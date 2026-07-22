@@ -783,9 +783,23 @@ export class PortfolioService {
       return undefined;
     }
 
-    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       { dataSource, symbol }
     ]);
+
+    const assetProfile =
+      symbolProfile ??
+      ({
+        dataSource,
+        symbol,
+        assetClass: AssetClass.LIQUIDITY,
+        assetSubClass: AssetSubClass.CASH,
+        countries: [],
+        currency: symbol,
+        holdings: [],
+        name: symbol,
+        sectors: []
+      } as EnhancedSymbolProfile);
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
@@ -829,9 +843,10 @@ export class PortfolioService {
       timeWeightedInvestmentWithCurrencyEffect
     } = holding;
 
-    const activitiesOfHolding = activities.filter(({ assetProfile }) => {
+    const activitiesOfHolding = activities.filter((activity) => {
       return (
-        assetProfile.dataSource === dataSource && assetProfile.symbol === symbol
+        activity.assetProfile.dataSource === dataSource &&
+        activity.assetProfile.symbol === symbol
       );
     });
 
@@ -863,19 +878,17 @@ export class PortfolioService {
       new Date()
     );
 
+    const [firstActivity] = activitiesOfHolding;
+    const referenceUnitPrice =
+      firstActivity?.unitPriceInAssetProfileCurrency ?? marketPrice;
+
     const historicalDataArray: HistoricalDataItem[] = [];
-    let marketPriceMax = Math.max(
-      activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
-      marketPrice
-    );
+    let marketPriceMax = Math.max(referenceUnitPrice, marketPrice);
     let marketPriceMaxDate =
-      marketPrice > activitiesOfHolding[0].unitPriceInAssetProfileCurrency
+      marketPrice > referenceUnitPrice
         ? new Date()
-        : activitiesOfHolding[0].date;
-    let marketPriceMin = Math.min(
-      activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
-      marketPrice
-    );
+        : (firstActivity?.date ?? new Date());
+    let marketPriceMin = Math.min(referenceUnitPrice, marketPrice);
 
     const historicalDataItems =
       historicalData[getAssetProfileIdentifier({ dataSource, symbol })];
@@ -926,10 +939,10 @@ export class PortfolioService {
     } else {
       // Add historical entry for buy date, if no historical data available
       historicalDataArray.push({
-        averagePrice: activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
+        averagePrice: referenceUnitPrice,
         date: dateOfFirstActivity,
-        marketPrice: activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
-        quantity: activitiesOfHolding[0].quantity
+        marketPrice: referenceUnitPrice,
+        quantity: firstActivity?.quantity ?? quantity.toNumber()
       });
     }
 
@@ -947,16 +960,16 @@ export class PortfolioService {
       marketPriceMin,
       tags,
       assetProfile: {
-        assetClass: SymbolProfile.assetClass,
-        assetSubClass: SymbolProfile.assetSubClass,
-        countries: SymbolProfile.countries,
-        currency: SymbolProfile.currency,
-        dataSource: SymbolProfile.dataSource,
-        isin: SymbolProfile.isin,
-        name: SymbolProfile.name,
-        sectors: SymbolProfile.sectors,
-        symbol: SymbolProfile.symbol,
-        userId: SymbolProfile.userId
+        assetClass: assetProfile.assetClass,
+        assetSubClass: assetProfile.assetSubClass,
+        countries: assetProfile.countries,
+        currency: assetProfile.currency,
+        dataSource: assetProfile.dataSource,
+        isin: assetProfile.isin,
+        name: assetProfile.name,
+        sectors: assetProfile.sectors,
+        symbol: assetProfile.symbol,
+        userId: assetProfile.userId
       },
       averagePrice: averagePrice.toNumber(),
       dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],

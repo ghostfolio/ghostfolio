@@ -51,6 +51,8 @@ import {
   format,
   isAfter,
   isBefore,
+  isFuture,
+  isPast,
   isWithinInterval,
   min,
   startOfDay,
@@ -134,7 +136,7 @@ export abstract class PortfolioCalculator {
             dateOfFirstActivity = date;
           }
 
-          if (isAfter(date, new Date())) {
+          if (isFuture(date)) {
             // Adapt date to today if activity is in future (e.g. liability)
             // to include it in the interval
             date = endOfDay(new Date());
@@ -1113,7 +1115,7 @@ export abstract class PortfolioCalculator {
         portfolioSnapshot
       );
 
-      if (isAfter(new Date(), new Date(expiration))) {
+      if (isPast(new Date(expiration))) {
         isCachedPortfolioSnapshotExpired = true;
       }
     } catch {}
