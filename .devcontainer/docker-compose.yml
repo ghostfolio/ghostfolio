@@ -5,9 +5,13 @@ services:
       dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspaces/ghostfolio:cached
+      - node_modules:/workspaces/ghostfolio/node_modules
     command: sleep infinity
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+
+volumes:
+  node_modules:
