@@ -22,7 +22,12 @@ import {
   viewChild
 } from '@angular/core';
 import { Big } from 'big.js';
-import type { ActiveElement, ChartData, TooltipOptions } from 'chart.js';
+import type {
+  ActiveElement,
+  ChartData,
+  TooltipItem,
+  TooltipOptions
+} from 'chart.js';
 import { Chart, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { isUUID } from 'class-validator';
@@ -33,8 +38,8 @@ import OpenColor from 'open-color';
 
 import type {
   GetColorParams,
-  GfTreemapScriptableContext,
-  GfTreemapTooltipItem
+  GfTreemapDataPoint,
+  GfTreemapScriptableContext
 } from './interfaces/interfaces';
 
 const { gray, green, red } = OpenColor;
@@ -225,7 +230,9 @@ export class GfTreemapChartComponent
       datasets: [
         {
           backgroundColor: (context: GfTreemapScriptableContext) => {
-            if (!context.raw) {
+            const raw = context.raw as GfTreemapDataPoint;
+
+            if (!raw) {
               return undefined;
             }
 
@@ -233,13 +240,10 @@ export class GfTreemapChartComponent
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
-                  max([
-                    context.raw._data.dateOfFirstActivity ?? new Date(0),
-                    startDate
-                  ])
+                  max([raw._data.dateOfFirstActivity ?? new Date(0), startDate])
                 ),
                 netPerformancePercentage: new Big(
-                  context.raw._data.netPerformancePercentWithCurrencyEffect
+                  raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
 
@@ -261,7 +265,9 @@ export class GfTreemapChartComponent
           labels: {
             align: 'left',
             color: (context: GfTreemapScriptableContext) => {
-              if (!context.raw) {
+              const raw = context.raw as GfTreemapDataPoint;
+
+              if (!raw) {
                 return undefined;
               }
 
@@ -270,12 +276,12 @@ export class GfTreemapChartComponent
                   daysInMarket: differenceInDays(
                     endDate,
                     max([
-                      context.raw._data.dateOfFirstActivity ?? new Date(0),
+                      raw._data.dateOfFirstActivity ?? new Date(0),
                       startDate
                     ])
                   ),
                   netPerformancePercentage: new Big(
-                    context.raw._data.netPerformancePercentWithCurrencyEffect
+                    raw._data.netPerformancePercentWithCurrencyEffect
                   )
                 }).toNumber();
 
@@ -294,7 +300,9 @@ export class GfTreemapChartComponent
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter: ({ raw }: GfTreemapScriptableContext) => {
+            formatter: (context: GfTreemapScriptableContext) => {
+              const raw = context.raw as GfTreemapDataPoint;
+
               let netPerformancePercentWithCurrencyEffect = round(
                 raw._data.netPerformancePercentWithCurrencyEffect,
                 4
@@ -380,7 +388,9 @@ export class GfTreemapChartComponent
       }),
       // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
-        label: ({ raw }: GfTreemapTooltipItem) => {
+        label: (context: TooltipItem<'treemap'>) => {
+          const raw = context.raw as GfTreemapDataPoint;
+
           const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
           const name = raw._data.assetProfile.name;
 
