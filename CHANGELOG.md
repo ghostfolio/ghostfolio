@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `chartjs-chart-treemap` from version `3.1.0` to `4.2.0`
+
 ### Fixed
 
 - Skipped opening the holding detail dialog for cash positions on the allocations page, the analysis page and the portfolio holdings page
