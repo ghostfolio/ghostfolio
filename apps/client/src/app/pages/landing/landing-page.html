@@ -247,11 +247,11 @@
                   @if (testimonial.url) {
                     <a target="_blank" [href]="testimonial.url">{{
                       testimonial.author
-                    }}</a>
+                    }}</a
+                    >,
                   } @else {
-                    <span>{{ testimonial.author }}</span>
+                    <span>{{ testimonial.author }},</span>
                   }
-                  ,
                   {{ testimonial.country }}
                 </div>
               </div>

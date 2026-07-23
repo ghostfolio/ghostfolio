@@ -7,10 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the stack trace logging for `MaxListenersExceededWarning` occurrences
+
 ### Changed
 
 - Recomputed the portfolio snapshot calculation in the background on a portfolio change
 - Improved the deduplication of the portfolio snapshot calculation jobs by considering the filters
+- Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
+- Improved the language localization for Polish (`pl`)
+
+### Fixed
+
+- Improved the spacing in the testimonial section on the landing page
 
 ## 3.32.0 - 2026-07-22
 
