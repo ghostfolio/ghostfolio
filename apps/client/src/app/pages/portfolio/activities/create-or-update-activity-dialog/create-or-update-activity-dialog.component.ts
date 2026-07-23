@@ -265,14 +265,14 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
         this.activityForm.get('currency')?.setValue(currency);
         this.activityForm.get('currencyOfUnitPrice')?.setValue(currency);
+      }
 
-        if (['FEE', 'INTEREST'].includes(type)) {
-          if (this.activityForm.get('accountId')?.value) {
-            this.activityForm.get('updateAccountBalance')?.enable();
-          } else {
-            this.activityForm.get('updateAccountBalance')?.disable();
-            this.activityForm.get('updateAccountBalance')?.setValue(false);
-          }
+      if (!['LIABILITY', 'VALUABLE'].includes(type)) {
+        if (accountId) {
+          this.activityForm.get('updateAccountBalance')?.enable();
+        } else {
+          this.activityForm.get('updateAccountBalance')?.disable();
+          this.activityForm.get('updateAccountBalance')?.setValue(false);
         }
       }
     });
@@ -298,7 +298,10 @@ export class GfCreateOrUpdateActivityDialogComponent {
       });
 
     this.activityForm.get('date')?.valueChanges.subscribe(() => {
-      if (isToday(this.activityForm.get('date')?.value)) {
+      if (
+        isToday(this.activityForm.get('date')?.value) &&
+        this.activityForm.get('accountId')?.value
+      ) {
         this.activityForm.get('updateAccountBalance')?.enable();
       } else {
         this.activityForm.get('updateAccountBalance')?.disable();
@@ -441,7 +444,13 @@ export class GfCreateOrUpdateActivityDialogComponent {
             .get('searchSymbol')
             ?.setValidators(Validators.required);
           this.activityForm.get('searchSymbol')?.updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance')?.enable();
+
+          if (this.activityForm.get('accountId')?.value) {
+            this.activityForm.get('updateAccountBalance')?.enable();
+          } else {
+            this.activityForm.get('updateAccountBalance')?.disable();
+            this.activityForm.get('updateAccountBalance')?.setValue(false);
+          }
         }
 
         this.changeDetectorRef.markForCheck();

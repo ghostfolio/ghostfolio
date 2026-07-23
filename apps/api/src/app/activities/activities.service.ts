@@ -275,7 +275,7 @@ export class ActivitiesService {
       include: { SymbolProfile: true }
     });
 
-    if (updateAccountBalance === true) {
+    if (accountId && updateAccountBalance === true) {
       let amount = new Big(data.unitPrice).mul(data.quantity);
 
       if (['BUY', 'FEE'].includes(data.type)) {
