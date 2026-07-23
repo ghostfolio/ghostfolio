@@ -26,6 +26,15 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 const logger = new Logger('Bootstrap');
+const processWarningLogger = new Logger('ProcessWarning');
+
+process.on('warning', ({ name, stack }) => {
+  if (name === 'MaxListenersExceededWarning') {
+    // Log the stack trace of MaxListenersExceededWarning occurrences to identify
+    // the event emitter and the call site which registers the listeners
+    processWarningLogger.warn(stack);
+  }
+});
 
 async function bootstrap() {
   // Respect HTTP_PROXY / HTTPS_PROXY / NO_PROXY for outbound HTTP requests

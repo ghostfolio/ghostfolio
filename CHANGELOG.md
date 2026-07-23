@@ -7,9 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the stack trace logging for `MaxListenersExceededWarning` occurrences
+
+### Changed
+
+- Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
+- Improved the language localization for Polish (`pl`)
+
 ### Fixed
 
 - Resolved an exception in the `POST api/v1/order` endpoint when creating an activity with the update account balance option but without an account
+- Improved the spacing in the testimonial section on the landing page
 
 ## 3.32.0 - 2026-07-22
 

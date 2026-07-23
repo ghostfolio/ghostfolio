@@ -1,5 +1,5 @@
+import { ANIMATION_MODULE_TYPE } from '@angular/core';
 import '@angular/localize/init';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -11,7 +11,12 @@ export default {
   component: GfValueComponent,
   decorators: [
     applicationConfig({
-      providers: [provideNoopAnimations()]
+      providers: [
+        {
+          provide: ANIMATION_MODULE_TYPE,
+          useValue: 'NoopAnimations'
+        }
+      ]
     }),
     moduleMetadata({
       imports: [NgxSkeletonLoaderModule]
