@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Recomputed the portfolio snapshot calculation in the background on a portfolio change
+- Improved the deduplication of the portfolio snapshot calculation jobs by considering the filters
 
 ## 3.32.0 - 2026-07-22
 
