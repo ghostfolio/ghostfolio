@@ -58,7 +58,7 @@
         mat-cell
         [attr.colspan]="displayedColumns.length"
       >
-        <div [@detailExpand]="element.expand ? 'expanded' : 'collapsed'">
+        <div class="detail-expand" [class.expanded]="element.expand">
           <div class="holding-parents-table">
             <table
               class="gf-table w-100"
