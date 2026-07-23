@@ -7,13 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the stack trace logging for `MaxListenersExceededWarning` occurrences
+
 ### Changed
 
+- Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
 - Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
 
 ### Fixed
 
 - Fixed an issue with the localization in the _FIRE_ page
+- Improved the spacing in the testimonial section on the landing page
 
 ## 3.32.0 - 2026-07-22
 
