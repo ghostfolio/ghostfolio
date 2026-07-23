@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the stack trace logging for `MaxListenersExceededWarning` occurrences
 
+### Changed
+
+- Improved the language localization for Polish (`pl`)
+
 ## 3.32.0 - 2026-07-22
 
 ### Changed
