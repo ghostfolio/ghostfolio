@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
+- Improved the language localization for Polish (`pl`)
+
+## 3.32.0 - 2026-07-22
+
+### Changed
+
 - Upgraded `chartjs-chart-treemap` from version `3.1.0` to `4.2.0`
 
 ### Fixed
