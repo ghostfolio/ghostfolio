@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the stack trace logging for `MaxListenersExceededWarning` occurrences
+
 ### Changed
 
 - Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
