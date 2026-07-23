@@ -58,25 +58,33 @@ export class PortfolioChangedListener {
       const user = await this.userService.user({ id: userId });
       const userSettings = user.settings.settings;
 
+      const filters = this.apiService.buildFiltersFromUserSettings({
+        userSettings
+      });
+
       // Recompute in the background to avoid a cold start on the next request
       await this.portfolioSnapshotService.addJobToQueue({
         data: {
+          filters,
           userId,
           calculationType: userSettings.performanceCalculationType,
-          filters: this.apiService.buildFiltersFromUserSettings({
-            userSettings
-          }),
           userCurrency: userSettings.baseCurrency
         },
         name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
         opts: {
           ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
-          jobId: userId,
+          jobId: this.redisCacheService.getPortfolioSnapshotKey({
+            filters,
+            userId
+          }),
           priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
         }
       });
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(
+        `Portfolio snapshot of user '${userId}' could not be recomputed`,
+        error
+      );
     }
   }
 }
