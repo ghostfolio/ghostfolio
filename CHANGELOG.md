@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Polish (`pl`)
 
+### Fixed
+
+- Improved the spacing in the testimonial section on the landing page
+
 ## 3.32.0 - 2026-07-22
 
 ### Changed
