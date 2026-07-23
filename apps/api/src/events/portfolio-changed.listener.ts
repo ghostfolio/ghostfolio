@@ -56,6 +56,11 @@ export class PortfolioChangedListener {
       await this.redisCacheService.removePortfolioSnapshotsByUserId({ userId });
 
       const user = await this.userService.user({ id: userId });
+
+      if (!user) {
+        return;
+      }
+
       const userSettings = user.settings.settings;
 
       const filters = this.apiService.buildFiltersFromUserSettings({
