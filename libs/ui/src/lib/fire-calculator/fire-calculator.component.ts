@@ -208,6 +208,19 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       });
   }
 
+  protected get retirementDateLabel(): string {
+    const retirementDate = this.calculatorForm.get('retirementDate')?.value;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    return new Intl.DateTimeFormat(this.locale, {
+      month: 'long',
+      year: 'numeric'
+    }).format(retirementDate);
+  }
+
   public ngOnChanges() {
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       this.calculatorForm.setValue(

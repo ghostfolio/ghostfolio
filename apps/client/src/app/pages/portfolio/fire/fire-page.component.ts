@@ -77,6 +77,20 @@ export class GfFirePageComponent implements OnInit {
   );
   private readonly userService = inject(UserService);
 
+  protected get retirementDateLabel(): string {
+    const retirementDate =
+      this.user?.settings?.retirementDate ?? this.retirementDate;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    return new Intl.DateTimeFormat(this.user?.settings?.locale, {
+      month: 'long',
+      year: 'numeric'
+    }).format(new Date(retirementDate));
+  }
+
   public ngOnInit() {
     this.isLoading = true;
 
