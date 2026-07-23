@@ -1,6 +1,7 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { formatMonthAndYear } from '@ghostfolio/common/helper';
 import {
   FireCalculationCompleteEvent,
   FireWealth,
@@ -76,6 +77,20 @@ export class GfFirePageComponent implements OnInit {
     ImpersonationStorageService
   );
   private readonly userService = inject(UserService);
+
+  protected get retirementDateLabel(): string {
+    const retirementDate =
+      this.user?.settings?.retirementDate ?? this.retirementDate;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    return formatMonthAndYear({
+      date: new Date(retirementDate),
+      locale: this.user?.settings?.locale
+    });
+  }
 
   public ngOnInit() {
     this.isLoading = true;
