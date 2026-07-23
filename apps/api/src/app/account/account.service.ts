@@ -37,11 +37,26 @@ export class AccountService {
   public async account({
     id_userId
   }: Prisma.AccountWhereUniqueInput): Promise<Account | null> {
-    const [account] = await this.accounts({
-      where: id_userId
+    const account = await this.prismaService.account.findUnique({
+      include: {
+        balances: {
+          orderBy: { date: 'desc' },
+          take: 1
+        }
+      },
+      where: { id_userId }
     });
 
-    return account;
+    if (!account) {
+      return null;
+    }
+
+    const { balances, ...accountData } = account;
+
+    return {
+      ...accountData,
+      balance: balances[0]?.value ?? 0
+    };
   }
 
   public async accountWithActivities(
