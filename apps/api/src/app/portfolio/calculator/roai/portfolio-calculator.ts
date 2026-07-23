@@ -155,6 +155,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceAtStartDateWithCurrencyEffect = new Big(0);
     let grossPerformanceFromSells = new Big(0);
     let grossPerformanceFromSellsWithCurrencyEffect = new Big(0);
+    let hasClosedPosition = false;
     let initialValue: Big;
     let initialValueWithCurrencyEffect: Big;
     let investmentAtStartDate: Big;
@@ -633,6 +634,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           );
 
       if (totalUnits.eq(0)) {
+        if (order.type === 'SELL') {
+          hasClosedPosition = true;
+        }
+
         // Reset tracking variables when position is fully closed
         totalInvestmentFromBuyTransactions = new Big(0);
         totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
@@ -930,9 +935,24 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
                 new Big(0))
         ) ?? new Big(0);
 
-      netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
-        ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
-        : new Big(0);
+      // For a position that was fully closed and reopened, the accumulated
+      // investment average spans lots that are no longer held and no longer
+      // reflects the net invested capital. Use the current net investment as
+      // the base instead to avoid a misleading percentage.
+      if (
+        dateRange === 'max' &&
+        hasClosedPosition &&
+        totalInvestmentWithCurrencyEffect.gt(0)
+      ) {
+        netPerformancePercentageWithCurrencyEffectMap[dateRange] =
+          netPerformanceWithCurrencyEffectMap[dateRange].div(
+            totalInvestmentWithCurrencyEffect
+          );
+      } else {
+        netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
+          ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
+          : new Big(0);
+      }
     }
 
     if (PortfolioCalculator.ENABLE_LOGGING) {
