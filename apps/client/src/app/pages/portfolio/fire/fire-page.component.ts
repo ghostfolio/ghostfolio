@@ -1,6 +1,7 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { formatMonthAndYear } from '@ghostfolio/common/helper';
 import {
   FireCalculationCompleteEvent,
   FireWealth,
@@ -85,10 +86,10 @@ export class GfFirePageComponent implements OnInit {
       return '';
     }
 
-    return new Intl.DateTimeFormat(this.user?.settings?.locale, {
-      month: 'long',
-      year: 'numeric'
-    }).format(new Date(retirementDate));
+    return formatMonthAndYear({
+      date: new Date(retirementDate),
+      locale: this.user?.settings?.locale
+    });
   }
 
   public ngOnInit() {

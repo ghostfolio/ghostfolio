@@ -3,7 +3,7 @@ import {
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
-import { getLocale } from '@ghostfolio/common/helper';
+import { formatMonthAndYear, getLocale } from '@ghostfolio/common/helper';
 import { FireCalculationCompleteEvent } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
@@ -215,10 +215,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       return '';
     }
 
-    return new Intl.DateTimeFormat(this.locale, {
-      month: 'long',
-      year: 'numeric'
-    }).format(retirementDate);
+    return formatMonthAndYear({
+      date: retirementDate,
+      locale: this.locale
+    });
   }
 
   public ngOnChanges() {
