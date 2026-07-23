@@ -69,6 +69,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization in the historical market data table of the admin control panel
 - Improved the language localization in the tag management of the admin control panel
 
+### Changed
+
+- Included cash in the performance calculation of the portfolio
+
 ### Fixed
 
 - Fixed the missing validation of the tags when creating or updating an activity

@@ -28,6 +28,10 @@ export class PortfolioSnapshot {
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
+  totalCashInBaseCurrency: Big;
+
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
   totalFeesWithCurrencyEffect: Big;
 
   @Transform(transformToBig, { toClassOnly: true })
