@@ -269,6 +269,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the validation of the data source field of an asset profile with market data
 - Fixed a recurring issue where single-value fields were incorrectly validated as arrays in various endpoints
 
+### Fixed
+
+- Fixed symbol mapping for asset profiles with the `MANUAL` data source
+
 ## 3.18.0 - 2026-06-28
 
 ### Added

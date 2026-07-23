@@ -70,14 +70,8 @@ export class DataGatheringService {
   }
 
   public async gatherAssetProfiles(
-    aAssetProfileIdentifiers?: AssetProfileIdentifier[]
+    assetProfileIdentifiers?: AssetProfileIdentifier[]
   ) {
-    let assetProfileIdentifiers = aAssetProfileIdentifiers?.filter(
-      (dataGatheringItem) => {
-        return dataGatheringItem.dataSource !== 'MANUAL';
-      }
-    );
-
     if (!assetProfileIdentifiers) {
       assetProfileIdentifiers = await this.getActiveAssetProfileIdentifiers();
     }
@@ -86,10 +80,31 @@ export class DataGatheringService {
       return;
     }
 
-    const assetProfiles = await this.dataProviderService.getAssetProfiles(
+    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
       assetProfileIdentifiers
     );
-    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+
+    // Exclude MANUAL asset profiles unless they define a symbol mapping that
+    // lets data enhancers gather profile data from another data source
+    assetProfileIdentifiers = assetProfileIdentifiers.filter(
+      ({ dataSource, symbol }) => {
+        if (dataSource !== 'MANUAL') {
+          return true;
+        }
+
+        const symbolProfile = symbolProfiles.find((profile) => {
+          return profile.dataSource === dataSource && profile.symbol === symbol;
+        });
+
+        return !isEmpty(symbolProfile?.symbolMapping);
+      }
+    );
+
+    if (assetProfileIdentifiers.length <= 0) {
+      return;
+    }
+
+    const assetProfiles = await this.dataProviderService.getAssetProfiles(
       assetProfileIdentifiers
     );
 
@@ -372,15 +387,16 @@ export class DataGatheringService {
   }: {
     maxAge?: StringValue;
   } = {}): Promise<AssetProfileIdentifier[]> {
-    return this.prismaService.symbolProfile.findMany({
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
       orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }],
       select: {
         dataSource: true,
-        symbol: true
+        symbol: true,
+        symbolMapping: true
       },
       where: {
         dataSource: {
-          notIn: ['MANUAL', 'RAPID_API']
+          not: 'RAPID_API'
         },
         isActive: true,
         ...(maxAge && {
@@ -390,6 +406,16 @@ export class DataGatheringService {
         })
       }
     });
+
+    return symbolProfiles
+      .filter(({ dataSource, symbolMapping }) => {
+        // Include MANUAL asset profiles only when they define a symbol mapping
+        // that lets data enhancers gather profile data from another data source
+        return dataSource !== 'MANUAL' || !isEmpty(symbolMapping);
+      })
+      .map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      });
   }
 
   private async getAssetProfileIdentifiersWithCompleteMarketData(): Promise<
