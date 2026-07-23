@@ -1,4 +1,4 @@
-import { Filter } from '@ghostfolio/common/interfaces';
+import { Filter, UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 
@@ -88,5 +88,19 @@ export class ApiService {
     }
 
     return filters;
+  }
+
+  public buildFiltersFromUserSettings({
+    userSettings
+  }: {
+    userSettings: UserSettings;
+  }): Filter[] {
+    return this.buildFiltersFromQueryParams({
+      filterByAccounts: userSettings?.['filters.accounts']?.[0],
+      filterByAssetClasses: userSettings?.['filters.assetClasses']?.[0],
+      filterByDataSource: userSettings?.['filters.dataSource'],
+      filterBySymbol: userSettings?.['filters.symbol'],
+      filterByTags: userSettings?.['filters.tags']?.[0]
+    });
   }
 }
