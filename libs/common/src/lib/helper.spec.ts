@@ -2,7 +2,8 @@ import {
   extractNumberFromString,
   getNumberFormatGroup,
   isCurrency,
-  isCurrencySymbol
+  isCurrencySymbol,
+  isValidManualSymbol
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -193,6 +194,30 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is valid manual symbol', () => {
+    it('UUID', () => {
+      expect(
+        isValidManualSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
+      ).toEqual(true);
+    });
+
+    it('Ghostfolio-prefixed symbol', () => {
+      expect(isValidManualSymbol('GF_PENTHOUSE_APARTMENT')).toEqual(true);
+    });
+
+    it('Human-readable symbol', () => {
+      expect(isValidManualSymbol('PENTHOUSE_APARTMENT')).toEqual(false);
+    });
+
+    it('Human-readable name', () => {
+      expect(isValidManualSymbol('Penthouse Apartment')).toEqual(false);
+    });
+
+    it('Empty symbol', () => {
+      expect(isValidManualSymbol('')).toEqual(false);
     });
   });
 });

@@ -4,9 +4,10 @@ import {
   CreateOrderDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
+import { HasValidManualSymbolsConstraint } from '@ghostfolio/common/validator-constraints/has-valid-manual-symbols';
 
 import { Type } from 'class-transformer';
-import { IsArray, IsOptional, ValidateNested } from 'class-validator';
+import { IsArray, IsOptional, Validate, ValidateNested } from 'class-validator';
 
 export class ImportDataDto {
   @IsArray()
@@ -17,6 +18,7 @@ export class ImportDataDto {
 
   @IsArray()
   @Type(() => CreateOrderDto)
+  @Validate(HasValidManualSymbolsConstraint)
   @ValidateNested({ each: true })
   activities: CreateOrderDto[];
 
