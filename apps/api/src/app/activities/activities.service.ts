@@ -17,12 +17,12 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
-  ghostfolioPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
   canDeleteAssetProfile,
-  getAssetProfileIdentifier
+  getAssetProfileIdentifier,
+  isValidManualSymbol
 } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
@@ -45,7 +45,6 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
@@ -201,10 +200,7 @@ export class ActivitiesService {
       let symbol: string;
 
       if (
-        data.SymbolProfile.connectOrCreate.create.symbol.startsWith(
-          `${ghostfolioPrefix}_`
-        ) ||
-        isUUID(data.SymbolProfile.connectOrCreate.create.symbol)
+        isValidManualSymbol(data.SymbolProfile.connectOrCreate.create.symbol)
       ) {
         // Connect custom asset profile (clone)
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
