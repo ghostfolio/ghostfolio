@@ -9,7 +9,10 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
+import {
+  ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL,
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH
+} from '@ghostfolio/common/config';
 import { CreateAssetProfileDto, CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
@@ -384,7 +387,7 @@ export class ImportService {
 
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
-        if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
+        if (ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.includes(activity.type)) {
           activity.dataSource = DataSource.MANUAL;
         } else {
           activity.dataSource =

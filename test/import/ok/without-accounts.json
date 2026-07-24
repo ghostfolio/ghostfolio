@@ -16,16 +16,6 @@
     },
     {
       "fee": 0,
-      "quantity": 1,
-      "type": "BUY",
-      "unitPrice": 500000,
-      "currency": "USD",
-      "dataSource": "MANUAL",
-      "date": "2022-01-01T00:00:00.000Z",
-      "symbol": "Penthouse Apartment"
-    },
-    {
-      "fee": 0,
       "quantity": 5,
       "type": "DIVIDEND",
       "unitPrice": 0.62,

@@ -510,7 +510,7 @@ export function isRootCurrency(aCurrency: string) {
   });
 }
 
-export function isValidManualSymbol(aSymbol: string) {
+export function isValidManualSymbol(aSymbol?: string) {
   if (!aSymbol) {
     return false;
   }

@@ -14,6 +14,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
+  ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
@@ -188,7 +189,7 @@ export class ActivitiesService {
     const userId = data.userId;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.includes(data.type) ||
       (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
@@ -957,7 +958,7 @@ export class ActivitiesService {
     let isDraft = false;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {

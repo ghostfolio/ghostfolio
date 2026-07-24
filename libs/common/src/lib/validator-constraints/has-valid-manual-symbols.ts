@@ -1,46 +1,67 @@
+import { DataSource } from '@prisma/client';
 import {
   ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface
 } from 'class-validator';
 
-import { ghostfolioPrefix } from '../config';
+import {
+  ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL,
+  ghostfolioPrefix
+} from '../config';
 import { isValidManualSymbol } from '../helper';
-
-interface ImportDataLike {
-  activities?: { dataSource?: string; symbol?: string; type?: string }[];
-  assetProfiles?: { dataSource?: string; symbol?: string }[];
-}
+import { ImportDataLike } from './interfaces/interfaces';
 
 @ValidatorConstraint({ name: 'hasValidManualSymbols' })
 export class HasValidManualSymbolsConstraint implements ValidatorConstraintInterface {
-  public defaultMessage() {
-    return `manual symbols must be a UUID or start with "${ghostfolioPrefix}_"`;
+  public defaultMessage(args: ValidationArguments) {
+    const entry = this.getEntryWithInvalidManualSymbol(
+      args.object as ImportDataLike
+    );
+
+    return `manual symbols must be a UUID or start with "${ghostfolioPrefix}_", but got "${entry?.symbol ?? ''}"`;
   }
 
   public validate(_: unknown, args: ValidationArguments) {
-    const { activities = [], assetProfiles = [] } =
-      args.object as ImportDataLike;
+    return !this.getEntryWithInvalidManualSymbol(args.object as ImportDataLike);
+  }
 
-    const activitiesAreValid = activities.every(
+  private getEntryWithInvalidManualSymbol({
+    activities,
+    assetProfiles
+  }: ImportDataLike) {
+    // Defer to @IsArray() and @ValidateNested() for malformed input
+    const activityWithInvalidSymbol = this.toEntries(activities).find(
       ({ dataSource, symbol, type }) => {
-        // FEE, INTEREST and LIABILITY default to the MANUAL data source
-        // (resolved in the backend), so treat them as manual when no data
-        // source is set
-        const isManual =
-          dataSource === 'MANUAL' ||
-          (!dataSource && ['FEE', 'INTEREST', 'LIABILITY'].includes(type));
+        const hasGeneratedUuidSymbol =
+          ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.some((activityType) => {
+            return activityType === type;
+          });
 
-        return !isManual || isValidManualSymbol(symbol);
+        return (
+          dataSource === DataSource.MANUAL &&
+          !hasGeneratedUuidSymbol &&
+          !isValidManualSymbol(symbol)
+        );
       }
     );
 
-    const assetProfilesAreValid = assetProfiles.every(
-      ({ dataSource, symbol }) => {
-        return dataSource !== 'MANUAL' || isValidManualSymbol(symbol);
-      }
-    );
+    if (activityWithInvalidSymbol) {
+      return activityWithInvalidSymbol;
+    }
 
-    return activitiesAreValid && assetProfilesAreValid;
+    return this.toEntries(assetProfiles).find(({ dataSource, symbol }) => {
+      return dataSource === DataSource.MANUAL && !isValidManualSymbol(symbol);
+    });
+  }
+
+  private toEntries<T>(aValue?: T[]) {
+    if (!Array.isArray(aValue)) {
+      return [];
+    }
+
+    return aValue.filter((entry) => {
+      return entry instanceof Object;
+    });
   }
 }
