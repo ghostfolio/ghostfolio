@@ -8,7 +8,7 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isISO4217CurrencyCode } from 'class-validator';
+import { isISO4217CurrencyCode, isUUID } from 'class-validator';
 import {
   getDate,
   getMonth,
@@ -41,6 +41,7 @@ import {
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
+  ghostfolioPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from './config';
 import {
@@ -499,6 +500,14 @@ export function isDerivedCurrency(aCurrency: string) {
   });
 }
 
+export function isGhostfolioSymbol(aSymbol?: string) {
+  if (!aSymbol) {
+    return false;
+  }
+
+  return aSymbol.startsWith(`${ghostfolioPrefix}_`);
+}
+
 export function isRootCurrency(aCurrency: string) {
   if (aCurrency === 'USD') {
     return true;
@@ -507,6 +516,14 @@ export function isRootCurrency(aCurrency: string) {
   return DERIVED_CURRENCIES.find(({ rootCurrency }) => {
     return rootCurrency === aCurrency;
   });
+}
+
+export function isValidManualSymbol(aSymbol?: string) {
+  if (!aSymbol) {
+    return false;
+  }
+
+  return isGhostfolioSymbol(aSymbol) || isUUID(aSymbol);
 }
 
 export function parseDate(date: string): Date | undefined {

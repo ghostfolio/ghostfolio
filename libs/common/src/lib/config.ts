@@ -32,6 +32,15 @@ export const warnColorRgb = {
   b: 69
 };
 
+// The symbol of these activity types is a label rather than an asset
+// identifier, so a symbol profile with a generated UUID is created for each of
+// them
+export const ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL: Type[] = [
+  Type.FEE,
+  Type.INTEREST,
+  Type.LIABILITY
+];
+
 export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],
   [AssetClass.COMMODITY, [AssetSubClass.PRECIOUS_METAL]],

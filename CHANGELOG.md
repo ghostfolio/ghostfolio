@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Recomputed the portfolio snapshot calculation in the background on a portfolio change
 - Improved the deduplication of the portfolio snapshot calculation jobs by considering the filters
+- Improved the validation of manual symbols in the activities import functionality
 - Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)

@@ -1,3 +1,4 @@
+import { ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
@@ -77,8 +78,12 @@ export class ImportActivitiesService {
         updateAccountBalance: false
       });
 
-      if (dataSource === DataSource.MANUAL) {
-        // Create synthetic asset profile for MANUAL data source
+      if (
+        dataSource === DataSource.MANUAL &&
+        !ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.includes(type)
+      ) {
+        // Create synthetic asset profile for MANUAL data source. Activity types
+        // with a generated symbol are skipped, as the backend assigns a UUID.
         assetProfiles.push({
           currency,
           symbol,

@@ -7,6 +7,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL,
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
   PROPERTY_API_KEY_GHOSTFOLIO,
@@ -267,7 +268,7 @@ export class DataProviderService implements OnModuleInit {
       if (!assetProfiles[assetProfileIdentifier]) {
         if (
           (dataSource === DataSource.MANUAL && type === 'BUY') ||
-          ['FEE', 'INTEREST', 'LIABILITY'].includes(type)
+          ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.includes(type)
         ) {
           const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
             (assetProfile) => {

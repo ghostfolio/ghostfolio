@@ -14,15 +14,17 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
+  ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
-  ghostfolioPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
   canDeleteAssetProfile,
-  getAssetProfileIdentifier
+  getAssetProfileIdentifier,
+  isGhostfolioSymbol,
+  isValidManualSymbol
 } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
@@ -45,7 +47,6 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
@@ -189,7 +190,7 @@ export class ActivitiesService {
     const userId = data.userId;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.includes(data.type) ||
       (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
@@ -201,13 +202,25 @@ export class ActivitiesService {
       let symbol: string;
 
       if (
-        data.SymbolProfile.connectOrCreate.create.symbol.startsWith(
-          `${ghostfolioPrefix}_`
-        ) ||
-        isUUID(data.SymbolProfile.connectOrCreate.create.symbol)
+        isValidManualSymbol(data.SymbolProfile.connectOrCreate.create.symbol)
       ) {
         // Connect custom asset profile (clone)
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
+
+        if (isGhostfolioSymbol(symbol)) {
+          // Asset profiles with the Ghostfolio prefix are created in the admin
+          // control only, so they must exist already
+          const existingAssetProfile =
+            await this.prismaService.symbolProfile.findUnique({
+              where: { dataSource_symbol: { dataSource, symbol } }
+            });
+
+          if (!existingAssetProfile) {
+            throw new Error(
+              `Asset profile not found for ${symbol} (${dataSource})`
+            );
+          }
+        }
       } else {
         // Create custom asset profile
         name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;
@@ -961,7 +974,7 @@ export class ActivitiesService {
     let isDraft = false;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
