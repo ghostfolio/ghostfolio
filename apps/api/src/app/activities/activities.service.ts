@@ -23,6 +23,7 @@ import {
 import {
   canDeleteAssetProfile,
   getAssetProfileIdentifier,
+  isGhostfolioSymbol,
   isValidManualSymbol
 } from '@ghostfolio/common/helper';
 import {
@@ -205,6 +206,21 @@ export class ActivitiesService {
       ) {
         // Connect custom asset profile (clone)
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
+
+        if (isGhostfolioSymbol(symbol)) {
+          // Asset profiles with the Ghostfolio prefix are created in the admin
+          // control only, so they must exist already
+          const existingAssetProfile =
+            await this.prismaService.symbolProfile.findUnique({
+              where: { dataSource_symbol: { dataSource, symbol } }
+            });
+
+          if (!existingAssetProfile) {
+            throw new Error(
+              `Asset profile not found for ${symbol} (${dataSource})`
+            );
+          }
+        }
       } else {
         // Create custom asset profile
         name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;

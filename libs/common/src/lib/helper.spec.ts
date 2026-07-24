@@ -3,6 +3,7 @@ import {
   getNumberFormatGroup,
   isCurrency,
   isCurrencySymbol,
+  isGhostfolioSymbol,
   isValidManualSymbol
 } from '@ghostfolio/common/helper';
 
@@ -194,6 +195,22 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is Ghostfolio symbol', () => {
+    it('Ghostfolio-prefixed symbol', () => {
+      expect(isGhostfolioSymbol('GF_PENTHOUSE_APARTMENT')).toEqual(true);
+    });
+
+    it('UUID', () => {
+      expect(
+        isGhostfolioSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
+      ).toEqual(false);
+    });
+
+    it('Human-readable symbol', () => {
+      expect(isGhostfolioSymbol('PENTHOUSE_APARTMENT')).toEqual(false);
     });
   });
 

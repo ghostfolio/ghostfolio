@@ -500,6 +500,14 @@ export function isDerivedCurrency(aCurrency: string) {
   });
 }
 
+export function isGhostfolioSymbol(aSymbol?: string) {
+  if (!aSymbol) {
+    return false;
+  }
+
+  return aSymbol.startsWith(`${ghostfolioPrefix}_`);
+}
+
 export function isRootCurrency(aCurrency: string) {
   if (aCurrency === 'USD') {
     return true;
@@ -515,7 +523,7 @@ export function isValidManualSymbol(aSymbol?: string) {
     return false;
   }
 
-  return isUUID(aSymbol) || aSymbol.startsWith(`${ghostfolioPrefix}_`);
+  return isGhostfolioSymbol(aSymbol) || isUUID(aSymbol);
 }
 
 export function parseDate(date: string): Date | undefined {

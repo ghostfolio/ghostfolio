@@ -11,11 +11,13 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   ACTIVITY_TYPES_WITH_GENERATED_UUID_SYMBOL,
-  DATA_GATHERING_QUEUE_PRIORITY_HIGH
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  ghostfolioPrefix
 } from '@ghostfolio/common/config';
 import { CreateAssetProfileDto, CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
+  isGhostfolioSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
 import {
@@ -34,7 +36,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
-import { omit, uniqBy } from 'lodash';
+import { omit, uniq, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 import { ImportDataDto } from './import-data.dto';
@@ -192,6 +194,11 @@ export class ImportService {
     const assetProfileSymbolMapping: { [oldSymbol: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
+
+    await this.validateGhostfolioSymbols({
+      activitiesDto,
+      assetProfilesWithMarketDataDto
+    });
 
     const existingTagsOfUser =
       tagsDto?.length || (!isDryRun && accountsWithBalancesDto?.length)
@@ -748,5 +755,46 @@ export class ImportService {
     }
 
     return uniqueAccountIds.size === 1;
+  }
+
+  private async validateGhostfolioSymbols({
+    activitiesDto,
+    assetProfilesWithMarketDataDto
+  }: {
+    activitiesDto: ImportDataDto['activities'];
+    assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
+  }) {
+    const symbols = uniq(
+      [...(activitiesDto ?? []), ...(assetProfilesWithMarketDataDto ?? [])].map(
+        ({ symbol }) => {
+          return symbol;
+        }
+      )
+    ).filter((symbol) => {
+      return isGhostfolioSymbol(symbol);
+    });
+
+    if (symbols.length === 0) {
+      return;
+    }
+
+    const existingAssetProfiles =
+      await this.symbolProfileService.getSymbolProfiles(
+        symbols.map((symbol) => {
+          return { symbol, dataSource: DataSource.MANUAL };
+        })
+      );
+
+    const missingSymbols = symbols.filter((symbol) => {
+      return !existingAssetProfiles.some(({ symbol: existingSymbol }) => {
+        return existingSymbol === symbol;
+      });
+    });
+
+    if (missingSymbols.length > 0) {
+      throw new Error(
+        `Asset profiles with the prefix "${ghostfolioPrefix}_" can only be created in the admin control (${missingSymbols.join(', ')})`
+      );
+    }
   }
 }
