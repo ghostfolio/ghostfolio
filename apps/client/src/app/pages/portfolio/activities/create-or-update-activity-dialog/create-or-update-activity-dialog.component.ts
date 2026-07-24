@@ -297,17 +297,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.activityForm.get('date')?.valueChanges.subscribe(() => {
-      if (isToday(this.activityForm.get('date')?.value)) {
-        this.activityForm.get('updateAccountBalance')?.enable();
-      } else {
-        this.activityForm.get('updateAccountBalance')?.disable();
-        this.activityForm.get('updateAccountBalance')?.setValue(false);
-      }
-
-      this.changeDetectorRef.markForCheck();
-    });
-
     this.activityForm.get('searchSymbol')?.valueChanges.subscribe(() => {
       if (this.activityForm.get('searchSymbol')?.invalid) {
         this.data.activity.assetProfile = null;

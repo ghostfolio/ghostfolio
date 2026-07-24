@@ -337,7 +337,7 @@ export class AccountService {
         accountId,
         userId,
         balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber(),
-        date: date.toISOString()
+        date: format(new Date(), DATE_FORMAT)
       });
     }
   }
