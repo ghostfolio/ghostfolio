@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Included cash in the performance calculation of the portfolio
 - Upgraded `countup.js` from version `2.10.0` to `2.10.1`
 - Upgraded `fuse.js` from version `7.3.0` to `7.5.0`
 

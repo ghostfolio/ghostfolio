@@ -248,7 +248,6 @@ describe('PortfolioCalculator', () => {
           '0.08211603004634809014'
         ),
         grossPerformanceWithCurrencyEffect: new Big(70),
-        includeInTotalAssetValue: false,
         investment: new Big(1820),
         investmentWithCurrencyEffect: new Big(1750),
         marketPrice: 1,
@@ -283,10 +282,36 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(portfolioSnapshot).toMatchObject({
+        currentValueInBaseCurrency: new Big(1820),
         hasErrors: false,
+        totalCashInBaseCurrency: new Big(1820),
         totalFeesWithCurrencyEffect: new Big(0),
         totalInterestWithCurrencyEffect: new Big(0),
+        totalInvestment: new Big(1820),
         totalLiabilitiesWithCurrencyEffect: new Big(0)
+      });
+
+      /**
+       * Value with currency effect: 2000 USD * 0.91 = 1820 CHF
+       * Net worth: 1820 CHF (the cash is included in the value and therefore
+       * not added on top of it again)
+       * Cash in base currency: 2000 USD * 0.91 = 1820 CHF (the whole portfolio
+       * consists of cash, hence it matches the value)
+       * Net performance with currency effect: 70 CHF / 852.45 CHF ≈ 8.21 %
+       */
+      expect(portfolioSnapshot.historicalData.at(-1)).toEqual({
+        date: '2025-01-01',
+        investmentValueWithCurrencyEffect: 0,
+        netPerformance: 0,
+        netPerformanceInPercentage: 0,
+        netPerformanceInPercentageWithCurrencyEffect: 0.08211603004634808,
+        netPerformanceWithCurrencyEffect: 70,
+        netWorth: 1820,
+        totalCashInBaseCurrency: 1820,
+        totalInvestment: 1820,
+        totalInvestmentValueWithCurrencyEffect: 1750,
+        value: 1820,
+        valueWithCurrencyEffect: 1820
       });
     });
   });
