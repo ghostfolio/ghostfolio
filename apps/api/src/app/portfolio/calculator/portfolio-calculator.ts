@@ -39,6 +39,7 @@ import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
+import { AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
@@ -451,7 +452,7 @@ export abstract class PortfolioCalculator {
         valueInBaseCurrency
       });
 
-      if (item.assetSubClass === 'CASH') {
+      if (item.assetSubClass === AssetSubClass.CASH) {
         cashSymbols.add(item.symbol);
 
         totalCashInBaseCurrency =
