@@ -1,6 +1,7 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   RuleSettings,
@@ -68,7 +69,10 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
     });
   }
 
-  public getSettings({ locale, xRayRules }: UserSettings): RuleSettings {
+  public getSettings({
+    locale = DEFAULT_LOCALE,
+    xRayRules
+  }: UserSettings): RuleSettings {
     return {
       locale,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true
