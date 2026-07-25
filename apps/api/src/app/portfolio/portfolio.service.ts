@@ -541,12 +541,6 @@ export class PortfolioService {
 
     let filteredValueInBaseCurrency = currentValueInBaseCurrency;
 
-    if (!this.activitiesService.areCashActivitiesExcludedByFilters(filters)) {
-      filteredValueInBaseCurrency = filteredValueInBaseCurrency.plus(
-        cashDetails.balanceInBaseCurrency
-      );
-    }
-
     const assetProfileIdentifiers = positions.map(({ dataSource, symbol }) => {
       return {
         dataSource,
@@ -1906,6 +1900,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      totalCashInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect
     } = await portfolioCalculator.getSnapshot();
@@ -1982,8 +1977,7 @@ export class PortfolioService {
       .plus(totalOfExcludedActivities)
       .toNumber();
 
-    const netWorth = new Big(balanceInBaseCurrency)
-      .plus(currentValueInBaseCurrency)
+    const netWorth = new Big(currentValueInBaseCurrency)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
       .toNumber();
@@ -2035,6 +2029,7 @@ export class PortfolioService {
       fireWealth: {
         today: {
           valueInBaseCurrency: new Big(currentValueInBaseCurrency)
+            .minus(totalCashInBaseCurrency ?? 0)
             .minus(emergencyFundHoldingsValueInBaseCurrency)
             .toNumber()
         }

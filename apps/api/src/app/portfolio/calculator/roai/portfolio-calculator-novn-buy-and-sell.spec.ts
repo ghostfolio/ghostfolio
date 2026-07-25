@@ -142,7 +142,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0,
         netPerformanceWithCurrencyEffect: 0,
         netWorth: 0,
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
         value: 0,
@@ -161,7 +161,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.158311345646438, // 24 ÷ 151.6 = 0.158311345646438
         netPerformanceWithCurrencyEffect: 24,
         netWorth: 175.6, // 2 * 87.8 = 175.6
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 151.6,
         totalInvestmentValueWithCurrencyEffect: 151.6,
         value: 175.6, // 2 * 87.8 = 175.6
@@ -180,7 +180,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.13100263852242744,
         netPerformanceWithCurrencyEffect: 19.86,
         netWorth: 0,
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
         value: 0,

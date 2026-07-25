@@ -78,7 +78,7 @@ export class AccessController {
   ): Promise<AccessModel> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -134,7 +134,7 @@ export class AccessController {
   ): Promise<AccessModel> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

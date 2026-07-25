@@ -97,7 +97,7 @@ export class PortfolioController {
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       hasDetails =
-        this.request.user.subscription.type === SubscriptionType.Premium;
+        this.request.user.subscription?.type === SubscriptionType.Premium;
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -383,7 +383,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       dividends = dividends.map((item) => {
         return nullifyValuesInObject(item, ['investment']);
@@ -511,7 +511,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       investments = investments.map((item) => {
         return nullifyValuesInObject(item, ['investment']);
@@ -623,7 +623,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         (item) => {
@@ -651,7 +651,7 @@ export class PortfolioController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       for (const category of report.xRay.categories) {
         category.rules = null;

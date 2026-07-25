@@ -18,7 +18,6 @@ import {
   BenchmarkProperty,
   BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
-import { BenchmarkTrend } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
@@ -146,7 +145,7 @@ export class BenchmarkService {
   public async addBenchmark({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile>> {
+  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile> | undefined> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,
@@ -183,7 +182,7 @@ export class BenchmarkService {
   public async deleteBenchmark({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile>> {
+  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile> | null> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,
@@ -240,12 +239,12 @@ export class BenchmarkService {
       enableSharing
     });
 
-    const promisesAllTimeHighs: Promise<{ date: Date; marketPrice: number }>[] =
-      [];
-    const promisesBenchmarkTrends: Promise<{
-      trend50d: BenchmarkTrend;
-      trend200d: BenchmarkTrend;
-    }>[] = [];
+    const promisesAllTimeHighs: ReturnType<
+      typeof this.marketDataService.getMax
+    >[] = [];
+    const promisesBenchmarkTrends: ReturnType<
+      typeof this.getBenchmarkTrends
+    >[] = [];
 
     const quotes = await this.dataProviderService.getQuotes({
       items: benchmarkAssetProfiles.map(({ dataSource, symbol }) => {

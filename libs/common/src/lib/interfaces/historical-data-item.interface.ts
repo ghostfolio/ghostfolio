@@ -11,7 +11,7 @@ export interface HistoricalDataItem {
   netWorth?: number;
   netWorthInPercentage?: number;
   quantity?: number;
-  totalAccountBalance?: number;
+  totalCashInBaseCurrency?: number;
   totalInvestment?: number;
   totalInvestmentValueWithCurrencyEffect?: number;
   value?: number;
