@@ -16,11 +16,11 @@ import { GfLogoComponent } from '../logo';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  selector: 'gf-no-transactions-info-indicator',
-  styleUrls: ['./no-transactions-info.component.scss'],
-  templateUrl: './no-transactions-info.component.html'
+  selector: 'gf-no-activities-info',
+  styleUrls: ['./no-activities-info.component.scss'],
+  templateUrl: './no-activities-info.component.html'
 })
-export class GfNoTransactionsInfoComponent {
+export class GfNoActivitiesInfoComponent {
   @HostBinding('class.has-border') @Input() hasBorder = true;
 
   public routerLinkPortfolioActivitiesCreate =

@@ -16,7 +16,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo';
-import { GfNoTransactionsInfoComponent } from '../no-transactions-info/no-transactions-info.component';
+import { GfNoActivitiesInfoComponent } from '../no-activities-info/no-activities-info.component';
 import { NotificationService } from '../notifications';
 import { GfValueComponent } from '../value';
 import { GfActivitiesTableComponent } from './activities-table.component';
@@ -373,7 +373,7 @@ export default {
         CommonModule,
         GfActivityTypeComponent,
         GfEntityLogoComponent,
-        GfNoTransactionsInfoComponent,
+        GfNoActivitiesInfoComponent,
         GfValueComponent,
         IonIcon,
         MatButtonModule,
