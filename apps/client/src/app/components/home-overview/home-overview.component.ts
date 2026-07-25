@@ -58,6 +58,8 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
+  protected readonly routerLinkPortfolioActivitiesCreate =
+    internalRoutes.portfolio.subRoutes.activities.subRoutes.create.routerLink;
 
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
