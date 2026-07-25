@@ -66,7 +66,7 @@ import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { interval } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -173,11 +173,13 @@ export class GfAdminUsersComponent implements OnInit {
             this.changeDetectorRef.markForCheck();
           }
         }),
-        switchMap(() => this.route.paramMap)
+        switchMap(() => this.route.paramMap),
+        map((params) => {
+          return params.get('userId');
+        }),
+        distinctUntilChanged()
       )
-      .subscribe((params) => {
-        const userId = params.get('userId');
-
+      .subscribe((userId) => {
         if (userId) {
           this.openUserDetailDialog(userId);
         }
