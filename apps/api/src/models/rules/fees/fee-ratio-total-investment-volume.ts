@@ -1,6 +1,7 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
+import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class FeeRatioTotalInvestmentVolume extends Rule<Settings> {
@@ -76,8 +77,8 @@ export class FeeRatioTotalInvestmentVolume extends Rule<Settings> {
   }
 
   public getSettings({
-    baseCurrency,
-    locale,
+    baseCurrency = DEFAULT_CURRENCY,
+    locale = DEFAULT_LOCALE,
     xRayRules
   }: UserSettings): Settings {
     return {
