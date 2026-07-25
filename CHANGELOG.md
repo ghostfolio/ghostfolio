@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the _Add activity_ link of the onboarding on the overview tab of the home page to open the create activity dialog
+- Fixed the link of the no transactions info component to open the create activity dialog
 - Resolved an exception in the `POST api/v1/activities` endpoint when creating an activity with the update account balance option but without an account
 
 ## 3.33.0 - 2026-07-25
