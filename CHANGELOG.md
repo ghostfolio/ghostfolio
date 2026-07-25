@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
+- Upgraded `fuse.js` from version `7.3.0` to `7.5.0`
 
 ### Fixed
 
