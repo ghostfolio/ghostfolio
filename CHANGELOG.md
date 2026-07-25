@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `countup.js` from version `2.10.0` to `2.10.1`
 - Upgraded `fuse.js` from version `7.3.0` to `7.5.0`
 
 ## 3.33.0 - 2026-07-25
@@ -25,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
-- Upgraded `countup.js` from version `2.10.0` to `2.10.1`
 
 ### Fixed
 
