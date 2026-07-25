@@ -149,7 +149,7 @@ export class SubscriptionService {
       }
 
       const subscriptionOffer: SubscriptionOffer = JSON.parse(
-        session.metadata.subscriptionOffer ?? '{}'
+        session.metadata?.subscriptionOffer ?? '{}'
       );
 
       const durationExtension = subscriptionOffer?.durationExtension;
