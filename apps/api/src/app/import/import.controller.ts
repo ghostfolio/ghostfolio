@@ -65,7 +65,7 @@ export class ImportController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Premium
+      this.request.user.subscription?.type === SubscriptionType.Premium
     ) {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }
@@ -109,7 +109,7 @@ export class ImportController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Premium
+      this.request.user.subscription?.type === SubscriptionType.Premium
     ) {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }

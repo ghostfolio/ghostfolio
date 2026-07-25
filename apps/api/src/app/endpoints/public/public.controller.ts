@@ -65,7 +65,7 @@ export class PublicController {
     });
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      hasDetails = user.subscription.type === SubscriptionType.Premium;
+      hasDetails = user?.subscription?.type === SubscriptionType.Premium;
     }
 
     const { filters } = (access.settings ?? {}) as AccessSettings;
@@ -98,7 +98,7 @@ export class PublicController {
       sortDirection: 'desc',
       take: 10,
       types: [ActivityType.BUY, ActivityType.SELL],
-      userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
+      userCurrency: user?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: user.id,
       withExcludedAccountsAndActivities: false
     });
@@ -167,7 +167,7 @@ export class PublicController {
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
             assetProfile.currency,
-            user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
+            user?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
           )
         );
       })
