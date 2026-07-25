@@ -236,12 +236,17 @@ export class GfAdminUsersComponent implements OnInit {
           .deleteUser(aId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
-            this.router.navigate(['..'], { relativeTo: this.route });
+            this.router.navigate(this.routerLinkAdminControlUsers);
+
+            this.fetchUsers({
+              pageIndex: this.paginator().pageIndex,
+              showLoading: false
+            });
           });
       },
       confirmType: ConfirmationDialogType.Warn,
       discardFn: () => {
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.router.navigate(this.routerLinkAdminControlUsers);
       },
       title: $localize`Do you really want to delete this user?`
     });
@@ -283,9 +288,7 @@ export class GfAdminUsersComponent implements OnInit {
   }
 
   protected onOpenUserDetailDialog(userId: string) {
-    this.router.navigate(
-      internalRoutes.adminControl.subRoutes.users.routerLink.concat(userId)
-    );
+    this.router.navigate(this.routerLinkAdminControlUsers.concat(userId));
   }
 
   private fetchUsers({
@@ -341,9 +344,7 @@ export class GfAdminUsersComponent implements OnInit {
         if (data?.action === 'delete' && data?.userId) {
           this.onDeleteUser(data.userId);
         } else {
-          this.router.navigate(
-            internalRoutes.adminControl.subRoutes.users.routerLink
-          );
+          this.router.navigate(this.routerLinkAdminControlUsers);
         }
       });
   }
