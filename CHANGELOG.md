@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `fuse.js` from version `7.3.0` to `7.5.0`
 
+### Fixed
+
+- Resolved an exception in the `POST api/v1/activities` endpoint when creating an activity with the update account balance option but without an account
+
 ## 3.33.0 - 2026-07-25
 
 ### Added

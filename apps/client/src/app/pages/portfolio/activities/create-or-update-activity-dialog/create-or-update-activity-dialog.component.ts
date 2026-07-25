@@ -266,16 +266,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
         this.activityForm.get('currency')?.setValue(currency);
         this.activityForm.get('currencyOfUnitPrice')?.setValue(currency);
-
-        if (['FEE', 'INTEREST'].includes(type)) {
-          if (this.activityForm.get('accountId')?.value) {
-            this.activityForm.get('updateAccountBalance')?.enable();
-          } else {
-            this.activityForm.get('updateAccountBalance')?.disable();
-            this.activityForm.get('updateAccountBalance')?.setValue(false);
-          }
-        }
       }
+
+      this.syncUpdateAccountBalanceControl();
     });
 
     this.activityForm
@@ -299,12 +292,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       });
 
     this.activityForm.get('date')?.valueChanges.subscribe(() => {
-      if (isToday(this.activityForm.get('date')?.value)) {
-        this.activityForm.get('updateAccountBalance')?.enable();
-      } else {
-        this.activityForm.get('updateAccountBalance')?.disable();
-        this.activityForm.get('updateAccountBalance')?.setValue(false);
-      }
+      this.syncUpdateAccountBalanceControl();
 
       this.changeDetectorRef.markForCheck();
     });
@@ -384,8 +372,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
             .get('searchSymbol')
             ?.removeValidators(Validators.required);
           this.activityForm.get('searchSymbol')?.updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance')?.disable();
-          this.activityForm.get('updateAccountBalance')?.setValue(false);
         } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           const currency =
             this.data.accounts.find(({ id }) => {
@@ -421,16 +407,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
           if (type === 'FEE') {
             this.activityForm.get('unitPrice')?.setValue(0);
           }
-
-          if (
-            ['FEE', 'INTEREST'].includes(type) &&
-            this.activityForm.get('accountId')?.value
-          ) {
-            this.activityForm.get('updateAccountBalance')?.enable();
-          } else {
-            this.activityForm.get('updateAccountBalance')?.disable();
-            this.activityForm.get('updateAccountBalance')?.setValue(false);
-          }
         } else {
           this.activityForm
             .get('dataSource')
@@ -442,8 +418,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
             .get('searchSymbol')
             ?.setValidators(Validators.required);
           this.activityForm.get('searchSymbol')?.updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance')?.enable();
         }
+
+        this.syncUpdateAccountBalanceControl();
 
         this.changeDetectorRef.markForCheck();
       });
@@ -556,6 +533,27 @@ export class GfCreateOrUpdateActivityDialogComponent {
       }
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  private syncUpdateAccountBalanceControl() {
+    const accountBalanceControl = this.activityForm.get('updateAccountBalance');
+    const accountId = this.activityForm.get('accountId')?.value;
+    const dataSource = this.activityForm.get('dataSource')?.value;
+    const date = this.activityForm.get('date')?.value;
+    const type = this.activityForm.get('type')?.value;
+
+    const isEligible =
+      !!accountId &&
+      isToday(date) &&
+      !['LIABILITY', 'VALUABLE'].includes(type) &&
+      !(dataSource === 'MANUAL' && type === 'BUY');
+
+    if (isEligible) {
+      accountBalanceControl?.enable();
+    } else {
+      accountBalanceControl?.disable();
+      accountBalanceControl?.setValue(false);
     }
   }
 
