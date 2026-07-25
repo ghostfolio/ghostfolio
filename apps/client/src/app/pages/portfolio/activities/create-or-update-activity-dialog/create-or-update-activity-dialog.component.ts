@@ -120,9 +120,10 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
   public ngOnInit() {
     this.currencyOfAssetProfile = this.data.activity?.assetProfile?.currency;
-    this.hasPermissionToCreateOwnTag =
-      this.data.user?.settings?.isExperimentalFeatures &&
-      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
+    this.hasPermissionToCreateOwnTag = hasPermission(
+      this.data.user?.permissions,
+      permissions.createOwnTag
+    );
     this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 

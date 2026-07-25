@@ -82,9 +82,10 @@ export class GfCreateOrUpdateAccountDialogComponent {
     const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
 
-    this.hasPermissionToCreateOwnTag =
-      this.data.user?.settings?.isExperimentalFeatures &&
-      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
+    this.hasPermissionToCreateOwnTag = hasPermission(
+      this.data.user?.permissions,
+      permissions.createOwnTag
+    );
 
     this.tagsAvailable = [
       ...(this.data.user?.tags ?? []),
