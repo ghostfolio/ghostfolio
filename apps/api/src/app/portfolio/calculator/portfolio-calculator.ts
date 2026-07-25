@@ -816,25 +816,39 @@ export abstract class PortfolioCalculator {
     let firstAccountBalanceDate: Date;
     let firstActivityDate: Date;
 
-    try {
-      const firstAccountBalanceDateString = this.accountBalanceItems[0]?.date;
-      firstAccountBalanceDate = firstAccountBalanceDateString
-        ? parseDate(firstAccountBalanceDateString)
-        : new Date();
-    } catch (error) {
-      firstAccountBalanceDate = new Date();
+    if (this.accountBalanceItems?.length > 0) {
+      try {
+        const firstAccountBalanceDateString = this.accountBalanceItems[0].date;
+        firstAccountBalanceDate = firstAccountBalanceDateString
+          ? parseDate(firstAccountBalanceDateString)
+          : new Date();
+      } catch (error) {
+        firstAccountBalanceDate = new Date();
+      }
     }
 
-    try {
-      const firstActivityDateString = this.transactionPoints[0].date;
-      firstActivityDate = firstActivityDateString
-        ? parseDate(firstActivityDateString)
-        : new Date();
-    } catch (error) {
-      firstActivityDate = new Date();
+    if (this.transactionPoints?.length > 0) {
+      try {
+        const firstActivityDateString = this.transactionPoints[0].date;
+        firstActivityDate = firstActivityDateString
+          ? parseDate(firstActivityDateString)
+          : new Date();
+      } catch (error) {
+        firstActivityDate = new Date();
+      }
     }
 
-    return min([firstAccountBalanceDate, firstActivityDate]);
+    const dates = [firstAccountBalanceDate, firstActivityDate].filter(
+      (date) => {
+        return !!date;
+      }
+    );
+
+    if (dates.length === 0) {
+      return undefined;
+    }
+
+    return min(dates);
   }
 
   protected abstract getSymbolMetrics({
