@@ -581,9 +581,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOwnTag =
-            hasPermission(this.user.permissions, permissions.createOwnTag) &&
-            (this.user?.settings?.isExperimentalFeatures ?? false);
+          this.hasPermissionToCreateOwnTag = hasPermission(
+            this.user?.permissions,
+            permissions.createOwnTag
+          );
 
           this.tagsAvailable =
             this.user?.tags?.map((tag) => {

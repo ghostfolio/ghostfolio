@@ -233,6 +233,19 @@ export function extractNumberFromString({
   }
 }
 
+export function formatMonthAndYear({
+  date,
+  locale
+}: {
+  date: Date;
+  locale?: string;
+}) {
+  return new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
+}
+
 export function getAllActivityTypes(): ActivityType[] {
   return Object.values(ActivityType);
 }

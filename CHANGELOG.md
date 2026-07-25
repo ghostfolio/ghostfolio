@@ -7,18 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `fuse.js` from version `7.3.0` to `7.5.0`
+
+### Fixed
+
+- Resolved an exception in the `POST api/v1/order` endpoint when creating an activity with the update account balance option but without an account
+
+## 3.33.0 - 2026-07-25
+
 ### Added
 
 - Added the stack trace logging for `MaxListenersExceededWarning` occurrences
 
 ### Changed
 
+- Moved the support to create custom tags from experimental to general availability
+- Recomputed the portfolio snapshot calculation in the background on a portfolio change
+- Improved the deduplication of the portfolio snapshot calculation jobs by considering the filters
 - Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
+- Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 
 ### Fixed
 
-- Resolved an exception in the `POST api/v1/order` endpoint when creating an activity with the update account balance option but without an account
+- Fixed an issue with the localization in the _FIRE_ page
 - Improved the spacing in the testimonial section on the landing page
 
 ## 3.32.0 - 2026-07-22

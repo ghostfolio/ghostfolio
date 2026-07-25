@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "3.32.0",
+  "version": "3.33.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -114,7 +114,7 @@
     "dotenv-expand": "12.0.3",
     "envalid": "8.2.0",
     "fast-redact": "3.5.0",
-    "fuse.js": "7.3.0",
+    "fuse.js": "7.5.0",
     "google-spreadsheet": "3.2.0",
     "helmet": "8.2.0",
     "http-status-codes": "2.3.0",
