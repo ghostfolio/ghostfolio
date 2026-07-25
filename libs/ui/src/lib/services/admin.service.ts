@@ -16,7 +16,7 @@ import {
   AssetProfileIdentifier,
   DataProviderGhostfolioStatusResponse,
   DataProviderHistoricalResponse,
-  EnhancedSymbolProfile
+  EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
@@ -196,7 +196,7 @@ export class AdminService {
       url
     }: UpdateAssetProfileDto
   ) {
-    return this.http.patch<EnhancedSymbolProfile>(
+    return this.http.patch<EnhancedAssetProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${encodeURIComponent(symbol)}`,
       {
         assetClass,

@@ -28,7 +28,7 @@ import {
   ActivitiesResponse,
   Activity,
   AssetProfileIdentifier,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
@@ -902,10 +902,10 @@ export class ActivitiesService {
   }
 
   public async getStatisticsByCurrency(
-    currency: EnhancedSymbolProfile['currency']
+    currency: EnhancedAssetProfile['currency']
   ): Promise<{
-    activitiesCount: EnhancedSymbolProfile['activitiesCount'];
-    dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+    activitiesCount: EnhancedAssetProfile['activitiesCount'];
+    dateOfFirstActivity: EnhancedAssetProfile['dateOfFirstActivity'];
   }> {
     const { _count, _min } = await this.prismaService.order.aggregate({
       _count: true,

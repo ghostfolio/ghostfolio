@@ -48,7 +48,7 @@ import {
   AccountsResponse,
   Activity,
   AssetProfileIdentifier,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Filter,
   HistoricalDataItem,
   InvestmentItem,
@@ -556,7 +556,7 @@ export class PortfolioService {
     symbolProfiles.push(...cashSymbolProfiles);
 
     const symbolProfileMap: {
-      [assetProfileIdentifier: string]: EnhancedSymbolProfile;
+      [assetProfileIdentifier: string]: EnhancedAssetProfile;
     } = {};
 
     for (const symbolProfile of symbolProfiles) {
@@ -793,7 +793,7 @@ export class PortfolioService {
         holdings: [],
         name: symbol,
         sectors: []
-      } as EnhancedSymbolProfile);
+      } as EnhancedAssetProfile);
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
@@ -1579,7 +1579,7 @@ export class PortfolioService {
       ...new Set(cashDetails.accounts.map(({ currency }) => currency))
     ];
 
-    return cashSymbols.map<EnhancedSymbolProfile>((currency) => {
+    return cashSymbols.map<EnhancedAssetProfile>((currency) => {
       const account = cashDetails.accounts.find(
         ({ currency: accountCurrency }) => {
           return accountCurrency === currency;
@@ -1731,11 +1731,7 @@ export class PortfolioService {
     };
   }
 
-  private getMarkets({
-    assetProfile
-  }: {
-    assetProfile: EnhancedSymbolProfile;
-  }) {
+  private getMarkets({ assetProfile }: { assetProfile: EnhancedAssetProfile }) {
     const markets = {
       [UNKNOWN_KEY]: 0,
       developedMarkets: 0,

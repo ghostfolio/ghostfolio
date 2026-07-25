@@ -25,7 +25,7 @@ import {
   AdminData,
   AdminUserResponse,
   AdminUsersResponse,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -304,7 +304,7 @@ export class AdminController {
     @Body() assetProfile: UpdateAssetProfileDto,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
-  ): Promise<EnhancedSymbolProfile> {
+  ): Promise<EnhancedAssetProfile> {
     return this.adminService.patchAssetProfileData(
       { dataSource, symbol },
       assetProfile
