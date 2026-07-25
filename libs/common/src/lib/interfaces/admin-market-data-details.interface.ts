@@ -1,8 +1,8 @@
 import { MarketData } from '@prisma/client';
 
-import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
+import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 
 export interface AdminMarketDataDetails {
-  assetProfile: Partial<EnhancedSymbolProfile>;
+  assetProfile: Partial<EnhancedAssetProfile>;
   marketData: MarketData[];
 }

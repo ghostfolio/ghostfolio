@@ -1,7 +1,7 @@
 import {
   Benchmark,
   DataProviderInfo,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
 
@@ -10,7 +10,7 @@ import { Tag } from '@prisma/client';
 export interface PortfolioHoldingResponse {
   activitiesCount: number;
   assetProfile: Pick<
-    EnhancedSymbolProfile,
+    EnhancedAssetProfile,
     | 'assetClass'
     | 'assetSubClass'
     | 'countries'

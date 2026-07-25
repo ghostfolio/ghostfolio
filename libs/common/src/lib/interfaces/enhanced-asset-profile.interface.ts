@@ -11,7 +11,7 @@ import { Holding } from './holding.interface';
 import { ScraperConfiguration } from './scraper-configuration.interface';
 import { Sector } from './sector.interface';
 
-export interface EnhancedSymbolProfile {
+export interface EnhancedAssetProfile {
   activitiesCount: number;
   assetClass: AssetClass;
   assetSubClass: AssetSubClass;

@@ -3,7 +3,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Holding,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
@@ -107,7 +107,7 @@ export class SymbolProfileService {
 
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
-  ): Promise<EnhancedSymbolProfile[]> {
+  ): Promise<EnhancedAssetProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
         include: {
@@ -139,7 +139,7 @@ export class SymbolProfileService {
 
   public async getSymbolProfilesByIds(
     symbolProfileIds: string[]
-  ): Promise<EnhancedSymbolProfile[]> {
+  ): Promise<EnhancedAssetProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
         include: {
@@ -227,7 +227,7 @@ export class SymbolProfileService {
       }[];
       assetProfileOverrides: AssetProfileOverrides;
     })[]
-  ): EnhancedSymbolProfile[] {
+  ): EnhancedAssetProfile[] {
     return symbolProfiles.map((symbolProfile) => {
       const symbolProfileWithOverrides = applyAssetProfileOverrides(
         symbolProfile,

@@ -2,13 +2,13 @@ import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 
 import { Tag } from '@prisma/client';
 
-import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
+import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 
 export interface PortfolioPosition {
   activitiesCount: number;
   allocationInPercentage: number;
   assetProfile: Pick<
-    EnhancedSymbolProfile,
+    EnhancedAssetProfile,
     | 'assetClass'
     | 'assetSubClass'
     | 'countries'

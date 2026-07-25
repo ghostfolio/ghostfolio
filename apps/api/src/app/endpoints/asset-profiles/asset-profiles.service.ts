@@ -17,7 +17,7 @@ import {
   AssetProfileIdentifier,
   AssetProfileItem,
   AssetProfilesResponse,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
@@ -42,9 +42,9 @@ export class AssetProfilesService {
     dataSource,
     symbol
   }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {
-    let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-    let currency: EnhancedSymbolProfile['currency'] = '-';
-    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+    let activitiesCount: EnhancedAssetProfile['activitiesCount'] = 0;
+    let currency: EnhancedAssetProfile['currency'] = '-';
+    let dateOfFirstActivity: EnhancedAssetProfile['dateOfFirstActivity'];
 
     const isCurrencyAssetProfile = isCurrency(getCurrencyFromSymbol(symbol));
 
@@ -333,7 +333,7 @@ export class AssetProfilesService {
   public async updateAssetProfileData(
     { dataSource, symbol }: AssetProfileIdentifier,
     assetProfileData: UpdateAssetProfileDataDto
-  ): Promise<EnhancedSymbolProfile> {
+  ): Promise<EnhancedAssetProfile> {
     const notFoundMessage = `Could not find the asset profile for ${symbol} (${dataSource})`;
 
     const data = this.getAssetProfileDataUpdate(assetProfileData);
@@ -446,9 +446,9 @@ export class AssetProfilesService {
 
     const assetProfilePromises: Promise<AssetProfileItem>[] = currencyPairs.map(
       async ({ dataSource, symbol }) => {
-        let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-        let currency: EnhancedSymbolProfile['currency'] = '-';
-        let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+        let activitiesCount: EnhancedAssetProfile['activitiesCount'] = 0;
+        let currency: EnhancedAssetProfile['currency'] = '-';
+        let dateOfFirstActivity: EnhancedAssetProfile['dateOfFirstActivity'];
 
         if (isCurrency(getCurrencyFromSymbol(symbol))) {
           currency = getCurrencyFromSymbol(symbol);
