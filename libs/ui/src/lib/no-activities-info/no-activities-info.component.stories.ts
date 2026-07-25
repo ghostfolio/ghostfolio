@@ -4,19 +4,19 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
-import { GfNoTransactionsInfoComponent } from './no-transactions-info.component';
+import { GfNoActivitiesInfoComponent } from './no-activities-info.component';
 
 export default {
-  title: 'No Transactions Info',
-  component: GfNoTransactionsInfoComponent,
+  component: GfNoActivitiesInfoComponent,
   decorators: [
     moduleMetadata({
       imports: [GfLogoComponent, RouterTestingModule]
     })
-  ]
-} as Meta<GfNoTransactionsInfoComponent>;
+  ],
+  title: 'No Activities Info'
+} as Meta<GfNoActivitiesInfoComponent>;
 
-type Story = StoryObj<GfNoTransactionsInfoComponent>;
+type Story = StoryObj<GfNoActivitiesInfoComponent>;
 
 export const Default: Story = {
   args: {}
