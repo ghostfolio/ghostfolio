@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Included cash in the performance calculation of the portfolio
+- Moved the support for tags in the account from experimental to general availability
 - Upgraded `countup.js` from version `2.10.0` to `2.10.1`
 - Upgraded `dotenv` from version `17.2.3` to `17.4.2`
 - Upgraded `dotenv-expand` from version `12.0.3` to `13.0.0`
