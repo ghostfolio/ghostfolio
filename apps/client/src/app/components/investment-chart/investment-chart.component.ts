@@ -41,7 +41,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { type AnnotationOptions } from 'chartjs-plugin-annotation';
-import { isAfter } from 'date-fns';
+import { isFuture } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
@@ -311,6 +311,6 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       return undefined;
     }
 
-    return isAfter(new Date(xValue), new Date()) ? aValue : undefined;
+    return isFuture(new Date(xValue)) ? aValue : undefined;
   }
 }

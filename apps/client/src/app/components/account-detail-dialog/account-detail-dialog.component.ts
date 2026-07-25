@@ -15,7 +15,6 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
@@ -41,7 +40,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
@@ -53,9 +52,12 @@ import {
 } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { forkJoin } from 'rxjs';
+import { filter, forkJoin } from 'rxjs';
 
-import { AccountDetailDialogParams } from './interfaces/interfaces';
+import {
+  AccountDetailDialogParams,
+  AccountDetailDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -113,11 +115,24 @@ export class GfAccountDetailDialogComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
-    inject<MatDialogRef<GfAccountDetailDialogComponent>>(MatDialogRef);
+    inject<
+      MatDialogRef<GfAccountDetailDialogComponent, AccountDetailDialogResult>
+    >(MatDialogRef);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
+    this.router.events
+      .pipe(
+        filter((event) => {
+          return event instanceof NavigationStart;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close({ isNavigating: true });
+      });
+
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
@@ -153,17 +168,6 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.pageIndex = page.pageIndex;
 
     this.fetchActivities();
-  }
-
-  protected onCloneActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, createDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
   }
 
   protected onClose() {
@@ -206,17 +210,6 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.sortDirection = direction;
 
     this.fetchActivities();
-  }
-
-  protected onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, editDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
   }
 
   protected showValuesInPercentage() {

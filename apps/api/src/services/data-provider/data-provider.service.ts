@@ -27,7 +27,8 @@ import {
   DataProviderHistoricalResponse,
   DataProviderResponse,
   LookupItem,
-  LookupResponse
+  LookupResponse,
+  MarketDataOfMarketsResponse
 } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
@@ -98,7 +99,7 @@ export class DataProviderService implements OnModuleInit {
       return dataSource;
     });
 
-    const promises = [];
+    const promises: Promise<void>[] = [];
 
     for (const [dataSource, assetProfileIdentifiers] of Object.entries(
       itemsGroupedByDataSource
@@ -194,11 +195,7 @@ export class DataProviderService implements OnModuleInit {
         return DataSource[dataSource];
       });
 
-    const ghostfolioApiKey = await this.propertyService.getByKey<string>(
-      PROPERTY_API_KEY_GHOSTFOLIO
-    );
-
-    if (ghostfolioApiKey) {
+    if (await this.isDataProviderGhostfolioConfigured()) {
       dataSources.push('GHOSTFOLIO');
     }
 
@@ -251,7 +248,7 @@ export class DataProviderService implements OnModuleInit {
 
       if (
         this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-        user.subscription.type === SubscriptionType.Basic
+        user.subscription?.type === SubscriptionType.Basic
       ) {
         const dataProvider = this.getDataProvider(DataSource[dataSource]);
 
@@ -511,7 +508,7 @@ export class DataProviderService implements OnModuleInit {
                 requestTimeout: ms('30 seconds')
               })
               .then((data) => {
-                return { dataSource, symbol, data: data?.[symbol] };
+                return { data, dataSource, symbol };
               })
           );
         }
@@ -549,6 +546,22 @@ export class DataProviderService implements OnModuleInit {
     }
 
     return result;
+  }
+
+  public async getMarketDataOfMarkets({
+    includeHistoricalData
+  }: {
+    includeHistoricalData: number;
+  }): Promise<MarketDataOfMarketsResponse> {
+    const dataProvider = this.getDataProvider(DataSource.GHOSTFOLIO);
+
+    if (!dataProvider.getMarketDataOfMarkets) {
+      throw new Error(
+        `The data provider (${DataSource.GHOSTFOLIO}) does not support the market data of markets`
+      );
+    }
+
+    return dataProvider.getMarketDataOfMarkets({ includeHistoricalData });
   }
 
   public async getQuotes({
@@ -647,7 +660,7 @@ export class DataProviderService implements OnModuleInit {
           } else if (
             dataProvider.getDataProviderInfo().isPremium &&
             this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-            user?.subscription.type === SubscriptionType.Basic
+            user?.subscription?.type === SubscriptionType.Basic
           ) {
             // Skip symbols of Premium data providers for users without subscription
             return false;
@@ -807,6 +820,12 @@ export class DataProviderService implements OnModuleInit {
     return response;
   }
 
+  public async isDataProviderGhostfolioConfigured(): Promise<boolean> {
+    return !!(await this.propertyService.getByKey<string>(
+      PROPERTY_API_KEY_GHOSTFOLIO
+    ));
+  }
+
   public async search({
     includeIndices = false,
     query,
@@ -857,7 +876,7 @@ export class DataProviderService implements OnModuleInit {
       })
       .map((lookupItem) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-          if (user.subscription.type === SubscriptionType.Premium) {
+          if (user.subscription?.type === SubscriptionType.Premium) {
             lookupItem.dataProviderInfo.isPremium = false;
           }
 

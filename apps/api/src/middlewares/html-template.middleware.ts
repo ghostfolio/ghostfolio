@@ -111,7 +111,13 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
       );
 
       try {
-        map[languageCode] = readFileSync(indexHtmlPath, 'utf8');
+        // Restore the interpolation token which the template replaces with a
+        // static fallback title to avoid showing an unresolved template
+        // literal when served without interpolation (e.g. by the service worker)
+        map[languageCode] = readFileSync(indexHtmlPath, 'utf8').replace(
+          /<title>.*?<\/title>/,
+          '<title>${title}</title>'
+        );
       } catch {
         this.logger.warn(
           `Skipping language '${languageCode}': ${indexHtmlPath} not found`

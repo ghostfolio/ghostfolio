@@ -8,8 +8,7 @@ import {
   Activity,
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
-import { OrderWithAccount } from '@ghostfolio/common/types';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
@@ -50,6 +49,7 @@ import {
 } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Type as ActivityType } from '@prisma/client';
 import { isUUID } from 'class-validator';
@@ -82,7 +82,6 @@ import { GfValueComponent } from '../value/value.component';
     GfActivityTypeComponent,
     GfEntityLogoComponent,
     GfNoTransactionsInfoComponent,
-    GfSymbolPipe,
     GfValueComponent,
     IonIcon,
     MatButtonModule,
@@ -95,7 +94,8 @@ import { GfValueComponent } from '../value/value.component';
     MatTableModule,
     MatTooltipModule,
     NgxSkeletonLoaderModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
@@ -123,8 +123,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
   @Output() activityDeleted = new EventEmitter<string>();
-  @Output() activityToClone = new EventEmitter<OrderWithAccount>();
-  @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
   @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
@@ -150,6 +148,25 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public readonly showAccountColumn = input(true);
   public readonly showCheckbox = input(false);
   public readonly showNameColumn = input(true);
+
+  protected readonly activityDialogRouterLinks = computed(() => {
+    const { clone, update } =
+      internalRoutes.portfolio.subRoutes.activities.subRoutes;
+
+    const routerLinks = new Map<
+      string,
+      { clone: string[]; update: string[] }
+    >();
+
+    for (const { id } of this.dataSource()?.data ?? []) {
+      routerLinks.set(id, {
+        clone: clone.routerLink(id),
+        update: update.routerLink(id)
+      });
+    }
+
+    return routerLinks;
+  });
 
   protected readonly displayedColumns = computed(() => {
     let columns = [
@@ -291,10 +308,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     }
   }
 
-  public onCloneActivity(aActivity: OrderWithAccount) {
-    this.activityToClone.emit(aActivity);
-  }
-
   public onDeleteActivities() {
     this.notificationService.confirm({
       confirmFn: () => {
@@ -347,10 +360,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.notificationService.alert({
       title: aComment
     });
-  }
-
-  public onUpdateActivity(aActivity: OrderWithAccount) {
-    this.activityToUpdate.emit(aActivity);
   }
 
   public sortByValue(

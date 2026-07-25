@@ -11,7 +11,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
   private holdings: PortfolioPosition[];
 
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
+    exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     holdings: PortfolioPosition[],
     languageCode: string

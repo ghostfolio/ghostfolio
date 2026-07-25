@@ -1,6 +1,7 @@
 import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 
 import { CommonModule } from '@angular/common';
+import { ANIMATION_MODULE_TYPE } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import '@angular/localize/init';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,7 +9,6 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -32,10 +32,16 @@ export default {
         MatFormFieldModule,
         MatInputModule,
         NgxSkeletonLoaderModule,
-        NoopAnimationsModule,
         ReactiveFormsModule
       ],
-      providers: [FireCalculatorService, provideNativeDateAdapter()]
+      providers: [
+        FireCalculatorService,
+        provideNativeDateAdapter(),
+        {
+          provide: ANIMATION_MODULE_TYPE,
+          useValue: 'NoopAnimations'
+        }
+      ]
     })
   ]
 } as Meta<GfFireCalculatorComponent>;

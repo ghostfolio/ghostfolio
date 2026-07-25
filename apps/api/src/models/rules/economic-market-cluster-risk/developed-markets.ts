@@ -8,7 +8,7 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
   private developedMarketsValueInBaseCurrency: number;
 
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
+    exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     currentValueInBaseCurrency: number,
     developedMarketsValueInBaseCurrency: number,

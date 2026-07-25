@@ -11,7 +11,7 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
   private holdings: PortfolioPosition[];
 
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
+    exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     languageCode: string,
     holdings: PortfolioPosition[]

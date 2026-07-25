@@ -5,7 +5,7 @@ import { AccessPermission } from '@prisma/client';
 import { AccessSettings } from './access-settings.interface';
 
 export interface Access {
-  alias?: string;
+  alias: string | null;
   grantee?: string;
   id: string;
   permissions: AccessPermission[];

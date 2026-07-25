@@ -58,7 +58,7 @@ export class RapidApiService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       if (symbol === ghostfolioFearAndGreedIndexSymbolStocks) {
@@ -66,10 +66,8 @@ export class RapidApiService implements DataProviderInterface {
 
         if (fgi) {
           return {
-            [symbol]: {
-              [format(getYesterday(), DATE_FORMAT)]: {
-                marketPrice: fgi.previousClose.value
-              }
+            [format(getYesterday(), DATE_FORMAT)]: {
+              marketPrice: fgi.previousClose.value
             }
           };
         }

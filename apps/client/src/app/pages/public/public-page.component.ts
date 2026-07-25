@@ -1,5 +1,5 @@
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
+import { getCountryName } from '@ghostfolio/common/helper';
 import {
   InfoItem,
   PortfolioPosition,
@@ -250,9 +250,9 @@ export class GfPublicPageComponent implements OnInit {
         }
       }
 
-      this.symbols[prettifySymbol(symbol)] = {
-        name: position.assetProfile.name ?? prettifySymbol(symbol),
-        symbol: prettifySymbol(symbol),
+      this.symbols[symbol] = {
+        symbol,
+        name: position.assetProfile.name ?? symbol,
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
           : (position.valueInPercentage ?? 0)

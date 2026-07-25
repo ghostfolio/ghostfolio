@@ -87,13 +87,15 @@
             >
               <ng-container i18n>Name</ng-container>
             </th>
-            <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
+            <td
+              *matCellDef="let element"
+              class="line-height-normal px-1"
+              mat-cell
+            >
               <div class="text-truncate">{{ element.name }}</div>
               @if (!isUUID(element.symbol)) {
                 <div>
-                  <small class="text-muted">{{
-                    element.symbol | gfSymbol
-                  }}</small>
+                  <small class="text-muted">{{ element.symbol }}</small>
                 </div>
               }
             </td>
@@ -113,8 +115,17 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Asset Class</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
-              {{ element.assetClass }}
+            <td
+              *matCellDef="let element"
+              class="line-height-normal px-1 text-nowrap"
+              mat-cell
+            >
+              <div>{{ translate(element.assetClass) }}</div>
+              @if (element.assetClass) {
+                <div>
+                  <small class="text-muted">{{ element.assetClass }}</small>
+                </div>
+              }
             </td>
           </ng-container>
 
@@ -122,8 +133,17 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Asset Sub Class</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
-              {{ element.assetSubClass }}
+            <td
+              *matCellDef="let element"
+              class="line-height-normal px-1 text-nowrap"
+              mat-cell
+            >
+              <div>{{ translate(element.assetSubClass) }}</div>
+              @if (element.assetSubClass) {
+                <div>
+                  <small class="text-muted">{{ element.assetSubClass }}</small>
+                </div>
+              }
             </td>
           </ng-container>
 

@@ -78,7 +78,7 @@ export class AccessController {
   ): Promise<AccessModel> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -87,7 +87,7 @@ export class AccessController {
     }
 
     try {
-      return this.accessService.createAccess({
+      return await this.accessService.createAccess({
         alias: data.alias || undefined,
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
@@ -134,7 +134,7 @@ export class AccessController {
   ): Promise<AccessModel> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Basic
+      this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -155,7 +155,7 @@ export class AccessController {
     }
 
     try {
-      return this.accessService.updateAccess({
+      return await this.accessService.updateAccess({
         data: {
           alias: data.alias,
           granteeUser: data.granteeUserId

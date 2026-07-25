@@ -50,6 +50,8 @@ import {
   format,
   isAfter,
   isBefore,
+  isFuture,
+  isPast,
   isWithinInterval,
   min,
   startOfDay,
@@ -133,7 +135,7 @@ export abstract class PortfolioCalculator {
             dateOfFirstActivity = date;
           }
 
-          if (isAfter(date, new Date())) {
+          if (isFuture(date)) {
             // Adapt date to today if activity is in future (e.g. liability)
             // to include it in the interval
             date = endOfDay(new Date());
@@ -1078,15 +1080,18 @@ export abstract class PortfolioCalculator {
 
     let cachedPortfolioSnapshot: PortfolioSnapshot;
     let isCachedPortfolioSnapshotExpired = false;
-    const jobId = this.userId;
+    const portfolioSnapshotKey = this.redisCacheService.getPortfolioSnapshotKey(
+      {
+        filters: this.filters,
+        userId: this.userId
+      }
+    );
+
+    const jobId = portfolioSnapshotKey;
 
     try {
-      const cachedPortfolioSnapshotValue = await this.redisCacheService.get(
-        this.redisCacheService.getPortfolioSnapshotKey({
-          filters: this.filters,
-          userId: this.userId
-        })
-      );
+      const cachedPortfolioSnapshotValue =
+        await this.redisCacheService.get(portfolioSnapshotKey);
 
       const { expiration, portfolioSnapshot }: PortfolioSnapshotValue =
         JSON.parse(cachedPortfolioSnapshotValue);
@@ -1096,7 +1101,7 @@ export abstract class PortfolioCalculator {
         portfolioSnapshot
       );
 
-      if (isAfter(new Date(), new Date(expiration))) {
+      if (isPast(new Date(expiration))) {
         isCachedPortfolioSnapshotExpired = true;
       }
     } catch {}

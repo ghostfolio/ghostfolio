@@ -13,13 +13,14 @@ import {
   input,
   Input,
   OnChanges,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { copyOutline } from 'ionicons/icons';
+import { checkmarkOutline, copyOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -32,7 +33,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   styleUrls: ['./value.component.scss'],
   templateUrl: './value.component.html'
 })
-export class GfValueComponent implements AfterViewInit, OnChanges {
+export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() colorizeSign = false;
   @Input() deviceType: string;
   @Input() enableCopyToClipboardButton = false;
@@ -54,9 +55,13 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   public absoluteValue = 0;
   public formattedValue = '';
   public hasLabel = false;
+  public isCopied = false;
   public isNumber = false;
   public isString = false;
   public useAbsoluteValue = false;
+
+  public readonly copiedTitle = $localize`The value has been copied to the clipboard`;
+  public readonly copyToClipboardTitle = $localize`Copy to clipboard`;
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -64,11 +69,14 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
     private snackBar: MatSnackBar
   ) {
     addIcons({
+      checkmarkOutline,
       copyOutline
     });
   }
 
   public readonly precision = input<number>();
+
+  private copyToClipboardTimeout: ReturnType<typeof setTimeout>;
 
   private readonly formatOptions = computed<Intl.NumberFormatOptions>(() => {
     const digits = this.hasPrecision ? this.precision() : 2;
@@ -178,6 +186,18 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
   public onCopyValueToClipboard() {
     this.clipboard.copy(String(this.value));
 
+    this.isCopied = true;
+
+    if (this.copyToClipboardTimeout) {
+      clearTimeout(this.copyToClipboardTimeout);
+    }
+
+    this.copyToClipboardTimeout = setTimeout(() => {
+      this.isCopied = false;
+
+      this.changeDetectorRef.markForCheck();
+    }, ms('3 seconds'));
+
     this.snackBar.open(
       '✅ ' + $localize`${this.value} has been copied to the clipboard`,
       undefined,
@@ -187,12 +207,23 @@ export class GfValueComponent implements AfterViewInit, OnChanges {
     );
   }
 
+  public ngOnDestroy() {
+    if (this.copyToClipboardTimeout) {
+      clearTimeout(this.copyToClipboardTimeout);
+    }
+  }
+
   private initializeVariables() {
     this.absoluteValue = 0;
     this.formattedValue = '';
+    this.isCopied = false;
     this.isNumber = false;
     this.isString = false;
     this.locale = this.locale || getLocale();
     this.useAbsoluteValue = false;
+
+    if (this.copyToClipboardTimeout) {
+      clearTimeout(this.copyToClipboardTimeout);
+    }
   }
 }

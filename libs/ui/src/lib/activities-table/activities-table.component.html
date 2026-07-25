@@ -160,8 +160,8 @@
       <th *matHeaderCellDef class="px-1" mat-header-cell>
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
-        <div class="align-items-center d-flex line-height-1 text-nowrap">
+      <td *matCellDef="let element" class="line-height-normal px-1" mat-cell>
+        <div class="align-items-center d-flex text-nowrap">
           <span class="text-truncate">{{ element.assetProfile?.name }}</span>
           @if (element.isDraft) {
             <span class="badge badge-secondary ml-1" i18n>Draft</span>
@@ -172,9 +172,7 @@
           !isUUID(element.assetProfile?.symbol)
         ) {
           <div>
-            <small class="text-muted">{{
-              element.assetProfile?.symbol | gfSymbol
-            }}</small>
+            <small class="text-muted">{{ element.assetProfile?.symbol }}</small>
           </div>
         }
       </td>
@@ -476,18 +474,24 @@
               </span>
             </button>
           }
-          <button mat-menu-item (click)="onUpdateActivity(element)">
+          <a
+            mat-menu-item
+            [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
+          >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
               <span><ng-container i18n>Edit</ng-container>...</span>
             </span>
-          </button>
-          <button mat-menu-item (click)="onCloneActivity(element)">
+          </a>
+          <a
+            mat-menu-item
+            [routerLink]="activityDialogRouterLinks().get(element.id)?.clone"
+          >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="copy-outline" />
               <span><ng-container i18n>Clone</ng-container>...</span>
             </span>
-          </button>
+          </a>
           <button
             mat-menu-item
             [disabled]="!element.isDraft"

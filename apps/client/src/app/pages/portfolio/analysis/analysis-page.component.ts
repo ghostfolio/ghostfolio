@@ -6,6 +6,7 @@ import {
   DEFAULT_DATE_RANGE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
+import { canOpenHoldingDetail } from '@ghostfolio/common/helper';
 import {
   HistoricalDataItem,
   InvestmentItem,
@@ -365,8 +366,11 @@ export class GfAnalysisPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         const holdingsSorted = sortBy(
-          holdings.filter(({ netPerformancePercentWithCurrencyEffect }) => {
-            return isNumber(netPerformancePercentWithCurrencyEffect);
+          holdings.filter((holding) => {
+            return (
+              canOpenHoldingDetail(holding) &&
+              isNumber(holding.netPerformancePercentWithCurrencyEffect)
+            );
           }),
           'netPerformancePercentWithCurrencyEffect'
         ).reverse();

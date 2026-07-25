@@ -11,12 +11,22 @@ describe('Helper', () => {
       expect(extractNumberFromString({ value: '999.99' })).toEqual(999.99);
     });
 
+    it('Get negative decimal number', () => {
+      expect(extractNumberFromString({ value: '-999.99' })).toEqual(-999.99);
+    });
+
     it('Get decimal number (with spaces)', () => {
       expect(extractNumberFromString({ value: ' 999.99 ' })).toEqual(999.99);
     });
 
     it('Get decimal number (with currency)', () => {
       expect(extractNumberFromString({ value: '999.99 CHF' })).toEqual(999.99);
+    });
+
+    it('Get negative decimal number (with currency)', () => {
+      expect(extractNumberFromString({ value: '-999.99 CHF' })).toEqual(
+        -999.99
+      );
     });
 
     it('Get decimal number (comma notation)', () => {
@@ -37,10 +47,20 @@ describe('Helper', () => {
       ).toEqual(99999.99);
     });
 
+    it('Get negative decimal number with group (comma notation)', () => {
+      expect(
+        extractNumberFromString({ locale: 'de-DE', value: '-99.999,99' })
+      ).toEqual(-99999.99);
+    });
+
     it('Get decimal number (comma notation) for locale where currency is not grouped by default', () => {
       expect(
         extractNumberFromString({ locale: 'es-ES', value: '999,99' })
       ).toEqual(999.99);
+    });
+
+    it('Get decimal number (with hyphenated text)', () => {
+      expect(extractNumberFromString({ value: 'BRK-B 425.30' })).toEqual(425.3);
     });
 
     it('Not a number', () => {

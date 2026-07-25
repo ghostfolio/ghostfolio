@@ -1,16 +1,8 @@
 import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
-import { resetHours } from '@ghostfolio/common/helper';
-import {
-  Benchmark,
-  HistoricalDataItem,
-  InfoItem,
-  User
-} from '@ghostfolio/common/interfaces';
+import { Benchmark, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
-import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -29,11 +21,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    GfBenchmarkComponent,
-    GfFearAndGreedIndexComponent,
-    GfLineChartComponent
-  ],
+  imports: [GfBenchmarkComponent, GfFearAndGreedIndexComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-market',
   styleUrls: ['./home-market.scss'],
@@ -41,15 +29,13 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 })
 export class GfHomeMarketComponent implements OnInit {
   protected readonly benchmarks = signal<Benchmark[]>([]);
+
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected readonly fearAndGreedIndex = signal<number | undefined>(undefined);
-  protected readonly fearLabel = $localize`Fear`;
-  protected readonly greedLabel = $localize`Greed`;
+
+  protected fearAndGreedIndex: number | undefined;
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
-  protected readonly historicalDataItems = signal<HistoricalDataItem[]>([]);
-  protected readonly numberOfDays = 365;
   protected user: User;
 
   private readonly info: InfoItem;
@@ -80,27 +66,8 @@ export class GfHomeMarketComponent implements OnInit {
       permissions.enableFearAndGreedIndex
     );
 
-    if (
-      this.hasPermissionToAccessFearAndGreedIndex &&
-      this.info.fearAndGreedDataSource
-    ) {
-      this.dataService
-        .fetchSymbolItem({
-          dataSource: this.info.fearAndGreedDataSource,
-          includeHistoricalData: this.numberOfDays,
-          symbol: ghostfolioFearAndGreedIndexSymbolStocks
-        })
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(({ historicalData, marketPrice }) => {
-          this.fearAndGreedIndex.set(marketPrice);
-          this.historicalDataItems.set([
-            ...historicalData,
-            {
-              date: resetHours(new Date()).toISOString(),
-              value: marketPrice
-            }
-          ]);
-        });
+    if (this.hasPermissionToAccessFearAndGreedIndex) {
+      this.fearAndGreedIndex = this.info.fearAndGreedStocksMarketPrice;
     }
 
     this.dataService

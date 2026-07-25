@@ -10,7 +10,7 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
   private emergingMarketsValueInBaseCurrency: number;
 
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
+    exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     languageCode: string,
     currentValueInBaseCurrency: number,

@@ -3,6 +3,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -68,6 +69,7 @@ export class GfAdminTagComponent implements OnInit {
   ];
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected tags: Tag[];
+  protected readonly translate = translate;
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
@@ -155,7 +157,12 @@ export class GfAdminTagComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.tags);
         this.dataSource.paginator = this.paginator();
         this.dataSource.sort = this.sort();
-        this.dataSource.sortingDataAccessor = getLowercase;
+
+        this.dataSource.sortingDataAccessor = (tag, path) => {
+          return path === 'name'
+            ? translate(tag.name).toLocaleLowerCase()
+            : (getLowercase(tag, path) as number | string);
+        };
 
         this.dataService.updateInfo();
 

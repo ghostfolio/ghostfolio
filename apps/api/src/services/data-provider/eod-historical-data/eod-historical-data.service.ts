@@ -147,7 +147,7 @@ export class EodHistoricalDataService
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     symbol = this.convertToEodSymbol(symbol);
 
@@ -166,22 +166,19 @@ export class EodHistoricalDataService
         })
         .then((res) => res.json());
 
-      return response.reduce(
-        (result, { adjusted_close, date }) => {
-          if (isNumber(adjusted_close)) {
-            result[this.convertFromEodSymbol(symbol)][date] = {
-              marketPrice: adjusted_close
-            };
-          } else {
-            this.logger.error(
-              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`
-            );
-          }
+      return response.reduce((result, { adjusted_close, date }) => {
+        if (isNumber(adjusted_close)) {
+          result[date] = {
+            marketPrice: adjusted_close
+          };
+        } else {
+          this.logger.error(
+            `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`
+          );
+        }
 
-          return result;
-        },
-        { [this.convertFromEodSymbol(symbol)]: {} }
-      );
+        return result;
+      }, {});
     } catch (error) {
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(

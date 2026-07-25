@@ -213,9 +213,16 @@ export class GfAdminOverviewComponent implements OnInit {
       duration: this.couponDuration
     };
 
+    const hasCopiedCouponCode = this.clipboard.copy(newCoupon.code);
+
     const coupons = [...this.couponsDataSource.data, newCoupon];
 
-    this.saveCoupons({ coupons, codeToCopy: newCoupon.code });
+    this.saveCoupons({
+      coupons,
+      snackBarMessage: hasCopiedCouponCode
+        ? '✅ ' + $localize`${newCoupon.code} has been copied to the clipboard`
+        : '✅ ' + $localize`Coupon ${newCoupon.code} has been created`
+    });
   }
 
   protected onChangeCouponDuration(aCouponDuration: StringValue) {
@@ -374,11 +381,11 @@ export class GfAdminOverviewComponent implements OnInit {
   }
 
   private saveCoupons({
-    codeToCopy,
-    coupons
+    coupons,
+    snackBarMessage
   }: {
-    codeToCopy?: string;
     coupons: Coupon[];
+    snackBarMessage?: string;
   }) {
     this.dataService
       .putAdminSetting(PROPERTY_COUPONS, {
@@ -388,14 +395,10 @@ export class GfAdminOverviewComponent implements OnInit {
       .subscribe(() => {
         this.couponsDataSource.data = coupons;
 
-        if (codeToCopy) {
-          this.clipboard.copy(codeToCopy);
-
-          this.snackBar.open(
-            '✅ ' + $localize`${codeToCopy} has been copied to the clipboard`,
-            undefined,
-            { duration: ms('3 seconds') }
-          );
+        if (snackBarMessage) {
+          this.snackBar.open(snackBarMessage, undefined, {
+            duration: ms('3 seconds')
+          });
         }
 
         this.changeDetectorRef.markForCheck();

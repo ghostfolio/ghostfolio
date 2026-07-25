@@ -35,6 +35,15 @@ export class SymbolProfileService {
     });
   }
 
+  public deleteAssetProfileOverrides({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    return this.prismaService.assetProfileOverrides.deleteMany({
+      where: { symbolProfile: { dataSource, symbol } }
+    });
+  }
+
   public async deleteById(id: string) {
     return this.prismaService.symbolProfile.delete({
       where: { id }

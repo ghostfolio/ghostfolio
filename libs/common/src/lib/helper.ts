@@ -2,6 +2,7 @@ import { NumberParser } from '@internationalized/number';
 import {
   Type as ActivityType,
   AssetProfileOverrides,
+  AssetSubClass,
   MarketData,
   Prisma,
   SymbolProfile
@@ -40,13 +41,13 @@ import {
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
-  ghostfolioScraperApiSymbolPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from './config';
 import {
   AssetProfileIdentifier,
   AssetProfileItem,
-  Benchmark
+  Benchmark,
+  PortfolioPosition
 } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
@@ -173,6 +174,12 @@ export function canDeleteUser({
   return currentUserId !== userId;
 }
 
+export function canOpenHoldingDetail({
+  assetProfile
+}: Pick<PortfolioPosition, 'assetProfile'>): boolean {
+  return assetProfile?.assetSubClass !== AssetSubClass.CASH;
+}
+
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }
@@ -210,15 +217,33 @@ export function extractNumberFromString({
   value: string;
 }): number | undefined {
   try {
+    // Only a leading minus sign indicates a negative value. Detect it before
+    // stripping so that hyphens within the text cannot flip the sign.
+    const isNegative = value.trim().startsWith('-');
+
     // Remove non-numeric characters (excluding international formatting characters)
     const numericValue = value.replace(/[^\d.,'’\s]/g, '');
 
     const parser = new NumberParser(locale);
+    const parsedValue = parser.parse(numericValue);
 
-    return parser.parse(numericValue);
+    return isNegative ? -parsedValue : parsedValue;
   } catch {
     return undefined;
   }
+}
+
+export function formatMonthAndYear({
+  date,
+  locale
+}: {
+  date: Date;
+  locale?: string;
+}) {
+  return new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
 }
 
 export function getAllActivityTypes(): ActivityType[] {
@@ -525,10 +550,6 @@ export function parseSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     ticker,
     exchange: exchange ?? (dataSource === 'YAHOO' ? 'US' : undefined)
   };
-}
-
-export function prettifySymbol(aSymbol: string): string {
-  return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
 }
 
 export function resetHours(aDate: Date) {

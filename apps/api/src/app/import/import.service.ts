@@ -153,7 +153,6 @@ export class ImportService {
             feeInBaseCurrency: 0,
             id: assetProfile.id,
             isDraft: false,
-            SymbolProfile: assetProfile,
             symbolProfileId: assetProfile.id,
             type: 'DIVIDEND',
             unitPrice: marketPrice,
@@ -623,9 +622,7 @@ export class ImportService {
         assetProfile,
         error,
         value,
-        valueInBaseCurrency,
-        // @ts-ignore
-        SymbolProfile: assetProfile
+        valueInBaseCurrency
       });
     }
 

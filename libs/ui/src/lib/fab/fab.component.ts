@@ -13,7 +13,8 @@ import { addOutline } from 'ionicons/icons';
   templateUrl: './fab.component.html'
 })
 export class GfFabComponent {
-  public readonly queryParams = input.required<Params>();
+  public readonly queryParams = input<Params>();
+  public readonly routerLink = input<string[]>([]);
 
   public constructor() {
     addIcons({ addOutline });

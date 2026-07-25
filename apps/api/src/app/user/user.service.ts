@@ -29,6 +29,7 @@ import {
   DEFAULT_DATE_RANGE,
   DEFAULT_LANGUAGE_CODE,
   DEFAULT_LOCALE,
+  PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_REFERRAL_PARTNERS,
   PROPERTY_SYSTEM_MESSAGE,
@@ -545,6 +546,12 @@ export class UserService {
 
       if (hasRole(user, Role.ADMIN)) {
         currentPermissions.push(permissions.syncDemoUserAccount);
+      }
+    } else {
+      if (
+        await this.propertyService.getByKey<string>(PROPERTY_API_KEY_GHOSTFOLIO)
+      ) {
+        currentPermissions.push(permissions.readMarketDataOfMarkets);
       }
     }
 

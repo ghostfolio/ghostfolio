@@ -40,6 +40,7 @@ import { filter } from 'rxjs/operators';
 import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogResult } from './components/holding-detail-dialog/interfaces/interfaces';
 import { GfAppQueryParams } from './interfaces/interfaces';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { UserService } from './services/user/user.service';
@@ -319,7 +320,11 @@ export class GfAppComponent implements OnInit {
         dialogRef
           .afterClosed()
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
+          .subscribe((result: HoldingDetailDialogResult) => {
+            if (result?.isNavigating) {
+              return;
+            }
+
             void this.router.navigate([], {
               queryParams: {
                 dataSource: null,

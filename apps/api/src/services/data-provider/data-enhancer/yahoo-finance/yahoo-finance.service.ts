@@ -200,13 +200,13 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
       response.assetClass = assetClass;
       response.assetSubClass = assetSubClass;
-      response.currency = assetProfile.price.currency;
+      response.currency = assetProfile.price?.currency;
       response.dataSource = this.getName();
       response.name = this.formatName({
-        longName: assetProfile.price.longName,
-        quoteType: assetProfile.price.quoteType,
-        shortName: assetProfile.price.shortName,
-        symbol: assetProfile.price.symbol
+        longName: assetProfile.price?.longName,
+        quoteType: assetProfile.price?.quoteType,
+        shortName: assetProfile.price?.shortName,
+        symbol: assetProfile.price?.symbol
       });
       response.symbol = this.convertFromYahooFinanceSymbol(
         assetProfile.price.symbol

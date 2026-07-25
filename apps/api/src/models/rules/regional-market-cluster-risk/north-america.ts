@@ -10,7 +10,7 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
   private northAmericaValueInBaseCurrency: number;
 
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
+    exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     languageCode: string,
     currentValueInBaseCurrency: number,

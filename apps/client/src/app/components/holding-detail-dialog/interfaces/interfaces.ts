@@ -15,3 +15,7 @@ export interface HoldingDetailDialogParams {
   locale: string;
   symbol: string;
 }
+
+export interface HoldingDetailDialogResult {
+  isNavigating?: boolean;
+}

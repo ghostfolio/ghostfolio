@@ -20,7 +20,7 @@ export class TagService {
 
   public async getTag(
     tagWhereUniqueInput: Prisma.TagWhereUniqueInput
-  ): Promise<Tag> {
+  ): Promise<Tag | null> {
     return this.prismaService.tag.findUnique({
       where: tagWhereUniqueInput
     });

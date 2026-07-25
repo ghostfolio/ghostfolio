@@ -204,7 +204,7 @@ export class MarketDataService {
     );
   }
 
-  public async updateAssetProfileIdentifier(
+  public updateAssetProfileIdentifier(
     oldAssetProfileIdentifier: AssetProfileIdentifier,
     newAssetProfileIdentifier: AssetProfileIdentifier
   ) {

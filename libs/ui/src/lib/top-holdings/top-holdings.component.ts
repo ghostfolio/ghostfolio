@@ -1,17 +1,10 @@
-import { getLocale } from '@ghostfolio/common/helper';
+import { canOpenHoldingDetail, getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  HoldingWithParents
+  HoldingWithParents,
+  PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -31,19 +24,8 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { GfValueComponent } from '../value/value.component';
 
 @Component({
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed,void', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      )
-    ])
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    GfSymbolPipe,
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,
@@ -84,8 +66,19 @@ export class GfTopHoldingsComponent implements OnChanges {
     }
   }
 
-  public onClickHolding({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.holdingClicked.emit({ dataSource, symbol });
+  public canShowDetails(holding: { position?: PortfolioPosition }): boolean {
+    return !!holding?.position && canOpenHoldingDetail(holding.position);
+  }
+
+  public onClickHolding({ position }: { position?: PortfolioPosition }) {
+    if (!position || !canOpenHoldingDetail(position)) {
+      return;
+    }
+
+    this.holdingClicked.emit({
+      dataSource: position.assetProfile.dataSource,
+      symbol: position.assetProfile.symbol
+    });
   }
 
   public onShowAllHoldings() {

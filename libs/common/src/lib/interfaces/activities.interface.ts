@@ -9,12 +9,6 @@ export interface Activity extends Order {
   error?: ActivityError;
   feeInAssetProfileCurrency: number;
   feeInBaseCurrency: number;
-
-  /**
-   * @deprecated Use `assetProfile` instead
-   */
-  SymbolProfile?: EnhancedSymbolProfile;
-
   tagIds?: string[];
   tags?: Tag[];
   unitPriceInAssetProfileCurrency: number;

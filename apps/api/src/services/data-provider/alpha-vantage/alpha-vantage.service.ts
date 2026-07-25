@@ -70,7 +70,7 @@ export class AlphaVantageService
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const historicalData: {
@@ -83,10 +83,8 @@ export class AlphaVantageService
       );
 
       const response: {
-        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
-
-      response[symbol] = {};
 
       for (const [key, timeSeries] of Object.entries(
         historicalData['Time Series (Digital Currency Daily)']
@@ -95,7 +93,7 @@ export class AlphaVantageService
           isAfter(from, parse(key, DATE_FORMAT, new Date())) &&
           isBefore(to, parse(key, DATE_FORMAT, new Date()))
         ) {
-          response[symbol][key] = {
+          response[key] = {
             marketPrice: parseFloat(timeSeries['4a. close (USD)'])
           };
         }

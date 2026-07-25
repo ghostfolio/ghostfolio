@@ -3,7 +3,7 @@ import {
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { getLocale } from '@ghostfolio/common/helper';
+import { canOpenHoldingDetail, getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -21,9 +21,13 @@ import {
   output,
   viewChild
 } from '@angular/core';
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import type { ChartData, TooltipOptions } from 'chart.js';
+import type {
+  ActiveElement,
+  ChartData,
+  TooltipItem,
+  TooltipOptions
+} from 'chart.js';
 import { Chart, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { isUUID } from 'class-validator';
@@ -34,8 +38,8 @@ import OpenColor from 'open-color';
 
 import type {
   GetColorParams,
-  GfTreemapScriptableContext,
-  GfTreemapTooltipItem
+  GfTreemapDataPoint,
+  GfTreemapScriptableContext
 } from './interfaces/interfaces';
 
 const { gray, green, red } = OpenColor;
@@ -154,6 +158,23 @@ export class GfTreemapChartComponent
     }
   }
 
+  private getHolding(
+    chart: Chart<'treemap'>,
+    activeElement: ActiveElement
+  ): PortfolioPosition | undefined {
+    if (!activeElement) {
+      return undefined;
+    }
+
+    const dataset = orderBy(
+      chart.data.datasets[activeElement.datasetIndex].tree,
+      ['allocationInPercentage'],
+      ['desc']
+    ) as PortfolioPosition[];
+
+    return dataset[activeElement.index];
+  }
+
   private initialize() {
     const holdings = this.holdings();
 
@@ -209,7 +230,9 @@ export class GfTreemapChartComponent
       datasets: [
         {
           backgroundColor: (context: GfTreemapScriptableContext) => {
-            if (!context.raw) {
+            const raw = context.raw as GfTreemapDataPoint;
+
+            if (!raw) {
               return undefined;
             }
 
@@ -217,13 +240,10 @@ export class GfTreemapChartComponent
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
-                  max([
-                    context.raw._data.dateOfFirstActivity ?? new Date(0),
-                    startDate
-                  ])
+                  max([raw._data.dateOfFirstActivity ?? new Date(0), startDate])
                 ),
                 netPerformancePercentage: new Big(
-                  context.raw._data.netPerformancePercentWithCurrencyEffect
+                  raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
 
@@ -245,7 +265,9 @@ export class GfTreemapChartComponent
           labels: {
             align: 'left',
             color: (context: GfTreemapScriptableContext) => {
-              if (!context.raw) {
+              const raw = context.raw as GfTreemapDataPoint;
+
+              if (!raw) {
                 return undefined;
               }
 
@@ -254,12 +276,12 @@ export class GfTreemapChartComponent
                   daysInMarket: differenceInDays(
                     endDate,
                     max([
-                      context.raw._data.dateOfFirstActivity ?? new Date(0),
+                      raw._data.dateOfFirstActivity ?? new Date(0),
                       startDate
                     ])
                   ),
                   netPerformancePercentage: new Big(
-                    context.raw._data.netPerformancePercentWithCurrencyEffect
+                    raw._data.netPerformancePercentWithCurrencyEffect
                   )
                 }).toNumber();
 
@@ -278,7 +300,9 @@ export class GfTreemapChartComponent
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter: ({ raw }: GfTreemapScriptableContext) => {
+            formatter: (context: GfTreemapScriptableContext) => {
+              const raw = context.raw as GfTreemapDataPoint;
+
               let netPerformancePercentWithCurrencyEffect = round(
                 raw._data.netPerformancePercentWithCurrencyEffect,
                 4
@@ -323,27 +347,24 @@ export class GfTreemapChartComponent
             animation: false,
             onClick: (_, activeElements, chart: Chart<'treemap'>) => {
               try {
-                const dataIndex = activeElements[0].index;
-                const datasetIndex = activeElements[0].datasetIndex;
+                const holding = this.getHolding(chart, activeElements[0]);
 
-                const dataset = orderBy(
-                  chart.data.datasets[datasetIndex].tree,
-                  ['allocationInPercentage'],
-                  ['desc']
-                ) as PortfolioPosition[];
-
-                const dataSource: DataSource =
-                  dataset[dataIndex].assetProfile.dataSource;
-
-                const symbol: string = dataset[dataIndex].assetProfile.symbol;
-
-                this.treemapChartClicked.emit({ dataSource, symbol });
+                if (holding && canOpenHoldingDetail(holding)) {
+                  this.treemapChartClicked.emit({
+                    dataSource: holding.assetProfile.dataSource,
+                    symbol: holding.assetProfile.symbol
+                  });
+                }
               } catch {}
             },
-            onHover: (event, chartElement) => {
+            onHover: (event, chartElements, chart: Chart<'treemap'>) => {
               if (this.cursor()) {
+                const holding = this.getHolding(chart, chartElements[0]);
+
                 (event.native?.target as HTMLElement).style.cursor =
-                  chartElement[0] ? this.cursor() : 'default';
+                  holding && canOpenHoldingDetail(holding)
+                    ? this.cursor()
+                    : 'default';
               }
             },
             plugins: {
@@ -367,7 +388,9 @@ export class GfTreemapChartComponent
       }),
       // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
-        label: ({ raw }: GfTreemapTooltipItem) => {
+        label: (context: TooltipItem<'treemap'>) => {
+          const raw = context.raw as GfTreemapDataPoint;
+
           const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
           const name = raw._data.assetProfile.name;
 

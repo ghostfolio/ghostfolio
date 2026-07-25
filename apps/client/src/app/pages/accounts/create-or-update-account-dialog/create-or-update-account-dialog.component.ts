@@ -65,7 +65,7 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected accountForm: FormGroup;
   protected currencies: string[] = [];
   protected filteredPlatforms: Observable<Platform[]> | undefined;
-  protected hasPermissionToCreateOwnTag: boolean | undefined;
+  protected hasPermissionToCreateOwnTag: boolean;
   protected platforms: Platform[] = [];
   protected tagsAvailable: Tag[] = [];
 
@@ -82,9 +82,10 @@ export class GfCreateOrUpdateAccountDialogComponent {
     const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
 
-    this.hasPermissionToCreateOwnTag =
-      this.data.user?.settings?.isExperimentalFeatures &&
-      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
+    this.hasPermissionToCreateOwnTag = hasPermission(
+      this.data.user?.permissions,
+      permissions.createOwnTag
+    );
 
     this.tagsAvailable = [
       ...(this.data.user?.tags ?? []),

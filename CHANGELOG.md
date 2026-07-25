@@ -10,6 +10,95 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Included cash in the performance calculation of the portfolio
+- Upgraded `fuse.js` from version `7.3.0` to `7.5.0`
+
+### Fixed
+
+- Resolved an exception in the `POST api/v1/activities` endpoint when creating an activity with the update account balance option but without an account
+
+## 3.33.0 - 2026-07-25
+
+### Added
+
+- Added the stack trace logging for `MaxListenersExceededWarning` occurrences
+
+### Changed
+
+- Moved the support to create custom tags from experimental to general availability
+- Recomputed the portfolio snapshot calculation in the background on a portfolio change
+- Improved the deduplication of the portfolio snapshot calculation jobs by considering the filters
+- Refactored the deprecated animation providers (`provideAnimations()` and `provideNoopAnimations()`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
+
+### Fixed
+
+- Fixed an issue with the localization in the _FIRE_ page
+- Improved the spacing in the testimonial section on the landing page
+
+## 3.32.0 - 2026-07-22
+
+### Changed
+
+- Upgraded `chartjs-chart-treemap` from version `3.1.0` to `4.2.0`
+
+### Fixed
+
+- Skipped opening the holding detail dialog for cash positions on the allocations page, the analysis page and the portfolio holdings page
+- Resolved an exception in the `GET api/v1/portfolio/holding/:dataSource/:symbol` endpoint for cash positions
+- Improved the error handling in the access endpoints (`POST` and `PUT`) to return `400 Bad Request` when granting access to a non-existent user
+
+## 3.31.0 - 2026-07-20
+
+### Changed
+
+- Removed the deprecated `SymbolProfile` field from the activity interface
+- Refactored the language redirect of the root path from the static file serving configuration to a dedicated middleware
+- Upgraded `yahoo-finance2` from version `3.15.4` to `4.0.0`
+
+### Fixed
+
+- Fixed the `RangeNotSatisfiableError` for requests with a `Range` header to the root path caused by the empty `index.html` placeholder
+- Fixed the unresolved template literal in the page title while the app is loading from the service worker cache
+
+## 3.30.0 - 2026-07-19
+
+### Added
+
+- Added support for converting an asset profile to the `MANUAL` data source in the asset profile details dialog of the admin control panel
+
+### Changed
+
+- Extended the `extractNumberFromString()` function to support negative values
+- Restricted the symbol data endpoint (`GET /api/v1/symbol/:dataSource/:symbol`) to authenticated users
+- Removed the deprecated `auth` endpoint of the login with _Security Token_ (`GET`)
+- Simplified the `getHistorical()` function response in the data provider interface
+- Upgraded `bull-board` from version `8.0.1` to `8.1.2`
+
+## 3.29.0 - 2026-07-18
+
+### Added
+
+- Added support for the _Fear & Greed Index_ (market mood) via the `GHOSTFOLIO` data provider in self-hosted environments
+- Added a _Storybook_ story for the copy-to-clipboard functionality in the value component
+
+### Changed
+
+- Improved the copy-to-clipboard functionality in the value component by providing a visual confirmation
+- Improved the language localization for German (`de`)
+- Upgraded `stripe` from version `22.2.3` to `22.3.2`
+
+### Fixed
+
+- Fixed an issue with the delete button in the tags selector component
+
+## 3.28.0 - 2026-07-17
+
+### Changed
+
+- Migrated the clone, create and edit activity dialogs to dedicated routes
+- Improved the language localization in the historical market data table of the admin control panel
+- Improved the language localization in the tag management of the admin control panel
 
 ### Fixed
 

@@ -1,5 +1,4 @@
 import { Activity } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,9 +8,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule } from '@angular/router';
+import { provideRouter, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -366,13 +365,15 @@ export default {
   title: 'Activities Table',
   component: GfActivitiesTableComponent,
   decorators: [
+    applicationConfig({
+      providers: [provideRouter([])]
+    }),
     moduleMetadata({
       imports: [
         CommonModule,
         GfActivityTypeComponent,
         GfEntityLogoComponent,
         GfNoTransactionsInfoComponent,
-        GfSymbolPipe,
         GfValueComponent,
         IonIcon,
         MatButtonModule,
@@ -418,8 +419,8 @@ export const Loading: Story = {
 
 export const Default: Story = {
   args: {
-    baseCurrency: 'USD',
     dataSource,
+    baseCurrency: 'USD',
     deviceType: 'desktop',
     hasActivities: true,
     hasPermissionToCreateActivity: false,
@@ -467,5 +468,29 @@ export const Pagination: Story = {
     sortDirection: 'desc',
     sortDisabled: false,
     totalItems: 50
+  }
+};
+
+export const Actions: Story = {
+  args: {
+    dataSource,
+    baseCurrency: 'USD',
+    deviceType: 'desktop',
+    hasActivities: true,
+    hasPermissionToCreateActivity: false,
+    hasPermissionToDeleteActivity: true,
+    hasPermissionToExportActivities: false,
+    hasPermissionToOpenDetails: true,
+    locale: 'en-US',
+    pageIndex: 0,
+    pageSize: 10,
+    showAccountColumn: true,
+    showActions: true,
+    showCheckbox: false,
+    showNameColumn: true,
+    sortColumn: 'date',
+    sortDirection: 'desc',
+    sortDisabled: false,
+    totalItems: activities.length
   }
 };

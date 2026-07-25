@@ -3,7 +3,7 @@ import {
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
-import { getLocale } from '@ghostfolio/common/helper';
+import { formatMonthAndYear, getLocale } from '@ghostfolio/common/helper';
 import { FireCalculationCompleteEvent } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
@@ -206,6 +206,19 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
           this.retirementDateChanged.emit(retirementDate);
         }
       });
+  }
+
+  protected get retirementDateLabel(): string {
+    const retirementDate = this.calculatorForm.get('retirementDate')?.value;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    return formatMonthAndYear({
+      date: retirementDate,
+      locale: this.locale
+    });
   }
 
   public ngOnChanges() {

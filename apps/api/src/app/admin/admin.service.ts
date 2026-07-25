@@ -12,6 +12,7 @@ import {
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
 import {
+  applyAssetProfileOverrides,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol
 } from '@ghostfolio/common/helper';
@@ -39,6 +40,7 @@ import {
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class AdminService {
@@ -240,16 +242,25 @@ export class AdminService {
       url
     }: Prisma.SymbolProfileUpdateInput
   ) {
+    const isConversionToManualDataSource =
+      newDataSource === DataSource.MANUAL && dataSource !== DataSource.MANUAL;
+
+    if (isConversionToManualDataSource && !newSymbol) {
+      newSymbol = randomUUID();
+    }
+
     if (
-      newSymbol &&
       newDataSource &&
-      (newSymbol !== symbol || newDataSource !== dataSource)
+      newSymbol &&
+      (newDataSource !== dataSource || newSymbol !== symbol)
     ) {
+      const newAssetProfileIdentifier: AssetProfileIdentifier = {
+        dataSource: newDataSource as DataSource,
+        symbol: newSymbol as string
+      };
+
       const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
-        {
-          dataSource: DataSource[newDataSource.toString()],
-          symbol: newSymbol as string
-        }
+        newAssetProfileIdentifier
       ]);
 
       if (assetProfile) {
@@ -259,45 +270,79 @@ export class AdminService {
         );
       }
 
-      try {
-        await Promise.all([
-          this.symbolProfileService.updateAssetProfileIdentifier(
-            {
-              dataSource,
-              symbol
-            },
-            {
-              dataSource: DataSource[newDataSource.toString()],
-              symbol: newSymbol as string
-            }
+      const operations: Prisma.PrismaPromise<unknown>[] = [
+        this.symbolProfileService.updateAssetProfileIdentifier(
+          {
+            dataSource,
+            symbol
+          },
+          newAssetProfileIdentifier
+        ),
+        this.marketDataService.updateAssetProfileIdentifier(
+          {
+            dataSource,
+            symbol
+          },
+          newAssetProfileIdentifier
+        )
+      ];
+
+      if (isConversionToManualDataSource) {
+        const currentAssetProfile =
+          await this.prismaService.symbolProfile.findUnique({
+            include: { assetProfileOverrides: true },
+            where: { dataSource_symbol: { dataSource, symbol } }
+          });
+
+        if (!currentAssetProfile) {
+          throw new HttpException(
+            getReasonPhrase(StatusCodes.NOT_FOUND),
+            StatusCodes.NOT_FOUND
+          );
+        }
+
+        const currentAssetProfileWithOverrides = applyAssetProfileOverrides(
+          currentAssetProfile,
+          currentAssetProfile.assetProfileOverrides
+        );
+
+        operations.push(
+          // The overrides are applied on every read, so delete them and
+          // persist the merged values in the asset profile instead
+          this.symbolProfileService.deleteAssetProfileOverrides(
+            newAssetProfileIdentifier
           ),
-          this.marketDataService.updateAssetProfileIdentifier(
+          this.symbolProfileService.updateSymbolProfile(
+            newAssetProfileIdentifier,
             {
-              dataSource,
-              symbol
-            },
-            {
-              dataSource: DataSource[newDataSource.toString()],
-              symbol: newSymbol as string
+              assetClass: currentAssetProfileWithOverrides.assetClass,
+              assetSubClass: currentAssetProfileWithOverrides.assetSubClass,
+              countries:
+                currentAssetProfileWithOverrides.countries ?? undefined,
+              holdings: currentAssetProfileWithOverrides.holdings ?? undefined,
+              name: currentAssetProfileWithOverrides.name,
+              sectors: currentAssetProfileWithOverrides.sectors ?? undefined,
+              url: currentAssetProfileWithOverrides.url
             }
           )
-        ]);
+        );
+      }
 
-        const [updatedAssetProfile] =
-          await this.symbolProfileService.getSymbolProfiles([
-            {
-              dataSource: DataSource[newDataSource.toString()],
-              symbol: newSymbol as string
-            }
-          ]);
-
-        return updatedAssetProfile;
+      try {
+        await this.prismaService.$transaction(operations);
       } catch {
         throw new HttpException(
           getReasonPhrase(StatusCodes.BAD_REQUEST),
           StatusCodes.BAD_REQUEST
         );
       }
+
+      const [updatedAssetProfile] =
+        await this.symbolProfileService.getSymbolProfiles([
+          newAssetProfileIdentifier
+        ]);
+
+      return updatedAssetProfile;
     } else {
       const assetProfileOverrides = {
         assetClass: assetClass as AssetClass,

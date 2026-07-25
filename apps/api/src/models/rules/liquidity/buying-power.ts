@@ -7,7 +7,7 @@ export class BuyingPower extends Rule<Settings> {
   private buyingPower: number;
 
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
+    exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     buyingPower: number,
     languageCode: string

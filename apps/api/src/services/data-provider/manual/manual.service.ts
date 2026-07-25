@@ -79,7 +79,7 @@ export class ManualService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
@@ -90,14 +90,13 @@ export class ManualService implements DataProviderInterface {
 
       if (defaultMarketPrice) {
         const historical: {
-          [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
-        } = {
-          [symbol]: {}
-        };
+          [date: string]: DataProviderHistoricalResponse;
+        } = {};
+
         let date = from;
 
         while (isBefore(date, to)) {
-          historical[symbol][format(date, DATE_FORMAT)] = {
+          historical[format(date, DATE_FORMAT)] = {
             marketPrice: defaultMarketPrice
           };
 
@@ -115,10 +114,8 @@ export class ManualService implements DataProviderInterface {
       });
 
       return {
-        [symbol]: {
-          [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: value
-          }
+        [format(getYesterday(), DATE_FORMAT)]: {
+          marketPrice: value
         }
       };
     } catch (error) {

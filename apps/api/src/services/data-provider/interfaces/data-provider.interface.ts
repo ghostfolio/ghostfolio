@@ -2,7 +2,8 @@ import {
   DataProviderHistoricalResponse,
   DataProviderInfo,
   DataProviderResponse,
-  LookupResponse
+  LookupResponse,
+  MarketDataOfMarketsResponse
 } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 
@@ -34,8 +35,13 @@ export interface DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
-  }>; // TODO: Return only one symbol
+    [date: string]: DataProviderHistoricalResponse;
+  }>;
+
+  getMarketDataOfMarkets?({
+    includeHistoricalData,
+    requestTimeout
+  }: GetMarketDataOfMarketsParams): Promise<MarketDataOfMarketsResponse>;
 
   getMaxNumberOfSymbolsPerRequest?(): number;
 
@@ -70,6 +76,11 @@ export interface GetHistoricalParams {
   requestTimeout?: number;
   symbol: string;
   to: Date;
+}
+
+export interface GetMarketDataOfMarketsParams {
+  includeHistoricalData?: number;
+  requestTimeout?: number;
 }
 
 export interface GetQuotesParams {

@@ -123,7 +123,7 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
@@ -144,13 +144,11 @@ export class YahooFinanceService implements DataProviderInterface {
       );
 
       const response: {
-        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
-      response[symbol] = {};
-
       for (const historicalItem of historicalResult) {
-        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
+        response[format(historicalItem.date, DATE_FORMAT)] = {
           marketPrice: historicalItem.close
         };
       }
