@@ -92,7 +92,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
   protected currentMarketPrice: number | null = null;
   protected defaultDateFormat: string;
   protected defaultLookupItems: LookupItem[] = [];
-  protected hasPermissionToCreateOwnTag: boolean | undefined;
+  protected hasPermissionToCreateOwnTag: boolean;
   protected isLoading = false;
   protected readonly isToday = isToday;
   protected mode: 'create' | 'update';

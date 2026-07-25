@@ -65,7 +65,7 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected accountForm: FormGroup;
   protected currencies: string[] = [];
   protected filteredPlatforms: Observable<Platform[]> | undefined;
-  protected hasPermissionToCreateOwnTag: boolean | undefined;
+  protected hasPermissionToCreateOwnTag: boolean;
   protected platforms: Platform[] = [];
   protected tagsAvailable: Tag[] = [];
 
