@@ -1,6 +1,10 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
-import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
+import {
+  WHERE_ACCOUNT_NOT_EXCLUDED,
+  getWhereAccountBalanceNotInFuture,
+  isAccountBalanceInFuture
+} from '@ghostfolio/api/helper/account.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
@@ -19,7 +23,7 @@ import {
   Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday, format, isAfter } from 'date-fns';
+import { endOfToday, format } from 'date-fns';
 import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
@@ -42,10 +46,8 @@ export class AccountService {
         balances: {
           orderBy: { date: 'desc' },
           take: 1,
-          where: {
-            // Ignore account balances in the future
-            date: { lte: endOfToday() }
-          }
+          // Ignore account balances in the future
+          where: getWhereAccountBalanceNotInFuture()
         }
       },
       where: { id_userId }
@@ -99,14 +101,15 @@ export class AccountService {
 
     include.balances = {
       orderBy: { date: 'desc' },
+      // If the balances are included, they are returned as-is (including the
+      // ones in the future) because the client renders the full history. The
+      // balance is derived below and skips the account balances in the future.
       ...(isBalancesIncluded
         ? {}
         : {
             take: 1,
-            where: {
-              // Ignore account balances in the future
-              date: { lte: endOfToday() }
-            }
+            // Ignore account balances in the future
+            where: getWhereAccountBalanceNotInFuture()
           })
     };
 
@@ -127,6 +130,8 @@ export class AccountService {
       where
     });
 
+    const endOfTodayDate = endOfToday();
+
     return accounts.map((account) => {
       const result = {
         ...account,
@@ -134,7 +139,7 @@ export class AccountService {
           // The balances are ordered by date descending, hence the first account
           // balance which is not in the future reflects the current balance
           account.balances.find(({ date }) => {
-            return !isAfter(date, endOfToday());
+            return !isAccountBalanceInFuture(date, endOfTodayDate);
           })?.value ?? 0,
         tags: isTagsIncluded
           ? (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {
