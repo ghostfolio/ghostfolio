@@ -468,6 +468,11 @@ export class ActivitiesService {
       let currentBalanceInBaseCurrency = 0;
 
       for (const balanceItem of balances) {
+        if (isAfter(balanceItem.date, endOfToday())) {
+          // Skip account balances in the future
+          continue;
+        }
+
         const syntheticActivityTemplate: Activity = {
           userId,
           accountId: account.id,

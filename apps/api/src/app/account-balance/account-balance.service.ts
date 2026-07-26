@@ -15,7 +15,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
-import { format, parseISO } from 'date-fns';
+import { endOfToday, format, isAfter, parseISO } from 'date-fns';
 import { groupBy } from 'lodash';
 
 @Injectable()
@@ -116,6 +116,11 @@ export class AccountBalanceService {
     const lastBalancesByAccount: { [accountId: string]: Big } = {};
 
     for (const { accountId, date, valueInBaseCurrency } of balances) {
+      if (isAfter(date, endOfToday())) {
+        // Skip account balances in the future
+        continue;
+      }
+
       const formattedDate = format(date, DATE_FORMAT);
 
       lastBalancesByAccount[accountId] = new Big(valueInBaseCurrency);

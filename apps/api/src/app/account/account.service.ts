@@ -19,7 +19,7 @@ import {
   Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { format } from 'date-fns';
+import { endOfToday, format, isAfter } from 'date-fns';
 import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
@@ -41,7 +41,11 @@ export class AccountService {
       include: {
         balances: {
           orderBy: { date: 'desc' },
-          take: 1
+          take: 1,
+          where: {
+            // Ignore account balances in the future
+            date: { lte: endOfToday() }
+          }
         }
       },
       where: { id_userId }
@@ -95,7 +99,15 @@ export class AccountService {
 
     include.balances = {
       orderBy: { date: 'desc' },
-      ...(isBalancesIncluded ? {} : { take: 1 })
+      ...(isBalancesIncluded
+        ? {}
+        : {
+            take: 1,
+            where: {
+              // Ignore account balances in the future
+              date: { lte: endOfToday() }
+            }
+          })
     };
 
     if (isTagsIncluded) {
@@ -118,7 +130,12 @@ export class AccountService {
     return accounts.map((account) => {
       const result = {
         ...account,
-        balance: account.balances[0]?.value ?? 0,
+        balance:
+          // The balances are ordered by date descending, hence the first account
+          // balance which is not in the future reflects the current balance
+          account.balances.find(({ date }) => {
+            return !isAfter(date, endOfToday());
+          })?.value ?? 0,
         tags: isTagsIncluded
           ? (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {
               return tag;
