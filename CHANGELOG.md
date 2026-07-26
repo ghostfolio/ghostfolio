@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deprecated `firstOrderDate` in favor of `dateOfFirstActivity` in the `GET api/v2/portfolio/performance` endpoint
 - Upgraded `prettier` from version `3.8.4` to `3.9.6`
 
 ## 3.34.0 - 2026-07-25

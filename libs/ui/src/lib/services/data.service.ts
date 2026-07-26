@@ -716,8 +716,10 @@ export class DataService {
       })
       .pipe(
         map((response) => {
-          if (response.firstOrderDate) {
-            response.firstOrderDate = parseISO(response.firstOrderDate);
+          if (response.dateOfFirstActivity) {
+            response.dateOfFirstActivity = parseISO(
+              response.dateOfFirstActivity
+            );
           }
 
           return response;
