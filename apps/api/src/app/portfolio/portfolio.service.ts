@@ -1034,6 +1034,7 @@ export class PortfolioService {
     if (accountBalanceItems.length === 0 && activities.length === 0) {
       return {
         chart: [],
+        dateOfFirstActivity: undefined,
         firstOrderDate: undefined,
         hasErrors: false,
         performance: {
@@ -1091,6 +1092,7 @@ export class PortfolioService {
       chart,
       errors,
       hasErrors,
+      dateOfFirstActivity: parseDate(historicalData[0]?.date),
       firstOrderDate: parseDate(historicalData[0]?.date),
       performance: {
         netPerformance,
