@@ -138,7 +138,7 @@ Find answers to commonly asked questions about self-hosting Ghostfolio in our [F
 Run the following command to start the Docker images from [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio):
 
 ```bash
-docker compose -f docker/docker-compose.yml up -d
+docker compose -f docker/docker-compose.yml --env-file .env up -d
 ```
 
 #### b. Build and run environment
@@ -146,8 +146,8 @@ docker compose -f docker/docker-compose.yml up -d
 Run the following commands to build and start the Docker images:
 
 ```bash
-docker compose -f docker/docker-compose.build.yml build
-docker compose -f docker/docker-compose.build.yml up -d
+docker compose -f docker/docker-compose.build.yml --env-file .env build
+docker compose -f docker/docker-compose.build.yml --env-file .env up -d
 ```
 
 #### Setup
