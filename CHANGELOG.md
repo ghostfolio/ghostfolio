@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Warmed up the portfolio snapshot calculation in the background during the biometric authentication
+- Deprecated `firstOrderDate` in favor of `dateOfFirstActivity` in the `GET api/v2/portfolio/performance` endpoint
 
 ## 3.34.0 - 2026-07-25
 
