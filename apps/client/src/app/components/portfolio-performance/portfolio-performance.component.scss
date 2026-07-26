@@ -16,6 +16,10 @@
   }
 
   .value-container {
+    &.medium {
+      font-size: 2rem;
+    }
+
     #value {
       font-variant-numeric: tabular-nums;
     }

@@ -1,6 +1,6 @@
 <div class="container p-0">
   <div class="no-gutters row">
-    <div class="status-container text-muted text-right">
+    <div class="pr-1 status-container text-muted text-right">
       @if (errors()?.length > 0 && !isLoading()) {
         <ion-icon
           i18n-title
@@ -24,11 +24,12 @@
     }
     <div
       class="display-4 font-weight-bold m-0 text-center value-container"
+      [class.medium]="size() === 'medium'"
       [hidden]="isLoading()"
     >
       <span #value id="value"></span>
     </div>
-    <div class="currency-container flex-grow-1 px-1">
+    <div class="currency-container flex-grow-1 pl-1">
       {{ unit() }}
     </div>
   </div>
