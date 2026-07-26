@@ -44,6 +44,7 @@ export class GfPortfolioPerformanceComponent {
     }
   });
   public readonly showDetails = input<boolean>(false);
+  public readonly size = input<'large' | 'medium'>('large');
   public readonly unit = input.required<string>();
 
   private readonly value =

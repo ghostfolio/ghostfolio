@@ -5,7 +5,8 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
-  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+  NUMERICAL_PRECISION_THRESHOLD_6_FIGURES,
+  NUMERICAL_PRECISION_THRESHOLD_7_FIGURES
 } from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
@@ -51,6 +52,7 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly isLoadingPerformance = signal(true);
   protected readonly performance = signal<PortfolioPerformance | null>(null);
   protected readonly performanceLabel = $localize`Performance`;
+  protected readonly performanceSize = signal<'large' | 'medium'>('large');
   protected readonly precision = signal(2);
   protected readonly user = signal<User | null>(null);
 
@@ -143,6 +145,7 @@ export class GfHomeOverviewComponent implements OnInit {
         );
 
         this.precision.set(2);
+        this.performanceSize.set('large');
 
         if (
           this.deviceType() === 'mobile' &&
@@ -150,6 +153,13 @@ export class GfHomeOverviewComponent implements OnInit {
             NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
         ) {
           this.precision.set(0);
+
+          if (
+            performance.currentValueInBaseCurrency >=
+            NUMERICAL_PRECISION_THRESHOLD_7_FIGURES
+          ) {
+            this.performanceSize.set('medium');
+          }
         }
 
         this.isLoadingPerformance.set(false);

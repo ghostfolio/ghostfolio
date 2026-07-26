@@ -24,6 +24,7 @@
     }
     <div
       class="display-4 font-weight-bold m-0 text-center value-container"
+      [class.medium]="size() === 'medium'"
       [hidden]="isLoading()"
     >
       <span #value id="value"></span>
