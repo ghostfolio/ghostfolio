@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the `SPLIT` activity type to the database schema as a foundation for upcoming stock split support
+
 ### Changed
 
 - Deprecated `firstOrderDate` in favor of `dateOfFirstActivity` in the `GET api/v2/portfolio/performance` endpoint

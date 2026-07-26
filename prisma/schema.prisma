@@ -379,6 +379,7 @@ enum Type {
   INTEREST
   LIABILITY
   SELL
+  SPLIT
 }
 
 enum ViewMode {
