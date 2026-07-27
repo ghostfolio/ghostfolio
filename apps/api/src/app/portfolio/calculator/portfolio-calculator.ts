@@ -1,4 +1,5 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { PortfolioCalculatorPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-position.interface';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
@@ -34,7 +35,7 @@ import {
   ResponseError,
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -176,7 +177,7 @@ export abstract class PortfolioCalculator {
   }
 
   protected abstract calculateOverallPerformance(
-    positions: (TimelinePosition & { includeInPerformance: boolean })[]
+    positions: PortfolioCalculatorPosition[]
   ): PortfolioSnapshot;
 
   @LogPerformance
@@ -312,10 +313,7 @@ export abstract class PortfolioCalculator {
     const errors: ResponseError['errors'] = [];
     let hasAnySymbolMetricsErrors = false;
 
-    const positions: (TimelinePosition & {
-      includeInHoldings: boolean;
-      includeInPerformance: boolean;
-    })[] = [];
+    const positions: PortfolioCalculatorPosition[] = [];
 
     const accumulatedValuesByDate: {
       [date: string]: {
