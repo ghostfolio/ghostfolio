@@ -4,6 +4,7 @@ import { Statistics } from './statistics.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
 
 export interface InfoItem {
+  aiChatModel?: string;
   baseCurrency: string;
   benchmarks: Partial<SymbolProfile>[];
   countriesOfSubscribers?: string[];

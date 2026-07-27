@@ -468,10 +468,10 @@ export class UserService {
     }
 
     if (!(user.settings.settings as UserSettings).isExperimentalFeatures) {
-      // currentPermissions = without(
-      //   currentPermissions,
-      //   permissions.xyz
-      // );
+      currentPermissions = without(
+        currentPermissions,
+        permissions.accessAiChat
+      );
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -507,6 +507,7 @@ export class UserService {
 
         currentPermissions = without(
           currentPermissions,
+          permissions.accessAiChat,
           permissions.accessHoldingsChart,
           permissions.createAccess,
           permissions.createMarketDataOfOwnAssetProfile,

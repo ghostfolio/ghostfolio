@@ -10,12 +10,14 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   DEFAULT_CURRENCY,
   ghostfolioFearAndGreedIndexSymbolStocks,
+  PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
   PROPERTY_DOCKER_HUB_PULLS,
   PROPERTY_GITHUB_CONTRIBUTORS,
   PROPERTY_GITHUB_STARGAZERS,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_OPENROUTER_MODEL,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_UPTIME
 } from '@ghostfolio/common/config';
@@ -99,6 +101,8 @@ export class InfoService {
     }
 
     const [
+      aiChatApiKey,
+      aiChatModel,
       benchmarks,
       demoAuthToken,
       isUserSignupEnabled,
@@ -106,6 +110,8 @@ export class InfoService {
       statistics,
       subscriptionOffer
     ] = await Promise.all([
+      this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER),
+      this.propertyService.getByKey<string>(PROPERTY_OPENROUTER_MODEL),
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
       this.propertyService.isUserSignupEnabled(),
@@ -113,6 +119,14 @@ export class InfoService {
       this.getStatistics(),
       this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
+
+    const normalizedAiChatApiKey = aiChatApiKey?.trim();
+    const normalizedAiChatModel = aiChatModel?.trim();
+
+    if (normalizedAiChatApiKey && normalizedAiChatModel) {
+      info.aiChatModel = normalizedAiChatModel;
+      globalPermissions.push(permissions.enableAiChat);
+    }
 
     if (isUserSignupEnabled) {
       globalPermissions.push(permissions.createUserAccount);

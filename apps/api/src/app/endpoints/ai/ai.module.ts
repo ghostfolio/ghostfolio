@@ -24,6 +24,9 @@ import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
+import { AiChatThrottlerGuard } from './ai-chat-throttler.guard';
+import { AiModelService } from './ai-model.service';
+import { AiPortfolioToolsService } from './ai-portfolio-tools.service';
 import { AiController } from './ai.controller';
 import { AiService } from './ai.service';
 
@@ -51,6 +54,9 @@ import { AiService } from './ai.service';
   providers: [
     AccountBalanceService,
     AccountService,
+    AiChatThrottlerGuard,
+    AiModelService,
+    AiPortfolioToolsService,
     AiService,
     CurrentRateService,
     MarketDataService,

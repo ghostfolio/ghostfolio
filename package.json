@@ -54,6 +54,7 @@
     "workspace-generator": "nx workspace-generator"
   },
   "dependencies": {
+    "@ai-sdk/angular": "2.0.175",
     "@angular/animations": "21.2.7",
     "@angular/cdk": "21.2.5",
     "@angular/common": "21.2.7",
