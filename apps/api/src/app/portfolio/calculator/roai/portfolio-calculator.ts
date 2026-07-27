@@ -41,12 +41,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let totalTimeWeightedInvestmentWithCurrencyEffect = new Big(0);
 
     for (const currentPosition of positions) {
-      if (currentPosition.feeInBaseCurrency) {
-        totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
-          currentPosition.feeInBaseCurrency
-        );
-      }
-
       if (currentPosition.valueInBaseCurrency) {
         currentValueInBaseCurrency = currentValueInBaseCurrency.plus(
           currentPosition.valueInBaseCurrency
@@ -57,6 +51,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       if (!currentPosition.includeInPerformance) {
         continue;
+      }
+
+      if (currentPosition.feeInBaseCurrency) {
+        totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
+          currentPosition.feeInBaseCurrency
+        );
       }
 
       if (currentPosition.investment) {

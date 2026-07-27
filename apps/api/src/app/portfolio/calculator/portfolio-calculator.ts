@@ -327,6 +327,7 @@ export abstract class PortfolioCalculator {
         totalInvestmentValueWithCurrencyEffect: Big;
         totalNetPerformanceValue: Big;
         totalNetPerformanceValueWithCurrencyEffect: Big;
+        totalNetWorthValueWithCurrencyEffect: Big;
         totalTimeWeightedInvestmentValue: Big;
         totalTimeWeightedInvestmentValueWithCurrencyEffect: Big;
       };
@@ -341,6 +342,7 @@ export abstract class PortfolioCalculator {
         investmentValuesWithCurrencyEffect: { [date: string]: Big };
         netPerformanceValues: { [date: string]: Big };
         netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
+        netWorthValuesWithCurrencyEffect: { [date: string]: Big };
         timeWeightedInvestmentValues: { [date: string]: Big };
         timeWeightedInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
       };
@@ -359,7 +361,8 @@ export abstract class PortfolioCalculator {
 
       const isCashInBaseCurrency =
         item.assetSubClass === AssetSubClass.CASH &&
-        item.currency === this.currency;
+        item.currency === this.currency &&
+        item.symbol === this.currency;
 
       const {
         currentValues,
@@ -402,16 +405,19 @@ export abstract class PortfolioCalculator {
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
 
       // Cash in the base currency cannot generate a currency effect and thus
-      // contributes nothing but its balance to the performance calculation
+      // contributes nothing but its balance to the performance calculation. It
+      // is therefore excluded from the value and the investment, while still
+      // contributing to the net worth.
       valuesBySymbol[item.symbol] = isCashInBaseCurrency
         ? {
-            currentValues,
-            currentValuesWithCurrencyEffect,
+            currentValues: {},
+            currentValuesWithCurrencyEffect: {},
             investmentValuesAccumulated: {},
             investmentValuesAccumulatedWithCurrencyEffect: {},
             investmentValuesWithCurrencyEffect: {},
             netPerformanceValues: {},
             netPerformanceValuesWithCurrencyEffect: {},
+            netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect,
             timeWeightedInvestmentValues: {},
             timeWeightedInvestmentValuesWithCurrencyEffect: {}
           }
@@ -424,7 +430,8 @@ export abstract class PortfolioCalculator {
             netPerformanceValues,
             netPerformanceValuesWithCurrencyEffect,
             timeWeightedInvestmentValues,
-            timeWeightedInvestmentValuesWithCurrencyEffect
+            timeWeightedInvestmentValuesWithCurrencyEffect,
+            netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect
           };
 
       positions.push({
@@ -528,6 +535,10 @@ export abstract class PortfolioCalculator {
           symbolValues.netPerformanceValuesWithCurrencyEffect?.[dateString] ??
           new Big(0);
 
+        const netWorthValueWithCurrencyEffect =
+          symbolValues.netWorthValuesWithCurrencyEffect?.[dateString] ??
+          new Big(0);
+
         const timeWeightedInvestmentValue =
           symbolValues.timeWeightedInvestmentValues?.[dateString] ?? new Big(0);
 
@@ -546,7 +557,7 @@ export abstract class PortfolioCalculator {
               ?.totalCashValueWithCurrencyEffect ?? new Big(0)
           ).add(
             cashSymbols.has(symbol)
-              ? currentValueWithCurrencyEffect
+              ? netWorthValueWithCurrencyEffect
               : new Big(0)
           ),
           totalCurrentValue: (
@@ -572,6 +583,10 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalNetPerformanceValueWithCurrencyEffect ?? new Big(0)
           ).add(netPerformanceValueWithCurrencyEffect),
+          totalNetWorthValueWithCurrencyEffect: (
+            accumulatedValuesByDate[dateString]
+              ?.totalNetWorthValueWithCurrencyEffect ?? new Big(0)
+          ).add(netWorthValueWithCurrencyEffect),
           totalTimeWeightedInvestmentValue: (
             accumulatedValuesByDate[dateString]
               ?.totalTimeWeightedInvestmentValue ?? new Big(0)
@@ -596,6 +611,7 @@ export abstract class PortfolioCalculator {
         totalInvestmentValueWithCurrencyEffect,
         totalNetPerformanceValue,
         totalNetPerformanceValueWithCurrencyEffect,
+        totalNetWorthValueWithCurrencyEffect,
         totalTimeWeightedInvestmentValue,
         totalTimeWeightedInvestmentValueWithCurrencyEffect
       } = values;
@@ -622,7 +638,7 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        netWorth: totalCurrentValueWithCurrencyEffect.toNumber(),
+        netWorth: totalNetWorthValueWithCurrencyEffect.toNumber(),
         totalCashInBaseCurrency: totalCashValueWithCurrencyEffect.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
         totalInvestmentValueWithCurrencyEffect:

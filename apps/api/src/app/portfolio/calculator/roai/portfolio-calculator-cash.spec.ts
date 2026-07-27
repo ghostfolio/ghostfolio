@@ -433,6 +433,11 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big(0)
       });
 
+      /**
+       * Value: 0 CHF (the cash is excluded from the performance calculation
+       * and therefore from the value it is measured against)
+       * Net worth: 2000 CHF (the cash still counts towards the net worth)
+       */
       expect(portfolioSnapshot.historicalData.at(-1)).toEqual({
         date: '2025-01-01',
         investmentValueWithCurrencyEffect: 0,
@@ -444,8 +449,8 @@ describe('PortfolioCalculator', () => {
         totalCashInBaseCurrency: 2000,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
-        value: 2000,
-        valueWithCurrencyEffect: 2000
+        value: 0,
+        valueWithCurrencyEffect: 0
       });
     });
   });
