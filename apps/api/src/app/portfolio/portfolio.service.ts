@@ -1976,6 +1976,11 @@ export class PortfolioService {
       .plus(totalOfExcludedActivities)
       .toNumber();
 
+    // Exclude emergency fund from the financial independence calculation
+    const fireWealthInBaseCurrency = new Big(totalAssetsInBaseCurrency).minus(
+      totalEmergencyFund
+    );
+
     const netWorth = new Big(totalAssetsInBaseCurrency)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
@@ -2027,10 +2032,9 @@ export class PortfolioService {
         : undefined,
       fireWealth: {
         today: {
-          valueInBaseCurrency: new Big(totalAssetsInBaseCurrency)
-            .minus(totalCashInBaseCurrency ?? 0)
-            .minus(emergencyFundHoldingsValueInBaseCurrency)
-            .toNumber()
+          valueInBaseCurrency: fireWealthInBaseCurrency.gt(0)
+            ? fireWealthInBaseCurrency.toNumber()
+            : 0
         }
       },
       grossPerformance: new Big(netPerformance).plus(fees).toNumber(),
