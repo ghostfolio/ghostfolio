@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a loading indicator to the access table to share the portfolio
+
 ### Changed
 
 - Deprecated `firstOrderDate` in favor of `dateOfFirstActivity` in the `GET api/v2/portfolio/performance` endpoint
