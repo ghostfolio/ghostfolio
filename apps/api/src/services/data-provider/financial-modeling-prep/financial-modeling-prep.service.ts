@@ -18,6 +18,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
+  isCurrency,
   isCurrencySymbol,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -259,7 +260,11 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      this.logger.error(message);
+      if (error instanceof AssetProfileDelistedError) {
+        this.logger.warn(error.message);
+      } else {
+        this.logger.error(message);
+      }
     }
 
     return response;
@@ -478,6 +483,14 @@ export class FinancialModelingPrepService
               currencyBySymbolMap[symbol] = {
                 currency: assetProfile.currency
               };
+            } else {
+              const currency = symbol.substring(
+                symbol.length - DEFAULT_CURRENCY.length
+              );
+
+              if (isCurrency(currency)) {
+                currencyBySymbolMap[symbol] = { currency };
+              }
             }
           })
         );
