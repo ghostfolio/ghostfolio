@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the missing currency in the get quotes functionality of the _Financial Modeling Prep_ service for symbols without an asset profile
+- Fixed the missing currency in the get quotes functionality of the _Financial Modeling Prep_ service for cryptocurrencies without an asset profile
 
 ## 3.34.0 - 2026-07-25
 
