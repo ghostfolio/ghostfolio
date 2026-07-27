@@ -483,7 +483,10 @@ export class FinancialModelingPrepService
               currencyBySymbolMap[symbol] = {
                 currency: assetProfile.currency
               };
-            } else if (symbol.length > DEFAULT_CURRENCY.length) {
+            } else if (
+              isCurrencySymbol(symbol) ||
+              this.cryptocurrencyService.isCryptocurrency(symbol)
+            ) {
               const currency = symbol.substring(
                 symbol.length - DEFAULT_CURRENCY.length
               );
