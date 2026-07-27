@@ -1,11 +1,15 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
+import {
+  DEFAULT_LOCALE,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+} from '@ghostfolio/common/config';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfLocalizedNumberDirective } from '@ghostfolio/ui/localized-number';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 
@@ -28,6 +32,7 @@ import {
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -48,6 +53,7 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
     CommonModule,
     GfCurrencySelectorComponent,
     GfEntityLogoComponent,
+    GfLocalizedNumberDirective,
     GfTagsSelectorComponent,
     MatAutocompleteModule,
     MatButtonModule,
@@ -77,15 +83,25 @@ export class GfCreateOrUpdateAccountDialogComponent {
     inject<MatDialogRef<GfCreateOrUpdateAccountDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
   private readonly userService = inject(UserService);
+  protected locale = inject<string>(MAT_DATE_LOCALE);
 
   public ngOnInit() {
     const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
 
+<<<<<<< HEAD
     this.hasPermissionToCreateOwnTag = hasPermission(
       this.data.user?.permissions,
       permissions.createOwnTag
     );
+=======
+    this.locale =
+      this.data.user?.settings?.locale ?? this.locale ?? DEFAULT_LOCALE;
+
+    this.hasPermissionToCreateOwnTag =
+      this.data.user?.settings?.isExperimentalFeatures &&
+      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
+>>>>>>> c5ab9c84a (fix(client): address review feedback for localized number directive)
 
     this.tagsAvailable = [
       ...(this.data.user?.tags ?? []),

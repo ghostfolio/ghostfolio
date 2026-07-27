@@ -25,9 +25,10 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Market Price</mat-label>
         <input
+          gfLocalizedNumber
           matInput
           name="marketPrice"
-          type="number"
+          [locale]="locale"
           [ngModel]="marketPrice()"
           (ngModelChange)="marketPrice.set($event)"
         />

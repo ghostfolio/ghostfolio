@@ -1,4 +1,3 @@
-import { GfLocalizedNumberDirective } from '@ghostfolio/client/directives/localized-number/localized-number.directive';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ASSET_CLASS_MAPPING, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
@@ -11,6 +10,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfLocalizedNumberDirective } from '@ghostfolio/ui/localized-number';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
@@ -113,7 +113,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateActivityDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
-  private locale = inject<string>(MAT_DATE_LOCALE);
+  protected locale = inject<string>(MAT_DATE_LOCALE);
   private readonly userService = inject(UserService);
 
   public constructor() {

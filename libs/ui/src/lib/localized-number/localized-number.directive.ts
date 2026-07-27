@@ -1,9 +1,18 @@
 import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
-import { extractNumberFromString } from '@ghostfolio/common/helper';
+import {
+  extractNumberFromString,
+  formatNumberForLocale
+} from '@ghostfolio/common/helper';
 
 import { DOCUMENT } from '@angular/common';
-import { Directive, ElementRef, inject, input } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import {
+  Directive,
+  ElementRef,
+  forwardRef,
+  inject,
+  input
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Directive({
   host: {
@@ -12,6 +21,13 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
     '[attr.inputmode]': '"decimal"',
     '[attr.type]': '"text"'
   },
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => GfLocalizedNumberDirective),
+      multi: true
+    }
+  ],
   selector: 'input[gfLocalizedNumber]'
 })
 export class GfLocalizedNumberDirective implements ControlValueAccessor {
@@ -20,15 +36,6 @@ export class GfLocalizedNumberDirective implements ControlValueAccessor {
   private readonly document = inject(DOCUMENT);
   private readonly elementRef =
     inject<ElementRef<HTMLInputElement>>(ElementRef);
-
-  public constructor() {
-    const ngControl = inject(NgControl, { optional: true, self: true });
-
-    if (ngControl) {
-      // Replace DefaultValueAccessor so the FormControl stores a number
-      ngControl.valueAccessor = this;
-    }
-  }
 
   public handleBlur() {
     this.onTouched();
@@ -49,7 +56,8 @@ export class GfLocalizedNumberDirective implements ControlValueAccessor {
     //   3. DEFAULT_LOCALE ('en-US') as the final fallback
     const localeInput = this.locale();
     const documentLang = this.document.documentElement.lang;
-    const resolvedLocale = localeInput ?? documentLang ?? DEFAULT_LOCALE;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const resolvedLocale = localeInput || documentLang || DEFAULT_LOCALE;
 
     const parsedNumber = extractNumberFromString({
       locale: resolvedLocale,
@@ -76,10 +84,25 @@ export class GfLocalizedNumberDirective implements ControlValueAccessor {
   }
 
   public writeValue(value: number | null) {
-    this.elementRef.nativeElement.value =
-      value === null || value === undefined || Number.isNaN(value)
-        ? ''
-        : String(value);
+    if (
+      value === null ||
+      value === undefined ||
+      typeof value !== 'number' ||
+      Number.isNaN(value)
+    ) {
+      this.elementRef.nativeElement.value = '';
+      return;
+    }
+
+    const localeInput = this.locale();
+    const documentLang = this.document.documentElement.lang;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const resolvedLocale = localeInput || documentLang || DEFAULT_LOCALE;
+
+    this.elementRef.nativeElement.value = formatNumberForLocale({
+      locale: resolvedLocale,
+      value
+    });
   }
 
   private onChange: (value: number | null) => void = () => undefined;

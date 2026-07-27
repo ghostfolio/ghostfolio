@@ -82,9 +82,44 @@ describe('GfLocalizedNumberDirective', () => {
     host.control.setValue(1234.5);
     fixture.detectChanges();
 
-    expect(input.value).toBe('1234.5');
+    expect(input.value).toBe('1,234.5');
 
     host.control.setValue(null);
+    fixture.detectChanges();
+
+    expect(input.value).toBe('');
+  });
+
+  it('should write and parse correctly for German locale (de-DE)', () => {
+    host.locale = 'de-DE';
+    fixture.detectChanges();
+
+    host.control.setValue(1234.5);
+    fixture.detectChanges();
+
+    expect(input.value).toBe('1.234,5');
+
+    typeValue('1.234,5');
+
+    expect(host.control.value).toBe(1234.5);
+  });
+
+  it('should preserve more than 3 fraction digits on write/parse', () => {
+    host.locale = 'de-DE';
+    fixture.detectChanges();
+
+    host.control.setValue(12.345678);
+    fixture.detectChanges();
+
+    expect(input.value).toBe('12,345678');
+
+    typeValue(input.value);
+
+    expect(host.control.value).toBe(12.345678);
+  });
+
+  it('should write empty string for non-numeric values', () => {
+    host.control.setValue('' as unknown as number);
     fixture.detectChanges();
 
     expect(input.value).toBe('');

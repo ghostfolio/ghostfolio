@@ -78,7 +78,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restricted the symbol data endpoint (`GET /api/v1/symbol/:dataSource/:symbol`) to authenticated users
 - Removed the deprecated `auth` endpoint of the login with _Security Token_ (`GET`)
 - Simplified the `getHistorical()` function response in the data provider interface
+<<<<<<< HEAD
 - Upgraded `bull-board` from version `8.0.1` to `8.1.2`
+=======
+- Fixed parsing of localized decimal numbers with thousands separators across number input fields
+>>>>>>> c5ab9c84a (fix(client): address review feedback for localized number directive)
 
 ## 3.29.0 - 2026-07-18
 

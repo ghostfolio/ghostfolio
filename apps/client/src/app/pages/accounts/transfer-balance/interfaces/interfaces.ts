@@ -3,6 +3,7 @@ import { Account } from '@prisma/client';
 
 export interface TransferBalanceDialogParams {
   accounts: Account[];
+  locale?: string;
 }
 
 export type TransferBalanceForm = FormGroup<{
