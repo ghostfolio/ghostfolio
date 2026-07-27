@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refreshed the cryptocurrencies list
 - Upgraded `prettier` from version `3.8.4` to `3.9.6`
 
+### Fixed
+
+- Resolved an exception in the user service when getting a non-existent user
+
 ## 3.34.0 - 2026-07-25
 
 ### Changed
