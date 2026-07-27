@@ -26,7 +26,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
 
   protected calculateOverallPerformance(
-    positions: TimelinePosition[]
+    positions: (TimelinePosition & { includeInPerformance: boolean })[]
   ): PortfolioSnapshot {
     let currentValueInBaseCurrency = new Big(0);
     let grossPerformance = new Big(0);
@@ -53,6 +53,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         );
       } else {
         hasErrors = true;
+      }
+
+      if (!currentPosition.includeInPerformance) {
+        continue;
       }
 
       if (currentPosition.investment) {

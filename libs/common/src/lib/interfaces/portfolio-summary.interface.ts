@@ -23,6 +23,7 @@ export interface PortfolioSummary extends PortfolioPerformance {
   interestInBaseCurrency: number;
   liabilitiesInBaseCurrency: number;
   totalBuy: number;
+  totalCashInBaseCurrency: number;
   totalSell: number;
   totalValueInBaseCurrency?: number;
 }

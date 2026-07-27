@@ -164,7 +164,47 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="align-items-center d-flex flex-grow-1">
+    <div class="flex-grow-1 ml-3 text-truncate" i18n>Cash</div>
+    <div class="flex-column flex-wrap justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        position="end"
+        [isCurrency]="true"
+        [locale]="locale"
+        [precision]="precision"
+        [unit]="baseCurrency"
+        [value]="isLoading ? undefined : summary?.totalCashInBaseCurrency"
+      />
+    </div>
+  </div>
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="align-items-center d-flex flex-grow-1 ml-4">
+      <ng-container i18n>Buying Power</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : buyingPowerPercentage"
+        />
+      }
+    </div>
+    <div class="align-items-center d-flex justify-content-end">
+      <gf-value
+        [isCurrency]="true"
+        [locale]="locale"
+        [precision]="precision"
+        [unit]="baseCurrency"
+        [value]="isLoading ? undefined : summary?.cash"
+      />
+    </div>
+  </div>
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="align-items-center d-flex flex-grow-1 ml-3">
       <ng-container i18n>Emergency Fund</ng-container>
       @if (
         !hasImpersonationId &&
@@ -215,7 +255,7 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 ml-3 text-truncate" i18n>Cash</div>
+    <div class="flex-grow-1 ml-4 text-truncate" i18n>in Cash</div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
@@ -229,7 +269,7 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 ml-3 text-truncate" i18n>Assets</div>
+    <div class="flex-grow-1 ml-4 text-truncate" i18n>in Holdings</div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
@@ -239,32 +279,6 @@
         [precision]="precision"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.assets"
-      />
-    </div>
-  </div>
-  <div class="flex-nowrap px-3 py-1 row">
-    <div class="align-items-center d-flex flex-grow-1">
-      <ng-container i18n>Buying Power</ng-container>
-      @if (
-        !hasImpersonationId &&
-        summary?.totalValueInBaseCurrency > 0 &&
-        user?.settings?.isExperimentalFeatures
-      ) {
-        <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
-          [isPercent]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : buyingPowerPercentage"
-        />
-      }
-    </div>
-    <div class="align-items-center d-flex justify-content-end">
-      <gf-value
-        [isCurrency]="true"
-        [locale]="locale"
-        [precision]="precision"
-        [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.cash"
       />
     </div>
   </div>

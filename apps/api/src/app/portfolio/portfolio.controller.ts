@@ -209,6 +209,7 @@ export class PortfolioController {
         'netPerformance',
         'netPerformanceWithCurrencyEffect',
         'totalBuy',
+        'totalCashInBaseCurrency',
         'totalInvestment',
         'totalInvestmentValueWithCurrencyEffect',
         'totalSell',

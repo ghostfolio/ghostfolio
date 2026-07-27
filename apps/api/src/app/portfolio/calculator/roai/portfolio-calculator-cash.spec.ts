@@ -314,5 +314,139 @@ describe('PortfolioCalculator', () => {
         valueWithCurrencyEffect: 1820
       });
     });
+
+    it('should exclude cash in the base currency from the performance calculation', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());
+
+      const accountId = randomUUID();
+
+      jest
+        .spyOn(accountBalanceService, 'getAccountBalances')
+        .mockResolvedValue({
+          balances: [
+            {
+              accountId,
+              date: parseDate('2023-12-31'),
+              id: randomUUID(),
+              value: 1000,
+              valueInBaseCurrency: 1000
+            },
+            {
+              accountId,
+              date: parseDate('2024-12-31'),
+              id: randomUUID(),
+              value: 2000,
+              valueInBaseCurrency: 2000
+            }
+          ]
+        });
+
+      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+        accounts: [
+          {
+            balance: 2000,
+            comment: null,
+            createdAt: parseDate('2023-12-31'),
+            currency: 'CHF',
+            id: accountId,
+            isExcluded: false,
+            name: 'CHF',
+            platformId: null,
+            updatedAt: parseDate('2023-12-31'),
+            userId: userDummyData.id
+          }
+        ],
+        balanceInBaseCurrency: 2000
+      });
+
+      jest
+        .spyOn(dataProviderService, 'getDataSourceForExchangeRates')
+        .mockReturnValue(DataSource.YAHOO);
+
+      jest.spyOn(activitiesService, 'getActivities').mockResolvedValue({
+        activities: [],
+        count: 0
+      });
+
+      const { activities } =
+        await activitiesService.getActivitiesForPortfolioCalculator({
+          userCurrency: 'CHF',
+          userId: userDummyData.id,
+          withCash: true
+        });
+
+      jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
+        dataProviderInfos: [],
+        errors: [],
+        values: []
+      });
+
+      const accountBalanceItems =
+        await accountBalanceService.getAccountBalanceItems({
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        accountBalanceItems,
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const position = portfolioSnapshot.positions.find(({ symbol }) => {
+        return symbol === 'CHF';
+      });
+
+      /**
+       * The holding itself keeps its investment and value so that it remains
+       * visible in the holdings table
+       */
+      expect(position).toMatchObject({
+        currency: 'CHF',
+        grossPerformance: new Big(0),
+        grossPerformanceWithCurrencyEffect: new Big(0),
+        investment: new Big(2000),
+        investmentWithCurrencyEffect: new Big(2000),
+        netPerformance: new Big(0),
+        quantity: new Big(2000),
+        symbol: 'CHF',
+        valueInBaseCurrency: new Big(2000)
+      });
+
+      /**
+       * Total investment: 0 CHF (cash in the base currency cannot generate a
+       * currency effect and would only dilute the performance)
+       * Current value in base currency: 2000 CHF (the cash still counts
+       * towards the net worth)
+       */
+      expect(portfolioSnapshot).toMatchObject({
+        currentValueInBaseCurrency: new Big(2000),
+        hasErrors: false,
+        totalCashInBaseCurrency: new Big(2000),
+        totalFeesWithCurrencyEffect: new Big(0),
+        totalInterestWithCurrencyEffect: new Big(0),
+        totalInvestment: new Big(0),
+        totalLiabilitiesWithCurrencyEffect: new Big(0)
+      });
+
+      expect(portfolioSnapshot.historicalData.at(-1)).toEqual({
+        date: '2025-01-01',
+        investmentValueWithCurrencyEffect: 0,
+        netPerformance: 0,
+        netPerformanceInPercentage: 0,
+        netPerformanceInPercentageWithCurrencyEffect: 0,
+        netPerformanceWithCurrencyEffect: 0,
+        netWorth: 2000,
+        totalCashInBaseCurrency: 2000,
+        totalInvestment: 0,
+        totalInvestmentValueWithCurrencyEffect: 0,
+        value: 2000,
+        valueWithCurrencyEffect: 2000
+      });
+    });
   });
 });
