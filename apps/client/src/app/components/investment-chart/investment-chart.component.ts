@@ -225,8 +225,8 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                 y: getValueAxisOptions({
                   colorScheme: this.colorScheme,
                   display: !this.isInPercentage,
-                  tickCallback: (value: number) => {
-                    return transformTickToAbbreviation(value);
+                  tickCallback: (tickValue) => {
+                    return transformTickToAbbreviation(Number(tickValue));
                   }
                 })
               }
@@ -244,7 +244,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   private getTooltipPluginConfiguration(): Partial<
     TooltipOptions<'bar' | 'line'>
   > {
-    return getTimeSeriesTooltipOptions({
+    return getTimeSeriesTooltipOptions<'bar' | 'line'>({
       colorScheme: this.colorScheme,
       currency: this.isInPercentage ? undefined : this.currency,
       groupBy: this.groupBy,

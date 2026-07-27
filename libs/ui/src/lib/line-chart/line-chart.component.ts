@@ -292,7 +292,7 @@ export class GfLineChartComponent
   }
 
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
-    return getTimeSeriesTooltipOptions({
+    return getTimeSeriesTooltipOptions<'line'>({
       colorScheme: this.colorScheme,
       currency: this.currency,
       locale: this.locale,

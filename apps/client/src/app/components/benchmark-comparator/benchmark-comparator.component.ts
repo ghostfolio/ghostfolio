@@ -192,8 +192,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
               }),
               y: getValueAxisOptions({
                 colorScheme: this.colorScheme(),
-                tickCallback: (value: number) => {
-                  return `${value.toFixed(2)} %`;
+                tickCallback: (tickValue) => {
+                  return `${Number(tickValue).toFixed(2)} %`;
                 }
               })
             }
@@ -208,7 +208,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
-    return getTimeSeriesTooltipOptions({
+    return getTimeSeriesTooltipOptions<'line'>({
       colorScheme: this.colorScheme(),
       locale: this.locale(),
       unit: '%'
