@@ -446,14 +446,12 @@ export class PortfolioController {
       filterByTags
     });
 
-    const holdings = await this.portfolioService.getHoldings({
+    return this.portfolioService.getHoldings({
       dateRange,
       filters,
       impersonationId,
       userId: this.request.user.id
     });
-
-    return { holdings };
   }
 
   @Get('investments')

@@ -1,3 +1,4 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
@@ -20,6 +21,7 @@ import { randomUUID } from 'node:crypto';
 import { PortfolioService } from './portfolio.service';
 
 describe('PortfolioService', () => {
+  let accountBalanceService: AccountBalanceService;
   let accountService: AccountService;
   let activitiesService: ActivitiesService;
   let configurationService: ConfigurationService;
@@ -47,6 +49,12 @@ describe('PortfolioService', () => {
       null,
       null,
       null,
+      null
+    );
+
+    accountBalanceService = new AccountBalanceService(
+      null,
+      exchangeRateDataService,
       null
     );
 
@@ -96,7 +104,7 @@ describe('PortfolioService', () => {
     );
 
     portfolioService = new PortfolioService(
-      null,
+      accountBalanceService,
       accountService,
       activitiesService,
       null,
@@ -334,6 +342,121 @@ describe('PortfolioService', () => {
       expect(holdings['USD']).toBeDefined();
       expect(holdings['USD'].assetProfile.dataSource).toBe(DataSource.YAHOO);
       expect(holdings['USD'].assetProfile.symbol).toBe('USD');
+    });
+  });
+
+  describe('getHoldings', () => {
+    it('should return totalValueInBaseCurrency as the sum of returned holdings', async () => {
+      jest
+        .spyOn(impersonationService, 'validateImpersonationId')
+        .mockResolvedValue(null);
+
+      jest.spyOn(portfolioService, 'getDetails').mockResolvedValue({
+        accounts: {},
+        createdAt: parseDate('2024-01-01'),
+        hasErrors: false,
+        holdings: {
+          AMZN: {
+            assetProfile: { name: 'Amazon.com, Inc.', symbol: 'AMZN' },
+            valueInBaseCurrency: 5298.2
+          },
+          MSFT: {
+            assetProfile: { name: 'Microsoft Corporation', symbol: 'MSFT' },
+            valueInBaseCurrency: 1700.15
+          }
+        },
+        platforms: {}
+      } as unknown as Awaited<ReturnType<typeof portfolioService.getDetails>>);
+
+      const response = await portfolioService.getHoldings({
+        dateRange: 'max',
+        filters: [],
+        impersonationId: userDummyData.id,
+        userId: userDummyData.id
+      });
+
+      expect(response.holdings).toHaveLength(2);
+      expect(response.totalValueInBaseCurrency).toBeCloseTo(6998.35);
+    });
+  });
+
+  describe('getPerformance', () => {
+    it('should use the snapshot currentValueInBaseCurrency for the current performance value', async () => {
+      jest
+        .spyOn(accountBalanceService, 'getAccountBalanceItems')
+        .mockResolvedValue([
+          {
+            date: '2024-01-01',
+            value: 0
+          }
+        ]);
+
+      jest
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+        .mockResolvedValue({ activities: [], count: 0 });
+
+      jest
+        .spyOn(impersonationService, 'validateImpersonationId')
+        .mockResolvedValue(null);
+
+      jest.spyOn(userService, 'user').mockResolvedValue({
+        accessesGet: [],
+        accounts: [],
+        activityCount: 0,
+        dataProviderGhostfolioDailyRequests: 0,
+        id: userDummyData.id,
+        settings: {
+          settings: {
+            baseCurrency: 'USD'
+          }
+        }
+      } as unknown as Awaited<ReturnType<typeof userService.user>>);
+
+      jest
+        .spyOn(portfolioCalculatorFactory, 'createCalculator')
+        .mockReturnValue({
+          getPerformance: jest.fn().mockResolvedValue({
+            chart: [
+              {
+                date: '2024-01-01',
+                netPerformance: 0,
+                netPerformanceInPercentage: 0,
+                netPerformanceInPercentageWithCurrencyEffect: 0,
+                netPerformanceWithCurrencyEffect: 0,
+                netWorth: 0,
+                totalInvestment: 0,
+                totalInvestmentValueWithCurrencyEffect: 0,
+                valueWithCurrencyEffect: 0
+              }
+            ]
+          }),
+          getSnapshot: jest.fn().mockResolvedValue({
+            createdAt: parseDate('2024-01-01'),
+            currentValueInBaseCurrency: new Big(231216.02329207),
+            errors: [],
+            hasErrors: false,
+            historicalData: [{ date: '2024-01-01' }],
+            positions: [],
+            totalFeesWithCurrencyEffect: new Big(0),
+            totalInterestWithCurrencyEffect: new Big(0),
+            totalInvestment: new Big(0),
+            totalInvestmentWithCurrencyEffect: new Big(0),
+            totalLiabilitiesWithCurrencyEffect: new Big(0)
+          })
+        } as unknown as ReturnType<
+          typeof portfolioCalculatorFactory.createCalculator
+        >);
+
+      const response = await portfolioService.getPerformance({
+        dateRange: 'max',
+        filters: [],
+        impersonationId: userDummyData.id,
+        userId: userDummyData.id
+      });
+
+      expect(response.performance.currentValueInBaseCurrency).toBe(
+        231216.02329207
+      );
     });
   });
 
