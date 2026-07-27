@@ -1,13 +1,17 @@
 import type { ElementRef } from '@angular/core';
 import type {
   Chart,
+  ChartOptions,
   ChartType,
   ControllerDatasetOptions,
   Plugin,
   Point,
+  ScaleOptions,
+  Tick,
   TooltipOptions,
   TooltipPosition
 } from 'chart.js';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { format } from 'date-fns';
 
 import {
@@ -15,6 +19,7 @@ import {
   DATE_FORMAT_MONTHLY,
   DATE_FORMAT_YEARLY,
   getBackgroundColor,
+  getDateFormatString,
   getLocale,
   getTextColor
 } from './helper';
@@ -36,6 +41,53 @@ export function formatGroupedDate({
   return format(date, DATE_FORMAT);
 }
 
+export function getChartBorderColor(colorScheme: ColorScheme) {
+  return `rgba(${getTextColor(colorScheme)}, 0.1)`;
+}
+
+export function getChartElementsOptions(
+  colorScheme: ColorScheme
+): ChartOptions<'bar' | 'line'>['elements'] {
+  return {
+    line: {
+      tension: 0
+    },
+    point: {
+      hoverBackgroundColor: getBackgroundColor(colorScheme),
+      hoverRadius: 2,
+      radius: 0
+    }
+  };
+}
+
+export function getTimeAxisOptions({
+  borderWidth = 1,
+  colorScheme,
+  display = true,
+  locale = getLocale()
+}: {
+  borderWidth?: number;
+  colorScheme: ColorScheme;
+  display?: boolean;
+  locale?: string;
+}): ScaleOptions<'time'> {
+  return {
+    display,
+    border: {
+      color: getChartBorderColor(colorScheme),
+      width: borderWidth
+    },
+    grid: {
+      display: false
+    },
+    time: {
+      tooltipFormat: getDateFormatString(locale),
+      unit: 'year'
+    },
+    type: 'time'
+  };
+}
+
 export function getTooltipOptions<T extends ChartType>({
   colorScheme,
   currency = '',
@@ -53,7 +105,7 @@ export function getTooltipOptions<T extends ChartType>({
     backgroundColor: getBackgroundColor(colorScheme),
     bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
-    borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
+    borderColor: getChartBorderColor(colorScheme),
     // @ts-expect-error: no need to set all attributes in callbacks
     callbacks: {
       label: (context) => {
@@ -116,6 +168,50 @@ export function getTooltipPositionerMapTop(
   };
 }
 
+export function getValueAxisOptions({
+  colorScheme,
+  display = true,
+  highlightedValues = [],
+  tickCallback
+}: {
+  colorScheme: ColorScheme;
+  display?: boolean;
+  highlightedValues?: number[];
+  tickCallback: (
+    tickValue: number | string,
+    index: number,
+    ticks: Tick[]
+  ) => string;
+}): ScaleOptions<'linear'> {
+  return {
+    display,
+    border: {
+      display: false
+    },
+    grid: {
+      color: ({ scale, tick }) => {
+        if (
+          tick.value === 0 ||
+          tick.value === scale.max ||
+          tick.value === scale.min ||
+          highlightedValues.includes(tick.value)
+        ) {
+          return getChartBorderColor(colorScheme);
+        }
+
+        return 'transparent';
+      }
+    },
+    position: 'right',
+    ticks: {
+      display,
+      callback: tickCallback,
+      mirror: true,
+      z: 1
+    }
+  };
+}
+
 export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
   chartCanvas: ElementRef<HTMLCanvasElement>,
   colorScheme: ColorScheme
@@ -149,6 +245,18 @@ export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
       }
     },
     id: 'verticalHoverLine'
+  };
+}
+
+export function getZeroLineAnnotation(
+  colorScheme: ColorScheme
+): AnnotationOptions<'line'> {
+  return {
+    borderColor: getChartBorderColor(colorScheme),
+    borderWidth: 1,
+    scaleID: 'y',
+    type: 'line',
+    value: 0
   };
 }
 
