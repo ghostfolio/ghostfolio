@@ -18,7 +18,6 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
-  isCurrency,
   isCurrencySymbol,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -483,17 +482,8 @@ export class FinancialModelingPrepService
               currencyBySymbolMap[symbol] = {
                 currency: assetProfile.currency
               };
-            } else if (
-              isCurrencySymbol(symbol) ||
-              this.cryptocurrencyService.isCryptocurrency(symbol)
-            ) {
-              const currency = symbol.substring(
-                symbol.length - DEFAULT_CURRENCY.length
-              );
-
-              if (isCurrency(currency)) {
-                currencyBySymbolMap[symbol] = { currency };
-              }
+            } else if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
+              currencyBySymbolMap[symbol] = { currency: DEFAULT_CURRENCY };
             }
           })
         );
