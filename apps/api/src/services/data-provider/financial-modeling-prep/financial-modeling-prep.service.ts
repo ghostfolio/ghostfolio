@@ -111,6 +111,12 @@ export class FinancialModelingPrepService
           )
           .then((res) => res.json());
 
+        if (!quote) {
+          throw new AssetProfileDelistedError(
+            `No data found, ${symbol} (${this.getName()}) may be delisted`
+          );
+        }
+
         response.assetClass = AssetClass.LIQUIDITY;
         response.assetSubClass = AssetSubClass.CRYPTOCURRENCY;
         response.currency = symbol.substring(
