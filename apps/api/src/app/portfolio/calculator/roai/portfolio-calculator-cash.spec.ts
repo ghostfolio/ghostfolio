@@ -410,7 +410,7 @@ describe('PortfolioCalculator', () => {
        * The holding itself keeps its investment and value so that it remains
        * visible in the holdings table
        */
-      expect(position).toMatchObject({
+      expect(position).toMatchObject<Partial<TimelinePosition>>({
         currency: 'CHF',
         grossPerformance: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),

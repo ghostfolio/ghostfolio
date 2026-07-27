@@ -2042,7 +2042,7 @@ export class PortfolioService {
       interestInBaseCurrency: interest.toNumber(),
       liabilitiesInBaseCurrency: liabilities.toNumber(),
       totalAssetsInBaseCurrency: totalAssetsInBaseCurrency.toNumber(),
-      totalCashInBaseCurrency: balanceInBaseCurrency,
+      totalCashInBaseCurrency: totalCashInBaseCurrency.toNumber(),
       totalInvestment: totalInvestment.toNumber(),
       totalInvestmentValueWithCurrencyEffect:
         totalInvestmentWithCurrencyEffect.toNumber(),

@@ -166,7 +166,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="align-items-center d-flex flex-grow-1 indent-1">
       <ng-container i18n>Cash</ng-container>
-      @if (!hasImpersonationId && summary?.totalValueInBaseCurrency > 0) {
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
           [isPercent]="true"
@@ -220,7 +224,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="align-items-center d-flex flex-grow-1 indent-1">
       <ng-container i18n>Holdings</ng-container>
-      @if (!hasImpersonationId && summary?.totalValueInBaseCurrency > 0) {
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
           [isPercent]="true"
@@ -260,7 +268,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="align-items-center d-flex flex-grow-1">
       <ng-container i18n>Excluded from Analysis</ng-container>
-      @if (!hasImpersonationId && summary?.totalValueInBaseCurrency > 0) {
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
           [isPercent]="true"
@@ -342,7 +354,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="align-items-center d-flex flex-grow-1">
       <ng-container i18n>Emergency Fund</ng-container>
-      @if (!hasImpersonationId && summary?.totalValueInBaseCurrency > 0) {
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
           [isPercent]="true"
