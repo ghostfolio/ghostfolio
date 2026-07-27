@@ -7,14 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a loading indicator to the access table to share the portfolio
+
 ### Changed
 
 - Deprecated `firstOrderDate` in favor of `dateOfFirstActivity` in the `GET api/v2/portfolio/performance` endpoint
 - Improved the log output in the get asset profile functionality of the _Financial Modeling Prep_ service for delisted asset profiles
+- Refreshed the cryptocurrencies list
 - Upgraded `prettier` from version `3.8.4` to `3.9.6`
 
 ### Fixed
 
+- Resolved an exception in the user service when getting a non-existent user
 - Fixed the missing currency in the get quotes functionality of the _Financial Modeling Prep_ service for cryptocurrencies without an asset profile
 
 ## 3.34.0 - 2026-07-25
