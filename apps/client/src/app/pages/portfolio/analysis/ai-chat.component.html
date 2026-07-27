@@ -1,0 +1,262 @@
+<mat-card
+  appearance="outlined"
+  aria-labelledby="ai-portfolio-chat-heading"
+  class="ai-chat-card"
+  id="ai-portfolio-chat-panel"
+  role="region"
+>
+  <mat-card-header>
+    <mat-card-title class="align-items-center d-flex">
+      <span class="flex-grow-1" i18n id="ai-portfolio-chat-heading"
+        >AI portfolio chat</span
+      >
+      <button
+        aria-label="Close AI portfolio chat"
+        i18n-aria-label
+        mat-icon-button
+        type="button"
+        (click)="onClose()"
+      >
+        <ion-icon name="close-outline" />
+      </button>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div
+      aria-label="Portfolio scope"
+      class="ai-scope align-items-center d-flex flex-wrap mb-3"
+      i18n-aria-label
+    >
+      <span class="ai-scope-label mr-2" i18n>Scope</span>
+      @for (chip of scopeChips(); track chip) {
+        <span class="ai-scope-chip">{{ chip }}</span>
+      }
+    </div>
+
+    @if (!hasConsent()) {
+      <div class="ai-consent">
+        <h2 class="h5" i18n>Before you start</h2>
+        <p i18n>
+          Your question and the scoped portfolio data needed to answer it will
+          be sent through OpenRouter to model
+          <code>{{ model() }}</code
+          >.
+        </p>
+        <p i18n>
+          Ghostfolio keeps this conversation only in memory for this open panel
+          in this browser tab. Closing the panel, leaving the page, refreshing
+          the tab, or changing the portfolio scope clears it.
+        </p>
+        <p class="mb-4" i18n>
+          OpenRouter and upstream model providers may process or retain
+          submitted data under their own privacy and data-retention policies.
+        </p>
+        <div class="d-flex flex-wrap justify-content-end">
+          <button
+            class="mb-2 mr-2"
+            mat-button
+            type="button"
+            (click)="onClose()"
+          >
+            <ng-container i18n>Not now</ng-container>
+          </button>
+          <button
+            class="mb-2"
+            color="primary"
+            mat-flat-button
+            type="button"
+            (click)="onAcceptConsent()"
+          >
+            <ng-container i18n>Continue to AI chat</ng-container>
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div
+        aria-label="AI chat messages"
+        class="ai-messages mb-3"
+        i18n-aria-label
+      >
+        @if (chat.messages.length === 0) {
+          <div class="ai-empty-state py-4 text-center">
+            <p class="mb-1" i18n>Ask about the portfolio shown above.</p>
+            <small class="text-muted" i18n
+              >The assistant can use portfolio summary, holdings, and
+              performance data.</small
+            >
+          </div>
+        }
+
+        @for (message of chat.messages; track message.id) {
+          @if (getMessageText(message)) {
+            <article
+              class="ai-message"
+              [class.ai-message-assistant]="message.role === 'assistant'"
+              [class.ai-message-user]="message.role === 'user'"
+            >
+              <div class="ai-message-label">
+                @if (message.role === 'user') {
+                  <ng-container i18n>You</ng-container>
+                } @else {
+                  <ng-container i18n>AI</ng-container>
+                }
+              </div>
+
+              @if (message.role === 'assistant') {
+                <div class="ai-markdown">
+                  @for (block of getSafeMarkdownBlocks(message); track $index) {
+                    @switch (block.type) {
+                      @case ('heading') {
+                        <h3 class="h6">
+                          <gf-ai-chat-inline [parts]="block.parts" />
+                        </h3>
+                      }
+                      @case ('ordered-list') {
+                        <ol>
+                          @for (item of block.items; track $index) {
+                            <li>
+                              <gf-ai-chat-inline [parts]="item" />
+                            </li>
+                          }
+                        </ol>
+                      }
+                      @case ('unordered-list') {
+                        <ul>
+                          @for (item of block.items; track $index) {
+                            <li>
+                              <gf-ai-chat-inline [parts]="item" />
+                            </li>
+                          }
+                        </ul>
+                      }
+                      @default {
+                        <p>
+                          <gf-ai-chat-inline [parts]="block.parts" />
+                        </p>
+                      }
+                    }
+                  }
+                </div>
+              } @else {
+                <div class="ai-user-text">{{ getMessageText(message) }}</div>
+              }
+
+              @if (getSourceLabels(message).length > 0) {
+                <div
+                  class="ai-sources align-items-center d-flex flex-wrap mt-2"
+                >
+                  <span class="mr-2" i18n>Sources</span>
+                  @for (source of getSourceLabels(message); track source) {
+                    <span class="ai-source-chip">{{ source }}</span>
+                  }
+                </div>
+              }
+            </article>
+          }
+        }
+
+        @if (chat.status === 'submitted') {
+          <div
+            aria-live="polite"
+            class="ai-thinking align-items-center d-flex"
+            role="status"
+          >
+            <mat-spinner class="mr-2" color="accent" [diameter]="16" />
+            <span i18n>Reviewing the portfolio data...</span>
+          </div>
+        }
+
+        @if (chat.status === 'streaming') {
+          <span
+            aria-live="polite"
+            class="cdk-visually-hidden"
+            i18n
+            role="status"
+            >The AI response is being generated.</span
+          >
+        } @else if (
+          chat.status === 'ready' &&
+          chat.messages.length > 0 &&
+          chat.messages.at(-1)?.role === 'assistant'
+        ) {
+          <span
+            aria-live="polite"
+            class="cdk-visually-hidden"
+            i18n
+            role="status"
+            >The AI response is complete.</span
+          >
+        }
+      </div>
+
+      @if (chat.status === 'error') {
+        <div aria-live="assertive" class="ai-error mb-3" role="alert">
+          <span i18n
+            >The AI response could not be completed. Please try again.</span
+          >
+          <button mat-button type="button" (click)="onRetry()">
+            <ion-icon class="mr-1" name="refresh-outline" />
+            <ng-container i18n>Retry</ng-container>
+          </button>
+        </div>
+      }
+
+      <form (submit)="onSubmit($event)">
+        <mat-form-field appearance="outline" class="ai-prompt w-100">
+          <mat-label i18n>Ask about this portfolio</mat-label>
+          <textarea
+            #promptInput
+            aria-describedby="ai-chat-keyboard-hint ai-chat-advice-notice"
+            matInput
+            maxlength="2000"
+            rows="3"
+            [disabled]="isBusy()"
+            [value]="prompt()"
+            (input)="onInput($event)"
+            (keydown)="onKeydown($event)"
+          ></textarea>
+          <mat-hint i18n id="ai-chat-keyboard-hint"
+            >Enter to send, Shift+Enter for a new line</mat-hint
+          >
+        </mat-form-field>
+
+        <div class="ai-actions align-items-center d-flex flex-wrap">
+          <button
+            aria-label="Clear AI chat"
+            i18n-aria-label
+            mat-button
+            type="button"
+            [disabled]="chat.messages.length === 0 && !isBusy()"
+            (click)="onClear()"
+          >
+            <ion-icon class="mr-1" name="trash-outline" />
+            <ng-container i18n>Clear</ng-container>
+          </button>
+          <span class="flex-grow-1"></span>
+          @if (isBusy()) {
+            <button mat-stroked-button type="button" (click)="onStop()">
+              <ion-icon class="mr-1" name="stop-circle-outline" />
+              <ng-container i18n>Stop</ng-container>
+            </button>
+          } @else {
+            <button
+              color="primary"
+              mat-flat-button
+              type="submit"
+              [disabled]="!prompt().trim()"
+            >
+              <ion-icon class="mr-1" name="send-outline" />
+              <ng-container i18n>Send</ng-container>
+            </button>
+          }
+        </div>
+      </form>
+    }
+
+    <p class="ai-notice mb-0 mt-3 text-muted" i18n id="ai-chat-advice-notice">
+      AI-generated information may be inaccurate and is not financial, tax, or
+      legal advice.
+    </p>
+  </mat-card-content>
+</mat-card>

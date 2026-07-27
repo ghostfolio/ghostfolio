@@ -3,7 +3,26 @@
   @if (user?.settings?.isExperimentalFeatures) {
     <div class="mb-3 row">
       <div class="col-lg">
-        <div class="d-flex justify-content-end">
+        <div class="d-flex flex-wrap justify-content-end">
+          @if (canUseAiChat) {
+            <button
+              #aiChatTrigger
+              aria-controls="ai-portfolio-chat-panel"
+              class="mx-1"
+              color="primary"
+              mat-stroked-button
+              type="button"
+              [attr.aria-expanded]="isAiChatOpen"
+              (click)="onToggleAiChat()"
+            >
+              <ion-icon class="mr-2" name="sparkles-outline" />
+              @if (isAiChatOpen) {
+                <ng-container i18n>Close AI portfolio chat</ng-container>
+              } @else {
+                <ng-container i18n>Ask AI about this portfolio</ng-container>
+              }
+            </button>
+          }
           <button
             #actionsMenuButton
             class="mx-1 no-min-width px-2"
@@ -73,6 +92,16 @@
         </div>
       </div>
     </div>
+  }
+
+  @if (canUseAiChat && isAiChatOpen) {
+    <gf-ai-chat
+      class="mb-5"
+      [filters]="aiChatFilters"
+      [model]="aiChatModel"
+      [range]="user?.settings?.dateRange ?? 'max'"
+      (closed)="onCloseAiChat()"
+    />
   }
 
   <div class="mb-5 row">
