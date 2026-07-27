@@ -22,6 +22,7 @@ export interface PortfolioSummary extends PortfolioPerformance {
   grossPerformanceWithCurrencyEffect: number;
   interestInBaseCurrency: number;
   liabilitiesInBaseCurrency: number;
+  totalAssetsInBaseCurrency: number;
   totalBuy: number;
   totalCashInBaseCurrency: number;
   totalSell: number;

@@ -79,14 +79,14 @@ export class GfPortfolioSummaryComponent implements OnChanges {
 
   protected get holdingsInBaseCurrency() {
     if (
-      !isNumber(this.summary?.currentValueInBaseCurrency) ||
+      !isNumber(this.summary?.totalAssetsInBaseCurrency) ||
       !isNumber(this.summary?.totalCashInBaseCurrency)
     ) {
       return null;
     }
 
     return (
-      this.summary.currentValueInBaseCurrency -
+      this.summary.totalAssetsInBaseCurrency -
       this.summary.totalCashInBaseCurrency
     );
   }
