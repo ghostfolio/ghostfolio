@@ -67,13 +67,14 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    const user = await this.validateAccessToken(
-      data.accessToken,
-      this.request.user.id
-    );
+    if (this.request.user.provider === 'ANONYMOUS') {
+      await this.validateAccessToken(data.accessToken, this.request.user.id);
+    } else {
+      await this.validateUserHasNoData(this.request.user.id);
+    }
 
     return this.userService.deleteUser({
-      id: user.id
+      id: this.request.user.id
     });
   }
 
@@ -242,5 +243,19 @@ export class UserController {
     }
 
     return user;
+  }
+
+  private async validateUserHasNoData(userId: string) {
+    const [accountsCount, activitiesCount] = await Promise.all([
+      this.prismaService.account.count({ where: { userId } }),
+      this.prismaService.order.count({ where: { userId } })
+    ]);
+
+    if (accountsCount > 0 || activitiesCount > 0) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
   }
 }

@@ -292,7 +292,26 @@
         <div class="d-flex py-1">
           <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
           <div class="pl-1 w-50">
-            @if (hasPermissionToDeleteOwnUser) {
+            @if (mustRemoveDataBeforeClosingAccount) {
+              <button color="warn" i18n mat-flat-button [disabled]="true">
+                Close Account
+              </button>
+              <div class="hint-text mt-2 text-muted" i18n>
+                For security reasons, please delete all activities and accounts
+                first before your Ghostfolio account can be closed.
+              </div>
+            } @else if (
+              hasPermissionToDeleteOwnUser && !isAnonymousAuthenticationProvider
+            ) {
+              <button
+                color="warn"
+                i18n
+                mat-flat-button
+                (click)="onCloseAccount()"
+              >
+                Close Account
+              </button>
+            } @else if (hasPermissionToDeleteOwnUser) {
               <form
                 class="w-100"
                 [formGroup]="deleteOwnUserForm"
@@ -337,17 +356,6 @@
                   Close Account
                 </button>
               </form>
-            } @else if (
-              hasPermissionToRequestOwnUserDeletion &&
-              (user?.accounts?.length > 0 || user?.activitiesCount > 0)
-            ) {
-              <button color="warn" i18n mat-flat-button [disabled]="true">
-                Close Account
-              </button>
-              <div class="hint-text mt-2 text-muted" i18n>
-                For security reasons, please delete all activities and accounts
-                first before your Ghostfolio account can be closed.
-              </div>
             } @else if (hasPermissionToRequestOwnUserDeletion) {
               <a
                 color="warn"

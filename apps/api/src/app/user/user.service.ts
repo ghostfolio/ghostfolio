@@ -110,7 +110,7 @@ export class UserService {
     locale?: string;
     user: UserWithSettings;
   }): Promise<IUser> {
-    const { id, permissions, settings, subscription } = user;
+    const { id, permissions, provider, settings, subscription } = user;
 
     const [
       access,
@@ -193,6 +193,7 @@ export class UserService {
       activitiesCount,
       id,
       permissions,
+      provider,
       referralPartners,
       subscription,
       systemMessage,
@@ -462,8 +463,11 @@ export class UserService {
 
     let currentPermissions = getPermissions(user.role);
 
-    if (user.provider === 'ANONYMOUS') {
+    if (!hasRole(user, Role.DEMO)) {
       currentPermissions.push(permissions.deleteOwnUser);
+    }
+
+    if (user.provider === 'ANONYMOUS') {
       currentPermissions.push(permissions.updateOwnAccessToken);
     }
 

@@ -5,7 +5,10 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { E_MAIL_LINE_BREAK } from '@ghostfolio/common/config';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  E_MAIL_LINE_BREAK
+} from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
@@ -83,6 +86,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected hasPermissionToUpdateViewMode: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
+  protected isAnonymousAuthenticationProvider: boolean;
   protected readonly isFingerprintSupported = this.doesBrowserSupportAuthn();
   protected isWebAuthnEnabled: boolean;
   protected readonly language = document.documentElement.lang;
@@ -104,6 +108,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'uk',
     'zh'
   ];
+  protected mustRemoveDataBeforeClosingAccount: boolean;
   protected user: User;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -127,6 +132,14 @@ export class GfUserAccountSettingsComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          const userDetailUrl = [
+            window.location.origin,
+            DEFAULT_LANGUAGE_CODE,
+            internalRoutes.adminControl.path,
+            internalRoutes.adminControl.subRoutes.users.path,
+            this.user.id
+          ].join('/');
+
           this.closeUserAccountMailHref = `mailto:hi@ghostfol.io?subject=Delete Account&body=${[
             'Hello',
             '',
@@ -134,7 +147,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
             '',
             `User ID: ${this.user.id}`,
             '',
-            'Kind regards'
+            'Kind regards',
+            '',
+            '',
+            '---',
+            userDetailUrl
           ].join(E_MAIL_LINE_BREAK)}`;
 
           this.hasPermissionToDeleteOwnUser = hasPermission(
@@ -146,6 +163,14 @@ export class GfUserAccountSettingsComponent implements OnInit {
             this.user.permissions,
             permissions.requestOwnUserDeletion
           );
+
+          this.isAnonymousAuthenticationProvider =
+            this.user.provider === 'ANONYMOUS';
+
+          this.mustRemoveDataBeforeClosingAccount =
+            (!this.isAnonymousAuthenticationProvider ||
+              this.hasPermissionToRequestOwnUserDeletion) &&
+            (this.user.accounts?.length > 0 || this.user.activitiesCount > 0);
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
@@ -207,12 +232,16 @@ export class GfUserAccountSettingsComponent implements OnInit {
       confirmFn: () => {
         this.dataService
           .deleteOwnUser({
-            accessToken: this.deleteOwnUserForm.controls.accessToken.value
+            accessToken: this.isAnonymousAuthenticationProvider
+              ? this.deleteOwnUserForm.controls.accessToken.value
+              : undefined
           })
           .pipe(
             catchError(() => {
               this.notificationService.alert({
-                title: $localize`Oops! Incorrect Security Token.`
+                title: this.isAnonymousAuthenticationProvider
+                  ? $localize`Oops! Incorrect Security Token.`
+                  : $localize`Oops! Your account could not be closed.`
               });
 
               return EMPTY;
