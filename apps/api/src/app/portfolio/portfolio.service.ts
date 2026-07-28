@@ -1986,7 +1986,9 @@ export class PortfolioService {
       .minus(liabilities)
       .toNumber();
 
-    const daysInMarket = differenceInDays(new Date(), dateOfFirstActivity);
+    const daysInMarket = dateOfFirstActivity
+      ? differenceInDays(new Date(), dateOfFirstActivity)
+      : 0;
 
     const annualizedPerformancePercent = getAnnualizedPerformancePercent({
       daysInMarket,

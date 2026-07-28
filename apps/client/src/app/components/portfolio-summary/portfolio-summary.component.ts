@@ -116,7 +116,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
           }
         );
       } else {
-        this.timeInMarket = '-';
+        this.timeInMarket = '–';
       }
     } else {
       this.timeInMarket = undefined;
