@@ -1,3 +1,11 @@
 :host {
   display: block;
+
+  .indent-1 {
+    margin-left: 1rem;
+  }
+
+  .indent-2 {
+    margin-left: 2rem;
+  }
 }

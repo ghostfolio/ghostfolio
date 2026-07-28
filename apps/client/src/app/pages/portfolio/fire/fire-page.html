@@ -109,7 +109,7 @@
             >
               @for (rate of safeWithdrawalRateOptions; track rate) {
                 <option [value]="rate">
-                  {{ rate | percent: '1.1-1' }}
+                  {{ rate * 100 | number: '1.1-1' }} %
                 </option>
               }</select
             >.

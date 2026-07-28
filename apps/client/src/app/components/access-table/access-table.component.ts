@@ -31,6 +31,7 @@ import {
   removeCircleOutline
 } from 'ionicons/icons';
 import ms from 'ms';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +41,7 @@ import ms from 'ms';
     MatButtonModule,
     MatMenuModule,
     MatTableModule,
+    NgxSkeletonLoaderModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -66,6 +68,10 @@ export class GfAccessTableComponent {
     }
 
     return columns;
+  });
+
+  protected readonly isLoading = computed(() => {
+    return !this.accesses();
   });
 
   private readonly clipboard = inject(Clipboard);

@@ -111,6 +111,12 @@ export class FinancialModelingPrepService
           )
           .then((res) => res.json());
 
+        if (!quote) {
+          throw new AssetProfileDelistedError(
+            `No data found, ${symbol} (${this.getName()}) may be delisted`
+          );
+        }
+
         response.assetClass = AssetClass.LIQUIDITY;
         response.assetSubClass = AssetSubClass.CRYPTOCURRENCY;
         response.currency = symbol.substring(
@@ -259,7 +265,11 @@ export class FinancialModelingPrepService
         ).toFixed(3)} seconds`;
       }
 
-      this.logger.error(message);
+      if (error instanceof AssetProfileDelistedError) {
+        this.logger.warn(error.message);
+      } else {
+        this.logger.error(message);
+      }
     }
 
     return response;
@@ -478,6 +488,8 @@ export class FinancialModelingPrepService
               currencyBySymbolMap[symbol] = {
                 currency: assetProfile.currency
               };
+            } else if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
+              currencyBySymbolMap[symbol] = { currency: DEFAULT_CURRENCY };
             }
           })
         );
