@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the portfolio summary tab on the home page
 - Upgraded `@openrouter/ai-sdk-provider` from version `2.9.1` to `3.0.0`
 - Upgraded `ai` from version `6.0.174` to `7.0.37`
 

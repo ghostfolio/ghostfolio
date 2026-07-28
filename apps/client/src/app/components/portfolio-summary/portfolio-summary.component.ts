@@ -98,6 +98,16 @@ export class GfPortfolioSummaryComponent implements OnChanges {
       : 0;
   }
 
+  protected get investmentsInBaseCurrency() {
+    if (!isNumber(this.holdingsInBaseCurrency)) {
+      return null;
+    }
+
+    return (
+      this.holdingsInBaseCurrency - (this.summary.emergencyFund?.assets ?? 0)
+    );
+  }
+
   public ngOnChanges() {
     if (this.summary) {
       if (
