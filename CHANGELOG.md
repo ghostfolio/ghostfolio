@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an option to use the annualized performance as the annual interest rate in the _FIRE_ calculator
+
 ### Changed
 
 - Upgraded `@openrouter/ai-sdk-provider` from version `2.9.1` to `3.0.0`

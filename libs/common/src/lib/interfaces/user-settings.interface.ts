@@ -31,6 +31,7 @@ export interface UserSettings {
   retirementDate?: string;
   safeWithdrawalRate?: number;
   savingsRate?: number;
+  useAnnualizedPerformanceRate?: boolean;
   viewMode?: ViewMode;
   xRayRules?: XRayRulesSettings;
 }

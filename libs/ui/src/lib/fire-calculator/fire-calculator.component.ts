@@ -28,6 +28,7 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MatDatepicker,
   MatDatepickerModule
@@ -72,6 +73,7 @@ import { FireCalculatorService } from './fire-calculator.service';
     FormsModule,
     IonIcon,
     MatButtonModule,
+    MatCheckboxModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
@@ -85,6 +87,7 @@ import { FireCalculatorService } from './fire-calculator.service';
 })
 export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() annualInterestRate = 0;
+  @Input() annualizedPerformancePercent: number;
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() deviceType: string;
@@ -94,13 +97,15 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() projectedTotalAmount = 0;
   @Input() retirementDate: Date;
   @Input() savingsRate = 0;
+  @Input() useAnnualizedPerformanceRate = false;
 
   public calculatorForm = this.formBuilder.group({
     annualInterestRate: new FormControl<number | null>(null),
     paymentPerPeriod: new FormControl<number | null>(null),
     principalInvestmentAmount: new FormControl<number | null>(null),
     projectedTotalAmount: new FormControl<number | null>(null),
-    retirementDate: new FormControl<Date | null>(null)
+    retirementDate: new FormControl<Date | null>(null),
+    useAnnualizedPerformanceRate: new FormControl<boolean>(false)
   });
 
   public chart: Chart<'bar'>;
@@ -116,6 +121,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   protected readonly projectedTotalAmountChanged = output<number>();
   protected readonly retirementDateChanged = output<Date>();
   protected readonly savingsRateChanged = output<number>();
+  protected readonly useAnnualizedPerformanceRateChanged = output<boolean>();
 
   private readonly CONTRIBUTION_PERIOD = 12;
 
@@ -206,6 +212,27 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
           this.retirementDateChanged.emit(retirementDate);
         }
       });
+    this.calculatorForm
+      .get('useAnnualizedPerformanceRate')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((useAnnualizedPerformanceRate) => {
+        if (useAnnualizedPerformanceRate !== null) {
+          this.applyAnnualizedPerformanceRate(useAnnualizedPerformanceRate);
+        }
+      });
+    this.calculatorForm
+      .get('useAnnualizedPerformanceRate')
+      ?.valueChanges.pipe(
+        debounceTime(500),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((useAnnualizedPerformanceRate) => {
+        if (useAnnualizedPerformanceRate !== null) {
+          this.useAnnualizedPerformanceRateChanged.emit(
+            useAnnualizedPerformanceRate
+          );
+        }
+      });
   }
 
   protected get retirementDateLabel(): string {
@@ -222,14 +249,24 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
+    const useAnnualizedPerformanceRate =
+      this.useAnnualizedPerformanceRate ?? false;
+
+    const annualInterestRate =
+      useAnnualizedPerformanceRate &&
+      this.isAnnualizedPerformancePercentAvailable()
+        ? this.getAnnualizedInterestRatePercent()
+        : this.annualInterestRate;
+
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       this.calculatorForm.setValue(
         {
-          annualInterestRate: this.annualInterestRate,
+          annualInterestRate,
           paymentPerPeriod: this.savingsRate,
           principalInvestmentAmount: this.fireWealth,
           projectedTotalAmount: this.projectedTotalAmount,
-          retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
+          retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE,
+          useAnnualizedPerformanceRate
         },
         {
           emitEvent: false
@@ -271,6 +308,16 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       this.calculatorForm
         .get('projectedTotalAmount')
         ?.enable({ emitEvent: false });
+
+      if (this.isAnnualizedPerformancePercentAvailable()) {
+        this.calculatorForm
+          .get('useAnnualizedPerformanceRate')
+          ?.enable({ emitEvent: false });
+      } else {
+        this.calculatorForm
+          .get('useAnnualizedPerformanceRate')
+          ?.disable({ emitEvent: false });
+      }
     } else {
       this.calculatorForm
         .get('annualInterestRate')
@@ -280,6 +327,15 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
         ?.disable({ emitEvent: false });
       this.calculatorForm
         .get('projectedTotalAmount')
+        ?.disable({ emitEvent: false });
+      this.calculatorForm
+        .get('useAnnualizedPerformanceRate')
+        ?.disable({ emitEvent: false });
+    }
+
+    if (useAnnualizedPerformanceRate) {
+      this.calculatorForm
+        .get('annualInterestRate')
         ?.disable({ emitEvent: false });
     }
 
@@ -465,6 +521,45 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       labels,
       datasets: [datasetDeposit, datasetSavings, datasetInterest]
     };
+  }
+
+  private applyAnnualizedPerformanceRate(
+    useAnnualizedPerformanceRate: boolean
+  ) {
+    const annualInterestRateControl =
+      this.calculatorForm.get('annualInterestRate');
+
+    if (
+      useAnnualizedPerformanceRate &&
+      this.isAnnualizedPerformancePercentAvailable()
+    ) {
+      annualInterestRateControl?.setValue(
+        this.getAnnualizedInterestRatePercent(),
+        { emitEvent: false }
+      );
+      annualInterestRateControl?.disable({ emitEvent: false });
+    } else {
+      annualInterestRateControl?.setValue(this.annualInterestRate, {
+        emitEvent: false
+      });
+
+      if (this.hasPermissionToUpdateUserSettings === true) {
+        annualInterestRateControl?.enable({ emitEvent: false });
+      }
+    }
+
+    this.initialize();
+  }
+
+  private isAnnualizedPerformancePercentAvailable(): boolean {
+    return (
+      isNumber(this.annualizedPerformancePercent) &&
+      !Number.isNaN(this.annualizedPerformancePercent)
+    );
+  }
+
+  private getAnnualizedInterestRatePercent(): number {
+    return Math.round(this.annualizedPerformancePercent * 10000) / 100;
   }
 
   private getP() {
