@@ -21,6 +21,7 @@ import {
   ellipsisHorizontalCircleOutline,
   informationCircleOutline
 } from 'ionicons/icons';
+import { isNumber } from 'lodash';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,9 +56,10 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     addIcons({ ellipsisHorizontalCircleOutline, informationCircleOutline });
   }
 
-  protected get buyingPowerPercentage() {
+  protected get cashPercentage() {
     return this.summary?.totalValueInBaseCurrency
-      ? this.summary.cash / this.summary.totalValueInBaseCurrency
+      ? this.summary.totalCashInBaseCurrency /
+          this.summary.totalValueInBaseCurrency
       : 0;
   }
 
@@ -72,6 +74,27 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     return this.summary?.totalValueInBaseCurrency
       ? this.summary.excludedAccountsAndActivities /
           this.summary.totalValueInBaseCurrency
+      : 0;
+  }
+
+  protected get holdingsInBaseCurrency() {
+    if (
+      !isNumber(this.summary?.totalAssetsInBaseCurrency) ||
+      !isNumber(this.summary?.totalCashInBaseCurrency)
+    ) {
+      return null;
+    }
+
+    return (
+      this.summary.totalAssetsInBaseCurrency -
+      this.summary.totalCashInBaseCurrency
+    );
+  }
+
+  protected get holdingsPercentage() {
+    return this.summary?.totalValueInBaseCurrency &&
+      isNumber(this.holdingsInBaseCurrency)
+      ? this.holdingsInBaseCurrency / this.summary.totalValueInBaseCurrency
       : 0;
   }
 
@@ -93,7 +116,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
           }
         );
       } else {
-        this.timeInMarket = '-';
+        this.timeInMarket = '–';
       }
     } else {
       this.timeInMarket = undefined;

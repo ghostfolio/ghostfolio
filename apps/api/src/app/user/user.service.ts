@@ -231,22 +231,7 @@ export class UserService {
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
-    const {
-      _count,
-      accessesGet,
-      accessToken,
-      accounts,
-      analytics,
-      authChallenge,
-      createdAt,
-      id,
-      provider,
-      role,
-      settings,
-      subscriptions,
-      thirdPartyId,
-      updatedAt
-    } = await this.prismaService.user.findUnique({
+    const userFromDatabase = await this.prismaService.user.findUnique({
       include: {
         _count: {
           select: {
@@ -263,6 +248,27 @@ export class UserService {
       },
       where: userWhereUniqueInput
     });
+
+    if (!userFromDatabase) {
+      return null;
+    }
+
+    const {
+      _count,
+      accessesGet,
+      accessToken,
+      accounts,
+      analytics,
+      authChallenge,
+      createdAt,
+      id,
+      provider,
+      role,
+      settings,
+      subscriptions,
+      thirdPartyId,
+      updatedAt
+    } = userFromDatabase;
 
     const activitiesCount = _count?.activities ?? 0;
 
@@ -283,16 +289,16 @@ export class UserService {
         analytics?.dataProviderGhostfolioDailyRequests
     };
 
-    if (user?.settings) {
+    if (user.settings) {
       if (!user.settings.settings) {
         user.settings.settings = {};
       }
-    } else if (user) {
+    } else {
       // Set default settings if needed
       user.settings = {
         settings: {},
         updatedAt: new Date(),
-        userId: user?.id
+        userId: user.id
       };
     }
 
