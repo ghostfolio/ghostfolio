@@ -4,12 +4,11 @@
     @for (filter of selectedFilters; track filter) {
       <mat-chip-row
         class="mx-1 my-0 px-2 py-0"
-        matChipRemove
         [removable]="true"
         (removed)="onRemoveFilter(filter)"
       >
         {{ filter.label }}
-        <button matChipRemove>
+        <button matChipRemove type="button">
           <ion-icon name="close-outline" />
         </button>
       </mat-chip-row>
