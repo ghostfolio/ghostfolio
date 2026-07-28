@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the time in market of the portfolio summary to be empty if there is no activity
+- Fixed an issue with the delete button in the activities filter component
 
 ## 3.35.0 - 2026-07-27
 
