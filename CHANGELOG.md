@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `@openrouter/ai-sdk-provider` from version `2.9.1` to `3.0.0`
+- Upgraded `ai` from version `6.0.174` to `7.0.37`
+
 ### Fixed
 
 - Fixed the time in market of the portfolio summary to be empty if there is no activity
