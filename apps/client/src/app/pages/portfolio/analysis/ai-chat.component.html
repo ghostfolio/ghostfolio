@@ -45,8 +45,14 @@
         </p>
         <p i18n>
           Ghostfolio keeps this conversation only in memory for this open panel
-          in this browser tab. Closing the panel, leaving the page, refreshing
-          the tab, or changing the portfolio scope clears it.
+          in this browser tab. Closing the panel, leaving the page, or
+          refreshing the tab clears it.
+        </p>
+        <p i18n>
+          Your consent applies to the portfolio scope shown above. If the
+          displayed filters or date range differ from the scope you consented
+          to, any active response is stopped, the conversation is cleared, and
+          you are asked to consent again.
         </p>
         <p class="mb-4" i18n>
           OpenRouter and upstream model providers may process or retain
@@ -68,7 +74,7 @@
             type="button"
             (click)="onAcceptConsent()"
           >
-            <ng-container i18n>Continue to AI chat</ng-container>
+            <ng-container i18n>Consent and continue</ng-container>
           </button>
         </div>
       </div>

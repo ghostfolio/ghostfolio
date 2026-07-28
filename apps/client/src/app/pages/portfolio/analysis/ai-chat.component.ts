@@ -378,7 +378,11 @@ export class GfAiChatComponent implements OnDestroy {
       }
     })
   });
-  protected readonly hasConsent = signal(false);
+  protected readonly hasConsent = computed(() => {
+    return (
+      !!this.model() && this.consentedScopeSignature() === this.scopeSignature()
+    );
+  });
   protected readonly isBusy = computed(() => {
     return this.chat.status === 'streaming' || this.chat.status === 'submitted';
   });
@@ -403,6 +407,9 @@ export class GfAiChatComponent implements OnDestroy {
 
   private readonly promptElement =
     viewChild<ElementRef<HTMLTextAreaElement>>('promptInput');
+  private readonly consentedScopeSignature = signal<string | undefined>(
+    undefined
+  );
   private readonly shouldFocusPrompt = signal(true);
   private readonly scopeSignature = computed(() => {
     const filters = this.filters()
@@ -430,16 +437,33 @@ export class GfAiChatComponent implements OnDestroy {
       const scopeSignature = this.scopeSignature();
 
       untracked(() => {
-        this.hasConsent.set(
-          !!model &&
-            window.sessionStorage.getItem(this.getConsentKey(model)) === 'true'
-        );
-
-        if (
+        const hasScopeChanged =
           previousScopeSignature !== undefined &&
-          previousScopeSignature !== scopeSignature
-        ) {
+          previousScopeSignature !== scopeSignature;
+        const consentKey = model ? this.getConsentKey(model) : undefined;
+        const storedScopeSignature = consentKey
+          ? window.sessionStorage.getItem(consentKey)
+          : null;
+
+        if (hasScopeChanged) {
           this.resetChat();
+
+          if (consentKey) {
+            window.sessionStorage.removeItem(consentKey);
+          }
+
+          this.consentedScopeSignature.set(undefined);
+        } else {
+          const hasConsent =
+            !!consentKey && storedScopeSignature === scopeSignature;
+
+          if (consentKey && storedScopeSignature !== null && !hasConsent) {
+            window.sessionStorage.removeItem(consentKey);
+          }
+
+          this.consentedScopeSignature.set(
+            hasConsent ? scopeSignature : undefined
+          );
         }
 
         previousScopeSignature = scopeSignature;
@@ -490,9 +514,12 @@ export class GfAiChatComponent implements OnDestroy {
   }
 
   protected onAcceptConsent() {
-    window.sessionStorage.setItem(this.getConsentKey(this.model()), 'true');
+    window.sessionStorage.setItem(
+      this.getConsentKey(this.model()),
+      this.scopeSignature()
+    );
     this.shouldFocusPrompt.set(true);
-    this.hasConsent.set(true);
+    this.consentedScopeSignature.set(this.scopeSignature());
   }
 
   protected onClear() {

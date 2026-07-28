@@ -1,5 +1,6 @@
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { Filter } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { HttpParams } from '@angular/common/http';
@@ -14,12 +15,18 @@ import {
   GfAiChatComponent
 } from './ai-chat.component';
 
+let mockPrepareSendMessagesRequest: (options: {
+  headers: Record<string, string>;
+  messages: UIMessage[];
+}) => { api: string };
+
 jest.mock('@ai-sdk/angular', () => {
   const { signal } =
     jest.requireActual<typeof import('@angular/core')>('@angular/core');
 
   class ChatMock {
     public error: Error | undefined;
+    public sendMessageCallCount = 0;
     public status = 'ready';
     public stopCallCount = 0;
     private readonly messagesSignal = signal<UIMessage[]>([]);
@@ -42,6 +49,8 @@ jest.mock('@ai-sdk/angular', () => {
     }
 
     public sendMessage() {
+      this.sendMessageCallCount += 1;
+
       return Promise.resolve();
     }
 
@@ -72,7 +81,15 @@ jest.mock('@ionic/angular/standalone', () => {
 });
 
 jest.mock('ai', () => {
-  class DefaultChatTransportMock {}
+  class DefaultChatTransportMock {
+    public constructor({
+      prepareSendMessagesRequest
+    }: {
+      prepareSendMessagesRequest: typeof mockPrepareSendMessagesRequest;
+    }) {
+      mockPrepareSendMessagesRequest = prepareSendMessagesRequest;
+    }
+  }
 
   return {
     DefaultChatTransport: DefaultChatTransportMock,
@@ -95,8 +112,60 @@ jest.mock('ionicons/icons', () => {
 });
 
 describe('GfAiChatComponent', () => {
+  const consentKey = 'ghostfolio.ai-chat.consent:openai/test-model';
   let component: GfAiChatComponent;
   let fixture: ComponentFixture<GfAiChatComponent>;
+
+  const acceptConsent = () => {
+    const consentButton = getButton('Consent and continue');
+
+    expect(consentButton).toBeDefined();
+    consentButton?.click();
+    fixture.detectChanges();
+  };
+
+  const createComponent = ({
+    filters = [],
+    range = 'ytd'
+  }: {
+    filters?: Filter[];
+    range?: DateRange;
+  } = {}) => {
+    fixture = TestBed.createComponent(GfAiChatComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('filters', filters);
+    fixture.componentRef.setInput('model', 'openai/test-model');
+    fixture.componentRef.setInput('range', range);
+    fixture.detectChanges();
+    TestBed.flushEffects();
+  };
+
+  const getButton = (label: string) => {
+    return [...fixture.nativeElement.querySelectorAll('button')].find(
+      (button: HTMLButtonElement) => {
+        return button.textContent?.includes(label);
+      }
+    ) as HTMLButtonElement | undefined;
+  };
+
+  const getComponentInternals = () => {
+    return component as unknown as {
+      chat: {
+        messages: UIMessage[];
+        sendMessageCallCount: number;
+        status: string;
+        stopCallCount: number;
+      };
+      getApiUrl: () => string;
+      hasConsent: () => boolean;
+      prompt: {
+        (): string;
+        set: (value: string) => void;
+      };
+      sendMessage: () => void;
+      scopeSignature: () => string;
+    };
+  };
 
   beforeEach(async () => {
     window.sessionStorage.clear();
@@ -134,53 +203,34 @@ describe('GfAiChatComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(GfAiChatComponent);
-    component = fixture.componentInstance;
-    fixture.componentRef.setInput('model', 'openai/test-model');
-    fixture.componentRef.setInput('range', 'ytd');
-    fixture.detectChanges();
-    TestBed.flushEffects();
+    createComponent();
   });
 
-  it('stores only the model-specific session consent marker', () => {
+  it('binds the model-specific session consent marker to the scope', () => {
     expect(fixture.nativeElement.textContent).toContain('Before you start');
     expect(fixture.nativeElement.textContent).toContain('OpenRouter');
+    expect(fixture.nativeElement.textContent).toContain(
+      'Your consent applies to the portfolio scope shown above'
+    );
+    expect(fixture.nativeElement.textContent).toContain(
+      'you are asked to consent again'
+    );
     expect(fixture.nativeElement.textContent).toContain(
       'may process or retain submitted data'
     );
 
-    const continueButton = [
-      ...fixture.nativeElement.querySelectorAll('button')
-    ].find((button: HTMLButtonElement) => {
-      return button.textContent?.includes('Continue to AI chat');
-    });
+    acceptConsent();
 
-    continueButton?.click();
-    fixture.detectChanges();
-
-    expect(
-      window.sessionStorage.getItem(
-        'ghostfolio.ai-chat.consent:openai/test-model'
-      )
-    ).toBe('true');
+    expect(window.sessionStorage.getItem(consentKey)).toBe(
+      getComponentInternals().scopeSignature()
+    );
     expect(window.sessionStorage.length).toBe(1);
   });
 
   it('does not render remote images or raw HTML as active content', () => {
-    const continueButton = [
-      ...fixture.nativeElement.querySelectorAll('button')
-    ].find((button: HTMLButtonElement) => {
-      return button.textContent?.includes('Continue to AI chat');
-    });
+    acceptConsent();
 
-    continueButton?.click();
-    fixture.detectChanges();
-
-    const componentInternals = component as unknown as {
-      chat: { messages: UIMessage[] };
-    };
-
-    componentInternals.chat.messages = [
+    getComponentInternals().chat.messages = [
       {
         id: 'assistant-message',
         parts: [
@@ -216,19 +266,80 @@ describe('GfAiChatComponent', () => {
     ]);
     fixture.detectChanges();
 
-    const componentInternals = component as unknown as {
-      getApiUrl: () => string;
-    };
-
-    expect(componentInternals.getApiUrl()).toBe(
+    expect(getComponentInternals().getApiUrl()).toBe(
       '/api/v1/ai/chat?accounts=account-1&tags=tag-1&range=ytd'
     );
   });
 
-  it('clears the in-memory conversation when the scope changes', () => {
-    const componentInternals = component as unknown as {
-      chat: { messages: UIMessage[] };
-    };
+  it.each([
+    {
+      changeScope: () => fixture.componentRef.setInput('range', '1y'),
+      scopePart: 'date range'
+    },
+    {
+      changeScope: () =>
+        fixture.componentRef.setInput('filters', [
+          { id: 'account-1', type: 'ACCOUNT' }
+        ]),
+      scopePart: 'filters'
+    }
+  ])(
+    'invalidates consent and context when the $scopePart changes',
+    ({ changeScope }) => {
+      acceptConsent();
+
+      const componentInternals = getComponentInternals();
+
+      componentInternals.chat.messages = [
+        {
+          id: 'message-1',
+          parts: [{ text: 'How am I doing?', type: 'text' }],
+          role: 'user'
+        }
+      ];
+      componentInternals.chat.status = 'streaming';
+      componentInternals.prompt.set('Compare my holdings');
+      const stopCallCount = componentInternals.chat.stopCallCount;
+
+      changeScope();
+      fixture.detectChanges();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+
+      expect(componentInternals.chat.stopCallCount).toBe(stopCallCount + 1);
+      expect(componentInternals.chat.messages).toEqual([]);
+      expect(componentInternals.prompt()).toBe('');
+      expect(window.sessionStorage.getItem(consentKey)).toBeNull();
+      expect(fixture.nativeElement.textContent).toContain('Before you start');
+    }
+  );
+
+  it('blocks sending as soon as the scope input changes', () => {
+    acceptConsent();
+
+    const componentInternals = getComponentInternals();
+
+    componentInternals.prompt.set('Compare my holdings');
+
+    fixture.componentRef.setInput('range', '1y');
+
+    expect(componentInternals.hasConsent()).toBe(false);
+
+    componentInternals.sendMessage();
+
+    expect(componentInternals.chat.sendMessageCallCount).toBe(0);
+  });
+
+  it('preserves consent and context for equivalent filter changes', () => {
+    fixture.componentRef.setInput('filters', [
+      { id: 'account-1', label: 'Brokerage', type: 'ACCOUNT' },
+      { id: 'tag-1', label: 'Long term', type: 'TAG' }
+    ]);
+    fixture.detectChanges();
+    TestBed.flushEffects();
+    acceptConsent();
+
+    const componentInternals = getComponentInternals();
 
     componentInternals.chat.messages = [
       {
@@ -237,12 +348,75 @@ describe('GfAiChatComponent', () => {
         role: 'user'
       }
     ];
+    const consentScopeSignature = window.sessionStorage.getItem(consentKey);
+    const stopCallCount = componentInternals.chat.stopCallCount;
+
+    fixture.componentRef.setInput('filters', [
+      { id: 'tag-1', label: 'Retirement', type: 'TAG' },
+      { id: 'account-1', label: 'Primary account', type: 'ACCOUNT' }
+    ]);
+    fixture.detectChanges();
+    TestBed.flushEffects();
+
+    expect(componentInternals.chat.stopCallCount).toBe(stopCallCount);
+    expect(componentInternals.chat.messages).toHaveLength(1);
+    expect(window.sessionStorage.getItem(consentKey)).toBe(
+      consentScopeSignature
+    );
+    expect(fixture.nativeElement.textContent).not.toContain('Before you start');
+  });
+
+  it('restores consent only when a reopened panel has the same scope', () => {
+    acceptConsent();
+
+    const consentScopeSignature = window.sessionStorage.getItem(consentKey);
+
+    fixture.destroy();
+    createComponent();
+
+    expect(window.sessionStorage.getItem(consentKey)).toBe(
+      consentScopeSignature
+    );
+    expect(fixture.nativeElement.textContent).not.toContain('Before you start');
+
+    fixture.destroy();
+    createComponent({ range: '1y' });
+
+    expect(window.sessionStorage.getItem(consentKey)).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Before you start');
+  });
+
+  it('removes a legacy model-only consent marker', () => {
+    fixture.destroy();
+    window.sessionStorage.setItem(consentKey, 'true');
+
+    createComponent();
+
+    expect(window.sessionStorage.getItem(consentKey)).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Before you start');
+  });
+
+  it('stores renewed consent for the changed request scope', () => {
+    fixture.componentRef.setInput('filters', [
+      { id: 'account-1', type: 'ACCOUNT' }
+    ]);
+    fixture.detectChanges();
+    TestBed.flushEffects();
+    acceptConsent();
 
     fixture.componentRef.setInput('range', '1y');
     fixture.detectChanges();
     TestBed.flushEffects();
+    fixture.detectChanges();
 
-    expect(componentInternals.chat.messages).toEqual([]);
+    acceptConsent();
+
+    expect(window.sessionStorage.getItem(consentKey)).toBe(
+      getComponentInternals().scopeSignature()
+    );
+    expect(
+      mockPrepareSendMessagesRequest({ headers: {}, messages: [] }).api
+    ).toBe('/api/v1/ai/chat?accounts=account-1&range=1y');
   });
 
   it('stops the active stream and clears messages when destroyed', () => {
