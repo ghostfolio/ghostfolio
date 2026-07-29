@@ -295,7 +295,6 @@ export function parseSafeMarkdown(value: string): SafeMarkdownBlock[] {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-ai-chat-inline',
-  standalone: true,
   template: `
     @for (part of parts(); track $index) {
       @switch (part.type) {

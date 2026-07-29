@@ -7,6 +7,10 @@ import {
   AiPortfolioToolsService
 } from './ai-portfolio-tools.service';
 
+jest.mock('ai', () => ({
+  tool: jest.fn((definition: unknown) => definition)
+}));
+
 describe('AiPortfolioToolsService', () => {
   let portfolioService: {
     getDetails: jest.Mock;
@@ -170,13 +174,14 @@ describe('AiPortfolioToolsService', () => {
   it('propagates an already-aborted tool execution signal', async () => {
     const abortController = new AbortController();
     abortController.abort(new Error('request aborted'));
-    const execute = service.createTools(scope).getPortfolioSummary.execute;
+    const execute = service.createTools().getPortfolioSummary.execute;
 
     await expect(
       execute(
         {},
         {
           abortSignal: abortController.signal,
+          context: scope,
           messages: [],
           toolCallId: 'tool-call-1'
         }

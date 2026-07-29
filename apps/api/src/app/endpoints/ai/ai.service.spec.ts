@@ -9,16 +9,15 @@ import { AiModelService } from './ai-model.service';
 import { AiPortfolioToolsService } from './ai-portfolio-tools.service';
 import { AiService } from './ai.service';
 
-jest.mock('ai', () => {
-  const actual = jest.requireActual('ai');
+jest.mock('@openrouter/ai-sdk-provider', () => ({
+  createOpenRouter: jest.fn()
+}));
 
-  return {
-    ...actual,
-    generateText: jest.fn(),
-    stepCountIs: jest.fn(),
-    streamText: jest.fn()
-  };
-});
+jest.mock('ai', () => ({
+  generateText: jest.fn(),
+  stepCountIs: jest.fn(),
+  streamText: jest.fn()
+}));
 
 describe('AiService', () => {
   let aiModelService: { getModel: jest.Mock };
@@ -88,13 +87,7 @@ describe('AiService', () => {
     ]);
     expect(aiModelService.getModel).toHaveBeenCalledTimes(1);
     expect(stepCountIs).toHaveBeenCalledWith(4);
-    expect(aiPortfolioToolsService.createTools).toHaveBeenCalledWith({
-      abortSignal: abortController.signal,
-      dateRange: 'ytd',
-      filters: [{ id: 'account-1', type: 'ACCOUNT' }],
-      userCurrency: 'USD',
-      userId: 'user-1'
-    });
+    expect(aiPortfolioToolsService.createTools).toHaveBeenCalledWith();
     expect(streamText).toHaveBeenCalledWith(
       expect.objectContaining({
         abortSignal: abortController.signal,
@@ -102,7 +95,27 @@ describe('AiService', () => {
         maxRetries: 1,
         messages,
         stopWhen: 'four-step-stop',
-        timeout: 30_000
+        timeout: 30_000,
+        toolsContext: {
+          getPortfolioHoldings: {
+            dateRange: 'ytd',
+            filters: [{ id: 'account-1', type: 'ACCOUNT' }],
+            userCurrency: 'USD',
+            userId: 'user-1'
+          },
+          getPortfolioPerformance: {
+            dateRange: 'ytd',
+            filters: [{ id: 'account-1', type: 'ACCOUNT' }],
+            userCurrency: 'USD',
+            userId: 'user-1'
+          },
+          getPortfolioSummary: {
+            dateRange: 'ytd',
+            filters: [{ id: 'account-1', type: 'ACCOUNT' }],
+            userCurrency: 'USD',
+            userId: 'user-1'
+          }
+        }
       })
     );
 

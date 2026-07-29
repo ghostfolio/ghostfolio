@@ -13,14 +13,13 @@ import type { Response } from 'express';
 import { AiController } from './ai.controller';
 import { AiService } from './ai.service';
 
-jest.mock('ai', () => {
-  const actual = jest.requireActual('ai');
+jest.mock('@openrouter/ai-sdk-provider', () => ({
+  createOpenRouter: jest.fn()
+}));
 
-  return {
-    ...actual,
-    pipeUIMessageStreamToResponse: jest.fn()
-  };
-});
+jest.mock('ai', () => ({
+  pipeUIMessageStreamToResponse: jest.fn()
+}));
 
 describe('AiController', () => {
   let aiService: { streamChat: jest.Mock };

@@ -14,44 +14,91 @@ export interface AiPortfolioScope {
   userId: string;
 }
 
+type AiPortfolioToolContext = Omit<AiPortfolioScope, 'abortSignal'>;
+
+const aiPortfolioToolInputSchema: z.ZodType<Record<string, never>> = z.object(
+  {}
+);
+
+const aiPortfolioToolContextSchema: z.ZodType<AiPortfolioToolContext> =
+  z.object({
+    dateRange: z.string(),
+    filters: z
+      .array(
+        z.object({
+          id: z.string(),
+          label: z.string().optional(),
+          type: z.enum([
+            'ACCOUNT',
+            'ASSET_CLASS',
+            'ASSET_SUB_CLASS',
+            'DATA_SOURCE',
+            'HOLDING_TYPE',
+            'PRESET_ID',
+            'SEARCH_QUERY',
+            'SYMBOL',
+            'TAG'
+          ])
+        })
+      )
+      .optional(),
+    userCurrency: z.string(),
+    userId: z.string()
+  });
+
 @Injectable()
 export class AiPortfolioToolsService {
   private static readonly HOLDINGS_LIMIT = 25;
 
   public constructor(private readonly portfolioService: PortfolioService) {}
 
-  public createTools(scope: AiPortfolioScope) {
+  public createTools() {
     return {
-      getPortfolioHoldings: tool({
+      getPortfolioHoldings: tool<
+        Record<string, never>,
+        Awaited<ReturnType<AiPortfolioToolsService['getPortfolioHoldings']>>,
+        AiPortfolioToolContext
+      >({
+        contextSchema: aiPortfolioToolContextSchema,
         description:
           'Read the portfolio holdings in the active scope, ordered by allocation. Monetary values use the stated currency and percentages are percentage points.',
-        inputSchema: z.object({}),
-        execute: async (_input, { abortSignal }) => {
+        inputSchema: aiPortfolioToolInputSchema,
+        execute: async (_input, { abortSignal, context }) => {
           return this.getPortfolioHoldings({
-            ...scope,
-            abortSignal: abortSignal ?? scope.abortSignal
+            ...context,
+            abortSignal
           });
         }
       }),
-      getPortfolioPerformance: tool({
+      getPortfolioPerformance: tool<
+        Record<string, never>,
+        Awaited<ReturnType<AiPortfolioToolsService['getPortfolioPerformance']>>,
+        AiPortfolioToolContext
+      >({
+        contextSchema: aiPortfolioToolContextSchema,
         description:
           'Read compact portfolio performance metrics for the active date range and filters. Chart history is intentionally excluded. Percentages are percentage points.',
-        inputSchema: z.object({}),
-        execute: async (_input, { abortSignal }) => {
+        inputSchema: aiPortfolioToolInputSchema,
+        execute: async (_input, { abortSignal, context }) => {
           return this.getPortfolioPerformance({
-            ...scope,
-            abortSignal: abortSignal ?? scope.abortSignal
+            ...context,
+            abortSignal
           });
         }
       }),
-      getPortfolioSummary: tool({
+      getPortfolioSummary: tool<
+        Record<string, never>,
+        Awaited<ReturnType<AiPortfolioToolsService['getPortfolioSummary']>>,
+        AiPortfolioToolContext
+      >({
+        contextSchema: aiPortfolioToolContextSchema,
         description:
           'Read a compact portfolio snapshot for the active date range and filters. Monetary values use the stated currency and percentages are percentage points.',
-        inputSchema: z.object({}),
-        execute: async (_input, { abortSignal }) => {
+        inputSchema: aiPortfolioToolInputSchema,
+        execute: async (_input, { abortSignal, context }) => {
           return this.getPortfolioSummary({
-            ...scope,
-            abortSignal: abortSignal ?? scope.abortSignal
+            ...context,
+            abortSignal
           });
         }
       })

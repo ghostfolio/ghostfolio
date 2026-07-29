@@ -80,6 +80,13 @@ export class AiService {
     userCurrency: string;
     userId: string;
   }) {
+    const portfolioToolContext = {
+      dateRange,
+      filters,
+      userCurrency,
+      userId
+    };
+
     const result = streamAiText({
       abortSignal,
       maxOutputTokens: 800,
@@ -100,13 +107,12 @@ export class AiService {
         `Respond in the user's preferred language (${languageCode}).`
       ].join('\n'),
       timeout: 30_000,
-      tools: this.aiPortfolioToolsService.createTools({
-        abortSignal,
-        dateRange,
-        filters,
-        userCurrency,
-        userId
-      })
+      tools: this.aiPortfolioToolsService.createTools(),
+      toolsContext: {
+        getPortfolioHoldings: portfolioToolContext,
+        getPortfolioPerformance: portfolioToolContext,
+        getPortfolioSummary: portfolioToolContext
+      }
     });
 
     return result
