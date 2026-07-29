@@ -9,6 +9,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
+  ghostfolioPrefix,
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
@@ -21,6 +22,7 @@ import {
   getStartOfUtcDate,
   isCurrency,
   isDerivedCurrency,
+  isValidCustomAssetProfileSymbol,
   isValidSearchQuery
 } from '@ghostfolio/common/helper';
 import {
@@ -287,6 +289,15 @@ export class DataProviderService implements OnModuleInit {
           };
 
           continue;
+        }
+
+        if (
+          dataSource === DataSource.MANUAL &&
+          !isValidCustomAssetProfileSymbol(symbol)
+        ) {
+          throw new Error(
+            `${activityPath}.symbol "${symbol}" must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source "${DataSource.MANUAL}"`
+          );
         }
 
         let assetProfile: Partial<SymbolProfile> = { currency };

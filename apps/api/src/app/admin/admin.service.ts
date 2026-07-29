@@ -7,6 +7,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  ghostfolioPrefix,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
@@ -14,7 +15,8 @@ import {
 import {
   applyAssetProfileOverrides,
   getAssetProfileIdentifier,
-  getCurrencyFromSymbol
+  getCurrencyFromSymbol,
+  hasGhostfolioPrefix
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
@@ -63,6 +65,12 @@ export class AdminService {
   > {
     try {
       if (dataSource === 'MANUAL') {
+        if (!hasGhostfolioPrefix(symbol)) {
+          throw new BadRequestException(
+            `symbol "${symbol}" must start with the prefix "${ghostfolioPrefix}_" for the data source "${dataSource}"`
+          );
+        }
+
         return this.symbolProfileService.add({
           currency,
           dataSource,
