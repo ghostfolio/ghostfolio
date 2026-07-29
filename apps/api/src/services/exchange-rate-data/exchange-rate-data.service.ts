@@ -203,7 +203,7 @@ export class ExchangeRateDataService {
       }
     }
 
-    const resultExtended = result;
+    const resultExtended = { ...result };
 
     for (const symbol of Object.keys(result)) {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
