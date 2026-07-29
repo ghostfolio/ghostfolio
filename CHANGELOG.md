@@ -10,12 +10,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the line chart components to share the common chart configuration
+
+## 3.36.0 - 2026-07-29
+
+### Added
+
+- Added an overview tab to the account detail dialog
+- Added the tags (read-only) to the account detail dialog (experimental)
+
+### Changed
+
+- Improved the portfolio summary tab on the home page
+- Improved the language localization for German (`de`)
 - Upgraded `@openrouter/ai-sdk-provider` from version `2.9.1` to `3.0.0`
 - Upgraded `ai` from version `6.0.174` to `7.0.37`
 
 ### Fixed
 
 - Fixed the time in market of the portfolio summary to be empty if there is no activity
+- Fixed an issue with the delete button in the activities filter component
+- Fixed the tags in the read-only mode of the tags selector component
 
 ## 3.35.0 - 2026-07-27
 

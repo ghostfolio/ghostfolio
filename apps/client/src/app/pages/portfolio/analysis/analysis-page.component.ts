@@ -82,7 +82,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected hasImpersonationId: boolean;
   protected hasPermissionToReadAiPrompt: boolean;
   protected investments: InvestmentItem[];
-  protected readonly investmentTimelineDataLabel = $localize`Investment`;
+  protected readonly investmentTimelineDataLabel = $localize`Invested Capital`;
   protected investmentsByGroup: InvestmentItem[];
   protected isLoadingAnalysisPrompt: boolean;
   protected isLoadingBenchmarkComparator: boolean;

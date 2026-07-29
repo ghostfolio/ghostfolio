@@ -57,7 +57,7 @@
     <div class="col"><hr /></div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Investment</div>
+    <div class="flex-grow-1 text-truncate" i18n>Invested Capital</div>
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
@@ -165,6 +165,65 @@
   </div>
   <div class="flex-nowrap px-3 py-1 row">
     <div class="align-items-center d-flex flex-grow-1 indent-1">
+      <ng-container i18n>Holdings</ng-container>
+      @if (
+        !hasImpersonationId &&
+        summary?.totalValueInBaseCurrency > 0 &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <gf-value
+          class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isPercent]="true"
+          [locale]="locale"
+          [precision]="0"
+          [value]="isLoading ? undefined : holdingsPercentage"
+        />
+      }
+    </div>
+    <div class="flex-column flex-wrap justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        position="end"
+        [isCurrency]="true"
+        [locale]="locale"
+        [precision]="precision"
+        [unit]="baseCurrency"
+        [value]="isLoading ? undefined : holdingsInBaseCurrency"
+      />
+    </div>
+  </div>
+  @if (isLoading || summary?.emergencyFund?.assets > 0) {
+    <div class="flex-nowrap px-3 py-1 row">
+      <div class="flex-grow-1 indent-2 text-truncate" i18n>Investments</div>
+      <div class="flex-column flex-wrap justify-content-end">
+        <gf-value
+          class="justify-content-end"
+          position="end"
+          [isCurrency]="true"
+          [locale]="locale"
+          [precision]="precision"
+          [unit]="baseCurrency"
+          [value]="isLoading ? undefined : investmentsInBaseCurrency"
+        />
+      </div>
+    </div>
+    <div class="flex-nowrap px-3 py-1 row">
+      <div class="flex-grow-1 indent-2 text-truncate" i18n>Emergency Fund</div>
+      <div class="flex-column flex-wrap justify-content-end">
+        <gf-value
+          class="justify-content-end"
+          position="end"
+          [isCurrency]="true"
+          [locale]="locale"
+          [precision]="precision"
+          [unit]="baseCurrency"
+          [value]="isLoading ? undefined : summary?.emergencyFund?.assets"
+        />
+      </div>
+    </div>
+  }
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="align-items-center d-flex flex-grow-1 indent-1">
       <ng-container i18n>Cash</ng-container>
       @if (
         !hasImpersonationId &&
@@ -175,6 +234,7 @@
           class="d-lg-inline-block d-none ml-2 small text-muted"
           [isPercent]="true"
           [locale]="locale"
+          [precision]="0"
           [value]="isLoading ? undefined : cashPercentage"
         />
       }
@@ -222,50 +282,6 @@
     </div>
   }
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="align-items-center d-flex flex-grow-1 indent-1">
-      <ng-container i18n>Holdings</ng-container>
-      @if (
-        !hasImpersonationId &&
-        summary?.totalValueInBaseCurrency > 0 &&
-        user?.settings?.isExperimentalFeatures
-      ) {
-        <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
-          [isPercent]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : holdingsPercentage"
-        />
-      }
-    </div>
-    <div class="flex-column flex-wrap justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        position="end"
-        [isCurrency]="true"
-        [locale]="locale"
-        [precision]="precision"
-        [unit]="baseCurrency"
-        [value]="isLoading ? undefined : holdingsInBaseCurrency"
-      />
-    </div>
-  </div>
-  @if (isLoading || summary?.emergencyFund?.assets > 0) {
-    <div class="flex-nowrap px-3 py-1 row">
-      <div class="flex-grow-1 indent-2 text-truncate" i18n>Emergency Fund</div>
-      <div class="flex-column flex-wrap justify-content-end">
-        <gf-value
-          class="justify-content-end"
-          position="end"
-          [isCurrency]="true"
-          [locale]="locale"
-          [precision]="precision"
-          [unit]="baseCurrency"
-          [value]="isLoading ? undefined : summary?.emergencyFund?.assets"
-        />
-      </div>
-    </div>
-  }
-  <div class="flex-nowrap px-3 py-1 row">
     <div class="align-items-center d-flex flex-grow-1">
       <ng-container i18n>Excluded from Analysis</ng-container>
       @if (
@@ -277,6 +293,7 @@
           class="d-lg-inline-block d-none ml-2 small text-muted"
           [isPercent]="true"
           [locale]="locale"
+          [precision]="0"
           [value]="isLoading ? undefined : excludedFromAnalysisPercentage"
         />
       }
@@ -363,6 +380,7 @@
           class="d-lg-inline-block d-none ml-2 small text-muted"
           [isPercent]="true"
           [locale]="locale"
+          [precision]="0"
           [value]="isLoading ? undefined : emergencyFundPercentage"
         />
       }
