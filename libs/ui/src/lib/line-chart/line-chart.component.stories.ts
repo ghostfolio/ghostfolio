@@ -19,6 +19,8 @@ type Story = StoryObj<GfLineChartComponent>;
 
 export const Simple: Story = {
   args: {
+    dataDecimation: true,
+    dataDecimationThreshold: 1,
     historicalDataItems: [
       {
         date: '2017-01-01',
