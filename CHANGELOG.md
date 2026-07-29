@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the tags (read-only) to the account detail dialog (experimental)
+
 ### Changed
 
 - Improved the portfolio summary tab on the home page
