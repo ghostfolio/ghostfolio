@@ -3,7 +3,10 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
-import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
+import {
+  isAccountBalanceInFuture,
+  WHERE_ACCOUNT_NOT_EXCLUDED
+} from '@ghostfolio/api/helper/account.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -456,6 +459,7 @@ export class ActivitiesService {
     }
 
     const activities: Activity[] = [];
+    const endOfTodayDate = endOfToday();
 
     for (const account of cashDetails.accounts) {
       const { balances } = await this.accountBalanceService.getAccountBalances({
@@ -468,6 +472,15 @@ export class ActivitiesService {
       let currentBalanceInBaseCurrency = 0;
 
       for (const balanceItem of balances) {
+        if (
+          isAccountBalanceInFuture({
+            endOfTodayDate,
+            date: balanceItem.date
+          })
+        ) {
+          continue;
+        }
+
         const syntheticActivityTemplate: Activity = {
           userId,
           accountId: account.id,
