@@ -1,20 +1,21 @@
 import {
-  getTooltipOptions,
-  getVerticalHoverLinePlugin
+  getChartBorderColor,
+  getChartElementsOptions,
+  getTimeAxisOptions,
+  getValueAxisOptions,
+  getVerticalHoverLinePlugin,
+  getZeroLineAnnotation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import {
-  getBackgroundColor,
-  getDateFormatString,
-  getLocale,
-  getTextColor,
-  parseDate
-} from '@ghostfolio/common/helper';
+import { getLocale, parseDate } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
-import { registerChartConfiguration } from '@ghostfolio/ui/chart';
+import {
+  getTimeSeriesTooltipOptions,
+  registerChartConfiguration
+} from '@ghostfolio/ui/chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import {
@@ -166,28 +167,13 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           data,
           options: {
             animation: false,
-            elements: {
-              line: {
-                tension: 0
-              },
-              point: {
-                hoverBackgroundColor: getBackgroundColor(this.colorScheme()),
-                hoverRadius: 2,
-                radius: 0
-              }
-            },
+            elements: getChartElementsOptions(this.colorScheme()),
             interaction: { intersect: false, mode: 'index' },
             maintainAspectRatio: true,
             plugins: {
               annotation: {
                 annotations: {
-                  yAxis: {
-                    borderColor: `rgba(${getTextColor(this.colorScheme())}, 0.1)`,
-                    borderWidth: 1,
-                    scaleID: 'y',
-                    type: 'line',
-                    value: 0
-                  }
+                  yAxis: getZeroLineAnnotation(this.colorScheme())
                 }
               },
               legend: {
@@ -195,54 +181,21 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
-                color: `rgba(${getTextColor(this.colorScheme())}, 0.1)`
+                color: getChartBorderColor(this.colorScheme())
               }
             },
             responsive: true,
             scales: {
-              x: {
-                border: {
-                  color: `rgba(${getTextColor(this.colorScheme())}, 0.1)`,
-                  width: 1
-                },
-                display: true,
-                grid: {
-                  display: false
-                },
-                type: 'time',
-                time: {
-                  tooltipFormat: getDateFormatString(this.locale()),
-                  unit: 'year'
+              x: getTimeAxisOptions({
+                colorScheme: this.colorScheme(),
+                locale: this.locale()
+              }),
+              y: getValueAxisOptions({
+                colorScheme: this.colorScheme(),
+                tickCallback: (tickValue) => {
+                  return `${Number(tickValue).toFixed(2)} %`;
                 }
-              },
-              y: {
-                border: {
-                  width: 0
-                },
-                display: true,
-                grid: {
-                  color: ({ scale, tick }) => {
-                    if (
-                      tick.value === 0 ||
-                      tick.value === scale.max ||
-                      tick.value === scale.min
-                    ) {
-                      return `rgba(${getTextColor(this.colorScheme())}, 0.1)`;
-                    }
-
-                    return 'transparent';
-                  }
-                },
-                position: 'right',
-                ticks: {
-                  callback: (value: number) => {
-                    return `${value.toFixed(2)} %`;
-                  },
-                  display: true,
-                  mirror: true,
-                  z: 1
-                }
-              }
+              })
             }
           },
           plugins: [
@@ -255,16 +208,10 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
-    return {
-      ...getTooltipOptions({
-        colorScheme: this.colorScheme(),
-        locale: this.locale(),
-        unit: '%'
-      }),
-      mode: 'index',
-      position: 'top',
-      xAlign: 'center',
-      yAlign: 'bottom'
-    };
+    return getTimeSeriesTooltipOptions<'line'>({
+      colorScheme: this.colorScheme(),
+      locale: this.locale(),
+      unit: '%'
+    });
   }
 }
