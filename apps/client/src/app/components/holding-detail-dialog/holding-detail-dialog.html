@@ -331,6 +331,17 @@
                 >ISIN</gf-value
               >
             </div>
+            <div class="col-12 mb-3">
+              <form [formGroup]="holdingForm">
+                <gf-tags-selector
+                  formControlName="tags"
+                  [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+                  [readonly]="!data.hasPermissionToUpdateActivity"
+                  [tagsAvailable]="tagsAvailable"
+                  [tagsReadOnly]="tagsOfAccounts"
+                />
+              </form>
+            </div>
 
             @if (dataProviderInfo) {
               <div class="col-md-12 mb-3 text-center">
@@ -418,16 +429,6 @@
         </mat-tab>
       }
     </mat-tab-group>
-
-    <form [formGroup]="holdingForm">
-      <gf-tags-selector
-        formControlName="tags"
-        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-        [readonly]="!data.hasPermissionToUpdateActivity"
-        [tagsAvailable]="tagsAvailable"
-        [tagsReadOnly]="tagsOfAccounts"
-      />
-    </form>
 
     @if (
       data.hasPermissionToAccessAdminControl ||
