@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the validation of the create activity and import functionality when referencing an asset profile with the data source `MANUAL`
-- Improved the validation of the endpoint to add a custom asset profile
+- Improved the validation of the endpoint to add a custom asset profile in the admin control panel
 
 ## 3.41.0 - 2026-08-03
 
