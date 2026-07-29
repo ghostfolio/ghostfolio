@@ -51,6 +51,7 @@ import { addIcons } from 'ionicons';
 import {
   albumsOutline,
   cashOutline,
+  readerOutline,
   swapVerticalOutline
 } from 'ionicons/icons';
 import { isNumber } from 'lodash';
@@ -101,7 +102,6 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected holdings: PortfolioPosition[];
   protected interestInBaseCurrency: number;
   protected interestInBaseCurrencyPrecision = 2;
-  protected isLoadingActivities: boolean;
   protected isLoadingChart: boolean;
   protected name: string | null;
   protected pageIndex = 0;
@@ -153,7 +153,12 @@ export class GfAccountDetailDialogComponent implements OnInit {
         }
       });
 
-    addIcons({ albumsOutline, cashOutline, swapVerticalOutline });
+    addIcons({
+      albumsOutline,
+      cashOutline,
+      readerOutline,
+      swapVerticalOutline
+    });
   }
 
   public ngOnInit() {
@@ -303,8 +308,6 @@ export class GfAccountDetailDialogComponent implements OnInit {
   }
 
   private fetchActivities() {
-    this.isLoadingActivities = true;
-
     this.dataService
       .fetchActivities({
         filters: [{ id: this.data.accountId, type: 'ACCOUNT' }],
@@ -317,8 +320,6 @@ export class GfAccountDetailDialogComponent implements OnInit {
       .subscribe(({ activities, count }) => {
         this.dataSource = new MatTableDataSource(activities);
         this.totalItems = count;
-
-        this.isLoadingActivities = false;
 
         this.changeDetectorRef.markForCheck();
       });
