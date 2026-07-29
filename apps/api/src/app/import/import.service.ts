@@ -386,6 +386,19 @@ export class ImportService {
       }
     }
 
+    for (const [index, assetProfileWithMarketData] of (
+      assetProfilesWithMarketDataDto ?? []
+    ).entries()) {
+      if (
+        assetProfileWithMarketData.dataSource === DataSource.MANUAL &&
+        !isValidCustomAssetProfileSymbol(assetProfileWithMarketData.symbol)
+      ) {
+        throw new Error(
+          `assetProfiles.${index}.symbol ("${assetProfileWithMarketData.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+        );
+      }
+    }
+
     if (!isDryRun && assetProfilesWithMarketDataDto?.length) {
       const existingAssetProfiles =
         await this.symbolProfileService.getSymbolProfiles(
@@ -395,15 +408,6 @@ export class ImportService {
         );
 
       for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
-        if (
-          !isValidCustomAssetProfileSymbol(assetProfileWithMarketData.symbol)
-        ) {
-          // Skip synthetic asset profiles (e.g. of the csv import), where the
-          // symbol is used as the name of the asset profile created in
-          // createActivity()
-          continue;
-        }
-
         // Check if there is any existing asset profile
         const existingAssetProfile = existingAssetProfiles.find(
           ({ dataSource, symbol }) => {

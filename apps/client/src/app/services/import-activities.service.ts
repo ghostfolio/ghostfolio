@@ -17,6 +17,7 @@ import { Account, DataSource, Type as ActivityType } from '@prisma/client';
 import { isFinite, isNumber, isString } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { firstValueFrom } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -64,10 +65,15 @@ export class ImportActivitiesService {
 
     for (const [index, item] of content.entries()) {
       const currency = this.parseCurrency({ content, index, item });
-      const dataSource = this.parseDataSource({ item });
       const type = this.parseType({ content, index, item });
 
+      let dataSource = this.parseDataSource({ item });
       let symbol = this.parseSymbol({ content, index, item });
+
+      if (!dataSource && ['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+        // Apply the same data source as the import service
+        dataSource = DataSource.MANUAL;
+      }
 
       if (dataSource === DataSource.MANUAL) {
         const name = symbol;
@@ -75,7 +81,7 @@ export class ImportActivitiesService {
         if (!isValidCustomAssetProfileSymbol(symbol)) {
           // Generate a symbol and keep the free text as the name
           assetProfileSymbolMapping[name] =
-            assetProfileSymbolMapping[name] ?? crypto.randomUUID();
+            assetProfileSymbolMapping[name] ?? uuidv4();
           symbol = assetProfileSymbolMapping[name];
         }
 
