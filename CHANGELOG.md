@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved the tags to the overview tab of the account detail dialog (experimental)
 - Moved the tags to the overview tab of the holding detail dialog
+- Improved the language localization for Spanish (`es`)
 
 ### Fixed
 
