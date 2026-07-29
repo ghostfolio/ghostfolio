@@ -167,7 +167,7 @@ export class GfTagsSelectorComponent
       return id;
     });
 
-    return this.tagsAvailable
+    return (this.tagsAvailable ?? [])
       .filter(({ id, name }) => {
         return (
           !tagIds.includes(id) &&
