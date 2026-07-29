@@ -11,11 +11,13 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  ghostfolioPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { CreateAssetProfileDto, CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
+  isValidCustomAssetProfileSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
 import {
@@ -393,6 +395,15 @@ export class ImportService {
         );
 
       for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
+        if (
+          !isValidCustomAssetProfileSymbol(assetProfileWithMarketData.symbol)
+        ) {
+          // Skip synthetic asset profiles (e.g. of the csv import), where the
+          // symbol is used as the name of the asset profile created in
+          // createActivity()
+          continue;
+        }
+
         // Check if there is any existing asset profile
         const existingAssetProfile = existingAssetProfiles.find(
           ({ dataSource, symbol }) => {
@@ -441,7 +452,7 @@ export class ImportService {
       }
     }
 
-    for (const activity of activitiesDto) {
+    for (const [index, activity] of activitiesDto.entries()) {
       if (!activity.dataSource) {
         if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
           activity.dataSource = DataSource.MANUAL;
@@ -449,6 +460,15 @@ export class ImportService {
           activity.dataSource =
             this.dataProviderService.getDataSourceForImport();
         }
+      }
+
+      if (
+        activity.dataSource === DataSource.MANUAL &&
+        !isValidCustomAssetProfileSymbol(activity.symbol)
+      ) {
+        throw new Error(
+          `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+        );
       }
 
       if (!isDryRun) {

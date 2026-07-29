@@ -5,7 +5,10 @@ import {
   CreatePlatformDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
-import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
+import {
+  isValidCustomAssetProfileSymbol,
+  parseDate as parseDateHelper
+} from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
@@ -57,12 +60,53 @@ export class ImportActivitiesService {
 
     const activities: CreateOrderDto[] = [];
     const assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+    const assetProfileSymbolMapping: { [name: string]: string } = {};
 
     for (const [index, item] of content.entries()) {
       const currency = this.parseCurrency({ content, index, item });
       const dataSource = this.parseDataSource({ item });
-      const symbol = this.parseSymbol({ content, index, item });
       const type = this.parseType({ content, index, item });
+
+      let symbol = this.parseSymbol({ content, index, item });
+
+      if (dataSource === DataSource.MANUAL) {
+        const name = symbol;
+
+        if (!isValidCustomAssetProfileSymbol(symbol)) {
+          // Generate a symbol and keep the free text as the name
+          assetProfileSymbolMapping[name] =
+            assetProfileSymbolMapping[name] ?? crypto.randomUUID();
+          symbol = assetProfileSymbolMapping[name];
+        }
+
+        const isExistingAssetProfile = assetProfiles.some((assetProfile) => {
+          return assetProfile.symbol === symbol;
+        });
+
+        if (!isExistingAssetProfile) {
+          // Create synthetic asset profile for MANUAL data source
+          assetProfiles.push({
+            currency,
+            name,
+            symbol,
+            assetClass: undefined,
+            assetSubClass: undefined,
+            comment: undefined,
+            countries: [],
+            cusip: undefined,
+            dataSource: DataSource.MANUAL,
+            figi: undefined,
+            figiComposite: undefined,
+            figiShareClass: undefined,
+            holdings: [],
+            isActive: true,
+            isin: undefined,
+            marketData: [],
+            sectors: [],
+            url: undefined
+          });
+        }
+      }
 
       activities.push({
         currency,
@@ -77,30 +121,6 @@ export class ImportActivitiesService {
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
-
-      if (dataSource === DataSource.MANUAL) {
-        // Create synthetic asset profile for MANUAL data source
-        assetProfiles.push({
-          currency,
-          symbol,
-          assetClass: undefined,
-          assetSubClass: undefined,
-          comment: undefined,
-          countries: [],
-          cusip: undefined,
-          dataSource: DataSource.MANUAL,
-          figi: undefined,
-          figiComposite: undefined,
-          figiShareClass: undefined,
-          holdings: [],
-          isActive: true,
-          isin: undefined,
-          marketData: [],
-          name: symbol,
-          sectors: [],
-          url: undefined
-        });
-      }
     }
 
     const result = await this.importJson({

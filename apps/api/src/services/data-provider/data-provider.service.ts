@@ -296,7 +296,7 @@ export class DataProviderService implements OnModuleInit {
           !isValidCustomAssetProfileSymbol(symbol)
         ) {
           throw new Error(
-            `${activityPath}.symbol "${symbol}" must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source "${DataSource.MANUAL}"`
+            `${activityPath}.symbol ("${symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
           );
         }
 
@@ -329,7 +329,7 @@ export class DataProviderService implements OnModuleInit {
 
         if (!assetProfile?.name) {
           throw new Error(
-            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${maskedDataSource}")`
+            `${activityPath}.symbol ("${symbol}") is not valid for the specified data source ("${maskedDataSource}")`
           );
         }
 

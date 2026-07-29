@@ -67,7 +67,7 @@ export class AdminService {
       if (dataSource === 'MANUAL') {
         if (!hasGhostfolioPrefix(symbol)) {
           throw new BadRequestException(
-            `symbol "${symbol}" must start with the prefix "${ghostfolioPrefix}_" for the data source "${dataSource}"`
+            `symbol ("${symbol}") must start with the prefix "${ghostfolioPrefix}_" for the data source ("${dataSource}")`
           );
         }
 

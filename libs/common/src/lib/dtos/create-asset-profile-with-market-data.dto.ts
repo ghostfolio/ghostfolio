@@ -1,8 +1,7 @@
 import { MarketData } from '@ghostfolio/common/interfaces';
-import { IsCustomAssetProfileSymbolConstraint } from '@ghostfolio/common/validator-constraints/is-custom-asset-profile-symbol';
 
 import { DataSource } from '@prisma/client';
-import { IsArray, IsIn, IsOptional, Validate } from 'class-validator';
+import { IsArray, IsIn, IsOptional } from 'class-validator';
 
 import { CreateAssetProfileDto } from './create-asset-profile.dto';
 
@@ -15,7 +14,4 @@ export class CreateAssetProfileWithMarketDataDto extends CreateAssetProfileDto {
   @IsArray()
   @IsOptional()
   marketData?: MarketData[];
-
-  @Validate(IsCustomAssetProfileSymbolConstraint)
-  override symbol: string;
 }
