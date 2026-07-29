@@ -1,7 +1,7 @@
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import {
-  WHERE_ACCOUNT_NOT_EXCLUDED,
-  isAccountBalanceInFuture
+  isAccountBalanceInFuture,
+  WHERE_ACCOUNT_NOT_EXCLUDED
 } from '@ghostfolio/api/helper/account.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
