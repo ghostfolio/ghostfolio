@@ -350,19 +350,21 @@ describe('PortfolioService', () => {
       ).getSummary(args);
     };
 
-    const portfolioCalculator = {
-      getDividendInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
-      getFeesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
-      getInterestInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
-      getLiabilitiesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
-      getSnapshot: jest.fn().mockResolvedValue({
-        currentValueInBaseCurrency: new Big(3000),
-        totalCashInBaseCurrency: new Big(1000),
-        totalInvestment: new Big(2000),
-        totalInvestmentWithCurrencyEffect: new Big(2000)
-      }),
-      getStartDate: jest.fn().mockReturnValue(parseDate('2024-01-01'))
-    } as unknown as PortfolioCalculator;
+    function createPortfolioCalculator() {
+      return {
+        getDividendInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getFeesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getInterestInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getLiabilitiesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getSnapshot: jest.fn().mockResolvedValue({
+          currentValueInBaseCurrency: new Big(3000),
+          totalCashInBaseCurrency: new Big(1000),
+          totalInvestment: new Big(2000),
+          totalInvestmentWithCurrencyEffect: new Big(2000)
+        }),
+        getStartDate: jest.fn().mockReturnValue(parseDate('2024-01-01'))
+      } as unknown as PortfolioCalculator;
+    }
 
     beforeEach(() => {
       jest
@@ -398,6 +400,8 @@ describe('PortfolioService', () => {
         accounts: [],
         balanceInBaseCurrency: 1000
       });
+
+      const portfolioCalculator = createPortfolioCalculator();
 
       const summary = await getSummary({
         portfolioCalculator,
