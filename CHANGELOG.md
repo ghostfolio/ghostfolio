@@ -120,6 +120,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Ignored future-dated account balances in the portfolio calculation
+- Fixed the creation of an asset profile with a free-text symbol on the activities import with the data source `MANUAL` from a `csv` file
 
 ## 3.36.0 - 2026-07-29
 
