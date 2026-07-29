@@ -30,70 +30,75 @@
       />
     </div>
 
-    <div class="mb-3 row">
-      <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [isCurrency]="true"
-          [locale]="user?.settings?.locale"
-          [precision]="balancePrecision"
-          [unit]="currency"
-          [value]="balance"
-          >Cash Balance</gf-value
-        >
-      </div>
-      <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [isCurrency]="true"
-          [locale]="user?.settings?.locale"
-          [precision]="equityPrecision"
-          [unit]="currency"
-          [value]="equity"
-          >Equity</gf-value
-        >
-      </div>
-      <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [isCurrency]="true"
-          [locale]="user?.settings?.locale"
-          [precision]="interestInBaseCurrencyPrecision"
-          [unit]="user?.settings?.baseCurrency"
-          [value]="interestInBaseCurrency"
-          >Interest</gf-value
-        >
-      </div>
-      <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [isCurrency]="true"
-          [locale]="user?.settings?.locale"
-          [precision]="dividendInBaseCurrencyPrecision"
-          [unit]="user?.settings?.baseCurrency"
-          [value]="dividendInBaseCurrency"
-          >Dividend</gf-value
-        >
-      </div>
-      <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="activitiesCount"
-          >Activities</gf-value
-        >
-      </div>
-      <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="platformName">Platform</gf-value>
-      </div>
-    </div>
-
-    <mat-tab-group
-      animationDuration="0ms"
-      [class.d-none]="isLoadingActivities"
-      [mat-stretch-tabs]="false"
-    >
+    <mat-tab-group animationDuration="0ms" [mat-stretch-tabs]="false">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="reader-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Overview</div>
+        </ng-template>
+        <div class="container mt-3 p-0">
+          <div class="row w-100">
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [precision]="balancePrecision"
+                [unit]="currency"
+                [value]="balance"
+                >Cash Balance</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [precision]="equityPrecision"
+                [unit]="currency"
+                [value]="equity"
+                >Equity</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [precision]="interestInBaseCurrencyPrecision"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="interestInBaseCurrency"
+                >Interest</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [precision]="dividendInBaseCurrencyPrecision"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="dividendInBaseCurrency"
+                >Dividend</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value i18n size="medium" [value]="activitiesCount"
+                >Activities</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value i18n size="medium" [value]="platformName"
+                >Platform</gf-value
+              >
+            </div>
+          </div>
+        </div>
+      </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="albums-outline" />
