@@ -18,9 +18,12 @@ export function getWhereAccountBalanceNotInFuture(): Prisma.AccountBalanceWhereI
   };
 }
 
-export function isAccountBalanceInFuture(
-  aDate: Date,
-  aEndOfToday = endOfToday()
-) {
-  return isAfter(aDate, aEndOfToday);
+export function isAccountBalanceInFuture({
+  date,
+  endOfTodayDate = endOfToday()
+}: {
+  date: Date;
+  endOfTodayDate?: Date;
+}) {
+  return isAfter(date, endOfTodayDate);
 }

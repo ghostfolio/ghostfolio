@@ -139,7 +139,7 @@ export class AccountService {
           // The balances are ordered by date descending, hence the first account
           // balance which is not in the future reflects the current balance
           account.balances.find(({ date }) => {
-            return !isAccountBalanceInFuture(date, endOfTodayDate);
+            return !isAccountBalanceInFuture({ date, endOfTodayDate });
           })?.value ?? 0,
         tags: isTagsIncluded
           ? (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {

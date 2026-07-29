@@ -120,7 +120,7 @@ export class AccountBalanceService {
     const endOfTodayDate = endOfToday();
 
     for (const { accountId, date, valueInBaseCurrency } of balances) {
-      if (isAccountBalanceInFuture(date, endOfTodayDate)) {
+      if (isAccountBalanceInFuture({ date, endOfTodayDate })) {
         continue;
       }
 

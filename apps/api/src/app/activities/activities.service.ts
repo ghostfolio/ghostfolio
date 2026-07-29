@@ -472,7 +472,12 @@ export class ActivitiesService {
       let currentBalanceInBaseCurrency = 0;
 
       for (const balanceItem of balances) {
-        if (isAccountBalanceInFuture(balanceItem.date, endOfTodayDate)) {
+        if (
+          isAccountBalanceInFuture({
+            endOfTodayDate,
+            date: balanceItem.date
+          })
+        ) {
           continue;
         }
 
