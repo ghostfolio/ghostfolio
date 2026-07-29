@@ -179,6 +179,10 @@
         />
       </mat-tab>
     </mat-tab-group>
+
+    @if (user?.settings?.isExperimentalFeatures) {
+      <gf-tags-selector [readonly]="true" [tags]="tags" />
+    }
   </div>
 </div>
 
