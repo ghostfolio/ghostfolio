@@ -85,6 +85,7 @@ const locales = {
   FEAR: $localize`Fear`,
   GREED: $localize`Greed`,
   NEUTRAL: $localize`Neutral`,
+  UNKNOWN: $localize`Unknown`,
 
   // Sectors
   'Basic Materials': $localize`Basic Materials`,

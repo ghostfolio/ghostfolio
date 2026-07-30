@@ -1,4 +1,3 @@
-import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TOKEN
@@ -14,6 +13,7 @@ import {
   MarketDataOfMarketsResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/ui/fear-and-greed-index';
 
 import { CommonModule } from '@angular/common';
 import {

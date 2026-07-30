@@ -1,4 +1,3 @@
-import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
@@ -12,6 +11,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { FearAndGreedIndexMode } from '@ghostfolio/common/types';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/ui/fear-and-greed-index';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
@@ -64,6 +64,7 @@ export class GfMarketsComponent implements OnInit {
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
   protected hasPermissionToReadMarketDataOfMarkets: boolean;
   protected historicalDataItems: HistoricalDataItem[];
+  protected isLoadingFearAndGreedIndex = true;
   protected user: User;
 
   private fearAndGreedIndexData: MarketDataOfMarketsResponse['fearAndGreedIndex'];
@@ -104,6 +105,8 @@ export class GfMarketsComponent implements OnInit {
             !this.fearAndGreedIndexData
           ) {
             this.fetchMarketDataOfMarkets();
+          } else {
+            this.isLoadingFearAndGreedIndex = false;
           }
 
           this.changeDetectorRef.markForCheck();
@@ -136,6 +139,8 @@ export class GfMarketsComponent implements OnInit {
         this.fearAndGreedIndexData = fearAndGreedIndex;
 
         this.initializeFearAndGreedIndex();
+
+        this.isLoadingFearAndGreedIndex = false;
 
         this.changeDetectorRef.markForCheck();
       });
