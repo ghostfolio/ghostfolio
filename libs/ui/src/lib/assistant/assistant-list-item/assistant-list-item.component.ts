@@ -53,10 +53,7 @@ export class GfAssistantListItemComponent
   public ngOnChanges() {
     if (this.item?.mode === SearchMode.ACCOUNT) {
       this.queryParams = {};
-
-      this.routerLink = internalRoutes.accounts.subRoutes.detail.routerLink(
-        this.item.id
-      );
+      this.routerLink = this.item.routerLink;
     } else if (this.item?.mode === SearchMode.ASSET_PROFILE) {
       this.queryParams = {
         assetProfileDialog: true,

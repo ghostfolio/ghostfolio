@@ -307,15 +307,17 @@
           <ion-icon name="ellipsis-horizontal" />
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
-          <a
-            mat-menu-item
-            [routerLink]="accountDialogRouterLinks().get(element.id)?.detail"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="wallet-outline" />
-              <span><ng-container i18n>View Details</ng-container>...</span>
-            </span>
-          </a>
+          @if (hasPermissionToOpenDetails()) {
+            <a
+              mat-menu-item
+              [routerLink]="accountDialogRouterLinks().get(element.id)?.detail"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="wallet-outline" />
+                <span><ng-container i18n>View Details</ng-container>...</span>
+              </span>
+            </a>
+          }
           <a
             mat-menu-item
             [routerLink]="accountDialogRouterLinks().get(element.id)?.update"

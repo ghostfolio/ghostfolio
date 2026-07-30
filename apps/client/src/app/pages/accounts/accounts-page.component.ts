@@ -48,6 +48,8 @@ export class GfAccountsPageComponent implements OnInit {
   protected totalValueInBaseCurrency = 0;
   protected user: User;
 
+  private isInitialFetch = true;
+
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
@@ -120,8 +122,6 @@ export class GfAccountsPageComponent implements OnInit {
           .get(true)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe();
-
-        this.fetchAccounts();
       });
   }
 
@@ -147,11 +147,17 @@ export class GfAccountsPageComponent implements OnInit {
           this.totalBalanceInBaseCurrency = totalBalanceInBaseCurrency;
           this.totalValueInBaseCurrency = totalValueInBaseCurrency;
 
-          if (this.hasPermissionToCreateAccount && this.accounts?.length <= 0) {
+          if (
+            this.accounts?.length <= 0 &&
+            this.hasPermissionToCreateAccount &&
+            this.isInitialFetch
+          ) {
             void this.router.navigate(
               internalRoutes.accounts.subRoutes.create.routerLink
             );
           }
+
+          this.isInitialFetch = false;
 
           this.changeDetectorRef.markForCheck();
         }

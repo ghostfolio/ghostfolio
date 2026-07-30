@@ -24,8 +24,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import {
+  distinctUntilChanged,
+  map,
+  switchMap,
+  takeUntil,
+  tap
+} from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccountDialogComponent } from '../create-or-update-account-dialog/create-or-update-account-dialog.component';
 import { CreateOrUpdateAccountDialogParams } from '../create-or-update-account-dialog/interfaces/interfaces';
@@ -37,11 +43,15 @@ import { AccountDialogMode } from './types/account-dialog-mode.type';
   template: ''
 })
 export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
-  private dialogRef: MatDialogRef<unknown>;
+  private dialogRef: MatDialogRef<
+    GfAccountDetailDialogComponent | GfCreateOrUpdateAccountDialogComponent
+  >;
 
   private readonly deviceType = computed(() => {
     return this.deviceDetectorService.deviceInfo().deviceType;
   });
+
+  private readonly dialogClosed = new Subject<void>();
 
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
@@ -56,20 +66,31 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     const mode = this.route.snapshot.data.mode as AccountDialogMode;
-    const accountId = this.route.snapshot.paramMap.get('accountId');
 
-    const account$: Observable<AccountResponse | undefined> =
-      mode === 'update' && accountId
-        ? this.dataService.fetchAccount(accountId)
-        : of(undefined);
-
-    this.userService
-      .get()
+    // The router reuses this component when only the account id changes, so
+    // the parameters are observed instead of read from the snapshot once
+    this.route.paramMap
       .pipe(
-        switchMap((user) => {
-          return account$.pipe(
-            map((account) => {
-              return { account, user };
+        map((paramMap) => {
+          return paramMap.get('accountId');
+        }),
+        distinctUntilChanged(),
+        tap(() => {
+          this.closeDialog();
+        }),
+        switchMap((accountId) => {
+          const account$: Observable<AccountResponse | undefined> =
+            mode === 'update' && accountId
+              ? this.dataService.fetchAccount(accountId)
+              : of(undefined);
+
+          return this.userService.get().pipe(
+            switchMap((user) => {
+              return account$.pipe(
+                map((account) => {
+                  return { account, accountId, user };
+                })
+              );
             })
           );
         }),
@@ -79,15 +100,18 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
         error: () => {
           this.navigateBack();
         },
-        next: ({ account, user }) => {
+        next: ({ account, accountId, user }) => {
           if (mode === 'detail') {
-            this.openAccountDetailDialog({ user });
+            this.openAccountDetailDialog({ accountId, user });
 
             return;
           }
 
           if (mode === 'update') {
-            if (!account) {
+            if (
+              !account ||
+              !hasPermission(user?.permissions, permissions.updateAccount)
+            ) {
               this.navigateBack();
 
               return;
@@ -151,15 +175,29 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
     // be closed explicitly when leaving the route (for example via the browser
     // navigation)
     this.dialogRef?.close();
+
+    this.dialogClosed.complete();
+  }
+
+  private closeDialog() {
+    // Tear down the subscription of the dialog which is about to be replaced,
+    // so that its result is not mistaken for the user closing it
+    this.dialogClosed.next();
+
+    this.dialogRef?.close();
   }
 
   private navigateBack() {
     void this.router.navigate(internalRoutes.accounts.routerLink);
   }
 
-  private openAccountDetailDialog({ user }: { user: User }) {
-    const accountId = this.route.snapshot.paramMap.get('accountId');
-
+  private openAccountDetailDialog({
+    accountId,
+    user
+  }: {
+    accountId: string | null;
+    user: User;
+  }) {
     if (!accountId) {
       this.navigateBack();
 
@@ -191,17 +229,11 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntil(this.dialogClosed), takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         if (result?.isNavigating) {
           return;
         }
-
-        // Deliberately not bound to the destroy reference: navigating back
-        // destroys this component and the refreshed user is what makes the
-        // accounts page reload its data, which may have been changed in the
-        // dialog (for example the cash balances)
-        this.userService.get(true).subscribe();
 
         this.navigateBack();
       });
@@ -233,7 +265,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(takeUntil(this.dialogClosed), takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         if (!result) {
           this.navigateBack();
