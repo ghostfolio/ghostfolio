@@ -1176,7 +1176,7 @@
       </trans-unit>
       <trans-unit id="5761400233881592893" datatype="html">
         <source>Update Activity</source>
-        <target state="translated">Оновити операцію</target>
+        <target state="new">Update Activity</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">146</context>
@@ -1932,7 +1932,7 @@
       </trans-unit>
       <trans-unit id="8375528527939577247" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="@if ( assetProfile?.currency &amp;&amp; data.baseCurrency !== assetProfile?.currency ) {"/> Change with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Change <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
-        <target state="translated"><x id="START_BLOCK_IF" equiv-text="seCurrency !== SymbolProfile?.currency ) {"/> Зміна з урахуванням валютного ефекту <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Зміна <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
+        <target state="new"><x id="START_BLOCK_IF" equiv-text="seCurrency !== SymbolProfile?.currency ) {"/> Зміна з урахуванням валютного ефекту <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Зміна <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">63</context>
@@ -1948,7 +1948,7 @@
       </trans-unit>
       <trans-unit id="6608617124920241143" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="@if ( assetProfile?.currency &amp;&amp; data.baseCurrency !== assetProfile?.currency ) {"/> Performance with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Performance <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
-        <target state="translated"><x id="START_BLOCK_IF" equiv-text="seCurrency !== SymbolProfile?.currency ) {"/> Прибутковість з урахуванням валютного ефекту валюти <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Прибутковість <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
+        <target state="new"><x id="START_BLOCK_IF" equiv-text="seCurrency !== SymbolProfile?.currency ) {"/> Прибутковість з урахуванням валютного ефекту валюти <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Прибутковість <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">83</context>
@@ -2988,7 +2988,7 @@
       </trans-unit>
       <trans-unit id="570056762949632344" datatype="html">
         <source>Clone Activity</source>
-        <target state="translated">Клонувати операцію</target>
+        <target state="new">Clone Activity</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">134</context>
@@ -3088,7 +3088,7 @@
       </trans-unit>
       <trans-unit id="8664947843178872012" datatype="html">
         <source>Close Account</source>
-        <target state="translated">Закрити рахунок</target>
+        <target state="new">Close Account</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">337</context>
@@ -3837,7 +3837,7 @@
       </trans-unit>
       <trans-unit id="4489207161748215824" datatype="html">
         <source>For security reasons, please delete all activities and accounts first before your Ghostfolio account can be closed.</source>
-        <target state="translated">З міркувань безпеки, будь ласка, спочатку видаліть усі операції та рахунки, перш ніж можна буде закрити ваш обліковий запис Ghostfolio.</target>
+        <target state="new">For security reasons, please delete all activities and accounts first before your Ghostfolio account can be closed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">348</context>
@@ -4413,7 +4413,7 @@
       </trans-unit>
       <trans-unit id="2375397722199009140" datatype="html">
         <source>Add Activity</source>
-        <target state="translated">Додати операцію</target>
+        <target state="new">Add Activity</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">139</context>
@@ -5025,7 +5025,7 @@
       </trans-unit>
       <trans-unit id="7934616470747135563" datatype="html">
         <source>Latest activities</source>
-        <target state="translated">Останні операції</target>
+        <target state="new">Latest activities</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">210</context>
@@ -6400,7 +6400,7 @@
       </trans-unit>
       <trans-unit id="5276907121760788823" datatype="html">
         <source>Request it</source>
-        <target state="translated">Запросити</target>
+        <target state="new">Request it</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">344</context>
@@ -6712,7 +6712,7 @@
       </trans-unit>
       <trans-unit id="1541521390115871091" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Profile} other {Profiles}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {Профіль} other {Профілі}}</target>
+        <target state="new">{VAR_PLURAL, plural, =1 {Profile} other {Profiles}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">275</context>
@@ -7204,7 +7204,7 @@
       </trans-unit>
       <trans-unit id="9218541487912911620" datatype="html">
         <source>No Activities</source>
-        <target state="translated">Немає операцій</target>
+        <target state="new">No Activities</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
           <context context-type="linenumber">145</context>
@@ -7688,7 +7688,7 @@
       </trans-unit>
       <trans-unit id="7825231215382064101" datatype="html">
         <source>Change with currency effect</source>
-        <target state="translated">Зміна з урахуванням валютного ефекту</target>
+        <target state="new">Change with currency effect</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">115</context>
@@ -8701,7 +8701,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets" datatype="html">
         <source>Developed Markets</source>
-        <target state="translated">Розвинені ринки</target>
+        <target state="new">Developed Markets</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">109</context>
