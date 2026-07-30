@@ -81,6 +81,7 @@ export class GfAdminSettingsComponent implements OnInit {
     'actions'
   ];
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
+  public hasGhostfolioApiKey: boolean;
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;
   public readonly premiumDataProviderMailHref = `mailto:hi@ghostfol.io?subject=Ghostfolio Premium Data Provider&body=${[
@@ -183,6 +184,8 @@ export class GfAdminSettingsComponent implements OnInit {
         const ghostfolioApiKey = settings[
           PROPERTY_API_KEY_GHOSTFOLIO
         ] as string;
+
+        this.hasGhostfolioApiKey = !!ghostfolioApiKey;
 
         if (ghostfolioApiKey) {
           this.adminService
