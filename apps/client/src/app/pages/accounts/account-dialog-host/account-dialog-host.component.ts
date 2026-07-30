@@ -110,23 +110,16 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
           if (mode === 'update') {
             if (
               !account ||
-              !hasPermission(user?.permissions, permissions.updateAccount)
+              !hasPermission(user?.permissions, permissions.updateAccount) ||
+              this.isReadOnlyMode(user)
             ) {
               this.navigateBack();
 
               return;
             }
 
-            const {
-              balance,
-              comment,
-              currency,
-              id,
-              isExcluded,
-              name,
-              platformId,
-              tags
-            } = account;
+            const { balance, comment, currency, id, name, platformId, tags } =
+              account;
 
             this.openCreateOrUpdateAccountDialog({
               user,
@@ -135,7 +128,6 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
                 comment,
                 currency,
                 id,
-                isExcluded,
                 name,
                 platformId,
                 tags
@@ -146,7 +138,10 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
             return;
           }
 
-          if (!hasPermission(user?.permissions, permissions.createAccount)) {
+          if (
+            !hasPermission(user?.permissions, permissions.createAccount) ||
+            this.isReadOnlyMode(user)
+          ) {
             this.navigateBack();
 
             return;
@@ -159,7 +154,6 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
               comment: null,
               currency: user?.settings?.baseCurrency ?? null,
               id: null,
-              isExcluded: false,
               name: null,
               platformId: null,
               tags: []
@@ -187,6 +181,15 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
     this.dialogRef?.close();
   }
 
+  private isReadOnlyMode(user: User) {
+    // Mirrors the conditions under which the accounts page offers the creation
+    // and the modification of an account
+    return (
+      !!this.impersonationStorageService.getId() ||
+      !!user?.settings?.isRestrictedView
+    );
+  }
+
   private navigateBack() {
     void this.router.navigate(internalRoutes.accounts.routerLink);
   }
@@ -204,7 +207,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
       return;
     }
 
-    const hasImpersonationId = !!this.impersonationStorageService.getId();
+    const impersonationId = this.impersonationStorageService.getId();
 
     const dialogRef = this.dialog.open<
       GfAccountDetailDialogComponent,
@@ -214,10 +217,10 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
       autoFocus: false,
       data: {
         accountId,
-        hasImpersonationId,
+        impersonationId,
         deviceType: this.deviceType(),
         hasPermissionToCreateActivity:
-          !hasImpersonationId &&
+          !impersonationId &&
           hasPermission(user?.permissions, permissions.createActivity) &&
           !user?.settings?.isRestrictedView
       },
