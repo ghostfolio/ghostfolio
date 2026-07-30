@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an empty state to the _Fear & Greed Index_ component
+- Added a _Storybook_ story for the _Fear & Greed Index_ component
+
 ### Changed
 
 - Moved the tags to the overview tab of the account detail dialog (experimental)
 - Moved the tags to the overview tab of the holding detail dialog
+- Consolidated the markets pages into a single route where the _Fear & Greed Index_ is controlled by permission
 - Refactored the line chart components to share the common chart configuration
 - Improved the language localization for Spanish (`es`)
 - Improved the language localization for Ukrainian (`uk`)

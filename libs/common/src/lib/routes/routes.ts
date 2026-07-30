@@ -94,11 +94,6 @@ export const internalRoutes = {
         routerLink: ['/home', 'markets'],
         title: $localize`Markets`
       },
-      marketsPremium: {
-        path: 'markets-premium',
-        routerLink: ['/home', 'markets-premium'],
-        title: $localize`Markets`
-      },
       summary: {
         path: 'summary',
         routerLink: ['/home', 'summary'],

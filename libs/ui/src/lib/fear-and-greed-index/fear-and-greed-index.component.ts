@@ -5,8 +5,8 @@ import { DecimalPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
-  OnChanges
+  computed,
+  input
 } from '@angular/core';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -17,16 +17,17 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   styleUrls: ['./fear-and-greed-index.component.scss'],
   templateUrl: './fear-and-greed-index.component.html'
 })
-export class GfFearAndGreedIndexComponent implements OnChanges {
-  @Input() fearAndGreedIndex: number;
+export class GfFearAndGreedIndexComponent {
+  public readonly fearAndGreedIndex = input<number>();
+  public readonly isLoading = input<boolean>(false);
 
-  public fearAndGreedIndexEmoji: string;
-  public fearAndGreedIndexText: string;
+  protected readonly placeholder = '—';
 
-  public ngOnChanges() {
-    const { emoji, key } = resolveFearAndGreedIndex(this.fearAndGreedIndex);
+  protected readonly fearAndGreedIndexEmoji = computed(() => {
+    return resolveFearAndGreedIndex(this.fearAndGreedIndex()).emoji;
+  });
 
-    this.fearAndGreedIndexEmoji = emoji;
-    this.fearAndGreedIndexText = translate(key);
-  }
+  protected readonly fearAndGreedIndexText = computed(() => {
+    return translate(resolveFearAndGreedIndex(this.fearAndGreedIndex()).key);
+  });
 }
