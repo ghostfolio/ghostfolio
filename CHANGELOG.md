@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the check for duplicates in the preview step of the import dividends dialog (regardless of the account)
 - Extended the activities import to reuse an existing account of the user by name and currency
 - Extended the activities import to resolve an ISIN to the symbol of the data provider
+- Migrated the create, detail and update account dialogs to dedicated routes
 - Improved the language localization for German (`de`)
 
 ### Fixed
