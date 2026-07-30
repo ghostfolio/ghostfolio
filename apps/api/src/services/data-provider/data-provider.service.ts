@@ -269,6 +269,15 @@ export class DataProviderService implements OnModuleInit {
 
       if (!assetProfiles[assetProfileIdentifier]) {
         if (
+          dataSource === DataSource.MANUAL &&
+          !isValidCustomAssetProfileSymbol(symbol)
+        ) {
+          throw new Error(
+            `${activityPath}.symbol ("${symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+          );
+        }
+
+        if (
           (dataSource === DataSource.MANUAL && type === 'BUY') ||
           ['FEE', 'INTEREST', 'LIABILITY'].includes(type)
         ) {
@@ -289,15 +298,6 @@ export class DataProviderService implements OnModuleInit {
           };
 
           continue;
-        }
-
-        if (
-          dataSource === DataSource.MANUAL &&
-          !isValidCustomAssetProfileSymbol(symbol)
-        ) {
-          throw new Error(
-            `${activityPath}.symbol ("${symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
-          );
         }
 
         let assetProfile: Partial<SymbolProfile> = { currency };

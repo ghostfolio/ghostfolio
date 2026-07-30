@@ -105,6 +105,27 @@ export class SymbolProfileService {
     };
   }
 
+  public async getCustomSymbolProfilesByNames({
+    names,
+    userId
+  }: {
+    names: string[];
+    userId: string;
+  }): Promise<Pick<SymbolProfile, 'name' | 'symbol'>[]> {
+    if (names.length === 0) {
+      return [];
+    }
+
+    return this.prismaService.symbolProfile.findMany({
+      select: { name: true, symbol: true },
+      where: {
+        userId,
+        dataSource: DataSource.MANUAL,
+        name: { in: names }
+      }
+    });
+  }
+
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ): Promise<EnhancedAssetProfile[]> {
