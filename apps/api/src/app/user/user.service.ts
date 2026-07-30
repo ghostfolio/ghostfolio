@@ -555,7 +555,10 @@ export class UserService {
       }
     } else {
       if (
-        await this.propertyService.getByKey<string>(PROPERTY_API_KEY_GHOSTFOLIO)
+        this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX') ||
+        (await this.propertyService.getByKey<string>(
+          PROPERTY_API_KEY_GHOSTFOLIO
+        ))
       ) {
         currentPermissions.push(permissions.readMarketDataOfMarkets);
       }
