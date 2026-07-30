@@ -105,8 +105,13 @@
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
             @if (
-              !isGhostfolioDataProvider(element) ||
-              isGhostfolioApiKeyValid === true
+              hasGhostfolioApiKey &&
+              isGhostfolioApiKeyValid === false &&
+              isGhostfolioDataProvider(element)
+            ) {
+              <span class="text-danger" i18n>Invalid API key</span>
+            } @else if (
+              hasGhostfolioApiKey || !isGhostfolioDataProvider(element)
             ) {
               <gf-data-provider-status [dataSource]="element.dataSource" />
             }
