@@ -16,7 +16,7 @@ import { PropertyValue } from './interfaces/interfaces';
 export class PropertyService {
   private static readonly CACHE_TTL = ms('1 minute');
 
-  private cachedProperties: Property[];
+  private cachedProperties: Promise<Property[]>;
   private cachedPropertiesExpiresAt: Date;
 
   public constructor(private readonly prismaService: PrismaService) {}
@@ -88,7 +88,13 @@ export class PropertyService {
       return this.cachedProperties;
     }
 
-    this.cachedProperties = await this.prismaService.property.findMany();
+    this.cachedProperties = this.prismaService.property
+      .findMany()
+      .catch((error) => {
+        this.invalidateCache();
+
+        throw error;
+      });
 
     this.cachedPropertiesExpiresAt = addMilliseconds(
       new Date(),
