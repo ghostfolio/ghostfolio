@@ -120,11 +120,11 @@ export class GfActivitiesPageComponent implements OnInit {
   protected onDeleteActivities() {
     this.dataService
       .deleteActivities({
-        range: this.getCalendarYearRange(),
         activityTypes: this.activityTypesFilter.length
           ? this.activityTypesFilter
           : undefined,
-        filters: this.userService.getFilters()
+        filters: this.userService.getFilters(),
+        range: this.getCalendarYearRange()
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -283,11 +283,11 @@ export class GfActivitiesPageComponent implements OnInit {
 
     this.dataService
       .fetchActivities({
-        range: this.getCalendarYearRange(),
         activityTypes: this.activityTypesFilter.length
           ? this.activityTypesFilter
           : undefined,
         filters: this.userService.getFilters(),
+        range: this.getCalendarYearRange(),
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection,

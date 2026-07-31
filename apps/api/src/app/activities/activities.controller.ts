@@ -83,7 +83,7 @@ export class ActivitiesController {
       filterByTags
     });
 
-    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+    const types = this.parseActivityTypes(filterByTypes);
 
     return this.activitiesService.deleteActivities({
       endDate,
@@ -152,7 +152,7 @@ export class ActivitiesController {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
 
-    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+    const types = this.parseActivityTypes(filterByTypes);
 
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
@@ -359,5 +359,29 @@ export class ActivitiesController {
         id
       }
     });
+  }
+
+  private parseActivityTypes(filterByTypes?: string): ActivityType[] {
+    if (!filterByTypes) {
+      return [];
+    }
+
+    const types = filterByTypes.split(',');
+
+    const invalidTypes = types.filter((type) => {
+      return !Object.values(ActivityType).includes(type as ActivityType);
+    });
+
+    if (invalidTypes.length > 0) {
+      throw new HttpException(
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [`Invalid activity type: ${invalidTypes.join(', ')}`]
+        },
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return types as ActivityType[];
   }
 }
