@@ -25,13 +25,17 @@ export class ExportService {
   public async export({
     activityIds,
     activityTypes,
+    endDate,
     filters,
+    startDate,
     userId,
     userSettings
   }: {
     activityIds?: string[];
     activityTypes?: ActivityType[];
+    endDate?: Date;
     filters?: Filter[];
+    startDate?: Date;
     userId: string;
     userSettings: UserSettings;
   }): Promise<ExportResponse> {
@@ -41,7 +45,9 @@ export class ExportService {
     const platformsMap: { [platformId: string]: Platform } = {};
 
     let { activities } = await this.activitiesService.getActivities({
+      endDate,
       filters,
+      startDate,
       userId,
       includeDrafts: true,
       sortColumn: 'date',

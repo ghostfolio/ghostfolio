@@ -329,8 +329,24 @@ export class DataService {
     return this.http.delete<AccountBalance>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteActivities({ filters }: { filters?: Filter[] }) {
-    const params = this.buildFiltersAsQueryParams({ filters });
+  public deleteActivities({
+    activityTypes,
+    filters,
+    range
+  }: {
+    activityTypes?: string[];
+    filters?: Filter[];
+    range?: DateRange;
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (activityTypes?.length) {
+      params = params.append('activityTypes', activityTypes.join(','));
+    }
+
+    if (range) {
+      params = params.append('range', range);
+    }
 
     return this.http.delete<number>('/api/v1/activities', { params });
   }
@@ -459,11 +475,13 @@ export class DataService {
   public fetchExport({
     activityIds,
     activityTypes,
-    filters
+    filters,
+    range
   }: {
     activityIds?: string[];
     activityTypes?: string[];
     filters?: Filter[];
+    range?: DateRange;
   } = {}) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
@@ -473,6 +491,10 @@ export class DataService {
 
     if (activityTypes?.length) {
       params = params.append('activityTypes', activityTypes.join(','));
+    }
+
+    if (range) {
+      params = params.append('range', range);
     }
 
     return this.http.get<ExportResponse>('/api/v1/export', {
@@ -509,8 +531,7 @@ export class DataService {
   public fetchInfo(): InfoItem {
     const info = cloneDeep((window as any).info);
     const utmSource = window.localStorage.getItem('utm_source') as
-      | 'ios'
-      | 'trusted-web-activity';
+      'ios' | 'trusted-web-activity';
 
     info.globalPermissions = filterGlobalPermissions(
       info.globalPermissions,
@@ -949,8 +970,7 @@ export class DataService {
   public updateInfo() {
     this.http.get<InfoItem>('/api/v1/info').subscribe((info) => {
       const utmSource = window.localStorage.getItem('utm_source') as
-        | 'ios'
-        | 'trusted-web-activity';
+        'ios' | 'trusted-web-activity';
 
       info.globalPermissions = filterGlobalPermissions(
         info.globalPermissions,
