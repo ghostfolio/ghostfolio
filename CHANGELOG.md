@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for the date range filter in the export functionality
 - Added support for the date range filter on the portfolio activities page
 
 ### Changed
@@ -28,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the calendar year date range to be independent of the server’s time zone
+- Fixed the calendar year date range in time zones with a negative _UTC_ offset
 - Fixed the deletion of activities to respect the activity type filter on the activities page (experimental)
 - Fixed the deletion of activities to respect the date range filter on the activities page
 - Fixed the static portfolio analysis rule for a portfolio with no holdings: _Asset Class Cluster Risks_ (Equity)
