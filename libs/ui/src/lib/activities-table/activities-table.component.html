@@ -1,4 +1,6 @@
-<div class="d-flex justify-content-end justify-content-lg-between">
+<div
+  class="align-items-center d-flex justify-content-end justify-content-lg-between"
+>
   <div class="d-none d-lg-flex">
     @if (hasPermissionToFilterByType) {
       <mat-form-field appearance="outline" class="without-hint">
@@ -82,14 +84,19 @@
         <button
           class="align-items-center d-flex"
           mat-menu-item
-          [disabled]="
-            dataSource()?.data.length === 0 || !hasPermissionToDeleteActivity
-          "
+          [disabled]="!canDeleteActivities()"
           (click)="onDeleteActivities()"
         >
           <span class="align-items-center d-flex">
             <ion-icon class="mr-2" name="trash-outline" />
-            <span i18n>Delete Activities</span>
+            @if (canDeleteActivities()) {
+              <span i18n
+                >Delete {{ totalItems > 1 ? totalItems : '' }}
+                {totalItems, plural, =1 {Activity} other {Activities}}</span
+              >
+            } @else {
+              <span i18n>Delete Activities</span>
+            }
           </span>
         </button>
       </mat-menu>

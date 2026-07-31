@@ -351,7 +351,7 @@
       </trans-unit>
       <trans-unit id="4467323362722952678" datatype="html">
         <source>Unknown</source>
-        <target state="new">Unknown</target>
+        <target state="translated">Unbekannt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">88</context>
@@ -1767,7 +1767,7 @@
       </trans-unit>
       <trans-unit id="659291745893337969" datatype="html">
         <source>Invalid API key</source>
-        <target state="new">Invalid API key</target>
+        <target state="translated">Ungültiger API-Schlüssel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">112</context>
