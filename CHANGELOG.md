@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the calendar year date range to be independent of the server’s time zone
 - Fixed the deletion of activities to respect the activity type filter on the activities page (experimental)
 - Fixed the deletion of activities to respect the date range filter on the activities page
 - Fixed the static portfolio analysis rule for a portfolio with no holdings: _Asset Class Cluster Risks_ (Equity)
