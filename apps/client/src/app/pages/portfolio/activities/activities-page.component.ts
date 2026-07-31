@@ -10,7 +10,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { DataService } from '@ghostfolio/ui/services';
@@ -124,7 +123,7 @@ export class GfActivitiesPageComponent implements OnInit {
           ? this.activityTypesFilter
           : undefined,
         filters: this.userService.getFilters(),
-        range: this.getCalendarYearRange()
+        range: this.getDateRange()
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -287,7 +286,7 @@ export class GfActivitiesPageComponent implements OnInit {
           ? this.activityTypesFilter
           : undefined,
         filters: this.userService.getFilters(),
-        range: this.getCalendarYearRange(),
+        range: this.getDateRange(),
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection,
@@ -312,18 +311,11 @@ export class GfActivitiesPageComponent implements OnInit {
       });
   }
 
-  private getCalendarYearRange() {
+  private getDateRange() {
     const dateRange = this.user?.settings?.dateRange;
 
-    return this.isCalendarYear(dateRange) ? dateRange : undefined;
-  }
-
-  private isCalendarYear(dateRange?: DateRange) {
-    if (!dateRange) {
-      return false;
-    }
-
-    return /^\d{4}$/.test(dateRange);
+    // Omit 'max' as it would exclude drafts, which are dated in the future
+    return dateRange === 'max' ? undefined : dateRange;
   }
 
   private updateUser(aUser: User) {
