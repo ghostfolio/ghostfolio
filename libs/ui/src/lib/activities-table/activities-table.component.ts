@@ -282,6 +282,12 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     );
   }
 
+  public canDeleteActivities() {
+    return (
+      this.hasPermissionToDeleteActivity && this.dataSource()?.data.length !== 0
+    );
+  }
+
   public isExcludedFromAnalysis(activity: Activity) {
     return (
       (activity.account && isAccountExcluded(activity.account)) ??
@@ -314,7 +320,10 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
         this.activitiesDeleted.emit();
       },
       confirmType: ConfirmationDialogType.Warn,
-      title: $localize`Do you really want to delete these activities?`
+      title:
+        this.totalItems === 1
+          ? $localize`Do you really want to delete this activity?`
+          : $localize`Do you really want to delete these ${this.totalItems}:count: activities?`
     });
   }
 
