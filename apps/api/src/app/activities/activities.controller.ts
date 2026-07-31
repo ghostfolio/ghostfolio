@@ -61,8 +61,16 @@ export class ActivitiesController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query() query: DeleteActivitiesDto
   ): Promise<number> {
+    if (impersonationId) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     let endDate: Date;
     let startDate: Date;
 
