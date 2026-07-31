@@ -54,7 +54,9 @@ export class SubscriptionController {
     }
 
     let coupons =
-      (await this.propertyService.getByKey<Coupon[]>(PROPERTY_COUPONS)) ?? [];
+      (await this.propertyService.getByKey<Coupon[]>(PROPERTY_COUPONS, {
+        skipCache: true
+      })) ?? [];
 
     const coupon = coupons.find((currentCoupon) => {
       return currentCoupon.code === couponCode;

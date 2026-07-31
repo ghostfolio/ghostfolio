@@ -26,7 +26,9 @@ export class HealthService {
 
   public async isDatabaseHealthy() {
     try {
-      await this.propertyService.getByKey(PROPERTY_CURRENCIES);
+      await this.propertyService.getByKey(PROPERTY_CURRENCIES, {
+        skipCache: true
+      });
 
       return true;
     } catch {
