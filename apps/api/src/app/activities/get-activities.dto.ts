@@ -2,9 +2,9 @@ import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, Min } from 'class-validator';
 
-import { DeleteActivitiesDto } from './delete-activities.dto';
+import { ActivitiesFilterDto } from './activities-filter.dto';
 
-export class GetActivitiesDto extends DeleteActivitiesDto {
+export class GetActivitiesDto extends ActivitiesFilterDto {
   @IsInt()
   @IsOptional()
   @Min(0)

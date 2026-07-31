@@ -9,7 +9,7 @@ import { isString } from 'lodash';
 // A named date range or a calendar year like '2024', '2023', '2022', etc.
 const DATE_RANGE_PATTERN = new RegExp(`^(${DATE_RANGES.join('|')}|\\d{4})$`);
 
-export class DeleteActivitiesDto {
+export class ActivitiesFilterDto {
   @IsOptional()
   @IsString()
   accounts?: string;

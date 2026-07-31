@@ -41,8 +41,8 @@ import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { ActivitiesFilterDto } from './activities-filter.dto';
 import { ActivitiesService } from './activities.service';
-import { DeleteActivitiesDto } from './delete-activities.dto';
 import { GetActivitiesDto } from './get-activities.dto';
 
 @Controller('activities')
@@ -62,7 +62,7 @@ export class ActivitiesController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query() query: DeleteActivitiesDto
+    @Query() query: ActivitiesFilterDto
   ): Promise<number> {
     if (impersonationId) {
       throw new HttpException(

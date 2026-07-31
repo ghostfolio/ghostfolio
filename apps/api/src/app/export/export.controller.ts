@@ -4,7 +4,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { ExportResponse } from '@ghostfolio/common/interfaces';
-import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Controller,
@@ -16,9 +16,9 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Type as ActivityType } from '@prisma/client';
 
 import { ExportService } from './export.service';
+import { GetExportDto } from './get-export.dto';
 
 @Controller('export')
 export class ExportController {
@@ -32,40 +32,30 @@ export class ExportController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async export(
-    @Query('accounts') filterByAccounts?: string,
-    @Query('activityIds') filterByActivityIds?: string,
-    @Query('activityTypes') filterByTypes?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange?: DateRange,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
-  ): Promise<ExportResponse> {
-    const activityIds = filterByActivityIds?.split(',') ?? [];
-    const activityTypes = (filterByTypes?.split(',') as ActivityType[]) ?? [];
-
+  public async export(@Query() query: GetExportDto): Promise<ExportResponse> {
     let endDate: Date;
     let startDate: Date;
 
-    if (dateRange) {
-      ({ endDate, startDate } = getIntervalFromDateRange({ dateRange }));
+    if (query.range) {
+      ({ endDate, startDate } = getIntervalFromDateRange({
+        dateRange: query.range
+      }));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: query.accounts,
+      filterByAssetClasses: query.assetClasses,
+      filterByDataSource: query.dataSource,
+      filterBySymbol: query.symbol,
+      filterByTags: query.tags
     });
 
     return this.exportService.export({
-      activityIds,
-      activityTypes,
       endDate,
       filters,
       startDate,
+      activityIds: query.activityIds,
+      activityTypes: query.activityTypes,
       userId: this.request.user.id,
       userSettings: this.request.user.settings.settings
     });
