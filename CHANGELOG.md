@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Removed the deprecated `firstOrderDate` attribute from the portfolio performance endpoint response
+- Removed the deprecated `firstOrderDate` attribute from the `GET api/v2/portfolio/performance` endpoint response
 
 ## 3.37.0 - 2026-07-30
 
