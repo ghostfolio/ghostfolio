@@ -120,6 +120,10 @@ export class GfActivitiesPageComponent implements OnInit {
   protected onDeleteActivities() {
     this.dataService
       .deleteActivities({
+        range: this.getCalendarYearRange(),
+        activityTypes: this.activityTypesFilter.length
+          ? this.activityTypesFilter
+          : undefined,
         filters: this.userService.getFilters()
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -277,12 +281,9 @@ export class GfActivitiesPageComponent implements OnInit {
     this.dataSource = undefined;
     this.totalItems = undefined;
 
-    const dateRange = this.user?.settings?.dateRange;
-    const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
-
     this.dataService
       .fetchActivities({
-        range,
+        range: this.getCalendarYearRange(),
         activityTypes: this.activityTypesFilter.length
           ? this.activityTypesFilter
           : undefined,
@@ -309,6 +310,12 @@ export class GfActivitiesPageComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private getCalendarYearRange() {
+    const dateRange = this.user?.settings?.dateRange;
+
+    return this.isCalendarYear(dateRange) ? dateRange : undefined;
   }
 
   private isCalendarYear(dateRange?: DateRange) {

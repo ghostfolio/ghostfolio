@@ -61,11 +61,20 @@ export class ActivitiesController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
     @Query('accounts') filterByAccounts?: string,
+    @Query('activityTypes') filterByTypes?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
+    @Query('range') dateRange?: DateRange,
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<number> {
+    let endDate: Date;
+    let startDate: Date;
+
+    if (dateRange) {
+      ({ endDate, startDate } = getIntervalFromDateRange({ dateRange }));
+    }
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -74,8 +83,13 @@ export class ActivitiesController {
       filterByTags
     });
 
+    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
+
     return this.activitiesService.deleteActivities({
+      endDate,
       filters,
+      startDate,
+      types,
       userId: this.request.user.id
     });
   }
