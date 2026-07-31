@@ -16,7 +16,10 @@ import {
   UpdateTagDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getLocalDateFromUtcDate
+} from '@ghostfolio/common/helper';
 import {
   Access,
   AccessTokenResponse,
@@ -586,7 +589,7 @@ export class DataService {
       .pipe(
         map((data) => {
           for (const item of data.marketData) {
-            item.date = parseISO(item.date);
+            item.date = getLocalDateFromUtcDate(parseISO(item.date));
           }
 
           for (const item of data.splits ?? []) {

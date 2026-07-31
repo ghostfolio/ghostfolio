@@ -359,6 +359,14 @@ export function getEmojiFlag(aCountryCode: string) {
     );
 }
 
+export function getLocalDateFromUtcDate(aUtcDate: Date) {
+  return new Date(
+    aUtcDate.getUTCFullYear(),
+    aUtcDate.getUTCMonth(),
+    aUtcDate.getUTCDate()
+  );
+}
+
 export function getLocale() {
   return navigator.language ?? DEFAULT_LOCALE;
 }

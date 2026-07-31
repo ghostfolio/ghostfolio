@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   extractNumberFromString,
+  getLocalDateFromUtcDate,
   getNumberFormatGroup,
   getStringOrNull,
   getStringOrUndefined,
@@ -353,6 +354,38 @@ describe('Helper', () => {
       expect(
         isValidCustomAssetProfileSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
       ).toEqual(true);
+    });
+  });
+
+  describe('Get local date from UTC date', () => {
+    const originalTz = process.env.TZ;
+
+    afterEach(() => {
+      process.env.TZ = originalTz;
+    });
+
+    it('Preserve the calendar date in a timezone behind UTC', () => {
+      process.env.TZ = 'America/New_York';
+
+      const localDate = getLocalDateFromUtcDate(
+        new Date('2026-01-05T00:00:00.000Z')
+      );
+
+      expect(localDate.getFullYear()).toEqual(2026);
+      expect(localDate.getMonth()).toEqual(0);
+      expect(localDate.getDate()).toEqual(5);
+    });
+
+    it('Preserve the calendar date in a timezone ahead of UTC', () => {
+      process.env.TZ = 'Asia/Tokyo';
+
+      const localDate = getLocalDateFromUtcDate(
+        new Date('2026-01-05T00:00:00.000Z')
+      );
+
+      expect(localDate.getFullYear()).toEqual(2026);
+      expect(localDate.getMonth()).toEqual(0);
+      expect(localDate.getDate()).toEqual(5);
     });
   });
 });

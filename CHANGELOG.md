@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the platform logo to the account selector in the create or update activity dialog
 
+### Fixed
+
+- Fixed the date handling in the historical market data editor so entries no longer shift to the previous day for users in timezones behind UTC
+
 ## 3.42.0 - 2026-08-04
 
 ### Changed
