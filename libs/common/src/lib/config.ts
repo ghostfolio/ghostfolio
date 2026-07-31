@@ -67,6 +67,20 @@ export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
   DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
 );
 
+/**
+ * The named date ranges, complemented by the calendar years like '2024',
+ * '2023', '2022', etc.
+ */
+export const DATE_RANGES = [
+  '1d',
+  '1y',
+  '5y',
+  'max',
+  'mtd',
+  'wtd',
+  'ytd'
+] as const;
+
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE =
   'PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE';
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH = 1;

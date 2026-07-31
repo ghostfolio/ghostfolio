@@ -1,4 +1,3 @@
-import { UTCDate } from '@date-fns/utc';
 import { Big } from 'big.js';
 import {
   endOfDay,
@@ -79,17 +78,13 @@ export function getIntervalFromDateRange(params: {
       break;
     default: {
       // '2024', '2023', '2022', etc.
-      const yearStartDate = new UTCDate(`${dateRange}-01-01`);
+      const yearStartDate = new Date(Number(dateRange), 0, 1);
 
-      // Derive the boundaries of the calendar year in UTC to be independent of
-      // the server's time zone, but hand out plain dates as the consumers apply
-      // local time zone semantics. As the start date is exclusive, the last
-      // millisecond of the preceding year is used.
-      endDate = new Date(endOfYear(yearStartDate).getTime());
-      startDate = max([
-        startDate,
-        new Date(subMilliseconds(yearStartDate, 1).getTime())
-      ]);
+      // Derive the boundaries of the calendar year in the local time zone, as
+      // the consumers apply local time zone semantics. As the start date is
+      // exclusive, the last millisecond of the preceding year is used.
+      endDate = endOfYear(yearStartDate);
+      startDate = max([startDate, subMilliseconds(yearStartDate, 1)]);
     }
   }
 

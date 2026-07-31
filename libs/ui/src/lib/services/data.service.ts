@@ -475,11 +475,13 @@ export class DataService {
   public fetchExport({
     activityIds,
     activityTypes,
-    filters
+    filters,
+    range
   }: {
     activityIds?: string[];
     activityTypes?: string[];
     filters?: Filter[];
+    range?: DateRange;
   } = {}) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
@@ -489,6 +491,10 @@ export class DataService {
 
     if (activityTypes?.length) {
       params = params.append('activityTypes', activityTypes.join(','));
+    }
+
+    if (range) {
+      params = params.append('range', range);
     }
 
     return this.http.get<ExportResponse>('/api/v1/export', {

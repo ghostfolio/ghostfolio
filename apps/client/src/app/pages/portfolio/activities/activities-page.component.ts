@@ -91,9 +91,13 @@ export class GfActivitiesPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
+          const previousDateRange = this.getDateRange();
+
           this.updateUser(state.user);
 
-          this.pageIndex = 0;
+          if (previousDateRange !== this.getDateRange()) {
+            this.pageIndex = 0;
+          }
 
           this.fetchActivities();
 
@@ -164,7 +168,8 @@ export class GfActivitiesPageComponent implements OnInit {
         activityTypes: this.activityTypesFilter.length
           ? this.activityTypesFilter
           : undefined,
-        filters: this.userService.getFilters()
+        filters: this.userService.getFilters(),
+        range: this.getDateRange()
       };
     }
 
