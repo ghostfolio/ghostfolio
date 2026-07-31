@@ -53,16 +53,18 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
 import { Prisma, Role, Settings, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
-import { without } from 'lodash';
+import { isNil, without } from 'lodash';
 import { createHmac } from 'node:crypto';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
@@ -245,19 +247,25 @@ export class UserService {
 
     const maxDailyRequests = await this.getMaxDailyRequests();
 
-    if (!maxDailyRequests) {
+    if (maxDailyRequests === undefined) {
       return false;
     }
 
-    const { isBlocked } = await this.throttlerStorage.increment(
-      `${THROTTLE_DAILY_KEY}-${user.id}`,
-      THROTTLE_DAILY_TTL,
-      maxDailyRequests,
-      THROTTLE_DAILY_TTL,
-      THROTTLE_DAILY_KEY
-    );
+    try {
+      const { isBlocked } = await this.throttlerStorage.increment(
+        `${THROTTLE_DAILY_KEY}-${user.id}`,
+        THROTTLE_DAILY_TTL,
+        maxDailyRequests,
+        THROTTLE_DAILY_TTL,
+        THROTTLE_DAILY_KEY
+      );
 
-    return isBlocked;
+      return isBlocked;
+    } catch (error) {
+      this.logger.error(error);
+
+      return false;
+    }
   }
 
   public async user(
@@ -820,6 +828,20 @@ export class UserService {
       PROPERTY_MAX_DAILY_REQUESTS
     );
 
-    return Number(value) || undefined;
+    if (isNil(value) || value === '') {
+      return undefined;
+    }
+
+    const maxDailyRequests = Number(value);
+
+    if (!Number.isInteger(maxDailyRequests) || maxDailyRequests < 0) {
+      this.logger.warn(
+        `The property ${PROPERTY_MAX_DAILY_REQUESTS} is not a non-negative integer ("${value}"), the daily request limit is not applied`
+      );
+
+      return undefined;
+    }
+
+    return maxDailyRequests;
   }
 }
