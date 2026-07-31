@@ -316,8 +316,13 @@ export class GfActivitiesPageComponent implements OnInit {
   private getDateRange() {
     const dateRange = this.user?.settings?.dateRange;
 
-    // Omit 'max' as it would exclude drafts, which are dated in the future
-    return dateRange === 'max' ? undefined : dateRange;
+    // Omit the date ranges which do not apply to activities: '1d' spans today
+    // only, while 'max' would exclude drafts, which are dated in the future
+    if (!dateRange || ['1d', 'max'].includes(dateRange)) {
+      return undefined;
+    }
+
+    return dateRange;
   }
 
   private updateUser(aUser: User) {
