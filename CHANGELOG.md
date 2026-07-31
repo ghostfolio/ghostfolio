@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the search functionality by trimming the query
 - Improved the log output in the search functionality of the _Yahoo Finance_ service for unsupported queries
 - Improved the performance of the property service by caching the properties in memory
+- Improved the validation of the query parameters in the activities endpoints
 - Improved the language localization for German (`de`)
 
 ### Fixed
