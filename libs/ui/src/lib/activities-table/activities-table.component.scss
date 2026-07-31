@@ -5,8 +5,8 @@
 
   @include mat.form-field-overrides(
     (
-      container-height: 2.5rem,
-      container-vertical-padding: 0.5rem
+      container-height: 2rem,
+      container-vertical-padding: 0.33rem
     )
   );
 }
