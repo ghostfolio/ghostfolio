@@ -340,6 +340,8 @@ export class GhostfolioService {
   }: GetSearchParams): Promise<LookupResponse> {
     const results: LookupResponse = { items: [] };
 
+    query = query?.trim();
+
     if (!query) {
       return results;
     }

@@ -838,6 +838,8 @@ export class DataProviderService implements OnModuleInit {
     let lookupItems: LookupItem[] = [];
     const promises: Promise<LookupResponse>[] = [];
 
+    query = query?.trim();
+
     if (query?.length < 2) {
       return { items: lookupItems };
     }
