@@ -6,17 +6,29 @@ import {
 import { PropertyKey } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { Property } from '@prisma/client';
+import { addMilliseconds, isBefore } from 'date-fns';
+import ms from 'ms';
 
 import { PropertyValue } from './interfaces/interfaces';
 
 @Injectable()
 export class PropertyService {
+  private static readonly CACHE_TTL = ms('1 minute');
+
+  private cachedProperties: Property[];
+  private cachedPropertiesExpiresAt: Date;
+
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async delete({ key }: { key: PropertyKey }) {
-    return this.prismaService.property.delete({
+    const property = await this.prismaService.property.delete({
       where: { key }
     });
+
+    this.invalidateCache();
+
+    return property;
   }
 
   public async get() {
@@ -26,7 +38,7 @@ export class PropertyService {
       [PROPERTY_CURRENCIES]: []
     };
 
-    const properties = await this.prismaService.property.findMany();
+    const properties = await this.getProperties();
 
     for (const property of properties) {
       let value = property.value;
@@ -53,10 +65,41 @@ export class PropertyService {
   }
 
   public async put({ key, value }: { key: PropertyKey; value: string }) {
-    return this.prismaService.property.upsert({
+    const property = await this.prismaService.property.upsert({
       create: { key, value },
       update: { value },
       where: { key }
     });
+
+    this.invalidateCache();
+
+    return property;
+  }
+
+  /**
+   * Returns the properties from the in-memory cache, falling back to the
+   * database
+   */
+  private async getProperties() {
+    if (
+      this.cachedProperties &&
+      isBefore(new Date(), this.cachedPropertiesExpiresAt)
+    ) {
+      return this.cachedProperties;
+    }
+
+    this.cachedProperties = await this.prismaService.property.findMany();
+
+    this.cachedPropertiesExpiresAt = addMilliseconds(
+      new Date(),
+      PropertyService.CACHE_TTL
+    );
+
+    return this.cachedProperties;
+  }
+
+  private invalidateCache() {
+    this.cachedProperties = undefined;
+    this.cachedPropertiesExpiresAt = undefined;
   }
 }
