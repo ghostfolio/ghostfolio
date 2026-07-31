@@ -326,8 +326,12 @@ export class GhostfolioService {
   }
 
   public async incrementDailyRequests({ userId }: { userId: string }) {
-    await this.prismaService.analytics.update({
-      data: {
+    await this.prismaService.analytics.upsert({
+      create: {
+        dataProviderGhostfolioDailyRequests: 1,
+        user: { connect: { id: userId } }
+      },
+      update: {
         dataProviderGhostfolioDailyRequests: { increment: 1 }
       },
       where: { userId }
