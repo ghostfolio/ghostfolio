@@ -32,30 +32,42 @@ export class ExportController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async export(@Query() query: GetExportDto): Promise<ExportResponse> {
+  public async export(
+    @Query()
+    {
+      accounts,
+      activityIds,
+      activityTypes,
+      assetClasses,
+      dataSource,
+      range,
+      symbol,
+      tags
+    }: GetExportDto
+  ): Promise<ExportResponse> {
     let endDate: Date;
     let startDate: Date;
 
-    if (query.range) {
+    if (range) {
       ({ endDate, startDate } = getIntervalFromDateRange({
-        dateRange: query.range
+        dateRange: range
       }));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts: query.accounts,
-      filterByAssetClasses: query.assetClasses,
-      filterByDataSource: query.dataSource,
-      filterBySymbol: query.symbol,
-      filterByTags: query.tags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     return this.exportService.export({
+      activityIds,
+      activityTypes,
       endDate,
       filters,
       startDate,
-      activityIds: query.activityIds,
-      activityTypes: query.activityTypes,
       userId: this.request.user.id,
       userSettings: this.request.user.settings.settings
     });
