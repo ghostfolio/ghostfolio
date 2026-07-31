@@ -330,13 +330,13 @@ export class YahooFinanceService implements DataProviderInterface {
         });
       }
     } catch (error) {
-      let message = error;
-
       if (error?.name === 'BadRequestError') {
-        message = `RequestError: The search for "${query}" is not supported`;
+        this.logger.warn(
+          `The search for "${query}" is not supported: ${error.message}`
+        );
+      } else {
+        this.logger.error(error);
       }
-
-      this.logger.error(message);
     }
 
     return { items };

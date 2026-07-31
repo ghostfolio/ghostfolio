@@ -840,7 +840,7 @@ export class DataProviderService implements OnModuleInit {
 
     query = query?.trim();
 
-    if (query?.length < 2) {
+    if (!query || query.length < 2) {
       return { items: lookupItems };
     }
 

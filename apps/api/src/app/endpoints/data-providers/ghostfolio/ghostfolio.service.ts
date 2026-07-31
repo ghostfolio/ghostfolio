@@ -342,17 +342,13 @@ export class GhostfolioService {
 
     query = query?.trim();
 
-    if (!query) {
+    if (!query || query.length < 2) {
       return results;
     }
 
     try {
       let lookupItems: LookupItem[] = [];
       const promises: Promise<{ items: LookupItem[] }>[] = [];
-
-      if (query?.length < 2) {
-        return { items: lookupItems };
-      }
 
       for (const dataProviderService of this.getDataProviderServices()) {
         promises.push(
