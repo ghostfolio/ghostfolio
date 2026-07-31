@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for the date range filter on the portfolio activities page
+
 ### Changed
 
 - Improved the style of the tabs in the account detail dialog on mobile
