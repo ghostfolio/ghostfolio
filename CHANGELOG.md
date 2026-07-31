@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the style of the tabs in the holding detail dialog on mobile
 - Improved the style of the tabs in the asset profile dialog of the admin control panel on mobile
 - Improved the style of the empty state in the _Fear & Greed Index_ component
+- Added the activity count to the delete menu item of the activities table
+- Added the activity count to the deletion confirmation dialog of the activities table
 - Improved the style of the type filter in the activities table component (experimental)
 - Improved the performance of the property service by caching the properties in memory
 - Improved the language localization for German (`de`)
