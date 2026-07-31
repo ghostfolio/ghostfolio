@@ -159,7 +159,8 @@ export class BenchmarkService {
 
     let benchmarks =
       (await this.propertyService.getByKey<BenchmarkProperty[]>(
-        PROPERTY_BENCHMARKS
+        PROPERTY_BENCHMARKS,
+        { skipCache: true }
       )) ?? [];
 
     benchmarks.push({ symbolProfileId: assetProfile.id });
@@ -196,7 +197,8 @@ export class BenchmarkService {
 
     let benchmarks =
       (await this.propertyService.getByKey<BenchmarkProperty[]>(
-        PROPERTY_BENCHMARKS
+        PROPERTY_BENCHMARKS,
+        { skipCache: true }
       )) ?? [];
 
     benchmarks = benchmarks.filter(({ symbolProfileId }) => {

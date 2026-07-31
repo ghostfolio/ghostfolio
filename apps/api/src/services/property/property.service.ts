@@ -31,14 +31,14 @@ export class PropertyService {
     return property;
   }
 
-  public async get() {
+  public async get({ skipCache = false } = {}) {
     const response: {
       [key: string]: PropertyValue;
     } = {
       [PROPERTY_CURRENCIES]: []
     };
 
-    const properties = await this.getProperties();
+    const properties = await this.getProperties({ skipCache });
 
     for (const property of properties) {
       let value = property.value;
@@ -53,8 +53,11 @@ export class PropertyService {
     return response;
   }
 
-  public async getByKey<TValue extends PropertyValue>(aKey: PropertyKey) {
-    const properties = await this.get();
+  public async getByKey<TValue extends PropertyValue>(
+    aKey: PropertyKey,
+    { skipCache = false } = {}
+  ) {
+    const properties = await this.get({ skipCache });
     return properties[aKey] as TValue;
   }
 
@@ -78,9 +81,14 @@ export class PropertyService {
 
   /**
    * Returns the properties from the in-memory cache, falling back to the
-   * database
+   * database. Callers which write back a modified property must set
+   * skipCache to avoid basing the write on a stale read.
    */
-  private async getProperties() {
+  private async getProperties({ skipCache = false } = {}) {
+    if (skipCache) {
+      return this.prismaService.property.findMany();
+    }
+
     if (
       this.cachedProperties &&
       isBefore(new Date(), this.cachedPropertiesExpiresAt)
@@ -88,14 +96,15 @@ export class PropertyService {
       return this.cachedProperties;
     }
 
-    this.cachedProperties = this.prismaService.property
-      .findMany()
-      .catch((error) => {
+    const properties = this.prismaService.property.findMany().catch((error) => {
+      if (this.cachedProperties === properties) {
         this.invalidateCache();
+      }
 
-        throw error;
-      });
+      throw error;
+    });
 
+    this.cachedProperties = properties;
     this.cachedPropertiesExpiresAt = addMilliseconds(
       new Date(),
       PropertyService.CACHE_TTL
