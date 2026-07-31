@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the style of the empty state in the _Fear & Greed Index_ component
+- Improved the style of the type filter in the activities table component (experimental)
 - Improved the language localization for German (`de`)
 
 ## 3.37.0 - 2026-07-30
