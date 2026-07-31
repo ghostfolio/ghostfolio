@@ -288,6 +288,8 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const SEARCH_QUERY_MINIMUM_LENGTH = 2;
+
 export const SECTORS = [
   'Basic Materials',
   'Communication Services',

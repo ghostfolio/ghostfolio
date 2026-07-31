@@ -202,6 +202,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
+          return searchTerm?.trim();
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
           this.isLoading = {
             accounts: true,
             assetProfiles: true,
@@ -216,11 +221,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           };
 
           this.changeDetectorRef.markForCheck();
-
-          return searchTerm?.trim();
         }),
-        debounceTime(300),
-        distinctUntilChanged(),
         switchMap((searchTerm) => {
           const results = {
             accounts: [],
