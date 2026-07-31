@@ -93,6 +93,8 @@ export class GfActivitiesPageComponent implements OnInit {
         if (state?.user) {
           this.updateUser(state.user);
 
+          this.pageIndex = 0;
+
           this.fetchActivities();
 
           this.changeDetectorRef.markForCheck();
