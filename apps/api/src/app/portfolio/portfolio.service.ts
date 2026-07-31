@@ -1035,7 +1035,6 @@ export class PortfolioService {
       return {
         chart: [],
         dateOfFirstActivity: undefined,
-        firstOrderDate: undefined,
         hasErrors: false,
         performance: {
           currentNetWorth: 0,
@@ -1093,7 +1092,6 @@ export class PortfolioService {
       errors,
       hasErrors,
       dateOfFirstActivity: parseDate(historicalData[0]?.date),
-      firstOrderDate: parseDate(historicalData[0]?.date),
       performance: {
         netPerformance,
         netPerformanceWithCurrencyEffect,
