@@ -284,7 +284,8 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
 
   public canDeleteActivities() {
     return (
-      this.hasPermissionToDeleteActivity && this.dataSource()?.data.length !== 0
+      (this.dataSource()?.data.length ?? 0) > 0 &&
+      this.hasPermissionToDeleteActivity
     );
   }
 
