@@ -494,3 +494,28 @@ export const Actions: Story = {
     totalItems: activities.length
   }
 };
+
+export const Toolbar: Story = {
+  args: {
+    dataSource,
+    baseCurrency: 'USD',
+    deviceType: 'desktop',
+    hasActivities: true,
+    hasPermissionToCreateActivity: true,
+    hasPermissionToDeleteActivity: true,
+    hasPermissionToExportActivities: true,
+    hasPermissionToFilterByType: true,
+    hasPermissionToOpenDetails: false,
+    locale: 'en-US',
+    pageIndex: 0,
+    pageSize: 10,
+    showAccountColumn: true,
+    showActions: false,
+    showCheckbox: false,
+    showNameColumn: true,
+    sortColumn: 'date',
+    sortDirection: 'desc',
+    sortDisabled: false,
+    totalItems: activities.length
+  }
+};
