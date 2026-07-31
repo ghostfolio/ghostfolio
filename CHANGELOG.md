@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the style of the empty state in the _Fear & Greed Index_ component
+- Added the activity count to the delete menu item of the activities table
+- Added the activity count to the deletion confirmation dialog of the activities table
 - Improved the style of the type filter in the activities table component (experimental)
 - Improved the language localization for German (`de`)
 
