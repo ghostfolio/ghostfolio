@@ -42,6 +42,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             );
           }
 
+          if (await this.userService.isDailyRequestLimitExceeded({ user })) {
+            throw new HttpException(
+              getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+              StatusCodes.TOO_MANY_REQUESTS
+            );
+          }
+
           const country =
             countriesAndTimezones.getCountryForTimezone(timezone)?.id;
 

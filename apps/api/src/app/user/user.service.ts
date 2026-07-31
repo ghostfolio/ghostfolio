@@ -31,9 +31,12 @@ import {
   DEFAULT_LOCALE,
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_MAX_DAILY_REQUESTS,
   PROPERTY_REFERRAL_PARTNERS,
   PROPERTY_SYSTEM_MESSAGE,
-  TAG_ID_EXCLUDE_FROM_ANALYSIS
+  TAG_ID_EXCLUDE_FROM_ANALYSIS,
+  THROTTLE_DAILY_KEY,
+  THROTTLE_DAILY_TTL
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
@@ -52,6 +55,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
 import { Prisma, Role, Settings, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { without } from 'lodash';
@@ -67,7 +71,9 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+    @InjectThrottlerStorage()
+    private readonly throttlerStorage: ThrottlerStorage
   ) {}
 
   public async count(args?: Prisma.UserCountArgs) {
@@ -226,6 +232,32 @@ export class UserService {
     });
 
     return usersWithAdminRole.length > 0;
+  }
+
+  public async isDailyRequestLimitExceeded({
+    user
+  }: {
+    user: UserWithSettings;
+  }) {
+    if (user.subscription?.type === SubscriptionType.Premium) {
+      return false;
+    }
+
+    const maxDailyRequests = await this.getMaxDailyRequests();
+
+    if (!maxDailyRequests) {
+      return false;
+    }
+
+    const { isBlocked } = await this.throttlerStorage.increment(
+      `${THROTTLE_DAILY_KEY}-${user.id}`,
+      THROTTLE_DAILY_TTL,
+      maxDailyRequests,
+      THROTTLE_DAILY_TTL,
+      THROTTLE_DAILY_KEY
+    );
+
+    return isBlocked;
   }
 
   public async user(
@@ -781,5 +813,13 @@ export class UserService {
     }
 
     return settings;
+  }
+
+  private async getMaxDailyRequests() {
+    const value = await this.propertyService.getByKey<string>(
+      PROPERTY_MAX_DAILY_REQUESTS
+    );
+
+    return Number(value) || undefined;
   }
 }

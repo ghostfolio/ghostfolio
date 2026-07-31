@@ -35,6 +35,13 @@ export class ApiKeyStrategy extends PassportStrategy(
         );
       }
 
+      if (await this.userService.isDailyRequestLimitExceeded({ user })) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+          StatusCodes.TOO_MANY_REQUESTS
+        );
+      }
+
       await this.prismaService.analytics.upsert({
         create: { user: { connect: { id: user.id } } },
         update: {
