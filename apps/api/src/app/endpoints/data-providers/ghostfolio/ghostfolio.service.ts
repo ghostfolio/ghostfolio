@@ -17,7 +17,10 @@ import {
   DERIVED_CURRENCIES
 } from '@ghostfolio/common/config';
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  getAssetProfileIdentifier,
+  isValidSearchQuery
+} from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioAssetProfileResponse,
   DataProviderHistoricalResponse,
@@ -342,7 +345,7 @@ export class GhostfolioService {
 
     query = query?.trim();
 
-    if (!query || query.length < 2) {
+    if (!isValidSearchQuery(query)) {
       return results;
     }
 

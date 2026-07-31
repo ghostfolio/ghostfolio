@@ -331,9 +331,7 @@ export class YahooFinanceService implements DataProviderInterface {
       }
     } catch (error) {
       if (error?.name === 'BadRequestError') {
-        this.logger.warn(
-          `The search for "${query}" is not supported: ${error.message}`
-        );
+        this.logger.warn(`Could not search for "${query}": ${error.message}`);
       } else {
         this.logger.error(error);
       }
