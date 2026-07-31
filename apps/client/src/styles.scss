@@ -411,6 +411,17 @@ ngx-skeleton-loader {
   .mdc-dialog__content {
     --mat-dialog-supporting-text-color: rgba(var(--dark-primary-text));
   }
+
+  @media (max-width: 575.98px) {
+    // Tabs fill the available width on mobile
+    .mat-mdc-tab-group {
+      .mat-mdc-tab {
+        flex-grow: 1;
+        min-width: unset;
+        padding: 0 0.5rem;
+      }
+    }
+  }
 }
 
 .mat-mdc-fab,
