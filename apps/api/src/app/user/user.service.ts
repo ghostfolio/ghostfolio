@@ -286,7 +286,7 @@ export class UserService {
       updatedAt,
       activityCount: analytics?.activityCount,
       dataProviderGhostfolioDailyRequests:
-        analytics?.dataProviderGhostfolioDailyRequests
+        analytics?.dataProviderGhostfolioDailyRequests ?? 0
     };
 
     if (user.settings) {
