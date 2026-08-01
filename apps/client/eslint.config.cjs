@@ -48,14 +48,7 @@ module.exports = [
     files: ['**/*.ts', '**/*.tsx'],
     // Override or add rules here
     rules: {
-      '@typescript-eslint/prefer-nullish-coalescing': [
-        'error',
-        {
-          ignorePrimitives: {
-            string: true
-          }
-        }
-      ]
+      '@typescript-eslint/prefer-nullish-coalescing': 'error'
     }
   },
   {

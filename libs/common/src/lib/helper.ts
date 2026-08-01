@@ -397,6 +397,22 @@ export function getStartOfUtcDate(aDate: Date) {
   return date;
 }
 
+export function getStringOrNull(aString: string | null | undefined) {
+  if (aString) {
+    return aString;
+  }
+
+  return null;
+}
+
+export function getStringOrUndefined(aString: string | null | undefined) {
+  if (aString) {
+    return aString;
+  }
+
+  return undefined;
+}
+
 export function getSum(aArray: Big[]) {
   if (aArray?.length > 0) {
     return aArray.reduce((a, b) => a.plus(b), new Big(0));
