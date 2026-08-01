@@ -570,7 +570,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         ) as Record<string, string>,
         locale:
           this.assetProfileForm.controls.scraperConfiguration.controls.locale
-            ?.value ?? undefined,
+            ?.value || undefined,
         mode:
           this.assetProfileForm.controls.scraperConfiguration.controls.mode
             ?.value ?? undefined,
@@ -619,7 +619,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       assetClass: this.assetProfileForm.controls.assetClass.value ?? undefined,
       assetSubClass:
         this.assetProfileForm.controls.assetSubClass.value ?? undefined,
-      comment: this.assetProfileForm.controls.comment.value ?? undefined,
+      comment: this.assetProfileForm.controls.comment.value || undefined,
       currency: this.assetProfileForm.controls.currency.value ?? undefined,
       dataGatheringFrequency:
         this.assetProfileForm.controls.dataGatheringFrequency.value ??
@@ -627,8 +627,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
       isActive: isBoolean(this.assetProfileForm.controls.isActive.value)
         ? this.assetProfileForm.controls.isActive.value
         : undefined,
-      name: this.assetProfileForm.controls.name.value ?? undefined,
-      url: this.assetProfileForm.controls.url.value ?? undefined
+      name: this.assetProfileForm.controls.name.value || undefined,
+      url: this.assetProfileForm.controls.url.value || undefined
     };
 
     try {
@@ -739,7 +739,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
           ) as Record<string, string>,
           locale:
             this.assetProfileForm.controls.scraperConfiguration.controls.locale
-              ?.value ?? undefined,
+              ?.value || undefined,
           mode: this.assetProfileForm.controls.scraperConfiguration.controls
             .mode?.value,
           selector:
