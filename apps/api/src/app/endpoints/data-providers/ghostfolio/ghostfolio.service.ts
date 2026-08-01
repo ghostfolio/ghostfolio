@@ -17,7 +17,10 @@ import {
   DERIVED_CURRENCIES
 } from '@ghostfolio/common/config';
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  getAssetProfileIdentifier,
+  isValidSearchQuery
+} from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioAssetProfileResponse,
   DataProviderHistoricalResponse,
@@ -326,8 +329,12 @@ export class GhostfolioService {
   }
 
   public async incrementDailyRequests({ userId }: { userId: string }) {
-    await this.prismaService.analytics.update({
-      data: {
+    await this.prismaService.analytics.upsert({
+      create: {
+        dataProviderGhostfolioDailyRequests: 1,
+        user: { connect: { id: userId } }
+      },
+      update: {
         dataProviderGhostfolioDailyRequests: { increment: 1 }
       },
       where: { userId }
@@ -340,17 +347,15 @@ export class GhostfolioService {
   }: GetSearchParams): Promise<LookupResponse> {
     const results: LookupResponse = { items: [] };
 
-    if (!query) {
+    query = query?.trim();
+
+    if (!isValidSearchQuery(query)) {
       return results;
     }
 
     try {
       let lookupItems: LookupItem[] = [];
       const promises: Promise<{ items: LookupItem[] }>[] = [];
-
-      if (query?.length < 2) {
-        return { items: lookupItems };
-      }
 
       for (const dataProviderService of this.getDataProviderServices()) {
         promises.push(

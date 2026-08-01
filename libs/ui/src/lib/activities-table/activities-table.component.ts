@@ -289,6 +289,13 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     );
   }
 
+  public canExportActivities() {
+    return (
+      (this.dataSource()?.data.length ?? 0) > 0 &&
+      this.hasPermissionToExportActivities
+    );
+  }
+
   public isExcludedFromAnalysis(activity: Activity) {
     return (
       (activity.account && isAccountExcluded(activity.account)) ??

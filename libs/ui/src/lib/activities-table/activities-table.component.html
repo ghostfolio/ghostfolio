@@ -58,12 +58,19 @@
           <button
             class="align-items-center d-flex"
             mat-menu-item
-            [disabled]="dataSource()?.data.length === 0"
+            [disabled]="!canExportActivities()"
             (click)="onExport()"
           >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="cloud-download-outline" />
-              <span i18n>Export Activities</span>
+              @if (canExportActivities()) {
+                <span i18n
+                  >Export {{ totalItems > 1 ? totalItems : '' }}
+                  {totalItems, plural, =1 {Activity} other {Activities}}</span
+                >
+              } @else {
+                <span i18n>Export Activities</span>
+              }
             </span>
           </button>
         }
