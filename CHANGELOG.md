@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Chinese (`zh`)
 
+### Fixed
+
+- Fixed the handling of the _Exclude from Analysis_ tag in the activities table
+
 ## 3.39.0 - 2026-08-01
 
 ### Changed
