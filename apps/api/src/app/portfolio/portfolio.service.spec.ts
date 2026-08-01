@@ -192,7 +192,6 @@ describe('PortfolioService', () => {
             createdAt: parseDate('2024-01-01'),
             currency: 'USD',
             id: randomUUID(),
-            isExcluded: false,
             name: 'USD',
             platformId: null,
             updatedAt: parseDate('2024-01-01'),
@@ -226,7 +225,6 @@ describe('PortfolioService', () => {
         createdAt: parseDate('2024-01-01'),
         currency: 'USD',
         id: accountId,
-        isExcluded: false,
         name: 'USD',
         platformId: null,
         updatedAt: parseDate('2024-01-01'),
@@ -438,7 +436,6 @@ describe('PortfolioService', () => {
       balance: 100,
       currency: 'USD',
       id: randomUUID(),
-      isExcluded: false,
       name: 'Account 1',
       platform: { name: 'Platform 1' },
       platformId: randomUUID()
