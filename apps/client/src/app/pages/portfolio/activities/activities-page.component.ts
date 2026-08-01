@@ -10,7 +10,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { DateRange } from '@ghostfolio/common/types';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { DataService } from '@ghostfolio/ui/services';
@@ -92,7 +91,13 @@ export class GfActivitiesPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
+          const previousDateRange = this.getDateRange();
+
           this.updateUser(state.user);
+
+          if (previousDateRange !== this.getDateRange()) {
+            this.pageIndex = 0;
+          }
 
           this.fetchActivities();
 
@@ -120,7 +125,11 @@ export class GfActivitiesPageComponent implements OnInit {
   protected onDeleteActivities() {
     this.dataService
       .deleteActivities({
-        filters: this.userService.getFilters()
+        activityTypes: this.activityTypesFilter.length
+          ? this.activityTypesFilter
+          : undefined,
+        filters: this.userService.getFilters(),
+        range: this.getDateRange()
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -159,7 +168,8 @@ export class GfActivitiesPageComponent implements OnInit {
         activityTypes: this.activityTypesFilter.length
           ? this.activityTypesFilter
           : undefined,
-        filters: this.userService.getFilters()
+        filters: this.userService.getFilters(),
+        range: this.getDateRange()
       };
     }
 
@@ -277,16 +287,13 @@ export class GfActivitiesPageComponent implements OnInit {
     this.dataSource = undefined;
     this.totalItems = undefined;
 
-    const dateRange = this.user?.settings?.dateRange;
-    const range = this.isCalendarYear(dateRange) ? dateRange : undefined;
-
     this.dataService
       .fetchActivities({
-        range,
         activityTypes: this.activityTypesFilter.length
           ? this.activityTypesFilter
           : undefined,
         filters: this.userService.getFilters(),
+        range: this.getDateRange(),
         skip: this.pageIndex * this.pageSize,
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection,
@@ -311,12 +318,16 @@ export class GfActivitiesPageComponent implements OnInit {
       });
   }
 
-  private isCalendarYear(dateRange?: DateRange) {
-    if (!dateRange) {
-      return false;
+  private getDateRange() {
+    const dateRange = this.user?.settings?.dateRange;
+
+    // Omit the date ranges which do not apply to activities: '1d' spans today
+    // only, while 'max' would exclude drafts dated in the future
+    if (!dateRange || ['1d', 'max'].includes(dateRange)) {
+      return undefined;
     }
 
-    return /^\d{4}$/.test(dateRange);
+    return dateRange;
   }
 
   private updateUser(aUser: User) {

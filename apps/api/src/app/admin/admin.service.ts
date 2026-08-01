@@ -107,8 +107,11 @@ export class AdminService {
     await this.marketDataService.deleteMany({ dataSource, symbol });
 
     const currency = getCurrencyFromSymbol(symbol);
-    const customCurrencies =
-      await this.propertyService.getByKey<string[]>(PROPERTY_CURRENCIES);
+
+    const customCurrencies = await this.propertyService.getByKey<string[]>(
+      PROPERTY_CURRENCIES,
+      { skipCache: true }
+    );
 
     if (customCurrencies.includes(currency)) {
       const updatedCustomCurrencies = customCurrencies.filter(

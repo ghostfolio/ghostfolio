@@ -20,7 +20,8 @@ import {
   getCurrencyFromSymbol,
   getStartOfUtcDate,
   isCurrency,
-  isDerivedCurrency
+  isDerivedCurrency,
+  isValidSearchQuery
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -838,7 +839,9 @@ export class DataProviderService implements OnModuleInit {
     let lookupItems: LookupItem[] = [];
     const promises: Promise<LookupResponse>[] = [];
 
-    if (query?.length < 2) {
+    query = query?.trim();
+
+    if (!isValidSearchQuery(query)) {
       return { items: lookupItems };
     }
 

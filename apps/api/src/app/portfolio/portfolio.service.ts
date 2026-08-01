@@ -1124,6 +1124,8 @@ export class PortfolioService {
         withSummary: true
       });
 
+    const hasOpenHoldings = Object.keys(holdings).length > 0;
+
     const marketsAdvancedTotalInBaseCurrency = getSum(
       Object.values(marketsAdvanced).map(({ valueInBaseCurrency }) => {
         return new Big(valueInBaseCurrency);
@@ -1183,26 +1185,25 @@ export class PortfolioService {
           id: 'rule.currencyClusterRisk.category',
           languageCode: userSettings.language
         }),
-        rules:
-          summary.activityCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    Object.values(holdings),
-                    userSettings.language
-                  ),
-                  new CurrencyClusterRiskCurrentInvestment(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    Object.values(holdings),
-                    userSettings.language
-                  )
-                ],
-                userSettings
-              )
-            : undefined
+        rules: hasOpenHoldings
+          ? await this.rulesService.evaluate(
+              [
+                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  Object.values(holdings),
+                  userSettings.language
+                ),
+                new CurrencyClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  Object.values(holdings),
+                  userSettings.language
+                )
+              ],
+              userSettings
+            )
+          : undefined
       },
       {
         key: 'assetClassClusterRisk',
@@ -1210,26 +1211,25 @@ export class PortfolioService {
           id: 'rule.assetClassClusterRisk.category',
           languageCode: userSettings.language
         }),
-        rules:
-          summary.activityCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new AssetClassClusterRiskEquity(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    Object.values(holdings)
-                  ),
-                  new AssetClassClusterRiskFixedIncome(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    Object.values(holdings)
-                  )
-                ],
-                userSettings
-              )
-            : undefined
+        rules: hasOpenHoldings
+          ? await this.rulesService.evaluate(
+              [
+                new AssetClassClusterRiskEquity(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
+                  Object.values(holdings)
+                ),
+                new AssetClassClusterRiskFixedIncome(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
+                  Object.values(holdings)
+                )
+              ],
+              userSettings
+            )
+          : undefined
       },
       {
         key: 'accountClusterRisk',
@@ -1264,28 +1264,27 @@ export class PortfolioService {
           id: 'rule.economicMarketClusterRisk.category',
           languageCode: userSettings.language
         }),
-        rules:
-          summary.activityCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new EconomicMarketClusterRiskDevelopedMarkets(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    marketsTotalInBaseCurrency,
-                    markets.developedMarkets.valueInBaseCurrency,
-                    userSettings.language
-                  ),
-                  new EconomicMarketClusterRiskEmergingMarkets(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    marketsTotalInBaseCurrency,
-                    markets.emergingMarkets.valueInBaseCurrency,
-                    userSettings.language
-                  )
-                ],
-                userSettings
-              )
-            : undefined
+        rules: hasOpenHoldings
+          ? await this.rulesService.evaluate(
+              [
+                new EconomicMarketClusterRiskDevelopedMarkets(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  marketsTotalInBaseCurrency,
+                  markets.developedMarkets.valueInBaseCurrency,
+                  userSettings.language
+                ),
+                new EconomicMarketClusterRiskEmergingMarkets(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  marketsTotalInBaseCurrency,
+                  markets.emergingMarkets.valueInBaseCurrency,
+                  userSettings.language
+                )
+              ],
+              userSettings
+            )
+          : undefined
       },
       {
         key: 'regionalMarketClusterRisk',
@@ -1293,49 +1292,48 @@ export class PortfolioService {
           id: 'rule.regionalMarketClusterRisk.category',
           languageCode: userSettings.language
         }),
-        rules:
-          summary.activityCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new RegionalMarketClusterRiskAsiaPacific(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    marketsAdvancedTotalInBaseCurrency,
-                    marketsAdvanced.asiaPacific.valueInBaseCurrency
-                  ),
-                  new RegionalMarketClusterRiskEmergingMarkets(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    marketsAdvancedTotalInBaseCurrency,
-                    marketsAdvanced.emergingMarkets.valueInBaseCurrency
-                  ),
-                  new RegionalMarketClusterRiskEurope(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    marketsAdvancedTotalInBaseCurrency,
-                    marketsAdvanced.europe.valueInBaseCurrency
-                  ),
-                  new RegionalMarketClusterRiskJapan(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    marketsAdvancedTotalInBaseCurrency,
-                    marketsAdvanced.japan.valueInBaseCurrency
-                  ),
-                  new RegionalMarketClusterRiskNorthAmerica(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    userSettings.language,
-                    marketsAdvancedTotalInBaseCurrency,
-                    marketsAdvanced.northAmerica.valueInBaseCurrency
-                  )
-                ],
-                userSettings
-              )
-            : undefined
+        rules: hasOpenHoldings
+          ? await this.rulesService.evaluate(
+              [
+                new RegionalMarketClusterRiskAsiaPacific(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.asiaPacific.valueInBaseCurrency
+                ),
+                new RegionalMarketClusterRiskEmergingMarkets(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.emergingMarkets.valueInBaseCurrency
+                ),
+                new RegionalMarketClusterRiskEurope(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.europe.valueInBaseCurrency
+                ),
+                new RegionalMarketClusterRiskJapan(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.japan.valueInBaseCurrency
+                ),
+                new RegionalMarketClusterRiskNorthAmerica(
+                  this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.northAmerica.valueInBaseCurrency
+                )
+              ],
+              userSettings
+            )
+          : undefined
       },
       {
         key: 'fees',

@@ -51,7 +51,7 @@ export class GhostfolioController {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
-      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+      this.request.user.dataProviderGhostfolioDailyRequests >= maxDailyRequests
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
@@ -95,7 +95,7 @@ export class GhostfolioController {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
-      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+      this.request.user.dataProviderGhostfolioDailyRequests >= maxDailyRequests
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
@@ -135,7 +135,7 @@ export class GhostfolioController {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
-      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+      this.request.user.dataProviderGhostfolioDailyRequests >= maxDailyRequests
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
@@ -176,7 +176,7 @@ export class GhostfolioController {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
-      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+      this.request.user.dataProviderGhostfolioDailyRequests >= maxDailyRequests
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
@@ -215,7 +215,7 @@ export class GhostfolioController {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
-      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+      this.request.user.dataProviderGhostfolioDailyRequests >= maxDailyRequests
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
@@ -252,7 +252,7 @@ export class GhostfolioController {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
-      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+      this.request.user.dataProviderGhostfolioDailyRequests >= maxDailyRequests
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
