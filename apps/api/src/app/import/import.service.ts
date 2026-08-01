@@ -303,6 +303,7 @@ export class ImportService {
           // the "Exclude from Analysis" tag
           if (
             accountWithBalances.isExcluded &&
+            existingTagIds.has(TAG_ID_EXCLUDE_FROM_ANALYSIS) &&
             !tagIds.includes(TAG_ID_EXCLUDE_FROM_ANALYSIS)
           ) {
             tagIds.push(TAG_ID_EXCLUDE_FROM_ANALYSIS);
