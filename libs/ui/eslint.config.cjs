@@ -42,15 +42,7 @@ module.exports = [
         ],
         '@angular-eslint/prefer-inject': 'off',
         '@angular-eslint/prefer-standalone': 'off',
-        '@typescript-eslint/prefer-nullish-coalescing': [
-          'error',
-          {
-            ignorePrimitives: {
-              boolean: true,
-              string: true
-            }
-          }
-        ]
+        '@typescript-eslint/prefer-nullish-coalescing': 'error'
       },
       languageOptions: {
         parserOptions: {
