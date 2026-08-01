@@ -9,12 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the data format of the export functionality
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `7.8.0` to `7.9.1`
 
 ### Fixed
 
 - Fixed the scroll behavior of the page content behind an open dialog
+- Fixed the export functionality to only include the accounts of the exported activities if a filter is applied
 
 ## 3.38.0 - 2026-07-31
 
