@@ -7,7 +7,7 @@ import {
   DataSource,
   Prisma
 } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { Transform, TransformFnParams, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -18,6 +18,7 @@ import {
   IsUrl,
   ValidateNested
 } from 'class-validator';
+import { isString } from 'lodash';
 
 import { CountryDto } from './country.dto';
 import { HoldingDto } from './holding.dto';
@@ -96,5 +97,8 @@ export class UpdateAssetProfileDto {
     protocols: ['http', 'https'],
     require_protocol: true
   })
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) && value.trim() === '' ? undefined : value
+  )
   url?: string;
 }
