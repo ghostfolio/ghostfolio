@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `7.8.0` to `7.9.1`
 
+### Fixed
+
+- Fixed the scroll behavior of the page content behind an open dialog
+
 ## 3.38.0 - 2026-07-31
 
 ### Added
