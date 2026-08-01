@@ -1,8 +1,13 @@
 import {
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+} from '@ghostfolio/common/config';
+import {
   extractNumberFromString,
   getNumberFormatGroup,
   getStringOrNull,
   getStringOrUndefined,
+  isAccountExcluded,
   isCurrency,
   isCurrencySymbol
 } from '@ghostfolio/common/helper';
@@ -194,6 +199,28 @@ describe('Helper', () => {
 
     it('Undefined', () => {
       expect(getStringOrUndefined(undefined)).toEqual(undefined);
+    });
+  });
+
+  describe('Is account excluded', () => {
+    it('Account with Exclude from Analysis tag', () => {
+      expect(
+        isAccountExcluded({ tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }] })
+      ).toEqual(true);
+    });
+
+    it('Account with another tag', () => {
+      expect(
+        isAccountExcluded({ tags: [{ id: TAG_ID_EMERGENCY_FUND }] })
+      ).toEqual(false);
+    });
+
+    it('Account without tags', () => {
+      expect(isAccountExcluded({ tags: [] })).toEqual(false);
+    });
+
+    it('Undefined account', () => {
+      expect(isAccountExcluded(undefined)).toEqual(false);
     });
   });
 

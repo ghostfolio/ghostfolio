@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the handling of the _Exclude from Analysis_ tag in the activities table
 - Resolved a validation error caused by empty strings in the asset profile details dialog of the admin control panel
 
 ## 3.39.0 - 2026-08-01
