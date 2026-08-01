@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the persistence of an empty comment in the create or update account dialog
+- Fixed the persistence of an empty comment in the create or update activity dialog
 - Resolved a validation error caused by empty strings in the asset profile details dialog of the admin control panel
 
 ## 3.39.0 - 2026-08-01
