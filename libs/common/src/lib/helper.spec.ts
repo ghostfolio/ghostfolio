@@ -5,6 +5,8 @@ import {
 import {
   extractNumberFromString,
   getNumberFormatGroup,
+  getStringOrNull,
+  getStringOrUndefined,
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol
@@ -144,7 +146,63 @@ describe('Helper', () => {
     });
   });
 
-  describe('Is account excluded', () => {
+  describe('Get string or null', () => {
+    it('String', () => {
+      expect(getStringOrNull('https://ghostfol.io')).toEqual(
+        'https://ghostfol.io'
+      );
+    });
+
+    it('String (with spaces)', () => {
+      expect(getStringOrNull(' https://ghostfol.io ')).toEqual(
+        'https://ghostfol.io'
+      );
+    });
+
+    it('Empty string', () => {
+      expect(getStringOrNull('')).toEqual(null);
+    });
+
+    it('Blank string', () => {
+      expect(getStringOrNull('   ')).toEqual(null);
+    });
+
+    it('Null', () => {
+      expect(getStringOrNull(null)).toEqual(null);
+    });
+
+    it('Undefined', () => {
+      expect(getStringOrNull(undefined)).toEqual(null);
+    });
+  });
+
+  describe('Get string or undefined', () => {
+    it('String', () => {
+      expect(getStringOrUndefined('de-DE')).toEqual('de-DE');
+    });
+
+    it('String (with spaces)', () => {
+      expect(getStringOrUndefined(' de-DE ')).toEqual('de-DE');
+    });
+
+    it('Empty string', () => {
+      expect(getStringOrUndefined('')).toEqual(undefined);
+    });
+
+    it('Blank string', () => {
+      expect(getStringOrUndefined('   ')).toEqual(undefined);
+    });
+
+    it('Null', () => {
+      expect(getStringOrUndefined(null)).toEqual(undefined);
+    });
+
+    it('Undefined', () => {
+      expect(getStringOrUndefined(undefined)).toEqual(undefined);
+    });
+  });
+  
+   describe('Is account excluded', () => {
     it('Account with Exclude from Analysis tag', () => {
       expect(
         isAccountExcluded({ tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }] })
