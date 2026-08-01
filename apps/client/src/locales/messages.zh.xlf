@@ -605,7 +605,7 @@
       </trans-unit>
       <trans-unit id="8282940047848889809" datatype="html">
         <source>Paid</source>
-        <target state="translated">已支付</target>
+        <target state="translated">付费</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
           <context context-type="linenumber">129</context>
@@ -3705,7 +3705,7 @@
       </trans-unit>
       <trans-unit id="2756436642316668410" datatype="html">
         <source>Oops! Could not delete the asset profiles.</source>
-        <target state="translated">哎呀！无法删除资产信息。</target>
+        <target state="translated">哎呀！无法删除资产概况。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">52</context>
@@ -4205,7 +4205,7 @@
       </trans-unit>
       <trans-unit id="8897501932747984560" datatype="html">
         <source>Do you really want to convert this asset profile to <x id="PH" equiv-text="newAssetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="newAssetProfileIdentifier.dataSource"/>)?</source>
-        <target state="translated">您确定要把此资产信息转换为 <x id="PH" equiv-text="newAssetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="newAssetProfileIdentifier.dataSource"/>) 吗？</target>
+        <target state="translated">您确定要把此资产概况转换为 <x id="PH" equiv-text="newAssetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="newAssetProfileIdentifier.dataSource"/>) 吗？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">723</context>
@@ -5390,7 +5390,7 @@
       </trans-unit>
       <trans-unit id="1541521390115871091" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Profile} other {Profiles}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {Profile} other {Profiles}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {个资产概况} other {个资产概况}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">275</context>
@@ -6835,7 +6835,7 @@
       </trans-unit>
       <trans-unit id="1284643802050750978" datatype="html">
         <source>Oops! Could not delete the asset profile.</source>
-        <target state="translated">哎呀！无法删除资产信息。</target>
+        <target state="translated">哎呀！无法删除资产概况。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">51</context>
@@ -6939,7 +6939,7 @@
       </trans-unit>
       <trans-unit id="1518717392874668219" datatype="html">
         <source>Do you really want to delete these <x id="count" equiv-text="assetProfileCount"/> asset profiles?</source>
-        <target state="translated">您确定要删除这 <x id="count" equiv-text="assetProfileCount"/> 个资产信息吗？</target>
+        <target state="translated">您确定要删除这 <x id="count" equiv-text="assetProfileCount"/> 个资产概况吗？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">67</context>
