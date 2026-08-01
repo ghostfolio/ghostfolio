@@ -135,7 +135,10 @@ export class GfAppComponent implements OnInit {
               this.currentSubRoute ===
                 internalRoutes.home.subRoutes?.holdings.path) ||
             (this.currentRoute === internalRoutes.portfolio.path &&
-              !this.currentSubRoute)) &&
+              !this.currentSubRoute) ||
+            (this.currentRoute === internalRoutes.portfolio.path &&
+              this.currentSubRoute ===
+                internalRoutes.portfolio.subRoutes?.activities.path)) &&
           this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;

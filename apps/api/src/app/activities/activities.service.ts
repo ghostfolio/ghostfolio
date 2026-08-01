@@ -361,14 +361,23 @@ export class ActivitiesService {
   }
 
   public async deleteActivities({
+    endDate,
     filters,
+    startDate,
+    types,
     userId
   }: {
+    endDate?: Date;
     filters?: Filter[];
+    startDate?: Date;
+    types?: ActivityType[];
     userId: string;
   }): Promise<number> {
     const { activities } = await this.getActivities({
+      endDate,
       filters,
+      startDate,
+      types,
       userId,
       includeDrafts: true,
       userCurrency: undefined,

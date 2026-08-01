@@ -1,6 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
@@ -11,7 +12,10 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation/imp
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  PortfolioSummary
+} from '@ghostfolio/common/interfaces';
 
 import { Account, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
@@ -85,6 +89,7 @@ describe('PortfolioService', () => {
     symbolProfileService = new SymbolProfileService(null);
 
     userService = new UserService(
+      null,
       null,
       null,
       null,
@@ -187,7 +192,6 @@ describe('PortfolioService', () => {
             createdAt: parseDate('2024-01-01'),
             currency: 'USD',
             id: randomUUID(),
-            isExcluded: false,
             name: 'USD',
             platformId: null,
             updatedAt: parseDate('2024-01-01'),
@@ -221,7 +225,6 @@ describe('PortfolioService', () => {
         createdAt: parseDate('2024-01-01'),
         currency: 'USD',
         id: accountId,
-        isExcluded: false,
         name: 'USD',
         platformId: null,
         updatedAt: parseDate('2024-01-01'),
@@ -337,6 +340,86 @@ describe('PortfolioService', () => {
     });
   });
 
+  describe('getSummary', () => {
+    const getSummary = (args: object) => {
+      return (
+        portfolioService as unknown as {
+          getSummary: (aArgs: object) => Promise<PortfolioSummary>;
+        }
+      ).getSummary(args);
+    };
+
+    function createPortfolioCalculator() {
+      return {
+        getDividendInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getFeesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getInterestInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getLiabilitiesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
+        getSnapshot: jest.fn().mockResolvedValue({
+          currentValueInBaseCurrency: new Big(3000),
+          totalCashInBaseCurrency: new Big(1000),
+          totalInvestment: new Big(2000),
+          totalInvestmentWithCurrencyEffect: new Big(2000)
+        }),
+        getStartDate: jest.fn().mockReturnValue(parseDate('2024-01-01'))
+      } as unknown as PortfolioCalculator;
+    }
+
+    beforeEach(() => {
+      jest
+        .spyOn(activitiesService, 'getActivities')
+        .mockResolvedValue({ activities: [], count: 0 });
+
+      jest
+        .spyOn(impersonationService, 'validateImpersonationId')
+        .mockResolvedValue(null);
+
+      jest.spyOn(portfolioService, 'getPerformance').mockResolvedValue({
+        performance: {
+          currentValueInBaseCurrency: 3000,
+          netPerformance: 500,
+          netPerformancePercentage: 0.2,
+          netPerformancePercentageWithCurrencyEffect: 0.2,
+          netPerformanceWithCurrencyEffect: 500
+        }
+      } as Awaited<ReturnType<typeof portfolioService.getPerformance>>);
+
+      jest.spyOn(userService, 'user').mockResolvedValue({
+        id: userDummyData.id,
+        settings: {
+          settings: {
+            baseCurrency: 'CHF'
+          }
+        }
+      } as unknown as Awaited<ReturnType<typeof userService.user>>);
+    });
+
+    it('should derive the cash and net worth from the account balance when there are no excluded accounts, no emergency fund and no liabilities', async () => {
+      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+        accounts: [],
+        balanceInBaseCurrency: 1000
+      });
+
+      const portfolioCalculator = createPortfolioCalculator();
+
+      const summary = await getSummary({
+        portfolioCalculator,
+        balanceInBaseCurrency: 1000,
+        emergencyFundHoldingsValueInBaseCurrency: 0,
+        filteredValueInBaseCurrency: new Big(3000),
+        impersonationId: undefined,
+        userCurrency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      expect(summary.cash).toBe(1000);
+      expect(summary.emergencyFund.total).toBe(0);
+      expect(summary.excludedAccountsAndActivities).toBe(0);
+      expect(summary.totalAssetsInBaseCurrency).toBe(3000);
+      expect(summary.totalValueInBaseCurrency).toBe(3000);
+    });
+  });
+
   describe('getValueOfAccountsAndPlatforms', () => {
     const getValueOfAccountsAndPlatforms = (args: object) => {
       return (
@@ -353,7 +436,6 @@ describe('PortfolioService', () => {
       balance: 100,
       currency: 'USD',
       id: randomUUID(),
-      isExcluded: false,
       name: 'Account 1',
       platform: { name: 'Platform 1' },
       platformId: randomUUID()

@@ -4,7 +4,6 @@ import { Transform, TransformFnParams } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
-  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -29,13 +28,6 @@ export class CreateAccountDto {
   @IsOptional()
   @IsString()
   id?: string;
-
-  /**
-   * @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
-   */
-  @IsBoolean()
-  @IsOptional()
-  isExcluded?: boolean;
 
   @IsString()
   name: string;
