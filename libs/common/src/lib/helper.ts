@@ -398,16 +398,20 @@ export function getStartOfUtcDate(aDate: Date) {
 }
 
 export function getStringOrNull(aString: string | null | undefined) {
-  if (aString) {
-    return aString;
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
   }
 
   return null;
 }
 
 export function getStringOrUndefined(aString: string | null | undefined) {
-  if (aString) {
-    return aString;
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
   }
 
   return undefined;
