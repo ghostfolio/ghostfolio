@@ -201,8 +201,8 @@ describe('Helper', () => {
       expect(getStringOrUndefined(undefined)).toEqual(undefined);
     });
   });
-  
-   describe('Is account excluded', () => {
+
+  describe('Is account excluded', () => {
     it('Account with Exclude from Analysis tag', () => {
       expect(
         isAccountExcluded({ tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }] })
