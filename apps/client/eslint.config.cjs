@@ -52,6 +52,7 @@ module.exports = [
         'error',
         {
           ignorePrimitives: {
+            boolean: true,
             string: true
           }
         }
