@@ -14,7 +14,7 @@ import {
 import {
   Activity,
   DataProviderInfo,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Filter,
   LineChartItem,
   NullableLineChartItem,
@@ -121,7 +121,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected activitiesCount: number;
   protected assetClass: string;
   protected assetProfile: Pick<
-    EnhancedSymbolProfile,
+    EnhancedAssetProfile,
     | 'assetClass'
     | 'assetSubClass'
     | 'countries'

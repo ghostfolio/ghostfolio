@@ -179,16 +179,12 @@
             <mat-card-content class="pt-3">
               @if (isFetchFailure(marketDataOfMarkets)) {
                 🔴 {{ marketDataOfMarkets.fetchError }}
-              } @else if (marketDataOfMarkets) {
+              } @else {
                 <gf-fear-and-greed-index
                   [fearAndGreedIndex]="
-                    marketDataOfMarkets.fearAndGreedIndex.STOCKS.marketPrice
+                    marketDataOfMarkets?.fearAndGreedIndex?.STOCKS?.marketPrice
                   "
-                />
-              } @else {
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  [theme]="{ height: '2.5rem', width: '100%' }"
+                  [isLoading]="!marketDataOfMarkets"
                 />
               }
             </mat-card-content>
@@ -203,17 +199,13 @@
             <mat-card-content class="pt-3">
               @if (isFetchFailure(marketDataOfMarkets)) {
                 🔴 {{ marketDataOfMarkets.fetchError }}
-              } @else if (marketDataOfMarkets) {
+              } @else {
                 <gf-fear-and-greed-index
                   [fearAndGreedIndex]="
-                    marketDataOfMarkets.fearAndGreedIndex.CRYPTOCURRENCIES
-                      .marketPrice
+                    marketDataOfMarkets?.fearAndGreedIndex?.CRYPTOCURRENCIES
+                      ?.marketPrice
                   "
-                />
-              } @else {
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  [theme]="{ height: '2.5rem', width: '100%' }"
+                  [isLoading]="!marketDataOfMarkets"
                 />
               }
             </mat-card-content>

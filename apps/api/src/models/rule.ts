@@ -59,7 +59,7 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
               new Big(currentValue.quantity)
                 .mul(currentValue.marketPrice ?? 0)
                 .toNumber(),
-              currentValue.assetProfile.currency,
+              currentValue.assetProfile.currency ?? baseCurrency,
               baseCurrency
             ),
           0

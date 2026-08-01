@@ -3,22 +3,20 @@
     @if (readonly) {
       <div class="h5" i18n>Tags</div>
       @if (
-        (tags && tags.length > 0) || (tagsReadOnly && tagsReadOnly.length > 0)
+        tagsSelected().length > 0 || (tagsReadOnly && tagsReadOnly.length > 0)
       ) {
         <mat-chip-listbox>
           @if (tagsReadOnly) {
-            @for (tag of tagsReadOnly; track tag) {
+            @for (tag of tagsReadOnly; track tag.id) {
               <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
             }
           }
-          @if (tags) {
-            @for (tag of tags; track tag) {
-              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
-            }
+          @for (tag of tagsSelected(); track tag.id) {
+            <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
           }
         </mat-chip-listbox>
       } @else {
-        <div>-</div>
+        <div>–</div>
       }
     } @else {
       <mat-form-field appearance="outline" class="w-100 without-hint">

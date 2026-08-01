@@ -31,8 +31,6 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -57,7 +55,6 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
     GfTagsSelectorComponent,
     MatAutocompleteModule,
     MatButtonModule,
-    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -89,19 +86,12 @@ export class GfCreateOrUpdateAccountDialogComponent {
     const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
 
-<<<<<<< HEAD
-    this.hasPermissionToCreateOwnTag = hasPermission(
-      this.data.user?.permissions,
-      permissions.createOwnTag
-    );
-=======
     this.locale =
       this.data.user?.settings?.locale ?? this.locale ?? DEFAULT_LOCALE;
 
     this.hasPermissionToCreateOwnTag =
       this.data.user?.settings?.isExperimentalFeatures &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
->>>>>>> c5ab9c84a (fix(client): address review feedback for localized number directive)
 
     this.tagsAvailable = [
       ...(this.data.user?.tags ?? []),
@@ -122,7 +112,6 @@ export class GfCreateOrUpdateAccountDialogComponent {
       balance: [this.data.account.balance, Validators.required],
       comment: [this.data.account.comment],
       currency: [this.data.account.currency, Validators.required],
-      isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
       platformId: [null, this.autocompleteObjectValidator()],
       tags: [
@@ -220,7 +209,6 @@ export class GfCreateOrUpdateAccountDialogComponent {
       comment: this.accountForm.get('comment')?.value ?? null,
       currency: this.accountForm.get('currency')?.value,
       id: this.accountForm.get('accountId')?.value,
-      isExcluded: this.accountForm.get('isExcluded')?.value,
       name: this.accountForm.get('name')?.value,
       platformId: this.accountForm.get('platformId')?.value?.id ?? null,
       tags: this.accountForm

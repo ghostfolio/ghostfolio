@@ -5,11 +5,129 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.39.0 - 2026-08-01
+
+### Changed
+
+- Harmonized the data format of the export functionality
+- Removed the deprecated `firstOrderDate` attribute from the `GET api/v2/portfolio/performance` endpoint response
+- Removed the deprecated `isExcluded` attribute of the account in favor of the _Exclude from Analysis_ tag including a data migration
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `7.8.0` to `7.9.1`
+
+### Fixed
+
+- Fixed the scroll behavior of the page content behind an open dialog
+- Fixed the export functionality to only include the accounts of the exported activities if a filter is applied
+
+## 3.38.0 - 2026-07-31
+
+### Added
+
+- Added support for the date range filter in the export functionality
+- Added support for the date range filter on the portfolio activities page
+
+### Changed
+
+- Improved the style of the tabs in the account detail dialog on mobile
+- Improved the style of the tabs in the holding detail dialog on mobile
+- Improved the style of the tabs in the asset profile dialog of the admin control panel on mobile
+- Improved the style of the empty state in the _Fear & Greed Index_ component
+- Added the activity count to the delete menu item of the activities table
+- Added the activity count to the deletion confirmation dialog of the activities table
+- Improved the style of the type filter in the activities table component (experimental)
+- Improved the search functionality by trimming the query
+- Improved the log output in the search functionality of the _Yahoo Finance_ service for unsupported queries
+- Improved the performance of the property service by caching the properties in memory
+- Improved the validation of the query parameters in the activities endpoints
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the calendar year date range in time zones with a negative _UTC_ offset
+- Fixed the deletion of activities to respect the activity type filter on the activities page (experimental)
+- Fixed the deletion of activities to respect the date range filter on the activities page
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Asset Class Cluster Risks_ (Equity)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Asset Class Cluster Risks_ (Fixed Income)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Currency Cluster Risks_ (Investment)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Currency Cluster Risks_ (Investment: Base Currency)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Economic Market Cluster Risks_ (Developed Markets)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Economic Market Cluster Risks_ (Emerging Markets)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Regional Market Cluster Risks_ (Asia-Pacific)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Regional Market Cluster Risks_ (Emerging Markets)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Regional Market Cluster Risks_ (Europe)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Regional Market Cluster Risks_ (Japan)
+- Fixed the static portfolio analysis rule for a portfolio with no holdings: _Regional Market Cluster Risks_ (North America)
+
+## 3.37.0 - 2026-07-30
+
+### Added
+
+- Added an empty state to the _Fear & Greed Index_ component
+- Added a _Storybook_ story for the _Fear & Greed Index_ component
+
+### Changed
+
+- Moved the tags to the overview tab of the account detail dialog (experimental)
+- Moved the tags to the overview tab of the holding detail dialog
+- Consolidated the markets pages into a single route where the _Fear & Greed Index_ is controlled by permission
+- Refactored the line chart components to share the common chart configuration
+- Improved the language localization for Spanish (`es`)
+- Improved the language localization for Ukrainian (`uk`)
+
+### Fixed
+
+- Ignored future-dated account balances in the portfolio calculation
+
+## 3.36.0 - 2026-07-29
+
+### Added
+
+- Added an overview tab to the account detail dialog
+- Added the tags (read-only) to the account detail dialog (experimental)
+
+### Changed
+
+- Improved the portfolio summary tab on the home page
+- Improved the language localization for German (`de`)
+- Upgraded `@openrouter/ai-sdk-provider` from version `2.9.1` to `3.0.0`
+- Upgraded `ai` from version `6.0.174` to `7.0.37`
+
+### Fixed
+
+- Fixed the time in market of the portfolio summary to be empty if there is no activity
+- Fixed an issue with the delete button in the activities filter component
+- Fixed the tags in the read-only mode of the tags selector component
+
+## 3.35.0 - 2026-07-27
+
+### Added
+
+- Added a loading indicator to the access table to share the portfolio
+
+### Changed
+
+- Improved the portfolio summary by presenting the cash and the holdings as a breakdown of the total assets
+- Improved the _FIRE_ calculator by including the cash which is not part of the emergency fund
+- Improved the performance calculation and the value of the portfolio by excluding cash denominated in the base currency
+- Extended the portfolio details endpoint to include the total assets and the total cash in the portfolio summary
+- Deprecated `firstOrderDate` in favor of `dateOfFirstActivity` in the `GET api/v2/portfolio/performance` endpoint
+- Improved the log output in the get asset profile functionality of the _Financial Modeling Prep_ service for delisted asset profiles
+- Refreshed the cryptocurrencies list
+- Upgraded `prettier` from version `3.8.4` to `3.9.6`
+
+### Fixed
+
+- Resolved an exception in the user service when getting a non-existent user
+- Fixed the missing currency in the get quotes functionality of the _Financial Modeling Prep_ service for cryptocurrencies without an asset profile
+
+## 3.34.0 - 2026-07-25
 
 ### Changed
 
 - Included cash in the performance calculation of the portfolio
+- Moved the support for tags in the account from experimental to general availability
+- Improved the user experience of the users table in the admin control panel by eliminating the reload when opening and closing the user detail dialog
 - Upgraded `countup.js` from version `2.10.0` to `2.10.1`
 - Upgraded `dotenv` from version `17.2.3` to `17.4.2`
 - Upgraded `dotenv-expand` from version `12.0.3` to `13.0.0`

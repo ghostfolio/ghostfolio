@@ -41,6 +41,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  map,
   switchMap
 } from 'rxjs/operators';
 
@@ -128,6 +129,9 @@ export class GfSymbolAutocompleteComponent
 
     this.control.valueChanges
       .pipe(
+        map((query) => {
+          return isString(query) ? query.trim() : query;
+        }),
         filter((query) => {
           if (query?.length === 0) {
             this.showDefaultOptions();
@@ -137,13 +141,13 @@ export class GfSymbolAutocompleteComponent
 
           return isString(query);
         }),
+        debounceTime(400),
+        distinctUntilChanged(),
         tap(() => {
           this.isLoading = true;
 
           this.changeDetectorRef.markForCheck();
         }),
-        debounceTime(400),
-        distinctUntilChanged(),
         takeUntilDestroyed(this.destroyRef),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({

@@ -329,8 +329,24 @@ export class DataService {
     return this.http.delete<AccountBalance>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteActivities({ filters }: { filters?: Filter[] }) {
-    const params = this.buildFiltersAsQueryParams({ filters });
+  public deleteActivities({
+    activityTypes,
+    filters,
+    range
+  }: {
+    activityTypes?: string[];
+    filters?: Filter[];
+    range?: DateRange;
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (activityTypes?.length) {
+      params = params.append('activityTypes', activityTypes.join(','));
+    }
+
+    if (range) {
+      params = params.append('range', range);
+    }
 
     return this.http.delete<number>('/api/v1/activities', { params });
   }
@@ -459,11 +475,15 @@ export class DataService {
   public fetchExport({
     activityIds,
     activityTypes,
-    filters
+    filters,
+    range,
+    withActivityIds = false
   }: {
     activityIds?: string[];
     activityTypes?: string[];
     filters?: Filter[];
+    range?: DateRange;
+    withActivityIds?: boolean;
   } = {}) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
@@ -475,9 +495,26 @@ export class DataService {
       params = params.append('activityTypes', activityTypes.join(','));
     }
 
-    return this.http.get<ExportResponse>('/api/v1/export', {
-      params
-    });
+    if (range) {
+      params = params.append('range', range);
+    }
+
+    return this.http
+      .get<ExportResponse>('/api/v1/export', {
+        params
+      })
+      .pipe(
+        map((exportResponse) => {
+          if (!withActivityIds) {
+            for (const activity of exportResponse.activities) {
+              delete (activity as Omit<typeof activity, 'id'> & { id?: string })
+                .id;
+            }
+          }
+
+          return exportResponse;
+        })
+      );
   }
 
   public fetchHoldingDetail({
@@ -509,8 +546,7 @@ export class DataService {
   public fetchInfo(): InfoItem {
     const info = cloneDeep((window as any).info);
     const utmSource = window.localStorage.getItem('utm_source') as
-      | 'ios'
-      | 'trusted-web-activity';
+      'ios' | 'trusted-web-activity';
 
     info.globalPermissions = filterGlobalPermissions(
       info.globalPermissions,
@@ -716,8 +752,10 @@ export class DataService {
       })
       .pipe(
         map((response) => {
-          if (response.firstOrderDate) {
-            response.firstOrderDate = parseISO(response.firstOrderDate);
+          if (response.dateOfFirstActivity) {
+            response.dateOfFirstActivity = parseISO(
+              response.dateOfFirstActivity
+            );
           }
 
           return response;
@@ -947,8 +985,7 @@ export class DataService {
   public updateInfo() {
     this.http.get<InfoItem>('/api/v1/info').subscribe((info) => {
       const utmSource = window.localStorage.getItem('utm_source') as
-        | 'ios'
-        | 'trusted-web-activity';
+        'ios' | 'trusted-web-activity';
 
       info.globalPermissions = filterGlobalPermissions(
         info.globalPermissions,

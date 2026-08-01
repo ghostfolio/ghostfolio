@@ -118,9 +118,9 @@ export class FetchService implements OnModuleInit {
         ].join('\n'),
         timeout: FetchService.WEB_FETCH_TIMEOUT,
         tools: {
-          // Provider-defined tool: lets OpenRouter perform the actual web
+          // Provider-executed tool: lets OpenRouter perform the actual web
           // request server-side via its `web_fetch` engine. `id` and `args`
-          // are the OpenRouter-specific identifiers; the input schema is left
+          // are the OpenRouter-specific identifiers. The input schema is left
           // open as the arguments are supplied by the model.
           web_fetch: tool({
             args: { engine: 'openrouter' },
@@ -129,6 +129,7 @@ export class FetchService implements OnModuleInit {
               additionalProperties: true,
               type: 'object'
             }),
+            isProviderExecuted: true,
             type: 'provider'
           })
         }

@@ -1,6 +1,7 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
+import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   RuleSettings,
@@ -50,7 +51,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       };
     }
 
-    let maxAccount: (typeof accounts)[0];
+    let maxAccount: (typeof accounts)[0] | undefined;
     let totalInvestment = 0;
 
     for (const account of Object.values(accounts)) {
@@ -67,7 +68,8 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       }
     }
 
-    const maxInvestmentRatio = maxAccount?.investment / totalInvestment || 0;
+    const maxInvestmentRatio =
+      (maxAccount?.investment ?? 0) / totalInvestment || 0;
 
     if (maxInvestmentRatio > ruleSettings.thresholdMax) {
       return {
@@ -75,7 +77,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
           id: 'rule.accountClusterRiskCurrentInvestment.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
-            maxAccountName: maxAccount.name,
+            maxAccountName: maxAccount?.name ?? '',
             maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
             thresholdMax: ruleSettings.thresholdMax * 100
           }
@@ -89,7 +91,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
         id: 'rule.accountClusterRiskCurrentInvestment.true',
         languageCode: this.getLanguageCode(),
         placeholders: {
-          maxAccountName: maxAccount.name,
+          maxAccountName: maxAccount?.name ?? '',
           maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
           thresholdMax: ruleSettings.thresholdMax * 100
         }
@@ -118,8 +120,8 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   }
 
   public getSettings({
-    baseCurrency,
-    locale,
+    baseCurrency = DEFAULT_CURRENCY,
+    locale = DEFAULT_LOCALE,
     xRayRules
   }: UserSettings): Settings {
     return {

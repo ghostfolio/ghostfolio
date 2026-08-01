@@ -1,0 +1,26 @@
+@if (isLoading() && !fearAndGreedIndex()) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="w-100"
+    [theme]="{
+      height: '2.5rem'
+    }"
+  />
+} @else {
+  <div class="align-items-center d-flex flex-row">
+    <div class="h2 mb-0 mr-2">{{ fearAndGreedIndexEmoji() }}</div>
+    <div>
+      <div class="h4 mb-0">
+        <span class="mr-2">{{ fearAndGreedIndexText() }}</span>
+        @let value = fearAndGreedIndex() | number: '1.0-0';
+        <small class="text-muted"
+          ><span [class.font-weight-bold]="value">{{
+            value ?? placeholder
+          }}</span
+          >/100</small
+        >
+      </div>
+      <small class="d-block" i18n>Current Market Mood</small>
+    </div>
+  </div>
+}

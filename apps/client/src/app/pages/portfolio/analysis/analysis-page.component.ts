@@ -82,7 +82,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected hasImpersonationId: boolean;
   protected hasPermissionToReadAiPrompt: boolean;
   protected investments: InvestmentItem[];
-  protected readonly investmentTimelineDataLabel = $localize`Investment`;
+  protected readonly investmentTimelineDataLabel = $localize`Invested Capital`;
   protected investmentsByGroup: InvestmentItem[];
   protected isLoadingAnalysisPrompt: boolean;
   protected isLoadingBenchmarkComparator: boolean;
@@ -110,7 +110,7 @@ export class GfAnalysisPageComponent implements OnInit {
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  private firstOrderDate: Date;
+  private dateOfFirstActivity: Date;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly clipboard = inject(Clipboard);
@@ -302,8 +302,8 @@ export class GfAnalysisPageComponent implements OnInit {
         range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ chart, firstOrderDate, performance }) => {
-        this.firstOrderDate = firstOrderDate ?? new Date();
+      .subscribe(({ chart, dateOfFirstActivity, performance }) => {
+        this.dateOfFirstActivity = dateOfFirstActivity ?? new Date();
 
         this.investments = [];
         this.performance = performance;
@@ -416,7 +416,7 @@ export class GfAnalysisPageComponent implements OnInit {
             symbol,
             filters: this.userService.getFilters(),
             range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE,
-            startDate: this.firstOrderDate
+            startDate: this.dateOfFirstActivity
           })
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(({ marketData }) => {

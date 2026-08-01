@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   selector: 'gf-demo-page',
-  standalone: true,
   templateUrl: './demo-page.html'
 })
 export class GfDemoPageComponent {

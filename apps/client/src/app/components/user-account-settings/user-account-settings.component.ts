@@ -5,7 +5,10 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { E_MAIL_LINE_BREAK } from '@ghostfolio/common/config';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  E_MAIL_LINE_BREAK
+} from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
@@ -127,6 +130,14 @@ export class GfUserAccountSettingsComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          const userDetailUrl = [
+            window.location.origin,
+            DEFAULT_LANGUAGE_CODE,
+            internalRoutes.adminControl.path,
+            internalRoutes.adminControl.subRoutes.users.path,
+            this.user.id
+          ].join('/');
+
           this.closeUserAccountMailHref = `mailto:hi@ghostfol.io?subject=Delete Account&body=${[
             'Hello',
             '',
@@ -134,7 +145,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
             '',
             `User ID: ${this.user.id}`,
             '',
-            'Kind regards'
+            'Kind regards',
+            '',
+            '',
+            '---',
+            userDetailUrl
           ].join(E_MAIL_LINE_BREAK)}`;
 
           this.hasPermissionToDeleteOwnUser = hasPermission(
@@ -251,10 +266,6 @@ export class GfUserAccountSettingsComponent implements OnInit {
       .fetchExport()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        for (const activity of data.activities) {
-          delete (activity as Omit<typeof activity, 'id'> & { id?: string }).id;
-        }
-
         downloadAsFile({
           content: data,
           fileName: `ghostfolio-export-${format(

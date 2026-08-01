@@ -41,6 +41,7 @@ import {
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
+  SEARCH_QUERY_MINIMUM_LENGTH,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from './config';
 import {
@@ -470,12 +471,8 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function isAccountExcluded(account: {
-  isExcluded: boolean;
-  tags?: { id: string }[];
-}) {
+export function isAccountExcluded(account: { tags?: { id: string }[] }) {
   return (
-    account.isExcluded ||
     account.tags?.some(({ id }) => {
       return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
     }) === true
@@ -522,6 +519,10 @@ export function isRootCurrency(aCurrency: string) {
   return DERIVED_CURRENCIES.find(({ rootCurrency }) => {
     return rootCurrency === aCurrency;
   });
+}
+
+export function isValidSearchQuery(aQuery: string) {
+  return aQuery?.trim().length >= SEARCH_QUERY_MINIMUM_LENGTH;
 }
 
 export function parseDate(date: string): Date | undefined {
@@ -575,8 +576,10 @@ export function resetHours(aDate: Date) {
   return new Date(Date.UTC(year, month, day));
 }
 
-export function resolveFearAndGreedIndex(aValue: number) {
-  if (aValue <= 25) {
+export function resolveFearAndGreedIndex(aValue?: number) {
+  if (isNil(aValue)) {
+    return { emoji: '⚪', key: 'UNKNOWN', text: 'Unknown' };
+  } else if (aValue <= 25) {
     return { emoji: '🥵', key: 'EXTREME_FEAR', text: 'Extreme Fear' };
   } else if (aValue <= 45) {
     return { emoji: '😨', key: 'FEAR', text: 'Fear' };

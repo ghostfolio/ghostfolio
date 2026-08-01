@@ -9,7 +9,7 @@ import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import { AssetProfileResponse } from '@ghostfolio/common/interfaces';
 import {
   AssetProfilesResponse,
-  EnhancedSymbolProfile
+  EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 import { hasPermission } from '@ghostfolio/common/permissions';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -126,7 +126,7 @@ export class AssetProfilesController {
     @Body() assetProfileData: UpdateAssetProfileDataDto,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
-  ): Promise<EnhancedSymbolProfile> {
+  ): Promise<EnhancedAssetProfile> {
     if (!this.request.user.settings.settings.isExperimentalFeatures) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
