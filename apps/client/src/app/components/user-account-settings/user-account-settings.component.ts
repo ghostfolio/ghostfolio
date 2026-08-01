@@ -266,10 +266,6 @@ export class GfUserAccountSettingsComponent implements OnInit {
       .fetchExport()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        for (const activity of data.activities) {
-          delete (activity as Omit<typeof activity, 'id'> & { id?: string }).id;
-        }
-
         downloadAsFile({
           content: data,
           fileName: `ghostfolio-export-${format(

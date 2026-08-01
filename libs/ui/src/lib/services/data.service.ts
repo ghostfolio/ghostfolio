@@ -476,12 +476,14 @@ export class DataService {
     activityIds,
     activityTypes,
     filters,
-    range
+    range,
+    withActivityIds = false
   }: {
     activityIds?: string[];
     activityTypes?: string[];
     filters?: Filter[];
     range?: DateRange;
+    withActivityIds?: boolean;
   } = {}) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
@@ -497,9 +499,22 @@ export class DataService {
       params = params.append('range', range);
     }
 
-    return this.http.get<ExportResponse>('/api/v1/export', {
-      params
-    });
+    return this.http
+      .get<ExportResponse>('/api/v1/export', {
+        params
+      })
+      .pipe(
+        map((exportResponse) => {
+          if (!withActivityIds) {
+            for (const activity of exportResponse.activities) {
+              delete (activity as Omit<typeof activity, 'id'> & { id?: string })
+                .id;
+            }
+          }
+
+          return exportResponse;
+        })
+      );
   }
 
   public fetchHoldingDetail({

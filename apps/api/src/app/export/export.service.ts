@@ -73,6 +73,13 @@ export class ExportService {
       };
     }
 
+    const isFilteredExport =
+      activityIds?.length > 0 ||
+      activityTypes?.length > 0 ||
+      filters?.length > 0 ||
+      !!endDate ||
+      !!startDate;
+
     const accounts = (
       await this.accountService.accounts({
         where,
@@ -87,7 +94,7 @@ export class ExportService {
       })
     )
       .filter(({ id }) => {
-        return activityIds?.length > 0
+        return isFilteredExport
           ? activities.some(({ accountId }) => {
               return accountId === id;
             })
