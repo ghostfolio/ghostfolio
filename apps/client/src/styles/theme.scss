@@ -364,6 +364,12 @@ $gf-typography: (
     )
   );
 
+  @include mat.pseudo-checkbox-overrides(
+    (
+      full-selected-icon-color: var(--gf-theme-primary-500)
+    )
+  );
+
   @include mat.slide-toggle-overrides(
     (
       selected-focus-handle-color: var(--gf-theme-primary-500),

@@ -3051,7 +3051,7 @@
       </trans-unit>
       <trans-unit id="1825717711340685842" datatype="html">
         <source>Export <x id="INTERPOLATION" equiv-text="{{ totalItems &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/></source>
-        <target state="new">Export <x id="INTERPOLATION" equiv-text="{{ totalItems &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/></target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ totalItems &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/> exportieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">68</context>
@@ -5287,7 +5287,7 @@
       </trans-unit>
       <trans-unit id="8993940354220895245" datatype="html">
         <source>Do you really want to delete these <x id="count" equiv-text="this.totalItems"/> activities?</source>
-        <target state="new">Do you really want to delete these <x id="count" equiv-text="this.totalItems"/> activities?</target>
+        <target state="translated">Möchtest du diese <x id="count" equiv-text="this.totalItems"/> Aktivitäten wirklich löschen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
           <context context-type="linenumber">334</context>
@@ -8125,7 +8125,7 @@
       </trans-unit>
       <trans-unit id="6278975207599702712" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Activity} other {Activities}}</source>
-        <target state="new">{VAR_PLURAL, plural, =1 {Activity} other {Activities}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {Aktivität} other {Aktivitäten}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">69</context>
