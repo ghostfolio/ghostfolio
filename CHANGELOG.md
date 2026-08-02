@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the activity import so it no longer fails when multiple rows create the same new manual asset profile
 - Fixed the handling of the _Exclude from Analysis_ tag in the activities table
 - Fixed the persistence of an empty comment in the create or update account dialog
 - Resolved a validation error caused by empty strings in the asset profile details dialog of the admin control panel
