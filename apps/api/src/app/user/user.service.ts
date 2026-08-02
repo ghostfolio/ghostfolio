@@ -549,9 +549,11 @@ export class UserService {
           currentPermissions,
           permissions.accessHoldingsChart,
           permissions.createAccess,
+          permissions.createAssetProfileSplitOfOwnAssetProfile,
           permissions.createMarketDataOfOwnAssetProfile,
           permissions.createOwnTag,
           permissions.createWatchlistItem,
+          permissions.deleteAssetProfileSplitOfOwnAssetProfile,
           permissions.readAiPrompt,
           permissions.readMarketDataOfOwnAssetProfile,
           permissions.updateMarketDataOfOwnAssetProfile

@@ -526,6 +526,28 @@ export function isRootCurrency(aCurrency: string) {
   });
 }
 
+/**
+ * Validates the ratio of a stock split, expressed as the number of shares held
+ * after the split (numerator) per number of shares held before (denominator),
+ * for example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split. An
+ * equal numerator and denominator would be a no-op.
+ */
+export function isSplitRatio({
+  denominator,
+  numerator
+}: {
+  denominator: number;
+  numerator: number;
+}) {
+  return (
+    Number.isSafeInteger(numerator) &&
+    Number.isSafeInteger(denominator) &&
+    numerator > 0 &&
+    denominator > 0 &&
+    numerator !== denominator
+  );
+}
+
 export function isValidSearchQuery(aQuery: string) {
   return aQuery?.trim().length >= SEARCH_QUERY_MINIMUM_LENGTH;
 }
