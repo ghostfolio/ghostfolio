@@ -145,13 +145,13 @@ export class BenchmarksController {
 
     return this.benchmarksService.getMarketDataForUser({
       dataSource,
-      dateRange: range,
       endDate,
       filters,
       impersonationId,
       startDate,
       symbol,
       withExcludedAccounts,
+      dateRange: range,
       user: this.request.user
     });
   }
