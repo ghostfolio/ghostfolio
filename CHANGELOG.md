@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the database model and endpoints to manage the stock splits of an asset profile (experimental)
+
 ### Changed
 
 - Improved the style of the read-only tags in the tags selector component
