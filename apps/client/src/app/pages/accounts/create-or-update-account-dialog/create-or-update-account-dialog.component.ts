@@ -1,6 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
+import { getStringOrNull } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
@@ -198,7 +199,7 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.get('balance')?.value,
-      comment: this.accountForm.get('comment')?.value ?? null,
+      comment: getStringOrNull(this.accountForm.get('comment')?.value),
       currency: this.accountForm.get('currency')?.value,
       id: this.accountForm.get('accountId')?.value,
       name: this.accountForm.get('name')?.value,
