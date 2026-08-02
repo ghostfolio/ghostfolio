@@ -35,7 +35,7 @@ export class UpdateAssetProfileDto {
 
   @IsOptional()
   @IsString()
-  comment?: string;
+  comment?: string | null;
 
   @IsArray()
   @IsOptional()
@@ -96,5 +96,5 @@ export class UpdateAssetProfileDto {
     protocols: ['http', 'https'],
     require_protocol: true
   })
-  url?: string;
+  url?: string | null;
 }

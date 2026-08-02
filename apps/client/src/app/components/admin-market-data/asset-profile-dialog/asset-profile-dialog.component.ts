@@ -11,6 +11,8 @@ import {
   DATE_FORMAT,
   getCountryName,
   getCurrencyFromSymbol,
+  getStringOrNull,
+  getStringOrUndefined,
   isCurrency
 } from '@ghostfolio/common/helper';
 import {
@@ -568,9 +570,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
           this.assetProfileForm.controls.scraperConfiguration.controls.headers
             .value ?? '{}'
         ) as Record<string, string>,
-        locale:
+        locale: getStringOrUndefined(
           this.assetProfileForm.controls.scraperConfiguration.controls.locale
-            ?.value ?? undefined,
+            ?.value
+        ),
         mode:
           this.assetProfileForm.controls.scraperConfiguration.controls.mode
             ?.value ?? undefined,
@@ -619,7 +622,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       assetClass: this.assetProfileForm.controls.assetClass.value ?? undefined,
       assetSubClass:
         this.assetProfileForm.controls.assetSubClass.value ?? undefined,
-      comment: this.assetProfileForm.controls.comment.value ?? undefined,
+      comment: getStringOrNull(this.assetProfileForm.controls.comment.value),
       currency: this.assetProfileForm.controls.currency.value ?? undefined,
       dataGatheringFrequency:
         this.assetProfileForm.controls.dataGatheringFrequency.value ??
@@ -628,7 +631,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         ? this.assetProfileForm.controls.isActive.value
         : undefined,
       name: this.assetProfileForm.controls.name.value ?? undefined,
-      url: this.assetProfileForm.controls.url.value ?? undefined
+      url: getStringOrNull(this.assetProfileForm.controls.url.value)
     };
 
     try {
@@ -737,9 +740,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
             this.assetProfileForm.controls.scraperConfiguration.controls.headers
               .value ?? '{}'
           ) as Record<string, string>,
-          locale:
+          locale: getStringOrUndefined(
             this.assetProfileForm.controls.scraperConfiguration.controls.locale
-              ?.value ?? undefined,
+              ?.value
+          ),
           mode: this.assetProfileForm.controls.scraperConfiguration.controls
             .mode?.value,
           selector:

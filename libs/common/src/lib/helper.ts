@@ -397,6 +397,26 @@ export function getStartOfUtcDate(aDate: Date) {
   return date;
 }
 
+export function getStringOrNull(aString: string | null | undefined) {
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
+  }
+
+  return null;
+}
+
+export function getStringOrUndefined(aString: string | null | undefined) {
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
+  }
+
+  return undefined;
+}
+
 export function getSum(aArray: Big[]) {
   if (aArray?.length > 0) {
     return aArray.reduce((a, b) => a.plus(b), new Big(0));
@@ -456,9 +476,9 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function isAccountExcluded(account: { tags?: { id: string }[] }) {
+export function isAccountExcluded(account?: { tags?: { id: string }[] }) {
   return (
-    account.tags?.some(({ id }) => {
+    account?.tags?.some(({ id }) => {
       return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
     }) === true
   );
