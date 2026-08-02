@@ -556,6 +556,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected onAddSplit() {
     const { date, factor } = this.assetProfileSplitForm.getRawValue();
 
+    if (!date || !factor) {
+      return;
+    }
+
     this.adminService
       .postAssetProfileSplit({
         dataSource: this.data.dataSource,
