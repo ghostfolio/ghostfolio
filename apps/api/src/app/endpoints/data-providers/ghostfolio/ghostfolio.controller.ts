@@ -90,7 +90,7 @@ export class GhostfolioController {
   @Version('2')
   public async getDividends(
     @Param('symbol') symbol: string,
-    @Query() query: GetDividendsDto
+    @Query() { from, granularity, to }: GetDividendsDto
   ): Promise<DividendsResponse> {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
@@ -105,10 +105,10 @@ export class GhostfolioController {
 
     try {
       const dividends = await this.ghostfolioService.getDividends({
+        granularity,
         symbol,
-        from: parseDate(query.from),
-        granularity: query.granularity,
-        to: parseDate(query.to)
+        from: parseDate(from),
+        to: parseDate(to)
       });
 
       await this.ghostfolioService.incrementDailyRequests({
@@ -130,7 +130,7 @@ export class GhostfolioController {
   @Version('2')
   public async getHistorical(
     @Param('symbol') symbol: string,
-    @Query() query: GetHistoricalDto
+    @Query() { from, granularity, to }: GetHistoricalDto
   ): Promise<HistoricalResponse> {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
@@ -145,10 +145,10 @@ export class GhostfolioController {
 
     try {
       const historicalData = await this.ghostfolioService.getHistorical({
+        granularity,
         symbol,
-        from: parseDate(query.from),
-        granularity: query.granularity,
-        to: parseDate(query.to)
+        from: parseDate(from),
+        to: parseDate(to)
       });
 
       await this.ghostfolioService.incrementDailyRequests({
@@ -247,7 +247,7 @@ export class GhostfolioController {
   @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
   @Version('2')
   public async getQuotes(
-    @Query() query: GetQuotesDto
+    @Query() { symbols }: GetQuotesDto
   ): Promise<QuotesResponse> {
     const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
@@ -262,7 +262,7 @@ export class GhostfolioController {
 
     try {
       const quotes = await this.ghostfolioService.getQuotes({
-        symbols: query.symbols
+        symbols
       });
 
       await this.ghostfolioService.incrementDailyRequests({

@@ -62,7 +62,16 @@ export class ActivitiesController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query() query: ActivitiesFilterDto
+    @Query()
+    {
+      accounts,
+      activityTypes,
+      assetClasses,
+      dataSource,
+      range,
+      symbol,
+      tags
+    }: ActivitiesFilterDto
   ): Promise<number> {
     if (impersonationId) {
       throw new HttpException(
@@ -74,25 +83,25 @@ export class ActivitiesController {
     let endDate: Date;
     let startDate: Date;
 
-    if (query.range) {
+    if (range) {
       ({ endDate, startDate } = getIntervalFromDateRange({
-        dateRange: query.range
+        dateRange: range
       }));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts: query.accounts,
-      filterByAssetClasses: query.assetClasses,
-      filterByDataSource: query.dataSource,
-      filterBySymbol: query.symbol,
-      filterByTags: query.tags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     return this.activitiesService.deleteActivities({
       endDate,
       filters,
       startDate,
-      types: query.activityTypes,
+      types: activityTypes,
       userId: this.request.user.id
     });
   }
@@ -125,23 +134,36 @@ export class ActivitiesController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query() query: GetActivitiesDto
+    @Query()
+    {
+      accounts,
+      activityTypes,
+      assetClasses,
+      dataSource,
+      range,
+      skip,
+      sortColumn,
+      sortDirection,
+      symbol,
+      tags,
+      take
+    }: GetActivitiesDto
   ): Promise<ActivitiesResponse> {
     let endDate: Date;
     let startDate: Date;
 
-    if (query.range) {
+    if (range) {
       ({ endDate, startDate } = getIntervalFromDateRange({
-        dateRange: query.range
+        dateRange: range
       }));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts: query.accounts,
-      filterByAssetClasses: query.assetClasses,
-      filterByDataSource: query.dataSource,
-      filterBySymbol: query.symbol,
-      filterByTags: query.tags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     const impersonationUserId =
@@ -152,14 +174,14 @@ export class ActivitiesController {
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
       filters,
+      skip,
+      sortColumn,
+      sortDirection,
       startDate,
+      take,
       userCurrency,
       includeDrafts: true,
-      skip: query.skip,
-      sortColumn: query.sortColumn,
-      sortDirection: query.sortDirection,
-      take: query.take,
-      types: query.activityTypes,
+      types: activityTypes,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
     });
