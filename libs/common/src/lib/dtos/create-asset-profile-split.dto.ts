@@ -26,9 +26,12 @@ export class CreateAssetProfileSplitDto {
    * The resulting split factor is numerator / denominator. Both parts are kept
    * so that the ratio stays exact, for example 1/3 for a 1:3 reverse split.
    *
-   * Only the quantity of activities is adjusted by this ratio. Market data is
-   * already split-adjusted by the data providers and must not be adjusted
-   * again.
+   * Activities are adjusted by this ratio: the quantity is multiplied by it and
+   * the unit price divided by it, so that the total value of an activity stays
+   * the same.
+   *
+   * Market data is already split-adjusted by the data providers and must not be
+   * adjusted again.
    */
   @IsInt()
   @Validate(IsSplitRatioConstraint)

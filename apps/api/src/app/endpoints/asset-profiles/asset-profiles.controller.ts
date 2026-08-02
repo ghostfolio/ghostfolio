@@ -222,8 +222,10 @@ export class AssetProfilesController {
 
     if (!canAccessAllAssetProfiles && !canAccessOwnAssetProfile) {
       throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
+        assetProfile.userId
+          ? getReasonPhrase(StatusCodes.NOT_FOUND)
+          : getReasonPhrase(StatusCodes.FORBIDDEN),
+        assetProfile.userId ? StatusCodes.NOT_FOUND : StatusCodes.FORBIDDEN
       );
     }
 
