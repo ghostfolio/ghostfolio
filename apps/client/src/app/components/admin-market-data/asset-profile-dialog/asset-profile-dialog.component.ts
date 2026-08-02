@@ -580,8 +580,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected onDeleteSplit(aId: string) {
     this.adminService
       .deleteAssetProfileSplit({
-        id: aId,
         dataSource: this.data.dataSource,
+        id: aId,
         symbol: this.data.symbol
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
