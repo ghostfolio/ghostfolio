@@ -9,7 +9,8 @@ import {
   getStringOrUndefined,
   isAccountExcluded,
   isCurrency,
-  isCurrencySymbol
+  isCurrencySymbol,
+  isSplitRatio
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -278,6 +279,51 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is split ratio', () => {
+    it('Forward split', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 2 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 1, numerator: 4 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 2, numerator: 3 })).toEqual(true);
+    });
+
+    it('Reverse split', () => {
+      expect(isSplitRatio({ denominator: 10, numerator: 1 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 3, numerator: 1 })).toEqual(true);
+    });
+
+    it('Ratio without effect', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 3, numerator: 3 })).toEqual(false);
+    });
+
+    it('Zero or negative ratio', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 0 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 0, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 1, numerator: -2 })).toEqual(false);
+      expect(isSplitRatio({ denominator: -2, numerator: 1 })).toEqual(false);
+    });
+
+    it('Non-integer ratio', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 1.5 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 2.5, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 1, numerator: Number.NaN })).toEqual(
+        false
+      );
+      expect(
+        isSplitRatio({ denominator: 1, numerator: Number.POSITIVE_INFINITY })
+      ).toEqual(false);
+    });
+
+    it('Missing ratio', () => {
+      expect(
+        isSplitRatio({ denominator: undefined, numerator: undefined })
+      ).toEqual(false);
+      expect(isSplitRatio({ denominator: null, numerator: null })).toEqual(
+        false
+      );
     });
   });
 });
