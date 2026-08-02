@@ -2,6 +2,7 @@ import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
   CreateOrderDto,
+  CreatePlatformDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
@@ -115,12 +116,14 @@ export class ImportActivitiesService {
     activities,
     assetProfiles,
     isDryRun = false,
+    platforms,
     tags
   }: {
     activities: CreateOrderDto[];
     accounts?: CreateAccountWithBalancesDto[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
     isDryRun?: boolean;
+    platforms?: CreatePlatformDto[];
     tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
@@ -131,6 +134,7 @@ export class ImportActivitiesService {
           accounts,
           activities,
           assetProfiles,
+          platforms,
           tags
         },
         isDryRun
@@ -142,11 +146,13 @@ export class ImportActivitiesService {
     accounts,
     activities,
     assetProfiles,
+    platforms,
     tags
   }: {
     accounts?: CreateAccountWithBalancesDto[];
     activities: Activity[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+    platforms?: CreatePlatformDto[];
     tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
@@ -158,6 +164,7 @@ export class ImportActivitiesService {
     return this.importJson({
       accounts,
       assetProfiles,
+      platforms,
       tags,
       activities: importData
     });
@@ -457,6 +464,7 @@ export class ImportActivitiesService {
       accounts?: CreateAccountWithBalancesDto[];
       activities: CreateOrderDto[];
       assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+      platforms?: CreatePlatformDto[];
       tags?: CreateTagDto[];
     },
     aIsDryRun = false
