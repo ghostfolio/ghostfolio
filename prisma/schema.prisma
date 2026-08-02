@@ -116,6 +116,20 @@ model AssetProfileResolution {
   @@unique([dataSourceOrigin, symbolOrigin])
 }
 
+model AssetProfileSplit {
+  createdAt       DateTime      @default(now())
+  date            DateTime
+  factor          Float
+  id              String        @id @default(uuid())
+  symbolProfile   SymbolProfile @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
+  symbolProfileId String
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([symbolProfileId, date])
+  @@index([date])
+  @@index([symbolProfileId])
+}
+
 model AuthDevice {
   createdAt           DateTime @default(now())
   credentialId        Bytes
@@ -200,6 +214,7 @@ model SymbolProfile {
   activities             Order[]
   assetClass             AssetClass?
   assetProfileOverrides  AssetProfileOverrides?
+  assetProfileSplits     AssetProfileSplit[]
   assetSubClass          AssetSubClass?
   comment                String?
   countries              Json?
