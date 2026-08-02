@@ -1,6 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
+import { getStringOrNull } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
@@ -27,7 +28,6 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -51,7 +51,6 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
     GfTagsSelectorComponent,
     MatAutocompleteModule,
     MatButtonModule,
-    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -106,7 +105,6 @@ export class GfCreateOrUpdateAccountDialogComponent {
       balance: [this.data.account.balance, Validators.required],
       comment: [this.data.account.comment],
       currency: [this.data.account.currency, Validators.required],
-      isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
       platformId: [null, this.autocompleteObjectValidator()],
       tags: [
@@ -201,10 +199,9 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.get('balance')?.value,
-      comment: this.accountForm.get('comment')?.value ?? null,
+      comment: getStringOrNull(this.accountForm.get('comment')?.value),
       currency: this.accountForm.get('currency')?.value,
       id: this.accountForm.get('accountId')?.value,
-      isExcluded: this.accountForm.get('isExcluded')?.value,
       name: this.accountForm.get('name')?.value,
       platformId: this.accountForm.get('platformId')?.value?.id ?? null,
       tags: this.accountForm

@@ -87,6 +87,14 @@ export const Readonly: Story = {
   }
 };
 
+export const ReadonlyWithoutValue: Story = {
+  args: {
+    readonly: true,
+    tags: [],
+    tagsAvailable: OPTIONS
+  }
+};
+
 export const WithoutValue: Story = {
   args: {
     tags: [],

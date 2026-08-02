@@ -5,11 +5,5 @@ import { ResponseError } from './errors.interface';
 export interface PortfolioPerformanceResponse extends ResponseError {
   chart?: HistoricalDataItem[];
   dateOfFirstActivity: Date;
-
-  /**
-   * @deprecated Use `dateOfFirstActivity` instead
-   */
-  firstOrderDate: Date;
-
   performance: PortfolioPerformance;
 }

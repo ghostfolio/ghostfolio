@@ -177,10 +177,6 @@ export class GfActivitiesPageComponent implements OnInit {
       .fetchExport(fetchExportParams)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        for (const activity of data.activities) {
-          delete (activity as Omit<typeof activity, 'id'> & { id?: string }).id;
-        }
-
         downloadAsFile({
           content: data,
           fileName: `ghostfolio-export-${format(
@@ -194,7 +190,7 @@ export class GfActivitiesPageComponent implements OnInit {
 
   protected onExportDrafts(activityIds?: string[]) {
     this.dataService
-      .fetchExport({ activityIds })
+      .fetchExport({ activityIds, withActivityIds: true })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         downloadAsFile({

@@ -1,20 +1,20 @@
 <div class="row">
   <div class="col">
     @if (readonly) {
-      <div class="h5" i18n>Tags</div>
+      <div class="h5 mb-0" i18n>Tags</div>
       @if (
         tagsSelected().length > 0 || (tagsReadOnly && tagsReadOnly.length > 0)
       ) {
-        <mat-chip-listbox>
+        <mat-chip-set>
           @if (tagsReadOnly) {
             @for (tag of tagsReadOnly; track tag.id) {
-              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+              <mat-chip>{{ tag.name }}</mat-chip>
             }
           }
           @for (tag of tagsSelected(); track tag.id) {
-            <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+            <mat-chip>{{ tag.name }}</mat-chip>
           }
-        </mat-chip-listbox>
+        </mat-chip-set>
       } @else {
         <div>–</div>
       }
