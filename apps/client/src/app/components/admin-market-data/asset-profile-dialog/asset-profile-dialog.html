@@ -503,7 +503,7 @@
           </div>
         </div>
       </mat-tab>
-      @if (isSplitsTabEnabled) {
+      @if (false && user?.settings?.isExperimentalFeatures) {
         <mat-tab>
           <ng-template mat-tab-label>
             <ion-icon name="git-compare-outline" />

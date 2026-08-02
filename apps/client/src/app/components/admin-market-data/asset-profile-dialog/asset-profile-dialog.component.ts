@@ -273,11 +273,6 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected isBenchmark = false;
   protected isDataGatheringEnabled: boolean;
   protected isEditAssetProfileIdentifierMode = false;
-
-  // Splits are not applied to the portfolio calculation yet, hence the tab to
-  // manage them is hidden
-  protected readonly isSplitsTabEnabled = false;
-
   protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
 
