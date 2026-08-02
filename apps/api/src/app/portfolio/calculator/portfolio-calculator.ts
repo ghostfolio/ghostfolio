@@ -176,6 +176,11 @@ export abstract class PortfolioCalculator {
     this.computeTransactionPoints();
 
     this.snapshotPromise = this.initialize();
+
+    // Mark the rejection as handled to prevent an unhandled promise rejection
+    // in case the snapshot promise is never awaited. Consumers awaiting it
+    // still receive the error.
+    this.snapshotPromise.catch(() => undefined);
   }
 
   protected abstract calculateOverallPerformance(
@@ -1185,6 +1190,12 @@ export abstract class PortfolioCalculator {
         });
       }
     } else {
+      if (attempt >= PortfolioCalculator.MAX_INITIALIZATION_ATTEMPTS) {
+        throw new Error(
+          `Portfolio snapshot of user '${this.userId}' could not be computed after ${attempt} attempts`
+        );
+      }
+
       // Wait for computation
       await this.portfolioSnapshotService.addJobToQueue({
         data: {
@@ -1205,12 +1216,6 @@ export abstract class PortfolioCalculator {
 
       if (job) {
         await job.finished();
-      }
-
-      if (attempt >= PortfolioCalculator.MAX_INITIALIZATION_ATTEMPTS) {
-        throw new Error(
-          `Portfolio snapshot of user '${this.userId}' could not be computed after ${attempt} attempts`
-        );
       }
 
       await this.initialize(attempt + 1);

@@ -40,5 +40,8 @@ export const PortfolioSnapshotServiceMock = {
 
     return Promise.resolve(job as Job);
   },
-  jobsStore: new Map<JobId, Partial<Job>>()
+  jobsStore: new Map<JobId, Partial<Job>>(),
+  reset() {
+    this.jobsStore.clear();
+  }
 };
