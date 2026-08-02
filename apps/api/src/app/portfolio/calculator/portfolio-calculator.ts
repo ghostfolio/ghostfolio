@@ -1,4 +1,5 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
 import { PortfolioCalculatorPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-position.interface';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
@@ -1190,9 +1191,9 @@ export abstract class PortfolioCalculator {
         });
       }
     } else {
-      if (attempt >= PortfolioCalculator.MAX_INITIALIZATION_ATTEMPTS) {
-        throw new Error(
-          `Portfolio snapshot of user '${this.userId}' could not be computed after ${attempt} attempts`
+      if (attempt > PortfolioCalculator.MAX_INITIALIZATION_ATTEMPTS) {
+        throw new PortfolioSnapshotComputationError(
+          `Portfolio snapshot of user '${this.userId}' could not be computed after ${PortfolioCalculator.MAX_INITIALIZATION_ATTEMPTS} attempts`
         );
       }
 
