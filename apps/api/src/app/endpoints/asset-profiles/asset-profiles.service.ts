@@ -1,4 +1,5 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -30,6 +31,7 @@ import { groupBy } from 'lodash';
 export class AssetProfilesService {
   public constructor(
     private readonly activitiesService: ActivitiesService,
+    private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -37,6 +39,39 @@ export class AssetProfilesService {
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async createSplit({
+    date,
+    factor,
+    symbolProfileId
+  }: {
+    date: Date;
+    factor: number;
+    symbolProfileId: string;
+  }) {
+    return this.assetProfileSplitService.upsert({
+      date,
+      factor,
+      symbolProfileId
+    });
+  }
+
+  public async deleteSplit({
+    id,
+    symbolProfileId
+  }: {
+    id: string;
+    symbolProfileId: string;
+  }) {
+    const isDeleted = await this.assetProfileSplitService.deleteById({
+      id,
+      symbolProfileId
+    });
+
+    if (!isDeleted) {
+      throw new NotFoundException();
+    }
+  }
 
   public async getAssetProfile({
     dataSource,
@@ -54,7 +89,7 @@ export class AssetProfilesService {
         await this.activitiesService.getStatisticsByCurrency(currency));
     }
 
-    const [[assetProfile], marketData] = await Promise.all([
+    const [[assetProfile], marketData, splits] = await Promise.all([
       this.symbolProfileService.getSymbolProfiles([
         {
           dataSource,
@@ -69,6 +104,9 @@ export class AssetProfilesService {
           dataSource,
           symbol
         }
+      }),
+      this.assetProfileSplitService.getSplits({
+        assetProfileIdentifiers: [{ dataSource, symbol }]
       })
     ]);
 
@@ -80,6 +118,7 @@ export class AssetProfilesService {
 
     return {
       marketData,
+      splits,
       assetProfile: assetProfile ?? {
         activitiesCount,
         currency,
