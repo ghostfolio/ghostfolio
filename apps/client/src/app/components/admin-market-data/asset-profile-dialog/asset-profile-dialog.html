@@ -557,14 +557,10 @@
                   </table>
                 }
                 <form
-                  class="align-items-center d-flex"
                   [formGroup]="assetProfileSplitForm"
                   (ngSubmit)="onAddSplit()"
                 >
-                  <mat-form-field
-                    appearance="outline"
-                    class="mr-3 without-hint"
-                  >
+                  <mat-form-field appearance="outline" class="w-100">
                     <mat-label i18n>Date</mat-label>
                     <input
                       formControlName="date"
@@ -584,7 +580,7 @@
                     </mat-datepicker-toggle>
                     <mat-datepicker #dateOfSplit />
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="mr-3">
+                  <mat-form-field appearance="outline" class="mb-3 w-100">
                     <mat-label i18n>Shares After</mat-label>
                     <input
                       formControlName="numerator"
@@ -592,12 +588,15 @@
                       step="1"
                       type="number"
                     />
-                    <mat-hint i18n
-                      >Numerator, e.g. 4 for a 4:1 split or 1 for a 1:10 reverse
-                      split</mat-hint
+                    <mat-hint
+                      ><ng-container i18n>Numerator</ng-container>,
+                      <ng-container i18n
+                        >e.g. 4 for a 4:1 split or 1 for a 1:10 reverse
+                        split</ng-container
+                      ></mat-hint
                     >
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="mr-3">
+                  <mat-form-field appearance="outline" class="mb-3 w-100">
                     <mat-label i18n>Shares Before</mat-label>
                     <input
                       formControlName="denominator"
@@ -605,21 +604,26 @@
                       step="1"
                       type="number"
                     />
-                    <mat-hint i18n
-                      >Denominator, e.g. 1 for a 4:1 split or 10 for a 1:10
-                      reverse split</mat-hint
+                    <mat-hint
+                      ><ng-container i18n>Denominator</ng-container>,
+                      <ng-container i18n
+                        >e.g. 1 for a 4:1 split or 10 for a 1:10 reverse
+                        split</ng-container
+                      ></mat-hint
                     >
                   </mat-form-field>
-                  <button
-                    color="primary"
-                    mat-flat-button
-                    type="submit"
-                    [disabled]="
-                      !assetProfileSplitForm.valid || !canEditAssetProfile
-                    "
-                  >
-                    <ng-container i18n>Add</ng-container>
-                  </button>
+                  <div class="text-right">
+                    <button
+                      color="primary"
+                      mat-flat-button
+                      type="submit"
+                      [disabled]="
+                        !assetProfileSplitForm.valid || !canEditAssetProfile
+                      "
+                    >
+                      <ng-container i18n>Add</ng-container>
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
