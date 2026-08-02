@@ -20,7 +20,7 @@ export class UpdateAccountDto {
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )
-  comment?: string;
+  comment?: string | null;
 
   @IsCurrencyCode()
   currency: string;

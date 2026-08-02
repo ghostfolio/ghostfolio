@@ -1,7 +1,10 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ASSET_CLASS_MAPPING, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import {
+  getDateFormatString,
+  getStringOrNull
+} from '@ghostfolio/common/helper';
 import {
   AssetClassSelectorOption,
   LookupItem
@@ -471,7 +474,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       accountId: this.activityForm.get('accountId')?.value,
       assetClass: this.activityForm.get('assetClass')?.value,
       assetSubClass: this.activityForm.get('assetSubClass')?.value,
-      comment: this.activityForm.get('comment')?.value ?? null,
+      comment: getStringOrNull(this.activityForm.get('comment')?.value),
       currency: this.activityForm.get('currency')?.value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice')?.value,
       dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
