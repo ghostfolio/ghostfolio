@@ -116,6 +116,13 @@ model AssetProfileResolution {
   @@unique([dataSourceOrigin, symbolOrigin])
 }
 
+/// A stock split of an asset profile. The factor is the number of shares held
+/// after the split per 1 share held before, for example 4 for a 4:1 split or
+/// 0.1 for a 1:10 reverse split.
+///
+/// Only the quantity of activities before the date is adjusted by the factor.
+/// Market data is already split-adjusted by the data providers and must not be
+/// adjusted again.
 model AssetProfileSplit {
   createdAt       DateTime      @default(now())
   date            DateTime
@@ -127,7 +134,6 @@ model AssetProfileSplit {
 
   @@unique([symbolProfileId, date])
   @@index([date])
-  @@index([symbolProfileId])
 }
 
 model AuthDevice {

@@ -5,6 +5,10 @@ import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { AssetProfileSplit } from '@prisma/client';
 
+export type AssetProfileSplitWithAssetProfileIdentifier = AssetProfileSplit & {
+  symbolProfile: AssetProfileIdentifier;
+};
+
 @Injectable()
 export class AssetProfileSplitService {
   public constructor(private readonly prismaService: PrismaService) {}
@@ -30,16 +34,29 @@ export class AssetProfileSplitService {
     return count > 0;
   }
 
+  /**
+   * Returns the splits of the given asset profiles in ascending order by date.
+   * Each split carries the identifier of its asset profile so that the result
+   * can be grouped when querying multiple asset profiles at once.
+   */
   public async getSplits({
     assetProfileIdentifiers
   }: {
     assetProfileIdentifiers: AssetProfileIdentifier[];
-  }): Promise<AssetProfileSplit[]> {
+  }): Promise<AssetProfileSplitWithAssetProfileIdentifier[]> {
     if (assetProfileIdentifiers.length === 0) {
       return [];
     }
 
     return this.prismaService.assetProfileSplit.findMany({
+      include: {
+        symbolProfile: {
+          select: {
+            dataSource: true,
+            symbol: true
+          }
+        }
+      },
       orderBy: [
         {
           date: 'asc'

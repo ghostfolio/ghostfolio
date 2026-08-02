@@ -14,7 +14,8 @@ import {
   getDateFormatString,
   getStringOrNull,
   getStringOrUndefined,
-  isCurrency
+  isCurrency,
+  isSplitFactor
 } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -208,7 +209,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
     factor: new FormControl<number | null>(null, [
       Validators.required,
       (control: AbstractControl): ValidationErrors | null => {
-        return control.value > 0 && control.value !== 1
+        return isSplitFactor(control.value)
           ? null
           : { invalidSplitFactor: true };
       }

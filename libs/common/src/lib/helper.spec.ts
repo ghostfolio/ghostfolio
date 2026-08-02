@@ -9,7 +9,8 @@ import {
   getStringOrUndefined,
   isAccountExcluded,
   isCurrency,
-  isCurrencySymbol
+  isCurrencySymbol,
+  isSplitFactor
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -278,6 +279,37 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is split factor', () => {
+    it('Forward split', () => {
+      expect(isSplitFactor(2)).toEqual(true);
+      expect(isSplitFactor(4)).toEqual(true);
+    });
+
+    it('Reverse split', () => {
+      expect(isSplitFactor(0.1)).toEqual(true);
+      expect(isSplitFactor(0.5)).toEqual(true);
+    });
+
+    it('Factor without effect', () => {
+      expect(isSplitFactor(1)).toEqual(false);
+    });
+
+    it('Zero or negative factor', () => {
+      expect(isSplitFactor(0)).toEqual(false);
+      expect(isSplitFactor(-2)).toEqual(false);
+    });
+
+    it('Non-finite factor', () => {
+      expect(isSplitFactor(Number.NaN)).toEqual(false);
+      expect(isSplitFactor(Number.POSITIVE_INFINITY)).toEqual(false);
+    });
+
+    it('Missing factor', () => {
+      expect(isSplitFactor(undefined)).toEqual(false);
+      expect(isSplitFactor(null)).toEqual(false);
     });
   });
 });

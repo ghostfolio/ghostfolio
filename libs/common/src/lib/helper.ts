@@ -526,6 +526,15 @@ export function isRootCurrency(aCurrency: string) {
   });
 }
 
+/**
+ * Validates the factor of a stock split, expressed as the number of shares
+ * held after the split per 1 share held before, for example 4 for a 4:1 split
+ * or 0.1 for a 1:10 reverse split. A factor of 1 would be a no-op.
+ */
+export function isSplitFactor(aFactor: number) {
+  return Number.isFinite(aFactor) && aFactor > 0 && aFactor !== 1;
+}
+
 export function isValidSearchQuery(aQuery: string) {
   return aQuery?.trim().length >= SEARCH_QUERY_MINIMUM_LENGTH;
 }

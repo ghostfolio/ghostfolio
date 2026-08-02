@@ -1,3 +1,5 @@
+import { isSplitFactor } from '@ghostfolio/common/helper';
+
 import {
   ValidatorConstraint,
   ValidatorConstraintInterface
@@ -10,6 +12,6 @@ export class IsSplitFactorConstraint implements ValidatorConstraintInterface {
   }
 
   public validate(aFactor: number) {
-    return typeof aFactor === 'number' && aFactor > 0 && aFactor !== 1;
+    return isSplitFactor(aFactor);
   }
 }

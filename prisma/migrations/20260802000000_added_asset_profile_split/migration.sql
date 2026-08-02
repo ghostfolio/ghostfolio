@@ -14,9 +14,6 @@ CREATE TABLE "AssetProfileSplit" (
 CREATE INDEX "AssetProfileSplit_date_idx" ON "AssetProfileSplit"("date");
 
 -- CreateIndex
-CREATE INDEX "AssetProfileSplit_symbolProfileId_idx" ON "AssetProfileSplit"("symbolProfileId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "AssetProfileSplit_symbolProfileId_date_key" ON "AssetProfileSplit"("symbolProfileId", "date");
 
 -- AddForeignKey

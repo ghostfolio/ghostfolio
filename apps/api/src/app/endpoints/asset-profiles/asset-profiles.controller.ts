@@ -127,6 +127,7 @@ export class AssetProfilesController {
 
   @Post(':dataSource/:symbol/splits')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createSplit(
     @Body() data: CreateAssetProfileSplitDto,
     @Param('dataSource') dataSource: DataSource,
@@ -149,6 +150,7 @@ export class AssetProfilesController {
 
   @Delete(':dataSource/:symbol/splits/:id')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteSplit(
     @Param('dataSource') dataSource: DataSource,
     @Param('id') id: string,
