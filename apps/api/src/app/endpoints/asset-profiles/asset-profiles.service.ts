@@ -25,7 +25,7 @@ import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
-import { groupBy, omit } from 'lodash';
+import { groupBy } from 'lodash';
 
 @Injectable()
 export class AssetProfilesService {
@@ -118,6 +118,7 @@ export class AssetProfilesService {
 
     return {
       marketData,
+      splits,
       assetProfile: assetProfile ?? {
         activitiesCount,
         currency,
@@ -127,10 +128,7 @@ export class AssetProfilesService {
         assetClass: isCurrencyAssetProfile ? AssetClass.LIQUIDITY : undefined,
         assetSubClass: isCurrencyAssetProfile ? AssetSubClass.CASH : undefined,
         isActive: true
-      },
-      splits: splits.map((split) => {
-        return omit(split, 'symbolProfile');
-      })
+      }
     };
   }
 
