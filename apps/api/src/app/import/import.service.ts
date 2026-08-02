@@ -205,10 +205,15 @@ export class ImportService {
       const existingPlatforms = await this.platformService.getPlatforms();
 
       for (const platform of platformsDto) {
-        // Check if there is any existing platform with the same ID or URL
-        const existingPlatform = existingPlatforms.find(({ id, url }) => {
-          return id === platform.id || url === platform.url;
-        });
+        // Check if there is any existing platform with the same ID, otherwise
+        // fall back to a platform with the same URL
+        const existingPlatform =
+          existingPlatforms.find(({ id }) => {
+            return id === platform.id;
+          }) ??
+          existingPlatforms.find(({ url }) => {
+            return url === platform.url;
+          });
 
         if (existingPlatform) {
           // Store the new to old platform ID mappings for creating accounts
