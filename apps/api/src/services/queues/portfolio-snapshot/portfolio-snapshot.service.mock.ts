@@ -1,4 +1,8 @@
+import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
+import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
+
 import type { Job, JobId, JobOptions } from 'bull';
+import ms from 'ms';
 import { setTimeout } from 'timers/promises';
 
 import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
@@ -15,7 +19,15 @@ export const PortfolioSnapshotServiceMock = {
       finished: async () => {
         await setTimeout(100);
 
-        return Promise.resolve();
+        // Mimic the processor which caches the computed portfolio snapshot
+        // under the job id
+        await RedisCacheServiceMock.set(
+          opts?.jobId as string,
+          JSON.stringify({
+            expiration: Date.now() + ms('1 minute'),
+            portfolioSnapshot: {}
+          } as unknown as PortfolioSnapshotValue)
+        );
       }
     };
 

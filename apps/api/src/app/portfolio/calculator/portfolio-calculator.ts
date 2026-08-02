@@ -65,6 +65,8 @@ import { isNumber, sortBy, sum, uniqBy } from 'lodash';
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
 
+  private static readonly MAX_INITIALIZATION_ATTEMPTS = 3;
+
   protected readonly logger = new Logger(PortfolioCalculator.name);
 
   protected accountBalanceItems: HistoricalDataItem[];
@@ -1124,7 +1126,7 @@ export abstract class PortfolioCalculator {
   }
 
   @LogPerformance
-  private async initialize() {
+  private async initialize(attempt = 1) {
     const startTimeTotal = performance.now();
 
     let cachedPortfolioSnapshot: PortfolioSnapshot;
@@ -1205,7 +1207,13 @@ export abstract class PortfolioCalculator {
         await job.finished();
       }
 
-      await this.initialize();
+      if (attempt >= PortfolioCalculator.MAX_INITIALIZATION_ATTEMPTS) {
+        throw new Error(
+          `Portfolio snapshot of user '${this.userId}' could not be computed after ${attempt} attempts`
+        );
+      }
+
+      await this.initialize(attempt + 1);
     }
   }
 }
