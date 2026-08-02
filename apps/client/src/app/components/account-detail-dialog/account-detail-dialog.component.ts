@@ -341,8 +341,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
             }
           ],
           range: DEFAULT_DATE_RANGE,
-          withExcludedAccounts: true,
-          withItems: true
+          withExcludedAccounts: true
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
     }).subscribe({
