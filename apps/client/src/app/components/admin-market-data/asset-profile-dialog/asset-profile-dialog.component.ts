@@ -11,6 +11,7 @@ import {
   DATE_FORMAT,
   getCountryName,
   getCurrencyFromSymbol,
+  getDateFormatString,
   getStringOrNull,
   getStringOrUndefined,
   isCurrency
@@ -63,6 +64,7 @@ import {
   MatCheckboxChange,
   MatCheckboxModule
 } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -76,6 +78,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { IonIcon } from '@ionic/angular/standalone';
 import {
   AssetClass,
+  AssetProfileSplit,
   AssetSubClass,
   DataGatheringFrequency,
   DataSource,
@@ -88,11 +91,14 @@ import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import {
+  calendarClearOutline,
   codeSlashOutline,
   createOutline,
   ellipsisVertical,
+  gitCompareOutline,
   readerOutline,
-  serverOutline
+  serverOutline,
+  trashOutline
 } from 'ionicons/icons';
 import { isBoolean } from 'lodash';
 import ms from 'ms';
@@ -116,6 +122,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatInputModule,
     MatMenuModule,
@@ -196,6 +203,18 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   );
 
+  protected readonly assetProfileSplitForm = this.formBuilder.group({
+    date: new FormControl<Date | null>(null, Validators.required),
+    factor: new FormControl<number | null>(null, [
+      Validators.required,
+      (control: AbstractControl): ValidationErrors | null => {
+        return control.value > 0 && control.value !== 1
+          ? null
+          : { invalidSplitFactor: true };
+      }
+    ])
+  });
+
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected canEditAssetProfile = true;
 
@@ -247,11 +266,17 @@ export class GfAssetProfileDialogComponent implements OnInit {
       value: 'max'
     }
   ];
+  protected defaultDateFormat: string;
   protected readonly getCountryName = getCountryName;
   protected historicalDataItems: LineChartItem[];
   protected isBenchmark = false;
   protected isDataGatheringEnabled: boolean;
   protected isEditAssetProfileIdentifierMode = false;
+
+  // Splits are not applied to the portfolio calculation yet, hence the tab to
+  // manage them is hidden
+  protected readonly isSplitsTabEnabled = false;
+
   protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
 
@@ -269,6 +294,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected sectors: {
     [name: string]: { name: string; value: number };
   };
+
+  protected splits: AssetProfileSplit[] = [];
 
   protected readonly translate = translate;
 
@@ -293,11 +320,14 @@ export class GfAssetProfileDialogComponent implements OnInit {
     private userService: UserService
   ) {
     addIcons({
+      calendarClearOutline,
       codeSlashOutline,
       createOutline,
       ellipsisVertical,
+      gitCompareOutline,
       readerOutline,
-      serverOutline
+      serverOutline,
+      trashOutline
     });
   }
 
@@ -310,6 +340,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
     this.benchmarks = benchmarks;
     this.currencies = currencies;
+    this.defaultDateFormat = getDateFormatString(this.data.locale);
 
     this.initialize();
   }
@@ -364,8 +395,9 @@ export class GfAssetProfileDialogComponent implements OnInit {
         symbol: this.data.symbol
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ assetProfile, marketData }) => {
+      .subscribe(({ assetProfile, marketData, splits }) => {
         this.assetProfile = assetProfile;
+        this.splits = splits ?? [];
 
         this.assetClassLabel = translate(this.assetProfile?.assetClass ?? '');
         this.assetSubClassLabel = translate(
@@ -519,6 +551,39 @@ export class GfAssetProfileDialogComponent implements OnInit {
       .gatherSymbol({ dataSource, range, symbol })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
+  }
+
+  protected onAddSplit() {
+    const { date, factor } = this.assetProfileSplitForm.getRawValue();
+
+    this.adminService
+      .postAssetProfileSplit({
+        dataSource: this.data.dataSource,
+        split: {
+          factor,
+          date: format(date, DATE_FORMAT)
+        },
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.assetProfileSplitForm.reset();
+
+        this.initialize();
+      });
+  }
+
+  protected onDeleteSplit(aId: string) {
+    this.adminService
+      .deleteAssetProfileSplit({
+        id: aId,
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initialize();
+      });
   }
 
   protected onMarketDataChanged(withRefresh: boolean = false) {
