@@ -116,18 +116,22 @@ model AssetProfileResolution {
   @@unique([dataSourceOrigin, symbolOrigin])
 }
 
-/// A stock split of an asset profile. The factor is the number of shares held
-/// after the split per 1 share held before, for example 4 for a 4:1 split or
-/// 0.1 for a 1:10 reverse split.
+/// A stock split of an asset profile. The numerator is the number of shares
+/// held after the split, the denominator the number of shares held before, for
+/// example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split.
 ///
-/// Only the quantity of activities before the date is adjusted by the factor.
+/// The ratio is stored as two integers instead of the resulting factor, so that
+/// it stays exact, for example 1/3 for a 1:3 reverse split.
+///
+/// Only the quantity of activities before the date is adjusted by the ratio.
 /// Market data is already split-adjusted by the data providers and must not be
 /// adjusted again.
 model AssetProfileSplit {
   createdAt       DateTime      @default(now())
   date            DateTime
-  factor          Float
+  denominator     Int
   id              String        @id @default(uuid())
+  numerator       Int
   symbolProfile   SymbolProfile @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
   symbolProfileId String
   updatedAt       DateTime      @updatedAt

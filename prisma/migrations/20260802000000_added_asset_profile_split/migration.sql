@@ -2,8 +2,9 @@
 CREATE TABLE "AssetProfileSplit" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "date" TIMESTAMP(3) NOT NULL,
-    "factor" DOUBLE PRECISION NOT NULL,
+    "denominator" INTEGER NOT NULL,
     "id" TEXT NOT NULL,
+    "numerator" INTEGER NOT NULL,
     "symbolProfileId" TEXT NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

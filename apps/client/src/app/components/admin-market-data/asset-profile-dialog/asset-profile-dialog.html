@@ -527,7 +527,7 @@
                           class="mat-mdc-header-cell px-1 py-2 text-right"
                           i18n
                         >
-                          Split Factor
+                          Split Ratio
                         </th>
                         <th class="mat-mdc-header-cell px-1 py-2"></th>
                       </tr>
@@ -539,7 +539,7 @@
                             {{ split.date | date: defaultDateFormat }}
                           </td>
                           <td class="mat-mdc-cell px-1 py-2 text-right">
-                            {{ split.factor }}
+                            {{ split.numerator }}:{{ split.denominator }}
                           </td>
                           <td class="mat-mdc-cell px-1 py-2 text-right">
                             <button
@@ -585,16 +585,29 @@
                     <mat-datepicker #dateOfSplit />
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="mr-3">
-                    <mat-label i18n>Split Factor</mat-label>
+                    <mat-label i18n>Shares After</mat-label>
                     <input
-                      formControlName="factor"
+                      formControlName="numerator"
                       matInput
-                      step="any"
+                      step="1"
                       type="number"
                     />
                     <mat-hint i18n
-                      >Shares after per 1 share before, e.g. 4 for a 4:1 split
-                      or 0.1 for a 1:10 reverse split</mat-hint
+                      >Numerator, e.g. 4 for a 4:1 split or 1 for a 1:10 reverse
+                      split</mat-hint
+                    >
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="mr-3">
+                    <mat-label i18n>Shares Before</mat-label>
+                    <input
+                      formControlName="denominator"
+                      matInput
+                      step="1"
+                      type="number"
+                    />
+                    <mat-hint i18n
+                      >Denominator, e.g. 1 for a 4:1 split or 10 for a 1:10
+                      reverse split</mat-hint
                     >
                   </mat-form-field>
                   <button

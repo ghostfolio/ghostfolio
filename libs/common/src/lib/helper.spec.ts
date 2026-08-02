@@ -10,7 +10,7 @@ import {
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol,
-  isSplitFactor
+  isSplitRatio
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -282,34 +282,48 @@ describe('Helper', () => {
     });
   });
 
-  describe('Is split factor', () => {
+  describe('Is split ratio', () => {
     it('Forward split', () => {
-      expect(isSplitFactor(2)).toEqual(true);
-      expect(isSplitFactor(4)).toEqual(true);
+      expect(isSplitRatio({ denominator: 1, numerator: 2 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 1, numerator: 4 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 2, numerator: 3 })).toEqual(true);
     });
 
     it('Reverse split', () => {
-      expect(isSplitFactor(0.1)).toEqual(true);
-      expect(isSplitFactor(0.5)).toEqual(true);
+      expect(isSplitRatio({ denominator: 10, numerator: 1 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 3, numerator: 1 })).toEqual(true);
     });
 
-    it('Factor without effect', () => {
-      expect(isSplitFactor(1)).toEqual(false);
+    it('Ratio without effect', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 3, numerator: 3 })).toEqual(false);
     });
 
-    it('Zero or negative factor', () => {
-      expect(isSplitFactor(0)).toEqual(false);
-      expect(isSplitFactor(-2)).toEqual(false);
+    it('Zero or negative ratio', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 0 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 0, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 1, numerator: -2 })).toEqual(false);
+      expect(isSplitRatio({ denominator: -2, numerator: 1 })).toEqual(false);
     });
 
-    it('Non-finite factor', () => {
-      expect(isSplitFactor(Number.NaN)).toEqual(false);
-      expect(isSplitFactor(Number.POSITIVE_INFINITY)).toEqual(false);
+    it('Non-integer ratio', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 1.5 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 2.5, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 1, numerator: Number.NaN })).toEqual(
+        false
+      );
+      expect(
+        isSplitRatio({ denominator: 1, numerator: Number.POSITIVE_INFINITY })
+      ).toEqual(false);
     });
 
-    it('Missing factor', () => {
-      expect(isSplitFactor(undefined)).toEqual(false);
-      expect(isSplitFactor(null)).toEqual(false);
+    it('Missing ratio', () => {
+      expect(
+        isSplitRatio({ denominator: undefined, numerator: undefined })
+      ).toEqual(false);
+      expect(isSplitRatio({ denominator: null, numerator: null })).toEqual(
+        false
+      );
     });
   });
 });

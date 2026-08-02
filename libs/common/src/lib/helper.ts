@@ -527,12 +527,25 @@ export function isRootCurrency(aCurrency: string) {
 }
 
 /**
- * Validates the factor of a stock split, expressed as the number of shares
- * held after the split per 1 share held before, for example 4 for a 4:1 split
- * or 0.1 for a 1:10 reverse split. A factor of 1 would be a no-op.
+ * Validates the ratio of a stock split, expressed as the number of shares held
+ * after the split (numerator) per number of shares held before (denominator),
+ * for example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split. An
+ * equal numerator and denominator would be a no-op.
  */
-export function isSplitFactor(aFactor: number) {
-  return Number.isFinite(aFactor) && aFactor > 0 && aFactor !== 1;
+export function isSplitRatio({
+  denominator,
+  numerator
+}: {
+  denominator: number;
+  numerator: number;
+}) {
+  return (
+    Number.isSafeInteger(numerator) &&
+    Number.isSafeInteger(denominator) &&
+    numerator > 0 &&
+    denominator > 0 &&
+    numerator !== denominator
+  );
 }
 
 export function isValidSearchQuery(aQuery: string) {

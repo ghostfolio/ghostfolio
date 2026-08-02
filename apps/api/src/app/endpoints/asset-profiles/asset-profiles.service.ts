@@ -42,16 +42,19 @@ export class AssetProfilesService {
 
   public async createSplit({
     date,
-    factor,
+    denominator,
+    numerator,
     symbolProfileId
   }: {
     date: Date;
-    factor: number;
+    denominator: number;
+    numerator: number;
     symbolProfileId: string;
   }) {
     return this.assetProfileSplitService.upsert({
       date,
-      factor,
+      denominator,
+      numerator,
       symbolProfileId
     });
   }
@@ -105,9 +108,7 @@ export class AssetProfilesService {
           symbol
         }
       }),
-      this.assetProfileSplitService.getSplits({
-        assetProfileIdentifiers: [{ dataSource, symbol }]
-      })
+      this.assetProfileSplitService.getSplits({ dataSource, symbol })
     ]);
 
     if (assetProfile) {

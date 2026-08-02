@@ -15,7 +15,7 @@ import {
   getStringOrNull,
   getStringOrUndefined,
   isCurrency,
-  isSplitFactor
+  isSplitRatio
 } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -204,17 +204,25 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   );
 
-  protected readonly assetProfileSplitForm = this.formBuilder.group({
-    date: new FormControl<Date | null>(null, Validators.required),
-    factor: new FormControl<number | null>(null, [
-      Validators.required,
-      (control: AbstractControl): ValidationErrors | null => {
-        return isSplitFactor(control.value)
+  protected readonly assetProfileSplitForm = this.formBuilder.group(
+    {
+      date: new FormControl<Date | null>(null, Validators.required),
+      denominator: new FormControl<number | null>(null, Validators.required),
+      numerator: new FormControl<number | null>(null, Validators.required)
+    },
+    {
+      validators: (control: AbstractControl): ValidationErrors | null => {
+        const { denominator, numerator } = control.value as {
+          denominator: number;
+          numerator: number;
+        };
+
+        return isSplitRatio({ denominator, numerator })
           ? null
-          : { invalidSplitFactor: true };
+          : { invalidSplitRatio: true };
       }
-    ])
-  });
+    }
+  );
 
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected canEditAssetProfile = true;
@@ -550,9 +558,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
   }
 
   protected onAddSplit() {
-    const { date, factor } = this.assetProfileSplitForm.getRawValue();
+    const { date, denominator, numerator } =
+      this.assetProfileSplitForm.getRawValue();
 
-    if (!date || !factor) {
+    if (!date || !denominator || !numerator) {
       return;
     }
 
@@ -560,7 +569,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
       .postAssetProfileSplit({
         dataSource: this.data.dataSource,
         split: {
-          factor,
+          denominator,
+          numerator,
           date: format(date, DATE_FORMAT)
         },
         symbol: this.data.symbol
