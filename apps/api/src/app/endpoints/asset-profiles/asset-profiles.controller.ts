@@ -132,9 +132,12 @@ export class AssetProfilesController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<AssetProfileSplit> {
-    const { id: symbolProfileId } = await this.validateCanManageSplits({
+    const { id: symbolProfileId } = await this.validateAccessToSplits({
       dataSource,
-      symbol
+      symbol,
+      permission: permissions.createAssetProfileSplit,
+      permissionOfOwnAssetProfile:
+        permissions.createAssetProfileSplitOfOwnAssetProfile
     });
 
     return this.assetProfilesService.createSplit({
@@ -151,9 +154,12 @@ export class AssetProfilesController {
     @Param('id') id: string,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    const { id: symbolProfileId } = await this.validateCanManageSplits({
+    const { id: symbolProfileId } = await this.validateAccessToSplits({
       dataSource,
-      symbol
+      symbol,
+      permission: permissions.deleteAssetProfileSplit,
+      permissionOfOwnAssetProfile:
+        permissions.deleteAssetProfileSplitOfOwnAssetProfile
     });
 
     return this.assetProfilesService.deleteSplit({ id, symbolProfileId });
@@ -180,11 +186,15 @@ export class AssetProfilesController {
     );
   }
 
-  private async validateCanManageSplits({
+  private async validateAccessToSplits({
     dataSource,
+    permission,
+    permissionOfOwnAssetProfile,
     symbol
   }: {
     dataSource: DataSource;
+    permission: string;
+    permissionOfOwnAssetProfile: string;
     symbol: string;
   }) {
     const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
@@ -198,28 +208,16 @@ export class AssetProfilesController {
       );
     }
 
-    const canManageAllAssetProfiles =
-      hasPermission(
-        this.request.user.permissions,
-        permissions.createMarketData
-      ) &&
-      hasPermission(
-        this.request.user.permissions,
-        permissions.updateMarketData
-      );
+    const canAccessAllAssetProfiles = hasPermission(
+      this.request.user.permissions,
+      permission
+    );
 
-    const canManageOwnAssetProfile =
+    const canAccessOwnAssetProfile =
       assetProfile.userId === this.request.user.id &&
-      hasPermission(
-        this.request.user.permissions,
-        permissions.createMarketDataOfOwnAssetProfile
-      ) &&
-      hasPermission(
-        this.request.user.permissions,
-        permissions.updateMarketDataOfOwnAssetProfile
-      );
+      hasPermission(this.request.user.permissions, permissionOfOwnAssetProfile);
 
-    if (!canManageAllAssetProfiles && !canManageOwnAssetProfile) {
+    if (!canAccessAllAssetProfiles && !canAccessOwnAssetProfile) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
