@@ -54,6 +54,7 @@ export class GfAccountsPageComponent implements OnInit {
   protected hasImpersonationId: boolean;
   protected hasPermissionToCreateAccount: boolean;
   protected hasPermissionToUpdateAccount: boolean;
+  protected impersonationId: string | null;
   protected totalBalanceInBaseCurrency = 0;
   protected totalValueInBaseCurrency = 0;
   protected user: User;
@@ -110,6 +111,7 @@ export class GfAccountsPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
       });
 
     this.userService.stateChanged
@@ -252,11 +254,11 @@ export class GfAccountsPageComponent implements OnInit {
       data: {
         accountId: aAccountId,
         deviceType: this.deviceType(),
-        hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
-          !this.user?.settings?.isRestrictedView
+          !this.user?.settings?.isRestrictedView,
+        impersonationId: this.impersonationId
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'

@@ -16,7 +16,11 @@ import {
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  hasPermission,
+  hasReadRestrictedAccessPermission,
+  permissions
+} from '@ghostfolio/common/permissions';
 import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -81,6 +85,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected readonly dividendTimelineDataLabel = $localize`Dividend`;
   protected hasImpersonationId: boolean;
   protected hasPermissionToReadAiPrompt: boolean;
+  protected impersonationId: string | null;
   protected investments: InvestmentItem[];
   protected readonly investmentTimelineDataLabel = $localize`Invested Capital`;
   protected investmentsByGroup: InvestmentItem[];
@@ -151,6 +156,7 @@ export class GfAnalysisPageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -239,6 +245,15 @@ export class GfAnalysisPageComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  protected showValuesInPercentage() {
+    return (
+      hasReadRestrictedAccessPermission({
+        accesses: this.user?.access,
+        impersonationId: this.impersonationId
+      }) || this.user?.settings?.isRestrictedView
+    );
   }
 
   private fetchDividendsAndInvestments() {

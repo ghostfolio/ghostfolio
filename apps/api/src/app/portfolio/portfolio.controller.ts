@@ -136,7 +136,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -180,7 +180,7 @@ export class PortfolioController {
       hasDetails === false ||
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -374,7 +374,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -503,7 +503,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -578,7 +578,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user) ||
       this.request.user.settings.settings.viewMode === 'ZEN'

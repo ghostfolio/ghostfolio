@@ -158,8 +158,8 @@
           [pageSize]="pageSize"
           [showAccountColumn]="false"
           [showActions]="
-            !data.hasImpersonationId &&
             data.hasPermissionToCreateActivity &&
+            !data.impersonationId &&
             user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "
@@ -183,8 +183,8 @@
           [currentBalance]="balance"
           [locale]="user?.settings?.locale"
           [showActions]="
-            !data.hasImpersonationId &&
             hasPermissionToDeleteAccountBalance &&
+            !data.impersonationId &&
             !user.settings.isRestrictedView
           "
           (accountBalanceCreated)="onAddAccountBalance($event)"
