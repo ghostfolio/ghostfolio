@@ -491,14 +491,14 @@ export class PortfolioController {
       filterByTags: tags
     });
 
-    let { investments, streaks } = await this.portfolioService.getInvestments({
-      filters,
-      groupBy,
-      impersonationId,
-      dateRange: range,
-      savingsRate: this.request.user?.settings?.settings.savingsRate,
-      userId: this.request.user.id
-    });
+    let { investments, savingsRate, streaks } =
+      await this.portfolioService.getInvestments({
+        filters,
+        groupBy,
+        impersonationId,
+        dateRange: range,
+        userId: this.request.user.id
+      });
 
     if (
       hasReadRestrictedAccessPermission({
@@ -521,6 +521,8 @@ export class PortfolioController {
         'currentStreak',
         'longestStreak'
       ]);
+
+      savingsRate = null;
     }
 
     if (
@@ -537,7 +539,7 @@ export class PortfolioController {
       ]);
     }
 
-    return { investments, streaks };
+    return { investments, savingsRate, streaks };
   }
 
   @Get('performance')

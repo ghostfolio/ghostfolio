@@ -201,14 +201,14 @@ export function hasReadRestrictedAccessPermission({
   accesses = [],
   impersonationId
 }: {
-  accesses: Pick<Access, 'id' | 'permissions'>[];
+  accesses?: Pick<Access, 'id' | 'permissions'>[];
   impersonationId: string | null;
 }) {
   if (!impersonationId) {
     return false;
   }
 
-  const access = accesses?.find(({ id }) => {
+  const access = accesses.find(({ id }) => {
     return id === impersonationId;
   });
 

@@ -63,6 +63,7 @@ export class GfAppComponent implements OnInit {
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
+  public impersonationId: string | null;
   public info: InfoItem;
   public pageTitle: string;
   public routerLinkRegister = publicRoutes.register.routerLink;
@@ -117,6 +118,7 @@ export class GfAppComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
       });
 
     this.router.events
@@ -291,7 +293,6 @@ export class GfAppComponent implements OnInit {
             baseCurrency: this.user?.settings?.baseCurrency,
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
             hasPermissionToAccessAdminControl: hasPermission(
               this.user?.permissions,
               permissions.accessAdminControl
@@ -314,6 +315,7 @@ export class GfAppComponent implements OnInit {
                 permissions.updateActivity
               ) &&
               !this.user?.settings?.isRestrictedView,
+            impersonationId: this.impersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
