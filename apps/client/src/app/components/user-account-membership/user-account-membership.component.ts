@@ -24,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import ms, { StringValue } from 'ms';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -184,30 +184,19 @@ export class GfUserAccountMembershipComponent {
 
                 return EMPTY;
               }),
+              switchMap(() => {
+                return this.userService.get(true);
+              }),
               takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
-              const snackBarRef = this.snackBar.open(
+              this.snackBar.open(
                 '✅ ' + $localize`Coupon code has been redeemed`,
-                $localize`Reload`,
+                undefined,
                 {
                   duration: ms('3 seconds')
                 }
               );
-
-              snackBarRef
-                .afterDismissed()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                  window.location.reload();
-                });
-
-              snackBarRef
-                .onAction()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                  window.location.reload();
-                });
             });
         }
       },
