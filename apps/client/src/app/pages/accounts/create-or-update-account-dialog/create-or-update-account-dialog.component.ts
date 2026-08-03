@@ -77,6 +77,12 @@ export class GfCreateOrUpdateAccountDialogComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly userService = inject(UserService);
 
+  protected get selectedPlatform() {
+    const platform = this.accountForm.get('platformId')?.value;
+
+    return typeof platform === 'string' ? undefined : (platform as Platform);
+  }
+
   public ngOnInit() {
     const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
