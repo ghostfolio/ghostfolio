@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the admin control panel by eliminating the page reload on changing a setting
+- Improved the usability of the admin control panel by eliminating the page reload on deleting an asset profile
 - Improved the usability of the admin control panel by eliminating the page reload on flushing the cache
+- Improved the usability of the admin control panel by eliminating the page reload on gathering historical market data
 
 ## 3.40.0 - 2026-08-02
 
