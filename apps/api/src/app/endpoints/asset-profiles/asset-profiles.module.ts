@@ -8,6 +8,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
 import { Module } from '@nestjs/common';
@@ -23,6 +24,7 @@ import { AssetProfilesService } from './asset-profiles.service';
     ApiModule,
     AssetProfileSplitModule,
     BenchmarkModule,
+    DataGatheringQueueModule,
     DataProviderModule,
     ExchangeRateDataModule,
     MarketDataModule,

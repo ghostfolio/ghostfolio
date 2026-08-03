@@ -514,10 +514,6 @@
           <div class="container mt-3 p-0">
             <div class="no-gutters row w-100">
               <div class="col-12">
-                <p class="text-muted" i18n>
-                  Splits are stored for this asset profile, but are not applied
-                  to the portfolio calculation yet.
-                </p>
                 @if (splits.length > 0) {
                   <table class="gf-table mb-3 w-100">
                     <thead>
@@ -580,38 +576,33 @@
                     </mat-datepicker-toggle>
                     <mat-datepicker #dateOfSplit />
                   </mat-form-field>
-                  <mat-form-field appearance="outline" class="mb-3 w-100">
-                    <mat-label i18n>Shares After</mat-label>
-                    <input
-                      formControlName="numerator"
-                      matInput
-                      step="1"
-                      type="number"
-                    />
-                    <mat-hint
-                      ><ng-container i18n>Numerator</ng-container>,
-                      <ng-container i18n
-                        >e.g. 4 for a 4:1 split or 1 for a 1:10 reverse
-                        split</ng-container
-                      ></mat-hint
+                  <div class="align-items-center d-flex mb-3">
+                    <mat-form-field
+                      appearance="outline"
+                      class="w-100 without-hint"
                     >
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" class="mb-3 w-100">
-                    <mat-label i18n>Shares Before</mat-label>
-                    <input
-                      formControlName="denominator"
-                      matInput
-                      step="1"
-                      type="number"
-                    />
-                    <mat-hint
-                      ><ng-container i18n>Denominator</ng-container>,
-                      <ng-container i18n
-                        >e.g. 1 for a 4:1 split or 10 for a 1:10 reverse
-                        split</ng-container
-                      ></mat-hint
+                      <mat-label i18n>Shares After</mat-label>
+                      <input
+                        formControlName="numerator"
+                        matInput
+                        step="1"
+                        type="number"
+                      />
+                    </mat-form-field>
+                    <div class="mx-2">:</div>
+                    <mat-form-field
+                      appearance="outline"
+                      class="w-100 without-hint"
                     >
-                  </mat-form-field>
+                      <mat-label i18n>Shares Before</mat-label>
+                      <input
+                        formControlName="denominator"
+                        matInput
+                        step="1"
+                        type="number"
+                      />
+                    </mat-form-field>
+                  </div>
                   <div class="text-right">
                     <button
                       color="primary"
