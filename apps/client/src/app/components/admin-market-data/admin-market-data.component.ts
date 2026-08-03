@@ -43,6 +43,7 @@ import {
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   MatSort,
   MatSortModule,
@@ -64,6 +65,7 @@ import {
   ellipsisVertical,
   trashOutline
 } from 'ionicons/icons';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
@@ -88,6 +90,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
     MatCheckboxModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatSnackBarModule,
     MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
@@ -177,6 +180,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -239,7 +243,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .subscribe((filters) => {
         this.activeFilters = filters;
 
-        this.loadData();
+        this.reloadData({ pageIndex: 0 });
       });
 
     addIcons({
@@ -285,15 +289,25 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
+    this.adminMarketDataService
+      .deleteAssetProfile({ dataSource, symbol })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.reloadData();
+      });
   }
 
   protected onDeleteAssetProfiles() {
-    this.adminMarketDataService.deleteAssetProfiles(
-      this.selection.selected.map(({ dataSource, symbol }) => {
-        return { dataSource, symbol };
-      })
-    );
+    this.adminMarketDataService
+      .deleteAssetProfiles(
+        this.selection.selected.map(({ dataSource, symbol }) => {
+          return { dataSource, symbol };
+        })
+      )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.reloadData();
+      });
   }
 
   protected onGatherMax() {
@@ -301,9 +315,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .gatherMax()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
+        this.notifyDataGatheringHasBeenStarted();
       });
   }
 
@@ -311,7 +323,9 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     this.adminService
       .gatherProfileData()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe(() => {
+        this.notifyDataGatheringHasBeenStarted();
+      });
   }
 
   protected onGatherRecentMarketData() {
@@ -319,9 +333,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .gatherRecentMarketData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
+        this.notifyDataGatheringHasBeenStarted();
       });
   }
 
@@ -396,6 +408,16 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       });
   }
 
+  private notifyDataGatheringHasBeenStarted() {
+    this.snackBar.open(
+      '✅ ' + $localize`Data gathering has been started.`,
+      undefined,
+      {
+        duration: ms('3 seconds')
+      }
+    );
+  }
+
   private openAssetProfileDialog({
     dataSource,
     symbol
@@ -431,6 +453,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             if (newAssetProfileIdentifier) {
               this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
             } else {
+              this.reloadData();
+
               this.router.navigate(['.'], { relativeTo: this.route });
             }
           });
@@ -482,5 +506,15 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             this.onOpenAssetProfileDialog({ dataSource, symbol });
           });
       });
+  }
+
+  private reloadData({
+    pageIndex = this.paginator().pageIndex
+  }: { pageIndex?: number } = {}) {
+    this.loadData({
+      pageIndex,
+      sortColumn: this.sort().active,
+      sortDirection: this.sort().direction
+    });
   }
 }

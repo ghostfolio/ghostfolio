@@ -1,4 +1,5 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { PortfolioSnapshotComputationExceptionFilter } from '@ghostfolio/api/filters/portfolio-snapshot-computation-exception.filter';
 import { getRedisConnectionOptions } from '@ghostfolio/api/helper/redis.helper';
 import { BullBoardAuthMiddleware } from '@ghostfolio/api/middlewares/bull-board-auth.middleware';
 import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
@@ -24,6 +25,7 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -184,7 +186,13 @@ import { UserModule } from './user/user.module';
     UserModule,
     WatchlistModule
   ],
-  providers: [I18nService]
+  providers: [
+    I18nService,
+    {
+      provide: APP_FILTER,
+      useClass: PortfolioSnapshotComputationExceptionFilter
+    }
+  ]
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

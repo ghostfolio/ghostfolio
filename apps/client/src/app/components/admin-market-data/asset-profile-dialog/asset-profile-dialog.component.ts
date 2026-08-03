@@ -531,9 +531,12 @@ export class GfAssetProfileDialogComponent implements OnInit {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
-
-    this.dialogRef.close();
+    this.adminMarketDataService
+      .deleteAssetProfile({ dataSource, symbol })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.dialogRef.close();
+      });
   }
 
   protected onGatherProfileDataBySymbol({
