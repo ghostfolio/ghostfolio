@@ -56,6 +56,7 @@ export class GfUserDetailDialogComponent implements OnInit {
   protected readonly baseCurrency: string;
   protected readonly canDeleteUser = canDeleteUser;
   protected readonly getCountryName = getCountryName;
+  protected isLoading = true;
   protected readonly subscriptionsDataSource =
     new MatTableDataSource<Subscription>();
   protected readonly subscriptionsDisplayedColumns = [
@@ -100,6 +101,8 @@ export class GfUserDetailDialogComponent implements OnInit {
         this.user = user;
 
         this.subscriptionsDataSource.data = this.user.subscriptions ?? [];
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
