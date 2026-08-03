@@ -5,6 +5,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UpdateAssetProfileDataDto } from '@ghostfolio/common/dtos';
 import {
@@ -33,6 +34,7 @@ export class AssetProfilesService {
     private readonly activitiesService: ActivitiesService,
     private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly benchmarkService: BenchmarkService,
+    private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
@@ -41,22 +43,28 @@ export class AssetProfilesService {
   ) {}
 
   public async createSplit({
+    dataSource,
     date,
     denominator,
     numerator,
+    symbol,
     symbolProfileId
   }: {
     date: Date;
     denominator: number;
     numerator: number;
     symbolProfileId: string;
-  }) {
-    return this.assetProfileSplitService.upsert({
+  } & AssetProfileIdentifier) {
+    const assetProfileSplit = await this.assetProfileSplitService.upsert({
       date,
       denominator,
       numerator,
       symbolProfileId
     });
+
+    await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+
+    return assetProfileSplit;
   }
 
   public async deleteSplit({

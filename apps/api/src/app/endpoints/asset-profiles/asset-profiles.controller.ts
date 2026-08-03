@@ -142,6 +142,8 @@ export class AssetProfilesController {
     });
 
     return this.assetProfilesService.createSplit({
+      dataSource,
+      symbol,
       symbolProfileId,
       date: parseISO(data.date),
       denominator: data.denominator,
