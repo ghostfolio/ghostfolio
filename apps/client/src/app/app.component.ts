@@ -57,7 +57,6 @@ export class GfAppComponent implements OnInit {
   public currentRoute: string;
   public currentSubRoute: string;
   public deviceType: string;
-  public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
@@ -117,7 +116,6 @@ export class GfAppComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
         this.impersonationId = impersonationId;
       });
 
@@ -298,7 +296,7 @@ export class GfAppComponent implements OnInit {
               permissions.accessAdminControl
             ),
             hasPermissionToCreateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.createActivity
@@ -309,7 +307,7 @@ export class GfAppComponent implements OnInit {
               permissions.reportDataGlitch
             ),
             hasPermissionToUpdateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.updateActivity

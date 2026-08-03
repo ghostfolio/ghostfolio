@@ -89,7 +89,6 @@ export class GfAllocationsPageComponent implements OnInit {
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected hasImpersonationId: boolean;
   protected holdings: {
     [symbol: string]: Pick<
       PortfolioPosition['assetProfile'],
@@ -174,7 +173,6 @@ export class GfAllocationsPageComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
         this.impersonationId = impersonationId;
 
         this.changeDetectorRef.markForCheck();
@@ -630,7 +628,7 @@ export class GfAllocationsPageComponent implements OnInit {
         accountId: aAccountId,
         deviceType: this.deviceType(),
         hasPermissionToCreateActivity:
-          !this.hasImpersonationId &&
+          !this.impersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView,
         impersonationId: this.impersonationId

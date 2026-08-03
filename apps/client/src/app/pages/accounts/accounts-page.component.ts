@@ -51,7 +51,6 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
 export class GfAccountsPageComponent implements OnInit {
   protected accounts: AccountWithValue[];
   protected activitiesCount = 0;
-  protected hasImpersonationId: boolean;
   protected hasPermissionToCreateAccount: boolean;
   protected hasPermissionToUpdateAccount: boolean;
   protected impersonationId: string | null;
@@ -105,12 +104,15 @@ export class GfAccountsPageComponent implements OnInit {
       });
   }
 
+  protected get hasImpersonationId() {
+    return !!this.impersonationId;
+  }
+
   public ngOnInit() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
         this.impersonationId = impersonationId;
       });
 

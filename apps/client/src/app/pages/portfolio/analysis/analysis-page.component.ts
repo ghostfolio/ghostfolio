@@ -104,7 +104,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected performanceDataItemsInPercentage: HistoricalDataItem[];
   protected readonly portfolioEvolutionDataLabel = $localize`Investment`;
   protected precision = 2;
-  protected savingsRatePerMonth: number;
+  protected savingsRatePerMonth: number | undefined;
   protected streaks: PortfolioInvestmentsResponse['streaks'];
   protected top3: PortfolioPosition[];
   protected unitCurrentStreak: string;
