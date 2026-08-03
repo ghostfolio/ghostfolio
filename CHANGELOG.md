@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the loading state in the user detail dialog of the admin control panel’s users section
 - Fixed a race condition where the portfolio snapshot computation was completed before its result had been cached, causing a redundant recomputation
 - Fixed an endless loop in the portfolio snapshot computation if the computed result could not be read from the cache
 
