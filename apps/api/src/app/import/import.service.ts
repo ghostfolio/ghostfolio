@@ -177,6 +177,7 @@ export class ImportService {
     assetProfilesWithMarketDataDto,
     isDryRun = false,
     maxActivitiesToImport,
+    platformsDto,
     tagsDto,
     user
   }: {
@@ -185,13 +186,53 @@ export class ImportService {
     assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
+    platformsDto: ImportDataDto['platforms'];
     tagsDto: ImportDataDto['tags'];
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
     const assetProfileSymbolMapping: { [oldSymbol: string]: string } = {};
+    const platformIdMapping: { [oldPlatformId: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
+
+    if (platformsDto?.length) {
+      const canCreatePlatform = hasPermission(
+        user.permissions,
+        permissions.createPlatform
+      );
+
+      const existingPlatforms = await this.platformService.getPlatforms();
+
+      for (const platform of platformsDto) {
+        // Check if there is any existing platform with the same ID, otherwise
+        // fall back to a platform with the same URL
+        const existingPlatform =
+          existingPlatforms.find(({ id }) => {
+            return id === platform.id;
+          }) ??
+          existingPlatforms.find(({ url }) => {
+            return url === platform.url;
+          });
+
+        if (existingPlatform) {
+          // Store the new to old platform ID mappings for creating accounts
+          if (platform.id && existingPlatform.id !== platform.id) {
+            platformIdMapping[platform.id] = existingPlatform.id;
+          }
+        } else {
+          if (!canCreatePlatform) {
+            throw new Error(
+              `Insufficient permissions to create platform ("${platform.name}")`
+            );
+          }
+
+          if (!isDryRun) {
+            await this.platformService.createPlatform(platform);
+          }
+        }
+      }
+    }
 
     const existingTagsOfUser =
       tagsDto?.length || (!isDryRun && accountsWithBalancesDto?.length)
@@ -282,7 +323,8 @@ export class ImportService {
           ]);
 
           let oldAccountId: string;
-          const platformId = account.platformId;
+          const platformId =
+            platformIdMapping[account.platformId] ?? account.platformId;
 
           delete account.platformId;
 

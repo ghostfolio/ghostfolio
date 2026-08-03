@@ -2,6 +2,7 @@ import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
   CreateOrderDto,
+  CreatePlatformDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
 
@@ -25,6 +26,12 @@ export class ImportDataDto {
   @Type(() => CreateAssetProfileWithMarketDataDto)
   @ValidateNested({ each: true })
   assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+
+  @IsArray()
+  @IsOptional()
+  @Type(() => CreatePlatformDto)
+  @ValidateNested({ each: true })
+  platforms?: CreatePlatformDto[];
 
   @IsArray()
   @IsOptional()
