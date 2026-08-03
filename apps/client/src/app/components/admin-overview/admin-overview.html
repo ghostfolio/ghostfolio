@@ -46,70 +46,86 @@
     <div class="col">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-content>
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>User Signup</div>
-            <div class="w-50">
-              <mat-slide-toggle
-                color="primary"
-                hideIcon="true"
-                [checked]="isUserSignupEnabled"
-                (change)="onEnableUserSignupModeChange($event)"
-              />
-            </div>
-          </div>
-          @if (hasPermissionToToggleReadOnlyMode) {
+          @if (isLoading) {
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="my-3"
+              [theme]="{
+                height: '1.5rem',
+                width: '100%'
+              }"
+            />
+          } @else {
             <div class="d-flex my-3">
-              <div class="w-50" i18n>Read-only Mode</div>
+              <div class="w-50" i18n>User Signup</div>
               <div class="w-50">
                 <mat-slide-toggle
                   color="primary"
                   hideIcon="true"
-                  [checked]="isReadOnlyMode"
-                  (change)="onReadOnlyModeChange($event)"
+                  [checked]="isUserSignupEnabled"
+                  (change)="onEnableUserSignupModeChange($event)"
                 />
               </div>
             </div>
-          }
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>Data Gathering</div>
-            <div class="w-50">
-              <mat-slide-toggle
-                color="primary"
-                hideIcon="true"
-                [checked]="isDataGatheringEnabled"
-                (change)="onEnableDataGatheringChange($event)"
-              />
-            </div>
-          </div>
-          @if (hasPermissionForSystemMessage) {
+            @if (hasPermissionToToggleReadOnlyMode) {
+              <div class="d-flex my-3">
+                <div class="w-50" i18n>Read-only Mode</div>
+                <div class="w-50">
+                  <mat-slide-toggle
+                    color="primary"
+                    hideIcon="true"
+                    [checked]="isReadOnlyMode"
+                    (change)="onReadOnlyModeChange($event)"
+                  />
+                </div>
+              </div>
+            }
             <div class="d-flex my-3">
-              <div class="w-50" i18n>System Message</div>
+              <div class="w-50" i18n>Data Gathering</div>
               <div class="w-50">
-                @if (systemMessage) {
-                  <div class="align-items-center d-flex">
-                    <div class="text-truncate">{{ systemMessage | json }}</div>
-                    <button
-                      class="h-100 mx-1 no-min-width px-2"
-                      mat-button
-                      (click)="onDeleteSystemMessage()"
-                    >
-                      <ion-icon name="trash-outline" />
-                    </button>
-                  </div>
-                }
-                @if (!systemMessage) {
-                  <button
-                    class="mt-2"
-                    color="accent"
-                    mat-flat-button
-                    (click)="onSetSystemMessage()"
-                  >
-                    <ion-icon class="mr-1" name="information-circle-outline" />
-                    <span i18n>Set Message</span>
-                  </button>
-                }
+                <mat-slide-toggle
+                  color="primary"
+                  hideIcon="true"
+                  [checked]="isDataGatheringEnabled"
+                  (change)="onEnableDataGatheringChange($event)"
+                />
               </div>
             </div>
+            @if (hasPermissionForSystemMessage) {
+              <div class="d-flex my-3">
+                <div class="w-50" i18n>System Message</div>
+                <div class="w-50">
+                  @if (systemMessage) {
+                    <div class="align-items-center d-flex">
+                      <div class="text-truncate">
+                        {{ systemMessage | json }}
+                      </div>
+                      <button
+                        class="h-100 mx-1 no-min-width px-2"
+                        mat-button
+                        (click)="onDeleteSystemMessage()"
+                      >
+                        <ion-icon name="trash-outline" />
+                      </button>
+                    </div>
+                  }
+                  @if (!systemMessage) {
+                    <button
+                      class="mt-2"
+                      color="accent"
+                      mat-flat-button
+                      (click)="onSetSystemMessage()"
+                    >
+                      <ion-icon
+                        class="mr-1"
+                        name="information-circle-outline"
+                      />
+                      <span i18n>Set Message</span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
           }
           <div class="d-flex my-3">
             <div class="w-50" i18n>Housekeeping</div>

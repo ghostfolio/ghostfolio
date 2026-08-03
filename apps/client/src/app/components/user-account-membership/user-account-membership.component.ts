@@ -173,6 +173,9 @@ export class GfUserAccountMembershipComponent {
           this.dataService
             .redeemCoupon(couponCode)
             .pipe(
+              switchMap(() => {
+                return this.userService.get(true);
+              }),
               catchError(() => {
                 this.snackBar.open(
                   '😞 ' + $localize`Could not redeem coupon code`,
@@ -183,9 +186,6 @@ export class GfUserAccountMembershipComponent {
                 );
 
                 return EMPTY;
-              }),
-              switchMap(() => {
-                return this.userService.get(true);
               }),
               takeUntilDestroyed(this.destroyRef)
             )

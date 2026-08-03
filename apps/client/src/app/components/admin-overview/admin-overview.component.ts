@@ -64,7 +64,7 @@ import {
 } from 'ionicons/icons';
 import ms, { StringValue } from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { switchMap } from 'rxjs';
+import { catchError, of, switchMap } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -389,6 +389,10 @@ export class GfAdminOverviewComponent implements OnInit {
       .pipe(
         switchMap(() => {
           return this.userService.get(true);
+        }),
+        catchError(() => {
+          // Refresh anyway to reflect the actual state of the settings
+          return of(undefined);
         }),
         takeUntilDestroyed(this.destroyRef)
       )

@@ -243,7 +243,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .subscribe((filters) => {
         this.activeFilters = filters;
 
-        this.loadData();
+        this.reloadData({ pageIndex: 0 });
       });
 
     addIcons({
@@ -293,7 +293,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .deleteAssetProfile({ dataSource, symbol })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.loadData();
+        this.reloadData();
       });
   }
 
@@ -306,7 +306,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.loadData();
+        this.reloadData();
       });
   }
 
@@ -453,11 +453,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             if (newAssetProfileIdentifier) {
               this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
             } else {
-              this.loadData({
-                pageIndex: this.paginator().pageIndex,
-                sortColumn: this.sort().active,
-                sortDirection: this.sort().direction
-              });
+              this.reloadData();
 
               this.router.navigate(['.'], { relativeTo: this.route });
             }
@@ -510,5 +506,15 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             this.onOpenAssetProfileDialog({ dataSource, symbol });
           });
       });
+  }
+
+  private reloadData({
+    pageIndex = this.paginator().pageIndex
+  }: { pageIndex?: number } = {}) {
+    this.loadData({
+      pageIndex,
+      sortColumn: this.sort().active,
+      sortDirection: this.sort().direction
+    });
   }
 }
