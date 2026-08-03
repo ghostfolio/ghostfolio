@@ -18,6 +18,9 @@ export const RedisCacheServiceMock = {
 
     return `portfolio-snapshot-${userId}${filtersHash > 0 ? `-${filtersHash}` : ''}`;
   },
+  reset: () => {
+    RedisCacheServiceMock.cache.clear();
+  },
   set: (key: string, value: string): Promise<string> => {
     RedisCacheServiceMock.cache.set(key, value);
 
