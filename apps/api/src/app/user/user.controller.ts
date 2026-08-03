@@ -1,7 +1,9 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { decodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -119,6 +121,7 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getUser(
     @Headers('accept-language') acceptLanguage: string,
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
@@ -165,6 +168,7 @@ export class UserController {
 
   @Put('setting')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async updateUserSetting(@Body() data: UpdateUserSettingDto) {
     if (
       size(data) === 1 &&
@@ -191,6 +195,12 @@ export class UserController {
       this.request.user.settings.settings as UserSettings,
       data
     );
+
+    if (userSettings['filters.dataSource']) {
+      userSettings['filters.dataSource'] = decodeDataSource(
+        userSettings['filters.dataSource']
+      );
+    }
 
     for (const key in userSettings) {
       if (userSettings[key] === false || userSettings[key] === null) {
