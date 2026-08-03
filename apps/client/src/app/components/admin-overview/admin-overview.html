@@ -52,9 +52,7 @@
               <mat-slide-toggle
                 color="primary"
                 hideIcon="true"
-                [checked]="
-                  info.globalPermissions.includes(permissions.createUserAccount)
-                "
+                [checked]="isUserSignupEnabled"
                 (change)="onEnableUserSignupModeChange($event)"
               />
             </div>
@@ -66,7 +64,7 @@
                 <mat-slide-toggle
                   color="primary"
                   hideIcon="true"
-                  [checked]="info?.isReadOnlyMode"
+                  [checked]="isReadOnlyMode"
                   (change)="onReadOnlyModeChange($event)"
                 />
               </div>
@@ -99,7 +97,7 @@
                     </button>
                   </div>
                 }
-                @if (!info?.systemMessage) {
+                @if (!systemMessage) {
                   <button
                     class="mt-2"
                     color="accent"
