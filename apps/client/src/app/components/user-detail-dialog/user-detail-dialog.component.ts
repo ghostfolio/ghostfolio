@@ -57,14 +57,17 @@ export class GfUserDetailDialogComponent implements OnInit {
   protected readonly canDeleteUser = canDeleteUser;
   protected readonly getCountryName = getCountryName;
   protected isLoading = true;
+
   protected readonly subscriptionsDataSource =
     new MatTableDataSource<Subscription>();
+
   protected readonly subscriptionsDisplayedColumns = [
     'createdAt',
     'type',
     'price',
     'expiresAt'
   ];
+
   protected user: AdminUserResponse;
 
   protected readonly data = inject<UserDetailDialogParams>(MAT_DIALOG_DATA);
@@ -73,6 +76,7 @@ export class GfUserDetailDialogComponent implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
+
   private readonly dialogRef =
     inject<MatDialogRef<GfUserDetailDialogComponent, UserDetailDialogResult>>(
       MatDialogRef
