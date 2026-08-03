@@ -78,6 +78,7 @@ export class TransformDataSourceInResponseInterceptor<
             valueMap,
             object: data,
             paths: [
+              '["filters.dataSource"]',
               'activities[*].assetProfile.dataSource',
               'activities[*].dataSource',
               'assetProfile.dataSource',
@@ -88,6 +89,7 @@ export class TransformDataSourceInResponseInterceptor<
               'holdings[*].assetProfile.dataSource',
               'holdings[*].dataSource',
               'items[*].dataSource',
+              'settings["filters.dataSource"]',
               'watchlist[*].dataSource'
             ]
           });
