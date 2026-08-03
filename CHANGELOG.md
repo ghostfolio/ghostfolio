@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability of the admin control panel by eliminating the page reload on deleting an asset profile
 - Improved the usability of the admin control panel by eliminating the page reload on flushing the cache
 - Improved the usability of the admin control panel by eliminating the page reload on gathering historical market data
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
