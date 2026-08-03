@@ -121,6 +121,12 @@ export class GfCreateOrUpdateActivityDialogComponent {
     addIcons({ calendarClearOutline, refreshOutline });
   }
 
+  protected get selectedAccount() {
+    return this.data.accounts.find(({ id }) => {
+      return id === this.activityForm.get('accountId')?.value;
+    });
+  }
+
   public ngOnInit() {
     this.currencyOfAssetProfile = this.data.activity?.assetProfile?.currency;
     this.hasPermissionToCreateOwnTag = hasPermission(

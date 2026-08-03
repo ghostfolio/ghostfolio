@@ -136,6 +136,7 @@ export class UserService {
         where: { granteeUserId: id }
       }),
       this.prismaService.account.findMany({
+        include: { platform: true },
         orderBy: {
           name: 'asc'
         },
