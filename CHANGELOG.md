@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the database model and endpoints to manage the stock splits of an asset profile (experimental)
 
+### Changed
+
+- Improved the usability of the admin control panel by eliminating the page reload on changing a setting
+- Improved the usability of the admin control panel by eliminating the page reload on deleting an asset profile
+- Improved the usability of the admin control panel by eliminating the page reload on flushing the cache
+- Improved the usability of the admin control panel by eliminating the page reload on gathering historical market data
+
 ### Fixed
 
 - Fixed the loading state in the user detail dialog of the admin control panel’s users section
