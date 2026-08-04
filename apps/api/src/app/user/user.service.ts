@@ -11,6 +11,7 @@ import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/ap
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
+import { EmergencyFundCoverage } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-coverage';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioTotalInvestmentVolume } from '@ghostfolio/api/models/rules/fees/fee-ratio-total-investment-volume';
 import { BuyingPower } from '@ghostfolio/api/models/rules/liquidity/buying-power';
@@ -448,6 +449,14 @@ export class UserService {
           undefined,
           undefined
         ).getSettings(user.settings.settings),
+      EmergencyFundCoverage: new EmergencyFundCoverage(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      ).getSettings(user.settings.settings),
       EmergencyFundSetup: new EmergencyFundSetup(
         undefined,
         undefined,

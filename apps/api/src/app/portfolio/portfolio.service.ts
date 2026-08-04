@@ -12,6 +12,7 @@ import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/ap
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
+import { EmergencyFundCoverage } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-coverage';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioTotalInvestmentVolume } from '@ghostfolio/api/models/rules/fees/fee-ratio-total-investment-volume';
 import { BuyingPower } from '@ghostfolio/api/models/rules/liquidity/buying-power';
@@ -1137,6 +1138,17 @@ export class PortfolioService {
 
     const hasOpenHoldings = Object.keys(holdings).length > 0;
 
+    const emergencyFundHoldingsValueInBaseCurrency =
+      this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings });
+
+    const emergencyFundInBaseCurrency = userSettings.emergencyFund ?? 0;
+
+    const { balanceInBaseCurrency: cashBalanceInBaseCurrency } =
+      await this.accountService.getCashDetails({
+        userId,
+        currency: this.getUserCurrency()
+      });
+
     const marketsAdvancedTotalInBaseCurrency = getSum(
       Object.values(marketsAdvanced).map(({ valueInBaseCurrency }) => {
         return new Big(valueInBaseCurrency);
@@ -1181,11 +1193,24 @@ export class PortfolioService {
               this.i18nService,
               userSettings.language,
               this.getTotalEmergencyFund({
-                userSettings,
-                emergencyFundHoldingsValueInBaseCurrency:
-                  this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings })
+                emergencyFundHoldingsValueInBaseCurrency,
+                userSettings
               }).toNumber()
-            )
+            ),
+            // The coverage is only meaningful once a target has been set,
+            // otherwise the set up rule already reports the missing setup
+            ...(emergencyFundInBaseCurrency > 0
+              ? [
+                  new EmergencyFundCoverage(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    emergencyFundInBaseCurrency,
+                    emergencyFundHoldingsValueInBaseCurrency,
+                    cashBalanceInBaseCurrency
+                  )
+                ]
+              : [])
           ],
           userSettings
         )
