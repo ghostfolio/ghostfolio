@@ -396,7 +396,7 @@ export class PortfolioService {
 
     if (filterBySearchQuery) {
       const fuse = new Fuse(holdings, {
-        keys: ['isin', 'name', 'symbol'],
+        keys: ['assetProfile.isin', 'assetProfile.name', 'assetProfile.symbol'],
         threshold: 0.3
       });
 
@@ -660,6 +660,7 @@ export class PortfolioService {
               };
             }
           ),
+          isin: assetProfile.isin,
           name: assetProfile.name,
           sectors: assetProfile.sectors,
           symbol: assetProfile.symbol,

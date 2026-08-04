@@ -15,6 +15,7 @@ export interface PortfolioPosition {
     | 'currency'
     | 'dataSource'
     | 'holdings'
+    | 'isin'
     | 'name'
     | 'sectors'
     | 'symbol'
