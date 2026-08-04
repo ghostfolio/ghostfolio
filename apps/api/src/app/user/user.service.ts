@@ -187,15 +187,15 @@ export class UserService {
       systemMessage = systemMessageProperty;
     }
 
-    let tags = tagsForUser.filter((tag) => {
-      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
-    });
+    let tags = tagsForUser;
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       subscription.type === SubscriptionType.Basic
     ) {
-      tags = [];
+      tags = tags.filter(({ id }) => {
+        return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+      });
     }
 
     return {

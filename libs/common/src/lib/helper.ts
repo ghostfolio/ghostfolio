@@ -8,7 +8,7 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isISO4217CurrencyCode } from 'class-validator';
+import { isISO4217CurrencyCode, isUUID } from 'class-validator';
 import {
   getDate,
   getMonth,
@@ -41,6 +41,7 @@ import {
   DERIVED_CURRENCIES,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
+  ghostfolioPrefix,
   SEARCH_QUERY_MINIMUM_LENGTH,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from './config';
@@ -466,6 +467,14 @@ export function getYesterday() {
   return subDays(new Date(Date.UTC(year, month, day)), 1);
 }
 
+export function hasGhostfolioPrefix(aSymbol: string) {
+  if (!aSymbol) {
+    return false;
+  }
+
+  return aSymbol.startsWith(`${ghostfolioPrefix}_`);
+}
+
 export function interpolate(template: string, context: any) {
   return template?.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
     const properties = objectPath.split('.');
@@ -546,6 +555,10 @@ export function isSplitRatio({
     denominator > 0 &&
     numerator !== denominator
   );
+}
+
+export function isValidCustomAssetProfileSymbol(aSymbol: string) {
+  return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
 }
 
 export function isValidSearchQuery(aQuery: string) {
