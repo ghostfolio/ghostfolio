@@ -11,11 +11,13 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  ghostfolioPrefix,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { CreateAssetProfileDto, CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
+  isValidCustomAssetProfileSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
 import {
@@ -195,6 +197,41 @@ export class ImportService {
     const platformIdMapping: { [oldPlatformId: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
+
+    // Validate the symbols before any data is persisted
+    for (const [index, assetProfileWithMarketData] of (
+      assetProfilesWithMarketDataDto ?? []
+    ).entries()) {
+      if (
+        assetProfileWithMarketData.dataSource === DataSource.MANUAL &&
+        !isValidCustomAssetProfileSymbol(assetProfileWithMarketData.symbol)
+      ) {
+        throw new Error(
+          `assetProfiles.${index}.symbol ("${assetProfileWithMarketData.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+        );
+      }
+    }
+
+    // Validate the symbols before any data is persisted. Activities without a
+    // data source are excluded, since a symbol is generated in
+    // createActivity() if needed.
+    for (const [index, activity] of activitiesDto.entries()) {
+      if (!activity.dataSource) {
+        if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
+          activity.dataSource = DataSource.MANUAL;
+        } else {
+          activity.dataSource =
+            this.dataProviderService.getDataSourceForImport();
+        }
+      } else if (
+        activity.dataSource === DataSource.MANUAL &&
+        !isValidCustomAssetProfileSymbol(activity.symbol)
+      ) {
+        throw new Error(
+          `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+        );
+      }
+    }
 
     if (platformsDto?.length) {
       const canCreatePlatform = hasPermission(
@@ -384,82 +421,123 @@ export class ImportService {
       }
     }
 
-    if (!isDryRun && assetProfilesWithMarketDataDto?.length) {
-      const existingAssetProfiles =
-        await this.symbolProfileService.getSymbolProfiles(
-          assetProfilesWithMarketDataDto.map(({ dataSource, symbol }) => {
-            return { dataSource, symbol };
+    if (assetProfilesWithMarketDataDto?.length) {
+      const customAssetProfileNames = assetProfilesWithMarketDataDto
+        .filter(({ dataSource, name }) => {
+          return dataSource === DataSource.MANUAL && Boolean(name);
+        })
+        .map(({ name }) => {
+          return name;
+        });
+
+      const [existingAssetProfiles, existingCustomAssetProfilesOfUser] =
+        await Promise.all([
+          this.symbolProfileService.getSymbolProfiles(
+            assetProfilesWithMarketDataDto.map(({ dataSource, symbol }) => {
+              return { dataSource, symbol };
+            })
+          ),
+          this.symbolProfileService.getCustomSymbolProfilesByNames({
+            names: customAssetProfileNames,
+            userId: user.id
           })
-        );
+        ]);
 
       for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
+        let symbol = assetProfileWithMarketData.symbol;
+
         // Check if there is any existing asset profile
         const existingAssetProfile = existingAssetProfiles.find(
-          ({ dataSource, symbol }) => {
+          (assetProfile) => {
             return (
-              dataSource === assetProfileWithMarketData.dataSource &&
-              symbol === assetProfileWithMarketData.symbol
+              assetProfile.dataSource ===
+                assetProfileWithMarketData.dataSource &&
+              assetProfile.symbol === assetProfileWithMarketData.symbol
             );
           }
         );
 
-        // If there is no asset profile or if the asset profile belongs to a different user, then create a new asset profile
+        // If there is no asset profile or if the asset profile belongs to a
+        // different user, then reuse the custom asset profile of the user or
+        // create a new asset profile
         if (!existingAssetProfile || existingAssetProfile.userId !== user.id) {
-          const assetProfile: CreateAssetProfileDto = omit(
-            assetProfileWithMarketData,
-            'marketData'
-          );
+          // Check if the user has a custom asset profile with the same name.
+          // Skip asset profiles with a legacy free-text symbol as they would
+          // fail the symbol validation on a future import.
+          const existingCustomAssetProfileOfUser =
+            assetProfileWithMarketData.dataSource === DataSource.MANUAL
+              ? existingCustomAssetProfilesOfUser.find((customAssetProfile) => {
+                  return (
+                    customAssetProfile.name ===
+                      assetProfileWithMarketData.name &&
+                    isValidCustomAssetProfileSymbol(customAssetProfile.symbol)
+                  );
+                })
+              : undefined;
 
-          // Asset profile belongs to a different user
-          if (existingAssetProfile) {
-            const symbol = randomUUID();
-            assetProfileSymbolMapping[assetProfile.symbol] = symbol;
+          if (existingCustomAssetProfileOfUser) {
+            // Reuse the custom asset profile of the user instead of creating a duplicate
+            symbol = existingCustomAssetProfileOfUser.symbol;
+          } else {
+            const assetProfile: CreateAssetProfileDto = omit(
+              assetProfileWithMarketData,
+              'marketData'
+            );
+
+            // Asset profile belongs to a different user, generate a new symbol
+            if (existingAssetProfile && !isDryRun) {
+              symbol = randomUUID();
+            }
+
             assetProfile.symbol = symbol;
+
+            if (!isDryRun) {
+              // Create a new asset profile
+              const assetProfileObject: Prisma.SymbolProfileCreateInput = {
+                ...assetProfile,
+                user: { connect: { id: user.id } }
+              };
+
+              await this.symbolProfileService.add(assetProfileObject);
+            }
           }
 
-          // Create a new asset profile
-          const assetProfileObject: Prisma.SymbolProfileCreateInput = {
-            ...assetProfile,
-            user: { connect: { id: user.id } }
-          };
+          if (symbol !== assetProfileWithMarketData.symbol) {
+            assetProfileSymbolMapping[assetProfileWithMarketData.symbol] =
+              symbol;
 
-          await this.symbolProfileService.add(assetProfileObject);
+            // Keep the asset profile in sync with the activities to validate
+            assetProfileWithMarketData.symbol = symbol;
+          }
         }
 
-        // Insert or update market data
-        const marketDataObjects = assetProfileWithMarketData.marketData.map(
-          (marketData) => {
+        if (!isDryRun) {
+          // Insert or update market data
+          const marketDataObjects = (
+            assetProfileWithMarketData.marketData ?? []
+          ).map((marketData) => {
             return {
               ...marketData,
-              dataSource: assetProfileWithMarketData.dataSource,
-              symbol: assetProfileWithMarketData.symbol
+              symbol,
+              dataSource: assetProfileWithMarketData.dataSource
             } as Prisma.MarketDataUpdateInput;
-          }
-        );
+          });
 
-        await this.marketDataService.updateMany({ data: marketDataObjects });
+          await this.marketDataService.updateMany({ data: marketDataObjects });
+        }
       }
     }
 
     for (const activity of activitiesDto) {
-      if (!activity.dataSource) {
-        if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
-          activity.dataSource = DataSource.MANUAL;
-        } else {
-          activity.dataSource =
-            this.dataProviderService.getDataSourceForImport();
-        }
+      // If an asset profile is created or reused, then update the symbol in all activities
+      if (assetProfileSymbolMapping[activity.symbol]) {
+        activity.symbol = assetProfileSymbolMapping[activity.symbol];
       }
 
       if (!isDryRun) {
         // If a new account is created, then update the accountId in all activities
         if (accountIdMapping[activity.accountId]) {
           activity.accountId = accountIdMapping[activity.accountId];
-        }
-
-        // If a new asset profile is created, then update the symbol in all activities
-        if (assetProfileSymbolMapping[activity.symbol]) {
-          activity.symbol = assetProfileSymbolMapping[activity.symbol];
         }
 
         // If a new tag is created, then update the tag ID in all activities

@@ -164,7 +164,22 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="align-items-center d-flex flex-grow-1 indent-1">
+    <div
+      class="align-items-center d-flex flex-grow-1 indent-1"
+      [class.cursor-pointer]="hasHoldingsBreakdown"
+      (click)="onToggleHoldings()"
+    >
+      @if (hasHoldingsBreakdown) {
+        <span
+          class="align-items-center caret-container d-inline-flex justify-content-center ml-n3"
+        >
+          <ion-icon
+            class="caret text-muted"
+            name="caret-forward-outline"
+            [class.caret-expanded]="isHoldingsExpanded"
+          />
+        </span>
+      }
       <ng-container i18n>Holdings</ng-container>
       @if (
         !hasImpersonationId &&
@@ -192,7 +207,7 @@
       />
     </div>
   </div>
-  @if (isLoading || summary?.emergencyFund?.assets > 0) {
+  @if (hasHoldingsBreakdown && isHoldingsExpanded) {
     <div class="flex-nowrap px-3 py-1 row">
       <div class="flex-grow-1 indent-2 text-truncate" i18n>Investments</div>
       <div class="flex-column flex-wrap justify-content-end">
@@ -223,7 +238,22 @@
     </div>
   }
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="align-items-center d-flex flex-grow-1 indent-1">
+    <div
+      class="align-items-center d-flex flex-grow-1 indent-1"
+      [class.cursor-pointer]="hasCashBreakdown"
+      (click)="onToggleCash()"
+    >
+      @if (hasCashBreakdown) {
+        <span
+          class="align-items-center caret-container d-inline-flex justify-content-center ml-n3"
+        >
+          <ion-icon
+            class="caret text-muted"
+            name="caret-forward-outline"
+            [class.caret-expanded]="isCashExpanded"
+          />
+        </span>
+      }
       <ng-container i18n>Cash</ng-container>
       @if (
         !hasImpersonationId &&
@@ -251,7 +281,7 @@
       />
     </div>
   </div>
-  @if (isLoading || summary?.emergencyFund?.cash > 0) {
+  @if (hasCashBreakdown && isCashExpanded) {
     <div class="flex-nowrap px-3 py-1 row">
       <div class="flex-grow-1 indent-2 text-truncate" i18n>Buying Power</div>
       <div class="flex-column flex-wrap justify-content-end">
