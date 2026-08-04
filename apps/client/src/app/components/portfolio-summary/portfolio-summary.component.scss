@@ -1,6 +1,23 @@
 :host {
   display: block;
 
+  .caret-container {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    margin-left: -1rem;
+    width: 1rem;
+
+    .caret {
+      font-size: 0.7rem;
+      transition: transform 150ms ease-in-out;
+
+      &.caret-expanded {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
   .indent-1 {
     margin-left: 1rem;
   }
