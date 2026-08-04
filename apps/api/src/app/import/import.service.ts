@@ -491,16 +491,6 @@ export class ImportService {
 
               await this.symbolProfileService.add(assetProfileObject);
             }
-
-            if (
-              assetProfile.dataSource === DataSource.MANUAL &&
-              assetProfile.name
-            ) {
-              existingCustomAssetProfilesOfUser.push({
-                name: assetProfile.name,
-                symbol: assetProfile.symbol
-              });
-            }
           }
 
           if (symbol !== assetProfileWithMarketData.symbol) {
@@ -514,15 +504,15 @@ export class ImportService {
 
         if (!isDryRun) {
           // Insert or update market data
-          const marketDataObjects = assetProfileWithMarketData.marketData.map(
-            (marketData) => {
-              return {
-                ...marketData,
-                symbol,
-                dataSource: assetProfileWithMarketData.dataSource
-              } as Prisma.MarketDataUpdateInput;
-            }
-          );
+          const marketDataObjects = (
+            assetProfileWithMarketData.marketData ?? []
+          ).map((marketData) => {
+            return {
+              ...marketData,
+              symbol,
+              dataSource: assetProfileWithMarketData.dataSource
+            } as Prisma.MarketDataUpdateInput;
+          });
 
           await this.marketDataService.updateMany({ data: marketDataObjects });
         }
