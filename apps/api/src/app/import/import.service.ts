@@ -212,6 +212,27 @@ export class ImportService {
       }
     }
 
+    // Validate the symbols before any data is persisted. Activities without a
+    // data source are excluded, since a symbol is generated in
+    // createActivity() if needed.
+    for (const [index, activity] of activitiesDto.entries()) {
+      if (!activity.dataSource) {
+        if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
+          activity.dataSource = DataSource.MANUAL;
+        } else {
+          activity.dataSource =
+            this.dataProviderService.getDataSourceForImport();
+        }
+      } else if (
+        activity.dataSource === DataSource.MANUAL &&
+        !isValidCustomAssetProfileSymbol(activity.symbol)
+      ) {
+        throw new Error(
+          `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+        );
+      }
+    }
+
     if (platformsDto?.length) {
       const canCreatePlatform = hasPermission(
         user.permissions,
@@ -247,26 +268,6 @@ export class ImportService {
             await this.platformService.createPlatform(platform);
           }
         }
-      }
-    }
-
-    for (const [index, activity] of activitiesDto.entries()) {
-      if (!activity.dataSource) {
-        if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
-          activity.dataSource = DataSource.MANUAL;
-        } else {
-          activity.dataSource =
-            this.dataProviderService.getDataSourceForImport();
-        }
-      }
-
-      if (
-        activity.dataSource === DataSource.MANUAL &&
-        !isValidCustomAssetProfileSymbol(activity.symbol)
-      ) {
-        throw new Error(
-          `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
-        );
       }
     }
 
@@ -456,13 +457,21 @@ export class ImportService {
           }
         );
 
-        // If there is no asset profile or if the asset profile belongs to a different user, then reuse the custom asset profile of the user or create a new asset profile
+        // If there is no asset profile or if the asset profile belongs to a
+        // different user, then reuse the custom asset profile of the user or
+        // create a new asset profile
         if (!existingAssetProfile || existingAssetProfile.userId !== user.id) {
-          // Check if the user has a custom asset profile with the same name
+          // Check if the user has a custom asset profile with the same name.
+          // Skip asset profiles with a legacy free-text symbol as they would
+          // fail the symbol validation on a future import.
           const existingCustomAssetProfileOfUser =
             assetProfileWithMarketData.dataSource === DataSource.MANUAL
-              ? existingCustomAssetProfilesOfUser.find(({ name }) => {
-                  return name === assetProfileWithMarketData.name;
+              ? existingCustomAssetProfilesOfUser.find((customAssetProfile) => {
+                  return (
+                    customAssetProfile.name ===
+                      assetProfileWithMarketData.name &&
+                    isValidCustomAssetProfileSymbol(customAssetProfile.symbol)
+                  );
                 })
               : undefined;
 

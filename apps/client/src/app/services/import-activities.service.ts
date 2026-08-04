@@ -61,7 +61,7 @@ export class ImportActivitiesService {
 
     const activities: CreateOrderDto[] = [];
     const assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
-    const assetProfileSymbolMapping: { [name: string]: string } = {};
+    const assetProfileSymbolMapping = new Map<string, string>();
 
     for (const [index, item] of content.entries()) {
       const currency = this.parseCurrency({ content, index, item });
@@ -80,9 +80,8 @@ export class ImportActivitiesService {
 
         if (!isValidCustomAssetProfileSymbol(symbol)) {
           // Generate a symbol and keep the free text as the name
-          assetProfileSymbolMapping[name] =
-            assetProfileSymbolMapping[name] ?? uuidv4();
-          symbol = assetProfileSymbolMapping[name];
+          symbol = assetProfileSymbolMapping.get(name) ?? uuidv4();
+          assetProfileSymbolMapping.set(name, symbol);
         }
 
         const isExistingAssetProfile = assetProfiles.some((assetProfile) => {
