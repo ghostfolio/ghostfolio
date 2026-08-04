@@ -95,7 +95,7 @@ export class GfAllocationsPageComponent implements OnInit {
       | 'assetSubClassLabel'
       | 'currency'
       | 'name'
-    > & { etfProvider: string; exchange?: string; value: number };
+    > & { etfProvider: string; value: number };
   };
   protected isLoading = false;
   protected markets: PortfolioDetails['markets'];
@@ -381,7 +381,6 @@ export class GfAllocationsPageComponent implements OnInit {
           assetSubClass: position.assetProfile.assetSubClass,
           name: position.assetProfile.name
         }),
-        exchange: position.exchange,
         name: position.assetProfile.name,
         value: this.showValuesInPercentage()
           ? position.allocationInPercentage
