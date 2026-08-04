@@ -10,7 +10,8 @@ import {
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol,
-  isSplitRatio
+  isSplitRatio,
+  isValidCustomAssetProfileSymbol
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -324,6 +325,34 @@ describe('Helper', () => {
       expect(isSplitRatio({ denominator: null, numerator: null })).toEqual(
         false
       );
+    });
+  });
+
+  describe('Is valid custom asset profile symbol', () => {
+    it('Empty symbol', () => {
+      expect(isValidCustomAssetProfileSymbol('')).toEqual(false);
+    });
+
+    it('Free-text symbol', () => {
+      expect(isValidCustomAssetProfileSymbol('Penthouse Apartment')).toEqual(
+        false
+      );
+    });
+
+    it('Stock symbol', () => {
+      expect(isValidCustomAssetProfileSymbol('AAPL')).toEqual(false);
+    });
+
+    it('Symbol with Ghostfolio prefix', () => {
+      expect(isValidCustomAssetProfileSymbol('GF_PENTHOUSE_APARTMENT')).toEqual(
+        true
+      );
+    });
+
+    it('UUID', () => {
+      expect(
+        isValidCustomAssetProfileSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
+      ).toEqual(true);
     });
   });
 });
