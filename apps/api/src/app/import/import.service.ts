@@ -494,7 +494,7 @@ export class ImportService {
 
             if (
               assetProfile.dataSource === DataSource.MANUAL &&
-              Boolean(assetProfile.name)
+              assetProfile.name
             ) {
               existingCustomAssetProfilesOfUser.push({
                 name: assetProfile.name,
