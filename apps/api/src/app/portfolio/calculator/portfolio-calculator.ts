@@ -151,10 +151,18 @@ export abstract class PortfolioCalculator {
             tags,
             type,
             date: format(date, DATE_FORMAT),
-            fee: new Big(feeInAssetProfileCurrency),
-            feeInBaseCurrency: new Big(feeInBaseCurrency),
+            fee: this.parseToBig(feeInAssetProfileCurrency, 'fee', SymbolProfile),
+            feeInBaseCurrency: this.parseToBig(
+              feeInBaseCurrency,
+              'feeInBaseCurrency',
+              SymbolProfile
+            ),
             quantity: new Big(quantity),
-            unitPrice: new Big(unitPriceInAssetProfileCurrency)
+            unitPrice: this.parseToBig(
+              unitPriceInAssetProfileCurrency,
+              'unitPrice',
+              SymbolProfile
+            )
           };
         }
       )
@@ -182,6 +190,35 @@ export abstract class PortfolioCalculator {
     // in case the snapshot promise is never awaited. Consumers awaiting it
     // still receive the error.
     this.snapshotPromise.catch(() => undefined);
+  }
+
+  // Coerce an activity value into a Big, tolerating a missing/non-finite input.
+  // Values that depend on a currency conversion (fee and unit price expressed in
+  // the asset profile or base currency) arrive as null/NaN when no exchange rate
+  // is available for the activity's currency and date. Passing such a value to
+  // `new Big()` throws "[big.js] Invalid number" inside the constructor, which
+  // aborts the whole portfolio calculation — a single unconvertible activity then
+  // fails the entire performance/details response. Default to 0 and warn instead,
+  // so the rest of the portfolio still renders.
+  private parseToBig(
+    value: number,
+    field: string,
+    symbolProfile?: { currency?: string; dataSource?: string; symbol?: string }
+  ): Big {
+    if (value == null || !Number.isFinite(value)) {
+      Logger.warn(
+        `Missing or invalid "${field}" (${value})` +
+          (symbolProfile?.symbol
+            ? ` for ${symbolProfile.dataSource}/${symbolProfile.symbol} (${symbolProfile.currency})`
+            : '') +
+          `; defaulting to 0 (likely an unavailable exchange rate)`,
+        'PortfolioCalculator'
+      );
+
+      return new Big(0);
+    }
+
+    return new Big(value);
   }
 
   protected abstract calculateOverallPerformance(
