@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the platform logo to the account selector in the create or update activity dialog
 
+### Fixed
+
+- Fixed the allocation percentages in the accounts section of the holding detail dialog by excluding the cash balances
+
 ## 3.42.0 - 2026-08-04
 
 ### Changed
