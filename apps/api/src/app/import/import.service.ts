@@ -392,7 +392,14 @@ export class ImportService {
           })
         );
 
+      const createdAssetProfileIdentifiers = new Set<string>();
+
       for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
+        const assetProfileIdentifier = getAssetProfileIdentifier({
+          dataSource: assetProfileWithMarketData.dataSource,
+          symbol: assetProfileWithMarketData.symbol
+        });
+
         // Check if there is any existing asset profile
         const existingAssetProfile = existingAssetProfiles.find(
           ({ dataSource, symbol }) => {
@@ -403,8 +410,18 @@ export class ImportService {
           }
         );
 
-        // If there is no asset profile or if the asset profile belongs to a different user, then create a new asset profile
-        if (!existingAssetProfile || existingAssetProfile.userId !== user.id) {
+        // If there is no asset profile or if the asset profile belongs to a
+        // different user, then create a new asset profile, unless it has
+        // already been created earlier in this loop (e.g. multiple imported
+        // activities referencing the same new manual asset profile). An asset
+        // profile without a user is shared, for example created via the admin
+        // control panel, and is reused as is
+        if (
+          (!existingAssetProfile ||
+            (existingAssetProfile.userId &&
+              existingAssetProfile.userId !== user.id)) &&
+          !createdAssetProfileIdentifiers.has(assetProfileIdentifier)
+        ) {
           const assetProfile: CreateAssetProfileDto = omit(
             assetProfileWithMarketData,
             'marketData'
@@ -424,6 +441,7 @@ export class ImportService {
           };
 
           await this.symbolProfileService.add(assetProfileObject);
+          createdAssetProfileIdentifiers.add(assetProfileIdentifier);
         }
 
         // Insert or update market data

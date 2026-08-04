@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed the activity import so it no longer fails when multiple rows create the same new manual asset profile
+- Fixed the activity import to reuse an existing manual asset profile of the admin control panel instead of duplicating it
+
 ## 3.41.0 - 2026-08-03
 
 ### Added
