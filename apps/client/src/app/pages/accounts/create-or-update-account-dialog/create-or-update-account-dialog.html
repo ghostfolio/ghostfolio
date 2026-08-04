@@ -34,8 +34,9 @@
         <mat-label i18n>Cash Balance</mat-label>
         <input
           formControlName="balance"
+          gfLocalizedNumber
           matInput
-          type="number"
+          [locale]="locale"
           (keydown.enter)="$event.stopPropagation()"
         />
         <span class="ml-2" matTextSuffix>{{

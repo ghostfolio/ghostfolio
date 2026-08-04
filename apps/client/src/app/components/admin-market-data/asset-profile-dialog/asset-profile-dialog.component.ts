@@ -32,6 +32,7 @@ import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfLocalizedNumberDirective } from '@ghostfolio/ui/localized-number';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -119,6 +120,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
     GfEntityLogoComponent,
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
+    GfLocalizedNumberDirective,
     GfPortfolioProportionChartComponent,
     GfSymbolAutocompleteComponent,
     GfValueComponent,

@@ -638,8 +638,9 @@
                     <mat-label i18n>Default Market Price</mat-label>
                     <input
                       formControlName="defaultMarketPrice"
+                      gfLocalizedNumber
                       matInput
-                      type="number"
+                      [locale]="user?.settings?.locale"
                     />
                   </mat-form-field>
                 </div>

@@ -27,6 +27,7 @@ import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { isNil } from 'lodash';
 
+import { GfLocalizedNumberDirective } from '../../localized-number';
 import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
 
 @Component({
@@ -34,6 +35,7 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   host: { class: 'h-100' },
   imports: [
     FormsModule,
+    GfLocalizedNumberDirective,
     IonIcon,
     MatButtonModule,
     MatDatepickerModule,
@@ -54,7 +56,7 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
   protected readonly marketPrice = signal(this.data.marketPrice);
 
   private readonly destroyRef = inject(DestroyRef);
-  private readonly locale =
+  protected readonly locale =
     this.data.user.settings.locale ?? inject<string>(MAT_DATE_LOCALE);
 
   public constructor(

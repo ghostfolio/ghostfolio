@@ -328,7 +328,8 @@ export class GfAccountsPageComponent implements OnInit {
       TransferBalanceDialogParams
     >(GfTransferBalanceDialogComponent, {
       data: {
-        accounts: this.accounts
+        accounts: this.accounts,
+        locale: this.user?.settings?.locale
       },
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });

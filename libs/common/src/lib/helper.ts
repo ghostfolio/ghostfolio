@@ -1,4 +1,4 @@
-import { NumberParser } from '@internationalized/number';
+import { NumberFormatter, NumberParser } from '@internationalized/number';
 import {
   Type as ActivityType,
   AssetProfileOverrides,
@@ -234,6 +234,7 @@ export function extractNumberFromString({
   }
 }
 
+<<<<<<< HEAD
 export function formatMonthAndYear({
   date,
   locale
@@ -245,6 +246,20 @@ export function formatMonthAndYear({
     month: 'long',
     year: 'numeric'
   }).format(date);
+=======
+export function formatNumberForLocale({
+  locale = 'en-US',
+  value
+}: {
+  locale?: string;
+  value: number;
+}): string {
+  const formatter = new NumberFormatter(locale, {
+    maximumFractionDigits: 15
+  });
+
+  return formatter.format(value);
+>>>>>>> c5ab9c84a (fix(client): address review feedback for localized number directive)
 }
 
 export function getAllActivityTypes(): ActivityType[] {

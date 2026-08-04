@@ -13,6 +13,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfLocalizedNumberDirective } from '@ghostfolio/ui/localized-number';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
@@ -60,6 +61,7 @@ import { ActivityType } from './types/activity-type.type';
   host: { class: 'h-100' },
   imports: [
     GfEntityLogoComponent,
+    GfLocalizedNumberDirective,
     GfSymbolAutocompleteComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
@@ -114,7 +116,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateActivityDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
-  private locale = inject<string>(MAT_DATE_LOCALE);
+  protected locale = inject<string>(MAT_DATE_LOCALE);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -127,7 +129,8 @@ export class GfCreateOrUpdateActivityDialogComponent {
       this.data.user?.permissions,
       permissions.createOwnTag
     );
-    this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
+    this.locale =
+      this.data.user.settings.locale ?? this.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
     this.dateAdapter.setLocale(this.locale);
