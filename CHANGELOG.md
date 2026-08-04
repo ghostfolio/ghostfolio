@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the performance of the search in the assistant by reusing the cached portfolio snapshot
+- Optimized the performance of the search in the assistant by reusing the cached portfolio snapshot
+
+### Fixed
+
+- Fixed the fuzzy search for the holdings in the assistant
 
 ## 3.41.0 - 2026-08-03
 
