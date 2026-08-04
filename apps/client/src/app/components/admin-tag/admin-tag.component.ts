@@ -2,7 +2,11 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  getLowercase,
+  isSystemTag
+} from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
@@ -67,6 +71,7 @@ export class GfAdminTagComponent implements OnInit {
     'activities',
     'actions'
   ];
+  protected readonly isSystemTag = isSystemTag;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected tags: Tag[];
   protected readonly translate = translate;
@@ -99,7 +104,7 @@ export class GfAdminTagComponent implements OnInit {
               return id === params['tagId'];
             });
 
-            if (tag) {
+            if (tag && !isSystemTag(tag)) {
               this.openUpdateTagDialog(tag);
             }
           } else {

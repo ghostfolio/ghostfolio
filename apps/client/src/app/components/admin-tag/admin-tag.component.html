@@ -83,7 +83,11 @@
         <ion-icon name="ellipsis-horizontal" />
       </button>
       <mat-menu #tagMenu="matMenu" xPosition="before">
-        <button mat-menu-item (click)="onUpdateTag(element)">
+        <button
+          mat-menu-item
+          [disabled]="isSystemTag(element)"
+          (click)="onUpdateTag(element)"
+        >
           <span class="align-items-center d-flex">
             <ion-icon class="mr-2" name="create-outline" />
             <span><ng-container i18n>Edit</ng-container>...</span>
@@ -92,7 +96,11 @@
         <hr class="m-0" />
         <button
           mat-menu-item
-          [disabled]="element.accountCount > 0 || element.activityCount > 0"
+          [disabled]="
+            element.accountCount > 0 ||
+            element.activityCount > 0 ||
+            isSystemTag(element)
+          "
           (click)="onDeleteTag(element.id)"
         >
           <span class="align-items-center d-flex">
