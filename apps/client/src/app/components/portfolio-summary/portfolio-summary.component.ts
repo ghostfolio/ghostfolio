@@ -85,11 +85,11 @@ export class GfPortfolioSummaryComponent implements OnChanges {
   }
 
   protected get hasCashBreakdown() {
-    return this.isLoading || this.summary?.emergencyFund?.cash > 0;
+    return !this.isLoading && this.summary?.emergencyFund?.cash > 0;
   }
 
   protected get hasHoldingsBreakdown() {
-    return this.isLoading || this.summary?.emergencyFund?.assets > 0;
+    return !this.isLoading && this.summary?.emergencyFund?.assets > 0;
   }
 
   protected get holdingsInBaseCurrency() {
