@@ -413,9 +413,13 @@ export class ImportService {
         // If there is no asset profile or if the asset profile belongs to a
         // different user, then create a new asset profile, unless it has
         // already been created earlier in this loop (e.g. multiple imported
-        // activities referencing the same new manual asset profile)
+        // activities referencing the same new manual asset profile). An asset
+        // profile without a user is shared, for example created via the admin
+        // control panel, and is reused as is
         if (
-          (!existingAssetProfile || existingAssetProfile.userId !== user.id) &&
+          (!existingAssetProfile ||
+            (existingAssetProfile.userId &&
+              existingAssetProfile.userId !== user.id)) &&
           !createdAssetProfileIdentifiers.has(assetProfileIdentifier)
         ) {
           const assetProfile: CreateAssetProfileDto = omit(

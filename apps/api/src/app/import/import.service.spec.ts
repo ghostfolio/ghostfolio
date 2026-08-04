@@ -8,9 +8,11 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 
 import { ImportService } from './import.service';
+
+let mockExistingAssetProfiles: Partial<SymbolProfile>[] = [];
 
 jest.mock('@ghostfolio/api/app/account/account.service', () => {
   return {
@@ -27,12 +29,14 @@ jest.mock('@ghostfolio/api/app/activities/activities.service', () => {
     ActivitiesService: jest.fn().mockImplementation(() => {
       return {
         getActivities: () => Promise.resolve({ activities: [] }),
-        createActivity: () => {
+        createActivity: jest.fn().mockImplementation((data) => {
           return Promise.resolve({
             id: 'ee3949fa-9df5-4b4e-9856-14dd1cfe9c86',
-            SymbolProfile: { symbol: 'Repeated Fee' }
+            SymbolProfile: {
+              symbol: data.SymbolProfile.connectOrCreate.create.symbol
+            }
           });
-        }
+        })
       };
     })
   };
@@ -95,7 +99,7 @@ jest.mock(
       SymbolProfileService: jest.fn().mockImplementation(() => {
         return {
           add: jest.fn().mockResolvedValue(undefined),
-          getSymbolProfiles: () => Promise.resolve([])
+          getSymbolProfiles: () => Promise.resolve(mockExistingAssetProfiles)
         };
       })
     };
@@ -124,6 +128,8 @@ describe('ImportService', () => {
   let tagService: TagService;
 
   beforeEach(() => {
+    mockExistingAssetProfiles = [];
+
     accountService = new AccountService(null, null, null, null, null);
     activitiesService = new ActivitiesService(
       null,
@@ -223,10 +229,108 @@ describe('ImportService', () => {
       ],
       assetProfilesWithMarketDataDto: [assetProfile, assetProfile],
       maxActivitiesToImport: 10,
+      platformsDto: [],
       tagsDto: [],
       user
     });
 
     expect(symbolProfileService.add).toHaveBeenCalledTimes(1);
   });
+
+  it('reuses an existing manual asset profile without a user', async () => {
+    mockExistingAssetProfiles = [
+      {
+        currency: 'USD',
+        dataSource: DataSource.MANUAL,
+        name: 'Manual Asset Profile',
+        symbol: 'GF_MANUAL',
+        userId: null
+      }
+    ];
+
+    await importActivitiesWithExistingAssetProfile();
+
+    expect(symbolProfileService.add).not.toHaveBeenCalled();
+
+    for (const [{ SymbolProfile }] of (
+      activitiesService.createActivity as jest.Mock
+    ).mock.calls) {
+      expect(SymbolProfile.connectOrCreate.create.symbol).toEqual('GF_MANUAL');
+    }
+  });
+
+  it('creates a new asset profile when the existing manual asset profile belongs to a different user', async () => {
+    mockExistingAssetProfiles = [
+      {
+        currency: 'USD',
+        dataSource: DataSource.MANUAL,
+        name: 'Manual Asset Profile',
+        symbol: 'GF_MANUAL',
+        userId: '5b7a1b3a-1f1c-4c7a-9a1a-3a1b5b7a1b3a'
+      }
+    ];
+
+    await importActivitiesWithExistingAssetProfile();
+
+    expect(symbolProfileService.add).toHaveBeenCalledTimes(1);
+
+    const [[{ symbol }]] = (symbolProfileService.add as jest.Mock).mock.calls;
+
+    expect(symbol).not.toEqual('GF_MANUAL');
+
+    for (const [{ SymbolProfile }] of (
+      activitiesService.createActivity as jest.Mock
+    ).mock.calls) {
+      expect(SymbolProfile.connectOrCreate.create.symbol).toEqual(symbol);
+    }
+  });
+
+  function importActivitiesWithExistingAssetProfile() {
+    const user = {
+      id: 'da8a5786-1223-4a51-9a86-2b60433c9f3f',
+      permissions: [],
+      settings: { settings: { baseCurrency: 'USD' } }
+    } as unknown as UserWithSettings;
+
+    // The client creates a synthetic asset profile per activity
+    const assetProfile = {
+      currency: 'USD',
+      dataSource: DataSource.MANUAL,
+      isActive: true,
+      marketData: [],
+      name: 'GF_MANUAL',
+      symbol: 'GF_MANUAL'
+    };
+
+    return importService.import({
+      accountsWithBalancesDto: [],
+      activitiesDto: [
+        {
+          currency: 'USD',
+          dataSource: DataSource.MANUAL,
+          date: '2024-01-01T00:00:00.000Z',
+          fee: 0,
+          quantity: 1,
+          symbol: 'GF_MANUAL',
+          type: 'BUY',
+          unitPrice: 1
+        },
+        {
+          currency: 'USD',
+          dataSource: DataSource.MANUAL,
+          date: '2024-01-02T00:00:00.000Z',
+          fee: 0,
+          quantity: 2,
+          symbol: 'GF_MANUAL',
+          type: 'BUY',
+          unitPrice: 1
+        }
+      ],
+      assetProfilesWithMarketDataDto: [assetProfile, assetProfile],
+      maxActivitiesToImport: 10,
+      platformsDto: [],
+      tagsDto: [],
+      user
+    });
+  }
 });
