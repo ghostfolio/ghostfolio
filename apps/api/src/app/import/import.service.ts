@@ -475,8 +475,8 @@ export class ImportService {
               'marketData'
             );
 
-            // Asset profile belongs to a different user
-            if (existingAssetProfile) {
+            // Asset profile belongs to a different user, generate a new symbol
+            if (existingAssetProfile && !isDryRun) {
               symbol = randomUUID();
             }
 
