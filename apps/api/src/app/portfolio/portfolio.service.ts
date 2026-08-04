@@ -165,6 +165,10 @@ export class PortfolioService {
       };
     }
 
+    const filtersWithoutSearchQueryFilter = filters?.filter(({ type }) => {
+      return type !== 'SEARCH_QUERY';
+    });
+
     const [accounts, details, user] = await Promise.all([
       this.accountService.accounts({
         where,
@@ -176,8 +180,8 @@ export class PortfolioService {
         orderBy: { name: 'asc' }
       }),
       this.getDetails({
-        filters,
         withExcludedAccounts,
+        filters: filtersWithoutSearchQueryFilter,
         impersonationId: userId,
         userId: this.request.user.id
       }),
@@ -369,14 +373,6 @@ export class PortfolioService {
     userId: string;
   }) {
     userId = await this.getUserId(impersonationId, userId);
-    const { holdings: holdingsMap } = await this.getDetails({
-      dateRange,
-      filters,
-      impersonationId,
-      userId
-    });
-
-    let holdings = Object.values(holdingsMap);
 
     const { SEARCH_QUERY: [filterBySearchQuery] = [] } = groupBy(
       filters,
@@ -384,6 +380,19 @@ export class PortfolioService {
         return type;
       }
     );
+
+    const filtersWithoutSearchQueryFilter = filters?.filter(({ type }) => {
+      return type !== 'SEARCH_QUERY';
+    });
+
+    const { holdings: holdingsMap } = await this.getDetails({
+      dateRange,
+      impersonationId,
+      userId,
+      filters: filtersWithoutSearchQueryFilter
+    });
+
+    let holdings = Object.values(holdingsMap);
 
     if (filterBySearchQuery) {
       const fuse = new Fuse(holdings, {
