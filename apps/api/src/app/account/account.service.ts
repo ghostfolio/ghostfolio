@@ -10,6 +10,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
+import { AccountWithBalance } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -40,7 +41,7 @@ export class AccountService {
 
   public async account({
     id_userId
-  }: Prisma.AccountWhereUniqueInput): Promise<Account | null> {
+  }: Prisma.AccountWhereUniqueInput): Promise<AccountWithBalance | null> {
     const account = await this.prismaService.account.findUnique({
       include: {
         balances: {
@@ -87,7 +88,7 @@ export class AccountService {
     where?: Prisma.AccountWhereInput;
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
-    (Account & {
+    (AccountWithBalance & {
       activities?: (Order & { SymbolProfile?: SymbolProfile })[];
       balances?: AccountBalance[];
       platform?: Platform;
@@ -160,12 +161,18 @@ export class AccountService {
     });
   }
 
-  public async createAccount(
-    data: Prisma.AccountCreateInput,
-    aUserId: string,
-    tagIds?: string[]
-  ): Promise<Account> {
-    await this.tagService.validateTagIds({ tagIds, userId: aUserId });
+  public async createAccount({
+    balance,
+    data,
+    tagIds,
+    userId
+  }: {
+    balance: number;
+    data: Prisma.AccountCreateInput;
+    tagIds?: string[];
+    userId: string;
+  }): Promise<Account> {
+    await this.tagService.validateTagIds({ tagIds, userId });
 
     const account = await this.prismaService.account.create({
       data: {
@@ -183,10 +190,10 @@ export class AccountService {
     });
 
     await this.accountBalanceService.createOrUpdateAccountBalance({
+      balance,
+      userId,
       accountId: account.id,
-      balance: data.balance,
-      date: format(new Date(), DATE_FORMAT),
-      userId: aUserId
+      date: format(new Date(), DATE_FORMAT)
     });
 
     this.eventEmitter.emit(
@@ -216,7 +223,7 @@ export class AccountService {
     return account;
   }
 
-  public async getAccounts(aUserId: string): Promise<Account[]> {
+  public async getAccounts(aUserId: string): Promise<AccountWithBalance[]> {
     const accounts = await this.accounts({
       include: {
         activities: true,
@@ -295,17 +302,20 @@ export class AccountService {
     };
   }
 
-  public async updateAccount(
-    params: {
-      data: Prisma.AccountUpdateInput;
-      where: Prisma.AccountWhereUniqueInput;
-    },
-    aUserId: string,
-    tagIds?: string[]
-  ): Promise<Account> {
-    const { data, where } = params;
-
-    await this.tagService.validateTagIds({ tagIds, userId: aUserId });
+  public async updateAccount({
+    balance,
+    data,
+    tagIds,
+    userId,
+    where
+  }: {
+    balance: number;
+    data: Prisma.AccountUpdateInput;
+    tagIds?: string[];
+    userId: string;
+    where: Prisma.AccountWhereUniqueInput;
+  }): Promise<Account> {
+    await this.tagService.validateTagIds({ tagIds, userId });
 
     const account = await this.prismaService.account.update({
       data: {
@@ -325,10 +335,10 @@ export class AccountService {
     });
 
     await this.accountBalanceService.createOrUpdateAccountBalance({
+      balance,
+      userId,
       accountId: account.id,
-      balance: data.balance as number,
-      date: format(new Date(), DATE_FORMAT),
-      userId: aUserId
+      date: format(new Date(), DATE_FORMAT)
     });
 
     this.eventEmitter.emit(

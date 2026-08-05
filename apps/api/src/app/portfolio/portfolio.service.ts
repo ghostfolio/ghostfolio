@@ -64,6 +64,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
 import {
+  AccountWithBalance,
   AccountWithValue,
   DateRange,
   GroupBy,
@@ -75,7 +76,6 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
-  Account,
   Type as ActivityType,
   AssetClass,
   AssetSubClass,
@@ -2142,7 +2142,7 @@ export class PortfolioService {
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};
 
-    let currentAccounts: (Account & {
+    let currentAccounts: (AccountWithBalance & {
       Order?: Order[];
       platform?: Platform;
       tags?: Tag[];

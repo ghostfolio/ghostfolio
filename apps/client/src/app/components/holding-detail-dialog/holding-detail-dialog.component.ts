@@ -22,6 +22,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
@@ -65,7 +66,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Account, MarketData, Tag } from '@prisma/client';
+import { MarketData, Tag } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
@@ -117,7 +118,7 @@ import {
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnInit {
-  protected accounts: Account[];
+  protected accounts: AccountWithValue[];
   protected activitiesCount: number;
   protected assetClass: string;
   protected assetProfile: Pick<
