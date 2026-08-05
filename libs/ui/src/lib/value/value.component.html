@@ -27,6 +27,10 @@
     }
   </ng-template>
 
+  <!--
+    @deprecated Rendering the loading state for an undefined value is kept for
+    backward compatibility; use the isLoading attribute instead
+  -->
   @if (isLoading() || value === undefined) {
     <ngx-skeleton-loader
       animation="pulse"
