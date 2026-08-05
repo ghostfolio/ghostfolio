@@ -99,7 +99,9 @@ export class ImportService {
             filters,
             userCurrency,
             userId,
-            startDate: parseDate(dateOfFirstActivity)
+            includeDrafts: true,
+            startDate: parseDate(dateOfFirstActivity),
+            withExcludedAccountsAndActivities: true
           }),
           this.symbolProfileService.getSymbolProfiles([
             {
@@ -329,23 +331,31 @@ export class ImportService {
       }
     }
 
-    if (!isDryRun && accountsWithBalancesDto?.length) {
-      const [existingAccounts, existingAccountsOfUser, existingPlatforms] =
-        await Promise.all([
-          this.accountService.accounts({
-            where: {
-              id: {
-                in: accountsWithBalancesDto.map(({ id }) => {
+    if (accountsWithBalancesDto?.length) {
+      const [
+        existingAccountsOfOtherUsers,
+        existingAccountsOfUser,
+        existingPlatforms
+      ] = await Promise.all([
+        this.accountService.accounts({
+          where: {
+            id: {
+              in: accountsWithBalancesDto
+                .filter(({ id }) => {
+                  return Boolean(id);
+                })
+                .map(({ id }) => {
                   return id;
                 })
-              }
-            }
-          }),
-          this.accountService.accounts({
-            where: { userId: user.id }
-          }),
-          this.platformService.getPlatforms()
-        ]);
+            },
+            userId: { not: user.id }
+          }
+        }),
+        this.accountService.accounts({
+          where: { userId: user.id }
+        }),
+        this.platformService.getPlatforms()
+      ]);
 
       const existingTagIds = new Set(
         existingTagsOfUser.map(({ id }) => {
@@ -354,19 +364,18 @@ export class ImportService {
       );
 
       for (const accountWithBalances of accountsWithBalancesDto) {
-        // Check if there is any existing account with the same ID
-        const accountWithSameId = existingAccounts.find((existingAccount) => {
-          return existingAccount.id === accountWithBalances.id;
-        });
-
         // Skip the account if it already belongs to the user
-        if (accountWithSameId && accountWithSameId.userId === user.id) {
+        if (
+          existingAccountsOfUser.some(({ id }) => {
+            return id === accountWithBalances.id;
+          })
+        ) {
           continue;
         }
 
         // If there is no account or if the account belongs to a different
         // user, then reuse an existing account of the user with the same name
-        // or create a new account
+        // and currency or create a new account
         const accountToReuse = this.getAccountToReuse({
           accountWithBalances,
           accountsWithBalancesDto,
@@ -388,6 +397,18 @@ export class ImportService {
           continue;
         }
 
+        if (isDryRun) {
+          continue;
+        }
+
+        // Check if there is any existing account of a different user with the
+        // same ID, since the ID cannot be reused in this case
+        const accountWithSameIdOfOtherUser = existingAccountsOfOtherUsers.find(
+          ({ id }) => {
+            return id === accountWithBalances.id;
+          }
+        );
+
         const account = omit(accountWithBalances, [
           'balances',
           'isExcluded',
@@ -400,7 +421,7 @@ export class ImportService {
 
         delete account.platformId;
 
-        if (accountWithSameId) {
+        if (accountWithSameIdOfOtherUser) {
           oldAccountId = account.id;
           delete account.id;
         }
@@ -449,7 +470,7 @@ export class ImportService {
         );
 
         // Store the new to old account ID mappings for updating activities
-        if (accountWithSameId && oldAccountId) {
+        if (accountWithSameIdOfOtherUser && oldAccountId) {
           accountIdMapping[oldAccountId] = newAccount.id;
         }
       }
@@ -568,12 +589,12 @@ export class ImportService {
         activity.symbol = assetProfileSymbolMapping[activity.symbol];
       }
 
-      if (!isDryRun) {
-        // If a new account is created, then update the accountId in all activities
-        if (accountIdMapping[activity.accountId]) {
-          activity.accountId = accountIdMapping[activity.accountId];
-        }
+      // If an account is created or reused, then update the accountId in all activities
+      if (accountIdMapping[activity.accountId]) {
+        activity.accountId = accountIdMapping[activity.accountId];
+      }
 
+      if (!isDryRun) {
         // If a new tag is created, then update the tag ID in all activities
         activity.tags = (activity.tags ?? []).map((tagId) => {
           return tagIdMapping[tagId] ?? tagId;
@@ -601,9 +622,20 @@ export class ImportService {
     );
 
     if (isDryRun) {
-      accountsWithBalancesDto.forEach(({ id, name }) => {
-        accounts.push({ id, name });
-      });
+      accountsWithBalancesDto
+        .filter(({ id }) => {
+          // Skip the accounts which are reused or which already belong to the
+          // user, since they are part of the accounts of the user above
+          return (
+            !accountIdMapping[id] &&
+            !accounts.some(({ id: accountId }) => {
+              return accountId === id;
+            })
+          );
+        })
+        .forEach(({ id, name }) => {
+          accounts.push({ id, name });
+        });
     }
 
     const tags = (await this.tagService.getTagsForUser(user.id)).map(
@@ -910,10 +942,12 @@ export class ImportService {
 
   /**
    * Returns the account of the user to reuse for the given account of the
-   * import, based on the name. The name is only considered if it is
-   * unambiguous, both in the accounts of the user and in the accounts of the
-   * import, since it is not unique. Otherwise, distinct accounts would be
-   * merged into a single one.
+   * import, based on the name and the currency. The currency is considered
+   * because the activities of the import would otherwise end up in an account
+   * of a different currency. The name is only considered if it is unambiguous,
+   * both in the accounts of the user and in the accounts of the import, since
+   * it is not unique. Otherwise, distinct accounts would be merged into a
+   * single one.
    */
   private getAccountToReuse({
     accountWithBalances,
@@ -924,26 +958,32 @@ export class ImportService {
     accountsWithBalancesDto: ImportDataDto['accounts'];
     existingAccountsOfUser: Account[];
   }): Account {
-    const accountsWithSameNameOfUser = existingAccountsOfUser.filter(
-      ({ name }) => {
-        return name === accountWithBalances.name;
+    const matchingAccountsOfUser = existingAccountsOfUser.filter(
+      ({ currency, name }) => {
+        return (
+          currency === accountWithBalances.currency &&
+          name === accountWithBalances.name
+        );
       }
     );
 
-    const accountsWithSameNameToImport = accountsWithBalancesDto.filter(
-      ({ name }) => {
-        return name === accountWithBalances.name;
+    const matchingAccountsToImport = accountsWithBalancesDto.filter(
+      ({ currency, name }) => {
+        return (
+          currency === accountWithBalances.currency &&
+          name === accountWithBalances.name
+        );
       }
     );
 
     if (
-      accountsWithSameNameOfUser.length !== 1 ||
-      accountsWithSameNameToImport.length !== 1
+      matchingAccountsOfUser.length !== 1 ||
+      matchingAccountsToImport.length !== 1
     ) {
       return undefined;
     }
 
-    return accountsWithSameNameOfUser[0];
+    return matchingAccountsOfUser[0];
   }
 
   private isUniqueAccount(accounts: AccountWithValue[]) {
