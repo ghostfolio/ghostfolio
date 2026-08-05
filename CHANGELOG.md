@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Guarded the system tags against deletion and renaming in the tag management of the admin control panel
 
+### Fixed
+
+- Handled an exception in the country weightings parsing of the _Financial Modeling Prep_ service
+
 ## 3.42.0 - 2026-08-04
 
 ### Changed
