@@ -37,12 +37,16 @@
           size="medium"
           [enableCopyToClipboardButton]="true"
           [isLoading]="isLoading"
-          [value]="user.id"
+          [value]="user?.id"
           >User ID</gf-value
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [isLoading]="isLoading" [value]="user.role"
+        <gf-value
+          i18n
+          size="medium"
+          [isLoading]="isLoading"
+          [value]="user?.role"
           >Role</gf-value
         >
       </div>
@@ -56,7 +60,7 @@
           [isDate]="true"
           [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="user.createdAt"
+          [value]="user?.createdAt"
           >Registration Date</gf-value
         >
       </div>
@@ -66,7 +70,7 @@
           size="medium"
           [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="user.provider"
+          [value]="user?.provider"
           >Authentication</gf-value
         >
       </div>
@@ -80,7 +84,7 @@
             size="medium"
             [isLoading]="isLoading"
             [locale]="data.locale"
-            [value]="user.subscription ? 'Premium' : 'Basic'"
+            [value]="user?.subscription ? 'Premium' : 'Basic'"
             >Membership</gf-value
           >
         </div>
@@ -90,7 +94,7 @@
             size="medium"
             [isLoading]="isLoading"
             [value]="
-              user.country ? getCountryName({ code: user.country }) : '-'
+              user?.country ? getCountryName({ code: user.country }) : '-'
             "
             >Country</gf-value
           >
@@ -105,7 +109,7 @@
           size="medium"
           [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="user.accountCount"
+          [value]="user?.accountCount"
           >Accounts</gf-value
         >
       </div>
@@ -115,7 +119,7 @@
           size="medium"
           [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="user.activityCount"
+          [value]="user?.activityCount"
           >Activities</gf-value
         >
       </div>
@@ -130,7 +134,7 @@
             [isLoading]="isLoading"
             [locale]="data.locale"
             [precision]="0"
-            [value]="user.engagement"
+            [value]="user?.engagement"
             >Engagement per Day</gf-value
           >
         </div>
@@ -140,7 +144,7 @@
             size="medium"
             [isLoading]="isLoading"
             [locale]="data.locale"
-            [value]="user.dailyApiRequests"
+            [value]="user?.dailyApiRequests"
             >API Requests Today</gf-value
           >
         </div>
