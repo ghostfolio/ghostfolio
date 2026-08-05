@@ -2,7 +2,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Time in Market</div>
     <div class="justify-content-end">
-      <gf-value class="justify-content-end" [value]="timeInMarket" />
+      <gf-value
+        class="justify-content-end"
+        [isLoading]="isLoading"
+        [value]="timeInMarket"
+      />
     </div>
   </div>
   <div

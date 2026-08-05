@@ -46,6 +46,7 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
 export class GfBenchmarkDetailDialogComponent implements OnInit {
   public assetProfile: AdminMarketDataDetails['assetProfile'];
   public historicalDataItems: LineChartItem[];
+  public isLoading = true;
   public value: number;
 
   public constructor(
@@ -78,6 +79,8 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
             };
           }
         );
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

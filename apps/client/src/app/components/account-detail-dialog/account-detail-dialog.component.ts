@@ -102,6 +102,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected holdings: PortfolioPosition[];
   protected interestInBaseCurrency: number;
   protected interestInBaseCurrencyPrecision = 2;
+  protected isLoading = true;
   protected isLoadingChart: boolean;
   protected name: string | null;
   protected pageIndex = 0;
@@ -301,6 +302,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
             }) ?? [];
 
           this.valueInBaseCurrency = valueInBaseCurrency;
+
+          this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
         }

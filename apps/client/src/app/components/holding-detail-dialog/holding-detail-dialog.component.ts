@@ -157,6 +157,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   }>;
   protected investmentInBaseCurrencyWithCurrencyEffect: number;
   protected investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
+  protected isLoading = true;
   protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
   protected marketPrice: number;
@@ -570,6 +571,8 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
             this.fetchMarketData();
           }
+
+          this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
         }

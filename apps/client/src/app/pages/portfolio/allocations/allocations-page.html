@@ -210,6 +210,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.developedMarkets?.valueInPercentage"
                 >Developed Markets</gf-value
@@ -219,6 +220,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.emergingMarkets?.valueInPercentage"
                 >Emerging Markets</gf-value
@@ -228,6 +230,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.otherMarkets?.valueInPercentage"
                 >Other Markets</gf-value
@@ -238,6 +241,7 @@
                 <gf-value
                   i18n
                   size="large"
+                  [isLoading]="isLoading"
                   [isPercent]="true"
                   [value]="markets?.[UNKNOWN_KEY]?.valueInPercentage"
                   >No data available</gf-value

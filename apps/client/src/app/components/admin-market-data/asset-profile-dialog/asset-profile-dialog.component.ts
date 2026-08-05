@@ -283,6 +283,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected isBenchmark = false;
   protected isDataGatheringEnabled: boolean;
   protected isEditAssetProfileIdentifierMode = false;
+  protected isLoading = true;
   protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
 
@@ -495,6 +496,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
         }
 
         this.assetProfileForm.markAsPristine();
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
