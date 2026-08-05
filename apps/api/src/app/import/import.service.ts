@@ -326,18 +326,22 @@ export class ImportService {
     }
 
     if (!isDryRun && accountsWithBalancesDto?.length) {
-      const [existingAccounts, existingPlatforms] = await Promise.all([
-        this.accountService.accounts({
-          where: {
-            id: {
-              in: accountsWithBalancesDto.map(({ id }) => {
-                return id;
-              })
+      const [existingAccounts, existingAccountsOfUser, existingPlatforms] =
+        await Promise.all([
+          this.accountService.accounts({
+            where: {
+              id: {
+                in: accountsWithBalancesDto.map(({ id }) => {
+                  return id;
+                })
+              }
             }
-          }
-        }),
-        this.platformService.getPlatforms()
-      ]);
+          }),
+          this.accountService.accounts({
+            where: { userId: user.id }
+          }),
+          this.platformService.getPlatforms()
+        ]);
 
       const existingTagIds = new Set(
         existingTagsOfUser.map(({ id }) => {
@@ -351,71 +355,92 @@ export class ImportService {
           return existingAccount.id === accountWithBalances.id;
         });
 
-        // If there is no account or if the account belongs to a different user then create a new account
+        // If there is no account or if the account belongs to a different
+        // user, then reuse an existing account of the user with the same name
+        // or create a new account
         if (!accountWithSameId || accountWithSameId.userId !== user.id) {
-          const account = omit(accountWithBalances, [
-            'balances',
-            'isExcluded',
-            'tags'
-          ]);
-
-          let oldAccountId: string;
-          const platformId =
-            platformIdMapping[account.platformId] ?? account.platformId;
-
-          delete account.platformId;
-
-          if (accountWithSameId) {
-            oldAccountId = account.id;
-            delete account.id;
-          }
-
-          const tagIds = (accountWithBalances.tags ?? [])
-            .map((tagId) => {
-              return tagIdMapping[tagId] ?? tagId;
-            })
-            .filter((tagId) => {
-              return existingTagIds.has(tagId);
-            });
-
-          // Map the legacy isExcluded attribute of old export files to
-          // the "Exclude from Analysis" tag
-          if (
-            accountWithBalances.isExcluded &&
-            existingTagIds.has(TAG_ID_EXCLUDE_FROM_ANALYSIS) &&
-            !tagIds.includes(TAG_ID_EXCLUDE_FROM_ANALYSIS)
-          ) {
-            tagIds.push(TAG_ID_EXCLUDE_FROM_ANALYSIS);
-          }
-
-          let accountObject: Prisma.AccountCreateInput = {
-            ...account,
-            balances: {
-              create: accountWithBalances.balances ?? []
-            },
-            user: { connect: { id: user.id } }
-          };
-
-          if (
-            existingPlatforms.some(({ id }) => {
-              return id === platformId;
-            })
-          ) {
-            accountObject = {
-              ...accountObject,
-              platform: { connect: { id: platformId } }
-            };
-          }
-
-          const newAccount = await this.accountService.createAccount(
-            accountObject,
-            user.id,
-            tagIds
+          // Check if the user has an account with the same name
+          const accountWithSameNameOfUser = existingAccountsOfUser.find(
+            ({ name }) => {
+              return name === accountWithBalances.name;
+            }
           );
 
-          // Store the new to old account ID mappings for updating activities
-          if (accountWithSameId && oldAccountId) {
-            accountIdMapping[oldAccountId] = newAccount.id;
+          if (accountWithSameNameOfUser) {
+            // Reuse the account of the user instead of creating a duplicate
+            if (
+              accountWithBalances.id &&
+              accountWithBalances.id !== accountWithSameNameOfUser.id
+            ) {
+              // Store the new to old account ID mappings for updating activities
+              accountIdMapping[accountWithBalances.id] =
+                accountWithSameNameOfUser.id;
+            }
+          } else {
+            const account = omit(accountWithBalances, [
+              'balances',
+              'isExcluded',
+              'tags'
+            ]);
+
+            let oldAccountId: string;
+            const platformId =
+              platformIdMapping[account.platformId] ?? account.platformId;
+
+            delete account.platformId;
+
+            if (accountWithSameId) {
+              oldAccountId = account.id;
+              delete account.id;
+            }
+
+            const tagIds = (accountWithBalances.tags ?? [])
+              .map((tagId) => {
+                return tagIdMapping[tagId] ?? tagId;
+              })
+              .filter((tagId) => {
+                return existingTagIds.has(tagId);
+              });
+
+            // Map the legacy isExcluded attribute of old export files to
+            // the "Exclude from Analysis" tag
+            if (
+              accountWithBalances.isExcluded &&
+              existingTagIds.has(TAG_ID_EXCLUDE_FROM_ANALYSIS) &&
+              !tagIds.includes(TAG_ID_EXCLUDE_FROM_ANALYSIS)
+            ) {
+              tagIds.push(TAG_ID_EXCLUDE_FROM_ANALYSIS);
+            }
+
+            let accountObject: Prisma.AccountCreateInput = {
+              ...account,
+              balances: {
+                create: accountWithBalances.balances ?? []
+              },
+              user: { connect: { id: user.id } }
+            };
+
+            if (
+              existingPlatforms.some(({ id }) => {
+                return id === platformId;
+              })
+            ) {
+              accountObject = {
+                ...accountObject,
+                platform: { connect: { id: platformId } }
+              };
+            }
+
+            const newAccount = await this.accountService.createAccount(
+              accountObject,
+              user.id,
+              tagIds
+            );
+
+            // Store the new to old account ID mappings for updating activities
+            if (accountWithSameId && oldAccountId) {
+              accountIdMapping[oldAccountId] = newAccount.id;
+            }
           }
         }
       }
@@ -823,10 +848,10 @@ export class ImportService {
         unitPrice
       }) => {
         const date = parseISO(dateString);
+
         const isDuplicate = existingActivities.some((activity) => {
           return (
-            activity.accountId === accountId &&
-            activity.comment === comment &&
+            (activity.comment ?? null) === (comment ?? null) &&
             (activity.currency === currency ||
               activity.assetProfile.currency === currency) &&
             activity.assetProfile.dataSource === dataSource &&
