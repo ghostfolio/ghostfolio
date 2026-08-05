@@ -62,6 +62,8 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   public readonly copiedTitle = $localize`The value has been copied to the clipboard`;
   public readonly copyToClipboardTitle = $localize`Copy to clipboard`;
+  public readonly isLoading = input<boolean>(false);
+  public readonly precision = input<number>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -73,8 +75,6 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
       copyOutline
     });
   }
-
-  public readonly precision = input<number>();
 
   private copyToClipboardTimeout: ReturnType<typeof setTimeout>;
 
