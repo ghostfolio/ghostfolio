@@ -43,7 +43,8 @@ import {
   ghostfolioFearAndGreedIndexSymbolStocks,
   ghostfolioPrefix,
   SEARCH_QUERY_MINIMUM_LENGTH,
-  TAG_ID_EXCLUDE_FROM_ANALYSIS
+  TAG_ID_EXCLUDE_FROM_ANALYSIS,
+  TAG_IDS_SYSTEM
 } from './config';
 import {
   AssetProfileIdentifier,
@@ -555,6 +556,12 @@ export function isSplitRatio({
     denominator > 0 &&
     numerator !== denominator
   );
+}
+
+export function isSystemTag(tag?: { id: string }) {
+  return TAG_IDS_SYSTEM.some((id) => {
+    return id === tag?.id;
+  });
 }
 
 export function isValidCustomAssetProfileSymbol(aSymbol: string) {

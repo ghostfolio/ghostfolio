@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the platform logo to the account selector in the create or update activity dialog
 
+### Changed
+
+- Guarded the system tags against deletion and renaming in the tag management of the admin control panel
+
 ## 3.42.0 - 2026-08-04
 
 ### Changed

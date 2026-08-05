@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
+import { isSystemTag } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -69,7 +70,7 @@ export class TagsController {
       id
     });
 
-    if (!originalTag) {
+    if (!originalTag || isSystemTag(originalTag)) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -94,7 +95,7 @@ export class TagsController {
       id
     });
 
-    if (!originalTag) {
+    if (!originalTag || isSystemTag(originalTag)) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
