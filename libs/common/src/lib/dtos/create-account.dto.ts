@@ -14,7 +14,7 @@ import { isString } from 'lodash';
 export class CreateAccountDto {
   /**
    * The initial balance, stored as the account balance of today.
-   * Optional because the balance is derived from the account balances.
+   * Optional because callers may instead supply the full history via `balances`.
    */
   @IsNumber()
   @IsOptional()

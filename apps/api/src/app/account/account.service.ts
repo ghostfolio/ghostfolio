@@ -25,7 +25,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, format } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy, isNil } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
 
@@ -189,7 +189,7 @@ export class AccountService {
       }
     });
 
-    if (balance !== undefined) {
+    if (!isNil(balance)) {
       await this.accountBalanceService.createOrUpdateAccountBalance({
         balance,
         userId,
@@ -311,7 +311,7 @@ export class AccountService {
     userId,
     where
   }: {
-    balance: number;
+    balance?: number;
     data: Prisma.AccountUpdateInput;
     tagIds?: string[];
     userId: string;
@@ -336,12 +336,14 @@ export class AccountService {
       where
     });
 
-    await this.accountBalanceService.createOrUpdateAccountBalance({
-      balance,
-      userId,
-      accountId: account.id,
-      date: format(new Date(), DATE_FORMAT)
-    });
+    if (!isNil(balance)) {
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        balance,
+        userId,
+        accountId: account.id,
+        date: format(new Date(), DATE_FORMAT)
+      });
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
