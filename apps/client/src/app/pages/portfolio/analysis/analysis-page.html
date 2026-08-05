@@ -83,14 +83,11 @@
             i18n
             size="large"
             [isCurrency]="true"
+            [isLoading]="isLoadingInvestmentChart"
             [locale]="user?.settings?.locale"
             [precision]="precision"
             [unit]="user?.settings?.baseCurrency"
-            [value]="
-              isLoadingInvestmentChart
-                ? undefined
-                : performance?.currentValueInBaseCurrency
-            "
+            [value]="performance?.currentValueInBaseCurrency"
             >Total amount</gf-value
           >
         </mat-card-content>
@@ -104,14 +101,11 @@
             size="large"
             [colorizeSign]="true"
             [isCurrency]="true"
+            [isLoading]="isLoadingInvestmentChart"
             [locale]="user?.settings?.locale"
             [precision]="precision"
             [unit]="user?.settings?.baseCurrency"
-            [value]="
-              isLoadingInvestmentChart
-                ? undefined
-                : performance?.netPerformanceWithCurrencyEffect
-            "
+            [value]="performance?.netPerformanceWithCurrencyEffect"
             >Change with currency effect</gf-value
           >
         </mat-card-content>
@@ -124,13 +118,10 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [isLoading]="isLoadingInvestmentChart"
             [isPercent]="true"
             [locale]="user?.settings?.locale"
-            [value]="
-              isLoadingInvestmentChart
-                ? undefined
-                : performance?.netPerformancePercentageWithCurrencyEffect
-            "
+            [value]="performance?.netPerformancePercentageWithCurrencyEffect"
             >Performance with currency effect</gf-value
           >
         </mat-card-content>
@@ -173,13 +164,10 @@
                 class="justify-content-end"
                 position="end"
                 [isCurrency]="true"
+                [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="
-                  isLoadingInvestmentChart
-                    ? undefined
-                    : performance?.netPerformance
-                "
+                [value]="performance?.netPerformance"
               />
             </div>
           </div>
@@ -192,13 +180,10 @@
                 class="justify-content-end"
                 position="end"
                 [colorizeSign]="true"
+                [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
-                [value]="
-                  isLoadingInvestmentChart
-                    ? undefined
-                    : performance?.netPerformancePercentage
-                "
+                [value]="performance?.netPerformancePercentage"
               />
             </div>
           </div>
@@ -216,15 +201,14 @@
                 class="justify-content-end"
                 position="end"
                 [isCurrency]="true"
+                [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
                 [value]="
-                  isLoadingInvestmentChart
-                    ? undefined
-                    : performance?.netPerformance === null
-                      ? null
-                      : performance?.netPerformanceWithCurrencyEffect -
-                        performance?.netPerformance
+                  performance?.netPerformance === null
+                    ? null
+                    : performance?.netPerformanceWithCurrencyEffect -
+                      performance?.netPerformance
                 "
               />
             </div>
@@ -238,15 +222,14 @@
                 class="justify-content-end"
                 position="end"
                 [colorizeSign]="true"
+                [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
                 [value]="
-                  isLoadingInvestmentChart
-                    ? undefined
-                    : performance?.netPerformancePercentage === null
-                      ? null
-                      : performance?.netPerformancePercentageWithCurrencyEffect -
-                        performance?.netPerformancePercentage
+                  performance?.netPerformancePercentage === null
+                    ? null
+                    : performance?.netPerformancePercentageWithCurrencyEffect -
+                      performance?.netPerformancePercentage
                 "
               />
             </div>
@@ -261,13 +244,10 @@
                 class="justify-content-end"
                 position="end"
                 [isCurrency]="true"
+                [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="
-                  isLoadingInvestmentChart
-                    ? undefined
-                    : performance?.netPerformanceWithCurrencyEffect
-                "
+                [value]="performance?.netPerformanceWithCurrencyEffect"
               />
             </div>
           </div>
@@ -280,12 +260,11 @@
                 class="justify-content-end"
                 position="end"
                 [colorizeSign]="true"
+                [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
                 [value]="
-                  isLoadingInvestmentChart
-                    ? undefined
-                    : performance?.netPerformancePercentageWithCurrencyEffect
+                  performance?.netPerformancePercentageWithCurrencyEffect
                 "
               />
             </div>

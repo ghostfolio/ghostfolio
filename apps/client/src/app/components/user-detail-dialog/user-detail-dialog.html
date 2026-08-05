@@ -36,12 +36,13 @@
           i18n
           size="medium"
           [enableCopyToClipboardButton]="true"
-          [value]="isLoading ? undefined : user.id"
+          [isLoading]="isLoading"
+          [value]="user.id"
           >User ID</gf-value
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="isLoading ? undefined : user.role"
+        <gf-value i18n size="medium" [isLoading]="isLoading" [value]="user.role"
           >Role</gf-value
         >
       </div>
@@ -53,8 +54,9 @@
           i18n
           size="medium"
           [isDate]="true"
+          [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="isLoading ? undefined : user.createdAt"
+          [value]="user.createdAt"
           >Registration Date</gf-value
         >
       </div>
@@ -62,8 +64,9 @@
         <gf-value
           i18n
           size="medium"
+          [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="isLoading ? undefined : user.provider"
+          [value]="user.provider"
           >Authentication</gf-value
         >
       </div>
@@ -75,10 +78,9 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [locale]="data.locale"
-            [value]="
-              isLoading ? undefined : user.subscription ? 'Premium' : 'Basic'
-            "
+            [value]="user.subscription ? 'Premium' : 'Basic'"
             >Membership</gf-value
           >
         </div>
@@ -86,12 +88,9 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [value]="
-              isLoading
-                ? undefined
-                : user.country
-                  ? getCountryName({ code: user.country })
-                  : '-'
+              user.country ? getCountryName({ code: user.country }) : '-'
             "
             >Country</gf-value
           >
@@ -104,8 +103,9 @@
         <gf-value
           i18n
           size="medium"
+          [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="isLoading ? undefined : user.accountCount"
+          [value]="user.accountCount"
           >Accounts</gf-value
         >
       </div>
@@ -113,8 +113,9 @@
         <gf-value
           i18n
           size="medium"
+          [isLoading]="isLoading"
           [locale]="data.locale"
-          [value]="isLoading ? undefined : user.activityCount"
+          [value]="user.activityCount"
           >Activities</gf-value
         >
       </div>
@@ -126,9 +127,10 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [locale]="data.locale"
             [precision]="0"
-            [value]="isLoading ? undefined : user.engagement"
+            [value]="user.engagement"
             >Engagement per Day</gf-value
           >
         </div>
@@ -136,8 +138,9 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [locale]="data.locale"
-            [value]="isLoading ? undefined : user.dailyApiRequests"
+            [value]="user.dailyApiRequests"
             >API Requests Today</gf-value
           >
         </div>

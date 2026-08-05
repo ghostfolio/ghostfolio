@@ -14,12 +14,9 @@
           <gf-value
             class="justify-content-end l-2"
             size="medium"
+            [isLoading]="isLoading"
             [isPercent]="true"
-            [value]="
-              isLoading
-                ? undefined
-                : portfolioDetails?.summary?.filteredValueInPercentage
-            "
+            [value]="portfolioDetails?.summary?.filteredValueInPercentage"
           />
         </mat-card-header>
         <mat-card-content>

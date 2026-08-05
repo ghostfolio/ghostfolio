@@ -38,24 +38,18 @@
         <gf-value
           [colorizeSign]="true"
           [isCurrency]="true"
+          [isLoading]="isLoading()"
           [locale]="locale()"
-          [value]="
-            isLoading()
-              ? undefined
-              : performance().netPerformanceWithCurrencyEffect
-          "
+          [value]="performance().netPerformanceWithCurrencyEffect"
         />
       </div>
       <div class="col">
         <gf-value
           [colorizeSign]="true"
+          [isLoading]="isLoading()"
           [isPercent]="true"
           [locale]="locale()"
-          [value]="
-            isLoading()
-              ? undefined
-              : performance().netPerformancePercentageWithCurrencyEffect
-          "
+          [value]="performance().netPerformancePercentageWithCurrencyEffect"
         />
       </div>
     </div>
