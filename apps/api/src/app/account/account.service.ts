@@ -167,7 +167,7 @@ export class AccountService {
     tagIds,
     userId
   }: {
-    balance: number;
+    balance?: number;
     data: Prisma.AccountCreateInput;
     tagIds?: string[];
     userId: string;
@@ -189,12 +189,14 @@ export class AccountService {
       }
     });
 
-    await this.accountBalanceService.createOrUpdateAccountBalance({
-      balance,
-      userId,
-      accountId: account.id,
-      date: format(new Date(), DATE_FORMAT)
-    });
+    if (balance !== undefined) {
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        balance,
+        userId,
+        accountId: account.id,
+        date: format(new Date(), DATE_FORMAT)
+      });
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
