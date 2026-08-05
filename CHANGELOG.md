@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Guarded the system tags against deletion and renaming in the tag management of the admin control panel
+- Improved the check for duplicates in the preview step of the activities import (regardless of the account)
+- Extended the activities import to reuse an existing account of the user by name
+
+### Fixed
+
+- Fixed the check for duplicates in the preview step of the activities import for activities without a comment
 
 ## 3.42.0 - 2026-08-04
 
