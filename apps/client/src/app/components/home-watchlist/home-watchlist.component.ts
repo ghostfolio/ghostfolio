@@ -146,7 +146,6 @@ export class GfHomeWatchlistComponent implements OnInit {
           GfCreateWatchlistItemDialogComponent,
           CreateWatchlistItemDialogParams
         >(GfCreateWatchlistItemDialogComponent, {
-          autoFocus: false,
           data: {
             deviceType: this.deviceType(),
             locale: this.user?.settings?.locale ?? DEFAULT_LOCALE
