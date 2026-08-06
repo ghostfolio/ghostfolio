@@ -46,10 +46,11 @@
     <div [class.d-none]="platforms?.length < 1">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
-        @if (selectedPlatform?.url) {
+        @if (selectedPlatform) {
           <gf-entity-logo
             class="ml-3"
             matPrefix
+            [hasPlaceholder]="true"
             [tooltip]="selectedPlatform?.name"
             [url]="selectedPlatform?.url"
           />
@@ -71,6 +72,7 @@
               <span class="d-flex">
                 <gf-entity-logo
                   class="mr-1"
+                  [hasPlaceholder]="true"
                   [tooltip]="platformEntry.name"
                   [url]="platformEntry.url"
                 />

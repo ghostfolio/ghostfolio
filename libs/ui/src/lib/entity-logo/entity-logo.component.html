@@ -1,8 +1,11 @@
-@if (src) {
+@if (src && !hasError) {
   <img
-    onerror="this.style.display = 'none'"
+    class="logo"
     [class.large]="size === 'large'"
     [src]="src"
     [title]="tooltip ? tooltip : ''"
+    (error)="onError()"
   />
+} @else if (hasPlaceholder) {
+  <div class="logo placeholder" [class.large]="size === 'large'"></div>
 }
