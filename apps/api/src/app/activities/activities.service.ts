@@ -7,6 +7,7 @@ import {
   isAccountBalanceInFuture,
   WHERE_ACCOUNT_NOT_EXCLUDED
 } from '@ghostfolio/api/helper/account.helper';
+import { isDraftTagToBeAssigned } from '@ghostfolio/api/helper/activity.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -21,6 +22,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
   NON_INVESTMENT_ACTIVITY_TYPES,
+  TAG_ID_DRAFT,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
@@ -265,13 +267,20 @@ export class ActivitiesService {
       ? false
       : isAfter(data.date as Date, endOfToday());
 
+    const tagsToConnect = isDraftTagToBeAssigned({
+      date: data.date as Date,
+      type: data.type
+    })
+      ? uniqBy([...tags, { id: TAG_ID_DRAFT }], 'id')
+      : tags;
+
     const activity = await this.prismaService.order.create({
       data: {
         ...orderData,
         account,
         isDraft,
         tags: {
-          connect: tags
+          connect: tagsToConnect
         }
       },
       include: { SymbolProfile: true }
@@ -1014,13 +1023,26 @@ export class ActivitiesService {
     delete data.symbol;
     delete data.tags;
 
+    const storedActivity = await this.prismaService.order.findUnique({
+      where,
+      select: { date: true }
+    });
+
+    const tagsToSet = isDraftTagToBeAssigned({
+      date: data.date as Date,
+      storedDate: storedActivity?.date,
+      type: data.type
+    })
+      ? uniqBy([...tags, { id: TAG_ID_DRAFT }], 'id')
+      : tags;
+
     const activity = await this.prismaService.order.update({
       where,
       data: {
         ...data,
         isDraft,
         tags: {
-          set: tags
+          set: tagsToSet
         }
       }
     });

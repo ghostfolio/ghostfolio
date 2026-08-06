@@ -172,7 +172,7 @@ export class AccountService {
     tagIds?: string[];
     userId: string;
   }): Promise<Account> {
-    await this.tagService.validateTagIds({ tagIds, userId });
+    await this.tagService.validateTagIdsForAccount({ tagIds, userId });
 
     const account = await this.prismaService.account.create({
       data: {
@@ -317,7 +317,7 @@ export class AccountService {
     userId: string;
     where: Prisma.AccountWhereUniqueInput;
   }): Promise<Account> {
-    await this.tagService.validateTagIds({ tagIds, userId });
+    await this.tagService.validateTagIdsForAccount({ tagIds, userId });
 
     const account = await this.prismaService.account.update({
       data: {
