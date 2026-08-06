@@ -12,6 +12,7 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   ghostfolioPrefix,
+  NON_INVESTMENT_ACTIVITY_TYPES,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
@@ -223,7 +224,7 @@ export class ImportService {
     // createActivity() if needed.
     for (const [index, activity] of activitiesDto.entries()) {
       if (!activity.dataSource) {
-        if (['FEE', 'INTEREST', 'LIABILITY'].includes(activity.type)) {
+        if (NON_INVESTMENT_ACTIVITY_TYPES.includes(activity.type)) {
           activity.dataSource = DataSource.MANUAL;
         } else {
           activity.dataSource =

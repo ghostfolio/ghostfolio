@@ -7,14 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
-
-- Added the platform logo to the platform selector in the create or update account dialog
-- Added the platform logo to the account selector in the create or update activity dialog
-
 ### Changed
 
-- Guarded the system tags against deletion and renaming in the tag management of the admin control panel
+- Migrated the abstract _Material_ form field from a component to a directive
 - Improved the check for duplicates in the preview step of the activities import (regardless of the account)
 - Improved the check for duplicates in the preview step of the import dividends dialog (regardless of the account)
 - Extended the activities import to reuse an existing account of the user by name and currency
@@ -22,6 +17,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the check for duplicates in the preview step of the activities import for activities without a comment
+
+## 3.43.0 - 2026-08-06
+
+### Added
+
+- Added the platform logo to the platform selector in the create or update account dialog
+- Added the platform logo to the account selector in the create or update activity dialog
+- Extended the value component by an `isLoading` attribute to distinguish the loading state from redacted values
+
+### Changed
+
+- Guarded the system tags against deletion and renaming in the tag management of the admin control panel
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Handled an exception in the country weightings parsing of the _Financial Modeling Prep_ service
 
 ## 3.42.0 - 2026-08-04
 

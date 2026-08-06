@@ -14,12 +14,9 @@
           <gf-value
             class="justify-content-end l-2"
             size="medium"
+            [isLoading]="isLoading"
             [isPercent]="true"
-            [value]="
-              isLoading
-                ? undefined
-                : portfolioDetails?.summary?.filteredValueInPercentage
-            "
+            [value]="portfolioDetails?.summary?.filteredValueInPercentage"
           />
         </mat-card-header>
         <mat-card-content>
@@ -213,6 +210,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.developedMarkets?.valueInPercentage"
                 >Developed Markets</gf-value
@@ -222,6 +220,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.emergingMarkets?.valueInPercentage"
                 >Emerging Markets</gf-value
@@ -231,6 +230,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.otherMarkets?.valueInPercentage"
                 >Other Markets</gf-value
@@ -241,6 +241,7 @@
                 <gf-value
                   i18n
                   size="large"
+                  [isLoading]="isLoading"
                   [isPercent]="true"
                   [value]="markets?.[UNKNOWN_KEY]?.valueInPercentage"
                   >No data available</gf-value

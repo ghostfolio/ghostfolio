@@ -27,7 +27,20 @@
     }
   </ng-template>
 
-  @if (value || value === 0 || value === null) {
+  <!--
+    @deprecated Rendering the loading state for an undefined value is kept for
+    backward compatibility. Use the isLoading attribute instead.
+  -->
+  @if (isLoading() || value === undefined) {
+    <ngx-skeleton-loader
+      animation="pulse"
+      [theme]="{
+        height:
+          size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
+        width: '5rem'
+      }"
+    />
+  } @else if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
       [class.justify-content-end]="position === 'end'"
@@ -73,17 +86,6 @@
         <ng-container *ngTemplateOutlet="copyIcon" />
       }
     </div>
-  }
-
-  @if (value === undefined) {
-    <ngx-skeleton-loader
-      animation="pulse"
-      [theme]="{
-        height:
-          size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
-        width: '5rem'
-      }"
-    />
   }
 
   @if (size === 'large') {

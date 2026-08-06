@@ -1,3 +1,4 @@
+import { NON_INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
@@ -70,7 +71,7 @@ export class ImportActivitiesService {
       let dataSource = this.parseDataSource({ item });
       let symbol = this.parseSymbol({ content, index, item });
 
-      if (!dataSource && ['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+      if (!dataSource && NON_INVESTMENT_ACTIVITY_TYPES.includes(type)) {
         // Apply the same data source as the import service
         dataSource = DataSource.MANUAL;
       }

@@ -20,6 +20,7 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
+  NON_INVESTMENT_ACTIVITY_TYPES,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
@@ -191,7 +192,7 @@ export class ActivitiesService {
     const userId = data.userId;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
@@ -260,7 +261,7 @@ export class ActivitiesService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type)
+    const isDraft = NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type)
       ? false
       : isAfter(data.date as Date, endOfToday());
 
@@ -981,7 +982,7 @@ export class ActivitiesService {
     let isDraft = false;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {

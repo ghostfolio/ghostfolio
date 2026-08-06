@@ -178,7 +178,7 @@ export class FinancialModelingPrepService
                   aliases: FinancialModelingPrepService.countriesMapping,
                   name: countryName
                 }),
-                weight: parseFloat(weightPercentage.slice(0, -1)) / 100
+                weight: parseFloat(`${weightPercentage}`) / 100
               };
             });
 
