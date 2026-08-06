@@ -1,3 +1,8 @@
+import {
+  getCountryCodeFromCurrency,
+  getEmojiFlag
+} from '@ghostfolio/common/helper';
+
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -39,7 +44,8 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.aria-describedBy]': 'describedBy',
-    '[id]': 'id'
+    '[id]': 'id',
+    class: 'align-items-center d-flex'
   },
   imports: [
     FormsModule,
@@ -56,7 +62,6 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-currency-selector',
-  styleUrls: ['./currency-selector.component.scss'],
   templateUrl: 'currency-selector.component.html'
 })
 export class GfCurrencySelectorComponent
@@ -86,6 +91,14 @@ export class GfCurrencySelectorComponent
     this.controlType = 'currency-selector';
   }
 
+  public get emojiFlagOfSelectedCurrency() {
+    const selectedCurrency = this.currencies().find((currency) => {
+      return currency === this.control.value;
+    });
+
+    return this.getEmojiFlagFromCurrency(selectedCurrency);
+  }
+
   public override get empty() {
     return this.input().empty;
   }
@@ -97,6 +110,10 @@ export class GfCurrencySelectorComponent
 
   public focus() {
     this.input().focus();
+  }
+
+  public getEmojiFlagFromCurrency(aCurrency = '') {
+    return getEmojiFlag(getCountryCodeFromCurrency(aCurrency));
   }
 
   public ngOnInit() {
