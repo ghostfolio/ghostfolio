@@ -231,6 +231,12 @@ export const INVESTMENT_ACTIVITY_TYPES = [
   Type.SELL
 ] as Type[];
 
+export const NON_INVESTMENT_ACTIVITY_TYPES = Object.values(Type).filter(
+  (type) => {
+    return !INVESTMENT_ACTIVITY_TYPES.includes(type);
+  }
+);
+
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true

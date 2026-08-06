@@ -9,6 +9,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
+  NON_INVESTMENT_ACTIVITY_TYPES,
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
@@ -268,7 +269,7 @@ export class DataProviderService implements OnModuleInit {
       if (!assetProfiles[assetProfileIdentifier]) {
         if (
           (dataSource === DataSource.MANUAL && type === 'BUY') ||
-          ['FEE', 'INTEREST', 'LIABILITY'].includes(type)
+          NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
         ) {
           const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
             (assetProfile) => {
