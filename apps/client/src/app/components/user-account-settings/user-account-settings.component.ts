@@ -86,6 +86,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected hasPermissionToUpdateViewMode: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
+  protected isAnonymousAuthenticationProvider: boolean;
   protected readonly isFingerprintSupported = this.doesBrowserSupportAuthn();
   protected isLoading = true;
   protected isWebAuthnEnabled: boolean;
@@ -108,6 +109,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'uk',
     'zh'
   ];
+  protected mustRemoveDataBeforeClosingAccount: boolean;
   protected user: User;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -162,6 +164,14 @@ export class GfUserAccountSettingsComponent implements OnInit {
             this.user.permissions,
             permissions.requestOwnUserDeletion
           );
+
+          this.isAnonymousAuthenticationProvider =
+            this.user.provider === 'ANONYMOUS';
+
+          this.mustRemoveDataBeforeClosingAccount =
+            (!this.isAnonymousAuthenticationProvider ||
+              this.hasPermissionToRequestOwnUserDeletion) &&
+            (this.user.accounts?.length > 0 || this.user.activitiesCount > 0);
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
@@ -225,12 +235,16 @@ export class GfUserAccountSettingsComponent implements OnInit {
       confirmFn: () => {
         this.dataService
           .deleteOwnUser({
-            accessToken: this.deleteOwnUserForm.controls.accessToken.value
+            accessToken: this.isAnonymousAuthenticationProvider
+              ? this.deleteOwnUserForm.controls.accessToken.value
+              : undefined
           })
           .pipe(
             catchError(() => {
               this.notificationService.alert({
-                title: $localize`Oops! Incorrect Security Token.`
+                title: this.isAnonymousAuthenticationProvider
+                  ? $localize`Oops! Incorrect Security Token.`
+                  : $localize`Oops! Your account could not be closed.`
               });
 
               return EMPTY;
