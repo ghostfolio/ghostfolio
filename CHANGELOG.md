@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a live preview of the date and number format to the user settings
 
+### Changed
+
+- Migrated the abstract _Material_ form field from a component to a directive
+
 ## 3.43.0 - 2026-08-06
 
 ### Added
