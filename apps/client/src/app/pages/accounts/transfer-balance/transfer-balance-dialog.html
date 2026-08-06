@@ -10,6 +10,20 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>From</mat-label>
         <mat-select formControlName="fromAccount">
+          <mat-select-trigger>
+            <div class="d-flex">
+              @if (selectedFromAccount) {
+                <gf-entity-logo
+                  class="mr-1"
+                  [hasPlaceholder]="true"
+                  [tooltip]="selectedFromAccount?.platform?.name"
+                  [url]="selectedFromAccount?.platform?.url"
+                />
+              }
+              <span>{{ selectedFromAccount?.name }}</span>
+            </div>
+          </mat-select-trigger>
+
           @for (account of accounts; track account) {
             <mat-option [value]="account.id">
               <div class="d-flex">
@@ -30,6 +44,20 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>To</mat-label>
         <mat-select formControlName="toAccount">
+          <mat-select-trigger>
+            <div class="d-flex">
+              @if (selectedToAccount) {
+                <gf-entity-logo
+                  class="mr-1"
+                  [hasPlaceholder]="true"
+                  [tooltip]="selectedToAccount?.platform?.name"
+                  [url]="selectedToAccount?.platform?.url"
+                />
+              }
+              <span>{{ selectedToAccount?.name }}</span>
+            </div>
+          </mat-select-trigger>
+
           @for (account of accounts; track account) {
             <mat-option [value]="account.id">
               <div class="d-flex">

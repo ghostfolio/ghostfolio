@@ -61,12 +61,22 @@ export class GfTransferBalanceDialogComponent {
   private readonly dialogRef =
     inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
 
+  protected get selectedFromAccount() {
+    return this.getAccountById(
+      this.transferBalanceForm.controls.fromAccount.value
+    );
+  }
+
+  protected get selectedToAccount() {
+    return this.getAccountById(
+      this.transferBalanceForm.controls.toAccount.value
+    );
+  }
+
   public ngOnInit() {
     this.transferBalanceForm.controls.fromAccount.valueChanges.subscribe(
       (id) => {
-        const currency = this.accounts.find((account) => {
-          return account.id === id;
-        })?.currency;
+        const currency = this.getAccountById(id)?.currency;
 
         if (currency) {
           this.currency = currency;
@@ -100,5 +110,11 @@ export class GfTransferBalanceDialogComponent {
     }
 
     return null;
+  }
+
+  private getAccountById(aId: string | null) {
+    return this.accounts.find(({ id }) => {
+      return id === aId;
+    });
   }
 }
