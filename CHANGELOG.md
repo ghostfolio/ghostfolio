@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the platform logo to the account selectors in the transfer cash balance dialog
 - Extended the entity logo component by a `hasPlaceholder` attribute to reserve the space of a missing logo
 
 ## 3.43.0 - 2026-08-06
