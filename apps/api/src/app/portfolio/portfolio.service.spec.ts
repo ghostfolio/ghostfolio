@@ -509,5 +509,36 @@ describe('PortfolioService', () => {
       expect(accounts[UNKNOWN_KEY]).toBeUndefined();
       expect(platforms[UNKNOWN_KEY]).toBeUndefined();
     });
+
+    it('should exclude the cash balance when filtering by a holding', async () => {
+      jest
+        .spyOn(accountService, 'accounts')
+        .mockResolvedValue([account] as unknown as Account[]);
+
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [
+          { id: DataSource.YAHOO, type: 'DATA_SOURCE' },
+          { id: 'AAPL', type: 'SYMBOL' }
+        ],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 1 * 10 (activity), without the balance of 100
+      expect(accounts[account.id].valueInBaseCurrency).toBe(10);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(10);
+    });
   });
 });

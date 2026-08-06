@@ -2142,6 +2142,15 @@ export class PortfolioService {
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};
 
+    const {
+      DATA_SOURCE: [filterByDataSource] = [],
+      SYMBOL: [filterBySymbol] = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
+    const isFilteredByHolding = !!(filterByDataSource && filterBySymbol);
+
     let currentAccounts: (Account & {
       Order?: Order[];
       platform?: Platform;
@@ -2185,7 +2194,9 @@ export class PortfolioService {
         return account ? accountId === account.id : !accountId;
       });
 
-      if (account) {
+      // Skip the cash balance if the request is filtered by a holding, so that
+      // the values of the accounts and platforms reflect this holding only
+      if (account && !isFilteredByHolding) {
         accounts[account.id] = {
           balance: account.balance,
           currency: account.currency,
