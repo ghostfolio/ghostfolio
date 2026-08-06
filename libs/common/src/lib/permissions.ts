@@ -5,6 +5,7 @@ import { Role } from '@prisma/client';
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
   accessAdminControlBullBoard: 'accessAdminControlBullBoard',
+  accessAiChat: 'accessAiChat',
   accessAssistant: 'accessAssistant',
   accessHoldingsChart: 'accessHoldingsChart',
   createAccess: 'createAccess',
@@ -35,6 +36,7 @@ export const permissions = {
   deleteTag: 'deleteTag',
   deleteUser: 'deleteUser',
   deleteWatchlistItem: 'deleteWatchlistItem',
+  enableAiChat: 'enableAiChat',
   enableAuthGoogle: 'enableAuthGoogle',
   enableAuthOidc: 'enableAuthOidc',
   enableAuthToken: 'enableAuthToken',
@@ -77,6 +79,7 @@ export function getPermissions(aRole: Role): string[] {
     case 'ADMIN':
       return [
         permissions.accessAdminControl,
+        permissions.accessAiChat,
         permissions.accessAssistant,
         permissions.accessHoldingsChart,
         permissions.createAccess,
@@ -132,6 +135,7 @@ export function getPermissions(aRole: Role): string[] {
 
     case 'USER':
       return [
+        permissions.accessAiChat,
         permissions.accessAssistant,
         permissions.accessHoldingsChart,
         permissions.createAccess,

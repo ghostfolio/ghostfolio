@@ -8,6 +8,7 @@ import {
 } from '@ghostfolio/common/config';
 import { canOpenHoldingDetail } from '@ghostfolio/common/helper';
 import {
+  Filter,
   HistoricalDataItem,
   InvestmentItem,
   PortfolioInvestmentsResponse,
@@ -31,6 +32,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  ElementRef,
   inject,
   OnInit,
   signal,
@@ -46,15 +48,18 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { SymbolProfile } from '@prisma/client';
 import { addIcons } from 'ionicons';
-import { copyOutline, ellipsisVertical } from 'ionicons/icons';
+import { copyOutline, ellipsisVertical, sparklesOutline } from 'ionicons/icons';
 import { isNumber, sortBy } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
+import { GfAiChatComponent } from './ai-chat.component';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    GfAiChatComponent,
     GfBenchmarkComparatorComponent,
     GfInvestmentChartComponent,
     GfPremiumIndicatorComponent,
@@ -73,6 +78,8 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './analysis-page.html'
 })
 export class GfAnalysisPageComponent implements OnInit {
+  protected aiChatFilters: Filter[] = [];
+  protected readonly aiChatModel?: string;
   protected benchmark?: Partial<SymbolProfile>;
   protected benchmarkDataItems: HistoricalDataItem[] = [];
   protected readonly benchmarks: Partial<SymbolProfile>[];
@@ -80,7 +87,9 @@ export class GfAnalysisPageComponent implements OnInit {
   protected dividendsByGroup: InvestmentItem[];
   protected readonly dividendTimelineDataLabel = $localize`Dividend`;
   protected hasImpersonationId: boolean;
+  protected hasPermissionToAccessAiChat: boolean;
   protected hasPermissionToReadAiPrompt: boolean;
+  protected readonly hasPermissionToUseAiChat: boolean;
   protected investments: InvestmentItem[];
   protected readonly investmentTimelineDataLabel = $localize`Invested Capital`;
   protected investmentsByGroup: InvestmentItem[];
@@ -90,6 +99,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingInvestmentChart: boolean;
   protected isLoadingInvestmentTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
+  protected isAiChatOpen = false;
   protected readonly mode = signal<GroupBy>('month');
   protected readonly modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -107,6 +117,8 @@ export class GfAnalysisPageComponent implements OnInit {
   protected user: User;
 
   private readonly actionsMenuButton = viewChild.required(MatMenuTrigger);
+  private readonly aiChatTrigger =
+    viewChild<ElementRef<HTMLButtonElement>>('aiChatTrigger');
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
@@ -124,10 +136,26 @@ export class GfAnalysisPageComponent implements OnInit {
   private readonly userService = inject(UserService);
 
   public constructor() {
-    const { benchmarks } = this.dataService.fetchInfo();
+    const { aiChatModel, benchmarks, globalPermissions } =
+      this.dataService.fetchInfo();
+    this.aiChatModel = aiChatModel;
     this.benchmarks = benchmarks;
+    this.hasPermissionToUseAiChat = hasPermission(
+      globalPermissions,
+      permissions.enableAiChat
+    );
 
-    addIcons({ copyOutline, ellipsisVertical });
+    addIcons({ copyOutline, ellipsisVertical, sparklesOutline });
+  }
+
+  get canUseAiChat() {
+    return (
+      !!this.aiChatModel &&
+      this.hasPermissionToUseAiChat &&
+      this.hasPermissionToAccessAiChat &&
+      !!this.user?.settings?.isExperimentalFeatures &&
+      !this.hasImpersonationId
+    );
   }
 
   get savingsRate() {
@@ -152,6 +180,10 @@ export class GfAnalysisPageComponent implements OnInit {
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
 
+        if (this.hasImpersonationId) {
+          this.isAiChatOpen = false;
+        }
+
         this.changeDetectorRef.markForCheck();
       });
 
@@ -160,15 +192,33 @@ export class GfAnalysisPageComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+          this.aiChatFilters = this.userService.getFilters().map((filter) => {
+            const label =
+              (filter.type === 'ACCOUNT'
+                ? this.user.accounts.find(({ id }) => id === filter.id)?.name
+                : filter.type === 'TAG'
+                  ? this.user.tags.find(({ id }) => id === filter.id)?.name
+                  : undefined) ?? undefined;
+
+            return { ...filter, label };
+          });
 
           this.benchmark = this.benchmarks.find(({ id }) => {
             return id === this.user.settings?.benchmark;
           });
 
+          this.hasPermissionToAccessAiChat = hasPermission(
+            this.user.permissions,
+            permissions.accessAiChat
+          );
           this.hasPermissionToReadAiPrompt = hasPermission(
             this.user.permissions,
             permissions.readAiPrompt
           );
+
+          if (!this.canUseAiChat) {
+            this.isAiChatOpen = false;
+          }
 
           this.update();
         }
@@ -196,6 +246,14 @@ export class GfAnalysisPageComponent implements OnInit {
   protected onChangeGroupBy(aMode: GroupBy) {
     this.mode.set(aMode);
     this.fetchDividendsAndInvestments();
+  }
+
+  protected onCloseAiChat() {
+    this.isAiChatOpen = false;
+
+    queueMicrotask(() => {
+      this.aiChatTrigger()?.nativeElement.focus();
+    });
   }
 
   protected onCopyPromptToClipboard(mode: AiPromptMode) {
@@ -239,6 +297,10 @@ export class GfAnalysisPageComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  protected onToggleAiChat() {
+    this.isAiChatOpen = !this.isAiChatOpen;
   }
 
   private fetchDividendsAndInvestments() {

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an opt-in, read-only AI portfolio chat to the analysis page (experimental)
+
 ### Changed
 
 - Migrated the abstract _Material_ form field from a component to a directive
