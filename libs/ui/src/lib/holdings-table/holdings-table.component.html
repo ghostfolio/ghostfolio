@@ -80,9 +80,9 @@
       >
         <div class="d-flex justify-content-end">
           <gf-value
-            [isCurrency]="true"
             [isLoading]="isLoading()"
             [locale]="locale()"
+            [precision]="getQuantityPrecision(element)"
             [value]="element.quantity"
           />
         </div>

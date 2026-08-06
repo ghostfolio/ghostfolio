@@ -1,3 +1,4 @@
+import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   canOpenHoldingDetail,
   getLocale,
@@ -7,6 +8,7 @@ import {
   AssetProfileIdentifier,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
+import { AssetSubClass } from '@prisma/client';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -101,6 +103,28 @@ export class GfHoldingsTableComponent {
 
   protected canShowDetails(holding: PortfolioPosition): boolean {
     return this.hasPermissionToOpenDetails() && canOpenHoldingDetail(holding);
+  }
+
+  protected getQuantityPrecision(holding: PortfolioPosition): number {
+    if (Number.isInteger(holding.quantity)) {
+      return 0;
+    }
+
+    if (holding.assetProfile.assetSubClass === AssetSubClass.CRYPTOCURRENCY) {
+      if (holding.quantity < 10) {
+        return 8;
+      }
+
+      if (holding.quantity < 1000) {
+        return 6;
+      }
+
+      if (holding.quantity >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES) {
+        return 0;
+      }
+    }
+
+    return 2;
   }
 
   protected onOpenHoldingDialog({
