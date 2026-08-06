@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the country flag to the currency selector
+- Added a _Storybook_ story for the currency selector component
+
 ### Changed
 
 - Migrated the abstract _Material_ form field from a component to a directive
