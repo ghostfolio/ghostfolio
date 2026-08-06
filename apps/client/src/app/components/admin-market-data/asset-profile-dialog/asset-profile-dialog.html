@@ -183,6 +183,7 @@
                   i18n
                   size="medium"
                   [enableCopyToClipboardButton]="true"
+                  [isLoading]="isLoading"
                   [value]="assetProfile?.symbol"
                   >Symbol</gf-value
                 >
@@ -191,6 +192,7 @@
                 <gf-value
                   i18n
                   size="medium"
+                  [isLoading]="isLoading"
                   [value]="
                     assetProfile?.dataProviderInfo?.name ??
                     assetProfile?.dataSource
@@ -213,7 +215,11 @@
               </div>
             }
             <div class="col-6 mb-3">
-              <gf-value i18n size="medium" [value]="assetProfile?.currency"
+              <gf-value
+                i18n
+                size="medium"
+                [isLoading]="isLoading"
+                [value]="assetProfile?.currency"
                 >Currency</gf-value
               >
             </div>
@@ -231,6 +237,7 @@
                 i18n
                 size="medium"
                 [isDate]="assetProfile?.dateOfFirstActivity ? true : false"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="assetProfile?.dateOfFirstActivity ?? '-'"
                 >First Activity</gf-value
@@ -240,6 +247,7 @@
               <gf-value
                 i18n
                 size="medium"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="assetProfile?.activitiesCount"
                 >Activities</gf-value

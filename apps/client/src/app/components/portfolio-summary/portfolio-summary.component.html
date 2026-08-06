@@ -2,7 +2,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Time in Market</div>
     <div class="justify-content-end">
-      <gf-value class="justify-content-end" [value]="timeInMarket" />
+      <gf-value
+        class="justify-content-end"
+        [isLoading]="isLoading"
+        [value]="timeInMarket"
+      />
     </div>
   </div>
   <div
@@ -33,10 +37,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.totalBuy"
+        [value]="summary?.totalBuy"
       />
     </div>
   </div>
@@ -46,10 +51,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.totalSell"
+        [value]="summary?.totalSell"
       />
     </div>
   </div>
@@ -62,14 +68,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="
-          isLoading
-            ? undefined
-            : summary?.totalInvestmentValueWithCurrencyEffect
-        "
+        [value]="summary?.totalInvestmentValueWithCurrencyEffect"
       />
     </div>
   </div>
@@ -79,12 +82,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="
-          isLoading ? undefined : summary?.grossPerformanceWithCurrencyEffect
-        "
+        [value]="summary?.grossPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
@@ -97,10 +99,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.fees"
+        [value]="summary?.fees"
       />
     </div>
   </div>
@@ -113,12 +116,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="
-          isLoading ? undefined : summary?.netPerformanceWithCurrencyEffect
-        "
+        [value]="summary?.netPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
@@ -136,13 +138,10 @@
         class="justify-content-end"
         position="end"
         [colorizeSign]="true"
+        [isLoading]="isLoading"
         [isPercent]="true"
         [locale]="locale"
-        [value]="
-          isLoading
-            ? undefined
-            : summary?.netPerformancePercentageWithCurrencyEffect
-        "
+        [value]="summary?.netPerformancePercentageWithCurrencyEffect"
       />
     </div>
   </div>
@@ -156,10 +155,11 @@
         class="justify-content-end"
         position="end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.totalAssetsInBaseCurrency"
+        [value]="summary?.totalAssetsInBaseCurrency"
       />
     </div>
   </div>
@@ -188,10 +188,11 @@
       ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
           [precision]="0"
-          [value]="isLoading ? undefined : holdingsPercentage"
+          [value]="holdingsPercentage"
         />
       }
     </div>
@@ -200,10 +201,11 @@
         class="justify-content-end"
         position="end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : holdingsInBaseCurrency"
+        [value]="holdingsInBaseCurrency"
       />
     </div>
   </div>
@@ -215,10 +217,11 @@
           class="justify-content-end"
           position="end"
           [isCurrency]="true"
+          [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
           [unit]="baseCurrency"
-          [value]="isLoading ? undefined : investmentsInBaseCurrency"
+          [value]="investmentsInBaseCurrency"
         />
       </div>
     </div>
@@ -229,10 +232,11 @@
           class="justify-content-end"
           position="end"
           [isCurrency]="true"
+          [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
           [unit]="baseCurrency"
-          [value]="isLoading ? undefined : summary?.emergencyFund?.assets"
+          [value]="summary?.emergencyFund?.assets"
         />
       </div>
     </div>
@@ -262,10 +266,11 @@
       ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
           [precision]="0"
-          [value]="isLoading ? undefined : cashPercentage"
+          [value]="cashPercentage"
         />
       }
     </div>
@@ -274,10 +279,11 @@
         class="justify-content-end"
         position="end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.totalCashInBaseCurrency"
+        [value]="summary?.totalCashInBaseCurrency"
       />
     </div>
   </div>
@@ -289,10 +295,11 @@
           class="justify-content-end"
           position="end"
           [isCurrency]="true"
+          [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
           [unit]="baseCurrency"
-          [value]="isLoading ? undefined : summary?.cash"
+          [value]="summary?.cash"
         />
       </div>
     </div>
@@ -303,10 +310,11 @@
           class="justify-content-end"
           position="end"
           [isCurrency]="true"
+          [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
           [unit]="baseCurrency"
-          [value]="isLoading ? undefined : summary?.emergencyFund?.cash"
+          [value]="summary?.emergencyFund?.cash"
         />
       </div>
     </div>
@@ -321,20 +329,22 @@
       ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
           [precision]="0"
-          [value]="isLoading ? undefined : excludedFromAnalysisPercentage"
+          [value]="excludedFromAnalysisPercentage"
         />
       }
     </div>
     <div class="align-items-center d-flex justify-content-end">
       <gf-value
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.excludedAccountsAndActivities"
+        [value]="summary?.excludedAccountsAndActivities"
       />
     </div>
   </div>
@@ -353,10 +363,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.liabilitiesInBaseCurrency"
+        [value]="summary?.liabilitiesInBaseCurrency"
       />
     </div>
   </div>
@@ -369,10 +380,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.totalValueInBaseCurrency"
+        [value]="summary?.totalValueInBaseCurrency"
       />
     </div>
   </div>
@@ -385,13 +397,10 @@
         class="justify-content-end"
         position="end"
         [colorizeSign]="true"
+        [isLoading]="isLoading"
         [isPercent]="true"
         [locale]="locale"
-        [value]="
-          isLoading
-            ? undefined
-            : summary?.annualizedPerformancePercentWithCurrencyEffect
-        "
+        [value]="summary?.annualizedPerformancePercentWithCurrencyEffect"
       />
     </div>
   </div>
@@ -408,10 +417,11 @@
       ) {
         <gf-value
           class="d-lg-inline-block d-none ml-2 small text-muted"
+          [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
           [precision]="0"
-          [value]="isLoading ? undefined : emergencyFundPercentage"
+          [value]="emergencyFundPercentage"
         />
       }
     </div>
@@ -443,10 +453,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.emergencyFund?.total"
+        [value]="summary?.emergencyFund?.total"
       />
     </div>
   </div>
@@ -456,10 +467,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.interestInBaseCurrency"
+        [value]="summary?.interestInBaseCurrency"
       />
     </div>
   </div>
@@ -469,10 +481,11 @@
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
+        [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.dividendInBaseCurrency"
+        [value]="summary?.dividendInBaseCurrency"
       />
     </div>
   </div>

@@ -87,6 +87,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
   protected readonly isFingerprintSupported = this.doesBrowserSupportAuthn();
+  protected isLoading = true;
   protected isWebAuthnEnabled: boolean;
   protected readonly language = document.documentElement.lang;
   protected locales = [
@@ -177,6 +178,8 @@ export class GfUserAccountSettingsComponent implements OnInit {
           }
 
           this.locales = Array.from(new Set(this.locales)).sort();
+
+          this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
         }

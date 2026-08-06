@@ -7,6 +7,7 @@
             i18n
             size="large"
             [enableCopyToClipboardButton]="true"
+            [isLoading]="isLoading"
             [value]="version"
             >Version</gf-value
           >
@@ -19,6 +20,7 @@
           <gf-value
             i18n
             size="large"
+            [isLoading]="isLoading"
             [locale]="user?.settings?.locale"
             [value]="userCount"
             >Users</gf-value
@@ -32,6 +34,7 @@
           <gf-value
             i18n
             size="large"
+            [isLoading]="isLoading"
             [locale]="user?.settings?.locale"
             [subLabel]="activitiesCountPerUser"
             [value]="activitiesCount"
