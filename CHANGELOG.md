@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the entity logo component by a `hasPlaceholder` attribute to reserve the space of a missing logo
 
+### Changed
+
+- Migrated the abstract _Material_ form field from a component to a directive
+
 ## 3.43.0 - 2026-08-06
 
 ### Added
