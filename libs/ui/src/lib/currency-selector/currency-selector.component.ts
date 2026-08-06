@@ -29,9 +29,11 @@ import {
 import {
   MatAutocomplete,
   MatAutocompleteModule,
+  MatAutocompleteOrigin,
   MatOption
 } from '@angular/material/autocomplete';
 import {
+  MAT_FORM_FIELD,
   MatFormFieldControl,
   MatFormFieldModule
 } from '@angular/material/form-field';
@@ -77,6 +79,7 @@ export class GfCurrencySelectorComponent
   public readonly formControlName = input.required<string>();
 
   private readonly destroyRef = inject(DestroyRef);
+  private readonly formField = inject(MAT_FORM_FIELD);
   private readonly input = viewChild.required(MatInput);
 
   public constructor(
@@ -91,6 +94,10 @@ export class GfCurrencySelectorComponent
     this.controlType = 'currency-selector';
   }
 
+  public get autocompleteOrigin(): MatAutocompleteOrigin {
+    return { elementRef: this.formField.getConnectedOverlayOrigin() };
+  }
+
   public get emojiFlagOfSelectedCurrency() {
     const selectedCurrency = this.currencies().find((currency) => {
       return currency === this.control.value;
@@ -100,7 +107,7 @@ export class GfCurrencySelectorComponent
   }
 
   public override get empty() {
-    return this.input().empty;
+    return !this.control.value;
   }
 
   public override set value(value: string | null) {
