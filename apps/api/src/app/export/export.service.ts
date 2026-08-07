@@ -102,7 +102,6 @@ export class ExportService {
       })
       .map(
         ({
-          balance,
           balances,
           comment,
           currency,
@@ -111,13 +110,12 @@ export class ExportService {
           platform,
           platformId,
           tags
-        }) => {
+        }): ExportResponse['accounts'][number] => {
           if (platformId) {
             platformsMap[platformId] = platform;
           }
 
           return {
-            balance,
             balances: balances.map(({ date, value }) => {
               return { date: date.toISOString(), value };
             }),

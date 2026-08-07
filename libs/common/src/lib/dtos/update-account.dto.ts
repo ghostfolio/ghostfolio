@@ -12,8 +12,13 @@ import {
 import { isString } from 'lodash';
 
 export class UpdateAccountDto {
+  /**
+   * The balance, stored as the account balance of today.
+   * Optional because the account balances are the source of truth.
+   */
   @IsNumber()
-  balance: number;
+  @IsOptional()
+  balance?: number;
 
   @IsOptional()
   @IsString()

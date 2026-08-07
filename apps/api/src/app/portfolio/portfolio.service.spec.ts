@@ -16,8 +16,9 @@ import {
   AssetProfileIdentifier,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
+import { AccountWithBalance } from '@ghostfolio/common/types';
 
-import { Account, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { randomUUID } from 'node:crypto';
 
@@ -219,7 +220,7 @@ describe('PortfolioService', () => {
     it('should return cash holdings when the calculator emits cash positions with the exchange-rate data source', async () => {
       const accountId = randomUUID();
 
-      const cashAccount: Account = {
+      const cashAccount: AccountWithBalance = {
         balance: 2000,
         comment: null,
         createdAt: parseDate('2024-01-01'),
@@ -444,7 +445,7 @@ describe('PortfolioService', () => {
     beforeEach(() => {
       jest
         .spyOn(accountService, 'getAccounts')
-        .mockResolvedValue([account] as unknown as Account[]);
+        .mockResolvedValue([account] as unknown as AccountWithBalance[]);
 
       jest
         .spyOn(exchangeRateDataService, 'toCurrency')

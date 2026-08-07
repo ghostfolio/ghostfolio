@@ -12,6 +12,7 @@ import {
 } from '@ghostfolio/common/dtos';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -29,7 +30,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Account as AccountModel, Tag } from '@prisma/client';
+import { Tag } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -48,7 +49,7 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   templateUrl: './accounts-page.html'
 })
 export class GfAccountsPageComponent implements OnInit {
-  protected accounts: AccountModel[];
+  protected accounts: AccountWithValue[];
   protected activitiesCount = 0;
   protected hasImpersonationId: boolean;
   protected hasPermissionToCreateAccount: boolean;
@@ -155,7 +156,7 @@ export class GfAccountsPageComponent implements OnInit {
     });
   }
 
-  protected onUpdateAccount(aAccount: AccountModel) {
+  protected onUpdateAccount(aAccount: AccountWithValue) {
     this.router.navigate([], {
       queryParams: { accountId: aAccount.id, editDialog: true }
     });
@@ -194,7 +195,7 @@ export class GfAccountsPageComponent implements OnInit {
     name,
     platformId,
     tags
-  }: AccountModel & { tags?: Tag[] }) {
+  }: AccountWithValue & { tags?: Tag[] }) {
     const dialogRef = this.dialog.open<
       GfCreateOrUpdateAccountDialogComponent,
       CreateOrUpdateAccountDialogParams

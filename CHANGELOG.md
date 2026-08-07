@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the usability of the create watchlist item dialog by setting the initial focus to the search field
 - Migrated the abstract _Material_ form field from a component to a directive
+- Removed the redundant `balance` attribute of the account in favor of the account balances
 
 ## 3.43.0 - 2026-08-06
 
