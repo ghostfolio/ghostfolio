@@ -1136,16 +1136,21 @@ export class PortfolioService {
         withSummary: true
       });
 
-    const { balanceInBaseCurrency: cashBalanceInBaseCurrency } =
-      await this.accountService.getCashDetails({
-        userId,
-        currency: this.getUserCurrency()
-      });
+    // The cash balance of the summary is split into the emergency fund and
+    // the remainder, both denominated in the base currency of the user
+    const cashBalanceInBaseCurrency = new Big(summary.cash)
+      .plus(summary.emergencyFund.cash)
+      .toNumber();
 
     const emergencyFundInBaseCurrency = userSettings.emergencyFund ?? 0;
 
     const emergencyFundHoldingsValueInBaseCurrency =
       this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings });
+
+    const totalEmergencyFundInBaseCurrency = this.getTotalEmergencyFund({
+      emergencyFundHoldingsValueInBaseCurrency,
+      userSettings
+    }).toNumber();
 
     const hasOpenHoldings = Object.keys(holdings).length > 0;
 
@@ -1192,14 +1197,11 @@ export class PortfolioService {
               this.exchangeRateDataService,
               this.i18nService,
               userSettings.language,
-              this.getTotalEmergencyFund({
-                emergencyFundHoldingsValueInBaseCurrency,
-                userSettings
-              }).toNumber()
+              totalEmergencyFundInBaseCurrency
             ),
-            // The coverage is only meaningful once a target has been set,
-            // otherwise the set up rule already reports the missing setup
-            ...(emergencyFundInBaseCurrency > 0
+            // The coverage is only meaningful once an emergency fund has been
+            // set up, either by an amount or by the tagged holdings
+            ...(totalEmergencyFundInBaseCurrency > 0
               ? [
                   new EmergencyFundCoverage(
                     this.exchangeRateDataService,

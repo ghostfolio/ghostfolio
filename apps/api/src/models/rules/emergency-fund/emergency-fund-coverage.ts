@@ -4,67 +4,68 @@ import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
 
-export class EmergencyFundCoverage extends Rule<Settings> {
-  private cashBalanceInBaseCurrency: number;
-  private emergencyFundHoldingsValueInBaseCurrency: number;
-  private emergencyFundInBaseCurrency: number;
+import { Big } from 'big.js';
 
+export class EmergencyFundCoverage extends Rule<Settings> {
   public constructor(
     exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
     languageCode: string,
-    emergencyFundInBaseCurrency: number,
-    emergencyFundHoldingsValueInBaseCurrency: number,
-    cashBalanceInBaseCurrency: number
+    private emergencyFundInBaseCurrency: number,
+    private emergencyFundHoldingsValueInBaseCurrency: number,
+    private cashBalanceInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
       languageCode,
       key: EmergencyFundCoverage.name
     });
-
-    this.cashBalanceInBaseCurrency = cashBalanceInBaseCurrency;
-    this.emergencyFundHoldingsValueInBaseCurrency =
-      emergencyFundHoldingsValueInBaseCurrency;
-    this.emergencyFundInBaseCurrency = emergencyFundInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {
-    // Only the holdings tagged as emergency fund are an explicit commitment,
-    // the cash balance covers the remainder
-    if (
-      this.emergencyFundHoldingsValueInBaseCurrency >
-      this.emergencyFundInBaseCurrency
-    ) {
+    if (!this.emergencyFundInBaseCurrency) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.emergencyFundCoverage.false.over',
-          languageCode: this.getLanguageCode(),
-          placeholders: {
-            baseCurrency: ruleSettings.baseCurrency,
-            emergencyFund: this.emergencyFundInBaseCurrency.toLocaleString(
-              ruleSettings.locale
-            )
-          }
+          id: 'rule.emergencyFundCoverage.false.unset',
+          languageCode: this.getLanguageCode()
         }),
         value: false
       };
     }
 
-    const coverageInBaseCurrency =
-      this.emergencyFundHoldingsValueInBaseCurrency +
-      this.cashBalanceInBaseCurrency;
+    const placeholders = {
+      baseCurrency: ruleSettings.baseCurrency,
+      emergencyFund: this.emergencyFundInBaseCurrency.toLocaleString(
+        ruleSettings.locale
+      )
+    };
 
-    if (coverageInBaseCurrency < this.emergencyFundInBaseCurrency) {
+    // Only the holdings tagged as emergency fund are an explicit commitment,
+    // the cash balance covers the remainder
+    if (
+      new Big(this.emergencyFundHoldingsValueInBaseCurrency).gt(
+        this.emergencyFundInBaseCurrency
+      )
+    ) {
       return {
         evaluation: this.i18nService.getTranslation({
+          placeholders,
+          id: 'rule.emergencyFundCoverage.false.over',
+          languageCode: this.getLanguageCode()
+        }),
+        value: false
+      };
+    }
+
+    const coverageInBaseCurrency = new Big(
+      this.emergencyFundHoldingsValueInBaseCurrency
+    ).plus(this.cashBalanceInBaseCurrency);
+
+    if (coverageInBaseCurrency.lt(this.emergencyFundInBaseCurrency)) {
+      return {
+        evaluation: this.i18nService.getTranslation({
+          placeholders,
           id: 'rule.emergencyFundCoverage.false.under',
-          languageCode: this.getLanguageCode(),
-          placeholders: {
-            baseCurrency: ruleSettings.baseCurrency,
-            emergencyFund: this.emergencyFundInBaseCurrency.toLocaleString(
-              ruleSettings.locale
-            )
-          }
+          languageCode: this.getLanguageCode()
         }),
         value: false
       };
@@ -72,14 +73,9 @@ export class EmergencyFundCoverage extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
+        placeholders,
         id: 'rule.emergencyFundCoverage.true',
-        languageCode: this.getLanguageCode(),
-        placeholders: {
-          baseCurrency: ruleSettings.baseCurrency,
-          emergencyFund: this.emergencyFundInBaseCurrency.toLocaleString(
-            ruleSettings.locale
-          )
-        }
+        languageCode: this.getLanguageCode()
       }),
       value: true
     };
