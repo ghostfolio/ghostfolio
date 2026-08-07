@@ -43,11 +43,7 @@ export class EmergencyFundCoverage extends Rule<Settings> {
             baseCurrency: ruleSettings.baseCurrency,
             emergencyFund: this.emergencyFundInBaseCurrency.toLocaleString(
               ruleSettings.locale
-            ),
-            emergencyFundHoldingsValue:
-              this.emergencyFundHoldingsValueInBaseCurrency.toLocaleString(
-                ruleSettings.locale
-              )
+            )
           }
         }),
         value: false
@@ -65,9 +61,6 @@ export class EmergencyFundCoverage extends Rule<Settings> {
           languageCode: this.getLanguageCode(),
           placeholders: {
             baseCurrency: ruleSettings.baseCurrency,
-            coverage: coverageInBaseCurrency.toLocaleString(
-              ruleSettings.locale
-            ),
             emergencyFund: this.emergencyFundInBaseCurrency.toLocaleString(
               ruleSettings.locale
             )
