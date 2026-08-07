@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for Traditional Chinese (`zh-TW`) locale
 - Added support for the `DIRECT_URL` environment variable to enable direct database connections
+
 
 ### Changed
 
