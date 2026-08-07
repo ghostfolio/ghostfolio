@@ -12,6 +12,7 @@ import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/ap
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
+import { EmergencyFundCoverage } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-coverage';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioTotalInvestmentVolume } from '@ghostfolio/api/models/rules/fees/fee-ratio-total-investment-volume';
 import { BuyingPower } from '@ghostfolio/api/models/rules/liquidity/buying-power';
@@ -1135,6 +1136,22 @@ export class PortfolioService {
         withSummary: true
       });
 
+    // The cash balance of the summary is split into the emergency fund and
+    // the remainder, both denominated in the base currency of the user
+    const cashBalanceInBaseCurrency = new Big(summary.cash)
+      .plus(summary.emergencyFund.cash)
+      .toNumber();
+
+    const emergencyFundInBaseCurrency = userSettings.emergencyFund ?? 0;
+
+    const emergencyFundHoldingsValueInBaseCurrency =
+      this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings });
+
+    const totalEmergencyFundInBaseCurrency = this.getTotalEmergencyFund({
+      emergencyFundHoldingsValueInBaseCurrency,
+      userSettings
+    }).toNumber();
+
     const hasOpenHoldings = Object.keys(holdings).length > 0;
 
     const marketsAdvancedTotalInBaseCurrency = getSum(
@@ -1180,12 +1197,22 @@ export class PortfolioService {
               this.exchangeRateDataService,
               this.i18nService,
               userSettings.language,
-              this.getTotalEmergencyFund({
-                userSettings,
-                emergencyFundHoldingsValueInBaseCurrency:
-                  this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings })
-              }).toNumber()
-            )
+              totalEmergencyFundInBaseCurrency
+            ),
+            // The coverage is only meaningful once an emergency fund has been
+            // set up, either by an amount or by the tagged holdings
+            ...(totalEmergencyFundInBaseCurrency > 0
+              ? [
+                  new EmergencyFundCoverage(
+                    this.exchangeRateDataService,
+                    this.i18nService,
+                    userSettings.language,
+                    emergencyFundInBaseCurrency,
+                    emergencyFundHoldingsValueInBaseCurrency,
+                    cashBalanceInBaseCurrency
+                  )
+                ]
+              : [])
           ],
           userSettings
         )
