@@ -61,8 +61,10 @@
                     href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
                       language
                     }}.xlf"
+                    rel="noreferrer noopener"
                     target="_blank"
                     >here</a
+
                   >.
                 </div>
               }
@@ -295,15 +297,18 @@
                 <input
                   formControlName="accessToken"
                   matInput
+                  placeholder="Security Token"
                   [type]="isAccessTokenHidden ? 'password' : 'text'"
                 />
                 <button
                   class="mx-2"
                   mat-icon-button
                   matSuffix
+                  title="Toggle Security Token Visibility"
                   type="button"
                   (click)="isAccessTokenHidden = !isAccessTokenHidden"
                 >
+
                   <ion-icon
                     class="mat-icon"
                     [name]="

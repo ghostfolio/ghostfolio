@@ -12,10 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for Traditional Chinese (`zh-TW`) locale
 - Added support for the `DIRECT_URL` environment variable to enable direct database connections
 
-
 ### Changed
 
 - Improved the pagination in the activities table of the account detail dialog
+
 - Improved the pagination in the activities table of the holding detail dialog
 - Randomized the placeholder in the assistant
 - Enabled the _Bull Dashboard_ in the admin control panel without requiring an environment variable (experimental)
