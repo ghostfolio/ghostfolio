@@ -355,6 +355,7 @@ export class ImportService {
         // If there is no account or if the account belongs to a different user then create a new account
         if (!accountWithSameId || accountWithSameId.userId !== user.id) {
           const account = omit(accountWithBalances, [
+            'balance',
             'balances',
             'isExcluded',
             'tags'
@@ -408,11 +409,12 @@ export class ImportService {
             };
           }
 
-          const newAccount = await this.accountService.createAccount(
-            accountObject,
-            user.id,
-            tagIds
-          );
+          const newAccount = await this.accountService.createAccount({
+            tagIds,
+            balance: accountWithBalances.balance,
+            data: accountObject,
+            userId: user.id
+          });
 
           // Store the new to old account ID mappings for updating activities
           if (accountWithSameId && oldAccountId) {

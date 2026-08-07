@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-  Component,
+  Directive,
   DoCheck,
   ElementRef,
   HostBinding,
@@ -13,10 +13,7 @@ import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
-@Component({
-  template: '',
-  standalone: false
-})
+@Directive()
 export abstract class AbstractMatFormField<T>
   implements ControlValueAccessor, DoCheck, MatFormFieldControl<T>, OnDestroy
 {

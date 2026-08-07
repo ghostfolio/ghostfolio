@@ -279,6 +279,17 @@ export function getCurrencyFromSymbol(aSymbol = '') {
   return aSymbol.replace(DEFAULT_CURRENCY, '');
 }
 
+export function getCountryCodeFromCurrency(aCurrency = '') {
+  // An ISO 4217 currency code is composed of the ISO 3166-1 alpha-2 country
+  // code and the initial of the currency itself, except for the supranational
+  // currencies, which are prefixed with X (like XAU or XOF)
+  if (aCurrency.startsWith('X')) {
+    return '';
+  }
+
+  return aCurrency.slice(0, 2).toUpperCase();
+}
+
 export function getCountryName({ code }: { code: string }): string {
   try {
     return (

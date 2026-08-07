@@ -5,7 +5,6 @@
   },
   "accounts": [
     {
-      "balance": 0,
       "balances": [],
       "currency": "USD",
       "id": "e62be662-a2c8-4cff-8b79-dc0a46576659",
