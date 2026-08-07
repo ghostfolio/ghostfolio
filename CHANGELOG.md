@@ -133,6 +133,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the duplicate detection during the activity import so it treats an omitted comment the same as null and matches holdings imported by ISIN against holdings imported by ticker symbol
 - Fixed the calendar year date range in time zones with a negative _UTC_ offset
 - Fixed the deletion of activities to respect the activity type filter on the activities page (experimental)
 - Fixed the deletion of activities to respect the date range filter on the activities page

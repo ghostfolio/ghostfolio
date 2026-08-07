@@ -811,6 +811,18 @@ export class ImportService {
         withExcludedAccountsAndActivities: true
       });
 
+    const incomingAssetProfiles =
+      await this.symbolProfileService.getSymbolProfiles(
+        uniqBy(
+          activitiesDto.map(({ dataSource, symbol }) => {
+            return { dataSource, symbol };
+          }),
+          ({ dataSource, symbol }) => {
+            return getAssetProfileIdentifier({ dataSource, symbol });
+          }
+        )
+      );
+
     return activitiesDto.map(
       ({
         accountId,
@@ -826,17 +838,30 @@ export class ImportService {
         unitPrice
       }) => {
         const date = parseISO(dateString);
+
+        const incomingIsin = incomingAssetProfiles.find((assetProfile) => {
+          return (
+            assetProfile.dataSource === dataSource &&
+            assetProfile.symbol === symbol
+          );
+        })?.isin;
+
         const isDuplicate = existingActivities.some((activity) => {
+          const isSameAssetProfile =
+            (activity.assetProfile.dataSource === dataSource &&
+              activity.assetProfile.symbol === symbol) ||
+            (!!activity.assetProfile.isin &&
+              activity.assetProfile.isin === incomingIsin);
+
           return (
             activity.accountId === accountId &&
-            activity.comment === comment &&
+            (activity.comment ?? null) === (comment ?? null) &&
             (activity.currency === currency ||
               activity.assetProfile.currency === currency) &&
-            activity.assetProfile.dataSource === dataSource &&
+            isSameAssetProfile &&
             isSameSecond(activity.date, date) &&
             activity.fee === fee &&
             activity.quantity === quantity &&
-            activity.assetProfile.symbol === symbol &&
             activity.type === type &&
             activity.unitPrice === unitPrice
           );
