@@ -413,19 +413,18 @@ export class PortfolioService {
     filters,
     groupBy,
     impersonationId,
-    savingsRate,
     userId
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     groupBy?: GroupBy;
     impersonationId: string;
-    savingsRate: number;
     userId: string;
   }): Promise<PortfolioInvestmentsResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
+    const savingsRate = (user.settings?.settings as UserSettings)?.savingsRate;
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
@@ -438,6 +437,7 @@ export class PortfolioService {
 
     if (activities.length === 0) {
       return {
+        savingsRate,
         investments: [],
         streaks: { currentStreak: 0, longestStreak: 0 }
       };
@@ -484,6 +484,7 @@ export class PortfolioService {
 
     return {
       investments,
+      savingsRate,
       streaks
     };
   }

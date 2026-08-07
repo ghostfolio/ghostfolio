@@ -136,7 +136,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -180,7 +180,7 @@ export class PortfolioController {
       hasDetails === false ||
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -374,7 +374,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -491,19 +491,19 @@ export class PortfolioController {
       filterByTags: tags
     });
 
-    let { investments, streaks } = await this.portfolioService.getInvestments({
-      filters,
-      groupBy,
-      impersonationId,
-      dateRange: range,
-      savingsRate: this.request.user?.settings?.settings.savingsRate,
-      userId: this.request.user.id
-    });
+    let { investments, savingsRate, streaks } =
+      await this.portfolioService.getInvestments({
+        filters,
+        groupBy,
+        impersonationId,
+        dateRange: range,
+        userId: this.request.user.id
+      });
 
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -521,6 +521,8 @@ export class PortfolioController {
         'currentStreak',
         'longestStreak'
       ]);
+
+      savingsRate = null;
     }
 
     if (
@@ -537,7 +539,7 @@ export class PortfolioController {
       ]);
     }
 
-    return { investments, streaks };
+    return { investments, savingsRate, streaks };
   }
 
   @Get('performance')
@@ -578,7 +580,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user) ||
       this.request.user.settings.settings.viewMode === 'ZEN'

@@ -382,7 +382,7 @@
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToDeleteActivity]="false"
           [hasPermissionToExportActivities]="
-            !data.hasImpersonationId && !user?.settings?.isRestrictedView
+            !data.impersonationId && !user?.settings?.isRestrictedView
           "
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
@@ -390,8 +390,8 @@
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
           [showActions]="
-            !data.hasImpersonationId &&
             data.hasPermissionToCreateActivity &&
+            !data.impersonationId &&
             user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "

@@ -38,7 +38,7 @@ export class RedactValuesInResponseInterceptor<T> implements NestInterceptor<
         if (
           hasReadRestrictedAccessPermission({
             impersonationId,
-            user
+            accesses: user?.accessesGet
           }) ||
           isRestrictedView(user)
         ) {
