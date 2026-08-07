@@ -15,7 +15,11 @@ import {
   NON_INVESTMENT_ACTIVITY_TYPES,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
-import { CreateAssetProfileDto, CreateOrderDto } from '@ghostfolio/common/dtos';
+import {
+  CreateAccountWithBalancesDto,
+  CreateAssetProfileDto,
+  CreateOrderDto
+} from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
   isValidCustomAssetProfileSymbol,
@@ -34,7 +38,7 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { DataSource, Prisma } from '@prisma/client';
+import { Account, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
@@ -96,7 +100,9 @@ export class ImportService {
             filters,
             userCurrency,
             userId,
-            startDate: parseDate(dateOfFirstActivity)
+            includeDrafts: true,
+            startDate: parseDate(dateOfFirstActivity),
+            withExcludedAccountsAndActivities: true
           }),
           this.symbolProfileService.getSymbolProfiles([
             {
@@ -117,6 +123,8 @@ export class ImportService {
 
       return await Promise.all(
         Object.entries(dividends).map(([dateString, { marketPrice }]) => {
+          const date = parseDate(dateString);
+
           const quantity =
             historicalData.find((historicalDataItem) => {
               return historicalDataItem.date === dateString;
@@ -124,10 +132,8 @@ export class ImportService {
 
           const value = new Big(quantity).mul(marketPrice).toNumber();
 
-          const date = parseDate(dateString);
           const isDuplicate = activities.some((activity) => {
             return (
-              activity.accountId === account?.id &&
               activity.assetProfile.currency === assetProfile.currency &&
               activity.assetProfile.dataSource === assetProfile.dataSource &&
               isSameSecond(activity.date, date) &&
@@ -326,16 +332,28 @@ export class ImportService {
       }
     }
 
-    if (!isDryRun && accountsWithBalancesDto?.length) {
-      const [existingAccounts, existingPlatforms] = await Promise.all([
+    if (accountsWithBalancesDto?.length) {
+      const [
+        existingAccountsOfOtherUsers,
+        existingAccountsOfUser,
+        existingPlatforms
+      ] = await Promise.all([
         this.accountService.accounts({
           where: {
             id: {
-              in: accountsWithBalancesDto.map(({ id }) => {
-                return id;
-              })
-            }
+              in: accountsWithBalancesDto
+                .filter(({ id }) => {
+                  return Boolean(id);
+                })
+                .map(({ id }) => {
+                  return id;
+                })
+            },
+            userId: { not: user.id }
           }
+        }),
+        this.accountService.accounts({
+          where: { userId: user.id }
         }),
         this.platformService.getPlatforms()
       ]);
@@ -347,79 +365,116 @@ export class ImportService {
       );
 
       for (const accountWithBalances of accountsWithBalancesDto) {
-        // Check if there is any existing account with the same ID
-        const accountWithSameId = existingAccounts.find((existingAccount) => {
-          return existingAccount.id === accountWithBalances.id;
+        // Skip the account if it already belongs to the user
+        if (
+          existingAccountsOfUser.some(({ id }) => {
+            return id === accountWithBalances.id;
+          })
+        ) {
+          continue;
+        }
+
+        // If there is no account or if the account belongs to a different
+        // user, then reuse an existing account of the user with the same name
+        // and currency or create a new account
+        const accountToReuse = this.getAccountToReuse({
+          accountWithBalances,
+          accountsWithBalancesDto,
+          existingAccountsOfUser
         });
 
-        // If there is no account or if the account belongs to a different user then create a new account
-        if (!accountWithSameId || accountWithSameId.userId !== user.id) {
-          const account = omit(accountWithBalances, [
-            'balance',
-            'balances',
-            'isExcluded',
-            'tags'
-          ]);
-
-          let oldAccountId: string;
-          const platformId =
-            platformIdMapping[account.platformId] ?? account.platformId;
-
-          delete account.platformId;
-
-          if (accountWithSameId) {
-            oldAccountId = account.id;
-            delete account.id;
-          }
-
-          const tagIds = (accountWithBalances.tags ?? [])
-            .map((tagId) => {
-              return tagIdMapping[tagId] ?? tagId;
-            })
-            .filter((tagId) => {
-              return existingTagIds.has(tagId);
-            });
-
-          // Map the legacy isExcluded attribute of old export files to
-          // the "Exclude from Analysis" tag
+        if (accountToReuse) {
+          // Reuse the account of the user instead of creating a duplicate. The
+          // balances, the platform and the tags of the import are deliberately
+          // not applied to leave the existing account of the user untouched.
           if (
-            accountWithBalances.isExcluded &&
-            existingTagIds.has(TAG_ID_EXCLUDE_FROM_ANALYSIS) &&
-            !tagIds.includes(TAG_ID_EXCLUDE_FROM_ANALYSIS)
+            accountWithBalances.id &&
+            accountWithBalances.id !== accountToReuse.id
           ) {
-            tagIds.push(TAG_ID_EXCLUDE_FROM_ANALYSIS);
+            // Store the new to old account ID mappings for updating activities
+            accountIdMapping[accountWithBalances.id] = accountToReuse.id;
           }
 
-          let accountObject: Prisma.AccountCreateInput = {
-            ...account,
-            balances: {
-              create: accountWithBalances.balances ?? []
-            },
-            user: { connect: { id: user.id } }
-          };
+          continue;
+        }
 
-          if (
-            existingPlatforms.some(({ id }) => {
-              return id === platformId;
-            })
-          ) {
-            accountObject = {
-              ...accountObject,
-              platform: { connect: { id: platformId } }
-            };
+        if (isDryRun) {
+          continue;
+        }
+
+        // Check if there is any existing account of a different user with the
+        // same ID, since the ID cannot be reused in this case
+        const accountWithSameIdOfOtherUser = existingAccountsOfOtherUsers.find(
+          ({ id }) => {
+            return id === accountWithBalances.id;
           }
+        );
 
-          const newAccount = await this.accountService.createAccount({
-            tagIds,
-            balance: accountWithBalances.balance,
-            data: accountObject,
-            userId: user.id
+        const account = omit(accountWithBalances, [
+          'balance',
+          'balances',
+          'isExcluded',
+          'tags'
+        ]);
+
+        let oldAccountId: string;
+        const platformId =
+          platformIdMapping[account.platformId] ?? account.platformId;
+
+        delete account.platformId;
+
+        if (accountWithSameIdOfOtherUser) {
+          oldAccountId = account.id;
+          delete account.id;
+        }
+
+        const tagIds = (accountWithBalances.tags ?? [])
+          .map((tagId) => {
+            return tagIdMapping[tagId] ?? tagId;
+          })
+          .filter((tagId) => {
+            return existingTagIds.has(tagId);
           });
 
-          // Store the new to old account ID mappings for updating activities
-          if (accountWithSameId && oldAccountId) {
-            accountIdMapping[oldAccountId] = newAccount.id;
-          }
+        // Map the legacy isExcluded attribute of old export files to
+        // the "Exclude from Analysis" tag
+        if (
+          accountWithBalances.isExcluded &&
+          existingTagIds.has(TAG_ID_EXCLUDE_FROM_ANALYSIS) &&
+          !tagIds.includes(TAG_ID_EXCLUDE_FROM_ANALYSIS)
+        ) {
+          tagIds.push(TAG_ID_EXCLUDE_FROM_ANALYSIS);
+        }
+
+        let accountObject: Prisma.AccountCreateInput = {
+          ...account,
+          balances: {
+            create: accountWithBalances.balances ?? []
+          },
+          user: { connect: { id: user.id } }
+        };
+
+        if (
+          existingPlatforms.some(({ id }) => {
+            return id === platformId;
+          })
+        ) {
+          accountObject = {
+            ...accountObject,
+            platform: { connect: { id: platformId } }
+          };
+        }
+
+        const newAccount = await this.accountService.createAccount({
+          tagIds,
+          balance: accountWithBalances.balance,
+          data: accountObject,
+          userId: user.id
+        });
+
+        // Store the new to old account ID mappings for updating activities
+        if (accountWithSameIdOfOtherUser && oldAccountId) {
+          accountIdMapping[oldAccountId] = newAccount.id;
         }
       }
     }
@@ -537,12 +592,12 @@ export class ImportService {
         activity.symbol = assetProfileSymbolMapping[activity.symbol];
       }
 
-      if (!isDryRun) {
-        // If a new account is created, then update the accountId in all activities
-        if (accountIdMapping[activity.accountId]) {
-          activity.accountId = accountIdMapping[activity.accountId];
-        }
+      // If an account is created or reused, then update the accountId in all activities
+      if (accountIdMapping[activity.accountId]) {
+        activity.accountId = accountIdMapping[activity.accountId];
+      }
 
+      if (!isDryRun) {
         // If a new tag is created, then update the tag ID in all activities
         activity.tags = (activity.tags ?? []).map((tagId) => {
           return tagIdMapping[tagId] ?? tagId;
@@ -570,9 +625,20 @@ export class ImportService {
     );
 
     if (isDryRun) {
-      accountsWithBalancesDto.forEach(({ id, name }) => {
-        accounts.push({ id, name });
-      });
+      accountsWithBalancesDto
+        .filter(({ id }) => {
+          // Skip the accounts which are reused or which already belong to the
+          // user, since they are part of the accounts of the user above
+          return (
+            !accountIdMapping[id] &&
+            !accounts.some(({ id: accountId }) => {
+              return accountId === id;
+            })
+          );
+        })
+        .forEach(({ id, name }) => {
+          accounts.push({ id, name });
+        });
     }
 
     const tags = (await this.tagService.getTagsForUser(user.id)).map(
@@ -826,10 +892,10 @@ export class ImportService {
         unitPrice
       }) => {
         const date = parseISO(dateString);
+
         const isDuplicate = existingActivities.some((activity) => {
           return (
-            activity.accountId === accountId &&
-            activity.comment === comment &&
+            (activity.comment || null) === (comment || null) &&
             (activity.currency === currency ||
               activity.assetProfile.currency === currency) &&
             activity.assetProfile.dataSource === dataSource &&
@@ -875,6 +941,52 @@ export class ImportService {
         };
       }
     );
+  }
+
+  /**
+   * Returns the account of the user to reuse for the given account of the
+   * import, based on the name and the currency. The currency is considered
+   * because the activities of the import would otherwise end up in an account
+   * of a different currency. The name is only considered if it is unambiguous,
+   * both in the accounts of the user and in the accounts of the import, since
+   * it is not unique. Otherwise, distinct accounts would be merged into a
+   * single one.
+   */
+  private getAccountToReuse({
+    accountWithBalances,
+    accountsWithBalancesDto,
+    existingAccountsOfUser
+  }: {
+    accountWithBalances: CreateAccountWithBalancesDto;
+    accountsWithBalancesDto: ImportDataDto['accounts'];
+    existingAccountsOfUser: Account[];
+  }): Account {
+    const matchingAccountsOfUser = existingAccountsOfUser.filter(
+      ({ currency, name }) => {
+        return (
+          currency === accountWithBalances.currency &&
+          name === accountWithBalances.name
+        );
+      }
+    );
+
+    const matchingAccountsToImport = accountsWithBalancesDto.filter(
+      ({ currency, name }) => {
+        return (
+          currency === accountWithBalances.currency &&
+          name === accountWithBalances.name
+        );
+      }
+    );
+
+    if (
+      matchingAccountsOfUser.length !== 1 ||
+      matchingAccountsToImport.length !== 1
+    ) {
+      return undefined;
+    }
+
+    return matchingAccountsOfUser[0];
   }
 
   private isUniqueAccount(accounts: AccountWithValue[]) {
