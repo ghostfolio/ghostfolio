@@ -15,7 +15,6 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
-  DEFAULT_DATE_RANGE,
   HEADER_KEY_IMPERSONATION,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
@@ -34,11 +33,7 @@ import {
   isRestrictedView,
   permissions
 } from '@ghostfolio/common/permissions';
-import type {
-  DateRange,
-  GroupBy,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -60,6 +55,11 @@ import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { GetDetailsDto } from './get-details.dto';
+import { GetDividendsDto } from './get-dividends.dto';
+import { GetHoldingsDto } from './get-holdings.dto';
+import { GetInvestmentsDto } from './get-investments.dto';
+import { GetPerformanceDto } from './get-performance.dto';
 import { PortfolioService } from './portfolio.service';
 import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 
@@ -82,16 +82,17 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string,
-    @Query('withMarkets') withMarketsParam = 'false'
+    @Query()
+    {
+      accounts: filterByAccounts,
+      assetClasses: filterByAssetClasses,
+      dataSource: filterByDataSource,
+      range,
+      symbol: filterBySymbol,
+      tags: filterByTags,
+      withMarkets
+    }: GetDetailsDto
   ): Promise<PortfolioDetails & { hasError: boolean }> {
-    const withMarkets = withMarketsParam === 'true';
-
     let hasDetails = true;
     let hasError = false;
 
@@ -118,10 +119,10 @@ export class PortfolioController {
       platforms,
       summary
     } = await this.portfolioService.getDetails({
-      dateRange,
       filters,
       impersonationId,
       withMarkets,
+      dateRange: range,
       userId: this.request.user.id,
       withSummary: true
     });
@@ -135,7 +136,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -179,7 +180,7 @@ export class PortfolioController {
       hasDetails === false ||
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -326,20 +327,23 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getDividends(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('groupBy') groupBy?: GroupBy,
-    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Query()
+    {
+      accounts,
+      assetClasses,
+      dataSource,
+      groupBy,
+      range,
+      symbol,
+      tags
+    }: GetDividendsDto
   ): Promise<PortfolioDividendsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     const impersonationUserId =
@@ -349,7 +353,9 @@ export class PortfolioController {
     const { settings } = await this.userService.user({ id: userId });
     const userCurrency = settings.settings.baseCurrency;
 
-    const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
+    const { endDate, startDate } = getIntervalFromDateRange({
+      dateRange: range
+    });
 
     const { activities } = await this.activitiesService.getActivities({
       endDate,
@@ -368,7 +374,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -429,29 +435,32 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getHoldings(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('holdingType') filterByHoldingType?: string,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Query()
+    {
+      accounts,
+      assetClasses,
+      dataSource,
+      holdingType,
+      query,
+      range,
+      symbol,
+      tags
+    }: GetHoldingsDto
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterByHoldingType,
-      filterBySearchQuery,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterByHoldingType: holdingType,
+      filterBySearchQuery: query,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     const holdings = await this.portfolioService.getHoldings({
-      dateRange,
       filters,
       impersonationId,
+      dateRange: range,
       userId: this.request.user.id
     });
 
@@ -463,35 +472,38 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getInvestments(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('groupBy') groupBy?: GroupBy,
-    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Query()
+    {
+      accounts,
+      assetClasses,
+      dataSource,
+      groupBy,
+      range,
+      symbol,
+      tags
+    }: GetInvestmentsDto
   ): Promise<PortfolioInvestmentsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
-    let { investments, streaks } = await this.portfolioService.getInvestments({
-      dateRange,
-      filters,
-      groupBy,
-      impersonationId,
-      savingsRate: this.request.user?.settings?.settings.savingsRate,
-      userId: this.request.user.id
-    });
+    let { investments, savingsRate, streaks } =
+      await this.portfolioService.getInvestments({
+        filters,
+        groupBy,
+        impersonationId,
+        dateRange: range,
+        userId: this.request.user.id
+      });
 
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user)
     ) {
@@ -509,6 +521,8 @@ export class PortfolioController {
         'currentStreak',
         'longestStreak'
       ]);
+
+      savingsRate = null;
     }
 
     if (
@@ -525,7 +539,7 @@ export class PortfolioController {
       ]);
     }
 
-    return { investments, streaks };
+    return { investments, savingsRate, streaks };
   }
 
   @Get('performance')
@@ -536,36 +550,37 @@ export class PortfolioController {
   @Version('2')
   public async getPerformanceV2(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string,
-    @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
+    @Query()
+    {
+      accounts,
+      assetClasses,
+      dataSource,
+      range,
+      symbol,
+      tags,
+      withExcludedAccounts
+    }: GetPerformanceDto
   ): Promise<PortfolioPerformanceResponse> {
-    const withExcludedAccounts = withExcludedAccountsParam === 'true';
-
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     const performanceInformation = await this.portfolioService.getPerformance({
-      dateRange,
       filters,
       impersonationId,
       withExcludedAccounts,
+      dateRange: range,
       userId: this.request.user.id
     });
 
     if (
       hasReadRestrictedAccessPermission({
         impersonationId,
-        user: this.request.user
+        accesses: this.request.user?.accessesGet
       }) ||
       isRestrictedView(this.request.user) ||
       this.request.user.settings.settings.viewMode === 'ZEN'

@@ -7,6 +7,7 @@
             i18n
             size="large"
             [enableCopyToClipboardButton]="true"
+            [isLoading]="isLoading"
             [value]="version"
             >Version</gf-value
           >
@@ -19,6 +20,7 @@
           <gf-value
             i18n
             size="large"
+            [isLoading]="isLoading"
             [locale]="user?.settings?.locale"
             [value]="userCount"
             >Users</gf-value
@@ -32,6 +34,7 @@
           <gf-value
             i18n
             size="large"
+            [isLoading]="isLoading"
             [locale]="user?.settings?.locale"
             [subLabel]="activitiesCountPerUser"
             [value]="activitiesCount"
@@ -52,9 +55,8 @@
               <mat-slide-toggle
                 color="primary"
                 hideIcon="true"
-                [checked]="
-                  info.globalPermissions.includes(permissions.createUserAccount)
-                "
+                [checked]="isUserSignupEnabled"
+                [disabled]="isLoading"
                 (change)="onEnableUserSignupModeChange($event)"
               />
             </div>
@@ -66,7 +68,8 @@
                 <mat-slide-toggle
                   color="primary"
                   hideIcon="true"
-                  [checked]="info?.isReadOnlyMode"
+                  [checked]="isReadOnlyMode"
+                  [disabled]="isLoading"
                   (change)="onReadOnlyModeChange($event)"
                 />
               </div>
@@ -79,6 +82,7 @@
                 color="primary"
                 hideIcon="true"
                 [checked]="isDataGatheringEnabled"
+                [disabled]="isLoading"
                 (change)="onEnableDataGatheringChange($event)"
               />
             </div>
@@ -89,7 +93,9 @@
               <div class="w-50">
                 @if (systemMessage) {
                   <div class="align-items-center d-flex">
-                    <div class="text-truncate">{{ systemMessage | json }}</div>
+                    <div class="text-truncate">
+                      {{ systemMessage | json }}
+                    </div>
                     <button
                       class="h-100 mx-1 no-min-width px-2"
                       mat-button
@@ -99,7 +105,7 @@
                     </button>
                   </div>
                 }
-                @if (!info?.systemMessage) {
+                @if (!systemMessage) {
                   <button
                     class="mt-2"
                     color="accent"

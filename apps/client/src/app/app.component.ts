@@ -57,12 +57,12 @@ export class GfAppComponent implements OnInit {
   public currentRoute: string;
   public currentSubRoute: string;
   public deviceType: string;
-  public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
+  public impersonationId: string | null;
   public info: InfoItem;
   public pageTitle: string;
   public routerLinkRegister = publicRoutes.register.routerLink;
@@ -116,7 +116,7 @@ export class GfAppComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
       });
 
     this.router.events
@@ -135,7 +135,10 @@ export class GfAppComponent implements OnInit {
               this.currentSubRoute ===
                 internalRoutes.home.subRoutes?.holdings.path) ||
             (this.currentRoute === internalRoutes.portfolio.path &&
-              !this.currentSubRoute)) &&
+              !this.currentSubRoute) ||
+            (this.currentRoute === internalRoutes.portfolio.path &&
+              this.currentSubRoute ===
+                internalRoutes.portfolio.subRoutes?.activities.path)) &&
           this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;
@@ -288,13 +291,12 @@ export class GfAppComponent implements OnInit {
             baseCurrency: this.user?.settings?.baseCurrency,
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
             hasPermissionToAccessAdminControl: hasPermission(
               this.user?.permissions,
               permissions.accessAdminControl
             ),
             hasPermissionToCreateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.createActivity
@@ -305,12 +307,13 @@ export class GfAppComponent implements OnInit {
               permissions.reportDataGlitch
             ),
             hasPermissionToUpdateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.updateActivity
               ) &&
               !this.user?.settings?.isRestrictedView,
+            impersonationId: this.impersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',

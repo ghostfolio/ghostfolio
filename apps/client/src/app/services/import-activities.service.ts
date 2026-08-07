@@ -1,10 +1,15 @@
+import { NON_INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
   CreateOrderDto,
+  CreatePlatformDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
-import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
+import {
+  isValidCustomAssetProfileSymbol,
+  parseDate as parseDateHelper
+} from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +18,7 @@ import { Account, DataSource, Type as ActivityType } from '@prisma/client';
 import { isFinite, isNumber, isString } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { firstValueFrom } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -56,12 +62,57 @@ export class ImportActivitiesService {
 
     const activities: CreateOrderDto[] = [];
     const assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+    const assetProfileSymbolMapping = new Map<string, string>();
 
     for (const [index, item] of content.entries()) {
       const currency = this.parseCurrency({ content, index, item });
-      const dataSource = this.parseDataSource({ item });
-      const symbol = this.parseSymbol({ content, index, item });
       const type = this.parseType({ content, index, item });
+
+      let dataSource = this.parseDataSource({ item });
+      let symbol = this.parseSymbol({ content, index, item });
+
+      if (!dataSource && NON_INVESTMENT_ACTIVITY_TYPES.includes(type)) {
+        // Apply the same data source as the import service
+        dataSource = DataSource.MANUAL;
+      }
+
+      if (dataSource === DataSource.MANUAL) {
+        const name = symbol;
+
+        if (!isValidCustomAssetProfileSymbol(symbol)) {
+          // Generate a symbol and keep the free text as the name
+          symbol = assetProfileSymbolMapping.get(name) ?? uuidv4();
+          assetProfileSymbolMapping.set(name, symbol);
+        }
+
+        const isExistingAssetProfile = assetProfiles.some((assetProfile) => {
+          return assetProfile.symbol === symbol;
+        });
+
+        if (!isExistingAssetProfile) {
+          // Create synthetic asset profile for MANUAL data source
+          assetProfiles.push({
+            currency,
+            name,
+            symbol,
+            assetClass: undefined,
+            assetSubClass: undefined,
+            comment: undefined,
+            countries: [],
+            cusip: undefined,
+            dataSource: DataSource.MANUAL,
+            figi: undefined,
+            figiComposite: undefined,
+            figiShareClass: undefined,
+            holdings: [],
+            isActive: true,
+            isin: undefined,
+            marketData: [],
+            sectors: [],
+            url: undefined
+          });
+        }
+      }
 
       activities.push({
         currency,
@@ -76,30 +127,6 @@ export class ImportActivitiesService {
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
-
-      if (dataSource === DataSource.MANUAL) {
-        // Create synthetic asset profile for MANUAL data source
-        assetProfiles.push({
-          currency,
-          symbol,
-          assetClass: undefined,
-          assetSubClass: undefined,
-          comment: undefined,
-          countries: [],
-          cusip: undefined,
-          dataSource: DataSource.MANUAL,
-          figi: undefined,
-          figiComposite: undefined,
-          figiShareClass: undefined,
-          holdings: [],
-          isActive: true,
-          isin: undefined,
-          marketData: [],
-          name: symbol,
-          sectors: [],
-          url: undefined
-        });
-      }
     }
 
     const result = await this.importJson({
@@ -115,12 +142,14 @@ export class ImportActivitiesService {
     activities,
     assetProfiles,
     isDryRun = false,
+    platforms,
     tags
   }: {
     activities: CreateOrderDto[];
     accounts?: CreateAccountWithBalancesDto[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
     isDryRun?: boolean;
+    platforms?: CreatePlatformDto[];
     tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
@@ -131,6 +160,7 @@ export class ImportActivitiesService {
           accounts,
           activities,
           assetProfiles,
+          platforms,
           tags
         },
         isDryRun
@@ -142,11 +172,13 @@ export class ImportActivitiesService {
     accounts,
     activities,
     assetProfiles,
+    platforms,
     tags
   }: {
     accounts?: CreateAccountWithBalancesDto[];
     activities: Activity[];
     assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+    platforms?: CreatePlatformDto[];
     tags?: CreateTagDto[];
   }): Promise<{
     activities: Activity[];
@@ -158,6 +190,7 @@ export class ImportActivitiesService {
     return this.importJson({
       accounts,
       assetProfiles,
+      platforms,
       tags,
       activities: importData
     });
@@ -457,6 +490,7 @@ export class ImportActivitiesService {
       accounts?: CreateAccountWithBalancesDto[];
       activities: CreateOrderDto[];
       assetProfiles?: CreateAssetProfileWithMarketDataDto[];
+      platforms?: CreatePlatformDto[];
       tags?: CreateTagDto[];
     },
     aIsDryRun = false

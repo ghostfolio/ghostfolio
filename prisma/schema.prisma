@@ -27,14 +27,11 @@ model Access {
 
 model Account {
   activities Order[]
-  balance    Float            @default(0)
   balances   AccountBalance[]
   comment    String?
   createdAt  DateTime         @default(now())
   currency   String?
   id         String           @default(uuid())
-  /// @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
-  isExcluded Boolean          @default(false)
   name       String?
   platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
@@ -46,7 +43,6 @@ model Account {
   @@id([id, userId])
   @@index([currency])
   @@index([id])
-  @@index([isExcluded])
   @@index([name])
   @@index([userId])
 }
@@ -117,6 +113,33 @@ model AssetProfileResolution {
   updatedAt        DateTime   @updatedAt
 
   @@unique([dataSourceOrigin, symbolOrigin])
+}
+
+/// A stock split of an asset profile. The numerator is the number of shares
+/// held after the split, the denominator the number of shares held before, for
+/// example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split.
+///
+/// The ratio is stored as two integers instead of the resulting factor, so that
+/// it stays exact, for example 1/3 for a 1:3 reverse split.
+///
+/// Activities before the date are adjusted by the ratio: the quantity is
+/// multiplied by it and the unit price divided by it, so that the total value
+/// of an activity stays the same.
+///
+/// Market data is already split-adjusted by the data providers and must not be
+/// adjusted again.
+model AssetProfileSplit {
+  createdAt       DateTime      @default(now())
+  date            DateTime
+  denominator     Int
+  id              String        @id @default(uuid())
+  numerator       Int
+  symbolProfile   SymbolProfile @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
+  symbolProfileId String
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([symbolProfileId, date])
+  @@index([date])
 }
 
 model AuthDevice {
@@ -203,6 +226,7 @@ model SymbolProfile {
   activities             Order[]
   assetClass             AssetClass?
   assetProfileOverrides  AssetProfileOverrides?
+  assetProfileSplits     AssetProfileSplit[]
   assetSubClass          AssetSubClass?
   comment                String?
   countries              Json?

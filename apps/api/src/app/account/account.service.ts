@@ -1,11 +1,16 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
-import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
+import {
+  getWhereAccountBalanceNotInFuture,
+  isAccountBalanceInFuture,
+  WHERE_ACCOUNT_NOT_EXCLUDED
+} from '@ghostfolio/api/helper/account.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
+import { AccountWithBalance } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -19,8 +24,8 @@ import {
   Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { format } from 'date-fns';
-import { groupBy } from 'lodash';
+import { endOfToday, format } from 'date-fns';
+import { groupBy, isNil } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
 
@@ -36,12 +41,14 @@ export class AccountService {
 
   public async account({
     id_userId
-  }: Prisma.AccountWhereUniqueInput): Promise<Account | null> {
+  }: Prisma.AccountWhereUniqueInput): Promise<AccountWithBalance | null> {
     const account = await this.prismaService.account.findUnique({
       include: {
         balances: {
           orderBy: { date: 'desc' },
-          take: 1
+          take: 1,
+          // Ignore account balances in the future
+          where: getWhereAccountBalanceNotInFuture()
         }
       },
       where: { id_userId }
@@ -81,7 +88,7 @@ export class AccountService {
     where?: Prisma.AccountWhereInput;
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
-    (Account & {
+    (AccountWithBalance & {
       activities?: (Order & { SymbolProfile?: SymbolProfile })[];
       balances?: AccountBalance[];
       platform?: Platform;
@@ -95,7 +102,16 @@ export class AccountService {
 
     include.balances = {
       orderBy: { date: 'desc' },
-      ...(isBalancesIncluded ? {} : { take: 1 })
+      // If the balances are included, they are returned as-is (including the
+      // ones in the future) because the client renders the full history. The
+      // balance is derived below and skips the account balances in the future.
+      ...(isBalancesIncluded
+        ? {}
+        : {
+            take: 1,
+            // Ignore account balances in the future
+            where: getWhereAccountBalanceNotInFuture()
+          })
     };
 
     if (isTagsIncluded) {
@@ -115,10 +131,17 @@ export class AccountService {
       where
     });
 
+    const endOfTodayDate = endOfToday();
+
     return accounts.map((account) => {
       const result = {
         ...account,
-        balance: account.balances[0]?.value ?? 0,
+        balance:
+          // The balances are ordered by date descending, hence the first account
+          // balance which is not in the future reflects the current balance
+          account.balances.find(({ date }) => {
+            return !isAccountBalanceInFuture({ date, endOfTodayDate });
+          })?.value ?? 0,
         tags: isTagsIncluded
           ? (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {
               return tag;
@@ -138,12 +161,18 @@ export class AccountService {
     });
   }
 
-  public async createAccount(
-    data: Prisma.AccountCreateInput,
-    aUserId: string,
-    tagIds?: string[]
-  ): Promise<Account> {
-    await this.tagService.validateTagIds({ tagIds, userId: aUserId });
+  public async createAccount({
+    balance,
+    data,
+    tagIds,
+    userId
+  }: {
+    balance?: number;
+    data: Prisma.AccountCreateInput;
+    tagIds?: string[];
+    userId: string;
+  }): Promise<Account> {
+    await this.tagService.validateTagIds({ tagIds, userId });
 
     const account = await this.prismaService.account.create({
       data: {
@@ -160,12 +189,14 @@ export class AccountService {
       }
     });
 
-    await this.accountBalanceService.createOrUpdateAccountBalance({
-      accountId: account.id,
-      balance: data.balance,
-      date: format(new Date(), DATE_FORMAT),
-      userId: aUserId
-    });
+    if (!isNil(balance)) {
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        balance,
+        userId,
+        accountId: account.id,
+        date: format(new Date(), DATE_FORMAT)
+      });
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
@@ -194,7 +225,7 @@ export class AccountService {
     return account;
   }
 
-  public async getAccounts(aUserId: string): Promise<Account[]> {
+  public async getAccounts(aUserId: string): Promise<AccountWithBalance[]> {
     const accounts = await this.accounts({
       include: {
         activities: true,
@@ -273,17 +304,20 @@ export class AccountService {
     };
   }
 
-  public async updateAccount(
-    params: {
-      data: Prisma.AccountUpdateInput;
-      where: Prisma.AccountWhereUniqueInput;
-    },
-    aUserId: string,
-    tagIds?: string[]
-  ): Promise<Account> {
-    const { data, where } = params;
-
-    await this.tagService.validateTagIds({ tagIds, userId: aUserId });
+  public async updateAccount({
+    balance,
+    data,
+    tagIds,
+    userId,
+    where
+  }: {
+    balance?: number;
+    data: Prisma.AccountUpdateInput;
+    tagIds?: string[];
+    userId: string;
+    where: Prisma.AccountWhereUniqueInput;
+  }): Promise<Account> {
+    await this.tagService.validateTagIds({ tagIds, userId });
 
     const account = await this.prismaService.account.update({
       data: {
@@ -302,12 +336,14 @@ export class AccountService {
       where
     });
 
-    await this.accountBalanceService.createOrUpdateAccountBalance({
-      accountId: account.id,
-      balance: data.balance as number,
-      date: format(new Date(), DATE_FORMAT),
-      userId: aUserId
-    });
+    if (!isNil(balance)) {
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        balance,
+        userId,
+        accountId: account.id,
+        date: format(new Date(), DATE_FORMAT)
+      });
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),

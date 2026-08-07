@@ -30,6 +30,9 @@ export default {
     enableCopyToClipboardButton: {
       control: 'boolean'
     },
+    isLoading: {
+      control: 'boolean'
+    },
     size: {
       control: 'select',
       options: ['small', 'medium', 'large']
@@ -41,7 +44,7 @@ type Story = StoryObj<GfValueComponent>;
 
 export const Loading: Story = {
   args: {
-    value: undefined
+    isLoading: true
   }
 };
 

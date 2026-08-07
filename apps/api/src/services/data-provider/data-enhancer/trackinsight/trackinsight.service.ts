@@ -50,12 +50,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    if (
-      !(
-        response.assetClass === 'EQUITY' &&
-        ['ETF', 'MUTUALFUND'].includes(response.assetSubClass)
-      )
-    ) {
+    if (!(
+      response.assetClass === 'EQUITY' &&
+      ['ETF', 'MUTUALFUND'].includes(response.assetSubClass)
+    )) {
       return response;
     }
 
@@ -214,8 +212,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         return undefined;
       })
       .catch(({ message }) => {
-        this.logger.error(
-          `Failed to search Trackinsight symbol for ${symbol} (${message})`
+        this.logger.warn(
+          `Could not search Trackinsight symbol for "${symbol}": ${message}`
         );
 
         return undefined;

@@ -5,17 +5,14 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import {
-  DEFAULT_DATE_RANGE,
-  HEADER_KEY_IMPERSONATION
-} from '@ghostfolio/common/config';
+import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import type {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -37,6 +34,7 @@ import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarksService } from './benchmarks.service';
+import { GetBenchmarkMarketDataDto } from './get-benchmark-market-data.dto';
 
 @Controller('benchmarks')
 export class BenchmarksController {
@@ -121,38 +119,39 @@ export class BenchmarksController {
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string,
-    @Query('range') dateRange: DateRange = DEFAULT_DATE_RANGE,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string,
-    @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
+    @Query()
+    {
+      accounts,
+      assetClasses,
+      dataSource: filterByDataSource,
+      range,
+      symbol: filterBySymbol,
+      tags,
+      withExcludedAccounts
+    }: GetBenchmarkMarketDataDto
   ): Promise<BenchmarkMarketDataDetailsResponse> {
     const { endDate, startDate } = getIntervalFromDateRange({
-      dateRange,
+      dateRange: range,
       startDate: new Date(startDateString)
     });
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
       filterByDataSource,
       filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByTags: tags
     });
-
-    const withExcludedAccounts = withExcludedAccountsParam === 'true';
 
     return this.benchmarksService.getMarketDataForUser({
       dataSource,
-      dateRange,
       endDate,
       filters,
       impersonationId,
       startDate,
       symbol,
       withExcludedAccounts,
+      dateRange: range,
       user: this.request.user
     });
   }

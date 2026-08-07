@@ -7,13 +7,12 @@
         @for (account of accounts(); track account.id) {
           <mat-option [value]="account.id">
             <div class="d-flex">
-              @if (account.platform?.url) {
-                <gf-entity-logo
-                  class="mr-1"
-                  [tooltip]="account.platform?.name ?? ''"
-                  [url]="account.platform?.url ?? ''"
-                />
-              }
+              <gf-entity-logo
+                class="mr-1"
+                [hasPlaceholder]="true"
+                [tooltip]="account.platform?.name ?? ''"
+                [url]="account.platform?.url ?? ''"
+              />
               <span>{{ account.name }}</span>
             </div>
           </mat-option>

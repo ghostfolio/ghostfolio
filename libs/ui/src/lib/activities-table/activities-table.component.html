@@ -1,4 +1,6 @@
-<div class="d-flex justify-content-end justify-content-lg-between">
+<div
+  class="align-items-center d-flex justify-content-end justify-content-lg-between"
+>
   <div class="d-none d-lg-flex">
     @if (hasPermissionToFilterByType) {
       <mat-form-field appearance="outline" class="without-hint">
@@ -56,12 +58,19 @@
           <button
             class="align-items-center d-flex"
             mat-menu-item
-            [disabled]="dataSource()?.data.length === 0"
+            [disabled]="!canExportActivities()"
             (click)="onExport()"
           >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="cloud-download-outline" />
-              <span i18n>Export Activities</span>
+              @if (canExportActivities()) {
+                <span i18n
+                  >Export {{ totalItems > 1 ? totalItems : '' }}
+                  {totalItems, plural, =1 {Activity} other {Activities}}</span
+                >
+              } @else {
+                <span i18n>Export Activities</span>
+              }
             </span>
           </button>
         }
@@ -82,14 +91,19 @@
         <button
           class="align-items-center d-flex"
           mat-menu-item
-          [disabled]="
-            dataSource()?.data.length === 0 || !hasPermissionToDeleteActivity
-          "
+          [disabled]="!canDeleteActivities()"
           (click)="onDeleteActivities()"
         >
           <span class="align-items-center d-flex">
             <ion-icon class="mr-2" name="trash-outline" />
-            <span i18n>Delete Activities</span>
+            @if (canDeleteActivities()) {
+              <span i18n
+                >Delete {{ totalItems > 1 ? totalItems : '' }}
+                {totalItems, plural, =1 {Activity} other {Activities}}</span
+              >
+            } @else {
+              <span i18n>Delete Activities</span>
+            }
           </span>
         </button>
       </mat-menu>
@@ -196,8 +210,9 @@
           <gf-value
             [deviceType]="deviceType"
             [isDate]="true"
+            [isLoading]="isLoading()"
             [locale]="locale"
-            [value]="isLoading() ? undefined : element.date"
+            [value]="element.date"
           />
         </div>
       </td>
@@ -220,8 +235,9 @@
         <div class="d-flex justify-content-end">
           <gf-value
             [isCurrency]="true"
+            [isLoading]="isLoading()"
             [locale]="locale"
-            [value]="isLoading() ? undefined : element.quantity"
+            [value]="element.quantity"
           />
         </div>
       </td>
@@ -244,8 +260,9 @@
         <div class="d-flex justify-content-end">
           <gf-value
             [isCurrency]="true"
+            [isLoading]="isLoading()"
             [locale]="locale"
-            [value]="isLoading() ? undefined : element.unitPrice"
+            [value]="element.unitPrice"
           />
         </div>
       </td>
@@ -268,8 +285,9 @@
         <div class="d-flex justify-content-end">
           <gf-value
             [isCurrency]="true"
+            [isLoading]="isLoading()"
             [locale]="locale"
-            [value]="isLoading() ? undefined : element.fee"
+            [value]="element.fee"
           />
         </div>
       </td>
@@ -291,8 +309,9 @@
         <div class="d-flex justify-content-end">
           <gf-value
             [isCurrency]="true"
+            [isLoading]="isLoading()"
             [locale]="locale"
-            [value]="isLoading() ? undefined : element.value"
+            [value]="element.value"
           />
         </div>
       </td>
@@ -323,8 +342,9 @@
         <div class="d-flex justify-content-end">
           <gf-value
             [isCurrency]="true"
+            [isLoading]="isLoading()"
             [locale]="locale"
-            [value]="isLoading() ? undefined : element.valueInBaseCurrency"
+            [value]="element.valueInBaseCurrency"
           />
         </div>
       </td>
@@ -336,13 +356,12 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          @if (element.account?.platform?.url) {
-            <gf-entity-logo
-              class="mr-1"
-              [tooltip]="element.account?.platform?.name"
-              [url]="element.account?.platform?.url"
-            />
-          }
+          <gf-entity-logo
+            class="mr-1"
+            [hasPlaceholder]="true"
+            [tooltip]="element.account?.platform?.name"
+            [url]="element.account?.platform?.url"
+          />
           <span class="d-none d-lg-block text-nowrap">{{
             element.account?.name
           }}</span>

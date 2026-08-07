@@ -25,13 +25,17 @@ export class ExportService {
   public async export({
     activityIds,
     activityTypes,
+    endDate,
     filters,
+    startDate,
     userId,
     userSettings
   }: {
     activityIds?: string[];
     activityTypes?: ActivityType[];
+    endDate?: Date;
     filters?: Filter[];
+    startDate?: Date;
     userId: string;
     userSettings: UserSettings;
   }): Promise<ExportResponse> {
@@ -41,7 +45,9 @@ export class ExportService {
     const platformsMap: { [platformId: string]: Platform } = {};
 
     let { activities } = await this.activitiesService.getActivities({
+      endDate,
       filters,
+      startDate,
       userId,
       includeDrafts: true,
       sortColumn: 'date',
@@ -67,6 +73,13 @@ export class ExportService {
       };
     }
 
+    const isFilteredExport =
+      activityIds?.length > 0 ||
+      activityTypes?.length > 0 ||
+      filters?.length > 0 ||
+      !!endDate ||
+      !!startDate;
+
     const accounts = (
       await this.accountService.accounts({
         where,
@@ -81,7 +94,7 @@ export class ExportService {
       })
     )
       .filter(({ id }) => {
-        return activityIds?.length > 0
+        return isFilteredExport
           ? activities.some(({ accountId }) => {
               return accountId === id;
             })
@@ -89,30 +102,26 @@ export class ExportService {
       })
       .map(
         ({
-          balance,
           balances,
           comment,
           currency,
           id,
-          isExcluded,
           name,
           platform,
           platformId,
           tags
-        }) => {
+        }): ExportResponse['accounts'][number] => {
           if (platformId) {
             platformsMap[platformId] = platform;
           }
 
           return {
-            balance,
             balances: balances.map(({ date, value }) => {
               return { date: date.toISOString(), value };
             }),
             comment,
             currency,
             id,
-            isExcluded,
             name,
             platformId,
             tags: tags.map(({ id: tagId }) => {

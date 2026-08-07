@@ -330,7 +330,11 @@ export class YahooFinanceService implements DataProviderInterface {
         });
       }
     } catch (error) {
-      this.logger.error(error);
+      if (error?.name === 'BadRequestError') {
+        this.logger.warn(`Could not search for "${query}": ${error.message}`);
+      } else {
+        this.logger.error(error);
+      }
     }
 
     return { items };

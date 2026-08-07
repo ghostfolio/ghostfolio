@@ -2,7 +2,7 @@
   align-items: center;
   display: flex;
 
-  img {
+  .logo {
     border-radius: 0.2rem;
     height: 0.8rem;
     width: 0.8rem;
@@ -11,5 +11,15 @@
       height: 1.4rem;
       width: 1.4rem;
     }
+
+    &.placeholder {
+      border: 1px solid rgba(var(--dark-dividers));
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  .placeholder {
+    border-color: rgba(var(--light-dividers));
   }
 }

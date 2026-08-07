@@ -17,7 +17,11 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  hasPermission,
+  hasReadRestrictedAccessPermission,
+  permissions
+} from '@ghostfolio/common/permissions';
 import { MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
@@ -85,7 +89,6 @@ export class GfAllocationsPageComponent implements OnInit {
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected hasImpersonationId: boolean;
   protected holdings: {
     [symbol: string]: Pick<
       PortfolioPosition['assetProfile'],
@@ -95,8 +98,9 @@ export class GfAllocationsPageComponent implements OnInit {
       | 'assetSubClassLabel'
       | 'currency'
       | 'name'
-    > & { etfProvider: string; exchange?: string; value: number };
+    > & { etfProvider: string; value: number };
   };
+  protected impersonationId: string | null;
   protected isLoading = false;
   protected markets: PortfolioDetails['markets'];
   protected marketsAdvanced: {
@@ -169,7 +173,7 @@ export class GfAllocationsPageComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -224,7 +228,12 @@ export class GfAllocationsPageComponent implements OnInit {
   }
 
   protected showValuesInPercentage() {
-    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
+    return (
+      hasReadRestrictedAccessPermission({
+        accesses: this.user?.access,
+        impersonationId: this.impersonationId
+      }) || this.user?.settings?.isRestrictedView
+    );
   }
 
   private extractCurrency({
@@ -381,7 +390,6 @@ export class GfAllocationsPageComponent implements OnInit {
           assetSubClass: position.assetProfile.assetSubClass,
           name: position.assetProfile.name
         }),
-        exchange: position.exchange,
         name: position.assetProfile.name,
         value: this.showValuesInPercentage()
           ? position.allocationInPercentage
@@ -619,11 +627,11 @@ export class GfAllocationsPageComponent implements OnInit {
       data: {
         accountId: aAccountId,
         deviceType: this.deviceType(),
-        hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
-          !this.hasImpersonationId &&
+          !this.impersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
-          !this.user?.settings?.isRestrictedView
+          !this.user?.settings?.isRestrictedView,
+        impersonationId: this.impersonationId
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'

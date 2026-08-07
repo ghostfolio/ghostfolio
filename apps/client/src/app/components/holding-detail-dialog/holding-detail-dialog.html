@@ -12,6 +12,7 @@
         <gf-value
           size="large"
           [isCurrency]="true"
+          [isLoading]="isLoading"
           [locale]="data.locale"
           [unit]="data.baseCurrency"
           [value]="value"
@@ -39,6 +40,7 @@
     <mat-tab-group
       animationDuration="0ms"
       class="mb-4"
+      [disablePagination]="true"
       [mat-stretch-tabs]="false"
     >
       <mat-tab>
@@ -54,6 +56,7 @@
                 size="medium"
                 [colorizeSign]="true"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="netPerformanceWithCurrencyEffectPrecision"
                 [unit]="data.baseCurrency"
@@ -74,6 +77,7 @@
                 i18n
                 size="medium"
                 [colorizeSign]="true"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [locale]="data.locale"
                 [precision]="netPerformancePercentWithCurrencyEffectPrecision"
@@ -94,6 +98,7 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="averagePricePrecision"
                 [unit]="assetProfile?.currency"
@@ -106,6 +111,7 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPricePrecision"
                 [unit]="assetProfile?.currency"
@@ -124,6 +130,7 @@
                     round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPriceMinPrecision"
                 [unit]="assetProfile?.currency"
@@ -142,6 +149,7 @@
                     round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPriceMaxPrecision"
                 [unit]="assetProfile?.currency"
@@ -153,6 +161,7 @@
               <gf-value
                 i18n
                 size="medium"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="quantityPrecision"
                 [value]="quantity"
@@ -164,13 +173,14 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="
                   investmentInBaseCurrencyWithCurrencyEffectPrecision
                 "
                 [unit]="data.baseCurrency"
                 [value]="investmentInBaseCurrencyWithCurrencyEffect"
-                >Investment</gf-value
+                >Invested Capital</gf-value
               >
             </div>
             @if (
@@ -181,6 +191,7 @@
                   i18n
                   size="medium"
                   [isCurrency]="true"
+                  [isLoading]="isLoading"
                   [locale]="data.locale"
                   [precision]="dividendInBaseCurrencyPrecision"
                   [unit]="data.baseCurrency"
@@ -192,6 +203,7 @@
                 <gf-value
                   i18n
                   size="medium"
+                  [isLoading]="isLoading"
                   [isPercent]="true"
                   [locale]="data.locale"
                   [value]="dividendYieldPercentWithCurrencyEffect"
@@ -204,6 +216,7 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [unit]="data.baseCurrency"
                 [value]="feeInBaseCurrency"
@@ -216,6 +229,7 @@
                 size="medium"
                 [deviceType]="data.deviceType"
                 [isDate]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="dateOfFirstActivity"
                 >First Activity</gf-value
@@ -224,6 +238,7 @@
             <div class="col-6 mb-3">
               <gf-value
                 size="medium"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="activitiesCount"
               >
@@ -331,6 +346,17 @@
                 >ISIN</gf-value
               >
             </div>
+            <div class="col-12 mb-3">
+              <form [formGroup]="holdingForm">
+                <gf-tags-selector
+                  formControlName="tags"
+                  [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+                  [readonly]="!data.hasPermissionToUpdateActivity"
+                  [tagsAvailable]="tagsAvailable"
+                  [tagsReadOnly]="tagsOfAccounts"
+                />
+              </form>
+            </div>
 
             @if (dataProviderInfo) {
               <div class="col-md-12 mb-3 text-center">
@@ -356,7 +382,7 @@
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToDeleteActivity]="false"
           [hasPermissionToExportActivities]="
-            !data.hasImpersonationId && !user?.settings?.isRestrictedView
+            !data.impersonationId && !user?.settings?.isRestrictedView
           "
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
@@ -364,8 +390,8 @@
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
           [showActions]="
-            !data.hasImpersonationId &&
             data.hasPermissionToCreateActivity &&
+            !data.impersonationId &&
             user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "
@@ -418,16 +444,6 @@
         </mat-tab>
       }
     </mat-tab-group>
-
-    <form [formGroup]="holdingForm">
-      <gf-tags-selector
-        formControlName="tags"
-        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-        [readonly]="!data.hasPermissionToUpdateActivity"
-        [tagsAvailable]="tagsAvailable"
-        [tagsReadOnly]="tagsOfAccounts"
-      />
-    </form>
 
     @if (
       data.hasPermissionToAccessAdminControl ||

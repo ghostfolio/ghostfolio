@@ -15,6 +15,7 @@ export interface PortfolioPosition {
     | 'currency'
     | 'dataSource'
     | 'holdings'
+    | 'isin'
     | 'name'
     | 'sectors'
     | 'symbol'
@@ -25,7 +26,6 @@ export interface PortfolioPosition {
   };
   dateOfFirstActivity: Date;
   dividend: number;
-  exchange?: string;
   grossPerformance: number;
   grossPerformancePercent: number;
   grossPerformancePercentWithCurrencyEffect: number;

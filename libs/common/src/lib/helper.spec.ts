@@ -1,8 +1,18 @@
 import {
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+} from '@ghostfolio/common/config';
+import {
   extractNumberFromString,
+  getCountryCodeFromCurrency,
   getNumberFormatGroup,
+  getStringOrNull,
+  getStringOrUndefined,
+  isAccountExcluded,
   isCurrency,
-  isCurrencySymbol
+  isCurrencySymbol,
+  isSplitRatio,
+  isValidCustomAssetProfileSymbol
 } from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
@@ -65,6 +75,30 @@ describe('Helper', () => {
 
     it('Not a number', () => {
       expect(extractNumberFromString({ value: 'X' })).toEqual(NaN);
+    });
+  });
+
+  describe('Get country code from currency', () => {
+    it('ISO 4217 currency code', () => {
+      expect(getCountryCodeFromCurrency('CHF')).toEqual('CH');
+      expect(getCountryCodeFromCurrency('USD')).toEqual('US');
+    });
+
+    it('Currency of the European Union', () => {
+      expect(getCountryCodeFromCurrency('EUR')).toEqual('EU');
+    });
+
+    it('Derived currency', () => {
+      expect(getCountryCodeFromCurrency('GBp')).toEqual('GB');
+    });
+
+    it('Supranational currency', () => {
+      expect(getCountryCodeFromCurrency('XAU')).toEqual('');
+      expect(getCountryCodeFromCurrency('XOF')).toEqual('');
+    });
+
+    it('Empty currency', () => {
+      expect(getCountryCodeFromCurrency('')).toEqual('');
     });
   });
 
@@ -139,6 +173,84 @@ describe('Helper', () => {
     });
   });
 
+  describe('Get string or null', () => {
+    it('String', () => {
+      expect(getStringOrNull('https://ghostfol.io')).toEqual(
+        'https://ghostfol.io'
+      );
+    });
+
+    it('String (with spaces)', () => {
+      expect(getStringOrNull(' https://ghostfol.io ')).toEqual(
+        'https://ghostfol.io'
+      );
+    });
+
+    it('Empty string', () => {
+      expect(getStringOrNull('')).toEqual(null);
+    });
+
+    it('Blank string', () => {
+      expect(getStringOrNull('   ')).toEqual(null);
+    });
+
+    it('Null', () => {
+      expect(getStringOrNull(null)).toEqual(null);
+    });
+
+    it('Undefined', () => {
+      expect(getStringOrNull(undefined)).toEqual(null);
+    });
+  });
+
+  describe('Get string or undefined', () => {
+    it('String', () => {
+      expect(getStringOrUndefined('de-DE')).toEqual('de-DE');
+    });
+
+    it('String (with spaces)', () => {
+      expect(getStringOrUndefined(' de-DE ')).toEqual('de-DE');
+    });
+
+    it('Empty string', () => {
+      expect(getStringOrUndefined('')).toEqual(undefined);
+    });
+
+    it('Blank string', () => {
+      expect(getStringOrUndefined('   ')).toEqual(undefined);
+    });
+
+    it('Null', () => {
+      expect(getStringOrUndefined(null)).toEqual(undefined);
+    });
+
+    it('Undefined', () => {
+      expect(getStringOrUndefined(undefined)).toEqual(undefined);
+    });
+  });
+
+  describe('Is account excluded', () => {
+    it('Account with Exclude from Analysis tag', () => {
+      expect(
+        isAccountExcluded({ tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }] })
+      ).toEqual(true);
+    });
+
+    it('Account with another tag', () => {
+      expect(
+        isAccountExcluded({ tags: [{ id: TAG_ID_EMERGENCY_FUND }] })
+      ).toEqual(false);
+    });
+
+    it('Account without tags', () => {
+      expect(isAccountExcluded({ tags: [] })).toEqual(false);
+    });
+
+    it('Undefined account', () => {
+      expect(isAccountExcluded(undefined)).toEqual(false);
+    });
+  });
+
   describe('Is currency', () => {
     it('ISO 4217 currency code', () => {
       expect(isCurrency('USD')).toEqual(true);
@@ -193,6 +305,79 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is split ratio', () => {
+    it('Forward split', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 2 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 1, numerator: 4 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 2, numerator: 3 })).toEqual(true);
+    });
+
+    it('Reverse split', () => {
+      expect(isSplitRatio({ denominator: 10, numerator: 1 })).toEqual(true);
+      expect(isSplitRatio({ denominator: 3, numerator: 1 })).toEqual(true);
+    });
+
+    it('Ratio without effect', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 3, numerator: 3 })).toEqual(false);
+    });
+
+    it('Zero or negative ratio', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 0 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 0, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 1, numerator: -2 })).toEqual(false);
+      expect(isSplitRatio({ denominator: -2, numerator: 1 })).toEqual(false);
+    });
+
+    it('Non-integer ratio', () => {
+      expect(isSplitRatio({ denominator: 1, numerator: 1.5 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 2.5, numerator: 1 })).toEqual(false);
+      expect(isSplitRatio({ denominator: 1, numerator: Number.NaN })).toEqual(
+        false
+      );
+      expect(
+        isSplitRatio({ denominator: 1, numerator: Number.POSITIVE_INFINITY })
+      ).toEqual(false);
+    });
+
+    it('Missing ratio', () => {
+      expect(
+        isSplitRatio({ denominator: undefined, numerator: undefined })
+      ).toEqual(false);
+      expect(isSplitRatio({ denominator: null, numerator: null })).toEqual(
+        false
+      );
+    });
+  });
+
+  describe('Is valid custom asset profile symbol', () => {
+    it('Empty symbol', () => {
+      expect(isValidCustomAssetProfileSymbol('')).toEqual(false);
+    });
+
+    it('Free-text symbol', () => {
+      expect(isValidCustomAssetProfileSymbol('Penthouse Apartment')).toEqual(
+        false
+      );
+    });
+
+    it('Stock symbol', () => {
+      expect(isValidCustomAssetProfileSymbol('AAPL')).toEqual(false);
+    });
+
+    it('Symbol with Ghostfolio prefix', () => {
+      expect(isValidCustomAssetProfileSymbol('GF_PENTHOUSE_APARTMENT')).toEqual(
+        true
+      );
+    });
+
+    it('UUID', () => {
+      expect(
+        isValidCustomAssetProfileSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
+      ).toEqual(true);
     });
   });
 });

@@ -156,32 +156,34 @@ export class AccountController {
   public async createAccount(
     @Body() data: CreateAccountDto
   ): Promise<AccountModel> {
-    const { tags: tagIds, ...accountData } = data;
+    const { balance, tags: tagIds, ...accountData } = data;
 
     if (accountData.platformId) {
       const platformId = accountData.platformId;
       delete accountData.platformId;
 
-      return this.accountService.createAccount(
-        {
+      return this.accountService.createAccount({
+        balance,
+        tagIds,
+        data: {
           ...accountData,
           platform: { connect: { id: platformId } },
           user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id,
-        tagIds
-      );
+        userId: this.request.user.id
+      });
     } else {
       delete accountData.platformId;
 
-      return this.accountService.createAccount(
-        {
+      return this.accountService.createAccount({
+        balance,
+        tagIds,
+        data: {
           ...accountData,
           user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id,
-        tagIds
-      );
+        userId: this.request.user.id
+      });
     }
   }
 
@@ -257,52 +259,50 @@ export class AccountController {
       );
     }
 
-    const { tags: tagIds, ...accountData } = data;
+    const { balance, tags: tagIds, ...accountData } = data;
 
     if (accountData.platformId) {
       const platformId = accountData.platformId;
       delete accountData.platformId;
 
-      return this.accountService.updateAccount(
-        {
-          data: {
-            ...accountData,
-            platform: { connect: { id: platformId } },
-            user: { connect: { id: this.request.user.id } }
-          },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
-            }
-          }
+      return this.accountService.updateAccount({
+        balance,
+        tagIds,
+        data: {
+          ...accountData,
+          platform: { connect: { id: platformId } },
+          user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id,
-        tagIds
-      );
+        userId: this.request.user.id,
+        where: {
+          id_userId: {
+            id,
+            userId: this.request.user.id
+          }
+        }
+      });
     } else {
       // platformId is null, remove it
       delete accountData.platformId;
 
-      return this.accountService.updateAccount(
-        {
-          data: {
-            ...accountData,
-            platform: originalAccount.platformId
-              ? { disconnect: true }
-              : undefined,
-            user: { connect: { id: this.request.user.id } }
-          },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
-            }
-          }
+      return this.accountService.updateAccount({
+        balance,
+        tagIds,
+        data: {
+          ...accountData,
+          platform: originalAccount.platformId
+            ? { disconnect: true }
+            : undefined,
+          user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id,
-        tagIds
-      );
+        userId: this.request.user.id,
+        where: {
+          id_userId: {
+            id,
+            userId: this.request.user.id
+          }
+        }
+      });
     }
   }
 }

@@ -4,7 +4,7 @@ import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService } from '@ghostfolio/ui/services';
 
 import { Injectable } from '@angular/core';
-import { EMPTY, catchError, finalize, forkJoin } from 'rxjs';
+import { EMPTY, Subject, catchError, finalize, forkJoin } from 'rxjs';
 
 @Injectable()
 export class AdminMarketDataService {
@@ -14,25 +14,29 @@ export class AdminMarketDataService {
   ) {}
 
   public deleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
+    const assetProfileDeleted = new Subject<void>();
+
     this.notificationService.confirm({
       confirmFn: () => {
         this.adminService
           .deleteProfileData({ dataSource, symbol })
           .subscribe(() => {
-            setTimeout(() => {
-              window.location.reload();
-            }, 300);
+            assetProfileDeleted.next();
+            assetProfileDeleted.complete();
           });
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete this asset profile?`
     });
+
+    return assetProfileDeleted.asObservable();
   }
 
   public deleteAssetProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ) {
     const assetProfileCount = aAssetProfileIdentifiers.length;
+    const assetProfilesDeleted = new Subject<void>();
 
     this.notificationService.confirm({
       confirmFn: () => {
@@ -55,7 +59,8 @@ export class AdminMarketDataService {
               return EMPTY;
             }),
             finalize(() => {
-              window.location.reload();
+              assetProfilesDeleted.next();
+              assetProfilesDeleted.complete();
             })
           )
           .subscribe();
@@ -66,5 +71,7 @@ export class AdminMarketDataService {
           ? $localize`Do you really want to delete this asset profile?`
           : $localize`Do you really want to delete these ${assetProfileCount}:count: asset profiles?`
     });
+
+    return assetProfilesDeleted.asObservable();
   }
 }

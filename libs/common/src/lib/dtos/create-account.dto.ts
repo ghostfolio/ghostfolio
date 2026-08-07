@@ -4,7 +4,6 @@ import { Transform, TransformFnParams } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
-  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
@@ -13,15 +12,20 @@ import {
 import { isString } from 'lodash';
 
 export class CreateAccountDto {
+  /**
+   * The initial balance, stored as the account balance of today.
+   * Optional because callers may instead supply the full history via `balances`.
+   */
   @IsNumber()
-  balance: number;
+  @IsOptional()
+  balance?: number;
 
   @IsOptional()
   @IsString()
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )
-  comment?: string;
+  comment?: string | null;
 
   @IsCurrencyCode()
   currency: string;
@@ -29,13 +33,6 @@ export class CreateAccountDto {
   @IsOptional()
   @IsString()
   id?: string;
-
-  /**
-   * @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
-   */
-  @IsBoolean()
-  @IsOptional()
-  isExcluded?: boolean;
 
   @IsString()
   name: string;

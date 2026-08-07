@@ -5,7 +5,10 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { E_MAIL_LINE_BREAK } from '@ghostfolio/common/config';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  E_MAIL_LINE_BREAK
+} from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
@@ -19,6 +22,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
@@ -47,6 +51,7 @@ import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import ms from 'ms';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -84,6 +89,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
   protected readonly isFingerprintSupported = this.doesBrowserSupportAuthn();
+  protected isLoading = true;
   protected isWebAuthnEnabled: boolean;
   protected readonly language = document.documentElement.lang;
   protected locales = [
@@ -104,10 +110,17 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'uk',
     'zh'
   ];
+  protected readonly previewDate = new Date().toISOString();
+  protected readonly previewValue = 9999.99;
   protected user: User;
+
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly notificationService = inject(NotificationService);
   private readonly settingsStorageService = inject(SettingsStorageService);
@@ -127,6 +140,14 @@ export class GfUserAccountSettingsComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          const userDetailUrl = [
+            window.location.origin,
+            DEFAULT_LANGUAGE_CODE,
+            internalRoutes.adminControl.path,
+            internalRoutes.adminControl.subRoutes.users.path,
+            this.user.id
+          ].join('/');
+
           this.closeUserAccountMailHref = `mailto:hi@ghostfol.io?subject=Delete Account&body=${[
             'Hello',
             '',
@@ -134,7 +155,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
             '',
             `User ID: ${this.user.id}`,
             '',
-            'Kind regards'
+            'Kind regards',
+            '',
+            '',
+            '---',
+            userDetailUrl
           ].join(E_MAIL_LINE_BREAK)}`;
 
           this.hasPermissionToDeleteOwnUser = hasPermission(
@@ -162,6 +187,8 @@ export class GfUserAccountSettingsComponent implements OnInit {
           }
 
           this.locales = Array.from(new Set(this.locales)).sort();
+
+          this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -251,10 +278,6 @@ export class GfUserAccountSettingsComponent implements OnInit {
       .fetchExport()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        for (const activity of data.activities) {
-          delete (activity as Omit<typeof activity, 'id'> & { id?: string }).id;
-        }
-
         downloadAsFile({
           content: data,
           fileName: `ghostfolio-export-${format(

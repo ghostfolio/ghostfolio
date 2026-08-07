@@ -1,9 +1,14 @@
+@if (emojiFlagOfSelectedCurrency) {
+  <span class="flex-shrink-0 mr-1">{{ emojiFlagOfSelectedCurrency }}</span>
+}
+
 <input
   autocapitalize="off"
   autocomplete="off"
   matInput
   [formControl]="control"
   [matAutocomplete]="currencyAutocomplete"
+  [matAutocompleteConnectedTo]="autocompleteOrigin"
 />
 
 <mat-autocomplete
@@ -12,7 +17,10 @@
 >
   @for (currency of filteredCurrencies; track currency) {
     <mat-option class="line-height-1" [value]="currency">
-      {{ currency }}
+      <span class="align-items-center d-flex">
+        <span class="mr-1">{{ getEmojiFlagFromCurrency(currency) }}</span>
+        <span>{{ currency }}</span>
+      </span>
     </mat-option>
   }
 </mat-autocomplete>

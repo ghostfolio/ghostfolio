@@ -1,6 +1,8 @@
-import { Account as AccountModel, Platform, Tag } from '@prisma/client';
+import { Platform, Tag } from '@prisma/client';
 
-export type AccountWithValue = AccountModel & {
+import { AccountWithBalance } from './account-with-balance.type';
+
+export type AccountWithValue = AccountWithBalance & {
   activitiesCount: number;
   allocationInPercentage: number;
   balanceInBaseCurrency: number;

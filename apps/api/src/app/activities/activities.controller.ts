@@ -18,7 +18,7 @@ import {
   ActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -29,7 +29,6 @@ import {
   HttpException,
   Inject,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -38,11 +37,13 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order, Prisma, Type as ActivityType } from '@prisma/client';
+import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { ActivitiesFilterDto } from './activities-filter.dto';
 import { ActivitiesService } from './activities.service';
+import { GetActivitiesDto } from './get-activities.dto';
 
 @Controller('activities')
 export class ActivitiesController {
@@ -60,22 +61,47 @@ export class ActivitiesController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Query()
+    {
+      accounts,
+      activityTypes,
+      assetClasses,
+      dataSource,
+      range,
+      symbol,
+      tags
+    }: ActivitiesFilterDto
   ): Promise<number> {
+    if (impersonationId) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    let endDate: Date;
+    let startDate: Date;
+
+    if (range) {
+      ({ endDate, startDate } = getIntervalFromDateRange({
+        dateRange: range
+      }));
+    }
+
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     return this.activitiesService.deleteActivities({
+      endDate,
       filters,
+      startDate,
+      types: activityTypes,
       userId: this.request.user.id
     });
   }
@@ -108,37 +134,40 @@ export class ActivitiesController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllActivities(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('activityTypes') filterByTypes?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('range') dateRange?: DateRange,
-    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
-    @Query('sortColumn') sortColumn?: string,
-    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string,
-    @Query('take', new ParseIntPipe({ optional: true })) take?: number
+    @Query()
+    {
+      accounts,
+      activityTypes,
+      assetClasses,
+      dataSource,
+      range,
+      skip,
+      sortColumn,
+      sortDirection,
+      symbol,
+      tags,
+      take
+    }: GetActivitiesDto
   ): Promise<ActivitiesResponse> {
     let endDate: Date;
     let startDate: Date;
 
-    if (dateRange) {
-      ({ endDate, startDate } = getIntervalFromDateRange({ dateRange }));
+    if (range) {
+      ({ endDate, startDate } = getIntervalFromDateRange({
+        dateRange: range
+      }));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-
-    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
 
     const userCurrency = this.request.user.settings.settings.baseCurrency;
 
@@ -150,9 +179,9 @@ export class ActivitiesController {
       sortDirection,
       startDate,
       take,
-      types,
       userCurrency,
       includeDrafts: true,
+      types: activityTypes,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccountsAndActivities: true
     });

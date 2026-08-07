@@ -11,7 +11,11 @@ import {
   DATE_FORMAT,
   getCountryName,
   getCurrencyFromSymbol,
-  isCurrency
+  getDateFormatString,
+  getStringOrNull,
+  getStringOrUndefined,
+  isCurrency,
+  isSplitRatio
 } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -35,6 +39,7 @@ import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplet
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -61,6 +66,7 @@ import {
   MatCheckboxChange,
   MatCheckboxModule
 } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -74,6 +80,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { IonIcon } from '@ionic/angular/standalone';
 import {
   AssetClass,
+  AssetProfileSplit,
   AssetSubClass,
   DataGatheringFrequency,
   DataSource,
@@ -86,11 +93,14 @@ import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import {
+  calendarClearOutline,
   codeSlashOutline,
   createOutline,
   ellipsisVertical,
+  gitCompareOutline,
   readerOutline,
-  serverOutline
+  serverOutline,
+  trashOutline
 } from 'ionicons/icons';
 import { isBoolean } from 'lodash';
 import ms from 'ms';
@@ -103,6 +113,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
+    CommonModule,
     FormsModule,
     GfCurrencySelectorComponent,
     GfEntityLogoComponent,
@@ -114,6 +125,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatInputModule,
     MatMenuModule,
@@ -194,6 +206,26 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
   );
 
+  protected readonly assetProfileSplitForm = this.formBuilder.group(
+    {
+      date: new FormControl<Date | null>(null, Validators.required),
+      denominator: new FormControl<number | null>(null, Validators.required),
+      numerator: new FormControl<number | null>(null, Validators.required)
+    },
+    {
+      validators: (control: AbstractControl): ValidationErrors | null => {
+        const { denominator, numerator } = control.value as {
+          denominator: number;
+          numerator: number;
+        };
+
+        return isSplitRatio({ denominator, numerator })
+          ? null
+          : { invalidSplitRatio: true };
+      }
+    }
+  );
+
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected canEditAssetProfile = true;
 
@@ -245,11 +277,13 @@ export class GfAssetProfileDialogComponent implements OnInit {
       value: 'max'
     }
   ];
+  protected defaultDateFormat: string;
   protected readonly getCountryName = getCountryName;
   protected historicalDataItems: LineChartItem[];
   protected isBenchmark = false;
   protected isDataGatheringEnabled: boolean;
   protected isEditAssetProfileIdentifierMode = false;
+  protected isLoading = true;
   protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
 
@@ -267,6 +301,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
   protected sectors: {
     [name: string]: { name: string; value: number };
   };
+
+  protected splits: AssetProfileSplit[] = [];
 
   protected readonly translate = translate;
 
@@ -291,11 +327,14 @@ export class GfAssetProfileDialogComponent implements OnInit {
     private userService: UserService
   ) {
     addIcons({
+      calendarClearOutline,
       codeSlashOutline,
       createOutline,
       ellipsisVertical,
+      gitCompareOutline,
       readerOutline,
-      serverOutline
+      serverOutline,
+      trashOutline
     });
   }
 
@@ -308,6 +347,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
     this.benchmarks = benchmarks;
     this.currencies = currencies;
+    this.defaultDateFormat = getDateFormatString(this.data.locale);
 
     this.initialize();
   }
@@ -362,8 +402,9 @@ export class GfAssetProfileDialogComponent implements OnInit {
         symbol: this.data.symbol
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ assetProfile, marketData }) => {
+      .subscribe(({ assetProfile, marketData, splits }) => {
         this.assetProfile = assetProfile;
+        this.splits = splits ?? [];
 
         this.assetClassLabel = translate(this.assetProfile?.assetClass ?? '');
         this.assetSubClassLabel = translate(
@@ -456,6 +497,8 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
         this.assetProfileForm.markAsPristine();
 
+        this.isLoading = false;
+
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -491,9 +534,12 @@ export class GfAssetProfileDialogComponent implements OnInit {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
-
-    this.dialogRef.close();
+    this.adminMarketDataService
+      .deleteAssetProfile({ dataSource, symbol })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.dialogRef.close();
+      });
   }
 
   protected onGatherProfileDataBySymbol({
@@ -517,6 +563,45 @@ export class GfAssetProfileDialogComponent implements OnInit {
       .gatherSymbol({ dataSource, range, symbol })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
+  }
+
+  protected onAddSplit() {
+    const { date, denominator, numerator } =
+      this.assetProfileSplitForm.getRawValue();
+
+    if (!date || !denominator || !numerator) {
+      return;
+    }
+
+    this.adminService
+      .postAssetProfileSplit({
+        dataSource: this.data.dataSource,
+        split: {
+          denominator,
+          numerator,
+          date: format(date, DATE_FORMAT)
+        },
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.assetProfileSplitForm.reset();
+
+        this.initialize();
+      });
+  }
+
+  protected onDeleteSplit(aId: string) {
+    this.adminService
+      .deleteAssetProfileSplit({
+        dataSource: this.data.dataSource,
+        id: aId,
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.initialize();
+      });
   }
 
   protected onMarketDataChanged(withRefresh: boolean = false) {
@@ -568,9 +653,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
           this.assetProfileForm.controls.scraperConfiguration.controls.headers
             .value ?? '{}'
         ) as Record<string, string>,
-        locale:
+        locale: getStringOrUndefined(
           this.assetProfileForm.controls.scraperConfiguration.controls.locale
-            ?.value ?? undefined,
+            ?.value
+        ),
         mode:
           this.assetProfileForm.controls.scraperConfiguration.controls.mode
             ?.value ?? undefined,
@@ -619,7 +705,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       assetClass: this.assetProfileForm.controls.assetClass.value ?? undefined,
       assetSubClass:
         this.assetProfileForm.controls.assetSubClass.value ?? undefined,
-      comment: this.assetProfileForm.controls.comment.value ?? undefined,
+      comment: getStringOrNull(this.assetProfileForm.controls.comment.value),
       currency: this.assetProfileForm.controls.currency.value ?? undefined,
       dataGatheringFrequency:
         this.assetProfileForm.controls.dataGatheringFrequency.value ??
@@ -628,7 +714,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
         ? this.assetProfileForm.controls.isActive.value
         : undefined,
       name: this.assetProfileForm.controls.name.value ?? undefined,
-      url: this.assetProfileForm.controls.url.value ?? undefined
+      url: getStringOrNull(this.assetProfileForm.controls.url.value)
     };
 
     try {
@@ -737,9 +823,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
             this.assetProfileForm.controls.scraperConfiguration.controls.headers
               .value ?? '{}'
           ) as Record<string, string>,
-          locale:
+          locale: getStringOrUndefined(
             this.assetProfileForm.controls.scraperConfiguration.controls.locale
-              ?.value ?? undefined,
+              ?.value
+          ),
           mode: this.assetProfileForm.controls.scraperConfiguration.controls
             .mode?.value,
           selector:

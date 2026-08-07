@@ -67,6 +67,20 @@ export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
   DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
 );
 
+/**
+ * The named date ranges, complemented by the calendar years like '2024',
+ * '2023', '2022', etc.
+ */
+export const DATE_RANGES = [
+  '1d',
+  '1y',
+  '5y',
+  'max',
+  'mtd',
+  'wtd',
+  'ytd'
+] as const;
+
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE =
   'PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE';
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH = 1;
@@ -101,7 +115,6 @@ export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].interestInBaseCurrency',
   'accounts[*].value',
   'accounts[*].valueInBaseCurrency',
-  'activities[*].account.balance',
   'activities[*].account.comment',
   'activities[*].assetProfile.symbolMapping',
   'activities[*].assetProfile.watchedByCount',
@@ -114,7 +127,6 @@ export const DEFAULT_REDACTED_PATHS = [
   'activities[*].valueInBaseCurrency',
   'balance',
   'balanceInBaseCurrency',
-  'balances[*].account.balance',
   'balances[*].account.comment',
   'balances[*].value',
   'balances[*].valueInBaseCurrency',
@@ -217,6 +229,12 @@ export const INVESTMENT_ACTIVITY_TYPES = [
   Type.SELL
 ] as Type[];
 
+export const NON_INVESTMENT_ACTIVITY_TYPES = Object.values(Type).filter(
+  (type) => {
+    return !INVESTMENT_ACTIVITY_TYPES.includes(type);
+  }
+);
+
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
@@ -253,6 +271,7 @@ export const PROPERTY_DEMO_USER_ID = 'DEMO_USER_ID';
 export const PROPERTY_IS_DATA_GATHERING_ENABLED = 'IS_DATA_GATHERING_ENABLED';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
+export const PROPERTY_MAX_DAILY_REQUESTS = 'MAX_DAILY_REQUESTS';
 export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
 export const PROPERTY_OPENROUTER_MODEL_WEB_FETCH = 'OPENROUTER_MODEL_WEB_FETCH';
 export const PROPERTY_PROXY_ROUTES = 'PROXY_ROUTES';
@@ -286,6 +305,8 @@ export const REPLACE_NAME_PARTS = [
   'Vanguard Index Funds -',
   'Xtrackers (IE) Plc -'
 ];
+
+export const SEARCH_QUERY_MINIMUM_LENGTH = 2;
 
 export const SECTORS = [
   'Basic Materials',
@@ -321,11 +342,19 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'zh'
 ] as const;
 
+export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
 export const TAG_ID_EMERGENCY_FUND = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 export const TAG_ID_EXCLUDE_FROM_ANALYSIS =
   'f2e868af-8333-459f-b161-cbc6544c24bd';
-export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
 
+export const TAG_IDS_SYSTEM = [
+  TAG_ID_DEMO,
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+];
+
+export const THROTTLE_DAILY_KEY = 'daily';
+export const THROTTLE_DAILY_TTL = ms('1 day');
 export const THROTTLE_DEFAULT_LIMIT = 10;
 export const THROTTLE_DEFAULT_TTL = ms('1 minute');
 export const THROTTLE_SIGNUP_LIMIT = 5;

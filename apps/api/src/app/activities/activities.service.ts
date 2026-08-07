@@ -3,7 +3,10 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
-import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
+import {
+  isAccountBalanceInFuture,
+  WHERE_ACCOUNT_NOT_EXCLUDED
+} from '@ghostfolio/api/helper/account.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -17,12 +20,13 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
-  ghostfolioPrefix,
+  NON_INVESTMENT_ACTIVITY_TYPES,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
   canDeleteAssetProfile,
-  getAssetProfileIdentifier
+  getAssetProfileIdentifier,
+  isValidCustomAssetProfileSymbol
 } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
@@ -45,7 +49,6 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
@@ -189,7 +192,7 @@ export class ActivitiesService {
     const userId = data.userId;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
@@ -201,10 +204,9 @@ export class ActivitiesService {
       let symbol: string;
 
       if (
-        data.SymbolProfile.connectOrCreate.create.symbol.startsWith(
-          `${ghostfolioPrefix}_`
-        ) ||
-        isUUID(data.SymbolProfile.connectOrCreate.create.symbol)
+        isValidCustomAssetProfileSymbol(
+          data.SymbolProfile.connectOrCreate.create.symbol
+        )
       ) {
         // Connect custom asset profile (clone)
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
@@ -259,7 +261,7 @@ export class ActivitiesService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type)
+    const isDraft = NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type)
       ? false
       : isAfter(data.date as Date, endOfToday());
 
@@ -358,14 +360,23 @@ export class ActivitiesService {
   }
 
   public async deleteActivities({
+    endDate,
     filters,
+    startDate,
+    types,
     userId
   }: {
+    endDate?: Date;
     filters?: Filter[];
+    startDate?: Date;
+    types?: ActivityType[];
     userId: string;
   }): Promise<number> {
     const { activities } = await this.getActivities({
+      endDate,
       filters,
+      startDate,
+      types,
       userId,
       includeDrafts: true,
       userCurrency: undefined,
@@ -456,6 +467,7 @@ export class ActivitiesService {
     }
 
     const activities: Activity[] = [];
+    const endOfTodayDate = endOfToday();
 
     for (const account of cashDetails.accounts) {
       const { balances } = await this.accountBalanceService.getAccountBalances({
@@ -468,6 +480,15 @@ export class ActivitiesService {
       let currentBalanceInBaseCurrency = 0;
 
       for (const balanceItem of balances) {
+        if (
+          isAccountBalanceInFuture({
+            endOfTodayDate,
+            date: balanceItem.date
+          })
+        ) {
+          continue;
+        }
+
         const syntheticActivityTemplate: Activity = {
           userId,
           accountId: account.id,
@@ -961,7 +982,7 @@ export class ActivitiesService {
     let isDraft = false;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {

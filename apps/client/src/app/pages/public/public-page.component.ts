@@ -69,6 +69,7 @@ export class GfPublicPageComponent implements OnInit {
   protected hasPermissionForSubscription: boolean;
   protected holdings: PublicPortfolioResponse['holdings'][string][];
   protected info: InfoItem;
+  protected isLoading = true;
   protected latestActivitiesDataSource: MatTableDataSource<
     PublicPortfolioResponse['latestActivities'][0]
   >;
@@ -137,6 +138,8 @@ export class GfPublicPageComponent implements OnInit {
         this.latestActivitiesDataSource = new MatTableDataSource(
           this.publicPortfolioDetails.latestActivities
         );
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
