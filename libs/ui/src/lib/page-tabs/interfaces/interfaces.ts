@@ -1,6 +1,11 @@
-export interface TabConfiguration {
+interface BaseTabConfiguration {
   iconName: string;
   label: string;
-  routerLink: string[];
   showCondition?: boolean;
 }
+
+export type TabConfiguration = BaseTabConfiguration &
+  (
+    | { onClick: () => void; routerLink?: never }
+    | { onClick?: never; routerLink: string[] }
+  );

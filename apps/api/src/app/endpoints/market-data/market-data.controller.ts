@@ -1,23 +1,11 @@
-import { AdminService } from '@ghostfolio/api/app/admin/admin.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
-import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import {
-  ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
-  ghostfolioFearAndGreedIndexDataSourceStocks,
-  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
-  ghostfolioFearAndGreedIndexSymbolStocks
-} from '@ghostfolio/common/config';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/common/dtos';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
-import {
-  MarketDataDetailsResponse,
-  MarketDataOfMarketsResponse
-} from '@ghostfolio/common/interfaces';
+import { MarketDataOfMarketsResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -28,10 +16,10 @@ import {
   HttpException,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
   Query,
-  UseGuards,
-  UseInterceptors
+  UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -42,7 +30,6 @@ import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 @Controller('market-data')
 export class MarketDataController {
   public constructor(
-    private readonly adminService: AdminService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly symbolProfileService: SymbolProfileService,
@@ -53,81 +40,12 @@ export class MarketDataController {
   @HasPermission(permissions.readMarketDataOfMarkets)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketDataOfMarkets(
-    @Query('includeHistoricalData') includeHistoricalData = 0
+    @Query('includeHistoricalData', new ParseIntPipe({ optional: true }))
+    includeHistoricalData = 0
   ): Promise<MarketDataOfMarketsResponse> {
-    const [
-      marketDataFearAndGreedIndexCryptocurrencies,
-      marketDataFearAndGreedIndexStocks
-    ] = await Promise.all([
-      this.symbolService.get({
-        includeHistoricalData,
-        dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
-          symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
-        }
-      }),
-      this.symbolService.get({
-        includeHistoricalData,
-        dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSourceStocks,
-          symbol: ghostfolioFearAndGreedIndexSymbolStocks
-        }
-      })
-    ]);
-
-    return {
-      fearAndGreedIndex: {
-        CRYPTOCURRENCIES: {
-          ...marketDataFearAndGreedIndexCryptocurrencies
-        },
-        STOCKS: {
-          ...marketDataFearAndGreedIndexStocks
-        }
-      }
-    };
-  }
-
-  @Get(':dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getMarketDataBySymbol(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<MarketDataDetailsResponse> {
-    const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
-      { dataSource, symbol }
-    ]);
-
-    if (!assetProfile && !isCurrency(getCurrencyFromSymbol(symbol))) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    const canReadAllAssetProfiles = hasPermission(
-      this.request.user.permissions,
-      permissions.readMarketData
-    );
-
-    const canReadOwnAssetProfile =
-      assetProfile?.userId === this.request.user.id &&
-      hasPermission(
-        this.request.user.permissions,
-        permissions.readMarketDataOfOwnAssetProfile
-      );
-
-    if (!canReadAllAssetProfiles && !canReadOwnAssetProfile) {
-      throw new HttpException(
-        assetProfile.userId
-          ? getReasonPhrase(StatusCodes.NOT_FOUND)
-          : getReasonPhrase(StatusCodes.FORBIDDEN),
-        assetProfile.userId ? StatusCodes.NOT_FOUND : StatusCodes.FORBIDDEN
-      );
-    }
-
-    return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
+    return this.symbolService.getMarketDataOfMarkets({
+      includeHistoricalData
+    });
   }
 
   @Post(':dataSource/:symbol')

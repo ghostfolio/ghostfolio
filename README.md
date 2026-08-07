@@ -77,6 +77,8 @@ The frontend is built with [Angular](https://angular.dev) and uses [Angular Mate
 
 We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64`, `linux/arm/v7` and `linux/arm64`.
 
+Find answers to commonly asked questions about self-hosting Ghostfolio in our [Frequently Asked Questions (FAQ)](https://ghostfol.io/en/faq/self-hosting) section.
+
 <div align="center">
 
 [<img src="./apps/client/src/assets/images/button-buy-me-a-coffee.png" width="150" alt="Buy me a coffee button"/>](https://www.buymeacoffee.com/ghostfolio)
@@ -85,29 +87,30 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 ### Supported Environment Variables
 
-| Name                        | Type                  | Default Value         | Description                                                                                                                                                                            |
-| --------------------------- | --------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ACCESS_TOKEN_SALT`         | `string`              |                       | A random string used as salt for access tokens                                                                                                                                         |
-| `API_KEY_COINGECKO_DEMO`    | `string` (optional)   |                       | The _CoinGecko_ Demo API key                                                                                                                                                           |
-| `API_KEY_COINGECKO_PRO`     | `string` (optional)   |                       | The _CoinGecko_ Pro API key                                                                                                                                                            |
-| `DATABASE_URL`              | `string`              |                       | The database connection URL. If using a connection pooler, use the pooled connection URL here. e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}` |
-| `DIRECT_URL`                | `string` (optional)   |                       | The direct database connection URL used by the _Prisma CLI_ (e.g. for schema migrations) and seeding, bypassing any connection poolers (falls back to `DATABASE_URL`)                  |
-| `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                | Enables authentication via security token                                                                                                                                              |
-| `HOST`                      | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                                                                                  |
-| `JWT_SECRET_KEY`            | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                                                                       |
-| `LOG_LEVELS`                | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                                                                               |
-| `PORT`                      | `number` (optional)   | `3333`                | The port where the Ghostfolio application will run on                                                                                                                                  |
-| `POSTGRES_DB`               | `string`              |                       | The name of the _PostgreSQL_ database                                                                                                                                                  |
-| `POSTGRES_PASSWORD`         | `string`              |                       | The password of the _PostgreSQL_ database                                                                                                                                              |
-| `POSTGRES_USER`             | `string`              |                       | The user of the _PostgreSQL_ database                                                                                                                                                  |
-| `REDIS_DB`                  | `number` (optional)   | `0`                   | The database index of _Redis_                                                                                                                                                          |
-| `REDIS_HOST`                | `string`              |                       | The host where _Redis_ is running                                                                                                                                                      |
-| `REDIS_PASSWORD`            | `string`              |                       | The password of _Redis_                                                                                                                                                                |
-| `REDIS_PORT`                | `number`              |                       | The port where _Redis_ is running                                                                                                                                                      |
-| `REQUEST_TIMEOUT`           | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                                                                      |
-| `ROOT_URL`                  | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                                                                      |
+| Name                        | Type                  | Default Value         | Description                                                                                                                                                                                                                   |
+| --------------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ACCESS_TOKEN_SALT`         | `string`              |                       | A random string used as salt for access tokens                                                                                                                                                                                |
+| `API_KEY_COINGECKO_DEMO`    | `string` (optional)   |                       | The _CoinGecko_ Demo API key                                                                                                                                                                                                  |
+| `API_KEY_COINGECKO_PRO`     | `string` (optional)   |                       | The _CoinGecko_ Pro API key                                                                                                                                                                                                   |
+| `DATABASE_URL`              | `string`              |                       | The database connection URL. If using a connection pooler, use the pooled connection URL here. e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}`                                        |
+| `DIRECT_URL`                | `string` (optional)   |                       | The direct database connection URL used by the _Prisma CLI_ (e.g. for schema migrations) and seeding, bypassing any connection poolers (falls back to `DATABASE_URL`)                                                         |
+| `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                | Enables authentication via security token                                                                                                                                                                                     |
+| `HOST`                      | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                                                                                                                         |
+| `JWT_SECRET_KEY`            | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                                                                                                              |
+| `LOG_LEVELS`                | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                                                                                                                      |
+| `PORT`                      | `number` (optional)   | `3333`                | The port where the Ghostfolio application will run on                                                                                                                                                                         |
+| `POSTGRES_DB`               | `string`              |                       | The name of the _PostgreSQL_ database                                                                                                                                                                                         |
+| `POSTGRES_PASSWORD`         | `string`              |                       | The password of the _PostgreSQL_ database                                                                                                                                                                                     |
+| `POSTGRES_USER`             | `string`              |                       | The user of the _PostgreSQL_ database                                                                                                                                                                                         |
+| `REDIS_DB`                  | `number` (optional)   | `0`                   | The database index of _Redis_                                                                                                                                                                                                 |
+| `REDIS_HOST`                | `string`              |                       | The host where _Redis_ is running                                                                                                                                                                                             |
+| `REDIS_PASSWORD`            | `string`              |                       | The password of _Redis_                                                                                                                                                                                                       |
+| `REDIS_PORT`                | `number`              |                       | The port where _Redis_ is running                                                                                                                                                                                             |
+| `REQUEST_TIMEOUT`           | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                                                                                                             |
+| `ROOT_URL`                  | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                                                                                                             |
+| `TRUST_PROXY`               | `string` (optional)   |                       | The [trust proxy](https://expressjs.com/en/guide/behind-proxies.html) setting of _Express.js_ to determine the client IP address for rate limiting, e.g. `1` if the Ghostfolio application runs behind a single reverse proxy |
 
-#### OpenID Connect OIDC (Experimental)
+#### OpenID Connect OIDC (experimental)
 
 | Name                       | Type                  | Default Value                        | Description                                                                                          |
 | -------------------------- | --------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
@@ -186,8 +189,6 @@ Set the header for each request as follows:
 ```
 
 You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anonymous` (Body: `{ "accessToken": "<INSERT_SECURITY_TOKEN_OF_ACCOUNT>" }`)
-
-Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>` or `curl -s http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>`.
 
 ### Health Check (experimental)
 
@@ -302,6 +303,58 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 }
 ```
 
+### Update Asset Profile Data (experimental)
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) for authorization with admin role
+
+#### Request
+
+`PATCH http://localhost:3333/api/v1/asset-profiles/<INSERT_DATA_SOURCE>/<INSERT_SYMBOL>`
+
+#### Body
+
+```
+{
+  "countries": [
+    {
+      "code": "US",
+      "weight": 1
+    }
+  ],
+  "sectors": [
+    {
+      "name": "Technology",
+      "weight": 1
+    }
+  ]
+}
+```
+
+| Field       | Type               | Description                                                            |
+| ----------- | ------------------ | ---------------------------------------------------------------------- |
+| `countries` | `array` (optional) | Countries with `code` (`ISO 3166-1 alpha-2`) and `weight` (`0` to `1`) |
+| `holdings`  | `array` (optional) | Holdings with `name` and `weight` (`0` to `1`)                         |
+| `sectors`   | `array` (optional) | Sectors with `name` and `weight` (`0` to `1`)                          |
+
+#### Response
+
+##### Success
+
+`200 OK`
+
+##### Error
+
+`404 Not Found`
+
+```
+{
+  "error": "Not Found",
+  "message": "Could not find the asset profile for MSFT (YAHOO)"
+}
+```
+
 ## Community Projects
 
 Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio
@@ -310,7 +363,7 @@ Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ r
 
 ## Contributing
 
-Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public, including you.
+Ghostfolio is **100% free** and **open source**. We support an active and healthy community and welcome contributions from everyone, including you.
 
 Not sure what to work on? We have [some ideas](https://github.com/ghostfolio/ghostfolio/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22%20no%3Aassignee), even for [newcomers](https://github.com/ghostfolio/ghostfolio/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22%20no%3Aassignee). Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or post to [@ghostfolio\_](https://x.com/ghostfolio_) on _X_. We would love to hear from you.
 
@@ -325,10 +378,6 @@ If you like to support this project, get [**Ghostfolio Premium**](https://ghostf
     <img alt="TestMu AI Logo" height="45" src="https://assets.testmuai.com/resources/images/logos/logo.svg" />
   </a>
 </div>
-
-## Analytics
-
-![Alt](https://repobeats.axiom.co/api/embed/281a80b2d0c4af1162866c24c803f1f18e5ed60e.svg 'Repobeats analytics image')
 
 ## License
 

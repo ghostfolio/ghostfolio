@@ -26,15 +26,22 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_DATE_RANGE,
   DEFAULT_LANGUAGE_CODE,
+  DEFAULT_LOCALE,
+  PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_MAX_DAILY_REQUESTS,
+  PROPERTY_REFERRAL_PARTNERS,
   PROPERTY_SYSTEM_MESSAGE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
-  locale as defaultLocale
+  THROTTLE_DAILY_KEY,
+  THROTTLE_DAILY_TTL
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   User as IUser,
+  ReferralPartner,
   SystemMessage,
   UserSettings
 } from '@ghostfolio/common/interfaces';
@@ -46,15 +53,18 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Prisma, Role, User } from '@prisma/client';
+import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
+import { Prisma, Role, Settings, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
-import { without } from 'lodash';
+import { isNil, without } from 'lodash';
 import { createHmac } from 'node:crypto';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
@@ -63,7 +73,9 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+    @InjectThrottlerStorage()
+    private readonly throttlerStorage: ThrottlerStorage
   ) {}
 
   public async count(args?: Prisma.UserCountArgs) {
@@ -99,7 +111,7 @@ export class UserService {
 
   public async getUser({
     impersonationUserId,
-    locale = defaultLocale,
+    locale = DEFAULT_LOCALE,
     user
   }: {
     impersonationUserId: string;
@@ -108,7 +120,14 @@ export class UserService {
   }): Promise<IUser> {
     const { id, permissions, settings, subscription } = user;
 
-    const userData = await Promise.all([
+    const [
+      access,
+      accounts,
+      activitiesCount,
+      firstActivity,
+      impersonationUserSettings,
+      tagsForUser
+    ] = await Promise.all([
       this.prismaService.access.findMany({
         include: {
           user: true
@@ -117,6 +136,7 @@ export class UserService {
         where: { granteeUserId: id }
       }),
       this.prismaService.account.findMany({
+        include: { platform: true },
         orderBy: {
           name: 'asc'
         },
@@ -133,16 +153,28 @@ export class UserService {
         },
         where: { userId: impersonationUserId || user.id }
       }),
+      impersonationUserId
+        ? this.prismaService.settings.findUnique({
+            where: { userId: impersonationUserId }
+          })
+        : Promise.resolve<Settings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const access = userData[0];
-    const accounts = userData[1];
-    const activitiesCount = userData[2];
-    const firstActivity = userData[3];
-    let tags = userData[4].filter((tag) => {
-      return tag.id !== TAG_ID_EXCLUDE_FROM_ANALYSIS;
-    });
+    const baseCurrency =
+      (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
+      (settings.settings as UserSettings)?.baseCurrency;
+
+    let referralPartners: ReferralPartner[];
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      subscription.type === SubscriptionType.Basic
+    ) {
+      referralPartners = await this.propertyService.getByKey<ReferralPartner[]>(
+        PROPERTY_REFERRAL_PARTNERS
+      );
+    }
 
     let systemMessage: SystemMessage;
 
@@ -155,17 +187,22 @@ export class UserService {
       systemMessage = systemMessageProperty;
     }
 
+    let tags = tagsForUser;
+
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       subscription.type === SubscriptionType.Basic
     ) {
-      tags = [];
+      tags = tags.filter(({ id }) => {
+        return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+      });
     }
 
     return {
       activitiesCount,
       id,
       permissions,
+      referralPartners,
       subscription,
       systemMessage,
       tags,
@@ -182,6 +219,7 @@ export class UserService {
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(settings.settings as UserSettings),
+        baseCurrency,
         locale: (settings.settings as UserSettings)?.locale ?? locale
       }
     };
@@ -199,25 +237,42 @@ export class UserService {
     return usersWithAdminRole.length > 0;
   }
 
+  public async isDailyRequestLimitExceeded({
+    user
+  }: {
+    user: UserWithSettings;
+  }) {
+    if (user.subscription?.type === SubscriptionType.Premium) {
+      return false;
+    }
+
+    const maxDailyRequests = await this.getMaxDailyRequests();
+
+    if (maxDailyRequests === undefined) {
+      return false;
+    }
+
+    try {
+      const { isBlocked } = await this.throttlerStorage.increment(
+        `${THROTTLE_DAILY_KEY}-${user.id}`,
+        THROTTLE_DAILY_TTL,
+        maxDailyRequests,
+        THROTTLE_DAILY_TTL,
+        THROTTLE_DAILY_KEY
+      );
+
+      return isBlocked;
+    } catch (error) {
+      this.logger.error(error);
+
+      return false;
+    }
+  }
+
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
-    const {
-      _count,
-      accessesGet,
-      accessToken,
-      accounts,
-      analytics,
-      authChallenge,
-      createdAt,
-      id,
-      provider,
-      role,
-      settings,
-      subscriptions,
-      thirdPartyId,
-      updatedAt
-    } = await this.prismaService.user.findUnique({
+    const userFromDatabase = await this.prismaService.user.findUnique({
       include: {
         _count: {
           select: {
@@ -235,6 +290,27 @@ export class UserService {
       where: userWhereUniqueInput
     });
 
+    if (!userFromDatabase) {
+      return null;
+    }
+
+    const {
+      _count,
+      accessesGet,
+      accessToken,
+      accounts,
+      analytics,
+      authChallenge,
+      createdAt,
+      id,
+      provider,
+      role,
+      settings,
+      subscriptions,
+      thirdPartyId,
+      updatedAt
+    } = userFromDatabase;
+
     const activitiesCount = _count?.activities ?? 0;
 
     const user: UserWithSettings = {
@@ -251,19 +327,19 @@ export class UserService {
       updatedAt,
       activityCount: analytics?.activityCount,
       dataProviderGhostfolioDailyRequests:
-        analytics?.dataProviderGhostfolioDailyRequests
+        analytics?.dataProviderGhostfolioDailyRequests ?? 0
     };
 
-    if (user?.settings) {
+    if (user.settings) {
       if (!user.settings.settings) {
         user.settings.settings = {};
       }
-    } else if (user) {
+    } else {
       // Set default settings if needed
       user.settings = {
         settings: {},
         updatedAt: new Date(),
-        userId: user?.id
+        userId: user.id
       };
     }
 
@@ -281,7 +357,8 @@ export class UserService {
     (user.settings.settings as UserSettings).dateRange =
       (user.settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
-        : ((user.settings.settings as UserSettings)?.dateRange ?? 'max');
+        : ((user.settings.settings as UserSettings)?.dateRange ??
+          DEFAULT_DATE_RANGE);
 
     // Set default value for performance calculation type
     if (!(user.settings.settings as UserSettings)?.performanceCalculationType) {
@@ -473,9 +550,11 @@ export class UserService {
           currentPermissions,
           permissions.accessHoldingsChart,
           permissions.createAccess,
+          permissions.createAssetProfileSplitOfOwnAssetProfile,
           permissions.createMarketDataOfOwnAssetProfile,
           permissions.createOwnTag,
           permissions.createWatchlistItem,
+          permissions.deleteAssetProfileSplitOfOwnAssetProfile,
           permissions.readAiPrompt,
           permissions.readMarketDataOfOwnAssetProfile,
           permissions.updateMarketDataOfOwnAssetProfile
@@ -506,8 +585,25 @@ export class UserService {
         user.subscription.offer.label = undefined;
       }
 
+      if (
+        !hasRole(user, Role.DEMO) &&
+        (user.provider !== 'ANONYMOUS' ||
+          user.subscription?.type === SubscriptionType.Premium)
+      ) {
+        currentPermissions.push(permissions.requestOwnUserDeletion);
+      }
+
       if (hasRole(user, Role.ADMIN)) {
         currentPermissions.push(permissions.syncDemoUserAccount);
+      }
+    } else {
+      if (
+        this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX') ||
+        (await this.propertyService.getByKey<string>(
+          PROPERTY_API_KEY_GHOSTFOLIO
+        ))
+      ) {
+        currentPermissions.push(permissions.readMarketDataOfMarkets);
       }
     }
 
@@ -728,5 +824,27 @@ export class UserService {
     }
 
     return settings;
+  }
+
+  private async getMaxDailyRequests() {
+    const value = await this.propertyService.getByKey<string>(
+      PROPERTY_MAX_DAILY_REQUESTS
+    );
+
+    if (isNil(value) || value === '') {
+      return undefined;
+    }
+
+    const maxDailyRequests = Number(value);
+
+    if (!Number.isInteger(maxDailyRequests) || maxDailyRequests < 0) {
+      this.logger.warn(
+        `The property ${PROPERTY_MAX_DAILY_REQUESTS} is not a non-negative integer ("${value}"), the daily request limit is not applied`
+      );
+
+      return undefined;
+    }
+
+    return maxDailyRequests;
   }
 }

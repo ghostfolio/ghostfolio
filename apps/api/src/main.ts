@@ -1,3 +1,5 @@
+import { languageRedirectMiddleware } from '@ghostfolio/api/middlewares/language-redirect.middleware';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   BULL_BOARD_ROUTE,
   DEFAULT_HOST,
@@ -18,11 +20,26 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
+import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
+const logger = new Logger('Bootstrap');
+const processWarningLogger = new Logger('ProcessWarning');
+
+process.on('warning', ({ name, stack }) => {
+  if (name === 'MaxListenersExceededWarning') {
+    // Log the stack trace of MaxListenersExceededWarning occurrences to identify
+    // the event emitter and the call site which registers the listeners
+    processWarningLogger.warn(stack);
+  }
+});
+
 async function bootstrap() {
+  // Respect HTTP_PROXY / HTTPS_PROXY / NO_PROXY for outbound HTTP requests
+  setGlobalDispatcher(new EnvHttpProxyAgent());
+
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
   let customLogLevels: LogLevel[];
@@ -32,6 +49,8 @@ async function bootstrap() {
       configService.get<string>('LOG_LEVELS')
     ) as LogLevel[];
   } catch {}
+
+  await configApp.close();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger:
@@ -91,6 +110,25 @@ async function bootstrap() {
     });
   }
 
+  app.use(languageRedirectMiddleware);
+
+  const configurationService = app.get(ConfigurationService);
+
+  const trustProxy = configurationService.get('TRUST_PROXY');
+
+  if (trustProxy) {
+    app.set('trust proxy', trustProxy);
+  }
+
+  if (
+    configurationService.get('ENABLE_FEATURE_RATE_LIMITING') &&
+    trustProxy === ''
+  ) {
+    logger.warn(
+      'Rate limiting is enabled, but TRUST_PROXY is not set. If the Ghostfolio application runs behind a reverse proxy, the rate limits are shared across all clients.'
+    );
+  }
+
   const HOST = configService.get<string>('HOST') || DEFAULT_HOST;
   const PORT = configService.get<number>('PORT') || DEFAULT_PORT;
 
@@ -110,20 +148,20 @@ async function bootstrap() {
       address = `${host}:${addressObject.port}`;
     }
 
-    Logger.log(`Listening at http://${address}`);
-    Logger.log('');
+    logger.log(`Listening at http://${address}`);
+    logger.log('');
   });
 }
 
 function logLogo() {
-  Logger.log('   ________               __  ____      ___');
-  Logger.log('  / ____/ /_  ____  _____/ /_/ __/___  / (_)___');
-  Logger.log(' / / __/ __ \\/ __ \\/ ___/ __/ /_/ __ \\/ / / __ \\');
-  Logger.log('/ /_/ / / / / /_/ (__  ) /_/ __/ /_/ / / / /_/ /');
-  Logger.log(
+  logger.log('   ________               __  ____      ___');
+  logger.log('  / ____/ /_  ____  _____/ /_/ __/___  / (_)___');
+  logger.log(' / / __/ __ \\/ __ \\/ ___/ __/ /_/ __ \\/ / / __ \\');
+  logger.log('/ /_/ / / / / /_/ (__  ) /_/ __/ /_/ / / / /_/ /');
+  logger.log(
     `\\____/_/ /_/\\____/____/\\__/_/  \\____/_/_/\\____/ ${environment.version}`
   );
-  Logger.log('');
+  logger.log('');
 }
 
 bootstrap();

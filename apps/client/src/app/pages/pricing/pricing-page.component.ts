@@ -8,6 +8,7 @@ import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -32,6 +33,7 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [
     GfPremiumIndicatorComponent,
@@ -67,20 +69,6 @@ export class GfPricingPageComponent implements OnInit {
   protected readonly professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
-
-  protected readonly referralBrokers = [
-    'Alpian',
-    'DEGIRO',
-    'finpension',
-    'frankly',
-    'Interactive Brokers',
-    'Mintos',
-    'Monefit SmartSaver',
-    'Revolut',
-    'Swissquote',
-    'VIAC',
-    'Zak'
-  ] as const;
 
   protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
   protected readonly routerLinkRegister = publicRoutes.register.routerLink;
@@ -137,9 +125,9 @@ export class GfPricingPageComponent implements OnInit {
           this.label = this.user?.subscription?.offer?.label;
           this.price = this.user?.subscription?.offer?.price;
           this.priceId = this.user?.subscription?.offer?.priceId;
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 

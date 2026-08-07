@@ -26,6 +26,10 @@
         "baseHref": "/it/",
         "translation": "apps/client/src/locales/messages.it.xlf"
       },
+      "ja": {
+        "baseHref": "/ja/",
+        "translation": "apps/client/src/locales/messages.ja.xlf"
+      },
       "ko": {
         "baseHref": "/ko/",
         "translation": "apps/client/src/locales/messages.ko.xlf"
@@ -118,6 +122,10 @@
           "baseHref": "/it/",
           "localize": ["it"]
         },
+        "development-ja": {
+          "baseHref": "/ja/",
+          "localize": ["ja"]
+        },
         "development-ko": {
           "baseHref": "/ko/",
           "localize": ["ko"]
@@ -204,9 +212,6 @@
             "command": "shx cp apps/client/src/assets/favicon.ico dist/apps/client"
           },
           {
-            "command": "shx cp apps/client/src/assets/index.html dist/apps/client"
-          },
-          {
             "command": "shx cp apps/client/src/assets/robots.txt dist/apps/client"
           },
           {
@@ -246,6 +251,9 @@
         },
         "development-it": {
           "buildTarget": "client:build:development-it"
+        },
+        "development-ja": {
+          "buildTarget": "client:build:development-ja"
         },
         "development-ko": {
           "buildTarget": "client:build:development-ko"
@@ -289,6 +297,7 @@
           "messages.es.xlf",
           "messages.fr.xlf",
           "messages.it.xlf",
+          "messages.ja.xlf",
           "messages.ko.xlf",
           "messages.nl.xlf",
           "messages.pl.xlf",

@@ -5,3 +5,7 @@ export interface LoginWithAccessTokenDialogParams {
   hasPermissionToUseAuthToken: boolean;
   title: string;
 }
+
+export interface LoginWithAccessTokenDialogResult {
+  accessToken: string | null;
+}

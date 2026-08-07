@@ -2,173 +2,252 @@ import { Product } from '@ghostfolio/common/interfaces';
 
 export const personalFinanceTools: Product[] = [
   {
+    categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    key: 'acemoney',
+    name: 'AceMoney',
+    note: 'License is a perpetual license',
+    origin: 'US',
+    platforms: ['MACOS', 'WINDOWS'],
+    pricingPerYear: '$44.95',
+    slogan: 'Lifetime Personal Finance Control, One Single Payment.',
+    url: 'https://www.mechcad.net'
+  },
+  {
+    categories: ['WEALTH_MANAGEMENT'],
+    key: 'akkuro',
+    name: 'Akkuro',
+    slogan: 'Composable Banking',
+    url: 'https://akkuro.com'
+  },
+  {
+    categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
     founded: 2023,
     hasSelfHostingAbility: false,
     key: 'allinvestview',
     languages: ['English'],
     name: 'AllInvestView',
-    slogan: 'All your Investments in One View'
+    platforms: ['WEB'],
+    slogan: 'All your Investments in One View',
+    url: 'https://www.allinvestview.com'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'allvue-systems',
     name: 'Allvue Systems',
-    origin: 'United States',
-    slogan: 'Investment Software Suite'
+    origin: 'US',
+    slogan: 'Investment Software Suite',
+    url: 'https://www.allvuesystems.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2016,
     key: 'alphatrackr',
     languages: ['English'],
     name: 'AlphaTrackr',
-    slogan: 'Investment Portfolio Tracking Tool'
+    platforms: ['WEB'],
+    slogan: 'Investment Portfolio Tracking Tool',
+    url: 'https://www.alphatrackr.com'
   },
   {
+    categories: ['FAMILY_OFFICE', 'NET_WORTH_TRACKING', 'WEALTH_MANAGEMENT'],
     founded: 2017,
     hasSelfHostingAbility: false,
     key: 'altoo',
     name: 'Altoo Wealth Platform',
-    origin: 'Switzerland',
-    slogan: 'Simplicity for Complex Wealth'
+    origin: 'CH',
+    platforms: ['WEB'],
+    slogan: 'Simplicity for Complex Wealth',
+    url: 'https://altoo.io'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'altruist',
     name: 'Altruist',
-    origin: 'United States',
-    slogan: 'The wealth platform built for independent advisors'
+    origin: 'US',
+    platforms: ['WEB'],
+    slogan: 'The wealth platform built for independent advisors',
+    url: 'https://altruist.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2023,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'amsflow',
     name: 'Amsflow Portfolio',
-    origin: 'Singapore',
+    origin: 'SG',
     pricingPerYear: '$228',
-    slogan: 'Portfolio Visualizer'
+    slogan: 'Portfolio Visualizer',
+    url: 'https://amsflow.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2018,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'anlage.app',
     languages: ['English'],
     name: 'Anlage.App',
-    origin: 'Austria',
+    origin: 'AT',
+    platforms: ['WEB'],
     pricingPerYear: '$120',
-    slogan: 'Analyze and track your portfolio.'
+    slogan: 'Analyze and track your portfolio.',
+    url: 'https://anlage.app'
   },
   {
+    categories: ['FAMILY_OFFICE'],
     founded: 2022,
     hasFreePlan: false,
     key: 'asseta',
     languages: ['English'],
     name: 'Asseta',
-    origin: 'United States',
-    slogan: 'The Intelligent Family Office Suite'
+    origin: 'US',
+    platforms: ['WEB'],
+    slogan: 'The Intelligent Family Office Suite',
+    url: 'https://www.asseta.ai'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2016,
     key: 'atominvest',
     name: 'Atominvest',
-    origin: 'United Kingdom',
-    slogan: 'Portfolio Management'
+    origin: 'GB',
+    slogan: 'Portfolio Management',
+    url: 'https://www.atominvest.co'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'balance-pro',
     name: 'Balance Pro',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$47.99',
-    slogan: 'The Smarter Way to Track Your Finances'
+    slogan: 'The Smarter Way to Track Your Finances',
+    url: 'https://www.balancepro.app'
   },
   {
+    categories: ['BUDGETING'],
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'banktivity',
     name: 'Banktivity',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['IOS', 'MACOS'],
     pricingPerYear: '$59.99',
-    slogan: 'Proactive money management app for macOS & iOS'
+    slogan: 'Proactive money management app for macOS & iOS',
+    url: 'https://www.banktivity.com'
+  },
+  {
+    categories: ['BUDGETING'],
+    key: 'basil-wealth',
+    name: 'Basil',
+    platforms: ['WEB'],
+    url: 'https://basilwealth.com'
   },
   {
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'basil-finance',
     name: 'Basil Finance',
-    slogan: 'The ultimate solution for tracking and managing your investments'
+    slogan: 'The ultimate solution for tracking and managing your investments',
+    url: 'https://basil.fi'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'beanvest',
     name: 'Beanvest',
-    origin: 'France',
+    origin: 'FR',
+    platforms: ['WEB'],
     pricingPerYear: '$100',
-    slogan: 'Stock Portfolio Tracker for Smart Investors'
+    slogan: 'Stock Portfolio Tracker for Smart Investors',
+    url: 'https://beanvest.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2024,
     hasSelfHostingAbility: false,
     key: 'bluebudget',
     languages: ['Deutsch', 'English', 'Français', 'Italiano'],
     name: 'BlueBudget',
-    origin: 'Switzerland',
-    slogan: 'Schweizer Budget App für einfache & smarte Budgetplanung'
+    origin: 'CH',
+    platforms: ['ANDROID', 'IOS'],
+    slogan: 'Schweizer Budget App für einfache & smarte Budgetplanung',
+    url: 'https://www.bluebudget.ch'
   },
   {
+    categories: ['FINANCIAL_PLANNING'],
     founded: 2015,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'boldin',
     name: 'Boldin',
     note: 'Originally named as NewRetirement',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$144',
-    slogan: 'Take control with retirement planning tools that begin with you'
+    slogan: 'Take control with retirement planning tools that begin with you',
+    url: 'https://www.boldin.com'
   },
   {
+    categories: ['BUDGETING'],
     key: 'budgetpulse',
     name: 'BudgetPulse',
-    origin: 'United States',
-    slogan: 'Giving life to your finance!'
+    origin: 'US',
+    platforms: ['WEB'],
+    slogan: 'Giving life to your finance!',
+    url: 'https://www.budgetpulse.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2007,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'buxfer',
     name: 'Buxfer',
-    origin: 'United States',
-    pricingPerYear: '$48',
+    origin: 'US',
+    platforms: ['WEB'],
+    pricingPerYear: '$96',
     regions: ['Global'],
-    slogan: 'Take control of your financial future'
+    slogan: 'Take control of your financial future',
+    url: 'https://www.buxfer.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'capitally',
     name: 'Capitally',
-    origin: 'Poland',
+    origin: 'PL',
+    platforms: ['WEB'],
     pricingPerYear: '€80',
-    slogan: 'Optimize your investments performance'
+    slogan: 'Optimize your investments performance',
+    url: 'https://www.mycapitally.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2022,
     isArchived: true,
     key: 'capmon',
     name: 'CapMon.org',
-    origin: 'Germany',
     note: 'CapMon.org was discontinued in 2023',
+    origin: 'DE',
+    platforms: ['WEB'],
     slogan: 'Next Generation Assets Tracking'
   },
   {
@@ -181,171 +260,246 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Toma el control total de tus finanzas.'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2011,
     key: 'cobalt',
     name: 'Cobalt',
-    origin: 'United States',
-    slogan: 'Next-Level Portfolio Monitoring'
+    origin: 'US',
+    platforms: ['WEB'],
+    slogan: 'Next-Level Portfolio Monitoring',
+    url: 'https://www.cobalt.pe'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'coinstats',
     name: 'CoinStats',
-    origin: 'Armenia',
+    origin: 'AM',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$168',
-    slogan: 'Manage All Your Wallets & Exchanges From One Place'
+    slogan: 'Manage All Your Wallets & Exchanges From One Place',
+    url: 'https://coinstats.app'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'TAX_REPORTING'],
     founded: 2013,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'cointracking',
     languages: ['Deutsch', 'English'],
     name: 'CoinTracking',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '$120',
-    slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator'
+    slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator',
+    url: 'https://cointracking.info'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2019,
     key: 'compound-planning',
     name: 'Compound Planning',
-    origin: 'United States',
-    slogan: 'Modern Wealth & Investment Management'
+    origin: 'US',
+    platforms: ['IOS', 'WEB'],
+    slogan: 'Modern Wealth & Investment Management',
+    url: 'https://compoundplanning.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'copilot-money',
     name: 'Copilot Money',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['IOS', 'MACOS', 'WEB'],
     pricingPerYear: '$95',
-    slogan: 'Do money better with Copilot'
+    slogan: 'Do money better with Copilot',
+    url: 'https://www.copilot.money'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2014,
     hasFreePlan: false,
     key: 'countabout',
     name: 'CountAbout',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$9.99',
-    slogan: 'Customizable and Secure Personal Finance App'
+    slogan: 'Customizable and Secure Personal Finance App',
+    url: 'https://countabout.com'
   },
   {
+    categories: ['FAMILY_OFFICE'],
     founded: 2023,
     hasFreePlan: false,
     key: 'danti',
     name: 'Danti',
-    origin: 'United Kingdom',
-    slogan: 'Digitising Generational Wealth'
+    origin: 'GB',
+    slogan: 'Digitising Generational Wealth',
+    url: 'https://danti.io'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2020,
     key: 'de.fi',
     languages: ['English'],
     name: 'De.Fi',
-    slogan: 'DeFi Portfolio Tracker'
+    slogan: 'DeFi Portfolio Tracker',
+    url: 'https://de.fi'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2016,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'defi-portfolio-tracker-by-zerion',
     languages: ['English'],
     name: 'DeFi Portfolio Tracker by Zerion',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$99',
-    slogan: 'DeFi Portfolio Tracker for All Chains'
+    slogan: 'DeFi Portfolio Tracker for All Chains',
+    url: 'https://zerion.io/defi-portfolio-tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'degiro-portfolio-tracker-by-capitalyse',
     languages: ['English'],
     name: 'DEGIRO Portfolio Tracker by Capitalyse',
-    origin: 'Netherlands',
+    origin: 'NL',
+    platforms: ['WEB'],
     pricingPerYear: '€24',
-    slogan: 'Democratizing Data Analytics'
+    slogan: 'Democratizing Data Analytics',
+    url: 'https://capitalyse.app/app/degiro'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'STOCK_TRACKING'],
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'delta',
     name: 'Delta Investment Tracker',
     note: 'Acquired by eToro',
-    origin: 'Belgium',
+    origin: 'BE',
+    platforms: ['ANDROID', 'IOS', 'MACOS', 'WEB', 'WINDOWS'],
     pricingPerYear: '$150',
-    slogan: 'The app to track all your investments. Make smart moves only.'
+    slogan: 'The app to track all your investments. Make smart moves only.',
+    url: 'https://delta.app'
   },
   {
+    categories: ['DIVIDEND_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'digrin',
     languages: ['English'],
     name: 'Digrin',
+    platforms: ['WEB'],
     pricingPerYear: '$49.90',
-    slogan: 'Dividend Portfolio Tracker'
+    slogan: 'Dividend Portfolio Tracker',
+    url: 'https://www.digrin.com'
   },
   {
+    categories: ['DIVIDEND_TRACKING'],
     founded: 2019,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'divvydiary',
     languages: ['Deutsch', 'English'],
     name: 'DivvyDiary',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€65',
-    slogan: 'Your personal Dividend Calendar'
+    slogan: 'Your personal Dividend Calendar',
+    url: 'https://divvydiary.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2009,
     hasSelfHostingAbility: false,
     key: 'empower',
     name: 'Empower',
     note: 'Originally named as Personal Capital',
-    origin: 'United States',
-    slogan: 'Get answers to your money questions'
+    origin: 'US',
+    platforms: ['WEB'],
+    slogan: 'Get answers to your money questions',
+    url: 'https://www.empower.com'
   },
   {
     alias: '8figures',
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2022,
     key: 'eightfigures',
     name: '8FIGURES',
-    origin: 'United States',
-    slogan: 'Portfolio Tracker Designed by Professional Investors'
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Portfolio Tracker Designed by Professional Investors',
+    url: 'https://8figures.com'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2010,
     hasFreePlan: false,
     key: 'etops',
     name: 'etops',
-    origin: 'Switzerland',
-    slogan: 'Your financial superpower'
+    origin: 'CH',
+    platforms: ['WEB'],
+    slogan: 'Your financial superpower',
+    url: 'https://www.etops.com'
   },
   {
+    categories: ['BUDGETING'],
+    founded: 2015,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'everydollar',
+    name: 'EveryDollar',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Plan, track, find more margin',
+    url: 'https://www.ramseysolutions.com/money/everydollar'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'exirio',
     name: 'Exirio',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$100',
-    slogan: 'All your wealth, in one place.'
+    slogan: 'All your wealth, in one place.',
+    url: 'https://www.exirio.com'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
+    hasFreePlan: false,
+    hasSelfHostingAbility: true,
+    key: 'expersoft',
+    name: 'Expersoft',
+    origin: 'CH',
+    slogan: 'Investment Management Platforms',
+    url: 'https://www.expersoft.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'fey',
     name: 'Fey',
-    origin: 'Canada',
+    note: 'Fey was discontinued in 2025',
+    origin: 'CA',
     pricingPerYear: '$300',
-    slogan: 'Make better investments.'
+    slogan: 'Make better investments.',
+    url: 'https://fey.com'
   },
   {
     founded: 2023,
@@ -354,85 +508,145 @@ export const personalFinanceTools: Product[] = [
     key: 'fina',
     languages: ['English'],
     name: 'Fina',
-    origin: 'United States',
+    origin: 'US',
     pricingPerYear: '$115',
-    slogan: 'Flexible Financial Management'
+    slogan: 'Flexible Financial Management',
+    url: 'https://www.fina.money'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2023,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'finanzfluss-copilot',
     name: 'Finanzfluss Copilot',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€69.99',
-    slogan: 'Portfolio Tracker für dein Vermögen'
+    slogan: 'Portfolio Tracker für dein Vermögen',
+    url: 'https://www.finanzfluss.de/copilot'
   },
   {
+    categories: ['BUDGETING'],
+    founded: 2015,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'finanzguru',
+    languages: ['Deutsch'],
+    name: 'Finanzguru',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'MACOS'],
+    slogan: 'Finanzen. Magisch. Einfach.',
+    url: 'https://www.finanzguru.de'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2020,
     key: 'finary',
     languages: ['Deutsch', 'English', 'Français'],
     name: 'Finary',
-    origin: 'United States',
-    slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Real-Time Portfolio Tracker & Stock Tracker',
+    url: 'https://finary.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'finateka',
     languages: ['English'],
     name: 'FINATEKA',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS'],
     slogan:
-      'The most convenient mobile application for personal finance accounting'
+      'The most convenient mobile application for personal finance accounting',
+    url: 'https://finateka.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2022,
     key: 'fincake',
     name: 'Fincake',
-    origin: 'British Virgin Islands',
-    slogan: 'Easy-to-use Portfolio Tracker'
+    origin: 'VG',
+    slogan: 'Easy-to-use Portfolio Tracker',
+    url: 'https://fincake.io'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
+    founded: 2015,
+    hasFreePlan: false,
+    key: 'fincite',
+    name: 'Fincite',
+    origin: 'DE',
+    platforms: ['WEB'],
+    slogan: 'Wealth Management Software',
+    url: 'https://fincite.de'
+  },
+  {
+    categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasSelfHostingAbility: false,
     key: 'finvest',
     name: 'Finvest',
-    origin: 'United States',
-    slogan: 'Grow your wealth in a stress-free way'
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Grow your wealth in a stress-free way',
+    url: 'https://www.getfinvest.com'
   },
   {
+    categories: ['BUDGETING', 'FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2023,
     hasFreePlan: true,
     key: 'finwise',
     name: 'FinWise',
-    origin: 'South Africa',
+    origin: 'ZA',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€69.99',
-    slogan: 'Personal finances, simplified'
+    slogan: 'Personal finances, simplified',
+    url: 'https://finwiseapp.io'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'firekit',
     languages: ['English', 'українська мова'],
     name: 'FIREkit',
-    origin: 'Ukraine',
+    origin: 'UA',
     pricingPerYear: '$40',
-    slogan: 'A simple solution to track your wealth online'
+    slogan: 'A simple solution to track your wealth online',
+    url: 'https://firekit.space'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'folishare',
     languages: ['Deutsch', 'English'],
     name: 'folishare',
-    origin: 'Austria',
+    origin: 'AT',
     pricingPerYear: '$65',
-    slogan: 'Take control over your investments'
+    slogan: 'Take control over your investments',
+    url: 'https://www.folishare.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
+    founded: 1993,
+    hasSelfHostingAbility: true,
+    key: 'fund-manager',
+    name: 'Fund Manager',
+    note: 'License is a perpetual license',
+    origin: 'US',
+    platforms: ['WINDOWS'],
+    pricingPerYear: '$99',
+    slogan: 'Powerful portfolio management software',
+    url: 'https://www.fundmanagersoftware.com'
+  },
+  {
+    categories: ['BUDGETING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'gasti',
@@ -445,21 +659,37 @@ export const personalFinanceTools: Product[] = [
       'Português'
     ],
     name: 'Gasti',
-    origin: 'Argentina',
+    origin: 'AR',
+    platforms: ['WEB'],
     pricingPerYear: '$60',
     regions: ['Global'],
-    slogan: 'Take control of your finances from WhatsApp'
+    slogan: 'Take control of your finances from WhatsApp',
+    url: 'https://gasti.pro'
   },
   {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'getquin',
     languages: ['Deutsch', 'English'],
     name: 'getquin',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€48',
-    slogan: 'Portfolio Tracker, Analysis & Community'
+    slogan: 'Portfolio Tracker, Analysis & Community',
+    url: 'https://www.getquin.com'
+  },
+  {
+    categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'goodbudget',
+    name: 'Goodbudget',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Budget with a why',
+    url: 'https://goodbudget.com'
   },
   {
     hasFreePlan: true,
@@ -468,26 +698,55 @@ export const personalFinanceTools: Product[] = [
     key: 'gospatz',
     name: 'goSPATZ',
     note: 'Renamed to Money Peak',
-    origin: 'Germany',
+    origin: 'DE',
     slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
+    founded: 2024,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'gustav',
+    languages: ['Français'],
+    name: 'Gustav',
+    origin: 'FR',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: '€59.99',
+    slogan: 'Prenez enfin le contrôle de votre argent',
+    url: 'https://get-gustav.com'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'holistic-capital',
     languages: ['Deutsch'],
     name: 'Holistic',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Die All-in-One Lösung für dein Vermögen.',
+    url: 'https://holistic.capital',
     useAnonymously: true
   },
   {
+    categories: ['BUDGETING'],
     founded: 2017,
     hasSelfHostingAbility: false,
     key: 'honeydue',
     name: 'Honeydue',
-    origin: 'United States',
-    slogan: 'Finance App for Couples'
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS'],
+    slogan: 'Finance App for Couples',
+    url: 'https://www.honeydue.com'
+  },
+  {
+    founded: 2003,
+    hasSelfHostingAbility: true,
+    isArchived: true,
+    key: 'ibank',
+    name: 'iBank',
+    note: 'Renamed to Banktivity',
+    origin: 'US'
   },
   {
     founded: 2022,
@@ -495,7 +754,7 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Income Reign',
     note: 'Income Reign was discontinued in 2025',
-    origin: 'United States',
+    origin: 'US',
     pricingPerYear: '$120'
   },
   {
@@ -505,106 +764,144 @@ export const personalFinanceTools: Product[] = [
     key: 'intuit-mint',
     name: 'Intuit Mint',
     note: 'Intuit Mint was discontinued in 2023',
-    origin: 'United States',
+    origin: 'US',
     pricingPerYear: '$60',
     slogan: 'Managing money, made simple'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'investify',
     name: 'Investify',
-    origin: 'Pakistan',
-    slogan: 'Advanced portfolio tracking and stock market information'
+    origin: 'PK',
+    platforms: ['ANDROID', 'IOS'],
+    slogan: 'Advanced portfolio tracking and stock market information',
+    url: 'https://www.investify.pk'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
     key: 'invmon',
     name: 'InvMon',
     note: 'Originally named as A2PB',
-    origin: 'Switzerland',
+    origin: 'CH',
+    platforms: ['MACOS'],
     pricingPerYear: '$156',
     slogan: 'Track all your assets, investments and portfolios in one place',
+    url: 'https://invmon.com',
     useAnonymously: true
   },
   {
+    categories: ['ETF_TRACKING'],
     founded: 2011,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'justetf',
     name: 'justETF',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€119',
-    slogan: 'ETF portfolios made simple'
+    slogan: 'ETF portfolios made simple',
+    url: 'https://www.justetf.com'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'TAX_REPORTING'],
     founded: 2018,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'koinly',
     name: 'Koinly',
-    origin: 'Singapore',
-    slogan: 'Track all your crypto wallets in one place'
+    origin: 'SG',
+    slogan: 'Track all your crypto wallets in one place',
+    url: 'https://koinly.io'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2016,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'koyfin',
     name: 'Koyfin',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$468',
-    slogan: 'Comprehensive financial data analysis'
+    slogan: 'Comprehensive financial data analysis',
+    url: 'https://www.koyfin.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'kubera',
     name: 'Kubera®',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$249',
-    slogan: 'The Time Machine for your Net Worth'
+    slogan: 'The Time Machine for your Net Worth',
+    url: 'https://www.kubera.com'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2021,
     hasFreePlan: false,
     key: 'leafs',
     languages: ['Deutsch', 'English'],
     name: 'Leafs',
-    origin: 'Switzerland',
-    slogan: 'Sustainability insights for wealth managers'
+    origin: 'CH',
+    slogan: 'Sustainability insights for wealth managers',
+    url: 'https://leafs.ch'
   },
   {
+    categories: ['BUDGETING'],
+    founded: 2020,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'lunch-money',
+    name: 'Lunch Money',
+    origin: 'CA',
+    slogan: 'Delightfully simple personal finance and budgeting',
+    url: 'https://lunchmoney.app'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'magnifi',
     name: 'Magnifi',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$132',
-    slogan: 'AI Investing Assistant'
+    slogan: 'AI Investing Assistant',
+    url: 'https://magnifi.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'markets.sh',
     languages: ['English'],
     name: 'markets.sh',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '€168',
     regions: ['Global'],
-    slogan: 'Track your investments'
+    slogan: 'Financial Intelligence Platform',
+    url: 'https://markets.sh'
   },
   {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
     founded: 2010,
     key: 'masttro',
     name: 'Masttro',
-    origin: 'United States',
-    slogan: 'Your platform for wealth in full view'
+    origin: 'US',
+    slogan: 'Your platform for wealth in full view',
+    url: 'https://masttro.com'
   },
   {
     founded: 2021,
@@ -616,21 +913,37 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'Maybe Finance',
     note: 'Maybe Finance was discontinued in 2023, relaunched in 2024, and discontinued again in 2025',
-    origin: 'United States',
+    origin: 'US',
     pricingPerYear: '$145',
-    regions: ['United States'],
-    slogan: 'Your financial future, in your control'
+    regions: ['US'],
+    slogan: 'Your financial future, in your control',
+    url: 'https://github.com/maybe-finance/maybe'
   },
   {
+    categories: ['CRYPTOCURRENCY'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'merlincrypto',
     languages: ['English'],
     name: 'Merlin',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$204',
-    regions: ['Canada', 'United States'],
-    slogan: 'The smartest way to track your crypto'
+    regions: ['CA', 'US'],
+    slogan: 'The smartest way to track your crypto',
+    url: 'https://www.merlincrypto.com'
+  },
+  {
+    categories: ['FINANCIAL_PLANNING'],
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'mezzi',
+    name: 'Mezzi',
+    origin: 'US',
+    platforms: ['IOS', 'WEB'],
+    pricingPerYear: '$48',
+    slogan: 'Self-manage your wealth. Get fiduciary advice.',
+    url: 'https://www.mezzi.com'
   },
   {
     founded: 1991,
@@ -639,199 +952,332 @@ export const personalFinanceTools: Product[] = [
     key: 'microsoft-money',
     name: 'Microsoft Money',
     note: 'Microsoft Money was discontinued in 2010',
-    origin: 'United States'
+    origin: 'US'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'monarch-money',
     name: 'Monarch Money',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$99.99',
-    slogan: 'The modern way to manage your money'
+    slogan: 'The modern way to manage your money',
+    url: 'https://www.monarch.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 1999,
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'moneydance',
     name: 'Moneydance',
-    origin: 'Scotland',
+    origin: 'GB',
+    platforms: ['ANDROID', 'IOS', 'LINUX', 'MACOS', 'WINDOWS'],
     pricingPerYear: '$100',
-    slogan: 'Personal Finance Manager for Mac, Windows, and Linux'
+    slogan: 'Personal Finance Manager for Mac, Windows, and Linux',
+    url: 'https://moneydance.com'
   },
   {
+    categories: ['BUDGETING'],
+    founded: 2016,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'moneypatrol',
+    name: 'MoneyPatrol',
+    origin: 'US',
+    pricingPerYear: '$29.99',
+    slogan: 'Personal Accounting Made Easy, Accurate, Comprehensive',
+    url: 'https://www.moneypatrol.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'moneypeak',
     name: 'Money Peak',
     note: 'Originally named as goSPATZ',
-    origin: 'Germany',
-    slogan: 'Dein smarter Finance Assistant'
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Dein smarter Finance Assistant',
+    url: 'https://moneypeak.ai'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2007,
     key: 'moneyspire',
     name: 'Moneyspire',
     note: 'License is a perpetual license',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['LINUX', 'MACOS', 'WINDOWS'],
     pricingPerYear: '$59.99',
-    slogan: 'Have total control of your financial life'
+    slogan: 'Have total control of your financial life',
+    url: 'https://www.moneyspire.com'
   },
   {
+    categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    key: 'moneywell',
+    name: 'MoneyWell',
+    origin: 'US',
+    platforms: ['IOS', 'MACOS'],
+    slogan: 'Personal Budgeting Software for Mac and iOS',
+    url: 'https://moneywell.app'
+  },
+  {
+    categories: ['BUDGETING'],
     key: 'moneywiz',
     name: 'MoneyWiz',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['IOS', 'MACOS'],
     pricingPerYear: '$29.99',
-    slogan: 'Get money management superpowers'
+    slogan: 'Get money management superpowers',
+    url: 'https://www.wiz.money'
   },
   {
+    categories: ['BUDGETING'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'monse',
     name: 'Monse',
+    note: 'Renamed to Nexafin',
     pricingPerYear: '$60',
-    slogan: 'Gain financial control and keep your data private.'
+    slogan: 'Gain financial control and keep your data private.',
+    url: 'https://monse.app'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2025,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'monsy',
     languages: ['English'],
     name: 'Monsy',
-    origin: 'Indonesia',
+    origin: 'ID',
+    platforms: ['WEB'],
     pricingPerYear: '$20',
-    slogan: 'Smart, simple, stress-free money tracking.'
+    slogan: 'Smart, simple, stress-free money tracking.',
+    url: 'https://www.monsy.app'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'morningstar-portfolio-manager',
     languages: ['English'],
     name: 'Morningstar® Portfolio Manager',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     slogan:
-      'Track your equity, fund, investment trust, ETF and pension investments in one place.'
+      'Track your equity, fund, investment trust, ETF and pension investments in one place.',
+    url: 'https://www.morningstar.com/mm'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'myfinancetools',
+    languages: ['Deutsch', 'English', 'Español', 'Français', 'Português'],
+    name: 'MyFinanceTools',
+    platforms: ['WEB'],
+    pricingPerYear: '$36',
+    slogan: 'Your Personal Finance Command Center',
+    url: 'https://myfinancetools.io'
+  },
+  {
+    categories: ['CRYPTOCURRENCY'],
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'nansen',
     name: 'Crypto Portfolio Tracker by Nansen',
-    origin: 'Singapore',
+    origin: 'SG',
+    platforms: ['WEB'],
     pricingPerYear: '$1188',
-    slogan: 'Your Complete Crypto Portfolio, Reimagined'
+    slogan: 'Your Complete Crypto Portfolio, Reimagined',
+    url: 'https://www.nansen.ai/crypto-portfolio-tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2017,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'navexa',
     name: 'Navexa',
-    origin: 'Australia',
+    origin: 'AU',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$90',
-    slogan: 'The Intelligent Portfolio Tracker'
+    slogan: 'The Intelligent Portfolio Tracker',
+    url: 'https://www.navexa.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'networthy',
+    name: 'Networthy',
+    platforms: ['WEB'],
+    pricingPerYear: '€49.99',
+    slogan: 'Your Personal Financial Analyst, powered by AI.',
+    url: 'https://networthy.pro'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING'],
+    key: 'nexafin',
+    name: 'Nexafin',
+    platforms: ['WEB'],
+    slogan: 'Your Finances. Finally Clear.',
+    url: 'https://nexafin.com'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasSelfHostingAbility: false,
     hasFreePlan: true,
     key: 'parqet',
     name: 'Parqet',
     note: 'Originally named as Tresor One',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '€99.99',
-    regions: ['Austria', 'Germany', 'Switzerland'],
-    slogan: 'Dein Vermögen immer im Blick'
+    regions: ['AT', 'CH', 'DE'],
+    slogan: 'Dein Vermögen immer im Blick',
+    url: 'https://www.parqet.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'patrice',
+    languages: [
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Português'
+    ],
+    name: 'Patrice',
+    platforms: ['WEB'],
+    pricingPerYear: '€49',
+    slogan: 'Votre patrimoine, enfin clair',
+    url: 'https://mypatrice.com'
+  },
+  {
+    categories: ['BUDGETING'],
     hasSelfHostingAbility: false,
     key: 'peek',
     name: 'Peek',
-    origin: 'Singapore',
-    slogan: 'Feel in control of your money without spreadsheets or shame'
+    origin: 'SG',
+    platforms: ['IOS'],
+    slogan: 'Feel in control of your money without spreadsheets or shame',
+    url: 'https://peek.money'
   },
   {
+    categories: ['BUDGETING'],
     key: 'pennies',
     name: 'Pennies',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['IOS'],
     pricingPerYear: '$39.99',
-    slogan: 'Your money. Made simple.'
+    slogan: 'Your money. Made simple.',
+    url: 'https://www.getpennies.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'pinklion',
     name: 'PinkLion',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '€50',
-    slogan: 'Invest smarter, not harder'
+    slogan: 'Invest smarter, not harder',
+    url: 'https://pinklion.xyz'
   },
   {
+    categories: ['DIVIDEND_TRACKING'],
     founded: 2023,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'plainzer',
     languages: ['English'],
     name: 'Plainzer',
-    origin: 'Poland',
+    origin: 'PL',
     pricingPerYear: '$74',
-    slogan: 'Free dividend tracker for your portfolio'
+    slogan: 'Free dividend tracker for your portfolio',
+    url: 'https://plainzer.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2023,
     hasSelfHostingAbility: false,
     key: 'plannix',
     name: 'Plannix',
-    origin: 'Italy',
-    slogan: 'Your Personal Finance Hub'
+    origin: 'IT',
+    platforms: ['WEB'],
+    slogan: 'Your Personal Finance Hub',
+    url: 'https://www.plannix.co'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2015,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'pocketguard',
     name: 'PocketGuard',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$74.99',
-    slogan: 'Budgeting App & Finance Planner'
+    slogan: 'Budgeting App & Finance Planner',
+    url: 'https://pocketguard.com'
   },
   {
+    categories: ['BUDGETING', 'FINANCIAL_PLANNING'],
     founded: 2008,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'pocketsmith',
     languages: ['English'],
     name: 'PocketSmith',
-    origin: 'New Zealand',
+    origin: 'NZ',
+    platforms: ['WEB'],
     pricingPerYear: '$120',
     regions: ['Global'],
-    slogan: 'Know where your money is going'
+    slogan: 'Know where your money is going',
+    url: 'https://www.pocketsmith.com'
   },
   {
+    categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'portfolio-dividend-tracker',
     languages: ['English', 'Nederlands'],
     name: 'Portfolio Dividend Tracker',
-    origin: 'Netherlands',
+    origin: 'NL',
+    platforms: ['WEB'],
     pricingPerYear: '€60',
-    slogan: 'Manage all your portfolios'
+    slogan: 'Manage all your portfolios',
+    url: 'https://portfoliodividendtracker.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'portfolio-visualizer',
     languages: ['English'],
     name: 'Portfolio Visualizer',
     pricingPerYear: '$360',
-    slogan: 'Tools for Better Investors'
+    slogan: 'Tools for Better Investors',
+    url: 'https://www.portfoliovisualizer.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     isArchived: true,
     key: 'portfoloo',
@@ -841,83 +1287,127 @@ export const personalFinanceTools: Product[] = [
       'Free Stock Portfolio Tracker with unlimited portfolio and stocks for DIY investors'
   },
   {
+    categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'portseido',
     languages: ['Deutsch', 'English', 'Français', 'Nederlands'],
     name: 'Portseido',
-    origin: 'Thailand',
+    origin: 'TH',
     pricingPerYear: '$96',
-    slogan: 'Portfolio Performance and Dividend Tracker'
+    slogan: 'Portfolio Performance and Dividend Tracker',
+    url: 'https://www.portseido.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
     key: 'projectionlab',
     name: 'ProjectionLab',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$108',
-    slogan: 'Build Financial Plans You Love.'
+    slogan: 'Build Financial Plans You Love.',
+    url: 'https://projectionlab.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2022,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'prostocktracker',
     name: 'Pro Stock Tracker',
-    origin: 'United Kingdom',
+    origin: 'GB',
+    platforms: ['WEB'],
     pricingPerYear: '$60',
-    slogan: 'The stock portfolio tracker built for long-term investors'
+    slogan: 'The stock portfolio tracker built for long-term investors',
+    url: 'https://prostocktracker.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
+    hasSelfHostingAbility: false,
+    key: 'quantive',
+    name: 'Quantive',
+    platforms: ['WEB'],
+    slogan: 'See your financial life clearly',
+    url: 'https://usequantive.app'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'rallies',
+    languages: ['English'],
+    name: 'Rallies',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: '$99.99',
+    slogan:
+      'Your entire financial life in one app, monitored continuously by agents',
+    url: 'https://rallies.ai'
+  },
+  {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     founded: 2015,
     hasSelfHostingAbility: false,
     key: 'rocket-money',
     name: 'Rocket Money',
-    origin: 'United States',
-    slogan: 'Track your net worth'
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Track your net worth',
+    url: 'https://www.rocketmoney.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2019,
     hasSelfHostingAbility: false,
     isArchived: true,
     key: 'sarmaaya.pk',
     name: 'Sarmaaya.pk Portfolio Tracking',
     note: 'Sarmaaya.pk Portfolio Tracking was discontinued in 2024',
-    origin: 'Pakistan',
+    origin: 'PK',
     slogan: 'Unified platform for financial research and portfolio tracking'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2004,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'seeking-alpha',
     name: 'Seeking Alpha',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$239',
-    slogan: 'Stock Market Analysis & Tools for Investors'
+    slogan: 'Stock Market Analysis & Tools for Investors',
+    url: 'https://seekingalpha.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2022,
     key: 'segmio',
     name: 'Segmio',
-    origin: 'Romania',
-    slogan: 'Wealth Management and Net Worth Tracking'
+    origin: 'RO',
+    platforms: ['WEB'],
+    slogan: 'Track your net worth. Project every possible future.',
+    url: 'https://www.segmio.com'
   },
   {
+    categories: ['STOCK_TRACKING', 'TAX_REPORTING'],
     founded: 2007,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'sharesight',
     name: 'Sharesight',
-    origin: 'New Zealand',
+    origin: 'NZ',
+    platforms: ['WEB'],
     pricingPerYear: '$135',
     regions: ['Global'],
-    slogan: 'Stock Portfolio Tracker'
+    slogan: 'Stock Portfolio Tracker',
+    url: 'https://www.sharesight.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     isArchived: true,
     key: 'sharesmaster',
@@ -926,101 +1416,140 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Free Stock Portfolio Tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'simple-portfolio',
     name: 'Simple Portfolio',
-    origin: 'Czech Republic',
+    origin: 'CZ',
+    platforms: ['WEB'],
     pricingPerYear: '€80',
-    slogan: 'Stock Portfolio Tracker'
+    slogan: 'Stock Portfolio Tracker',
+    url: 'https://simpleportfolio.app'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
+    founded: 2020,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'simplifi',
+    name: 'Simplifi by Quicken',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    url: 'https://www.quicken.com/products/simplifi'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2014,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'simply-wallstreet',
     name: 'Stock Portfolio Tracker & Visualizer by Simply Wall St',
-    origin: 'Australia',
+    origin: 'AU',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$120',
-    slogan: 'Smart portfolio tracker for informed investors'
+    slogan: 'Smart portfolio tracker for informed investors',
+    url: 'https://simplywall.st'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'snowball-analytics',
     name: 'Snowball Analytics',
-    origin: 'France',
+    origin: 'FR',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$80',
-    slogan: 'Simple and powerful portfolio tracker'
+    slogan: 'Simple and powerful portfolio tracker',
+    url: 'https://snowball-analytics.com'
   },
   {
     key: 'splashmoney',
     name: 'SplashMoney',
-    origin: 'United States',
+    origin: 'US',
     slogan: 'Manage your money anytime, anywhere.'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2019,
     hasSelfHostingAbility: false,
     key: 'stock-events',
     name: 'Stock Events',
-    origin: 'Germany',
-    slogan: 'Track all your Investments'
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Track all your Investments',
+    url: 'https://stockevents.app'
   },
   {
+    categories: ['STOCK_TRACKING'],
     key: 'stockle',
     name: 'Stockle',
-    origin: 'Finland',
-    slogan: 'Supercharge your investments tracking experience'
+    origin: 'FI',
+    platforms: ['WEB'],
+    slogan: 'Supercharge your investments tracking experience',
+    url: 'https://stockle.app'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2008,
     isArchived: true,
     key: 'stockmarketeye',
     name: 'StockMarketEye',
-    origin: 'France',
+    origin: 'FR',
     note: 'StockMarketEye was discontinued in 2023',
     slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2011,
     hasFreePlan: true,
     key: 'stock-rover',
     languages: ['English'],
     name: 'Stock Rover',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$79.99',
-    slogan: 'Investment Research and Portfolio Management'
+    slogan: 'Investment Research and Portfolio Management',
+    url: 'https://www.stockrover.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'stonksfolio',
     languages: ['English'],
     name: 'Stonksfolio',
-    origin: 'Bulgaria',
+    origin: 'BG',
+    platforms: ['WEB'],
     pricingPerYear: '€49.90',
-    slogan: 'Visualize all of your portfolios'
+    slogan: 'Visualize all of your portfolios',
+    url: 'https://stonksfolio.com'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'sumio',
     name: 'Sumio',
-    origin: 'Czech Republic',
+    origin: 'CZ',
+    platforms: ['ANDROID', 'IOS'],
     pricingPerYear: '$20',
-    slogan: 'Sum up and build your wealth.'
+    slogan: 'AI-Powered Portfolio & Net Worth Tracker',
+    url: 'https://www.sumio.app'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2016,
     hasFreePlan: false,
     key: 'tiller',
     name: 'Tiller',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$79',
     slogan:
-      'Your financial life in a spreadsheet, automatically updated each day'
+      'Your financial life in a spreadsheet, automatically updated each day',
+    url: 'https://tiller.com'
   },
   {
     founded: 2011,
@@ -1028,11 +1557,35 @@ export const personalFinanceTools: Product[] = [
     hasSelfHostingAbility: false,
     key: 'tradervue',
     name: 'Tradervue',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$360',
-    slogan: 'The Trading Journal to Improve Your Trading Performance'
+    slogan: 'The Trading Journal to Improve Your Trading Performance',
+    url: 'https://www.tradervue.com'
   },
   {
+    categories: ['STOCK_TRACKING', 'TAX_REPORTING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'trefolio',
+    languages: [
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Nederlands',
+      'Polski',
+      'Português'
+    ],
+    name: 'trefolio',
+    platforms: ['WEB'],
+    pricingPerYear: '€60',
+    slogan: 'The Extra Leaf for Your Portfolio',
+    url: 'https://trefolio.com'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasSelfHostingAbility: false,
     hasFreePlan: true,
@@ -1040,49 +1593,72 @@ export const personalFinanceTools: Product[] = [
     key: 'tresor-one',
     name: 'Tresor One',
     note: 'Renamed to Parqet',
-    origin: 'Germany',
-    regions: ['Austria', 'Germany', 'Switzerland'],
+    origin: 'DE',
+    regions: ['AT', 'CH', 'DE'],
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
+    categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2025,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'turbobulls',
     name: 'Turbobulls',
-    origin: 'Romania',
+    origin: 'RO',
+    platforms: ['WEB'],
     pricingPerYear: '€39.99',
-    slogan: 'Your complete financial dashboard. Actually private.'
+    slogan: 'Your complete financial dashboard. Actually private.',
+    url: 'https://www.turbobulls.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'utluna',
     languages: ['Deutsch', 'English', 'Français'],
     name: 'Utluna',
-    origin: 'Switzerland',
+    origin: 'CH',
+    platforms: ['WEB'],
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
+    url: 'https://www.utluna.com',
     useAnonymously: true
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'valuedge',
+    name: 'ValuEdge',
+    platforms: ['WEB'],
+    pricingPerYear: '€78',
+    slogan: 'Track your real portfolio. Not a watchlist.',
+    url: 'https://valuedge.app'
+  },
+  {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
     founded: 2020,
     hasFreePlan: true,
     key: 'vyzer',
     name: 'Vyzer',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$348',
-    slogan: 'Virtual Family Office for Smart Wealth Management'
+    slogan: 'Virtual Family Office for Smart Wealth Management',
+    url: 'https://vyzer.co'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     founded: 2020,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'walletguide',
     name: 'Walletguide',
-    origin: 'Germany',
+    origin: 'DE',
+    platforms: ['WEB'],
     pricingPerYear: '€90',
-    slogan: 'Personal finance reimagined with AI'
+    slogan: 'Personal finance reimagined with AI',
+    url: 'https://walletguide.com'
   },
   {
     hasSelfHostingAbility: false,
@@ -1091,20 +1667,48 @@ export const personalFinanceTools: Product[] = [
     languages: ['English'],
     name: 'wallmine',
     note: 'wallmine was discontinued in 2024',
-    origin: 'Czech Republic',
+    origin: 'CZ',
     pricingPerYear: '$600',
     slogan: 'Make Smarter Investments'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    founded: 2020,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'wallstreetzen',
+    name: 'WallStreetZen',
+    origin: 'HK',
+    platforms: ['WEB'],
+    pricingPerYear: '$234',
+    slogan: 'Stock market analysis for the serious part-time investor',
+    url: 'https://www.wallstreetzen.com'
+  },
+  {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
+    founded: 2015,
+    hasSelfHostingAbility: false,
+    key: 'wealtharc',
+    name: 'WealthArc',
+    origin: 'CH',
+    platforms: ['WEB'],
+    slogan: 'Manage wealth data more efficiently',
+    url: 'https://www.wealtharc.com'
+  },
+  {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
     founded: 2019,
     hasFreePlan: false,
     key: 'wealthbrain',
     languages: ['English'],
     name: 'Wealthbrain',
-    origin: 'United Arab Emirates',
-    slogan: 'Portfolio Management System'
+    origin: 'AE',
+    platforms: ['WEB'],
+    slogan: 'Portfolio Management System',
+    url: 'https://wealthbrain.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2024,
     hasSelfHostingAbility: true,
     isArchived: true,
@@ -1112,44 +1716,57 @@ export const personalFinanceTools: Product[] = [
     key: 'wealthfolio',
     languages: ['English'],
     name: 'Wealthfolio',
-    origin: 'Canada',
-    slogan: 'Desktop Investment Tracker'
+    origin: 'CA',
+    platforms: ['IOS', 'LINUX', 'MACOS', 'WEB', 'WINDOWS'],
+    slogan: 'Open-Source, Offline & Private Portfolio Tracker',
+    url: 'https://wealthfolio.app'
   },
   {
+    categories: ['NET_WORTH_TRACKING'],
     founded: 2015,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'wealthica',
     languages: ['English', 'Français'],
     name: 'Wealthica',
-    origin: 'Canada',
+    origin: 'CA',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$50',
-    slogan: 'See all your investments in one place'
+    slogan: 'See all your investments in one place',
+    url: 'https://wealthica.com'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2018,
     hasFreePlan: true,
     key: 'wealthposition',
     name: 'WealthPosition',
+    platforms: ['WEB'],
     pricingPerYear: '$60',
-    slogan: 'Personal Finance & Budgeting App'
+    slogan: 'Personal Finance & Budgeting App',
+    url: 'https://www.wealthposition.com'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2018,
     hasSelfHostingAbility: false,
     key: 'wealthy-tracker',
     languages: ['English'],
     name: 'Wealthy Tracker',
-    origin: 'India',
-    slogan: 'One app to manage all your investments'
+    origin: 'IN',
+    platforms: ['WEB'],
+    slogan: 'One app to manage all your investments',
+    url: 'https://www.wealthy.in/tracker'
   },
   {
+    categories: ['STOCK_TRACKING'],
     key: 'whal',
     name: 'Whal',
-    origin: 'United States',
+    origin: 'US',
     slogan: 'Manage your investments in one place'
   },
   {
+    categories: ['STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1158,28 +1775,34 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English', 'Español', 'Français', 'Italiano'],
     name: 'yeekatee',
     note: 'yeekatee was discontinued in 2024',
-    origin: 'Switzerland',
+    origin: 'CH',
     regions: ['Global'],
     slogan: 'Connect. Share. Invest.'
   },
   {
+    categories: ['BUDGETING'],
     founded: 2004,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'ynab',
     name: 'YNAB (You Need a Budget)',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
     pricingPerYear: '$109',
-    slogan: 'Change Your Relationship With Money'
+    slogan: 'Change Your Relationship With Money',
+    url: 'https://www.ynab.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'ziggma',
     name: 'Ziggma',
-    origin: 'United States',
+    origin: 'US',
+    platforms: ['WEB'],
     pricingPerYear: '$84',
-    slogan: 'Your solution for investing success'
+    slogan: 'Your solution for investing success',
+    url: 'https://ziggma.com'
   }
 ];

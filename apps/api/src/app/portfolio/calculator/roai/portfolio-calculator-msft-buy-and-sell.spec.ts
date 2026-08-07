@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -52,6 +52,9 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
     currentRateService = new CurrentRateService(null, null, null, null);
     exchangeRateDataService = new ExchangeRateDataService(
@@ -60,7 +63,7 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    portfolioSnapshotService = new PortfolioSnapshotService(null, null);
     redisCacheService = new RedisCacheService(null, null);
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
@@ -78,49 +81,49 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2024-03-08'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 0.3333333333333333,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-08'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 0.3333333333333333,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 408
         },
         {
           ...activityDummyData,
-          date: new Date('2024-03-13'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 0.6666666666666666,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-13'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 0.6666666666666666,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 400
         },
         {
           ...activityDummyData,
-          date: new Date('2024-03-14'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-14'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'SELL',
           unitPriceInAssetProfileCurrency: 411
         }

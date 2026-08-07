@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MarkdownModule],
   selector: 'gf-terms-of-service-page',
   styleUrls: ['./terms-of-service-page.scss'],

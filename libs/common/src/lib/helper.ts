@@ -1,7 +1,14 @@
 import { NumberParser } from '@internationalized/number';
-import { Type as ActivityType, DataSource, MarketData } from '@prisma/client';
+import {
+  Type as ActivityType,
+  AssetProfileOverrides,
+  AssetSubClass,
+  MarketData,
+  Prisma,
+  SymbolProfile
+} from '@prisma/client';
 import { Big } from 'big.js';
-import { isISO4217CurrencyCode } from 'class-validator';
+import { isISO4217CurrencyCode, isUUID } from 'class-validator';
 import {
   getDate,
   getMonth,
@@ -17,6 +24,7 @@ import {
   es,
   fr,
   it,
+  ja,
   ko,
   nl,
   pl,
@@ -31,16 +39,62 @@ import { get, isNil, isString } from 'lodash';
 
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_LOCALE,
   DERIVED_CURRENCIES,
-  ghostfolioScraperApiSymbolPrefix,
-  locale
+  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
+  ghostfolioFearAndGreedIndexSymbolStocks,
+  ghostfolioPrefix,
+  SEARCH_QUERY_MINIMUM_LENGTH,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS,
+  TAG_IDS_SYSTEM
 } from './config';
-import { AssetProfileIdentifier, Benchmark } from './interfaces';
+import {
+  AssetProfileIdentifier,
+  AssetProfileItem,
+  Benchmark,
+  PortfolioPosition
+} from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
+
+export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
+  assetProfile: T,
+  assetProfileOverrides: AssetProfileOverrides | null
+): T {
+  if (!assetProfileOverrides) {
+    return assetProfile;
+  }
+
+  const assetProfileWithOverrides = { ...assetProfile } as T;
+
+  assetProfileWithOverrides.assetClass =
+    assetProfileOverrides.assetClass ?? assetProfile.assetClass;
+
+  assetProfileWithOverrides.assetSubClass =
+    assetProfileOverrides.assetSubClass ?? assetProfile.assetSubClass;
+
+  if ((assetProfileOverrides.countries as Prisma.JsonArray)?.length > 0) {
+    assetProfileWithOverrides.countries = assetProfileOverrides.countries;
+  }
+
+  if ((assetProfileOverrides.holdings as Prisma.JsonArray)?.length > 0) {
+    assetProfileWithOverrides.holdings = assetProfileOverrides.holdings;
+  }
+
+  assetProfileWithOverrides.name =
+    assetProfileOverrides.name ?? assetProfile.name;
+
+  if ((assetProfileOverrides.sectors as Prisma.JsonArray)?.length > 0) {
+    assetProfileWithOverrides.sectors = assetProfileOverrides.sectors;
+  }
+
+  assetProfileWithOverrides.url = assetProfileOverrides.url ?? assetProfile.url;
+
+  return assetProfileWithOverrides;
+}
 
 export function calculateBenchmarkTrend({
   days,
@@ -95,16 +149,44 @@ export function calculateMovingAverage({
     .toNumber();
 }
 
-export function capitalize(aString: string) {
-  return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
+export function canDeleteAssetProfile({
+  activitiesCount,
+  isBenchmark,
+  symbol,
+  watchedByCount
+}: Pick<
+  AssetProfileItem,
+  'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
+>): boolean {
+  return (
+    activitiesCount === 0 &&
+    !isBenchmark &&
+    !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
+    !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
+    symbol !== ghostfolioFearAndGreedIndexSymbolCryptocurrencies &&
+    symbol !== ghostfolioFearAndGreedIndexSymbolStocks &&
+    watchedByCount === 0
+  );
 }
 
-export function decodeDataSource(encodedDataSource: string) {
-  if (encodedDataSource) {
-    return Buffer.from(encodedDataSource, 'hex').toString();
-  }
+export function canDeleteUser({
+  currentUserId,
+  userId
+}: {
+  currentUserId: string;
+  userId: string;
+}): boolean {
+  return currentUserId !== userId;
+}
 
-  return undefined;
+export function canOpenHoldingDetail({
+  assetProfile
+}: Pick<PortfolioPosition, 'assetProfile'>): boolean {
+  return assetProfile?.assetSubClass !== AssetSubClass.CASH;
+}
+
+export function capitalize(aString: string) {
+  return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }
 
 export function downloadAsFile({
@@ -132,14 +214,6 @@ export function downloadAsFile({
   a.click();
 }
 
-export function encodeDataSource(aDataSource: DataSource) {
-  if (aDataSource) {
-    return Buffer.from(aDataSource, 'utf-8').toString('hex');
-  }
-
-  return undefined;
-}
-
 export function extractNumberFromString({
   locale = 'en-US',
   value
@@ -148,15 +222,33 @@ export function extractNumberFromString({
   value: string;
 }): number | undefined {
   try {
+    // Only a leading minus sign indicates a negative value. Detect it before
+    // stripping so that hyphens within the text cannot flip the sign.
+    const isNegative = value.trim().startsWith('-');
+
     // Remove non-numeric characters (excluding international formatting characters)
     const numericValue = value.replace(/[^\d.,'’\s]/g, '');
 
     const parser = new NumberParser(locale);
+    const parsedValue = parser.parse(numericValue);
 
-    return parser.parse(numericValue);
+    return isNegative ? -parsedValue : parsedValue;
   } catch {
     return undefined;
   }
+}
+
+export function formatMonthAndYear({
+  date,
+  locale
+}: {
+  date: Date;
+  locale?: string;
+}) {
+  return new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
 }
 
 export function getAllActivityTypes(): ActivityType[] {
@@ -189,6 +281,29 @@ export function getCurrencyFromSymbol(aSymbol = '') {
   return aSymbol.replace(DEFAULT_CURRENCY, '');
 }
 
+export function getCountryCodeFromCurrency(aCurrency = '') {
+  // An ISO 4217 currency code is composed of the ISO 3166-1 alpha-2 country
+  // code and the initial of the currency itself, except for the supranational
+  // currencies, which are prefixed with X (like XAU or XOF)
+  if (aCurrency.startsWith('X')) {
+    return '';
+  }
+
+  return aCurrency.slice(0, 2).toUpperCase();
+}
+
+export function getCountryName({ code }: { code: string }): string {
+  try {
+    return (
+      new Intl.DisplayNames([document.documentElement.lang || DEFAULT_LOCALE], {
+        type: 'region'
+      }).of(code) ?? code
+    );
+  } catch {
+    return code;
+  }
+}
+
 export function getDateFnsLocale(aLanguageCode?: string) {
   if (aLanguageCode === 'ca') {
     return ca;
@@ -200,6 +315,8 @@ export function getDateFnsLocale(aLanguageCode?: string) {
     return fr;
   } else if (aLanguageCode === 'it') {
     return it;
+  } else if (aLanguageCode === 'ja') {
+    return ja;
   } else if (aLanguageCode === 'ko') {
     return ko;
   } else if (aLanguageCode === 'nl') {
@@ -260,7 +377,7 @@ export function getEmojiFlag(aCountryCode: string) {
 }
 
 export function getLocale() {
-  return navigator.language ?? locale;
+  return navigator.language ?? DEFAULT_LOCALE;
 }
 
 export function getLowercase(object: object, path: string) {
@@ -296,6 +413,26 @@ export function getStartOfUtcDate(aDate: Date) {
   date.setUTCHours(0, 0, 0, 0);
 
   return date;
+}
+
+export function getStringOrNull(aString: string | null | undefined) {
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
+  }
+
+  return null;
+}
+
+export function getStringOrUndefined(aString: string | null | undefined) {
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
+  }
+
+  return undefined;
 }
 
 export function getSum(aArray: Big[]) {
@@ -347,6 +484,14 @@ export function getYesterday() {
   return subDays(new Date(Date.UTC(year, month, day)), 1);
 }
 
+export function hasGhostfolioPrefix(aSymbol: string) {
+  if (!aSymbol) {
+    return false;
+  }
+
+  return aSymbol.startsWith(`${ghostfolioPrefix}_`);
+}
+
 export function interpolate(template: string, context: any) {
   return template?.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
     const properties = objectPath.split('.');
@@ -357,12 +502,34 @@ export function interpolate(template: string, context: any) {
   });
 }
 
+export function isAccountExcluded(account?: { tags?: { id: string }[] }) {
+  return (
+    account?.tags?.some(({ id }) => {
+      return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+    }) === true
+  );
+}
+
 export function isCurrency(aCurrency: string) {
   if (!aCurrency) {
     return false;
   }
 
   return isISO4217CurrencyCode(aCurrency) || isDerivedCurrency(aCurrency);
+}
+
+export function isCurrencySymbol(aSymbol: string) {
+  if (!aSymbol) {
+    return false;
+  }
+
+  return (
+    aSymbol.length >= 2 * DEFAULT_CURRENCY.length &&
+    isCurrency(
+      aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
+    ) &&
+    isCurrency(aSymbol.substring(aSymbol.length - DEFAULT_CURRENCY.length))
+  );
 }
 
 export function isDerivedCurrency(aCurrency: string) {
@@ -383,6 +550,42 @@ export function isRootCurrency(aCurrency: string) {
   return DERIVED_CURRENCIES.find(({ rootCurrency }) => {
     return rootCurrency === aCurrency;
   });
+}
+
+/**
+ * Validates the ratio of a stock split, expressed as the number of shares held
+ * after the split (numerator) per number of shares held before (denominator),
+ * for example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split. An
+ * equal numerator and denominator would be a no-op.
+ */
+export function isSplitRatio({
+  denominator,
+  numerator
+}: {
+  denominator: number;
+  numerator: number;
+}) {
+  return (
+    Number.isSafeInteger(numerator) &&
+    Number.isSafeInteger(denominator) &&
+    numerator > 0 &&
+    denominator > 0 &&
+    numerator !== denominator
+  );
+}
+
+export function isSystemTag(tag?: { id: string }) {
+  return TAG_IDS_SYSTEM.some((id) => {
+    return id === tag?.id;
+  });
+}
+
+export function isValidCustomAssetProfileSymbol(aSymbol: string) {
+  return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
+}
+
+export function isValidSearchQuery(aQuery: string) {
+  return aQuery?.trim().length >= SEARCH_QUERY_MINIMUM_LENGTH;
 }
 
 export function parseDate(date: string): Date | undefined {
@@ -428,10 +631,6 @@ export function parseSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
   };
 }
 
-export function prettifySymbol(aSymbol: string): string {
-  return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
-}
-
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);
@@ -440,8 +639,10 @@ export function resetHours(aDate: Date) {
   return new Date(Date.UTC(year, month, day));
 }
 
-export function resolveFearAndGreedIndex(aValue: number) {
-  if (aValue <= 25) {
+export function resolveFearAndGreedIndex(aValue?: number) {
+  if (isNil(aValue)) {
+    return { emoji: '⚪', key: 'UNKNOWN', text: 'Unknown' };
+  } else if (aValue <= 25) {
     return { emoji: '🥵', key: 'EXTREME_FEAR', text: 'Extreme Fear' };
   } else if (aValue <= 45) {
     return { emoji: '😨', key: 'FEAR', text: 'Fear' };

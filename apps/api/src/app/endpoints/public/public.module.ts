@@ -18,6 +18,7 @@ import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-da
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
@@ -38,6 +39,7 @@ import { PublicController } from './public.controller';
     PrismaModule,
     RedisCacheModule,
     SymbolProfileModule,
+    TagModule,
     TransformDataSourceInRequestModule,
     UserModule
   ],

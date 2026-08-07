@@ -14,6 +14,8 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
+  private readonly logger = new Logger(PrismaService.name);
+
   public constructor(configService: ConfigService) {
     const adapter = new PrismaPg({
       connectionString: configService.get<string>('DATABASE_URL')
@@ -43,7 +45,7 @@ export class PrismaService
     try {
       await this.$connect();
     } catch (error) {
-      Logger.error(error, 'PrismaService');
+      this.logger.error(error);
     }
   }
 

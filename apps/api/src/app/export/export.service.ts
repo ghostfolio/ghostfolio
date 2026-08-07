@@ -25,23 +25,29 @@ export class ExportService {
   public async export({
     activityIds,
     activityTypes,
+    endDate,
     filters,
+    startDate,
     userId,
     userSettings
   }: {
     activityIds?: string[];
     activityTypes?: ActivityType[];
+    endDate?: Date;
     filters?: Filter[];
+    startDate?: Date;
     userId: string;
     userSettings: UserSettings;
   }): Promise<ExportResponse> {
-    const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
+    const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
       return type;
     });
     const platformsMap: { [platformId: string]: Platform } = {};
 
     let { activities } = await this.activitiesService.getActivities({
+      endDate,
       filters,
+      startDate,
       userId,
       includeDrafts: true,
       sortColumn: 'date',
@@ -59,7 +65,7 @@ export class ExportService {
 
     const where: Prisma.AccountWhereInput = { userId };
 
-    if (filtersByAccount?.length > 0) {
+    if (filtersByAccount.length > 0) {
       where.id = {
         in: filtersByAccount.map(({ id }) => {
           return id;
@@ -67,12 +73,20 @@ export class ExportService {
       };
     }
 
+    const isFilteredExport =
+      activityIds?.length > 0 ||
+      activityTypes?.length > 0 ||
+      filters?.length > 0 ||
+      !!endDate ||
+      !!startDate;
+
     const accounts = (
       await this.accountService.accounts({
         where,
         include: {
           balances: true,
-          platform: true
+          platform: true,
+          tags: true
         },
         orderBy: {
           name: 'asc'
@@ -80,7 +94,7 @@ export class ExportService {
       })
     )
       .filter(({ id }) => {
-        return activityIds?.length > 0
+        return isFilteredExport
           ? activities.some(({ accountId }) => {
               return accountId === id;
             })
@@ -88,39 +102,39 @@ export class ExportService {
       })
       .map(
         ({
-          balance,
           balances,
           comment,
           currency,
           id,
-          isExcluded,
           name,
           platform,
-          platformId
-        }) => {
+          platformId,
+          tags
+        }): ExportResponse['accounts'][number] => {
           if (platformId) {
             platformsMap[platformId] = platform;
           }
 
           return {
-            balance,
             balances: balances.map(({ date, value }) => {
               return { date: date.toISOString(), value };
             }),
             comment,
             currency,
             id,
-            isExcluded,
             name,
-            platformId
+            platformId,
+            tags: tags.map(({ id: tagId }) => {
+              return tagId;
+            })
           };
         }
       );
 
     const customAssetProfiles = uniqBy(
       activities
-        .map(({ SymbolProfile }) => {
-          return SymbolProfile;
+        .map(({ assetProfile }) => {
+          return assetProfile;
         })
         .filter(({ userId: assetProfileUserId }) => {
           return assetProfileUserId === userId;
@@ -151,11 +165,14 @@ export class ExportService {
       .filter(({ id, isUsed }) => {
         return (
           isUsed &&
-          activities.some((activity) => {
-            return activity.tags.some(({ id: tagId }) => {
-              return tagId === id;
-            });
-          })
+          (accounts.some(({ tags: tagIds }) => {
+            return tagIds.includes(id);
+          }) ||
+            activities.some((activity) => {
+              return activity.tags.some(({ id: tagId }) => {
+                return tagId === id;
+              });
+            }))
         );
       })
       .map(({ id, name }) => {
@@ -216,13 +233,13 @@ export class ExportService {
       activities: activities.map(
         ({
           accountId,
+          assetProfile,
           comment,
           currency,
           date,
           fee,
           id,
           quantity,
-          SymbolProfile,
           tags: currentTags,
           type,
           unitPrice
@@ -235,10 +252,10 @@ export class ExportService {
             quantity,
             type,
             unitPrice,
-            currency: currency ?? SymbolProfile.currency,
-            dataSource: SymbolProfile.dataSource,
+            currency: currency ?? assetProfile.currency,
+            dataSource: assetProfile.dataSource,
             date: date.toISOString(),
-            symbol: SymbolProfile.symbol,
+            symbol: assetProfile.symbol,
             tags: currentTags.map(({ id: tagId }) => {
               return tagId;
             })

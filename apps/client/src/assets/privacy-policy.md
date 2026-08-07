@@ -1,6 +1,6 @@
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
-We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.
+We use Your Personal Data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.
 
 ## Interpretation and Definitions
 
@@ -14,7 +14,7 @@ For the purposes of this Privacy Policy:
 
 - **Account** means a unique account created for You to access our Service or parts of our Service.
 - **Application** means the software program provided by the Company downloaded by You on any electronic device, named Ghostfolio App.
-- **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Ghostfolio LLC.
+- **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Ghostfolio LLC, Switzerland.
 - **Country** refers to: Switzerland
 - **Device** means any device that can access the Service such as a computer, a cellphone or a digital tablet.
 - **Personal Data** is any information that relates to an identified or identifiable individual.
@@ -42,16 +42,20 @@ Usage Data may include information such as the time and date of Your visit, the 
 
 When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the unique user identifier and other diagnostic data.
 
+#### Cookies and Similar Technologies
+
+We do not use analytics or advertising cookies, and We do not track Your activity across other websites.
+
 ### Use of Your Personal Data
 
 The Company may use Personal Data for the following purposes:
 
 - **To provide and maintain our Service**, including to monitor the usage of our Service.
-- **For other purposes**: We may use Your information for other purposes, such as data analysis, identifying usage trends, determining the effectiveness of our promotional campaigns and to evaluate and improve our Service, products, services, marketing and your experience.
+- **For other purposes**: We may use Your information for other purposes, such as data analysis, identifying usage trends, and to evaluate and improve our Service, products, services and Your experience.
 
 ### Retention of Your Personal Data
 
-The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.
+The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain Your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.
 
 The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods.
 
@@ -75,6 +79,6 @@ You are advised to review this Privacy Policy periodically for any changes. Chan
 
 ## Contact Us
 
-If you have any questions about this Privacy Policy, You can contact us [here](https://ghostfol.io/en/about).
+If You have any questions about this Privacy Policy, You can contact Us [here](https://ghostfol.io/en/about).
 
-Date of Last Revision: March 29, 2025
+Date of Last Revision: June 30, 2026

@@ -1,7 +1,7 @@
 import {
   activityDummyData,
+  assetProfileDummyData,
   loadExportFile,
-  symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -67,6 +67,9 @@ describe('PortfolioCalculator', () => {
   });
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -78,7 +81,7 @@ describe('PortfolioCalculator', () => {
       null
     );
 
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    portfolioSnapshotService = new PortfolioSnapshotService(null, null);
 
     redisCacheService = new RedisCacheService(null, null);
 
@@ -99,16 +102,16 @@ describe('PortfolioCalculator', () => {
         (activity) => ({
           ...activityDummyData,
           ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: activity.fee,
-          feeInBaseCurrency: activity.fee,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: activity.currency,
             dataSource: activity.dataSource,
             name: 'Novartis AG',
             symbol: activity.symbol
           },
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: activity.fee,
+          feeInBaseCurrency: activity.fee,
           unitPriceInAssetProfileCurrency: activity.unitPrice
         })
       );
@@ -142,7 +145,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0,
         netPerformanceWithCurrencyEffect: 0,
         netWorth: 0,
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
         value: 0,
@@ -161,7 +164,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.158311345646438, // 24 ÷ 151.6 = 0.158311345646438
         netPerformanceWithCurrencyEffect: 24,
         netWorth: 175.6, // 2 * 87.8 = 175.6
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 151.6,
         totalInvestmentValueWithCurrencyEffect: 151.6,
         value: 175.6, // 2 * 87.8 = 175.6
@@ -180,7 +183,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.13100263852242744,
         netPerformanceWithCurrencyEffect: 19.86,
         netWorth: 0,
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
         value: 0,

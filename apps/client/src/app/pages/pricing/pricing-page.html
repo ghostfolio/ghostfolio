@@ -305,23 +305,23 @@
       </div>
     </div>
   </div>
-  @if (user?.subscription?.type === 'Basic') {
+  @if (user?.referralPartners?.length) {
     <div class="row">
       <div class="col mt-3">
         <p>
           <ng-container i18n>If you plan to open an account at</ng-container>
           <ng-container>&nbsp;</ng-container>
           @for (
-            broker of referralBrokers;
-            track broker;
+            partner of user.referralPartners;
+            track partner.name;
             let i = $index;
             let last = $last
           ) {
-            <i>{{ broker }}</i>
+            <i>{{ partner.name }}</i>
             @if (last) {
               <span>, </span>
             } @else {
-              @if (i === referralBrokers.length - 2) {
+              @if (i === user.referralPartners.length - 2) {
                 <ng-container>&nbsp;</ng-container>
                 <ng-container i18n>or</ng-container>
                 <ng-container>&nbsp;</ng-container>
@@ -332,7 +332,7 @@
           }
           <ng-container i18n>please</ng-container>
           <ng-container>&nbsp;</ng-container>
-          <a href="mailto:hi@ghostfol.io?Subject=Referral link for..." i18n
+          <a href="mailto:hi@ghostfol.io?subject=Referral link for..." i18n
             >contact us</a
           >
           <ng-container>&nbsp;</ng-container>
@@ -343,7 +343,7 @@
           <ng-container>&nbsp;</ng-container>
           <ng-container i18n>Request it</ng-container>
           <ng-container>&nbsp;</ng-container>
-          <a href="mailto:hi@ghostfol.io?Subject=Student Discount" i18n>here</a>
+          <a href="mailto:hi@ghostfol.io?subject=Student Discount" i18n>here</a>
           <ng-container>&nbsp;</ng-container>
           <ng-container i18n>with your university e-mail address</ng-container>.
         </p>

@@ -1,7 +1,8 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale } from '@ghostfolio/common/helper';
+import { getLocale, getLowercase } from '@ghostfolio/common/helper';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -22,6 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -33,7 +35,6 @@ import {
   ellipsisHorizontal,
   trashOutline
 } from 'ionicons/icons';
-import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
@@ -47,6 +48,7 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
     IonIcon,
     MatButtonModule,
     MatMenuModule,
+    MatPaginatorModule,
     MatSortModule,
     MatTableModule,
     RouterModule
@@ -60,11 +62,13 @@ export class GfAdminPlatformComponent implements OnInit {
 
   protected dataSource = new MatTableDataSource<Platform>();
   protected readonly displayedColumns = ['name', 'url', 'accounts', 'actions'];
+  protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected platforms: Platform[];
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+  private readonly paginator = viewChild.required(MatPaginator);
   private readonly sort = viewChild.required(MatSort);
 
   private readonly adminService = inject(AdminService);
@@ -146,8 +150,9 @@ export class GfAdminPlatformComponent implements OnInit {
         this.platforms = platforms;
 
         this.dataSource = new MatTableDataSource(platforms);
+        this.dataSource.paginator = this.paginator();
         this.dataSource.sort = this.sort();
-        this.dataSource.sortingDataAccessor = get;
+        this.dataSource.sortingDataAccessor = getLowercase;
 
         this.dataService.updateInfo();
 

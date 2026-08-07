@@ -1,5 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
@@ -50,7 +51,8 @@ export class AccountController {
     private readonly apiService: ApiService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Delete(':id')
@@ -137,11 +139,14 @@ export class AccountController {
   ): Promise<AccountBalancesResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
+    const userId = impersonationUserId || this.request.user.id;
+
+    const { settings } = await this.userService.user({ id: userId });
 
     return this.accountBalanceService.getAccountBalances({
+      userId,
       filters: [{ id, type: 'ACCOUNT' }],
-      userCurrency: this.request.user.settings.settings.baseCurrency,
-      userId: impersonationUserId || this.request.user.id
+      userCurrency: settings.settings.baseCurrency
     });
   }
 
@@ -151,28 +156,34 @@ export class AccountController {
   public async createAccount(
     @Body() data: CreateAccountDto
   ): Promise<AccountModel> {
-    if (data.platformId) {
-      const platformId = data.platformId;
-      delete data.platformId;
+    const { balance, tags: tagIds, ...accountData } = data;
 
-      return this.accountService.createAccount(
-        {
-          ...data,
+    if (accountData.platformId) {
+      const platformId = accountData.platformId;
+      delete accountData.platformId;
+
+      return this.accountService.createAccount({
+        balance,
+        tagIds,
+        data: {
+          ...accountData,
           platform: { connect: { id: platformId } },
           user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id
-      );
+        userId: this.request.user.id
+      });
     } else {
-      delete data.platformId;
+      delete accountData.platformId;
 
-      return this.accountService.createAccount(
-        {
-          ...data,
+      return this.accountService.createAccount({
+        balance,
+        tagIds,
+        data: {
+          ...accountData,
           user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id
-      );
+        userId: this.request.user.id
+      });
     }
   }
 
@@ -248,48 +259,50 @@ export class AccountController {
       );
     }
 
-    if (data.platformId) {
-      const platformId = data.platformId;
-      delete data.platformId;
+    const { balance, tags: tagIds, ...accountData } = data;
 
-      return this.accountService.updateAccount(
-        {
-          data: {
-            ...data,
-            platform: { connect: { id: platformId } },
-            user: { connect: { id: this.request.user.id } }
-          },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
-            }
-          }
+    if (accountData.platformId) {
+      const platformId = accountData.platformId;
+      delete accountData.platformId;
+
+      return this.accountService.updateAccount({
+        balance,
+        tagIds,
+        data: {
+          ...accountData,
+          platform: { connect: { id: platformId } },
+          user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id
-      );
+        userId: this.request.user.id,
+        where: {
+          id_userId: {
+            id,
+            userId: this.request.user.id
+          }
+        }
+      });
     } else {
       // platformId is null, remove it
-      delete data.platformId;
+      delete accountData.platformId;
 
-      return this.accountService.updateAccount(
-        {
-          data: {
-            ...data,
-            platform: originalAccount.platformId
-              ? { disconnect: true }
-              : undefined,
-            user: { connect: { id: this.request.user.id } }
-          },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
-            }
-          }
+      return this.accountService.updateAccount({
+        balance,
+        tagIds,
+        data: {
+          ...accountData,
+          platform: originalAccount.platformId
+            ? { disconnect: true }
+            : undefined,
+          user: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id
-      );
+        userId: this.request.user.id,
+        where: {
+          id_userId: {
+            id,
+            userId: this.request.user.id
+          }
+        }
+      });
     }
   }
 }

@@ -1,4 +1,5 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { AccessSettings, Filter } from '@ghostfolio/common/interfaces';
 import { AccessWithGranteeUser } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -37,6 +38,12 @@ export class AccessService {
       take,
       where
     });
+  }
+
+  public buildSettings(filters?: Filter[]) {
+    const settings: AccessSettings = filters?.length ? { filters } : {};
+
+    return settings as Prisma.InputJsonValue;
   }
 
   public async createAccess(data: Prisma.AccessCreateInput): Promise<Access> {

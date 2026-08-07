@@ -7,10 +7,8 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  ghostfolioFearAndGreedIndexSymbol,
-  ghostfolioFearAndGreedIndexSymbolStocks
-} from '@ghostfolio/common/config';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
+import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
@@ -25,8 +23,11 @@ import { format } from 'date-fns';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
+  private readonly logger = new Logger(RapidApiService.name);
+
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService
   ) {}
 
   public canHandle() {
@@ -57,24 +58,19 @@ export class RapidApiService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
-      if (
-        [
-          ghostfolioFearAndGreedIndexSymbol,
-          ghostfolioFearAndGreedIndexSymbolStocks
-        ].includes(symbol)
-      ) {
+      if (symbol === ghostfolioFearAndGreedIndexSymbolStocks) {
         const fgi = await this.getFearAndGreedIndex();
 
-        return {
-          [symbol]: {
+        if (fgi) {
+          return {
             [format(getYesterday(), DATE_FORMAT)]: {
               marketPrice: fgi.previousClose.value
             }
-          }
-        };
+          };
+        }
       }
     } catch (error) {
       throw new Error(
@@ -102,25 +98,22 @@ export class RapidApiService implements DataProviderInterface {
     try {
       const symbol = symbols[0];
 
-      if (
-        [
-          ghostfolioFearAndGreedIndexSymbol,
-          ghostfolioFearAndGreedIndexSymbolStocks
-        ].includes(symbol)
-      ) {
+      if (symbol === ghostfolioFearAndGreedIndexSymbolStocks) {
         const fgi = await this.getFearAndGreedIndex();
 
-        return {
-          [symbol]: {
-            currency: undefined,
-            dataSource: this.getName(),
-            marketPrice: fgi.now.value,
-            marketState: 'open'
-          }
-        };
+        if (fgi) {
+          return {
+            [symbol]: {
+              currency: undefined,
+              dataSource: this.getName(),
+              marketPrice: fgi.now.value,
+              marketState: 'open'
+            }
+          };
+        }
       }
     } catch (error) {
-      Logger.error(error, 'RapidApiService');
+      this.logger.error(error);
     }
 
     return {};
@@ -142,9 +135,8 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
-      const { fgi } = await fetch(
-        `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
-        {
+      const { fgi } = await this.fetchService
+        .fetch(`https://fear-and-greed-index.p.rapidapi.com/v1/fgi`, {
           headers: {
             useQueryString: 'true',
             'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
@@ -153,8 +145,8 @@ export class RapidApiService implements DataProviderInterface {
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
-        }
-      ).then((res) => res.json());
+        })
+        .then((res) => res.json());
 
       return fgi;
     } catch (error) {
@@ -166,7 +158,7 @@ export class RapidApiService implements DataProviderInterface {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'RapidApiService');
+      this.logger.error(message);
 
       return undefined;
     }

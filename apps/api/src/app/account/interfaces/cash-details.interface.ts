@@ -1,6 +1,6 @@
-import { Account } from '@prisma/client';
+import { AccountWithBalance } from '@ghostfolio/common/types';
 
 export interface CashDetails {
-  accounts: Account[];
+  accounts: AccountWithBalance[];
   balanceInBaseCurrency: number;
 }

@@ -7,6 +7,7 @@ import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.mo
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
+import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
@@ -29,6 +30,7 @@ import { InfoService } from './info.service';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '30 days' }
     }),
+    MarketDataModule,
     PlatformModule,
     PropertyModule,
     RedisCacheModule,

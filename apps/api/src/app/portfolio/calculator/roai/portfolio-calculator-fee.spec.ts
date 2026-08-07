@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -54,6 +54,9 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -65,7 +68,7 @@ describe('PortfolioCalculator', () => {
       null
     );
 
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    portfolioSnapshotService = new PortfolioSnapshotService(null, null);
 
     redisCacheService = new RedisCacheService(null, null);
 
@@ -85,17 +88,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2021-09-01'),
-          feeInAssetProfileCurrency: 49,
-          feeInBaseCurrency: 49,
-          quantity: 0,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'MANUAL',
             name: 'Account Opening Fee',
             symbol: '2c463fb3-af07-486e-adb0-8301b3d72141'
           },
+          date: new Date('2021-09-01'),
+          feeInAssetProfileCurrency: 49,
+          feeInBaseCurrency: 49,
+          quantity: 0,
           type: 'FEE',
           unitPriceInAssetProfileCurrency: 0
         }
@@ -113,7 +116,7 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
-        hasErrors: true,
+        hasErrors: false,
         positions: [],
         totalFeesWithCurrencyEffect: new Big('49'),
         totalInterestWithCurrencyEffect: new Big('0'),

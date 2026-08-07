@@ -1,5 +1,10 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  getLowercase,
+  isAccountExcluded
+} from '@ghostfolio/common/helper';
+import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -20,7 +25,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Account } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
   arrowRedoOutline,
@@ -51,7 +55,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './accounts-table.component.html'
 })
 export class GfAccountsTableComponent {
-  public readonly accounts = input.required<Account[]>();
+  public readonly accounts = input.required<AccountWithValue[]>();
   public readonly activitiesCount = input<number>();
   public readonly baseCurrency = input<string>();
   public readonly hasPermissionToOpenDetails = input(true);
@@ -67,12 +71,12 @@ export class GfAccountsTableComponent {
   public readonly totalValueInBaseCurrency = input<number>();
 
   public readonly accountDeleted = output<string>();
-  public readonly accountToUpdate = output<Account>();
+  public readonly accountToUpdate = output<AccountWithValue>();
   public readonly transferBalance = output<void>();
 
   public readonly sort = viewChild.required(MatSort);
 
-  protected readonly dataSource = new MatTableDataSource<Account>([]);
+  protected readonly dataSource = new MatTableDataSource<AccountWithValue>([]);
 
   protected readonly displayedColumns = computed(() => {
     const columns = ['status', 'account', 'platform'];
@@ -137,6 +141,12 @@ export class GfAccountsTableComponent {
     });
   }
 
+  protected isExcluded(
+    account: AccountWithValue & { tags?: { id: string }[] }
+  ) {
+    return isAccountExcluded(account);
+  }
+
   protected onDeleteAccount(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
@@ -165,7 +175,7 @@ export class GfAccountsTableComponent {
     this.transferBalance.emit();
   }
 
-  protected onUpdateAccount(aAccount: Account) {
+  protected onUpdateAccount(aAccount: AccountWithValue) {
     this.accountToUpdate.emit(aAccount);
   }
 }

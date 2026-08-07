@@ -2,18 +2,14 @@ import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ColorScheme } from './types';
+import { ColorScheme, DateRange } from './types';
 
 export const ghostfolioPrefix = 'GF';
-export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
+
 export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
   DataSource.MANUAL;
-export const ghostfolioFearAndGreedIndexDataSourceStocks = DataSource.RAPID_API;
-export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
 export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;
 export const ghostfolioFearAndGreedIndexSymbolStocks = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_STOCKS`;
-
-export const locale = 'en-US';
 
 export const primaryColorHex = '#36cfcc';
 export const primaryColorRgb = {
@@ -71,6 +67,20 @@ export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
   DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
 );
 
+/**
+ * The named date ranges, complemented by the calendar years like '2024',
+ * '2023', '2022', etc.
+ */
+export const DATE_RANGES = [
+  '1d',
+  '1y',
+  '5y',
+  'max',
+  'mtd',
+  'wtd',
+  'ytd'
+] as const;
+
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE =
   'PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE';
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH = 1;
@@ -82,14 +92,20 @@ export const STATISTICS_GATHERING_QUEUE = 'STATISTICS_GATHERING_QUEUE';
 export const DEFAULT_COLOR_SCHEME: ColorScheme = 'LIGHT';
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
+export const DEFAULT_DATE_RANGE: DateRange = 'max';
 export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
+export const DEFAULT_LOCALE = 'en-US';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PORT = 3333;
 export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY = 1;
+export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT =
+  ms('1 minute');
+export const DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY = 1;
-export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
+export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT =
+  ms('30 seconds');
 
 export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].balance',
@@ -99,20 +115,18 @@ export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].interestInBaseCurrency',
   'accounts[*].value',
   'accounts[*].valueInBaseCurrency',
-  'activities[*].account.balance',
   'activities[*].account.comment',
+  'activities[*].assetProfile.symbolMapping',
+  'activities[*].assetProfile.watchedByCount',
   'activities[*].comment',
   'activities[*].fee',
   'activities[*].feeInAssetProfileCurrency',
   'activities[*].feeInBaseCurrency',
   'activities[*].quantity',
-  'activities[*].SymbolProfile.symbolMapping',
-  'activities[*].SymbolProfile.watchedByCount',
   'activities[*].value',
   'activities[*].valueInBaseCurrency',
   'balance',
   'balanceInBaseCurrency',
-  'balances[*].account.balance',
   'balances[*].account.comment',
   'balances[*].value',
   'balances[*].valueInBaseCurrency',
@@ -138,8 +152,6 @@ export const DEFAULT_REDACTED_PATHS = [
   'platforms[*].balance',
   'platforms[*].valueInBaseCurrency',
   'quantity',
-  'SymbolProfile.symbolMapping',
-  'SymbolProfile.watchedByCount',
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',
@@ -166,6 +178,8 @@ export const DERIVED_CURRENCIES = [
     rootCurrency: 'ZAR'
   }
 ];
+
+export const E_MAIL_LINE_BREAK = '%0D%0A';
 
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
@@ -215,6 +229,12 @@ export const INVESTMENT_ACTIVITY_TYPES = [
   Type.SELL
 ] as Type[];
 
+export const NON_INVESTMENT_ACTIVITY_TYPES = Object.values(Type).filter(
+  (type) => {
+    return !INVESTMENT_ACTIVITY_TYPES.includes(type);
+  }
+);
+
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
@@ -228,6 +248,7 @@ export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
 export const MAX_TOP_HOLDINGS = 50;
 
 export const NUMERICAL_PRECISION_THRESHOLD_3_FIGURES = 100;
+export const NUMERICAL_PRECISION_THRESHOLD_4_FIGURES = 1000;
 export const NUMERICAL_PRECISION_THRESHOLD_5_FIGURES = 10000;
 export const NUMERICAL_PRECISION_THRESHOLD_6_FIGURES = 100000;
 
@@ -250,11 +271,16 @@ export const PROPERTY_DEMO_USER_ID = 'DEMO_USER_ID';
 export const PROPERTY_IS_DATA_GATHERING_ENABLED = 'IS_DATA_GATHERING_ENABLED';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
+export const PROPERTY_MAX_DAILY_REQUESTS = 'MAX_DAILY_REQUESTS';
 export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
+export const PROPERTY_OPENROUTER_MODEL_WEB_FETCH = 'OPENROUTER_MODEL_WEB_FETCH';
+export const PROPERTY_PROXY_ROUTES = 'PROXY_ROUTES';
+export const PROPERTY_REFERRAL_PARTNERS = 'REFERRAL_PARTNERS';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
 export const PROPERTY_UPTIME = 'UPTIME';
+export const PROPERTY_WEB_FETCH_ROUTES = 'WEB_FETCH_ROUTES';
 
 export const QUEUE_JOB_STATUS_LIST = [
   'active',
@@ -280,6 +306,23 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const SEARCH_QUERY_MINIMUM_LENGTH = 2;
+
+export const SECTORS = [
+  'Basic Materials',
+  'Communication Services',
+  'Consumer Cyclical',
+  'Consumer Defensive',
+  'Energy',
+  'Financial Services',
+  'Healthcare',
+  'Industrials',
+  'Other',
+  'Real Estate',
+  'Technology',
+  'Utilities'
+] as const;
+
 export const STORYBOOK_PATH = '/development/storybook';
 
 export const SUPPORTED_LANGUAGE_CODES = [
@@ -289,6 +332,7 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'es',
   'fr',
   'it',
+  // 'ja',
   'ko',
   'nl',
   'pl',
@@ -297,12 +341,25 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'uk',
   'zh',
   'zh-TW'
-];
+] as const;
 
+export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
 
 export const TAG_ID_EMERGENCY_FUND = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 export const TAG_ID_EXCLUDE_FROM_ANALYSIS =
   'f2e868af-8333-459f-b161-cbc6544c24bd';
-export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
+
+export const TAG_IDS_SYSTEM = [
+  TAG_ID_DEMO,
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+];
+
+export const THROTTLE_DAILY_KEY = 'daily';
+export const THROTTLE_DAILY_TTL = ms('1 day');
+export const THROTTLE_DEFAULT_LIMIT = 10;
+export const THROTTLE_DEFAULT_TTL = ms('1 minute');
+export const THROTTLE_SIGNUP_LIMIT = 5;
+export const THROTTLE_SIGNUP_TTL = ms('1 hour');
 
 export const UNKNOWN_KEY = 'UNKNOWN';

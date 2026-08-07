@@ -6,6 +6,10 @@
   height: 100%;
   width: 100%;
 
+  .external-link-icon {
+    font-size: 0.75rem;
+  }
+
   @include mat.tabs-overrides(
     (
       active-indicator-height: 0,
@@ -15,12 +19,6 @@
   );
 
   ::ng-deep {
-    .fab-container {
-      @media (max-width: 575.98px) {
-        bottom: 5rem;
-      }
-    }
-
     .mat-mdc-tab-nav-panel {
       padding: 2rem 0;
 
@@ -43,7 +41,12 @@
 
     @include mat.tabs-overrides(
       (
-        container-height: 2rem
+        active-focus-label-text-color: rgba(var(--palette-foreground-base), 1),
+        active-hover-label-text-color: rgba(var(--palette-foreground-base), 1),
+        active-label-text-color: rgba(var(--palette-foreground-base), 1),
+        active-ripple-color: rgba(var(--palette-foreground-base), 1),
+        container-height: 2rem,
+        inactive-ripple-color: rgba(var(--palette-foreground-base), 1)
       )
     );
 
@@ -53,11 +56,29 @@
         padding: 2rem 0;
         width: 14rem;
 
+        .mat-mdc-tab-list,
+        .mat-mdc-tab-links {
+          width: 100%;
+        }
+
         .mat-mdc-tab-links {
           flex-direction: column;
 
           .mat-mdc-tab-link {
+            border-radius: 0.25rem;
+            font-weight: 400;
             justify-content: flex-start;
+            margin: 0 0.5rem 0.1rem 0.5rem;
+
+            &.mdc-tab--active {
+              background-color: rgba(var(--palette-foreground-base), 0.05);
+              font-weight: 500;
+            }
+
+            .mdc-tab__content,
+            .mdc-tab__text-label {
+              width: 100%;
+            }
           }
         }
       }
@@ -67,8 +88,32 @@
 
 :host-context(.theme-dark) {
   @media (min-width: 576px) {
-    .mat-mdc-tab-header {
-      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+    @include mat.tabs-overrides(
+      (
+        active-focus-label-text-color: rgba(
+            var(--palette-foreground-base-dark),
+            1
+          ),
+        active-hover-label-text-color: rgba(
+            var(--palette-foreground-base-dark),
+            1
+          ),
+        active-label-text-color: rgba(var(--palette-foreground-base-dark), 1),
+        active-ripple-color: rgba(var(--palette-foreground-base-dark), 1),
+        inactive-ripple-color: rgba(var(--palette-foreground-base-dark), 1)
+      )
+    );
+
+    ::ng-deep {
+      .mat-mdc-tab-header {
+        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+
+        .mat-mdc-tab-link {
+          &.mdc-tab--active {
+            background-color: rgba(var(--palette-foreground-base-dark), 0.05);
+          }
+        }
+      }
     }
   }
 }

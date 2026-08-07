@@ -1,6 +1,6 @@
 import { UserWithSettings } from '@ghostfolio/common/types';
 
-import { Role } from '@prisma/client';
+import { Access, Role } from '@prisma/client';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
@@ -12,6 +12,9 @@ export const permissions = {
   createAccountBalance: 'createAccountBalance',
   createActivity: 'createActivity',
   createApiKey: 'createApiKey',
+  createAssetProfileSplit: 'createAssetProfileSplit',
+  createAssetProfileSplitOfOwnAssetProfile:
+    'createAssetProfileSplitOfOwnAssetProfile',
   createMarketData: 'createMarketData',
   createMarketDataOfOwnAssetProfile: 'createMarketDataOfOwnAssetProfile',
   createOwnTag: 'createOwnTag',
@@ -23,6 +26,9 @@ export const permissions = {
   deleteAccount: 'deleteAccount',
   deleteAccountBalance: 'deleteAccountBalance',
   deleteActivity: 'deleteActivity',
+  deleteAssetProfileSplit: 'deleteAssetProfileSplit',
+  deleteAssetProfileSplitOfOwnAssetProfile:
+    'deleteAssetProfileSplitOfOwnAssetProfile',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOwnUser: 'deleteOwnUser',
   deletePlatform: 'deletePlatform',
@@ -50,6 +56,7 @@ export const permissions = {
   readTags: 'readTags',
   readWatchlist: 'readWatchlist',
   reportDataGlitch: 'reportDataGlitch',
+  requestOwnUserDeletion: 'requestOwnUserDeletion',
   syncDemoUserAccount: 'syncDemoUserAccount',
   toggleReadOnlyMode: 'toggleReadOnlyMode',
   updateAccount: 'updateAccount',
@@ -79,6 +86,8 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createWatchlistItem,
         permissions.deleteAccountBalance,
         permissions.deleteWatchlistItem,
+        permissions.createAssetProfileSplit,
+        permissions.createAssetProfileSplitOfOwnAssetProfile,
         permissions.createMarketData,
         permissions.createMarketDataOfOwnAssetProfile,
         permissions.createOwnTag,
@@ -87,6 +96,8 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccess,
         permissions.deleteAccount,
         permissions.deleteActivity,
+        permissions.deleteAssetProfileSplit,
+        permissions.deleteAssetProfileSplitOfOwnAssetProfile,
         permissions.deleteAuthDevice,
         permissions.deletePlatform,
         permissions.deleteTag,
@@ -127,6 +138,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createAccount,
         permissions.createAccountBalance,
         permissions.createActivity,
+        permissions.createAssetProfileSplitOfOwnAssetProfile,
         permissions.createMarketDataOfOwnAssetProfile,
         permissions.createOwnTag,
         permissions.createWatchlistItem,
@@ -134,6 +146,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccount,
         permissions.deleteAccountBalance,
         permissions.deleteActivity,
+        permissions.deleteAssetProfileSplitOfOwnAssetProfile,
         permissions.deleteAuthDevice,
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
@@ -185,17 +198,17 @@ export function hasPermission(
 }
 
 export function hasReadRestrictedAccessPermission({
-  impersonationId,
-  user
+  accesses = [],
+  impersonationId
 }: {
-  impersonationId: string;
-  user: UserWithSettings;
+  accesses?: Pick<Access, 'id' | 'permissions'>[];
+  impersonationId: string | null;
 }) {
   if (!impersonationId) {
     return false;
   }
 
-  const access = user?.accessesGet?.find(({ id }) => {
+  const access = accesses.find(({ id }) => {
     return id === impersonationId;
   });
 

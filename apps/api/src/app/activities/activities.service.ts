@@ -3,25 +3,36 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import {
+  isAccountBalanceInFuture,
+  WHERE_ACCOUNT_NOT_EXCLUDED
+} from '@ghostfolio/api/helper/account.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
-  ghostfolioPrefix,
+  NON_INVESTMENT_ACTIVITY_TYPES,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  canDeleteAssetProfile,
+  getAssetProfileIdentifier,
+  isValidCustomAssetProfileSymbol
+} from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
   Activity,
   AssetProfileIdentifier,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
@@ -38,7 +49,6 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
@@ -48,13 +58,53 @@ export class ActivitiesService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly tagService: TagService
   ) {}
+
+  public areCashActivitiesExcludedByFilters(filters: Filter[] = []) {
+    const {
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
+    const isFilteredByAssetClassOtherThanLiquidity =
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.some(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      });
+
+    const isFilteredByAssetProfile = !!(filterByDataSource || filterBySymbol);
+    const isFilteredByTag = filtersByTag.length > 0;
+
+    const isFilteredByUnsupportedType = filters.some(({ type }) => {
+      return ![
+        'ACCOUNT',
+        'ASSET_CLASS',
+        'DATA_SOURCE',
+        'SYMBOL',
+        'TAG'
+      ].includes(type);
+    });
+
+    return (
+      isFilteredByAssetClassOtherThanLiquidity ||
+      isFilteredByAssetProfile ||
+      isFilteredByTag ||
+      isFilteredByUnsupportedType
+    );
+  }
 
   public async assignTags({
     dataSource,
@@ -62,6 +112,13 @@ export class ActivitiesService {
     tags,
     userId
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
+    await this.tagService.validateTagIds({
+      userId,
+      tagIds: tags.map(({ id }) => {
+        return id;
+      })
+    });
+
     const activities = await this.prismaService.order.findMany({
       where: {
         userId,
@@ -108,6 +165,15 @@ export class ActivitiesService {
       userId: string;
     }
   ): Promise<Order> {
+    const tags = data.tags ?? [];
+
+    await this.tagService.validateTagIds({
+      tagIds: tags.map(({ id }) => {
+        return id;
+      }),
+      userId: data.userId
+    });
+
     let account: Prisma.AccountCreateNestedOneWithoutActivitiesInput;
 
     if (data.accountId) {
@@ -122,12 +188,11 @@ export class ActivitiesService {
     }
 
     const accountId = data.accountId;
-    const tags = data.tags ?? [];
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
@@ -139,10 +204,9 @@ export class ActivitiesService {
       let symbol: string;
 
       if (
-        data.SymbolProfile.connectOrCreate.create.symbol.startsWith(
-          `${ghostfolioPrefix}_`
-        ) ||
-        isUUID(data.SymbolProfile.connectOrCreate.create.symbol)
+        isValidCustomAssetProfileSymbol(
+          data.SymbolProfile.connectOrCreate.create.symbol
+        )
       ) {
         // Connect custom asset profile (clone)
         symbol = data.SymbolProfile.connectOrCreate.create.symbol;
@@ -197,7 +261,7 @@ export class ActivitiesService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type)
+    const isDraft = NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type)
       ? false
       : isAfter(data.date as Date, endOfToday());
 
@@ -213,7 +277,7 @@ export class ActivitiesService {
       include: { SymbolProfile: true }
     });
 
-    if (updateAccountBalance === true) {
+    if (accountId && updateAccountBalance === true) {
       let amount = new Big(data.unitPrice).mul(data.quantity);
 
       if (['BUY', 'FEE'].includes(data.type)) {
@@ -262,7 +326,26 @@ export class ActivitiesService {
         activity.symbolProfileId
       ]);
 
-    if (symbolProfile.activitiesCount === 0) {
+    const benchmarkAssetProfiles =
+      await this.benchmarkService.getBenchmarkAssetProfiles();
+
+    const isBenchmark = benchmarkAssetProfiles.some(({ id }) => {
+      return id === symbolProfile.id;
+    });
+
+    if (
+      canDeleteAssetProfile({
+        isBenchmark,
+        activitiesCount: symbolProfile.activitiesCount,
+        symbol: symbolProfile.symbol,
+        watchedByCount: symbolProfile.watchedByCount
+      })
+    ) {
+      await this.marketDataService.deleteMany({
+        dataSource: symbolProfile.dataSource,
+        symbol: symbolProfile.symbol
+      });
+
       await this.symbolProfileService.deleteById(activity.symbolProfileId);
     }
 
@@ -277,14 +360,23 @@ export class ActivitiesService {
   }
 
   public async deleteActivities({
+    endDate,
     filters,
+    startDate,
+    types,
     userId
   }: {
+    endDate?: Date;
     filters?: Filter[];
+    startDate?: Date;
+    types?: ActivityType[];
     userId: string;
   }): Promise<number> {
     const { activities } = await this.getActivities({
+      endDate,
       filters,
+      startDate,
+      types,
       userId,
       includeDrafts: true,
       userCurrency: undefined,
@@ -308,8 +400,31 @@ export class ActivitiesService {
         })
       );
 
-    for (const { activitiesCount, id } of symbolProfiles) {
-      if (activitiesCount === 0) {
+    const benchmarkAssetProfiles =
+      await this.benchmarkService.getBenchmarkAssetProfiles();
+
+    for (const {
+      activitiesCount,
+      dataSource,
+      id,
+      symbol,
+      watchedByCount
+    } of symbolProfiles) {
+      const isBenchmark = benchmarkAssetProfiles.some(
+        (benchmarkAssetProfile) => {
+          return benchmarkAssetProfile.id === id;
+        }
+      );
+
+      if (
+        canDeleteAssetProfile({
+          activitiesCount,
+          isBenchmark,
+          symbol,
+          watchedByCount
+        })
+      ) {
+        await this.marketDataService.deleteMany({ dataSource, symbol });
         await this.symbolProfileService.deleteById(id);
       }
     }
@@ -344,17 +459,7 @@ export class ActivitiesService {
     userCurrency: string;
     userId: string;
   }): Promise<ActivitiesResponse> {
-    const filtersByAssetClass = filters.filter(({ type }) => {
-      return type === 'ASSET_CLASS';
-    });
-
-    if (
-      filtersByAssetClass.length > 0 &&
-      !filtersByAssetClass.find(({ id }) => {
-        return id === AssetClass.LIQUIDITY;
-      })
-    ) {
-      // If asset class filters are present and none of them is liquidity, return an empty response
+    if (this.areCashActivitiesExcludedByFilters(filters)) {
       return {
         activities: [],
         count: 0
@@ -362,6 +467,7 @@ export class ActivitiesService {
     }
 
     const activities: Activity[] = [];
+    const endOfTodayDate = endOfToday();
 
     for (const account of cashDetails.accounts) {
       const { balances } = await this.accountBalanceService.getAccountBalances({
@@ -374,21 +480,20 @@ export class ActivitiesService {
       let currentBalanceInBaseCurrency = 0;
 
       for (const balanceItem of balances) {
+        if (
+          isAccountBalanceInFuture({
+            endOfTodayDate,
+            date: balanceItem.date
+          })
+        ) {
+          continue;
+        }
+
         const syntheticActivityTemplate: Activity = {
           userId,
           accountId: account.id,
           accountUserId: account.userId,
-          comment: account.name,
-          createdAt: new Date(balanceItem.date),
-          currency: account.currency,
-          date: new Date(balanceItem.date),
-          fee: 0,
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          id: balanceItem.id,
-          isDraft: false,
-          quantity: 1,
-          SymbolProfile: {
+          assetProfile: {
             activitiesCount: 0,
             assetClass: AssetClass.LIQUIDITY,
             assetSubClass: AssetSubClass.CASH,
@@ -405,6 +510,16 @@ export class ActivitiesService {
             symbol: account.currency,
             updatedAt: new Date(balanceItem.date)
           },
+          comment: account.name,
+          createdAt: new Date(balanceItem.date),
+          currency: account.currency,
+          date: new Date(balanceItem.date),
+          fee: 0,
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          id: balanceItem.id,
+          isDraft: false,
+          quantity: 1,
           symbolProfileId: account.currency,
           type: ActivityType.BUY,
           unitPrice: 1,
@@ -492,41 +607,29 @@ export class ActivitiesService {
       { date: 'asc' }
     ];
 
-    const where: Prisma.OrderWhereInput = { userId };
+    const andConditions: Prisma.OrderWhereInput[] = [];
+    const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
 
-    if (endDate || startDate) {
-      where.AND = [];
+    if (endDate) {
+      andConditions.push({ date: { lte: endDate } });
+    }
 
-      if (endDate) {
-        where.AND.push({ date: { lte: endDate } });
-      }
-
-      if (startDate) {
-        where.AND.push({ date: { gt: startDate } });
-      }
+    if (startDate) {
+      andConditions.push({ date: { gt: startDate } });
     }
 
     const {
-      ACCOUNT: filtersByAccount,
-      ASSET_CLASS: filtersByAssetClass,
-      TAG: filtersByTag
+      ACCOUNT: filtersByAccount = [],
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SEARCH_QUERY: [filterBySearchQuery] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
     } = groupBy(filters, ({ type }) => {
       return type;
     });
 
-    const filterByDataSource = filters?.find(({ type }) => {
-      return type === 'DATA_SOURCE';
-    })?.id;
-
-    const filterBySymbol = filters?.find(({ type }) => {
-      return type === 'SYMBOL';
-    })?.id;
-
-    const searchQuery = filters?.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
-
-    if (filtersByAccount?.length > 0) {
+    if (filtersByAccount.length > 0) {
       where.accountId = {
         in: filtersByAccount.map(({ id }) => {
           return id;
@@ -538,7 +641,7 @@ export class ActivitiesService {
       where.isDraft = false;
     }
 
-    if (filtersByAssetClass?.length > 0) {
+    if (filtersByAssetClass.length > 0) {
       where.SymbolProfile = {
         OR: [
           {
@@ -550,14 +653,14 @@ export class ActivitiesService {
               },
               {
                 OR: [
-                  { SymbolProfileOverrides: { is: null } },
-                  { SymbolProfileOverrides: { assetClass: null } }
+                  { assetProfileOverrides: { is: null } },
+                  { assetProfileOverrides: { assetClass: null } }
                 ]
               }
             ]
           },
           {
-            SymbolProfileOverrides: {
+            assetProfileOverrides: {
               OR: filtersByAssetClass.map(({ id }) => {
                 return { assetClass: AssetClass[id] };
               })
@@ -574,8 +677,8 @@ export class ActivitiesService {
             where.SymbolProfile,
             {
               AND: [
-                { dataSource: filterByDataSource as DataSource },
-                { symbol: filterBySymbol }
+                { dataSource: filterByDataSource.id as DataSource },
+                { symbol: filterBySymbol.id }
               ]
             }
           ]
@@ -583,19 +686,19 @@ export class ActivitiesService {
       } else {
         where.SymbolProfile = {
           AND: [
-            { dataSource: filterByDataSource as DataSource },
-            { symbol: filterBySymbol }
+            { dataSource: filterByDataSource.id as DataSource },
+            { symbol: filterBySymbol.id }
           ]
         };
       }
     }
 
-    if (searchQuery) {
+    if (filterBySearchQuery) {
       const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
-        { id: { mode: 'insensitive', startsWith: searchQuery } },
-        { isin: { mode: 'insensitive', startsWith: searchQuery } },
-        { name: { mode: 'insensitive', startsWith: searchQuery } },
-        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
+        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
       ];
 
       if (where.SymbolProfile) {
@@ -614,14 +717,31 @@ export class ActivitiesService {
       }
     }
 
-    if (filtersByTag?.length > 0) {
-      where.tags = {
-        some: {
-          OR: filtersByTag.map(({ id }) => {
-            return { id };
-          })
-        }
-      };
+    if (filtersByTag.length > 0) {
+      andConditions.push({
+        OR: [
+          {
+            tags: {
+              some: {
+                OR: filtersByTag.map(({ id }) => {
+                  return { id };
+                })
+              }
+            }
+          },
+          {
+            account: {
+              tags: {
+                some: {
+                  OR: filtersByTag.map(({ id }) => {
+                    return { tagId: id };
+                  })
+                }
+              }
+            }
+          }
+        ]
+      });
     }
 
     if (sortColumn) {
@@ -633,13 +753,9 @@ export class ActivitiesService {
     }
 
     if (withExcludedAccountsAndActivities === false) {
-      where.OR = [
-        { account: null },
-        { account: { NOT: { isExcluded: true } } }
-      ];
+      where.OR = [{ account: null }, { account: WHERE_ACCOUNT_NOT_EXCLUDED }];
 
       where.tags = {
-        ...where.tags,
         none: {
           id: TAG_ID_EXCLUDE_FROM_ANALYSIS
         }
@@ -654,7 +770,12 @@ export class ActivitiesService {
         include: {
           account: {
             include: {
-              platform: true
+              platform: true,
+              tags: {
+                include: {
+                  tag: true
+                }
+              }
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -665,6 +786,16 @@ export class ActivitiesService {
       }),
       this.prismaService.order.count({ where })
     ]);
+
+    for (const order of orders) {
+      if (order.account) {
+        order.account.tags = (
+          order.account.tags as unknown as { tag: Tag }[]
+        ).map(({ tag }) => {
+          return tag;
+        });
+      }
+    }
 
     const assetProfileIdentifiers = uniqBy(
       orders.map(({ SymbolProfile }) => {
@@ -697,10 +828,10 @@ export class ActivitiesService {
         const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
         const [
-          feeInAssetProfileCurrency,
-          feeInBaseCurrency,
-          unitPriceInAssetProfileCurrency,
-          valueInBaseCurrency
+          feeInAssetProfileCurrency = 0,
+          feeInBaseCurrency = 0,
+          unitPriceInAssetProfileCurrency = 0,
+          valueInBaseCurrency = 0
         ] = await Promise.all([
           this.exchangeRateDataService.toCurrencyAtDate(
             order.fee,
@@ -730,12 +861,12 @@ export class ActivitiesService {
 
         return {
           ...order,
+          assetProfile,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
           unitPriceInAssetProfileCurrency,
           value,
-          valueInBaseCurrency,
-          SymbolProfile: assetProfile
+          valueInBaseCurrency
         };
       })
     );
@@ -770,7 +901,7 @@ export class ActivitiesService {
       withExcludedAccountsAndActivities: false // TODO
     });
 
-    if (withCash) {
+    if (withCash && !this.areCashActivitiesExcludedByFilters(filters)) {
       const cashDetails = await this.accountService.getCashDetails({
         filters,
         userId,
@@ -792,10 +923,10 @@ export class ActivitiesService {
   }
 
   public async getStatisticsByCurrency(
-    currency: EnhancedSymbolProfile['currency']
+    currency: EnhancedAssetProfile['currency']
   ): Promise<{
-    activitiesCount: EnhancedSymbolProfile['activitiesCount'];
-    dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+    activitiesCount: EnhancedAssetProfile['activitiesCount'];
+    dateOfFirstActivity: EnhancedAssetProfile['dateOfFirstActivity'];
   }> {
     const { _count, _min } = await this.prismaService.order.aggregate({
       _count: true,
@@ -821,6 +952,7 @@ export class ActivitiesService {
 
   public async updateActivity({
     data,
+    userId,
     where
   }: {
     data: Prisma.OrderUpdateInput & {
@@ -831,25 +963,29 @@ export class ActivitiesService {
       tags?: { id: string }[];
       type?: ActivityType;
     };
+    userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
+    const tags = data.tags ?? [];
+
+    await this.tagService.validateTagIds({
+      userId,
+      tagIds: tags.map(({ id }) => {
+        return id;
+      })
+    });
+
     if (!data.comment) {
       data.comment = null;
     }
 
-    const tags = data.tags ?? [];
-
     let isDraft = false;
 
     if (
-      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
-      if (data.account?.connect?.id_userId?.id === null) {
-        data.account = { disconnect: true };
-      }
-
       delete data.SymbolProfile.connect;
       delete data.SymbolProfile.update.name;
     } else {
@@ -878,19 +1014,13 @@ export class ActivitiesService {
     delete data.symbol;
     delete data.tags;
 
-    // Remove existing tags
-    await this.prismaService.order.update({
-      where,
-      data: { tags: { set: [] } }
-    });
-
     const activity = await this.prismaService.order.update({
       where,
       data: {
         ...data,
         isDraft,
         tags: {
-          connect: tags
+          set: tags
         }
       }
     });

@@ -6,12 +6,13 @@ import {
 } from '@ghostfolio/ui/page-tabs';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { cloudyOutline, readerOutline, serverOutline } from 'ionicons/icons';
 
 @Component({
-  host: { class: 'page has-tabs' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-faq-page',
   styleUrls: ['./faq-page.scss'],

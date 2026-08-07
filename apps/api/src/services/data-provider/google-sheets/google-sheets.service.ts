@@ -24,6 +24,8 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 @Injectable()
 export class GoogleSheetsService implements DataProviderInterface {
+  private readonly logger = new Logger(GoogleSheetsService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
@@ -58,7 +60,7 @@ export class GoogleSheetsService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const sheet = await this.getSheet({
@@ -83,9 +85,7 @@ export class GoogleSheetsService implements DataProviderInterface {
           historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };
         });
 
-      return {
-        [symbol]: historicalData
-      };
+      return historicalData;
     } catch (error) {
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
@@ -144,7 +144,7 @@ export class GoogleSheetsService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'GoogleSheetsService');
+      this.logger.error(error);
     }
 
     return {};

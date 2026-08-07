@@ -1,9 +1,10 @@
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterModule],
   selector: 'gf-resources-overview',
   styleUrls: ['./resources-overview.component.scss'],

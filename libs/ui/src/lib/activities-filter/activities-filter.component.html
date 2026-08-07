@@ -4,12 +4,11 @@
     @for (filter of selectedFilters; track filter) {
       <mat-chip-row
         class="mx-1 my-0 px-2 py-0"
-        matChipRemove
         [removable]="true"
         (removed)="onRemoveFilter(filter)"
       >
-        {{ filter.label ?? '' | gfSymbol }}
-        <button matChipRemove>
+        {{ filter.label }}
+        <button matChipRemove type="button">
           <ion-icon name="close-outline" />
         </button>
       </mat-chip-row>
@@ -33,7 +32,7 @@
       <mat-optgroup [label]="filterGroup.name">
         @for (filter of filterGroup.filters; track filter) {
           <mat-option [value]="filter.id">
-            {{ filter.label ?? '' | gfSymbol }}
+            {{ filter.label }}
           </mat-option>
         }
       </mat-optgroup>

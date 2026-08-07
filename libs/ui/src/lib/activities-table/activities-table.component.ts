@@ -3,13 +3,12 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale } from '@ghostfolio/common/helper';
+import { getLocale, isAccountExcluded } from '@ghostfolio/common/helper';
 import {
   Activity,
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
-import { OrderWithAccount } from '@ghostfolio/common/types';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
@@ -50,6 +49,7 @@ import {
 } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { Type as ActivityType } from '@prisma/client';
 import { isUUID } from 'class-validator';
@@ -72,7 +72,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
-import { GfNoTransactionsInfoComponent } from '../no-transactions-info/no-transactions-info.component';
+import { GfNoActivitiesInfoComponent } from '../no-activities-info/no-activities-info.component';
 import { GfValueComponent } from '../value/value.component';
 
 @Component({
@@ -81,8 +81,7 @@ import { GfValueComponent } from '../value/value.component';
     CommonModule,
     GfActivityTypeComponent,
     GfEntityLogoComponent,
-    GfNoTransactionsInfoComponent,
-    GfSymbolPipe,
+    GfNoActivitiesInfoComponent,
     GfValueComponent,
     IonIcon,
     MatButtonModule,
@@ -95,7 +94,8 @@ import { GfValueComponent } from '../value/value.component';
     MatTableModule,
     MatTooltipModule,
     NgxSkeletonLoaderModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
@@ -123,8 +123,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
   @Output() activityDeleted = new EventEmitter<string>();
-  @Output() activityToClone = new EventEmitter<OrderWithAccount>();
-  @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
   @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
@@ -150,6 +148,25 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public readonly showAccountColumn = input(true);
   public readonly showCheckbox = input(false);
   public readonly showNameColumn = input(true);
+
+  protected readonly activityDialogRouterLinks = computed(() => {
+    const { clone, update } =
+      internalRoutes.portfolio.subRoutes.activities.subRoutes;
+
+    const routerLinks = new Map<
+      string,
+      { clone: string[]; update: string[] }
+    >();
+
+    for (const { id } of this.dataSource()?.data ?? []) {
+      routerLinks.set(id, {
+        clone: clone.routerLink(id),
+        update: update.routerLink(id)
+      });
+    }
+
+    return routerLinks;
+  });
 
   protected readonly displayedColumns = computed(() => {
     let columns = [
@@ -265,12 +282,26 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     );
   }
 
+  public canDeleteActivities() {
+    return (
+      (this.dataSource()?.data.length ?? 0) > 0 &&
+      this.hasPermissionToDeleteActivity
+    );
+  }
+
+  public canExportActivities() {
+    return (
+      (this.dataSource()?.data.length ?? 0) > 0 &&
+      this.hasPermissionToExportActivities
+    );
+  }
+
   public isExcludedFromAnalysis(activity: Activity) {
     return (
-      activity.account?.isExcluded ??
+      isAccountExcluded(activity.account) ||
       activity.tags?.some(({ id }) => {
         return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
-      })
+      }) === true
     );
   }
 
@@ -285,14 +316,10 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
       }
     } else if (this.canClickActivity(activity)) {
       this.activityClicked.emit({
-        dataSource: activity.SymbolProfile.dataSource,
-        symbol: activity.SymbolProfile.symbol
+        dataSource: activity.assetProfile.dataSource,
+        symbol: activity.assetProfile.symbol
       });
     }
-  }
-
-  public onCloneActivity(aActivity: OrderWithAccount) {
-    this.activityToClone.emit(aActivity);
   }
 
   public onDeleteActivities() {
@@ -301,7 +328,10 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
         this.activitiesDeleted.emit();
       },
       confirmType: ConfirmationDialogType.Warn,
-      title: $localize`Do you really want to delete these activities?`
+      title:
+        this.totalItems === 1
+          ? $localize`Do you really want to delete this activity?`
+          : $localize`Do you really want to delete these ${this.totalItems}:count: activities?`
     });
   }
 
@@ -347,10 +377,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.notificationService.alert({
       title: aComment
     });
-  }
-
-  public onUpdateActivity(aActivity: OrderWithAccount) {
-    this.activityToUpdate.emit(aActivity);
   }
 
   public sortByValue(

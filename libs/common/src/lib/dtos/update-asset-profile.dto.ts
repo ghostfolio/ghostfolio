@@ -1,6 +1,13 @@
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
-import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataGatheringFrequency,
+  DataSource,
+  Prisma
+} from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -8,33 +15,51 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  IsUrl
+  IsUrl,
+  ValidateNested
 } from 'class-validator';
 
+import { CountryDto } from './country.dto';
+import { HoldingDto } from './holding.dto';
+import { ScraperConfigurationDto } from './scraper-configuration.dto';
+import { SectorDto } from './sector.dto';
+
 export class UpdateAssetProfileDto {
-  @IsEnum(AssetClass, { each: true })
+  @IsEnum(AssetClass)
   @IsOptional()
   assetClass?: AssetClass;
 
-  @IsEnum(AssetSubClass, { each: true })
+  @IsEnum(AssetSubClass)
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
   @IsOptional()
   @IsString()
-  comment?: string;
+  comment?: string | null;
 
   @IsArray()
   @IsOptional()
+  @Type(() => CountryDto)
+  @ValidateNested({ each: true })
   countries?: Prisma.InputJsonArray;
 
   @IsCurrencyCode()
   @IsOptional()
   currency?: string;
 
+  @IsEnum(DataGatheringFrequency)
+  @IsOptional()
+  dataGatheringFrequency?: DataGatheringFrequency;
+
   @IsEnum(DataSource)
   @IsOptional()
   dataSource?: DataSource;
+
+  @IsArray()
+  @IsOptional()
+  @Type(() => HoldingDto)
+  @ValidateNested({ each: true })
+  holdings?: Prisma.InputJsonArray;
 
   @IsBoolean()
   @IsOptional()
@@ -46,10 +71,14 @@ export class UpdateAssetProfileDto {
 
   @IsObject()
   @IsOptional()
+  @Type(() => ScraperConfigurationDto)
+  @ValidateNested()
   scraperConfiguration?: Prisma.InputJsonObject;
 
   @IsArray()
   @IsOptional()
+  @Type(() => SectorDto)
+  @ValidateNested({ each: true })
   sectors?: Prisma.InputJsonArray;
 
   @IsOptional()
@@ -64,8 +93,8 @@ export class UpdateAssetProfileDto {
 
   @IsOptional()
   @IsUrl({
-    protocols: ['https'],
+    protocols: ['http', 'https'],
     require_protocol: true
   })
-  url?: string;
+  url?: string | null;
 }

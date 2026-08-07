@@ -6,9 +6,30 @@ import { GfAdminUsersComponent } from '@ghostfolio/client/components/admin-users
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Routes } from '@angular/router';
+import { Routes, UrlMatcher, UrlSegment } from '@angular/router';
 
 import { AdminPageComponent } from './admin-page.component';
+
+// Matches both the users list and the user detail dialog route within a single
+// route configuration so that the component is reused (and not re-created) when
+// the user detail dialog is opened or closed
+const usersMatcher: UrlMatcher = (segments: UrlSegment[]) => {
+  if (
+    segments[0]?.path !== internalRoutes.adminControl.subRoutes.users.path ||
+    segments.length > 2
+  ) {
+    return null;
+  }
+
+  if (segments.length === 2) {
+    return {
+      consumed: segments,
+      posParams: { userId: segments[1] }
+    };
+  }
+
+  return { consumed: segments };
+};
 
 export const routes: Routes = [
   {
@@ -35,13 +56,8 @@ export const routes: Routes = [
         title: internalRoutes.adminControl.subRoutes.settings.title
       },
       {
-        path: internalRoutes.adminControl.subRoutes.users.path,
         component: GfAdminUsersComponent,
-        title: internalRoutes.adminControl.subRoutes.users.title
-      },
-      {
-        path: `${internalRoutes.adminControl.subRoutes.users.path}/:userId`,
-        component: GfAdminUsersComponent,
+        matcher: usersMatcher,
         title: internalRoutes.adminControl.subRoutes.users.title
       }
     ],

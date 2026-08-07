@@ -41,6 +41,8 @@ import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
+  private readonly logger = new Logger(YahooFinanceService.name);
+
   private readonly yahooFinance = new YahooFinance({
     suppressNotices: ['yahooSurvey']
   });
@@ -105,12 +107,11 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(
+      this.logger.error(
         `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
-        'YahooFinanceService'
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
 
       return {};
@@ -122,7 +123,7 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
@@ -143,13 +144,11 @@ export class YahooFinanceService implements DataProviderInterface {
       );
 
       const response: {
-        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
-      response[symbol] = {};
-
       for (const historicalItem of historicalResult) {
-        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
+        response[format(historicalItem.date, DATE_FORMAT)] = {
           marketPrice: historicalItem.close
         };
       }
@@ -198,12 +197,9 @@ export class YahooFinanceService implements DataProviderInterface {
       try {
         quotes = await this.yahooFinance.quote(yahooFinanceSymbols);
       } catch (error) {
-        Logger.error(error, 'YahooFinanceService');
+        this.logger.error(error);
 
-        Logger.warn(
-          'Fallback to yahooFinance.quoteSummary()',
-          'YahooFinanceService'
-        );
+        this.logger.warn('Fallback to yahooFinance.quoteSummary()');
 
         quotes = await this.getQuotesWithQuoteSummary(yahooFinanceSymbols);
       }
@@ -229,7 +225,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'YahooFinanceService');
+      this.logger.error(error);
 
       return {};
     }
@@ -334,7 +330,11 @@ export class YahooFinanceService implements DataProviderInterface {
         });
       }
     } catch (error) {
-      Logger.error(error, 'YahooFinanceService');
+      if (error?.name === 'BadRequestError') {
+        this.logger.warn(`Could not search for "${query}": ${error.message}`);
+      } else {
+        this.logger.error(error);
+      }
     }
 
     return { items };
@@ -365,10 +365,7 @@ export class YahooFinanceService implements DataProviderInterface {
       .filter(
         (result): result is PromiseFulfilledResult<QuoteSummaryResult> => {
           if (result.status === 'rejected') {
-            Logger.error(
-              `Could not get quote summary: ${result.reason}`,
-              'YahooFinanceService'
-            );
+            this.logger.error(`Could not get quote summary: ${result.reason}`);
 
             return false;
           }

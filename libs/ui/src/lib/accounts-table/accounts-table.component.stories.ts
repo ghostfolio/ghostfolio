@@ -1,3 +1,5 @@
+import { AccountWithValue } from '@ghostfolio/common/types';
+
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -14,17 +16,18 @@ import { NotificationService } from '../notifications';
 import { GfValueComponent } from '../value';
 import { GfAccountsTableComponent } from './accounts-table.component';
 
-const accounts = [
+const accounts: AccountWithValue[] = [
   {
     activitiesCount: 0,
-    allocationInPercentage: null,
+    allocationInPercentage: 0.002574748676949956,
     balance: 278,
     balanceInBaseCurrency: 278,
     comment: null,
     createdAt: new Date('2025-06-01T06:52:49.063Z'),
     currency: 'USD',
+    dividendInBaseCurrency: 0,
     id: '460d7401-ca43-4ed4-b08e-349f1822e9db',
-    isExcluded: false,
+    interestInBaseCurrency: 0,
     name: 'Coinbase Account',
     platform: {
       id: '8dc24b88-bb92-4152-af25-fe6a31643e26',
@@ -39,14 +42,15 @@ const accounts = [
   },
   {
     activitiesCount: 0,
-    allocationInPercentage: null,
+    allocationInPercentage: 0.11114023065971035,
     balance: 12000,
     balanceInBaseCurrency: 12000,
     comment: null,
     createdAt: new Date('2025-06-01T06:48:53.055Z'),
     currency: 'USD',
+    dividendInBaseCurrency: 0,
     id: '6d773e31-0583-4c85-a247-e69870b4f1ee',
-    isExcluded: false,
+    interestInBaseCurrency: 0,
     name: 'Private Banking Account',
     platform: {
       id: '43e8fcd1-5b79-4100-b678-d2229bd1660d',
@@ -61,14 +65,15 @@ const accounts = [
   },
   {
     activitiesCount: 12,
-    allocationInPercentage: null,
+    allocationInPercentage: 0.8862850206633397,
     balance: 150.2,
     balanceInBaseCurrency: 150.2,
     comment: null,
     createdAt: new Date('2025-05-31T13:00:13.940Z'),
     currency: 'USD',
+    dividendInBaseCurrency: 0,
     id: '776bd1e9-b2f6-4f7e-933d-18756c2f0625',
-    isExcluded: false,
+    interestInBaseCurrency: 0,
     name: 'Trading Account',
     platform: {
       id: '9da3a8a7-4795-43e3-a6db-ccb914189737',
@@ -76,10 +81,10 @@ const accounts = [
       url: 'https://interactivebrokers.com'
     },
     platformId: '9da3a8a7-4795-43e3-a6db-ccb914189737',
-    valueInBaseCurrency: 95693.70321466809,
     updatedAt: new Date('2025-06-01T06:53:10.569Z'),
     userId: '081aa387-487d-4438-83a4-3060eb2a016e',
-    value: 95693.70321466809
+    value: 95693.70321466809,
+    valueInBaseCurrency: 95693.70321466809
   }
 ];
 

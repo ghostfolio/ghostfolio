@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -66,6 +66,9 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -77,7 +80,7 @@ describe('PortfolioCalculator', () => {
       null
     );
 
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    portfolioSnapshotService = new PortfolioSnapshotService(null, null);
 
     redisCacheService = new RedisCacheService(null, null);
 
@@ -97,17 +100,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2023-01-03'),
-          feeInAssetProfileCurrency: 1,
-          feeInBaseCurrency: 0.9238,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Alphabet Inc.',
             symbol: 'GOOGL'
           },
+          date: new Date('2023-01-03'),
+          feeInAssetProfileCurrency: 1,
+          feeInBaseCurrency: 0.9238,
+          quantity: 1,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 89.12
         }

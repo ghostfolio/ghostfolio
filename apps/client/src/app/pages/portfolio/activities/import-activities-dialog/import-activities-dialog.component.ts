@@ -1,12 +1,13 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { DEFAULT_DATE_RANGE } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
+  CreatePlatformDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
 import { Activity, PortfolioPosition } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
@@ -65,7 +66,6 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
     GfFileDropDirective,
-    GfSymbolPipe,
     IonIcon,
     MatButtonModule,
     MatDialogModule,
@@ -108,6 +108,7 @@ export class GfImportActivitiesDialogComponent {
   private accounts: CreateAccountWithBalancesDto[] = [];
   private activities: Activity[] = [];
   private assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+  private platforms: CreatePlatformDto[] = [];
   private tags: CreateTagDto[] = [];
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -145,12 +146,12 @@ export class GfImportActivitiesDialogComponent {
               type: 'ASSET_CLASS'
             }
           ],
-          range: 'max'
+          range: DEFAULT_DATE_RANGE
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ holdings }) => {
           this.holdings = sortBy(holdings, ({ assetProfile }) => {
-            return assetProfile.name.toLowerCase();
+            return assetProfile.name?.toLowerCase();
           });
 
           this.assetProfileForm.controls.assetProfileIdentifier.enable();
@@ -174,6 +175,7 @@ export class GfImportActivitiesDialogComponent {
         accounts: this.accounts,
         activities: this.selectedActivities,
         assetProfiles: this.assetProfiles,
+        platforms: this.platforms,
         tags: this.tags
       });
 
@@ -225,7 +227,8 @@ export class GfImportActivitiesDialogComponent {
     this.assetProfileForm.controls.assetProfileIdentifier.disable();
 
     const { dataSource, symbol } =
-      this.assetProfileForm.controls.assetProfileIdentifier.value ?? {};
+      this.assetProfileForm.controls.assetProfileIdentifier.value
+        ?.assetProfile ?? {};
 
     if (!dataSource || !symbol) {
       return;
@@ -304,6 +307,7 @@ export class GfImportActivitiesDialogComponent {
 
           this.accounts = content.accounts;
           this.assetProfiles = content.assetProfiles;
+          this.platforms = content.platforms;
           this.tags = content.tags;
 
           if (!isArray(content.activities)) {
@@ -337,6 +341,7 @@ export class GfImportActivitiesDialogComponent {
                 activities: content.activities,
                 assetProfiles: content.assetProfiles,
                 isDryRun: true,
+                platforms: content.platforms,
                 tags: content.tags
               });
 

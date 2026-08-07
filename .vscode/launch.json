@@ -18,12 +18,20 @@
       "autoAttachChildProcesses": true,
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}/apps/api",
-      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "GHOSTFOLIO_ENV_FILE": "${workspaceFolder}/.env"
+      },
       "name": "Debug API",
       "outFiles": ["${workspaceFolder}/dist/apps/api/**/*.js"],
       "program": "${workspaceFolder}/apps/api/src/main.ts",
       "request": "launch",
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "runtimeArgs": [
+        "--nolazy",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "${workspaceFolder}/tools/load-env.ts"
+      ],
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"

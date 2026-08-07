@@ -17,6 +17,8 @@ import { isNumber } from 'lodash';
 
 @Injectable()
 export class BenchmarksService {
+  private readonly logger = new Logger(BenchmarksService.name);
+
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -79,6 +81,14 @@ export class BenchmarksService {
       })
     ]);
 
+    if (!currentSymbolItem) {
+      this.logger.error(
+        `No current market price is available for ${symbol} (${dataSource})`
+      );
+
+      return { marketData };
+    }
+
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         startDate,
@@ -96,12 +106,11 @@ export class BenchmarksService {
     })?.marketPrice;
 
     if (!marketPriceAtStartDate) {
-      Logger.error(
+      this.logger.error(
         `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
           startDate,
           DATE_FORMAT
-        )}`,
-        'BenchmarkService'
+        )}`
       );
 
       return { marketData };

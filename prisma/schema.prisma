@@ -27,16 +27,15 @@ model Access {
 
 model Account {
   activities Order[]
-  balance    Float            @default(0)
   balances   AccountBalance[]
   comment    String?
   createdAt  DateTime         @default(now())
   currency   String?
   id         String           @default(uuid())
-  isExcluded Boolean          @default(false)
   name       String?
   platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
+  tags       TagsOnAccounts[]
   updatedAt  DateTime         @updatedAt
   user       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String
@@ -44,7 +43,6 @@ model Account {
   @@id([id, userId])
   @@index([currency])
   @@index([id])
-  @@index([isExcluded])
   @@index([name])
   @@index([userId])
 }
@@ -88,6 +86,21 @@ model ApiKey {
   @@index([userId])
 }
 
+model AssetProfileOverrides {
+  assetClass      AssetClass?
+  assetSubClass   AssetSubClass?
+  countries       Json?          @default("[]")
+  holdings        Json?          @default("[]")
+  name            String?
+  sectors         Json?          @default("[]")
+  symbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
+  symbolProfileId String         @id
+  updatedAt       DateTime       @updatedAt
+  url             String?
+
+  @@map("SymbolProfileOverrides")
+}
+
 model AssetProfileResolution {
   createdAt        DateTime   @default(now())
   currency         String
@@ -100,6 +113,33 @@ model AssetProfileResolution {
   updatedAt        DateTime   @updatedAt
 
   @@unique([dataSourceOrigin, symbolOrigin])
+}
+
+/// A stock split of an asset profile. The numerator is the number of shares
+/// held after the split, the denominator the number of shares held before, for
+/// example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split.
+///
+/// The ratio is stored as two integers instead of the resulting factor, so that
+/// it stays exact, for example 1/3 for a 1:3 reverse split.
+///
+/// Activities before the date are adjusted by the ratio: the quantity is
+/// multiplied by it and the unit price divided by it, so that the total value
+/// of an activity stays the same.
+///
+/// Market data is already split-adjusted by the data providers and must not be
+/// adjusted again.
+model AssetProfileSplit {
+  createdAt       DateTime      @default(now())
+  date            DateTime
+  denominator     Int
+  id              String        @id @default(uuid())
+  numerator       Int
+  symbolProfile   SymbolProfile @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
+  symbolProfileId String
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([symbolProfileId, date])
+  @@index([date])
 }
 
 model AuthDevice {
@@ -185,36 +225,39 @@ model Settings {
 model SymbolProfile {
   activities             Order[]
   assetClass             AssetClass?
+  assetProfileOverrides  AssetProfileOverrides?
+  assetProfileSplits     AssetProfileSplit[]
   assetSubClass          AssetSubClass?
   comment                String?
   countries              Json?
-  createdAt              DateTime                @default(now())
+  createdAt              DateTime               @default(now())
   currency               String
   cusip                  String?
+  dataGatheringFrequency DataGatheringFrequency @default(DAILY)
   dataSource             DataSource
   figi                   String?
   figiComposite          String?
   figiShareClass         String?
-  holdings               Json?                   @default("[]")
-  id                     String                  @id @default(uuid())
-  isActive               Boolean                 @default(true)
+  holdings               Json?                  @default("[]")
+  id                     String                 @id @default(uuid())
+  isActive               Boolean                @default(true)
   isin                   String?
   name                   String?
-  updatedAt              DateTime                @updatedAt
   scraperConfiguration   Json?
   sectors                Json?
   symbol                 String
   symbolMapping          Json?
+  updatedAt              DateTime               @updatedAt
   url                    String?
-  user                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
+  user                   User?                  @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                 String?
-  watchedBy              User[]                  @relation("UserWatchlist")
-  SymbolProfileOverrides SymbolProfileOverrides?
+  watchedBy              User[]                 @relation("UserWatchlist")
 
   @@unique([dataSource, symbol])
   @@index([assetClass])
   @@index([currency])
   @@index([cusip])
+  @@index([dataGatheringFrequency])
   @@index([dataSource])
   @@index([isActive])
   @@index([isin])
@@ -222,40 +265,42 @@ model SymbolProfile {
   @@index([symbol])
 }
 
-model SymbolProfileOverrides {
-  assetClass      AssetClass?
-  assetSubClass   AssetSubClass?
-  countries       Json?          @default("[]")
-  holdings        Json?          @default("[]")
-  name            String?
-  sectors         Json?          @default("[]")
-  symbolProfileId String         @id
-  updatedAt       DateTime       @updatedAt
-  url             String?
-  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
-}
-
 model Subscription {
-  createdAt DateTime @default(now())
-  expiresAt DateTime
-  id        String   @id @default(uuid())
-  price     Float?
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
-  userId    String
+  createdAt               DateTime @default(now())
+  expiresAt               DateTime
+  id                      String   @id @default(uuid())
+  price                   Float?
+  stripeCheckoutSessionId String?  @unique
+  updatedAt               DateTime @updatedAt
+  user                    User     @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId                  String
 
   @@index([userId])
 }
 
 model Tag {
+  accounts   TagsOnAccounts[]
   activities Order[]
-  id         String  @id @default(uuid())
+  id         String           @id @default(uuid())
   name       String
-  user       User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
+  user       User?            @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String?
 
   @@unique([name, userId])
   @@index([name])
+}
+
+model TagsOnAccounts {
+  account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
+  accountId String
+  createdAt DateTime @default(now())
+  tag       Tag      @relation(fields: [tagId], onDelete: Cascade, references: [id])
+  tagId     String
+  updatedAt DateTime @updatedAt
+  userId    String
+
+  @@id([accountId, tagId, userId])
+  @@index([tagId])
 }
 
 model User {
@@ -313,6 +358,11 @@ enum AssetSubClass {
   PRECIOUS_METAL
   PRIVATE_EQUITY
   STOCK
+}
+
+enum DataGatheringFrequency {
+  DAILY
+  HOURLY
 }
 
 enum DataSource {

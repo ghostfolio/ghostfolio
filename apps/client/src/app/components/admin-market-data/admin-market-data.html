@@ -52,7 +52,7 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell></th>
             <td *matCellDef="let element" class="px-1" mat-cell>
               @if (
-                adminMarketDataService.hasPermissionToDeleteAssetProfile({
+                canDeleteAssetProfile({
                   activitiesCount: element.activitiesCount,
                   isBenchmark: element.isBenchmark,
                   symbol: element.symbol,
@@ -87,13 +87,15 @@
             >
               <ng-container i18n>Name</ng-container>
             </th>
-            <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
+            <td
+              *matCellDef="let element"
+              class="line-height-normal px-1"
+              mat-cell
+            >
               <div class="text-truncate">{{ element.name }}</div>
               @if (!isUUID(element.symbol)) {
                 <div>
-                  <small class="text-muted">{{
-                    element.symbol | gfSymbol
-                  }}</small>
+                  <small class="text-muted">{{ element.symbol }}</small>
                 </div>
               }
             </td>
@@ -113,8 +115,17 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Asset Class</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
-              {{ element.assetClass }}
+            <td
+              *matCellDef="let element"
+              class="line-height-normal px-1 text-nowrap"
+              mat-cell
+            >
+              <div>{{ translate(element.assetClass) }}</div>
+              @if (element.assetClass) {
+                <div>
+                  <small class="text-muted">{{ element.assetClass }}</small>
+                </div>
+              }
             </td>
           </ng-container>
 
@@ -122,8 +133,17 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Asset Sub Class</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
-              {{ element.assetSubClass }}
+            <td
+              *matCellDef="let element"
+              class="line-height-normal px-1 text-nowrap"
+              mat-cell
+            >
+              <div>{{ translate(element.assetSubClass) }}</div>
+              @if (element.assetSubClass) {
+                <div>
+                  <small class="text-muted">{{ element.assetSubClass }}</small>
+                </div>
+              }
             </td>
           </ng-container>
 
@@ -147,7 +167,13 @@
               <ng-container i18n>First Activity</ng-container>
             </th>
             <td *matCellDef="let element" class="px-1" mat-cell>
-              {{ (element.date | date: defaultDateFormat) ?? '' }}
+              @if (element.date) {
+                <gf-value
+                  [isDate]="true"
+                  [locale]="user?.settings?.locale"
+                  [value]="element.date"
+                />
+              }
             </td>
           </ng-container>
 
@@ -220,7 +246,7 @@
                 class="no-max-width"
                 xPosition="before"
               >
-                <button mat-menu-item (click)="onGather7Days()">
+                <button mat-menu-item (click)="onGatherRecentMarketData()">
                   <ng-container i18n
                     >Gather Recent Historical Market Data</ng-container
                   >
@@ -239,7 +265,18 @@
                   [disabled]="!selection.hasValue()"
                   (click)="onDeleteAssetProfiles()"
                 >
-                  <ng-container i18n>Delete Profiles</ng-container>
+                  <ng-container i18n
+                    >Delete
+                    {{
+                      selection.selected.length > 1
+                        ? selection.selected.length
+                        : ''
+                    }}
+                    {selection.selected.length, plural,
+                      =1 {Profile}
+                      other {Profiles}
+                    }</ng-container
+                  >
                 </button>
               </mat-menu>
             </th>
@@ -271,10 +308,11 @@
                 <button
                   mat-menu-item
                   [disabled]="
-                    !adminMarketDataService.hasPermissionToDeleteAssetProfile({
+                    !canDeleteAssetProfile({
                       activitiesCount: element.activitiesCount,
                       isBenchmark: element.isBenchmark,
-                      symbol: element.symbol
+                      symbol: element.symbol,
+                      watchedByCount: element.watchedByCount
                     })
                   "
                   (click)="
@@ -332,15 +370,5 @@
     </div>
   </div>
 
-  <div class="fab-container">
-    <a
-      class="align-items-center d-flex justify-content-center"
-      color="primary"
-      mat-fab
-      [queryParams]="{ createAssetProfileDialog: true }"
-      [routerLink]="[]"
-    >
-      <ion-icon name="add-outline" size="large" />
-    </a>
-  </div>
+  <gf-fab [queryParams]="{ createAssetProfileDialog: true }" />
 </div>

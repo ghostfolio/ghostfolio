@@ -5,17 +5,17 @@
       <mat-card appearance="outlined">
         <mat-card-content>
           <gf-portfolio-summary
-            [baseCurrency]="user?.settings?.baseCurrency"
-            [deviceType]="deviceType"
-            [hasImpersonationId]="hasImpersonationId"
+            [baseCurrency]="user()?.settings?.baseCurrency"
+            [deviceType]="deviceType()"
+            [hasImpersonationId]="hasImpersonationId()"
             [hasPermissionToUpdateUserSettings]="
-              !hasImpersonationId && hasPermissionToUpdateUserSettings
+              !hasImpersonationId() && hasPermissionToUpdateUserSettings()
             "
-            [isLoading]="isLoading"
-            [language]="user?.settings?.language"
-            [locale]="user?.settings?.locale"
-            [summary]="summary"
-            [user]="user"
+            [isLoading]="isLoading()"
+            [language]="user()?.settings?.language"
+            [locale]="user()?.settings?.locale"
+            [summary]="summary()"
+            [user]="user()"
             (emergencyFundChanged)="onChangeEmergencyFund($event)"
           />
         </mat-card-content>

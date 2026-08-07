@@ -7,7 +7,4 @@
     }"
   />
 }
-<canvas
-  #chartCanvas
-  [ngStyle]="{ display: isLoading ? 'none' : 'block' }"
-></canvas>
+<canvas #chartCanvas [style.display]="isLoading ? 'none' : 'block'"></canvas>

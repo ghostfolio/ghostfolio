@@ -2,14 +2,14 @@
   <table class="gf-table w-100" mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="alias">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Alias</th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
         {{ element.alias }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="grantee">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Grantee</th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
         {{ element.grantee }}
       </td>
     </ng-container>
@@ -105,3 +105,14 @@
     <tr *matRowDef="let row; columns: displayedColumns()" mat-row></tr>
   </table>
 </div>
+
+@if (isLoading()) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}

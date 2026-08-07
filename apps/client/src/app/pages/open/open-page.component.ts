@@ -4,6 +4,7 @@ import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -14,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfValueComponent, MatCardModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -42,9 +44,9 @@ export class GfOpenPageComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 }

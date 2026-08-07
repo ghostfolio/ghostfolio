@@ -1,5 +1,9 @@
 import { getCssVariable } from '@ghostfolio/common/helper';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -27,7 +31,6 @@ import {
   RouterLink,
   RouterOutlet
 } from '@angular/router';
-import { DataSource } from '@prisma/client';
 import { Chart } from 'chart.js';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
@@ -37,6 +40,7 @@ import { filter } from 'rxjs/operators';
 import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogResult } from './components/holding-detail-dialog/interfaces/interfaces';
 import { GfAppQueryParams } from './interfaces/interfaces';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { UserService } from './services/user/user.service';
@@ -53,12 +57,12 @@ export class GfAppComponent implements OnInit {
   public currentRoute: string;
   public currentSubRoute: string;
   public deviceType: string;
-  public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
+  public impersonationId: string | null;
   public info: InfoItem;
   public pageTitle: string;
   public routerLinkRegister = publicRoutes.register.routerLink;
@@ -112,7 +116,7 @@ export class GfAppComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
       });
 
     this.router.events
@@ -131,7 +135,10 @@ export class GfAppComponent implements OnInit {
               this.currentSubRoute ===
                 internalRoutes.home.subRoutes?.holdings.path) ||
             (this.currentRoute === internalRoutes.portfolio.path &&
-              !this.currentSubRoute)) &&
+              !this.currentSubRoute) ||
+            (this.currentRoute === internalRoutes.portfolio.path &&
+              this.currentSubRoute ===
+                internalRoutes.portfolio.subRoutes?.activities.path)) &&
           this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;
@@ -269,10 +276,7 @@ export class GfAppComponent implements OnInit {
   private openHoldingDetailDialog({
     dataSource,
     symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  }: AssetProfileIdentifier) {
     this.userService
       .get()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -287,13 +291,12 @@ export class GfAppComponent implements OnInit {
             baseCurrency: this.user?.settings?.baseCurrency,
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
             hasPermissionToAccessAdminControl: hasPermission(
               this.user?.permissions,
               permissions.accessAdminControl
             ),
             hasPermissionToCreateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.createActivity
@@ -304,12 +307,13 @@ export class GfAppComponent implements OnInit {
               permissions.reportDataGlitch
             ),
             hasPermissionToUpdateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.updateActivity
               ) &&
               !this.user?.settings?.isRestrictedView,
+            impersonationId: this.impersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
@@ -319,7 +323,11 @@ export class GfAppComponent implements OnInit {
         dialogRef
           .afterClosed()
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
+          .subscribe((result: HoldingDetailDialogResult) => {
+            if (result?.isNavigating) {
+              return;
+            }
+
             void this.router.navigate([], {
               queryParams: {
                 dataSource: null,

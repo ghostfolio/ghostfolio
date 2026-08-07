@@ -15,6 +15,6 @@ export class EntityLogoImageSourceService {
   }
 
   public getLogoUrlByUrl(url: string) {
-    return `../api/v1/logo?url=${url}`;
+    return `../api/v1/logo?url=${encodeURIComponent(url)}`;
   }
 }

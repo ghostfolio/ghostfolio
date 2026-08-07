@@ -1,7 +1,7 @@
 <gf-dialog-header
   position="center"
   [deviceType]="data.deviceType"
-  [title]="SymbolProfile?.name ?? SymbolProfile?.symbol"
+  [title]="assetProfile?.name ?? assetProfile?.symbol"
   (closeButtonClicked)="onClose()"
 />
 
@@ -12,6 +12,7 @@
         <gf-value
           size="large"
           [isCurrency]="true"
+          [isLoading]="isLoading"
           [locale]="data.locale"
           [unit]="data.baseCurrency"
           [value]="value"
@@ -24,11 +25,11 @@
       [benchmarkDataItems]="benchmarkDataItems"
       [benchmarkLabel]="benchmarkLabel"
       [colorScheme]="data.colorScheme"
-      [currency]="SymbolProfile?.currency"
+      [currency]="assetProfile?.currency"
       [historicalDataItems]="historicalDataItems"
       [isAnimated]="true"
       [label]="
-        isUUID(data.symbol) ? (SymbolProfile?.name ?? data.symbol) : data.symbol
+        isUUID(data.symbol) ? (assetProfile?.name ?? data.symbol) : data.symbol
       "
       [locale]="data.locale"
       [showGradient]="true"
@@ -39,6 +40,7 @@
     <mat-tab-group
       animationDuration="0ms"
       class="mb-4"
+      [disablePagination]="true"
       [mat-stretch-tabs]="false"
     >
       <mat-tab>
@@ -54,14 +56,15 @@
                 size="medium"
                 [colorizeSign]="true"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="netPerformanceWithCurrencyEffectPrecision"
                 [unit]="data.baseCurrency"
                 [value]="netPerformanceWithCurrencyEffect"
               >
                 @if (
-                  SymbolProfile?.currency &&
-                  data.baseCurrency !== SymbolProfile?.currency
+                  assetProfile?.currency &&
+                  data.baseCurrency !== assetProfile?.currency
                 ) {
                   Change with currency effect
                 } @else {
@@ -74,14 +77,15 @@
                 i18n
                 size="medium"
                 [colorizeSign]="true"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [locale]="data.locale"
                 [precision]="netPerformancePercentWithCurrencyEffectPrecision"
                 [value]="netPerformancePercentWithCurrencyEffect"
               >
                 @if (
-                  SymbolProfile?.currency &&
-                  data.baseCurrency !== SymbolProfile?.currency
+                  assetProfile?.currency &&
+                  data.baseCurrency !== assetProfile?.currency
                 ) {
                   Performance with currency effect
                 } @else {
@@ -94,9 +98,10 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="averagePricePrecision"
-                [unit]="SymbolProfile?.currency"
+                [unit]="assetProfile?.currency"
                 [value]="averagePrice"
                 >Average Unit Price</gf-value
               >
@@ -106,9 +111,10 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPricePrecision"
-                [unit]="SymbolProfile?.currency"
+                [unit]="assetProfile?.currency"
                 [value]="marketPrice"
                 >Market Price</gf-value
               >
@@ -118,13 +124,16 @@
                 i18n
                 size="medium"
                 [class.text-danger]="
-                  marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
-                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                  round(marketPriceMin, marketPriceMinPrecision) ===
+                    round(marketPrice, marketPricePrecision) &&
+                  round(marketPriceMax, marketPriceMaxPrecision) !==
+                    round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPriceMinPrecision"
-                [unit]="SymbolProfile?.currency"
+                [unit]="assetProfile?.currency"
                 [value]="marketPriceMin"
                 >Minimum Price</gf-value
               >
@@ -134,13 +143,16 @@
                 i18n
                 size="medium"
                 [class.text-success]="
-                  marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
-                  marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                  round(marketPriceMax, marketPriceMaxPrecision) ===
+                    round(marketPrice, marketPricePrecision) &&
+                  round(marketPriceMax, marketPriceMaxPrecision) !==
+                    round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPriceMaxPrecision"
-                [unit]="SymbolProfile?.currency"
+                [unit]="assetProfile?.currency"
                 [value]="marketPriceMax"
                 >Maximum Price</gf-value
               >
@@ -149,6 +161,7 @@
               <gf-value
                 i18n
                 size="medium"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="quantityPrecision"
                 [value]="quantity"
@@ -160,13 +173,14 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="
                   investmentInBaseCurrencyWithCurrencyEffectPrecision
                 "
                 [unit]="data.baseCurrency"
                 [value]="investmentInBaseCurrencyWithCurrencyEffect"
-                >Investment</gf-value
+                >Invested Capital</gf-value
               >
             </div>
             @if (
@@ -177,6 +191,7 @@
                   i18n
                   size="medium"
                   [isCurrency]="true"
+                  [isLoading]="isLoading"
                   [locale]="data.locale"
                   [precision]="dividendInBaseCurrencyPrecision"
                   [unit]="data.baseCurrency"
@@ -188,6 +203,7 @@
                 <gf-value
                   i18n
                   size="medium"
+                  [isLoading]="isLoading"
                   [isPercent]="true"
                   [locale]="data.locale"
                   [value]="dividendYieldPercentWithCurrencyEffect"
@@ -200,6 +216,7 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [unit]="data.baseCurrency"
                 [value]="feeInBaseCurrency"
@@ -212,6 +229,7 @@
                 size="medium"
                 [deviceType]="data.deviceType"
                 [isDate]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="dateOfFirstActivity"
                 >First Activity</gf-value
@@ -220,6 +238,7 @@
             <div class="col-6 mb-3">
               <gf-value
                 size="medium"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="activitiesCount"
               >
@@ -250,29 +269,33 @@
               >
             </div>
             @if (
-              SymbolProfile?.countries?.length > 0 ||
-              SymbolProfile?.sectors?.length > 0
+              assetProfile?.countries?.length > 0 ||
+              assetProfile?.sectors?.length > 0
             ) {
               @if (
-                SymbolProfile?.countries?.length === 1 &&
-                SymbolProfile?.sectors?.length === 1
+                assetProfile?.countries?.length === 1 &&
+                assetProfile?.sectors?.length === 1
               ) {
                 <div class="col-6 mb-3">
                   <gf-value
                     i18n
                     size="medium"
                     [locale]="data.locale"
-                    [value]="SymbolProfile.sectors[0].name"
+                    [value]="translate(assetProfile.sectors[0].name)"
                     >Sector</gf-value
                   >
                 </div>
-                @if (SymbolProfile?.countries?.length === 1) {
+                @if (assetProfile?.countries?.length === 1) {
                   <div class="col-6 mb-3">
                     <gf-value
                       i18n
                       size="medium"
                       [locale]="data.locale"
-                      [value]="SymbolProfile.countries[0].name"
+                      [value]="
+                        getCountryName({
+                          code: assetProfile.countries[0].code
+                        })
+                      "
                       >Country</gf-value
                     >
                   </div>
@@ -309,8 +332,8 @@
                 i18n
                 size="medium"
                 [enableCopyToClipboardButton]="true"
-                [hidden]="!SymbolProfile?.symbol"
-                [value]="SymbolProfile?.symbol"
+                [hidden]="!assetProfile?.symbol"
+                [value]="assetProfile?.symbol"
                 >Symbol</gf-value
               >
             </div>
@@ -318,10 +341,21 @@
               <gf-value
                 size="medium"
                 [enableCopyToClipboardButton]="true"
-                [hidden]="!SymbolProfile?.isin"
-                [value]="SymbolProfile?.isin"
+                [hidden]="!assetProfile?.isin"
+                [value]="assetProfile?.isin"
                 >ISIN</gf-value
               >
+            </div>
+            <div class="col-12 mb-3">
+              <form [formGroup]="holdingForm">
+                <gf-tags-selector
+                  formControlName="tags"
+                  [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+                  [readonly]="!data.hasPermissionToUpdateActivity"
+                  [tagsAvailable]="tagsAvailable"
+                  [tagsReadOnly]="tagsOfAccounts"
+                />
+              </form>
             </div>
 
             @if (dataProviderInfo) {
@@ -348,7 +382,7 @@
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToDeleteActivity]="false"
           [hasPermissionToExportActivities]="
-            !data.hasImpersonationId && !user?.settings?.isRestrictedView
+            !data.impersonationId && !user?.settings?.isRestrictedView
           "
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
@@ -356,8 +390,8 @@
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
           [showActions]="
-            !data.hasImpersonationId &&
             data.hasPermissionToCreateActivity &&
+            !data.impersonationId &&
             user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "
@@ -366,8 +400,6 @@
           [sortDirection]="sortDirection"
           [sortDisabled]="true"
           [totalItems]="activitiesCount"
-          (activityToClone)="onCloneActivity($event)"
-          (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
           (pageChanged)="onChangePage($event)"
         />
@@ -400,27 +432,18 @@
             <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
           </ng-template>
           <gf-historical-market-data-editor
-            [currency]="SymbolProfile?.currency"
-            [dataSource]="SymbolProfile?.dataSource"
+            [currency]="assetProfile?.currency"
+            [dataSource]="assetProfile?.dataSource"
             [dateOfFirstActivity]="dateOfFirstActivity"
             [locale]="data.locale"
             [marketData]="marketDataItems"
-            [symbol]="SymbolProfile?.symbol"
+            [symbol]="assetProfile?.symbol"
             [user]="user"
             (marketDataChanged)="onMarketDataChanged($event)"
           />
         </mat-tab>
       }
     </mat-tab-group>
-
-    <form [formGroup]="holdingForm">
-      <gf-tags-selector
-        formControlName="tags"
-        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-        [readonly]="!data.hasPermissionToUpdateActivity"
-        [tagsAvailable]="tagsAvailable"
-      />
-    </form>
 
     @if (
       data.hasPermissionToAccessAdminControl ||
@@ -447,7 +470,10 @@
               dataSource?.data.length > 0 &&
               data.hasPermissionToReportDataGlitch === true
             ) {
-              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+              <a
+                color="warn"
+                mat-stroked-button
+                [href]="reportDataGlitchMailHref"
                 ><ion-icon class="mr-1" name="flag-outline" /><span i18n
                   >Report Data Glitch</span
                 >...</a
@@ -458,8 +484,8 @@
                 mat-stroked-button
                 [queryParams]="{
                   assetProfileDialog: true,
-                  dataSource: SymbolProfile?.dataSource,
-                  symbol: SymbolProfile?.symbol
+                  dataSource: assetProfile?.dataSource,
+                  symbol: assetProfile?.symbol
                 }"
                 [routerLink]="routerLinkAdminControlMarketData"
                 (click)="onClose()"

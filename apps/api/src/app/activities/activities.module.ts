@@ -6,12 +6,15 @@ import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redac
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
+import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
+import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
@@ -23,15 +26,18 @@ import { ActivitiesService } from './activities.service';
   exports: [ActivitiesService],
   imports: [
     ApiModule,
+    BenchmarkModule,
     CacheModule,
     DataGatheringQueueModule,
     DataProviderModule,
     ExchangeRateDataModule,
     ImpersonationModule,
+    MarketDataModule,
     PrismaModule,
     RedactValuesInResponseModule,
     RedisCacheModule,
     SymbolProfileModule,
+    TagModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],

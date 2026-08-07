@@ -32,6 +32,7 @@ npm-debug.log
 .env.prod
 .github/instructions/nx.instructions.md
 .nx/cache
+.nx/migrate-runs
 .nx/polygraph
 .nx/self-healing
 .nx/workspace-data

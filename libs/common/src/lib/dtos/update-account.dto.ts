@@ -2,7 +2,8 @@ import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
-  IsBoolean,
+  ArrayUnique,
+  IsArray,
   IsNumber,
   IsOptional,
   IsString,
@@ -11,15 +12,20 @@ import {
 import { isString } from 'lodash';
 
 export class UpdateAccountDto {
+  /**
+   * The balance, stored as the account balance of today.
+   * Optional because the account balances are the source of truth.
+   */
   @IsNumber()
-  balance: number;
+  @IsOptional()
+  balance?: number;
 
   @IsOptional()
   @IsString()
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )
-  comment?: string;
+  comment?: string | null;
 
   @IsCurrencyCode()
   currency: string;
@@ -27,14 +33,16 @@ export class UpdateAccountDto {
   @IsString()
   id: string;
 
-  @IsBoolean()
-  @IsOptional()
-  isExcluded?: boolean;
-
   @IsString()
   name: string;
 
   @IsString()
   @ValidateIf((_object, value) => value !== null)
   platformId: string | null;
+
+  @ArrayUnique()
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  tags?: string[];
 }

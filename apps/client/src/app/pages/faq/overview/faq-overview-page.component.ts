@@ -4,6 +4,7 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -14,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPremiumIndicatorComponent, MatCardModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -38,9 +40,9 @@ export class GfFaqOverviewPageComponent {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 }

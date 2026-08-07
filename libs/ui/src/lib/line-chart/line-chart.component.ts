@@ -1,18 +1,14 @@
 import {
-  getTooltipOptions,
+  getChartBorderColor,
+  getTimeAxisOptions,
+  getValueAxisOptions,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import {
-  getBackgroundColor,
-  getDateFormatString,
-  getLocale,
-  getTextColor
-} from '@ghostfolio/common/helper';
+import { getBackgroundColor, getLocale } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -39,11 +35,14 @@ import {
 import 'chartjs-adapter-date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { registerChartConfiguration } from '../chart';
+import {
+  getTimeSeriesTooltipOptions,
+  registerChartConfiguration
+} from '../chart';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [NgxSkeletonLoaderModule],
   selector: 'gf-line-chart',
   styleUrls: ['./line-chart.component.scss'],
   templateUrl: './line-chart.component.html'
@@ -210,49 +209,21 @@ export class GfLineChartComponent
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
-                color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                color: getChartBorderColor(this.colorScheme)
               }
             },
             scales: {
-              x: {
-                border: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
-                },
+              x: getTimeAxisOptions({
+                colorScheme: this.colorScheme,
                 display: this.showXAxis,
-                grid: {
-                  display: false
-                },
-                time: {
-                  tooltipFormat: getDateFormatString(this.locale),
-                  unit: 'year'
-                },
-                type: 'time'
-              },
+                locale: this.locale
+              }),
               y: {
-                border: {
-                  width: 0
-                },
-                display: this.showYAxis,
-                grid: {
-                  color: ({ scale, tick }) => {
-                    if (
-                      tick.value === 0 ||
-                      tick.value === scale.max ||
-                      tick.value === scale.min ||
-                      tick.value === this.yMax ||
-                      tick.value === this.yMin
-                    ) {
-                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
-                    }
-
-                    return 'transparent';
-                  }
-                },
-                max: this.yMax,
-                min: this.yMin,
-                position: 'right',
-                ticks: {
-                  callback: (tickValue, index, ticks) => {
+                ...getValueAxisOptions({
+                  colorScheme: this.colorScheme,
+                  display: this.showYAxis,
+                  highlightedValues: [this.yMax, this.yMin],
+                  tickCallback: (tickValue, index, ticks) => {
                     if (index === 0 || index === ticks.length - 1) {
                       // Only print last and first legend entry
 
@@ -275,11 +246,10 @@ export class GfLineChartComponent
                     }
 
                     return '';
-                  },
-                  display: this.showYAxis,
-                  mirror: true,
-                  z: 1
-                },
+                  }
+                }),
+                max: this.yMax,
+                min: this.yMin,
                 type: 'linear'
               }
             },
@@ -322,17 +292,11 @@ export class GfLineChartComponent
   }
 
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
-    return {
-      ...getTooltipOptions({
-        colorScheme: this.colorScheme,
-        currency: this.currency,
-        locale: this.locale,
-        unit: this.unit
-      }),
-      mode: 'index',
-      position: 'top',
-      xAlign: 'center',
-      yAlign: 'bottom'
-    };
+    return getTimeSeriesTooltipOptions<'line'>({
+      colorScheme: this.colorScheme,
+      currency: this.currency,
+      locale: this.locale,
+      unit: this.unit
+    });
   }
 }

@@ -22,13 +22,12 @@
       <ng-container i18n>Name</ng-container>
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
-      @if (element.url) {
-        <gf-entity-logo
-          class="d-inline mr-1"
-          [tooltip]="element.name"
-          [url]="element.url"
-        />
-      }
+      <gf-entity-logo
+        class="d-inline mr-1"
+        [hasPlaceholder]="true"
+        [tooltip]="element.name"
+        [url]="element.url"
+      />
       <span>{{ element.name }}</span>
     </td></ng-container
   >
@@ -96,3 +95,9 @@
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 </table>
+
+<mat-paginator
+  [class.d-none]="dataSource.data.length <= pageSize"
+  [hidePageSize]="true"
+  [pageSize]="pageSize"
+/>

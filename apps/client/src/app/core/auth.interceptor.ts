@@ -13,20 +13,20 @@ import {
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  public constructor(
-    private impersonationStorageService: ImpersonationStorageService,
-    private tokenStorageService: TokenStorageService
-  ) {}
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly tokenStorageService = inject(TokenStorageService);
 
-  public intercept(
-    req: HttpRequest<any>,
+  public intercept<T>(
+    req: HttpRequest<T>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     let request = req;
 
     if (request.headers.has(HEADER_KEY_SKIP_INTERCEPTOR)) {

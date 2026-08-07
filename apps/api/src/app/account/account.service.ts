@@ -1,9 +1,16 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import {
+  getWhereAccountBalanceNotInFuture,
+  isAccountBalanceInFuture,
+  WHERE_ACCOUNT_NOT_EXCLUDED
+} from '@ghostfolio/api/helper/account.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
+import { AccountWithBalance } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -13,11 +20,12 @@ import {
   Order,
   Platform,
   Prisma,
-  SymbolProfile
+  SymbolProfile,
+  Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { format } from 'date-fns';
-import { groupBy } from 'lodash';
+import { endOfToday, format } from 'date-fns';
+import { groupBy, isNil } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
 
@@ -27,17 +35,35 @@ export class AccountService {
     private readonly accountBalanceService: AccountBalanceService,
     private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly tagService: TagService
   ) {}
 
   public async account({
     id_userId
-  }: Prisma.AccountWhereUniqueInput): Promise<Account | null> {
-    const [account] = await this.accounts({
-      where: id_userId
+  }: Prisma.AccountWhereUniqueInput): Promise<AccountWithBalance | null> {
+    const account = await this.prismaService.account.findUnique({
+      include: {
+        balances: {
+          orderBy: { date: 'desc' },
+          take: 1,
+          // Ignore account balances in the future
+          where: getWhereAccountBalanceNotInFuture()
+        }
+      },
+      where: { id_userId }
     });
 
-    return account;
+    if (!account) {
+      return null;
+    }
+
+    const { balances, ...accountData } = account;
+
+    return {
+      ...accountData,
+      balance: balances[0]?.value ?? 0
+    };
   }
 
   public async accountWithActivities(
@@ -62,20 +88,39 @@ export class AccountService {
     where?: Prisma.AccountWhereInput;
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
-    (Account & {
+    (AccountWithBalance & {
       activities?: (Order & { SymbolProfile?: SymbolProfile })[];
       balances?: AccountBalance[];
       platform?: Platform;
+      tags?: Tag[];
     })[]
   > {
     const { include = {}, skip, take, cursor, where, orderBy } = params;
 
     const isBalancesIncluded = !!include.balances;
+    const isTagsIncluded = !!include.tags;
 
     include.balances = {
       orderBy: { date: 'desc' },
-      ...(isBalancesIncluded ? {} : { take: 1 })
+      // If the balances are included, they are returned as-is (including the
+      // ones in the future) because the client renders the full history. The
+      // balance is derived below and skips the account balances in the future.
+      ...(isBalancesIncluded
+        ? {}
+        : {
+            take: 1,
+            // Ignore account balances in the future
+            where: getWhereAccountBalanceNotInFuture()
+          })
     };
+
+    if (isTagsIncluded) {
+      include.tags = {
+        include: {
+          tag: true
+        }
+      };
+    }
 
     const accounts = await this.prismaService.account.findMany({
       cursor,
@@ -86,31 +131,72 @@ export class AccountService {
       where
     });
 
+    const endOfTodayDate = endOfToday();
+
     return accounts.map((account) => {
-      account = { ...account, balance: account.balances[0]?.value ?? 0 };
+      const result = {
+        ...account,
+        balance:
+          // The balances are ordered by date descending, hence the first account
+          // balance which is not in the future reflects the current balance
+          account.balances.find(({ date }) => {
+            return !isAccountBalanceInFuture({ date, endOfTodayDate });
+          })?.value ?? 0,
+        tags: isTagsIncluded
+          ? (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {
+              return tag;
+            })
+          : undefined
+      };
 
       if (!isBalancesIncluded) {
-        delete account.balances;
+        delete result.balances;
       }
 
-      return account;
+      if (!isTagsIncluded) {
+        delete result.tags;
+      }
+
+      return result;
     });
   }
 
-  public async createAccount(
-    data: Prisma.AccountCreateInput,
-    aUserId: string
-  ): Promise<Account> {
+  public async createAccount({
+    balance,
+    data,
+    tagIds,
+    userId
+  }: {
+    balance?: number;
+    data: Prisma.AccountCreateInput;
+    tagIds?: string[];
+    userId: string;
+  }): Promise<Account> {
+    await this.tagService.validateTagIds({ tagIds, userId });
+
     const account = await this.prismaService.account.create({
-      data
+      data: {
+        ...data,
+        tags: tagIds
+          ? {
+              create: tagIds.map((tagId) => {
+                return {
+                  tag: { connect: { id: tagId } }
+                };
+              })
+            }
+          : undefined
+      }
     });
 
-    await this.accountBalanceService.createOrUpdateAccountBalance({
-      accountId: account.id,
-      balance: data.balance,
-      date: format(new Date(), DATE_FORMAT),
-      userId: aUserId
-    });
+    if (!isNil(balance)) {
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        balance,
+        userId,
+        accountId: account.id,
+        date: format(new Date(), DATE_FORMAT)
+      });
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
@@ -139,11 +225,12 @@ export class AccountService {
     return account;
   }
 
-  public async getAccounts(aUserId: string): Promise<Account[]> {
+  public async getAccounts(aUserId: string): Promise<AccountWithBalance[]> {
     const accounts = await this.accounts({
       include: {
         activities: true,
-        platform: true
+        platform: true,
+        tags: true
       },
       orderBy: { name: 'asc' },
       where: { userId: aUserId }
@@ -184,14 +271,14 @@ export class AccountService {
     };
 
     if (withExcludedAccounts === false) {
-      where.isExcluded = false;
+      where.AND = [WHERE_ACCOUNT_NOT_EXCLUDED];
     }
 
-    const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
+    const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
       return type;
     });
 
-    if (filtersByAccount?.length > 0) {
+    if (filtersByAccount.length > 0) {
       where.id = {
         in: filtersByAccount.map(({ id }) => {
           return id;
@@ -217,26 +304,46 @@ export class AccountService {
     };
   }
 
-  public async updateAccount(
-    params: {
-      where: Prisma.AccountWhereUniqueInput;
-      data: Prisma.AccountUpdateInput;
-    },
-    aUserId: string
-  ): Promise<Account> {
-    const { data, where } = params;
-
-    await this.accountBalanceService.createOrUpdateAccountBalance({
-      accountId: data.id as string,
-      balance: data.balance as number,
-      date: format(new Date(), DATE_FORMAT),
-      userId: aUserId
-    });
+  public async updateAccount({
+    balance,
+    data,
+    tagIds,
+    userId,
+    where
+  }: {
+    balance?: number;
+    data: Prisma.AccountUpdateInput;
+    tagIds?: string[];
+    userId: string;
+    where: Prisma.AccountWhereUniqueInput;
+  }): Promise<Account> {
+    await this.tagService.validateTagIds({ tagIds, userId });
 
     const account = await this.prismaService.account.update({
-      data,
+      data: {
+        ...data,
+        tags: tagIds
+          ? {
+              create: tagIds.map((tagId) => {
+                return {
+                  tag: { connect: { id: tagId } }
+                };
+              }),
+              deleteMany: {}
+            }
+          : undefined
+      },
       where
     });
+
+    if (!isNil(balance)) {
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        balance,
+        userId,
+        accountId: account.id,
+        date: format(new Date(), DATE_FORMAT)
+      });
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),

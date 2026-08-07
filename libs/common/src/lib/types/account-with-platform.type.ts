@@ -1,3 +1,6 @@
-import { Account, Platform } from '@prisma/client';
+import { Account, Platform, Tag } from '@prisma/client';
 
-export type AccountWithPlatform = Account & { platform?: Platform };
+export type AccountWithPlatform = Account & {
+  platform?: Platform;
+  tags?: Tag[];
+};

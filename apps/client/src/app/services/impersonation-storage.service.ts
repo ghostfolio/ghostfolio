@@ -7,11 +7,11 @@ export const IMPERSONATION_KEY = 'impersonationId';
   providedIn: 'root'
 })
 export class ImpersonationStorageService {
-  private hasImpersonationChangeSubject = new BehaviorSubject<string>(
+  private hasImpersonationChangeSubject = new BehaviorSubject<string | null>(
     this.getId()
   );
 
-  public getId(): string {
+  public getId(): string | null {
     return window.localStorage.getItem(IMPERSONATION_KEY);
   }
 

@@ -8,6 +8,7 @@ import {
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -30,8 +31,11 @@ import { addDays, format, isBefore } from 'date-fns';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
+  private readonly logger = new Logger(ManualService.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -75,7 +79,7 @@ export class ManualService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
@@ -86,14 +90,13 @@ export class ManualService implements DataProviderInterface {
 
       if (defaultMarketPrice) {
         const historical: {
-          [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
-        } = {
-          [symbol]: {}
-        };
+          [date: string]: DataProviderHistoricalResponse;
+        } = {};
+
         let date = from;
 
         while (isBefore(date, to)) {
-          historical[symbol][format(date, DATE_FORMAT)] = {
+          historical[format(date, DATE_FORMAT)] = {
             marketPrice: defaultMarketPrice
           };
 
@@ -111,10 +114,8 @@ export class ManualService implements DataProviderInterface {
       });
 
       return {
-        [symbol]: {
-          [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: value
-          }
+        [format(getYesterday(), DATE_FORMAT)]: {
+          marketPrice: value
         }
       };
     } catch (error) {
@@ -132,7 +133,8 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    symbols
+    symbols,
+    useCache = true
   }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
     const response: { [symbol: string]: DataProviderResponse } = {};
 
@@ -160,33 +162,32 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      const symbolProfilesWithScraperConfigurationAndInstantMode =
-        symbolProfiles.filter(({ scraperConfiguration }) => {
+      const symbolProfilesToScrape = symbolProfiles.filter(
+        ({ scraperConfiguration }) => {
           return (
-            scraperConfiguration?.mode === 'instant' &&
+            (scraperConfiguration?.mode === 'instant' || !useCache) &&
             scraperConfiguration?.selector &&
             scraperConfiguration?.url
           );
-        });
+        }
+      );
 
-      const scraperResultPromises =
-        symbolProfilesWithScraperConfigurationAndInstantMode.map(
-          async ({ scraperConfiguration, symbol }) => {
-            try {
-              const marketPrice = await this.scrape({
-                scraperConfiguration,
-                symbol
-              });
-              return { marketPrice, symbol };
-            } catch (error) {
-              Logger.error(
-                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`,
-                'ManualService'
-              );
-              return { symbol, marketPrice: undefined };
-            }
+      const scraperResultPromises = symbolProfilesToScrape.map(
+        async ({ scraperConfiguration, symbol }) => {
+          try {
+            const marketPrice = await this.scrape({
+              scraperConfiguration,
+              symbol
+            });
+            return { marketPrice, symbol };
+          } catch (error) {
+            this.logger.error(
+              `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`
+            );
+            return { symbol, marketPrice: undefined };
           }
-        );
+        }
+      );
 
       // Wait for all scraping requests to complete concurrently
       const scraperResults = await Promise.all(scraperResultPromises);
@@ -214,7 +215,7 @@ export class ManualService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'ManualService');
+      this.logger.error(error);
     }
 
     return {};
@@ -292,7 +293,7 @@ export class ManualService implements DataProviderInterface {
   }): Promise<number> {
     let locale = scraperConfiguration.locale;
 
-    const response = await fetch(scraperConfiguration.url, {
+    const response = await this.fetchService.fetch(scraperConfiguration.url, {
       headers: scraperConfiguration.headers as HeadersInit,
       signal: AbortSignal.timeout(
         this.configurationService.get('REQUEST_TIMEOUT')

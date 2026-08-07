@@ -1,8 +1,8 @@
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -14,8 +14,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
-  imports: [GfLogoComponent, MatButtonModule, MatProgressSpinnerModule],
+  imports: [MatButtonModule, MatProgressSpinnerModule],
   selector: 'gf-webauthn-page',
   styleUrls: ['./webauthn-page.scss'],
   templateUrl: './webauthn-page.html'
@@ -57,7 +58,9 @@ export class GfWebauthnPageComponent implements OnInit {
         },
         (error) => {
           console.error(error);
+
           this.hasError = true;
+
           this.changeDetectorRef.markForCheck();
         }
       );

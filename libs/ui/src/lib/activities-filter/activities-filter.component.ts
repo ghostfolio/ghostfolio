@@ -1,5 +1,4 @@
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
@@ -39,7 +38,6 @@ import { translate } from '../i18n';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    GfSymbolPipe,
     IonIcon,
     MatAutocompleteModule,
     MatButtonModule,

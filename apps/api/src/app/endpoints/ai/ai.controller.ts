@@ -1,4 +1,5 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { FilterDto } from '@ghostfolio/api/dtos/filter.dto';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { AiPromptResponse } from '@ghostfolio/common/interfaces';
@@ -31,18 +32,15 @@ export class AiController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPrompt(
     @Param('mode') mode: AiPromptMode,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Query()
+    { accounts, assetClasses, dataSource, symbol, tags }: FilterDto
   ): Promise<AiPromptResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     const prompt = await this.aiService.getPrompt({

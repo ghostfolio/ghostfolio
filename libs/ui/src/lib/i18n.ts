@@ -1,3 +1,9 @@
+import type {
+  ProductCategory,
+  ProductPlatform,
+  SectorName
+} from '@ghostfolio/common/types';
+
 import '@angular/localize/init';
 
 const locales = {
@@ -73,42 +79,51 @@ const locales = {
   Oceania: $localize`Oceania`,
   'South America': $localize`South America`,
 
-  // Countries
-  Armenia: $localize`Armenia`,
-  Argentina: $localize`Argentina`,
-  Australia: $localize`Australia`,
-  Austria: $localize`Austria`,
-  Belgium: $localize`Belgium`,
-  'British Virgin Islands': $localize`British Virgin Islands`,
-  Bulgaria: $localize`Bulgaria`,
-  Canada: $localize`Canada`,
-  'Czech Republic': $localize`Czech Republic`,
-  Finland: $localize`Finland`,
-  France: $localize`France`,
-  Germany: $localize`Germany`,
-  India: $localize`India`,
-  Indonesia: $localize`Indonesia`,
-  Italy: $localize`Italy`,
-  Japan: $localize`Japan`,
-  Netherlands: $localize`Netherlands`,
-  'New Zealand': $localize`New Zealand`,
-  Poland: $localize`Poland`,
-  Romania: $localize`Romania`,
-  Singapore: $localize`Singapore`,
-  'South Africa': $localize`South Africa`,
-  Switzerland: $localize`Switzerland`,
-  Thailand: $localize`Thailand`,
-  Ukraine: $localize`Ukraine`,
-  'United Kingdom': $localize`United Kingdom`,
-  'United States': $localize`United States`,
-
   // Fear and Greed Index
   EXTREME_FEAR: $localize`Extreme Fear`,
   EXTREME_GREED: $localize`Extreme Greed`,
   FEAR: $localize`Fear`,
   GREED: $localize`Greed`,
-  NEUTRAL: $localize`Neutral`
-};
+  NEUTRAL: $localize`Neutral`,
+  UNKNOWN: $localize`Unknown`,
+
+  // Sectors
+  'Basic Materials': $localize`Basic Materials`,
+  'Communication Services': $localize`Communication Services`,
+  'Consumer Cyclical': $localize`Consumer Cyclical`,
+  'Consumer Defensive': $localize`Consumer Defensive`,
+  Energy: $localize`Energy`,
+  'Financial Services': $localize`Financial Services`,
+  Healthcare: $localize`Healthcare`,
+  Industrials: $localize`Industrials`,
+  Other: $localize`Other`,
+  'Real Estate': $localize`Real Estate`,
+  Technology: $localize`Technology`,
+  Utilities: $localize`Utilities`,
+
+  // Product categories (CRYPTOCURRENCY is defined above under AssetSubClass)
+  BUDGETING: $localize`Budgeting`,
+  DIVIDEND_TRACKING: $localize`Dividend Tracking`,
+  ETF_TRACKING: $localize`ETF Tracking`,
+  FAMILY_OFFICE: $localize`Family Office`,
+  FINANCIAL_PLANNING: $localize`Financial Planning`,
+  INVESTMENT_RESEARCH: $localize`Investment Research`,
+  NET_WORTH_TRACKING: $localize`Net Worth Tracking`,
+  STOCK_TRACKING: $localize`Stock Tracking`,
+  TAX_REPORTING: $localize`Tax Reporting`,
+  WEALTH_MANAGEMENT: $localize`Wealth Management`,
+
+  // Product platforms
+  ANDROID: 'Android',
+  IOS: 'iOS',
+  LINUX: 'Linux',
+  MACOS: 'macOS',
+  WEB: $localize`Web`,
+  WINDOWS: 'Windows'
+} satisfies Record<ProductCategory, string> &
+  Record<ProductPlatform, string> &
+  Record<SectorName, string> &
+  Record<string, string>;
 
 export function translate(aKey: string): string {
   return locales[aKey] ?? aKey;

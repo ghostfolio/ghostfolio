@@ -6,7 +6,7 @@ import { addYears, format, getYear, parse } from 'date-fns';
 
 export class CustomDateAdapter extends NativeDateAdapter {
   public constructor(
-    @Inject(MAT_DATE_LOCALE) public locale: string,
+    @Inject(MAT_DATE_LOCALE) public override locale: string,
     @Inject(forwardRef(() => MAT_DATE_LOCALE)) matDateLocale: string
   ) {
     super(matDateLocale);
@@ -15,21 +15,21 @@ export class CustomDateAdapter extends NativeDateAdapter {
   /**
    * Formats a date as a string
    */
-  public format(aDate: Date): string {
+  public override format(aDate: Date): string {
     return format(aDate, getDateFormatString(this.locale));
   }
 
   /**
    * Sets the first day of the week to Monday
    */
-  public getFirstDayOfWeek(): number {
+  public override getFirstDayOfWeek(): number {
     return 1;
   }
 
   /**
    * Parses a date from a provided value
    */
-  public parse(aValue: string): Date {
+  public override parse(aValue: string): Date {
     let date = parse(aValue, getDateFormatString(this.locale), new Date());
 
     if (getYear(date) < 1900) {

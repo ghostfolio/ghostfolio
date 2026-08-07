@@ -22,7 +22,7 @@ export const activityDummyData = {
   valueInBaseCurrency: undefined
 };
 
-export const symbolProfileDummyData = {
+export const assetProfileDummyData = {
   activitiesCount: undefined,
   assetClass: undefined,
   assetSubClass: undefined,

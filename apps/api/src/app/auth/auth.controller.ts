@@ -1,4 +1,5 @@
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
+import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
@@ -13,7 +14,6 @@ import {
   Controller,
   Get,
   HttpException,
-  Param,
   Post,
   Req,
   Res,
@@ -35,26 +35,8 @@ export class AuthController {
     private readonly webAuthService: WebAuthService
   ) {}
 
-  /**
-   * @deprecated
-   */
-  @Get('anonymous/:accessToken')
-  public async accessTokenLoginGet(
-    @Param('accessToken') accessToken: string
-  ): Promise<OAuthResponse> {
-    try {
-      const authToken =
-        await this.authService.validateAnonymousLogin(accessToken);
-      return { authToken };
-    } catch {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-  }
-
   @Post('anonymous')
+  @UseGuards(CustomThrottlerGuard)
   public async accessTokenLogin(
     @Body() body: { accessToken: string }
   ): Promise<OAuthResponse> {
@@ -135,6 +117,7 @@ export class AuthController {
   }
 
   @Post('webauthn/generate-authentication-options')
+  @UseGuards(CustomThrottlerGuard)
   public async generateAuthenticationOptions(
     @Body() body: { deviceId: string }
   ) {
@@ -156,6 +139,7 @@ export class AuthController {
   }
 
   @Post('webauthn/verify-authentication')
+  @UseGuards(CustomThrottlerGuard)
   public async verifyAuthentication(
     @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
   ) {

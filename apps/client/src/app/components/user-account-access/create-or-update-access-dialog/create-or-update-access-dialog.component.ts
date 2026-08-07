@@ -1,6 +1,17 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
+import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import {
+  GfPortfolioFilterFormComponent,
+  getAssetClassFilters,
+  getFiltersFromPortfolioFilterFormValue,
+  getHoldingsForFilter,
+  getPortfolioFilterFormValue,
+  getTagFilters
+} from '@ghostfolio/ui/portfolio-filter-form';
 import { DataService } from '@ghostfolio/ui/services';
 
 import type { HttpErrorResponse } from '@angular/common/http';
@@ -29,6 +40,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -39,6 +51,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   imports: [
     FormsModule,
+    GfPortfolioFilterFormComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -51,8 +64,15 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-access-dialog.html'
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
+  public accounts: AccountWithPlatform[] = [];
+  public assetClasses: Filter[] = [];
+  public holdings: PortfolioPosition[] = [];
+  public tags: Filter[] = [];
+
   protected accessForm: FormGroup;
-  protected mode: 'create' | 'update';
+  protected readonly mode: 'create' | 'update';
+
+  private hasExperimentalFeatures = false;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -67,26 +87,52 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
+  private readonly userService = inject(UserService);
 
   public constructor() {
-    this.mode = this.data.access?.id ? 'update' : 'create';
+    this.mode = this.data.access ? 'update' : 'create';
+  }
+
+  public get canApplyFilters() {
+    return (
+      this.accessForm?.get('type')?.value === 'PUBLIC' &&
+      this.hasExperimentalFeatures
+    );
   }
 
   public ngOnInit() {
-    const isPublic = this.data.access.type === 'PUBLIC';
+    const access = this.data?.access;
+    const isPublic = access?.type === 'PUBLIC';
 
     this.accessForm = this.formBuilder.group({
-      alias: [this.data.access.alias],
+      alias: [access?.alias ?? ''],
+      filters: [null],
       granteeUserId: [
-        this.data.access.grantee,
+        access?.grantee ?? null,
         isPublic ? null : Validators.required
       ],
-      permissions: [this.data.access.permissions[0], Validators.required],
+      permissions: [
+        access?.permissions[0] ?? AccessPermission.READ_RESTRICTED,
+        Validators.required
+      ],
       type: [
-        { disabled: this.mode === 'update', value: this.data.access.type },
+        { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
         Validators.required
       ]
     });
+
+    this.assetClasses = getAssetClassFilters();
+
+    this.userService
+      .get()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ accounts, settings, tags }) => {
+        this.accounts = accounts;
+        this.hasExperimentalFeatures = settings.isExperimentalFeatures ?? false;
+        this.tags = getTagFilters(tags);
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.accessForm
       .get('type')
@@ -97,23 +143,28 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
         if (accessType === 'PRIVATE') {
           granteeUserIdControl?.setValidators(Validators.required);
+          this.accessForm.get('filters')?.setValue(null);
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-          permissionsControl?.setValue(this.data.access.permissions[0]);
+          permissionsControl?.setValue(
+            access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
+          );
         }
 
         granteeUserIdControl?.updateValueAndValidity();
 
         this.changeDetectorRef.markForCheck();
       });
+
+    this.loadHoldings();
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public async onSubmit() {
+  protected async onSubmit() {
     if (this.mode === 'create') {
       await this.createAccess();
     } else {
@@ -121,9 +172,18 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  private buildFilters(): Filter[] {
+    return getFiltersFromPortfolioFilterFormValue(
+      this.accessForm.get('filters')?.value
+    );
+  }
+
   private async createAccess() {
+    const filters = this.buildFilters();
+
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
+      filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       permissions: [this.accessForm.get('permissions')?.value]
     };
@@ -157,11 +217,33 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  private loadHoldings() {
+    this.dataService
+      .fetchPortfolioHoldings()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ holdings }) => {
+        this.holdings = getHoldingsForFilter(holdings);
+
+        this.updateFiltersFormControl(this.data.access?.settings?.filters);
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private async updateAccess() {
+    const accessId = this.data.access?.id;
+
+    if (!accessId) {
+      return;
+    }
+
+    const filters = this.buildFilters();
+
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
+      filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      id: this.data.access.id,
+      id: accessId,
       permissions: [this.accessForm.get('permissions')?.value]
     };
 
@@ -192,5 +274,15 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private updateFiltersFormControl(filters: Filter[] | undefined) {
+    if (!filters?.length) {
+      return;
+    }
+
+    this.accessForm
+      .get('filters')
+      ?.setValue(getPortfolioFilterFormValue(filters, this.holdings));
   }
 }

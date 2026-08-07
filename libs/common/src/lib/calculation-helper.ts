@@ -7,6 +7,7 @@ import {
   startOfWeek,
   startOfYear,
   subDays,
+  subMilliseconds,
   subYears
 } from 'date-fns';
 import { isFinite, isNumber } from 'lodash';
@@ -75,10 +76,16 @@ export function getIntervalFromDateRange(params: {
       break;
     case 'max':
       break;
-    default:
+    default: {
       // '2024', '2023', '2022', etc.
-      endDate = endOfYear(new Date(dateRange));
-      startDate = max([startDate, new Date(dateRange)]);
+      const yearStartDate = new Date(Number(dateRange), 0, 1);
+
+      // Derive the boundaries of the calendar year in the local time zone, as
+      // the consumers apply local time zone semantics. As the start date is
+      // exclusive, the last millisecond of the preceding year is used.
+      endDate = endOfYear(yearStartDate);
+      startDate = max([startDate, subMilliseconds(yearStartDate, 1)]);
+    }
   }
 
   return { endDate, startDate };

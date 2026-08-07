@@ -1,7 +1,10 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { PortfolioSnapshotComputationExceptionFilter } from '@ghostfolio/api/filters/portfolio-snapshot-computation-exception.filter';
+import { getRedisConnectionOptions } from '@ghostfolio/api/helper/redis.helper';
 import { BullBoardAuthMiddleware } from '@ghostfolio/api/middlewares/bull-board-auth.middleware';
 import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CronModule } from '@ghostfolio/api/services/cron/cron.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
@@ -12,19 +15,22 @@ import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-g
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import {
   BULL_BOARD_ROUTE,
-  DEFAULT_LANGUAGE_CODE,
-  SUPPORTED_LANGUAGE_CODES
+  THROTTLE_DEFAULT_LIMIT,
+  THROTTLE_DEFAULT_TTL
 } from '@ghostfolio/common/config';
 
 import { ExpressAdapter } from '@bull-board/express';
 import { BullBoardModule } from '@bull-board/nestjs';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { StatusCodes } from 'http-status-codes';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
 
 import { AccessModule } from './access/access.module';
@@ -38,6 +44,7 @@ import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
+import { AssetProfilesModule } from './endpoints/asset-profiles/asset-profiles.module';
 import { AssetsModule } from './endpoints/assets/assets.module';
 import { BenchmarksModule } from './endpoints/benchmarks/benchmarks.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
@@ -69,6 +76,7 @@ import { UserModule } from './user/user.module';
     ActivitiesModule,
     AiModule,
     ApiKeysModule,
+    AssetProfilesModule,
     AssetModule,
     AssetsModule,
     AuthDeviceModule,
@@ -93,12 +101,13 @@ import { UserModule } from './user/user.module';
       middleware: BullBoardAuthMiddleware,
       route: BULL_BOARD_ROUTE
     }),
-    BullModule.forRoot({
-      redis: {
-        db: parseInt(process.env.REDIS_DB ?? '0', 10),
-        host: process.env.REDIS_HOST,
-        password: process.env.REDIS_PASSWORD,
-        port: parseInt(process.env.REDIS_PORT ?? '6379', 10)
+    BullModule.forRootAsync({
+      imports: [ConfigurationModule],
+      inject: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => {
+        return {
+          redis: getRedisConnectionOptions(configurationService)
+        };
       }
     }),
     CacheModule,
@@ -134,27 +143,7 @@ import { UserModule } from './user/user.module';
         '/api/*wildcard',
         '/sitemap.xml'
       ],
-      rootPath: join(__dirname, '..', 'client'),
-      serveStaticOptions: {
-        setHeaders: (res) => {
-          if (res.req?.path === '/') {
-            let languageCode = DEFAULT_LANGUAGE_CODE;
-
-            try {
-              const code = res.req.headers['accept-language']
-                .split(',')[0]
-                .split('-')[0];
-
-              if (SUPPORTED_LANGUAGE_CODES.includes(code)) {
-                languageCode = code;
-              }
-            } catch {}
-
-            res.set('Location', `/${languageCode}`);
-            res.statusCode = StatusCodes.MOVED_PERMANENTLY;
-          }
-        }
-      }
+      rootPath: join(__dirname, '..', 'client')
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client', '.well-known'),
@@ -164,10 +153,46 @@ import { UserModule } from './user/user.module';
     SubscriptionModule,
     SymbolModule,
     TagsModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigurationModule],
+      inject: [ConfigurationService],
+      useFactory: (configurationService: ConfigurationService) => {
+        const isRateLimitingEnabled = configurationService.get(
+          'ENABLE_FEATURE_RATE_LIMITING'
+        );
+
+        return {
+          errorMessage: getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+          skipIf: () => {
+            return !isRateLimitingEnabled;
+          },
+          storage: isRateLimitingEnabled
+            ? new ThrottlerStorageRedisService({
+                ...getRedisConnectionOptions(configurationService),
+                // Reject commands immediately while Redis is unavailable
+                enableOfflineQueue: false,
+                maxRetriesPerRequest: 1
+              })
+            : undefined,
+          throttlers: [
+            {
+              limit: THROTTLE_DEFAULT_LIMIT,
+              ttl: THROTTLE_DEFAULT_TTL
+            }
+          ]
+        };
+      }
+    }),
     UserModule,
     WatchlistModule
   ],
-  providers: [I18nService]
+  providers: [
+    I18nService,
+    {
+      provide: APP_FILTER,
+      useClass: PortfolioSnapshotComputationExceptionFilter
+    }
+  ]
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

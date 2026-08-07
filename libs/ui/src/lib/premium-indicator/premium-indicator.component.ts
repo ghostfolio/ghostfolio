@@ -1,6 +1,5 @@
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -14,7 +13,7 @@ import { diamondOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, IonIcon, RouterModule],
+  imports: [IonIcon, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-premium-indicator',
   styleUrls: ['./premium-indicator.component.scss'],

@@ -16,8 +16,13 @@
       </td>
       <td *matFooterCellDef class="px-2" mat-footer-cell>
         <mat-form-field appearance="outline" class="py-1 without-hint">
-          <input formControlName="date" matInput [matDatepicker]="date" />
-          <mat-datepicker-toggle matSuffix [for]="date">
+          <input
+            formControlName="date"
+            matInput
+            [matDatepicker]="date"
+            [max]="maxDate"
+          />
+          <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
             <ion-icon
               class="text-muted"
               matDatepickerToggleIcon

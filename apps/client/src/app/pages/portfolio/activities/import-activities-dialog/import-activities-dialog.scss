@@ -1,9 +1,9 @@
+@use '@angular/material' as mat;
+
 :host {
   display: block;
 
   .mat-mdc-dialog-content {
-    max-height: unset;
-
     a {
       color: rgba(var(--palette-primary-500), 1);
     }
@@ -43,8 +43,13 @@
     }
 
     .mat-expansion-panel {
-      background: none;
-      box-shadow: none;
+      @include mat.expansion-overrides(
+        (
+          container-background-color: transparent,
+          container-elevation-shadow: none,
+          container-shape: 0
+        )
+      );
 
       .mat-expansion-panel-header {
         color: inherit;

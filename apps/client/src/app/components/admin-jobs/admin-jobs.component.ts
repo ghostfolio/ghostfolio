@@ -1,8 +1,5 @@
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  BULL_BOARD_COOKIE_NAME,
-  BULL_BOARD_ROUTE,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
@@ -10,7 +7,6 @@ import {
 } from '@ghostfolio/common/config';
 import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
 import { AdminJobs, User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService } from '@ghostfolio/ui/services';
 
@@ -106,7 +102,6 @@ export class GfAdminJobsComponent implements OnInit {
     'actions'
   ];
 
-  protected hasPermissionToAccessBullBoard = false;
   protected isLoading = false;
   protected readonly statusFilterOptions = QUEUE_JOB_STATUS_LIST;
 
@@ -116,7 +111,6 @@ export class GfAdminJobsComponent implements OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
   private readonly notificationService = inject(NotificationService);
-  private readonly tokenStorageService = inject(TokenStorageService);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -128,11 +122,6 @@ export class GfAdminJobsComponent implements OnInit {
 
           this.defaultDateTimeFormat = getDateWithTimeFormatString(
             this.user.settings.locale
-          );
-
-          this.hasPermissionToAccessBullBoard = hasPermission(
-            this.user.permissions,
-            permissions.accessAdminControlBullBoard
           );
         }
       });
@@ -191,18 +180,6 @@ export class GfAdminJobsComponent implements OnInit {
       .subscribe(() => {
         this.fetchJobs();
       });
-  }
-
-  protected onOpenBullBoard() {
-    const token = this.tokenStorageService.getToken();
-
-    document.cookie = [
-      `${BULL_BOARD_COOKIE_NAME}=${encodeURIComponent(token)}`,
-      'path=/',
-      'SameSite=Strict'
-    ].join('; ');
-
-    window.open(BULL_BOARD_ROUTE, '_blank');
   }
 
   protected onViewData(aData: AdminJobs['jobs'][0]['data']) {

@@ -24,6 +24,8 @@ import { HealthService } from './health.service';
 
 @Controller('health')
 export class HealthController {
+  private readonly logger = new Logger(HealthController.name);
+
   public constructor(
     private readonly aiService: AiService,
     private readonly healthService: HealthService
@@ -61,7 +63,7 @@ export class HealthController {
           .json({ status: getReasonPhrase(StatusCodes.OK) });
       }
     } catch (error) {
-      Logger.error(error, 'HealthController');
+      this.logger.error(error);
     }
 
     return response

@@ -4,6 +4,7 @@ import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
+  ArrayUnique,
   IsArray,
   IsBoolean,
   IsEnum,
@@ -21,11 +22,11 @@ export class CreateOrderDto {
   @IsString()
   accountId?: string;
 
-  @IsEnum(AssetClass, { each: true })
+  @IsEnum(AssetClass)
   @IsOptional()
   assetClass?: AssetClass;
 
-  @IsEnum(AssetSubClass, { each: true })
+  @IsEnum(AssetSubClass)
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
@@ -34,7 +35,7 @@ export class CreateOrderDto {
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )
-  comment?: string;
+  comment?: string | null;
 
   @IsCurrencyCode()
   currency: string;
@@ -62,11 +63,13 @@ export class CreateOrderDto {
   @IsString()
   symbol: string;
 
+  @ArrayUnique()
   @IsArray()
   @IsOptional()
+  @IsString({ each: true })
   tags?: string[];
 
-  @IsEnum(Type, { each: true })
+  @IsEnum(Type)
   type: Type;
 
   @IsNumber()

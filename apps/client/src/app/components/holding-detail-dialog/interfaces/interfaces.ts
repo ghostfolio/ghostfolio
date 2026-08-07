@@ -7,11 +7,15 @@ export interface HoldingDetailDialogParams {
   colorScheme: ColorScheme;
   dataSource: DataSource;
   deviceType: string;
-  hasImpersonationId: boolean;
   hasPermissionToAccessAdminControl: boolean;
   hasPermissionToCreateActivity: boolean;
   hasPermissionToReportDataGlitch: boolean;
   hasPermissionToUpdateActivity: boolean;
+  impersonationId: string | null;
   locale: string;
   symbol: string;
+}
+
+export interface HoldingDetailDialogResult {
+  isNavigating?: boolean;
 }

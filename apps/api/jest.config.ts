@@ -1,4 +1,8 @@
 /* eslint-disable */
+
+// Run tests in UTC for deterministic date-based calculations
+process.env.TZ = 'UTC';
+
 export default {
   displayName: 'api',
 

@@ -1,7 +1,7 @@
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -9,6 +9,7 @@ import { addIcons } from 'ionicons';
 import { chevronForwardOutline } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [IonIcon, MatCardModule, RouterModule],
   selector: 'gf-personal-finance-tools-page',

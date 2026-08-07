@@ -8,7 +8,7 @@ export const KEY_TOKEN = 'auth-token';
   providedIn: 'root'
 })
 export class SettingsStorageService {
-  public getSetting(aKey: string): string {
+  public getSetting(aKey: string): string | null {
     return window.localStorage.getItem(aKey);
   }
 

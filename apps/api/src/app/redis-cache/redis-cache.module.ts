@@ -1,3 +1,4 @@
+import { getRedisConnectionUrl } from '@ghostfolio/api/helper/redis.helper';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
@@ -14,16 +15,8 @@ import { RedisCacheService } from './redis-cache.service';
       imports: [ConfigurationModule],
       inject: [ConfigurationService],
       useFactory: async (configurationService: ConfigurationService) => {
-        const redisPassword = encodeURIComponent(
-          configurationService.get('REDIS_PASSWORD')
-        );
-
         return {
-          stores: [
-            createKeyv(
-              `redis://${redisPassword ? `:${redisPassword}` : ''}@${configurationService.get('REDIS_HOST')}:${configurationService.get('REDIS_PORT')}/${configurationService.get('REDIS_DB')}`
-            )
-          ],
+          stores: [createKeyv(getRedisConnectionUrl(configurationService))],
           ttl: configurationService.get('CACHE_TTL')
         };
       }

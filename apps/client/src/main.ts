@@ -1,5 +1,6 @@
 import { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
+import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 import { GfNotificationModule } from '@ghostfolio/ui/notifications';
 
@@ -22,7 +23,6 @@ import {
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { RouterModule, TitleStrategy } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
@@ -58,6 +58,8 @@ import { environment } from './environments/environment';
     enableProdMode();
   }
 
+  registerChartConfiguration();
+
   await bootstrapApplication(GfAppComponent, {
     providers: [
       authInterceptorProviders,
@@ -79,7 +81,6 @@ import { environment } from './environments/environment';
       ),
       LanguageService,
       ModulePreloadService,
-      provideAnimations(),
       provideHttpClient(withInterceptorsFromDi()),
       provideIonicAngular(),
       provideMarkdown(),

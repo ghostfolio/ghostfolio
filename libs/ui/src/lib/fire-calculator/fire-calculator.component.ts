@@ -3,7 +3,7 @@ import {
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
-import { getLocale } from '@ghostfolio/common/helper';
+import { formatMonthAndYear, getLocale } from '@ghostfolio/common/helper';
 import { FireCalculationCompleteEvent } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
@@ -34,6 +34,7 @@ import {
 } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { IonIcon } from '@ionic/angular/standalone';
 import {
   BarController,
   BarElement,
@@ -56,6 +57,8 @@ import {
   startOfMonth,
   sub
 } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline } from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { debounceTime } from 'rxjs';
@@ -67,6 +70,7 @@ import { FireCalculatorService } from './fire-calculator.service';
   imports: [
     CommonModule,
     FormsModule,
+    IonIcon,
     MatButtonModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -136,6 +140,8 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       Tooltip
     );
 
+    addIcons({ calendarClearOutline });
+
     this.calculatorForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -200,6 +206,19 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
           this.retirementDateChanged.emit(retirementDate);
         }
       });
+  }
+
+  protected get retirementDateLabel(): string {
+    const retirementDate = this.calculatorForm.get('retirementDate')?.value;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    return formatMonthAndYear({
+      date: retirementDate,
+      locale: this.locale
+    });
   }
 
   public ngOnChanges() {

@@ -6,6 +6,7 @@ import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
+  ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
@@ -21,6 +22,7 @@ import { UserAccountRegistrationDialogParams } from './user-account-registration
 import { GfUserAccountRegistrationDialogComponent } from './user-account-registration-dialog/user-account-registration-dialog.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,6 +1,5 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { StatisticsGatheringService } from '@ghostfolio/api/services/queues/statistics-gathering/statistics-gathering.service';
@@ -24,7 +23,6 @@ export class CronService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly propertyService: PropertyService,
     private readonly statisticsGatheringService: StatisticsGatheringService,
     private readonly twitterBotService: TwitterBotService,
@@ -41,13 +39,9 @@ export class CronService {
   @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)
   public async runEveryHourAtRandomMinute() {
     if (await this.isDataGatheringEnabled()) {
-      await this.dataGatheringService.gather7Days();
+      await this.dataGatheringService.gatherHourlyMarketData();
+      await this.dataGatheringService.gatherRecentMarketData();
     }
-  }
-
-  @Cron(CronExpression.EVERY_12_HOURS)
-  public async runEveryTwelveHours() {
-    await this.exchangeRateDataService.loadCurrencies();
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_5PM)

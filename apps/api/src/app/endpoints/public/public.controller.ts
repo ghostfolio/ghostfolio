@@ -9,19 +9,23 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { getSum } from '@ghostfolio/common/helper';
-import { PublicPortfolioResponse } from '@ghostfolio/common/interfaces';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import {
+  AccessSettings,
+  PublicPortfolioResponse
+} from '@ghostfolio/common/interfaces';
 
 import {
   Controller,
   Get,
   HttpException,
-  Inject,
   Param,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { Type as ActivityType } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  Type as ActivityType
+} from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -33,7 +37,6 @@ export class PublicController {
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
 
@@ -43,7 +46,10 @@ export class PublicController {
   public async getPublicPortfolio(
     @Param('accessId') accessId: string
   ): Promise<PublicPortfolioResponse> {
-    const access = await this.accessService.access({ id: accessId });
+    const access = await this.accessService.access({
+      granteeUserId: null,
+      id: accessId
+    });
 
     if (!access) {
       throw new HttpException(
@@ -59,8 +65,10 @@ export class PublicController {
     });
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      hasDetails = user.subscription.type === SubscriptionType.Premium;
+      hasDetails = user?.subscription?.type === SubscriptionType.Premium;
     }
+
+    const { filters } = (access.settings ?? {}) as AccessSettings;
 
     const [
       { createdAt, holdings, markets },
@@ -69,6 +77,7 @@ export class PublicController {
       { performance: performanceYtd }
     ] = await Promise.all([
       this.portfolioService.getDetails({
+        filters,
         impersonationId: access.userId,
         userId: user.id,
         withMarkets: true
@@ -76,6 +85,7 @@ export class PublicController {
       ...['1d', 'max', 'ytd'].map((dateRange) => {
         return this.portfolioService.getPerformance({
           dateRange,
+          filters,
           impersonationId: undefined,
           userId: user.id
         });
@@ -83,11 +93,12 @@ export class PublicController {
     ]);
 
     const { activities } = await this.activitiesService.getActivities({
+      filters,
       sortColumn: 'date',
       sortDirection: 'desc',
       take: 10,
       types: [ActivityType.BUY, ActivityType.SELL],
-      userCurrency: user.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
+      userCurrency: user?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: user.id,
       withExcludedAccountsAndActivities: false
     });
@@ -99,22 +110,22 @@ export class PublicController {
       ? []
       : activities.map(
           ({
+            assetProfile,
             currency,
             date,
             fee,
             quantity,
-            SymbolProfile,
             type,
             unitPrice,
             value,
             valueInBaseCurrency
           }) => {
             return {
+              assetProfile,
               currency,
               date,
               fee,
               quantity,
-              SymbolProfile,
               type,
               unitPrice,
               value,
@@ -156,8 +167,7 @@ export class PublicController {
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
             assetProfile.currency,
-            this.request.user?.settings?.settings.baseCurrency ??
-              DEFAULT_CURRENCY
+            user?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
           )
         );
       })
@@ -167,19 +177,46 @@ export class PublicController {
       publicPortfolioResponse.holdings[symbol] = {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
-        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
-        assetProfile: hasDetails ? portfolioPosition.assetProfile : undefined,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        dataSource: portfolioPosition.dataSource,
+        assetProfile: {
+          ...portfolioPosition.assetProfile,
+          assetClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClass
+              : undefined,
+          assetClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? portfolioPosition.assetProfile.assetClassLabel
+              : undefined,
+          assetSubClass:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClass
+              : undefined,
+          assetSubClassLabel:
+            hasDetails ||
+            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? portfolioPosition.assetProfile.assetSubClassLabel
+              : undefined,
+          holdings: portfolioPosition.assetProfile.holdings?.map(
+            ({ allocationInPercentage, name }) => {
+              return { allocationInPercentage, name };
+            }
+          ),
+          ...(hasDetails
+            ? {}
+            : {
+                countries: [],
+                currency: undefined,
+                holdings: [],
+                sectors: []
+              })
+        },
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
-        name: portfolioPosition.name,
         netPerformancePercentWithCurrencyEffect:
           portfolioPosition.netPerformancePercentWithCurrencyEffect,
-        sectors: hasDetails ? portfolioPosition.sectors : [],
-        symbol: portfolioPosition.symbol,
-        url: portfolioPosition.url,
         valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
       };
     }

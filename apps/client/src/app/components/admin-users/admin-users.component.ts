@@ -5,9 +5,11 @@ import {
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE, locale } from '@ghostfolio/common/config';
+import { DEFAULT_LOCALE, DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
+  canDeleteUser,
+  getCountryName,
   getDateFnsLocale,
   getDateFormatString,
   getEmojiFlag
@@ -26,6 +28,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -59,11 +62,14 @@ import {
   personOutline,
   trashOutline
 } from 'ionicons/icons';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { switchMap, tap } from 'rxjs/operators';
+import { interval } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     GfPremiumIndicatorComponent,
@@ -86,6 +92,8 @@ export class GfAdminUsersComponent implements OnInit {
   >();
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
+  protected readonly canDeleteUser = canDeleteUser;
+  protected readonly getCountryName = getCountryName;
   protected readonly getEmojiFlag = getEmojiFlag;
   protected hasPermissionForSubscription: boolean;
   protected hasPermissionToImpersonateAllUsers: boolean;
@@ -161,13 +169,17 @@ export class GfAdminUsersComponent implements OnInit {
               this.user.permissions,
               permissions.impersonateAllUsers
             );
+
+            this.changeDetectorRef.markForCheck();
           }
         }),
-        switchMap(() => this.route.paramMap)
+        switchMap(() => this.route.paramMap),
+        map((params) => {
+          return params.get('userId');
+        }),
+        distinctUntilChanged()
       )
-      .subscribe((params) => {
-        const userId = params.get('userId');
-
+      .subscribe((userId) => {
         if (userId) {
           this.openUserDetailDialog(userId);
         }
@@ -184,6 +196,17 @@ export class GfAdminUsersComponent implements OnInit {
 
   public ngOnInit() {
     this.fetchUsers();
+
+    interval(ms('30 seconds'))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.fetchUsers({
+          pageIndex: this.paginator().pageIndex,
+          showLoading: false
+        });
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   protected formatDistanceToNow(aDateString: string) {
@@ -195,7 +218,7 @@ export class GfAdminUsersComponent implements OnInit {
 
       return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
         60
-        ? 'just now'
+        ? $localize`just now`
         : distanceString;
     }
 
@@ -215,12 +238,17 @@ export class GfAdminUsersComponent implements OnInit {
           .deleteUser(aId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
-            this.router.navigate(['..'], { relativeTo: this.route });
+            this.router.navigate(this.routerLinkAdminControlUsers);
+
+            this.fetchUsers({
+              pageIndex: this.paginator().pageIndex,
+              showLoading: false
+            });
           });
       },
       confirmType: ConfirmationDialogType.Warn,
       discardFn: () => {
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.router.navigate(this.routerLinkAdminControlUsers);
       },
       title: $localize`Do you really want to delete this user?`
     });
@@ -262,13 +290,16 @@ export class GfAdminUsersComponent implements OnInit {
   }
 
   protected onOpenUserDetailDialog(userId: string) {
-    this.router.navigate(
-      internalRoutes.adminControl.subRoutes.users.routerLink.concat(userId)
-    );
+    this.router.navigate(this.routerLinkAdminControlUsers.concat(userId));
   }
 
-  private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
-    this.isLoading = true;
+  private fetchUsers({
+    pageIndex = 0,
+    showLoading = true
+  }: { pageIndex?: number; showLoading?: boolean } = {}) {
+    if (showLoading) {
+      this.isLoading = true;
+    }
 
     if (pageIndex === 0 && this.paginator()) {
       this.paginator().pageIndex = 0;
@@ -281,7 +312,7 @@ export class GfAdminUsersComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ count, users }) => {
-        this.dataSource = new MatTableDataSource(users);
+        this.dataSource.data = users;
         this.totalItems = count;
 
         this.isLoading = false;
@@ -301,7 +332,7 @@ export class GfAdminUsersComponent implements OnInit {
         currentUserId: this.user?.id,
         deviceType: this.deviceType(),
         hasPermissionForSubscription: this.hasPermissionForSubscription,
-        locale: this.user?.settings?.locale ?? locale,
+        locale: this.user?.settings?.locale ?? DEFAULT_LOCALE,
         userId: aUserId
       } satisfies UserDetailDialogParams,
       height: this.deviceType() === 'mobile' ? '98vh' : '60vh',
@@ -315,9 +346,7 @@ export class GfAdminUsersComponent implements OnInit {
         if (data?.action === 'delete' && data?.userId) {
           this.onDeleteUser(data.userId);
         } else {
-          this.router.navigate(
-            internalRoutes.adminControl.subRoutes.users.routerLink
-          );
+          this.router.navigate(this.routerLinkAdminControlUsers);
         }
       });
   }

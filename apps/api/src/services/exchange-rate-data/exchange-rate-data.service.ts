@@ -11,9 +11,11 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
+  getAssetProfileIdentifier,
   getYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
+import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -30,6 +32,8 @@ import { ExchangeRatesByCurrency } from './interfaces/exchange-rate-data.interfa
 
 @Injectable()
 export class ExchangeRateDataService {
+  private readonly logger = new Logger(ExchangeRateDataService.name);
+
   private currencies: string[] = [];
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
@@ -110,9 +114,8 @@ export class ExchangeRateDataService {
             previousExchangeRate;
 
           if (currency === DEFAULT_CURRENCY && isBefore(date, new Date())) {
-            Logger.error(
-              `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`,
-              'ExchangeRateDataService'
+            this.logger.error(
+              `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`
             );
           }
         } else {
@@ -161,7 +164,7 @@ export class ExchangeRateDataService {
   }
 
   public async loadCurrencies() {
-    const result = await this.dataProviderService.getHistorical(
+    const historicalData = await this.dataProviderService.getHistorical(
       this.currencyPairs,
       'day',
       getYesterday(),
@@ -175,11 +178,26 @@ export class ExchangeRateDataService {
       requestTimeout: ms('30 seconds')
     });
 
-    for (const symbol of Object.keys(quotes)) {
-      if (isNumber(quotes[symbol].marketPrice)) {
+    const result: {
+      [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    } = {};
+
+    for (const { dataSource, symbol } of this.currencyPairs) {
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource,
+        symbol
+      });
+
+      if (historicalData[assetProfileIdentifier]) {
+        result[symbol] = historicalData[assetProfileIdentifier];
+      }
+
+      const quote = quotes[assetProfileIdentifier];
+
+      if (isNumber(quote?.marketPrice)) {
         result[symbol] = {
           [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: quotes[symbol].marketPrice
+            marketPrice: quote.marketPrice
           }
         };
       }
@@ -253,9 +271,8 @@ export class ExchangeRateDataService {
     }
 
     // Fallback with error, if currencies are not available
-    Logger.error(
-      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
-      'ExchangeRateDataService'
+    this.logger.error(
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
     );
 
     return aValue;
@@ -341,12 +358,11 @@ export class ExchangeRateDataService {
       return factor * aValue;
     }
 
-    Logger.error(
+    this.logger.error(
       `No exchange rate has been found for ${aFromCurrency}${aToCurrency} at ${format(
         aDate,
         DATE_FORMAT
-      )}`,
-      'ExchangeRateDataService'
+      )}`
     );
 
     return undefined;
@@ -483,7 +499,7 @@ export class ExchangeRateDataService {
             errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
           }
 
-          Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
+          this.logger.error(`${errorMessage}.`);
         }
       }
     }

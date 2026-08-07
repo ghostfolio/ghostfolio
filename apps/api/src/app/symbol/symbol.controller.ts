@@ -14,6 +14,7 @@ import {
   HttpException,
   Inject,
   Param,
+  ParseIntPipe,
   Query,
   UseGuards,
   UseInterceptors
@@ -64,12 +65,14 @@ export class SymbolController {
    * Must be after /lookup
    */
   @Get(':dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getSymbolData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string,
-    @Query('includeHistoricalData') includeHistoricalData = 0
+    @Query('includeHistoricalData', new ParseIntPipe({ optional: true }))
+    includeHistoricalData = 0
   ): Promise<SymbolItem> {
     if (!DataSource[dataSource]) {
       throw new HttpException(

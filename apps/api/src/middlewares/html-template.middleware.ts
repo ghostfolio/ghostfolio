@@ -92,34 +92,50 @@ const locales = {
 
 @Injectable()
 export class HtmlTemplateMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(HtmlTemplateMiddleware.name);
+
   private indexHtmlMap: { [languageCode: string]: string } = {};
 
   public constructor(private readonly i18nService: I18nService) {
-    try {
-      this.indexHtmlMap = SUPPORTED_LANGUAGE_CODES.reduce(
-        (map, languageCode) => ({
-          ...map,
-          [languageCode]: readFileSync(
-            join(__dirname, '..', 'client', languageCode, 'index.html'),
-            'utf8'
-          )
-        }),
-        {}
-      );
-    } catch (error) {
-      Logger.error(
-        'Failed to initialize index HTML map',
-        error,
-        'HTMLTemplateMiddleware'
-      );
+    if (!environment.production) {
+      return;
     }
+
+    this.indexHtmlMap = SUPPORTED_LANGUAGE_CODES.reduce((map, languageCode) => {
+      const indexHtmlPath = join(
+        __dirname,
+        '..',
+        'client',
+        languageCode,
+        'index.html'
+      );
+
+      try {
+        // Restore the interpolation token which the template replaces with a
+        // static fallback title to avoid showing an unresolved template
+        // literal when served without interpolation (e.g. by the service worker)
+        map[languageCode] = readFileSync(indexHtmlPath, 'utf8').replace(
+          /<title>.*?<\/title>/,
+          '<title>${title}</title>'
+        );
+      } catch {
+        this.logger.warn(
+          `Skipping language '${languageCode}': ${indexHtmlPath} not found`
+        );
+      }
+
+      return map;
+    }, {});
   }
 
   public use(request: Request, response: Response, next: NextFunction) {
     const path = request.originalUrl.replace(/\/$/, '');
     let languageCode = path.substr(1, 2);
 
-    if (!SUPPORTED_LANGUAGE_CODES.includes(languageCode)) {
+    if (
+      !(SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(languageCode) ||
+      !this.indexHtmlMap[languageCode]
+    ) {
       languageCode = DEFAULT_LANGUAGE_CODE;
     }
 

@@ -1,5 +1,5 @@
+import { decodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { decodeDataSource } from '@ghostfolio/common/helper';
 
 import {
   CallHandler,

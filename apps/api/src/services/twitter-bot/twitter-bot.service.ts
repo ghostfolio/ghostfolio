@@ -1,10 +1,8 @@
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import {
-  ghostfolioFearAndGreedIndexDataSourceStocks,
-  ghostfolioFearAndGreedIndexSymbol
-} from '@ghostfolio/common/config';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
 import {
   resolveFearAndGreedIndex,
   resolveMarketCondition
@@ -12,15 +10,19 @@ import {
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
+import { round } from 'lodash';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
 export class TwitterBotService implements OnModuleInit {
+  private readonly logger = new Logger(TwitterBotService.name);
+
   private twitterClient: TwitterApiReadWrite;
 
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private readonly symbolService: SymbolService
   ) {}
 
@@ -46,8 +48,9 @@ export class TwitterBotService implements OnModuleInit {
     try {
       const symbolItem = await this.symbolService.get({
         dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSourceStocks,
-          symbol: ghostfolioFearAndGreedIndexSymbol
+          dataSource:
+            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
         }
       });
 
@@ -56,9 +59,9 @@ export class TwitterBotService implements OnModuleInit {
           symbolItem.marketPrice
         );
 
-        let status = `Current market mood is ${emoji} ${text.toLowerCase()} (${
+        let status = `Current market mood is ${emoji} ${text.toLowerCase()} (${round(
           symbolItem.marketPrice
-        }/100)`;
+        )}/100)`;
 
         const benchmarkListing = await this.getBenchmarkListing();
 
@@ -71,13 +74,12 @@ export class TwitterBotService implements OnModuleInit {
         const { data: createdTweet } =
           await this.twitterClient.v2.tweet(status);
 
-        Logger.log(
-          `Fear & Greed Index has been posted: https://x.com/ghostfolio_/status/${createdTweet.id}`,
-          'TwitterBotService'
+        this.logger.log(
+          `Fear & Greed Index has been posted: https://x.com/ghostfolio_/status/${createdTweet.id}`
         );
       }
     } catch (error) {
-      Logger.error(error, 'TwitterBotService');
+      this.logger.error(error);
     }
   }
 
@@ -88,16 +90,16 @@ export class TwitterBotService implements OnModuleInit {
     });
 
     return benchmarks
-      .map(({ marketCondition, name, performances }) => {
-        let changeFormAllTimeHigh = (
-          performances.allTimeHigh.performancePercent * 100
-        ).toFixed(1);
+      .map(({ name, performances }) => {
+        const performancePercent = round(
+          performances.allTimeHigh.performancePercent,
+          3
+        );
 
-        if (Math.abs(parseFloat(changeFormAllTimeHigh)) === 0) {
-          changeFormAllTimeHigh = '0.0';
-        }
+        const marketCondition =
+          this.benchmarkService.getMarketCondition(performancePercent);
 
-        return `${name} ${changeFormAllTimeHigh}%${
+        return `${name} ${(performancePercent * 100).toFixed(1)}%${
           marketCondition !== 'NEUTRAL_MARKET'
             ? ' ' + resolveMarketCondition(marketCondition).emoji
             : ''

@@ -111,6 +111,15 @@
                     >Italiano (<ng-container i18n>Community</ng-container
                     >)</mat-option
                   >
+                  <!--
+                    @if (user?.settings?.isExperimentalFeatures) {
+                      <mat-option value="ja"
+                        >Japanese / 日本語 (<ng-container i18n
+                          >Community</ng-container
+                        >)</mat-option
+                      >
+                    }
+                  -->
                   @if (user?.settings?.isExperimentalFeatures) {
                     <mat-option value="ko"
                       >Korean / 한국어 (<ng-container i18n
@@ -145,7 +154,7 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="align-items-center d-flex mb-2">
+          <div class="align-items-center d-flex mb-4">
             <div class="pr-1 w-50">
               <div i18n>Locale</div>
               <div class="hint-text text-muted">
@@ -153,7 +162,10 @@
               </div>
             </div>
             <div class="pl-1 w-50">
-              <mat-form-field appearance="outline" class="w-100 without-hint">
+              <mat-form-field
+                appearance="outline"
+                class="w-100 with-value-hint"
+              >
                 <mat-select
                   name="locale"
                   [disabled]="!hasPermissionToUpdateUserSettings"
@@ -167,6 +179,23 @@
                     <mat-option [value]="locale">{{ locale }}</mat-option>
                   }
                 </mat-select>
+                <mat-hint class="d-flex mt-2 text-muted">
+                  <gf-value
+                    [deviceType]="deviceType()"
+                    [isDate]="true"
+                    [isLoading]="isLoading"
+                    [locale]="user.settings.locale"
+                    [value]="previewDate"
+                  />
+                  <span class="mx-1">·</span>
+                  <gf-value
+                    [isCurrency]="true"
+                    [isLoading]="isLoading"
+                    [locale]="user.settings.locale"
+                    [unit]="user.settings.baseCurrency"
+                    [value]="previewValue"
+                  />
+                </mat-hint>
               </mat-form-field>
             </div>
           </div>
@@ -268,69 +297,100 @@
         <div class="pr-1 w-50">
           Ghostfolio <ng-container i18n>User ID</ng-container>
         </div>
-        <div class="pl-1 text-monospace w-50">{{ user?.id }}</div>
+        <div class="pl-1 w-50">
+          <gf-value
+            class="text-monospace"
+            [enableCopyToClipboardButton]="true"
+            [isLoading]="isLoading"
+            [value]="user?.id"
+          />
+        </div>
       </div>
       <div class="align-items-center d-flex py-1">
         <div class="pr-1 w-50"></div>
         <div class="pl-1 text-monospace w-50">
-          <button color="primary" mat-flat-button (click)="onExport()">
-            <span i18n>Export Data</span>
+          <button color="primary" i18n mat-flat-button (click)="onExport()">
+            Export Data
           </button>
         </div>
       </div>
-      @if (hasPermissionToDeleteOwnUser) {
+      @if (
+        hasPermissionToDeleteOwnUser || hasPermissionToRequestOwnUserDeletion
+      ) {
         <hr class="mt-5" />
-        <form
-          class="w-100"
-          [formGroup]="deleteOwnUserForm"
-          (ngSubmit)="onCloseAccount()"
-        >
-          <div class="d-flex py-1">
-            <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
-            <div class="pl-1 w-50">
-              <mat-form-field
-                appearance="outline"
-                class="without-hint w-100"
-                [hideRequiredMarker]="true"
+        <div class="d-flex py-1">
+          <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
+          <div class="pl-1 w-50">
+            @if (hasPermissionToDeleteOwnUser) {
+              <form
+                class="w-100"
+                [formGroup]="deleteOwnUserForm"
+                (ngSubmit)="onCloseAccount()"
               >
-                <mat-label i18n>Security Token</mat-label>
-                <input
-                  formControlName="accessToken"
-                  matInput
-                  placeholder="Security Token"
-                  [type]="isAccessTokenHidden ? 'password' : 'text'"
-                />
-                <button
-                  class="mx-2"
-                  mat-icon-button
-                  matSuffix
-                  title="Toggle Security Token Visibility"
-                  type="button"
-                  (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                <mat-form-field
+                  appearance="outline"
+                  class="without-hint w-100"
+                  [hideRequiredMarker]="true"
                 >
-
-                  <ion-icon
-                    class="mat-icon"
-                    [name]="
-                      isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
-                    "
+                  <mat-label i18n>Security Token</mat-label>
+                  <input
+                    formControlName="accessToken"
+                    matInput
+                    placeholder="Security Token"
+                    [type]="isAccessTokenHidden ? 'password' : 'text'"
                   />
+                  <button
+                    class="mx-2"
+                    mat-icon-button
+                    matSuffix
+                    title="Toggle Security Token Visibility"
+                    type="button"
+                    (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                  >
+                    <ion-icon
+                      class="mat-icon"
+                      [name]="
+                        isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
+                      "
+                    />
+                  </button>
+                </mat-form-field>
+
+                <button
+                  class="mt-2"
+                  color="warn"
+                  i18n
+                  mat-flat-button
+                  type="submit"
+                  [disabled]="
+                    !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
+                  "
+                >
+                  Close Account
                 </button>
-              </mat-form-field>
-              <button
-                class="mt-2"
-                color="warn"
-                mat-flat-button
-                type="submit"
-                [disabled]="
-                  !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
-                "
-              >
-                <span i18n>Close Account</span>
+              </form>
+            } @else if (
+              hasPermissionToRequestOwnUserDeletion &&
+              (user?.accounts?.length > 0 || user?.activitiesCount > 0)
+            ) {
+              <button color="warn" i18n mat-flat-button [disabled]="true">
+                Close Account
               </button>
-            </div>
+              <div class="hint-text mt-2 text-muted" i18n>
+                For security reasons, please delete all activities and accounts
+                first before your Ghostfolio account can be closed.
+              </div>
+            } @else if (hasPermissionToRequestOwnUserDeletion) {
+              <a
+                color="warn"
+                i18n
+                mat-flat-button
+                [href]="closeUserAccountMailHref"
+                >Close Account</a
+              >
+            }
           </div>
-        </form>
+        </div>
       }
     </div>
   </div>

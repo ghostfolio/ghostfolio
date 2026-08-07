@@ -1,32 +1,47 @@
-import { Job, JobOptions } from 'bull';
+import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
+import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
+
+import type { Job, JobId, JobOptions } from 'bull';
+import ms from 'ms';
 import { setTimeout } from 'timers/promises';
 
 import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 export const PortfolioSnapshotServiceMock = {
-  addJobToQueue({
+  addJobToQueue: ({
     opts
   }: {
     data: PortfolioSnapshotQueueJob;
     name: string;
     opts?: JobOptions;
-  }): Promise<Job<any>> {
-    const mockJob: Partial<Job<any>> = {
+  }): Promise<Job> => {
+    const mockJob: Partial<Job> = {
       finished: async () => {
         await setTimeout(100);
 
-        return Promise.resolve();
+        // Mimic the processor which caches the computed portfolio snapshot
+        // under the job id
+        await RedisCacheServiceMock.set(
+          opts?.jobId as string,
+          JSON.stringify({
+            expiration: Date.now() + ms('1 minute'),
+            portfolioSnapshot: {}
+          } as unknown as PortfolioSnapshotValue)
+        );
       }
     };
 
-    this.jobsStore.set(opts?.jobId, mockJob);
+    PortfolioSnapshotServiceMock.jobsStore.set(opts?.jobId, mockJob);
 
-    return Promise.resolve(mockJob as Job<any>);
+    return Promise.resolve(mockJob as Job);
   },
-  getJob(jobId: string): Promise<Job<any>> {
-    const job = this.jobsStore.get(jobId);
+  getJob: (jobId: JobId): Promise<Job> => {
+    const job = PortfolioSnapshotServiceMock.jobsStore.get(jobId);
 
-    return Promise.resolve(job as Job<any>);
+    return Promise.resolve(job as Job);
   },
-  jobsStore: new Map<string, Partial<Job<any>>>()
+  jobsStore: new Map<JobId, Partial<Job>>(),
+  reset: () => {
+    PortfolioSnapshotServiceMock.jobsStore.clear();
+  }
 };

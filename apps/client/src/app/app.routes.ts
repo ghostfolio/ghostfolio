@@ -128,8 +128,7 @@ export const routes: Routes = [
       import('./pages/webauthn/webauthn-page.component').then(
         (c) => c.GfWebauthnPageComponent
       ),
-    path: internalRoutes.webauthn.path,
-    title: internalRoutes.webauthn.title
+    path: internalRoutes.webauthn.path
   },
   {
     path: internalRoutes.zen.path,

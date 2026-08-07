@@ -51,13 +51,13 @@ export class CurrentRateService {
     const values: GetValueObject[] = [];
 
     if (includesToday) {
-      const quotesBySymbol = await this.dataProviderService.getQuotes({
+      const quotes = await this.dataProviderService.getQuotes({
         items: dataGatheringItems,
         user: this.request?.user
       });
 
       for (const { dataSource, symbol } of dataGatheringItems) {
-        const quote = quotesBySymbol[symbol];
+        const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
 
         if (quote?.dataProviderInfo) {
           dataProviderInfos.push(quote.dataProviderInfo);

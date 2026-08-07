@@ -30,28 +30,31 @@
 
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Retirement Date</mat-label>
-          <div>
-            {{
-              calculatorForm.get('retirementDate')?.value | date: 'MMMM yyyy'
-            }}
-          </div>
+          <div>{{ retirementDateLabel }}</div>
           <input
             class="d-none"
             formControlName="retirementDate"
             matInput
-            [matDatepicker]="datepicker"
+            [matDatepicker]="date"
             [min]="minDate"
           />
           <mat-datepicker-toggle
-            matIconSuffix
+            class="mr-2"
+            matSuffix
             [disabled]="hasPermissionToUpdateUserSettings !== true"
-            [for]="datepicker"
-          />
+            [for]="date"
+          >
+            <ion-icon
+              class="text-muted"
+              matDatepickerToggleIcon
+              name="calendar-clear-outline"
+            />
+          </mat-datepicker-toggle>
           <mat-datepicker
-            #datepicker
+            #date
             startView="multi-year"
             [disabled]="hasPermissionToUpdateUserSettings !== true"
-            (monthSelected)="setMonthAndYear($event, datepicker)"
+            (monthSelected)="setMonthAndYear($event, date)"
           />
         </mat-form-field>
 
@@ -81,7 +84,7 @@
         <canvas
           #chartCanvas
           class="h-100"
-          [ngStyle]="{ display: isLoading ? 'none' : 'block' }"
+          [style.display]="isLoading ? 'none' : 'block'"
         ></canvas>
       </div>
     </div>

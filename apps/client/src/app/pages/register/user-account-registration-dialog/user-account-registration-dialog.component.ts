@@ -9,8 +9,8 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  Inject,
-  ViewChild
+  inject,
+  viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -53,26 +53,28 @@ import { UserAccountRegistrationDialogParams } from './interfaces/interfaces';
   templateUrl: 'user-account-registration-dialog.html'
 })
 export class GfUserAccountRegistrationDialogComponent {
-  @ViewChild(MatStepper) stepper!: MatStepper;
+  protected readonly stepper = viewChild.required(MatStepper);
 
-  public accessToken: string;
-  public authToken: string;
-  public isCreateAccountButtonDisabled = true;
-  public isDisclaimerChecked = false;
-  public role: string;
-  public routerLinkAboutTermsOfService =
+  protected accessToken: string | undefined;
+  protected authToken: string;
+  protected isCreateAccountButtonDisabled = true;
+  protected isDisclaimerChecked = false;
+  protected role: string;
+  protected readonly routerLinkAboutTermsOfService =
     publicRoutes.about.subRoutes.termsOfService.routerLink;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: UserAccountRegistrationDialogParams,
-    private dataService: DataService,
-    private destroyRef: DestroyRef
-  ) {
+  protected readonly data =
+    inject<UserAccountRegistrationDialogParams>(MAT_DIALOG_DATA);
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  public constructor() {
     addIcons({ arrowForwardOutline, checkmarkOutline, copyOutline });
   }
 
-  public createAccount() {
+  protected createAccount() {
     this.dataService
       .postUser()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -81,17 +83,17 @@ export class GfUserAccountRegistrationDialogComponent {
         this.authToken = authToken;
         this.role = role;
 
-        this.stepper.next();
+        this.stepper().next();
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
-  public enableCreateAccountButton() {
+  protected enableCreateAccountButton() {
     this.isCreateAccountButtonDisabled = false;
   }
 
-  public onChangeDislaimerChecked() {
+  protected onChangeDislaimerChecked() {
     this.isDisclaimerChecked = !this.isDisclaimerChecked;
   }
 }

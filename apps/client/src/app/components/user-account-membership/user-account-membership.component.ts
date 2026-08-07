@@ -1,9 +1,9 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { E_MAIL_LINE_BREAK } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -14,7 +14,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DestroyRef
+  DestroyRef,
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import ms, { StringValue } from 'ms';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,29 +41,34 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './user-account-membership.html'
 })
 export class GfUserAccountMembershipComponent {
-  public baseCurrency: string;
-  public coupon: number;
-  public couponId: string;
-  public defaultDateFormat: string;
-  public durationExtension: StringValue;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToCreateApiKey: boolean;
-  public hasPermissionToUpdateUserSettings: boolean;
-  public price: number;
-  public priceId: string;
-  public routerLinkPricing = publicRoutes.pricing.routerLink;
-  public trySubscriptionMail =
-    'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
-  public user: User;
+  protected readonly baseCurrency: string;
+  protected coupon: number | undefined;
+  protected defaultDateFormat: string;
+  protected durationExtension: StringValue | undefined;
+  protected readonly hasPermissionForSubscription: boolean;
+  protected hasPermissionToCreateApiKey: boolean;
+  protected hasPermissionToUpdateUserSettings: boolean;
+  protected price: number;
+  protected readonly trySubscriptionMailHref = `mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=${[
+    'Hello',
+    '',
+    'I am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?',
+    '',
+    'Kind regards'
+  ].join(E_MAIL_LINE_BREAK)}`;
+  protected user: User;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private notificationService: NotificationService,
-    private snackBar: MatSnackBar,
-    private userService: UserService
-  ) {
+  private couponId: string | undefined;
+  private priceId: string;
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notificationService = inject(NotificationService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
     const { baseCurrency, globalPermissions } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
@@ -104,7 +110,7 @@ export class GfUserAccountMembershipComponent {
       });
   }
 
-  public onCheckout() {
+  protected onCheckout() {
     this.dataService
       .createStripeCheckoutSession({
         couponId: this.couponId,
@@ -125,7 +131,7 @@ export class GfUserAccountMembershipComponent {
       });
   }
 
-  public onGenerateApiKey() {
+  protected onGenerateApiKey() {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
@@ -146,11 +152,9 @@ export class GfUserAccountMembershipComponent {
           )
           .subscribe(({ apiKey }) => {
             this.notificationService.alert({
-              discardLabel: $localize`Okay`,
-              message:
-                $localize`Set this API key in your self-hosted environment:` +
-                '<br />' +
-                apiKey,
+              copyValue: apiKey,
+              discardLabel: $localize`Close`,
+              message: $localize`Set this API key in your self-hosted environment:`,
               title: $localize`Ghostfolio Premium Data Provider API Key`
             });
           });
@@ -160,7 +164,7 @@ export class GfUserAccountMembershipComponent {
     });
   }
 
-  public onRedeemCoupon() {
+  protected onRedeemCoupon() {
     this.notificationService.prompt({
       confirmFn: (value) => {
         const couponCode = value?.trim();
@@ -169,6 +173,9 @@ export class GfUserAccountMembershipComponent {
           this.dataService
             .redeemCoupon(couponCode)
             .pipe(
+              switchMap(() => {
+                return this.userService.get(true);
+              }),
               catchError(() => {
                 this.snackBar.open(
                   '😞 ' + $localize`Could not redeem coupon code`,
@@ -183,27 +190,13 @@ export class GfUserAccountMembershipComponent {
               takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
-              const snackBarRef = this.snackBar.open(
+              this.snackBar.open(
                 '✅ ' + $localize`Coupon code has been redeemed`,
-                $localize`Reload`,
+                undefined,
                 {
                   duration: ms('3 seconds')
                 }
               );
-
-              snackBarRef
-                .afterDismissed()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                  window.location.reload();
-                });
-
-              snackBarRef
-                .onAction()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                  window.location.reload();
-                });
             });
         }
       },

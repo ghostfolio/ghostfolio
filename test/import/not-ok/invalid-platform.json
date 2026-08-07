@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "date": "2023-02-05T00:00:00.000Z",
+    "version": "dev"
+  },
+  "accounts": [
+    {
+      "balances": [],
+      "currency": "USD",
+      "id": "e62be662-a2c8-4cff-8b79-dc0a46576659",
+      "name": "Lehman Brothers Account",
+      "platformId": "2807e8e7-3966-4ced-8d82-0fa2d9c97277"
+    }
+  ],
+  "platforms": [
+    {
+      "id": "2807e8e7-3966-4ced-8d82-0fa2d9c97277",
+      "name": "Lehman Brothers",
+      "url": "https://lehmanbrothers.com"
+    }
+  ],
+  "activities": [
+    {
+      "accountId": "e62be662-a2c8-4cff-8b79-dc0a46576659",
+      "fee": 19,
+      "quantity": 5,
+      "type": "BUY",
+      "unitPrice": 298.58,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2021-09-16T00:00:00.000Z",
+      "symbol": "MSFT"
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}

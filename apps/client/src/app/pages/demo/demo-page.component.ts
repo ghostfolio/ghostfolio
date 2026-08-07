@@ -3,13 +3,13 @@ import { InfoItem } from '@ghostfolio/common/interfaces';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   selector: 'gf-demo-page',
-  standalone: true,
   templateUrl: './demo-page.html'
 })
 export class GfDemoPageComponent {
@@ -25,7 +25,7 @@ export class GfDemoPageComponent {
   }
 
   public ngOnInit() {
-    const hasToken = this.tokenStorageService.getToken()?.length > 0;
+    const hasToken = !!this.tokenStorageService.getToken();
 
     if (hasToken) {
       this.notificationService.alert({

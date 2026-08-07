@@ -1,5 +1,4 @@
 import { LookupItem } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -42,6 +41,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  map,
   switchMap
 } from 'rxjs/operators';
 
@@ -58,7 +58,6 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   imports: [
     FormsModule,
     GfPremiumIndicatorComponent,
-    GfSymbolPipe,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
@@ -95,22 +94,22 @@ export class GfSymbolAutocompleteComponent
   private readonly input = viewChild.required(MatInput);
 
   public constructor(
-    public readonly _elementRef: ElementRef,
-    public readonly _focusMonitor: FocusMonitor,
+    public override readonly _elementRef: ElementRef<HTMLElement>,
+    public override readonly _focusMonitor: FocusMonitor,
     public readonly changeDetectorRef: ChangeDetectorRef,
     public readonly dataService: DataService,
-    public readonly ngControl: NgControl
+    public override readonly ngControl: NgControl
   ) {
     super(_elementRef, _focusMonitor, ngControl);
 
     this.controlType = 'symbol-autocomplete';
   }
 
-  public get empty() {
+  public override get empty() {
     return this.input().empty;
   }
 
-  public set value(value: LookupItem) {
+  public override set value(value: LookupItem) {
     this.control.setValue(value);
     super.value = value;
   }
@@ -130,6 +129,9 @@ export class GfSymbolAutocompleteComponent
 
     this.control.valueChanges
       .pipe(
+        map((query) => {
+          return isString(query) ? query.trim() : query;
+        }),
         filter((query) => {
           if (query?.length === 0) {
             this.showDefaultOptions();
@@ -139,13 +141,13 @@ export class GfSymbolAutocompleteComponent
 
           return isString(query);
         }),
+        debounceTime(400),
+        distinctUntilChanged(),
         tap(() => {
           this.isLoading = true;
 
           this.changeDetectorRef.markForCheck();
         }),
-        debounceTime(400),
-        distinctUntilChanged(),
         takeUntilDestroyed(this.destroyRef),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({
@@ -188,7 +190,7 @@ export class GfSymbolAutocompleteComponent
     });
   }
 
-  public ngDoCheck() {
+  public override ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
       this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);

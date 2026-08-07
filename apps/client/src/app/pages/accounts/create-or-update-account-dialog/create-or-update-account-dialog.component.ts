@@ -1,11 +1,22 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
+import { getStringOrNull } from '@ghostfolio/common/helper';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
+import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -16,7 +27,6 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -24,7 +34,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Platform } from '@prisma/client';
+import { Platform, Tag } from '@prisma/client';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -37,9 +47,9 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
     CommonModule,
     GfCurrencySelectorComponent,
     GfEntityLogoComponent,
+    GfTagsSelectorComponent,
     MatAutocompleteModule,
     MatButtonModule,
-    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -53,28 +63,89 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected accountForm: FormGroup;
   protected currencies: string[] = [];
   protected filteredPlatforms: Observable<Platform[]> | undefined;
+  protected hasPermissionToCreateOwnTag: boolean;
   protected platforms: Platform[] = [];
+  protected tagsAvailable: Tag[] = [];
 
   protected readonly data =
     inject<CreateOrUpdateAccountDialogParams>(MAT_DIALOG_DATA);
   private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateAccountDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly userService = inject(UserService);
+
+  protected get selectedPlatform() {
+    const platform = this.accountForm.get('platformId')?.value;
+
+    return typeof platform === 'string' ? undefined : (platform as Platform);
+  }
 
   public ngOnInit() {
     const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
+
+    this.hasPermissionToCreateOwnTag = hasPermission(
+      this.data.user?.permissions,
+      permissions.createOwnTag
+    );
+
+    this.tagsAvailable =
+      this.data.user?.tags?.map((tag) => {
+        return {
+          ...tag,
+          name: translate(tag.name)
+        };
+      }) ?? [];
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],
       balance: [this.data.account.balance, Validators.required],
       comment: [this.data.account.comment],
       currency: [this.data.account.currency, Validators.required],
-      isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
-      platformId: [null, this.autocompleteObjectValidator()]
+      platformId: [null, this.autocompleteObjectValidator()],
+      tags: [
+        this.data.account.tags?.map(({ id, name }) => {
+          return {
+            id,
+            name: translate(name)
+          };
+        })
+      ]
     });
+
+    this.accountForm
+      .get('tags')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((tags: Tag[]) => {
+        const newTag = tags.find(({ id }) => {
+          return id === undefined;
+        });
+
+        if (newTag && this.hasPermissionToCreateOwnTag) {
+          this.dataService
+            .postTag({ ...newTag, userId: this.data.user.id })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((tag) => {
+              this.accountForm.get('tags')?.setValue(
+                tags.map((currentTag) => {
+                  if (currentTag.id === undefined) {
+                    return tag;
+                  }
+
+                  return currentTag;
+                })
+              );
+
+              this.userService
+                .get(true)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe();
+            });
+        }
+      });
 
     this.dataService.fetchPlatforms().subscribe(({ platforms }) => {
       this.platforms = platforms;
@@ -127,12 +198,20 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.get('balance')?.value,
-      comment: this.accountForm.get('comment')?.value || null,
+      comment: getStringOrNull(this.accountForm.get('comment')?.value),
       currency: this.accountForm.get('currency')?.value,
       id: this.accountForm.get('accountId')?.value,
-      isExcluded: this.accountForm.get('isExcluded')?.value,
       name: this.accountForm.get('name')?.value,
-      platformId: this.accountForm.get('platformId')?.value?.id || null
+      platformId: this.accountForm.get('platformId')?.value?.id ?? null,
+      tags: this.accountForm
+        .get('tags')
+        ?.value?.filter(({ id }: Tag) => {
+          // Skip tags which have not been created yet
+          return !!id;
+        })
+        .map(({ id }: Tag) => {
+          return id;
+        })
     };
 
     try {

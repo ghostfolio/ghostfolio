@@ -58,23 +58,23 @@ export class UpdateUserSettingDto {
 
   @IsArray()
   @IsOptional()
-  'filters.accounts'?: string[];
+  'filters.accounts'?: string[] | null;
 
   @IsArray()
   @IsOptional()
-  'filters.assetClasses'?: string[];
+  'filters.assetClasses'?: string[] | null;
 
   @IsString()
   @IsOptional()
-  'filters.dataSource'?: string;
+  'filters.dataSource'?: string | null;
 
   @IsString()
   @IsOptional()
-  'filters.symbol'?: string;
+  'filters.symbol'?: string | null;
 
   @IsArray()
   @IsOptional()
-  'filters.tags'?: string[];
+  'filters.tags'?: string[] | null;
 
   @IsIn(['CHART', 'TABLE'] as HoldingsViewMode[])
   @IsOptional()

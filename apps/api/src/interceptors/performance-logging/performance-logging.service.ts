@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class PerformanceLoggingService {
+  private readonly logger = new Logger();
+
   public logPerformance({
     className,
     methodName,
@@ -13,7 +15,7 @@ export class PerformanceLoggingService {
   }) {
     const endTime = performance.now();
 
-    Logger.debug(
+    this.logger.debug(
       `Completed execution of ${methodName}() in ${((endTime - startTime) / 1000).toFixed(3)} seconds`,
       className
     );

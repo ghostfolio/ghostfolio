@@ -7,6 +7,8 @@ import { join } from 'node:path';
 
 @Injectable()
 export class I18nService implements OnModuleInit {
+  private readonly logger = new Logger(I18nService.name);
+
   private localesPath = join(__dirname, 'assets', 'locales');
   private translations: { [locale: string]: cheerio.CheerioAPI } = {};
 
@@ -26,7 +28,7 @@ export class I18nService implements OnModuleInit {
     const $ = this.translations[languageCode];
 
     if (!$) {
-      Logger.warn(`Translation not found for locale '${languageCode}'`);
+      this.logger.warn(`Translation not found for locale '${languageCode}'`);
     }
 
     let translatedText = $(
@@ -36,7 +38,7 @@ export class I18nService implements OnModuleInit {
     ).text();
 
     if (!translatedText) {
-      Logger.warn(
+      this.logger.warn(
         `Translation not found for id '${id}' in locale '${languageCode}'`
       );
     }
@@ -60,7 +62,7 @@ export class I18nService implements OnModuleInit {
           this.parseXml(xmlData);
       }
     } catch (error) {
-      Logger.error(error, 'I18nService');
+      this.logger.error(error);
     }
   }
 

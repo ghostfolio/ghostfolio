@@ -33,7 +33,7 @@
         mat-cell
       >
         <div class="d-flex justify-content-center">
-          @if (element.isExcluded) {
+          @if (isExcluded(element)) {
             <ion-icon name="eye-off-outline" />
           }
         </div>
@@ -49,14 +49,13 @@
       <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
-        @if (element.platform?.url) {
-          <gf-entity-logo
-            class="d-inline d-sm-none mr-1"
-            [tooltip]="element.platform?.name"
-            [url]="element.platform.url"
-          />
-        }
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+        <gf-entity-logo
+          class="d-inline d-sm-none mr-1"
+          [hasPlaceholder]="true"
+          [tooltip]="element.platform?.name"
+          [url]="element.platform?.url"
+        />
         <span>{{ element.name }}</span>
       </td>
       <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
@@ -98,13 +97,12 @@
         mat-cell
       >
         <div class="d-flex">
-          @if (element.platform?.url) {
-            <gf-entity-logo
-              class="mr-1"
-              [tooltip]="element.platform?.name"
-              [url]="element.platform.url"
-            />
-          }
+          <gf-entity-logo
+            class="mr-1"
+            [hasPlaceholder]="true"
+            [tooltip]="element.platform?.name"
+            [url]="element.platform?.url"
+          />
           <span>{{ element.platform?.name }}</span>
         </div>
       </td>
@@ -281,6 +279,7 @@
         @if (element.comment) {
           <button
             class="mx-1 no-min-width px-2"
+            i18n-title
             mat-button
             title="Note"
             (click)="onOpenComment(element.comment); $event.stopPropagation()"

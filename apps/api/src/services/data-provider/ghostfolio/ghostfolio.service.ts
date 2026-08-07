@@ -5,9 +5,11 @@ import {
   GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
+  GetMarketDataOfMarketsParams,
   GetQuotesParams,
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   HEADER_KEY_TOKEN,
@@ -22,7 +24,9 @@ import {
   DividendsResponse,
   HistoricalResponse,
   LookupResponse,
-  QuotesResponse
+  MarketDataOfMarketsResponse,
+  QuotesResponse,
+  SymbolItem
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -32,12 +36,15 @@ import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class GhostfolioService implements DataProviderInterface {
+  private readonly logger = new Logger(GhostfolioService.name);
+
   private readonly URL = environment.production
     ? 'https://ghostfol.io/api'
     : `${this.configurationService.get('ROOT_URL')}/api`;
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService,
     private readonly propertyService: PropertyService
   ) {}
 
@@ -52,7 +59,7 @@ export class GhostfolioService implements DataProviderInterface {
     let assetProfile: DataProviderGhostfolioAssetProfileResponse;
 
     try {
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
         {
           headers: await this.getRequestHeaders(),
@@ -87,7 +94,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return assetProfile;
@@ -122,7 +129,7 @@ export class GhostfolioService implements DataProviderInterface {
         to: format(to, DATE_FORMAT)
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
@@ -152,7 +159,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return dividends;
@@ -165,7 +172,7 @@ export class GhostfolioService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const queryParams = new URLSearchParams({
@@ -174,7 +181,7 @@ export class GhostfolioService implements DataProviderInterface {
         to: format(to, DATE_FORMAT)
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
@@ -191,9 +198,7 @@ export class GhostfolioService implements DataProviderInterface {
 
       const { historicalData } = (await response.json()) as HistoricalResponse;
 
-      return {
-        [symbol]: historicalData
-      };
+      return historicalData;
     } catch (error) {
       if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
         error.name = 'RequestError';
@@ -209,7 +214,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(error.message, 'GhostfolioService');
+      this.logger.error(error.message);
 
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
@@ -218,6 +223,63 @@ export class GhostfolioService implements DataProviderInterface {
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
     }
+  }
+
+  public async getMarketDataOfMarkets({
+    includeHistoricalData = 0,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
+  }: GetMarketDataOfMarketsParams): Promise<MarketDataOfMarketsResponse> {
+    let marketDataOfMarkets: MarketDataOfMarketsResponse = {
+      fearAndGreedIndex: {
+        CRYPTOCURRENCIES: {} as SymbolItem,
+        STOCKS: {} as SymbolItem
+      }
+    };
+
+    try {
+      const queryParams = new URLSearchParams({
+        includeHistoricalData: includeHistoricalData.toString()
+      });
+
+      const response = await this.fetchService.fetch(
+        `${this.URL}/v1/data-providers/ghostfolio/markets?${queryParams.toString()}`,
+        {
+          headers: await this.getRequestHeaders(),
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      );
+
+      if (!response.ok) {
+        throw new Response(await response.text(), {
+          status: response.status,
+          statusText: response.statusText
+        });
+      }
+
+      marketDataOfMarkets =
+        (await response.json()) as MarketDataOfMarketsResponse;
+    } catch (error) {
+      let message = error;
+
+      if (['AbortError', 'TimeoutError'].includes(error?.name)) {
+        message = `RequestError: The operation to get the market data of markets was aborted because the request to the data provider took more than ${(
+          requestTimeout / 1000
+        ).toFixed(3)} seconds`;
+      } else if (error?.status === StatusCodes.TOO_MANY_REQUESTS) {
+        message = 'RequestError: The daily request limit has been exceeded';
+      } else if (
+        [StatusCodes.FORBIDDEN, StatusCodes.UNAUTHORIZED].includes(
+          error?.status
+        )
+      ) {
+        message =
+          'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+      }
+
+      this.logger.error(message);
+    }
+
+    return marketDataOfMarkets;
   }
 
   public getMaxNumberOfSymbolsPerRequest() {
@@ -245,7 +307,7 @@ export class GhostfolioService implements DataProviderInterface {
         symbols: symbols.join(',')
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/quotes?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
@@ -281,7 +343,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return quotes;
@@ -302,7 +364,7 @@ export class GhostfolioService implements DataProviderInterface {
         query
       });
 
-      const response = await fetch(
+      const response = await this.fetchService.fetch(
         `${this.URL}/v2/data-providers/ghostfolio/lookup?${queryParams.toString()}`,
         {
           headers: await this.getRequestHeaders(),
@@ -336,7 +398,7 @@ export class GhostfolioService implements DataProviderInterface {
           'RequestError: The API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
-      Logger.error(message, 'GhostfolioService');
+      this.logger.error(message);
     }
 
     return searchResult;

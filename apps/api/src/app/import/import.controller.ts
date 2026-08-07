@@ -31,6 +31,8 @@ import { ImportService } from './import.service';
 
 @Controller('import')
 export class ImportController {
+  private readonly logger = new Logger(ImportController.name);
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
@@ -63,7 +65,7 @@ export class ImportController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Premium
+      this.request.user.subscription?.type === SubscriptionType.Premium
     ) {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }
@@ -75,13 +77,14 @@ export class ImportController {
         accountsWithBalancesDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
         assetProfilesWithMarketDataDto: importData.assetProfiles ?? [],
+        platformsDto: importData.platforms ?? [],
         tagsDto: importData.tags ?? [],
         user: this.request.user
       });
 
       return { activities };
     } catch (error) {
-      Logger.error(error, ImportController);
+      this.logger.error(error);
 
       throw new HttpException(
         {
@@ -107,7 +110,7 @@ export class ImportController {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === SubscriptionType.Premium
+      this.request.user.subscription?.type === SubscriptionType.Premium
     ) {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }

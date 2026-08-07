@@ -1,6 +1,7 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { formatMonthAndYear } from '@ghostfolio/common/helper';
 import {
   FireCalculationCompleteEvent,
   FireWealth,
@@ -12,8 +13,9 @@ import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { CommonModule, NgStyle } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -29,13 +31,13 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     FormsModule,
     GfFireCalculatorComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
-    NgStyle,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule
   ],
@@ -76,6 +78,20 @@ export class GfFirePageComponent implements OnInit {
   );
   private readonly userService = inject(UserService);
 
+  protected get retirementDateLabel(): string {
+    const retirementDate =
+      this.user?.settings?.retirementDate ?? this.retirementDate;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    return formatMonthAndYear({
+      date: new Date(retirementDate),
+      locale: this.user?.settings?.locale
+    });
+  }
+
   public ngOnInit() {
     this.isLoading = true;
 
@@ -90,6 +106,7 @@ export class GfFirePageComponent implements OnInit {
               : 0
           }
         };
+
         if (this.user.subscription?.type === SubscriptionType.Basic) {
           this.fireWealth = {
             today: {
@@ -108,6 +125,8 @@ export class GfFirePageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.safeWithdrawalRateControl.valueChanges
@@ -136,9 +155,9 @@ export class GfFirePageComponent implements OnInit {
           );
 
           this.calculateWithdrawalRates();
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 

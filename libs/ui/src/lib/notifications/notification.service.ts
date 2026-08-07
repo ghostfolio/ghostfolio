@@ -31,6 +31,7 @@ export class NotificationService {
     });
 
     dialog.componentInstance.initialize({
+      copyValue: aParams.copyValue,
       discardLabel: aParams.discardLabel,
       message: aParams.message,
       title: aParams.title

@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { parseSymbol } from '@ghostfolio/common/helper';
 
 import { Injectable } from '@nestjs/common';
@@ -10,7 +11,8 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://api.openfigi.com';
 
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly fetchService: FetchService
   ) {}
 
   public async enhance({
@@ -42,9 +44,8 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
         this.configurationService.get('API_KEY_OPEN_FIGI');
     }
 
-    const mappings = (await fetch(
-      `${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`,
-      {
+    const mappings = (await this.fetchService
+      .fetch(`${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`, {
         body: JSON.stringify([
           { exchCode: exchange, idType: 'TICKER', idValue: ticker }
         ]),
@@ -54,8 +55,8 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
         },
         method: 'POST',
         signal: AbortSignal.timeout(requestTimeout)
-      }
-    ).then((res) => res.json())) as any[];
+      })
+      .then((res) => res.json())) as any[];
 
     if (mappings?.length === 1 && mappings[0].data?.length === 1) {
       const { compositeFIGI, figi, shareClassFIGI } = mappings[0].data[0];

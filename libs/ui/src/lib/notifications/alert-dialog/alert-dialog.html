@@ -2,10 +2,22 @@
   <div mat-dialog-title [innerHTML]="title"></div>
 }
 
-@if (message) {
-  <div mat-dialog-content [innerHTML]="message"></div>
+@if (message || copyValue) {
+  <div mat-dialog-content>
+    @if (message) {
+      <div [innerHTML]="message"></div>
+    }
+    @if (copyValue) {
+      <div class="mt-1">{{ copyValue }}</div>
+    }
+  </div>
 }
 
 <div align="end" mat-dialog-actions>
   <button mat-button (click)="dialogRef.close()">{{ discardLabel }}</button>
+  @if (copyValue) {
+    <button color="primary" mat-flat-button (click)="onCopyToClipboard()">
+      <ng-container i18n>Copy</ng-container>
+    </button>
+  }
 </div>

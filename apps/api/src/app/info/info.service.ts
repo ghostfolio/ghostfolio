@@ -3,10 +3,13 @@ import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscripti
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  ghostfolioFearAndGreedIndexSymbolStocks,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
   PROPERTY_DOCKER_HUB_PULLS,
@@ -14,15 +17,14 @@ import {
   PROPERTY_GITHUB_STARGAZERS,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
-  PROPERTY_UPTIME,
-  ghostfolioFearAndGreedIndexDataSourceStocks
+  PROPERTY_UPTIME
 } from '@ghostfolio/common/config';
-import { encodeDataSource } from '@ghostfolio/common/helper';
 import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { MarketData } from '@prisma/client';
 import { subDays } from 'date-fns';
 import { isNil } from 'lodash';
 
@@ -33,8 +35,10 @@ export class InfoService {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
+    private readonly marketDataService: MarketDataService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly subscriptionService: SubscriptionService,
@@ -44,6 +48,7 @@ export class InfoService {
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
     let isReadOnlyMode: boolean;
+    let latestFearAndGreedStocksMarketDataPromise: Promise<MarketData>;
 
     const globalPermissions: string[] = [];
 
@@ -60,14 +65,12 @@ export class InfoService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-        info.fearAndGreedDataSource = encodeDataSource(
-          ghostfolioFearAndGreedIndexDataSourceStocks
-        );
-      } else {
-        info.fearAndGreedDataSource =
-          ghostfolioFearAndGreedIndexDataSourceStocks;
-      }
+      latestFearAndGreedStocksMarketDataPromise =
+        this.marketDataService.getLatest({
+          dataSource:
+            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
+        });
 
       globalPermissions.push(permissions.enableFearAndGreedIndex);
     }
@@ -99,12 +102,14 @@ export class InfoService {
       benchmarks,
       demoAuthToken,
       isUserSignupEnabled,
+      latestFearAndGreedStocksMarketData,
       statistics,
       subscriptionOffer
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
       this.propertyService.isUserSignupEnabled(),
+      latestFearAndGreedStocksMarketDataPromise,
       this.getStatistics(),
       this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
@@ -122,7 +127,9 @@ export class InfoService {
       statistics,
       subscriptionOffer,
       baseCurrency: DEFAULT_CURRENCY,
-      currencies: this.exchangeRateDataService.getCurrencies()
+      currencies: this.exchangeRateDataService.getCurrencies(),
+      fearAndGreedStocksMarketPrice:
+        latestFearAndGreedStocksMarketData?.marketPrice
     };
   }
 

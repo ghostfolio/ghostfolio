@@ -1,6 +1,10 @@
 export interface AccountDetailDialogParams {
   accountId: string;
   deviceType: string;
-  hasImpersonationId: boolean;
   hasPermissionToCreateActivity: boolean;
+  impersonationId: string | null;
+}
+
+export interface AccountDetailDialogResult {
+  isNavigating?: boolean;
 }
