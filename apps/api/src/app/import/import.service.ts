@@ -411,6 +411,7 @@ export class ImportService {
         );
 
         const account = omit(accountWithBalances, [
+          'balance',
           'balances',
           'isExcluded',
           'tags'
@@ -464,11 +465,12 @@ export class ImportService {
           };
         }
 
-        const newAccount = await this.accountService.createAccount(
-          accountObject,
-          user.id,
-          tagIds
-        );
+        const newAccount = await this.accountService.createAccount({
+          tagIds,
+          balance: accountWithBalances.balance,
+          data: accountObject,
+          userId: user.id
+        });
 
         // Store the new to old account ID mappings for updating activities
         if (accountWithSameIdOfOtherUser && oldAccountId) {

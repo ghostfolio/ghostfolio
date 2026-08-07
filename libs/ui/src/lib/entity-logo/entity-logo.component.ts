@@ -18,18 +18,22 @@ import { DataSource } from '@prisma/client';
 })
 export class GfEntityLogoComponent implements OnChanges {
   @Input() dataSource: DataSource;
+  @Input() hasPlaceholder = false;
   @Input() size: 'large';
   @Input() symbol: string;
   @Input() tooltip: string;
   @Input() url: string;
 
-  public src: string;
+  public hasError = false;
+  public src?: string;
 
   public constructor(
     private readonly imageSourceService: EntityLogoImageSourceService
   ) {}
 
   public ngOnChanges() {
+    this.hasError = false;
+
     if (this.dataSource && this.symbol) {
       this.src = this.imageSourceService.getLogoUrlByAssetProfileIdentifier({
         dataSource: this.dataSource,
@@ -37,6 +41,12 @@ export class GfEntityLogoComponent implements OnChanges {
       });
     } else if (this.url) {
       this.src = this.imageSourceService.getLogoUrlByUrl(this.url);
+    } else {
+      this.src = undefined;
     }
+  }
+
+  public onError() {
+    this.hasError = true;
   }
 }

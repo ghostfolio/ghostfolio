@@ -14,7 +14,11 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  hasPermission,
+  hasReadRestrictedAccessPermission,
+  permissions
+} from '@ghostfolio/common/permissions';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
@@ -225,7 +229,10 @@ export class GfAccountDetailDialogComponent implements OnInit {
 
   protected showValuesInPercentage() {
     return (
-      this.data.hasImpersonationId || this.user?.settings?.isRestrictedView
+      hasReadRestrictedAccessPermission({
+        accesses: this.user?.access,
+        impersonationId: this.data.impersonationId
+      }) || this.user?.settings?.isRestrictedView
     );
   }
 

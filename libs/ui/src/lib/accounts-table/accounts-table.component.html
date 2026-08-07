@@ -50,13 +50,12 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        @if (element.platform?.url) {
-          <gf-entity-logo
-            class="d-inline d-sm-none mr-1"
-            [tooltip]="element.platform?.name"
-            [url]="element.platform.url"
-          />
-        }
+        <gf-entity-logo
+          class="d-inline d-sm-none mr-1"
+          [hasPlaceholder]="true"
+          [tooltip]="element.platform?.name"
+          [url]="element.platform?.url"
+        />
         <span>{{ element.name }}</span>
       </td>
       <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
@@ -98,13 +97,12 @@
         mat-cell
       >
         <div class="d-flex">
-          @if (element.platform?.url) {
-            <gf-entity-logo
-              class="mr-1"
-              [tooltip]="element.platform?.name"
-              [url]="element.platform.url"
-            />
-          }
+          <gf-entity-logo
+            class="mr-1"
+            [hasPlaceholder]="true"
+            [tooltip]="element.platform?.name"
+            [url]="element.platform?.url"
+          />
           <span>{{ element.platform?.name }}</span>
         </div>
       </td>

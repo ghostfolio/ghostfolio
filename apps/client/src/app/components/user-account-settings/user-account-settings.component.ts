@@ -22,6 +22,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   inject,
@@ -50,6 +51,7 @@ import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import ms from 'ms';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -108,10 +110,17 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'uk',
     'zh'
   ];
+  protected readonly previewDate = new Date().toISOString();
+  protected readonly previewValue = 9999.99;
   protected user: User;
+
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly notificationService = inject(NotificationService);
   private readonly settingsStorageService = inject(SettingsStorageService);

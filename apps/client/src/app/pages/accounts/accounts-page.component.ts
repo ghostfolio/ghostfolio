@@ -12,6 +12,7 @@ import {
 } from '@ghostfolio/common/dtos';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -29,7 +30,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Account as AccountModel, Tag } from '@prisma/client';
+import { Tag } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -48,11 +49,11 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   templateUrl: './accounts-page.html'
 })
 export class GfAccountsPageComponent implements OnInit {
-  protected accounts: AccountModel[];
+  protected accounts: AccountWithValue[];
   protected activitiesCount = 0;
-  protected hasImpersonationId: boolean;
   protected hasPermissionToCreateAccount: boolean;
   protected hasPermissionToUpdateAccount: boolean;
+  protected impersonationId: string | null;
   protected totalBalanceInBaseCurrency = 0;
   protected totalValueInBaseCurrency = 0;
   protected user: User;
@@ -103,12 +104,16 @@ export class GfAccountsPageComponent implements OnInit {
       });
   }
 
+  protected get hasImpersonationId() {
+    return !!this.impersonationId;
+  }
+
   public ngOnInit() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
       });
 
     this.userService.stateChanged
@@ -155,7 +160,7 @@ export class GfAccountsPageComponent implements OnInit {
     });
   }
 
-  protected onUpdateAccount(aAccount: AccountModel) {
+  protected onUpdateAccount(aAccount: AccountWithValue) {
     this.router.navigate([], {
       queryParams: { accountId: aAccount.id, editDialog: true }
     });
@@ -194,7 +199,7 @@ export class GfAccountsPageComponent implements OnInit {
     name,
     platformId,
     tags
-  }: AccountModel & { tags?: Tag[] }) {
+  }: AccountWithValue & { tags?: Tag[] }) {
     const dialogRef = this.dialog.open<
       GfCreateOrUpdateAccountDialogComponent,
       CreateOrUpdateAccountDialogParams
@@ -251,11 +256,11 @@ export class GfAccountsPageComponent implements OnInit {
       data: {
         accountId: aAccountId,
         deviceType: this.deviceType(),
-        hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
-          !this.user?.settings?.isRestrictedView
+          !this.user?.settings?.isRestrictedView,
+        impersonationId: this.impersonationId
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'

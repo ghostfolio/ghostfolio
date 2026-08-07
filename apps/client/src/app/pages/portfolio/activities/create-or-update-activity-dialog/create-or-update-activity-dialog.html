@@ -87,9 +87,10 @@
         <mat-select formControlName="accountId">
           <mat-select-trigger>
             <div class="d-flex">
-              @if (selectedAccount?.platform?.url) {
+              @if (selectedAccount) {
                 <gf-entity-logo
                   class="mr-1"
+                  [hasPlaceholder]="true"
                   [tooltip]="selectedAccount?.platform?.name"
                   [url]="selectedAccount?.platform?.url"
                 />
@@ -103,13 +104,12 @@
           @for (account of data.accounts; track account) {
             <mat-option [value]="account.id">
               <div class="d-flex">
-                @if (account.platform?.url) {
-                  <gf-entity-logo
-                    class="mr-1"
-                    [tooltip]="account.platform?.name"
-                    [url]="account.platform?.url"
-                  />
-                }
+                <gf-entity-logo
+                  class="mr-1"
+                  [hasPlaceholder]="true"
+                  [tooltip]="account.platform?.name"
+                  [url]="account.platform?.url"
+                />
                 <span>{{ account.name }}</span>
               </div>
             </mat-option>
