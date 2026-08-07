@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   extractNumberFromString,
+  getCountryCodeFromCurrency,
   getNumberFormatGroup,
   getStringOrNull,
   getStringOrUndefined,
@@ -74,6 +75,30 @@ describe('Helper', () => {
 
     it('Not a number', () => {
       expect(extractNumberFromString({ value: 'X' })).toEqual(NaN);
+    });
+  });
+
+  describe('Get country code from currency', () => {
+    it('ISO 4217 currency code', () => {
+      expect(getCountryCodeFromCurrency('CHF')).toEqual('CH');
+      expect(getCountryCodeFromCurrency('USD')).toEqual('US');
+    });
+
+    it('Currency of the European Union', () => {
+      expect(getCountryCodeFromCurrency('EUR')).toEqual('EU');
+    });
+
+    it('Derived currency', () => {
+      expect(getCountryCodeFromCurrency('GBp')).toEqual('GB');
+    });
+
+    it('Supranational currency', () => {
+      expect(getCountryCodeFromCurrency('XAU')).toEqual('');
+      expect(getCountryCodeFromCurrency('XOF')).toEqual('');
+    });
+
+    it('Empty currency', () => {
+      expect(getCountryCodeFromCurrency('')).toEqual('');
     });
   });
 
