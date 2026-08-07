@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the check for duplicates in the preview step of the activities import for activities without a comment
+- Fixed the holdings mock data in the _Storybook_ story of the portfolio filter form component
 
 ## 3.44.0 - 2026-08-07
 
