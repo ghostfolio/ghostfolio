@@ -1136,18 +1136,18 @@ export class PortfolioService {
         withSummary: true
       });
 
-    const hasOpenHoldings = Object.keys(holdings).length > 0;
-
-    const emergencyFundHoldingsValueInBaseCurrency =
-      this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings });
-
-    const emergencyFundInBaseCurrency = userSettings.emergencyFund ?? 0;
-
     const { balanceInBaseCurrency: cashBalanceInBaseCurrency } =
       await this.accountService.getCashDetails({
         userId,
         currency: this.getUserCurrency()
       });
+
+    const emergencyFundInBaseCurrency = userSettings.emergencyFund ?? 0;
+
+    const emergencyFundHoldingsValueInBaseCurrency =
+      this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings });
+
+    const hasOpenHoldings = Object.keys(holdings).length > 0;
 
     const marketsAdvancedTotalInBaseCurrency = getSum(
       Object.values(marketsAdvanced).map(({ valueInBaseCurrency }) => {
