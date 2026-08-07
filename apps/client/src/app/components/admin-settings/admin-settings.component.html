@@ -59,7 +59,11 @@
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
             <div class="d-flex align-items-center">
-              <gf-entity-logo class="mr-1" [url]="element.url" />
+              <gf-entity-logo
+                class="mr-1"
+                [hasPlaceholder]="true"
+                [url]="element.url"
+              />
               <div>
                 @if (isGhostfolioDataProvider(element)) {
                   <a

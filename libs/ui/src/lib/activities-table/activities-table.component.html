@@ -356,13 +356,12 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          @if (element.account?.platform?.url) {
-            <gf-entity-logo
-              class="mr-1"
-              [tooltip]="element.account?.platform?.name"
-              [url]="element.account?.platform?.url"
-            />
-          }
+          <gf-entity-logo
+            class="mr-1"
+            [hasPlaceholder]="true"
+            [tooltip]="element.account?.platform?.name"
+            [url]="element.account?.platform?.url"
+          />
           <span class="d-none d-lg-block text-nowrap">{{
             element.account?.name
           }}</span>
