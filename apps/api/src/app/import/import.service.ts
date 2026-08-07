@@ -40,6 +40,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { Account, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
+import { isISIN } from 'class-validator';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
@@ -237,6 +238,59 @@ export class ImportService {
         throw new Error(
           `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
         );
+      }
+    }
+
+    // Resolve the symbols with an ISIN to the symbol of the data provider
+    // before the asset profiles are created and the duplicates are detected
+    const assetProfileIdentifiersWithIsin: AssetProfileIdentifier[] = uniqBy(
+      [...(assetProfilesWithMarketDataDto ?? []), ...activitiesDto]
+        .filter(({ dataSource, symbol }) => {
+          return dataSource !== DataSource.MANUAL && isISIN(symbol);
+        })
+        .map(({ dataSource, symbol }) => {
+          return { dataSource, symbol };
+        }),
+      getAssetProfileIdentifier
+    );
+
+    const resolvedAssetProfileIdentifiers = await Promise.all(
+      assetProfileIdentifiersWithIsin.map(async ({ dataSource, symbol }) => {
+        try {
+          const assetProfile = await this.dataProviderService
+            .getDataProvider(dataSource)
+            .getAssetProfile({ symbol });
+
+          return { dataSource, symbol, resolvedSymbol: assetProfile?.symbol };
+        } catch {
+          return { dataSource, symbol, resolvedSymbol: undefined };
+        }
+      })
+    );
+
+    for (const {
+      dataSource,
+      resolvedSymbol,
+      symbol
+    } of resolvedAssetProfileIdentifiers) {
+      if (!resolvedSymbol || resolvedSymbol === symbol) {
+        continue;
+      }
+
+      for (const activity of activitiesDto) {
+        if (activity.dataSource === dataSource && activity.symbol === symbol) {
+          activity.symbol = resolvedSymbol;
+        }
+      }
+
+      for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto ??
+        []) {
+        if (
+          assetProfileWithMarketData.dataSource === dataSource &&
+          assetProfileWithMarketData.symbol === symbol
+        ) {
+          assetProfileWithMarketData.symbol = resolvedSymbol;
+        }
       }
     }
 
