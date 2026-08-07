@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the country flag to the currency selector
+- Added a _Storybook_ story for the currency selector component
 - Extended the entity logo component by a `hasPlaceholder` attribute to reserve the space of a missing logo
 
 ### Changed
