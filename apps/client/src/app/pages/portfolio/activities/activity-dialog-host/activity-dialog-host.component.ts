@@ -156,8 +156,6 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
   }
 
   private isReadOnlyMode(user: User) {
-    // Mirrors the conditions under which the activities page offers the
-    // creation and the modification of an activity
     return (
       !!this.impersonationStorageService.getId() ||
       !!user?.settings?.isRestrictedView
