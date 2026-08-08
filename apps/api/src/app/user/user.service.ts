@@ -35,6 +35,7 @@ import {
   PROPERTY_MAX_DAILY_REQUESTS,
   PROPERTY_REFERRAL_PARTNERS,
   PROPERTY_SYSTEM_MESSAGE,
+  TAG_ID_DRAFT,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   THROTTLE_DAILY_KEY,
   THROTTLE_DAILY_TTL
@@ -195,7 +196,7 @@ export class UserService {
       subscription.type === SubscriptionType.Basic
     ) {
       tags = tags.filter(({ id }) => {
-        return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+        return [TAG_ID_DRAFT, TAG_ID_EXCLUDE_FROM_ANALYSIS].includes(id);
       });
     }
 

@@ -3,7 +3,11 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale, isAccountExcluded } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  isAccountExcluded,
+  isDraftActivity
+} from '@ghostfolio/common/helper';
 import {
   Activity,
   AssetProfileIdentifier
@@ -138,6 +142,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public activityTypesTranslationMap = new Map<ActivityType, string>();
   public hasDrafts = false;
   public hasErrors = false;
+  public isDraftActivity = isDraftActivity;
   public isUUID = isUUID;
   public selectedRows = new SelectionModel<Activity>(true, []);
   public typesFilter = new FormControl<string[]>([]);
@@ -277,7 +282,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     return (
       this.hasPermissionToOpenDetails &&
       this.isExcludedFromAnalysis(activity) === false &&
-      activity.isDraft === false &&
+      isDraftActivity(activity) === false &&
       ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     );
   }
@@ -357,7 +362,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.exportDrafts.emit(
       this.dataSource()
         ?.filteredData.filter((activity) => {
-          return activity.isDraft;
+          return isDraftActivity(activity);
         })
         .map((activity) => {
           return activity.id;

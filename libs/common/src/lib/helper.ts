@@ -43,6 +43,7 @@ import {
   ghostfolioFearAndGreedIndexSymbolStocks,
   ghostfolioPrefix,
   SEARCH_QUERY_MINIMUM_LENGTH,
+  TAG_ID_DRAFT,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   TAG_IDS_SYSTEM
 } from './config';
@@ -535,6 +536,14 @@ export function isDerivedCurrency(aCurrency: string) {
   return DERIVED_CURRENCIES.some(({ currency }) => {
     return currency === aCurrency;
   });
+}
+
+export function isDraftActivity(activity?: { tags?: { id: string }[] }) {
+  return (
+    activity?.tags?.some(({ id }) => {
+      return id === TAG_ID_DRAFT;
+    }) === true
+  );
 }
 
 export function isRootCurrency(aCurrency: string) {

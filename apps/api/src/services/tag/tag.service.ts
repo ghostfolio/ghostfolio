@@ -1,4 +1,5 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { TAG_ID_DRAFT } from '@ghostfolio/common/config';
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { Prisma, Tag } from '@prisma/client';
@@ -159,5 +160,24 @@ export class TagService {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  public async validateTagIdsWithoutDraftTag({
+    tagIds,
+    userId
+  }: {
+    tagIds: string[];
+    userId: string;
+  }) {
+    // The "DRAFT" tag qualifies an individual activity and can therefore
+    // neither be assigned to an account nor to all activities of a holding
+    if (tagIds?.includes(TAG_ID_DRAFT)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return this.validateTagIds({ tagIds, userId });
   }
 }
