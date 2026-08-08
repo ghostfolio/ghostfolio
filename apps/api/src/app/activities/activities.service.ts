@@ -7,7 +7,11 @@ import {
   isAccountBalanceInFuture,
   WHERE_ACCOUNT_NOT_EXCLUDED
 } from '@ghostfolio/api/helper/account.helper';
-import { isDraftTagToBeAssigned } from '@ghostfolio/api/helper/activity.helper';
+import {
+  isActivityInFuture,
+  isDraftTagToBeAssigned,
+  WHERE_ACTIVITY_NOT_DRAFT
+} from '@ghostfolio/api/helper/activity.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -28,6 +32,7 @@ import {
 import {
   canDeleteAssetProfile,
   getAssetProfileIdentifier,
+  isDraftActivity,
   isValidCustomAssetProfileSymbol
 } from '@ghostfolio/common/helper';
 import {
@@ -51,7 +56,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday, isAfter } from 'date-fns';
+import { endOfToday } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
@@ -263,10 +268,6 @@ export class ActivitiesService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type)
-      ? false
-      : isAfter(data.date as Date, endOfToday());
-
     const tagsToConnect = isDraftTagToBeAssigned({
       date: data.date as Date,
       type: data.type
@@ -278,7 +279,8 @@ export class ActivitiesService {
       data: {
         ...orderData,
         account,
-        isDraft,
+        // @deprecated Mirrors the "Draft" tag until the attribute is removed
+        isDraft: isDraftActivity({ tags: tagsToConnect }),
         tags: {
           connect: tagsToConnect
         }
@@ -647,7 +649,7 @@ export class ActivitiesService {
     }
 
     if (includeDrafts === false) {
-      where.isDraft = false;
+      andConditions.push(WHERE_ACTIVITY_NOT_DRAFT);
     }
 
     if (filtersByAssetClass.length > 0) {
@@ -961,6 +963,7 @@ export class ActivitiesService {
 
   public async updateActivity({
     data,
+    storedDate,
     userId,
     where
   }: {
@@ -972,6 +975,7 @@ export class ActivitiesService {
       tags?: { id: string }[];
       type?: ActivityType;
     };
+    storedDate: Date;
     userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
@@ -988,8 +992,6 @@ export class ActivitiesService {
       data.comment = null;
     }
 
-    let isDraft = false;
-
     if (
       NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
@@ -1000,10 +1002,9 @@ export class ActivitiesService {
     } else {
       delete data.SymbolProfile.update;
 
-      isDraft = isAfter(data.date as Date, endOfToday());
-
-      if (!isDraft) {
-        // Gather symbol data of order in the background, if not draft
+      if (!isActivityInFuture({ date: data.date as Date })) {
+        // Gather symbol data of order in the background, if the date is not in
+        // the future
         this.dataGatheringService.gatherSymbols({
           dataGatheringItems: [
             {
@@ -1023,14 +1024,9 @@ export class ActivitiesService {
     delete data.symbol;
     delete data.tags;
 
-    const storedActivity = await this.prismaService.order.findUnique({
-      where,
-      select: { date: true }
-    });
-
     const tagsToSet = isDraftTagToBeAssigned({
+      storedDate,
       date: data.date as Date,
-      storedDate: storedActivity?.date,
       type: data.type
     })
       ? uniqBy([...tags, { id: TAG_ID_DRAFT }], 'id')
@@ -1040,7 +1036,8 @@ export class ActivitiesService {
       where,
       data: {
         ...data,
-        isDraft,
+        // @deprecated Mirrors the "Draft" tag until the attribute is removed
+        isDraft: isDraftActivity({ tags: tagsToSet }),
         tags: {
           set: tagsToSet
         }

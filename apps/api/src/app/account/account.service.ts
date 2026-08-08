@@ -89,7 +89,7 @@ export class AccountService {
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
     (AccountWithBalance & {
-      activities?: (Order & { SymbolProfile?: SymbolProfile })[];
+      activities?: (Order & { SymbolProfile?: SymbolProfile; tags?: Tag[] })[];
       balances?: AccountBalance[];
       platform?: Platform;
       tags?: Tag[];
@@ -237,15 +237,10 @@ export class AccountService {
     });
 
     return accounts.map((account) => {
-      let activitiesCount = 0;
-
-      for (const { isDraft } of account.activities) {
-        if (!isDraft) {
-          activitiesCount += 1;
-        }
-      }
-
-      const result = { ...account, activitiesCount };
+      const result = {
+        ...account,
+        activitiesCount: account.activities.length
+      };
 
       delete result.activities;
 

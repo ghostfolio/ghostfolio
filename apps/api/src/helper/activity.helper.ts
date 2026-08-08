@@ -1,7 +1,28 @@
-import { NON_INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
+import {
+  NON_INVESTMENT_ACTIVITY_TYPES,
+  TAG_ID_DRAFT
+} from '@ghostfolio/common/config';
 
-import { Type as ActivityType } from '@prisma/client';
+import { Prisma, Type as ActivityType } from '@prisma/client';
 import { endOfToday, isAfter } from 'date-fns';
+
+export const WHERE_ACTIVITY_NOT_DRAFT: Prisma.OrderWhereInput = {
+  tags: {
+    none: {
+      id: TAG_ID_DRAFT
+    }
+  }
+};
+
+export function isActivityInFuture({
+  date,
+  endOfTodayDate = endOfToday()
+}: {
+  date: Date;
+  endOfTodayDate?: Date;
+}) {
+  return isAfter(date, endOfTodayDate);
+}
 
 export function isDraftTagToBeAssigned({
   date,
@@ -18,11 +39,13 @@ export function isDraftTagToBeAssigned({
     return false;
   }
 
-  if (!isAfter(date, endOfTodayDate)) {
+  if (!isActivityInFuture({ date, endOfTodayDate })) {
     return false;
   }
 
   // Assign only when the date newly moves into the future, so that a tag the
   // user has removed is not restored by an unrelated change
-  return storedDate ? !isAfter(storedDate, endOfTodayDate) : true;
+  return storedDate
+    ? !isActivityInFuture({ endOfTodayDate, date: storedDate })
+    : true;
 }

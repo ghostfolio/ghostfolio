@@ -2,6 +2,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { isDraftTagToBeAssigned } from '@ghostfolio/api/helper/activity.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -13,6 +14,7 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   ghostfolioPrefix,
   NON_INVESTMENT_ACTIVITY_TYPES,
+  TAG_ID_DRAFT,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
@@ -22,6 +24,7 @@ import {
 } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
+  isDraftActivity,
   isValidCustomAssetProfileSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -41,7 +44,7 @@ import { Injectable } from '@nestjs/common';
 import { Account, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISIN } from 'class-validator';
-import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
+import { isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
@@ -775,6 +778,16 @@ export class ImportService {
           });
 
       if (isDryRun) {
+        // Preview the "Draft" tag which createActivity() assigns in a real run
+        const draftTag = tags.find(({ id: tagId }) => {
+          return tagId === TAG_ID_DRAFT;
+        });
+
+        const previewTags =
+          draftTag && isDraftTagToBeAssigned({ date, type })
+            ? uniqBy([...validatedTags, draftTag], 'id')
+            : validatedTags;
+
         order = {
           comment,
           currency,
@@ -788,7 +801,7 @@ export class ImportService {
           accountUserId: undefined,
           createdAt: new Date(),
           id: randomUUID(),
-          isDraft: isAfter(date, endOfToday()),
+          isDraft: isDraftActivity({ tags: previewTags }),
           SymbolProfile: {
             assetClass,
             assetSubClass,
@@ -817,7 +830,7 @@ export class ImportService {
             userId: dataSource === 'MANUAL' ? user.id : undefined
           },
           symbolProfileId: undefined,
-          tags: validatedTags,
+          tags: previewTags,
           updatedAt: new Date(),
           userId: user.id
         };

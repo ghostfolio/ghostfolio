@@ -43,6 +43,7 @@ import {
   getAssetProfileIdentifier,
   getSum,
   isAccountExcluded,
+  isDraftActivity,
   parseDate
 } from '@ghostfolio/common/helper';
 import {
@@ -174,7 +175,7 @@ export class PortfolioService {
       this.accountService.accounts({
         where,
         include: {
-          activities: { include: { SymbolProfile: true } },
+          activities: { include: { SymbolProfile: true, tags: true } },
           platform: true,
           tags: true
         },
@@ -200,12 +201,18 @@ export class PortfolioService {
         for (const {
           currency,
           date,
-          isDraft,
           quantity,
           SymbolProfile,
+          tags,
           type,
           unitPrice
         } of account.activities) {
+          activitiesCount += 1;
+
+          if (isDraftActivity({ tags })) {
+            continue;
+          }
+
           switch (type) {
             case ActivityType.DIVIDEND:
               dividendInBaseCurrency +=
@@ -225,10 +232,6 @@ export class PortfolioService {
                   date
                 )) ?? 0;
               break;
-          }
-
-          if (!isDraft) {
-            activitiesCount += 1;
           }
         }
 
@@ -2101,8 +2104,8 @@ export class PortfolioService {
   }) {
     return getSum(
       activities
-        .filter(({ isDraft, type }) => {
-          return isDraft === false && type === activityType;
+        .filter((activity) => {
+          return !isDraftActivity(activity) && activity.type === activityType;
         })
         .map(({ assetProfile, currency, quantity, unitPrice }) => {
           return new Big(
