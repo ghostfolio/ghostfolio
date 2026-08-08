@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated the `isDraft` attribute of the activity in favor of the _Draft_ tag
 - Changed the activities count of an account to include draft activities
 - Extended the _Draft_ tag to activities with a custom asset profile of type `BUY`
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
