@@ -34,6 +34,7 @@ import {
 import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
+  TAG_ID_DRAFT,
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
@@ -175,7 +176,12 @@ export class PortfolioService {
       this.accountService.accounts({
         where,
         include: {
-          activities: { include: { SymbolProfile: true, tags: true } },
+          activities: {
+            include: {
+              SymbolProfile: true,
+              tags: { select: { id: true }, where: { id: TAG_ID_DRAFT } }
+            }
+          },
           platform: true,
           tags: true
         },

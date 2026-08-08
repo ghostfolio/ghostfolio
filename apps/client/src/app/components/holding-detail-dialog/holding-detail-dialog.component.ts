@@ -3,7 +3,8 @@ import {
   DEFAULT_PAGE_SIZE,
   E_MAIL_LINE_BREAK,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
-  NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+  NUMERICAL_PRECISION_THRESHOLD_4_FIGURES,
+  TAG_ID_DRAFT
 } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
@@ -591,12 +592,18 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           );
 
           this.tagsAvailable =
-            this.user?.tags?.map((tag) => {
-              return {
-                ...tag,
-                name: translate(tag.name)
-              };
-            }) ?? [];
+            this.user?.tags
+              ?.filter(({ id }) => {
+                // The "DRAFT" tag qualifies an individual activity and cannot
+                // be assigned to all activities of a holding
+                return id !== TAG_ID_DRAFT;
+              })
+              .map((tag) => {
+                return {
+                  ...tag,
+                  name: translate(tag.name)
+                };
+              }) ?? [];
 
           this.changeDetectorRef.markForCheck();
         }

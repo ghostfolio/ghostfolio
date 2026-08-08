@@ -2,7 +2,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { isDraftTagToBeAssigned } from '@ghostfolio/api/helper/activity.helper';
+import { getTagsWithDraftTag } from '@ghostfolio/api/helper/activity.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -716,6 +716,11 @@ export class ImportService {
         });
     }
 
+    // Preview the "Draft" tag which createActivity() assigns in a real run
+    const draftTag = tags.find(({ id }) => {
+      return id === TAG_ID_DRAFT;
+    }) ?? { id: TAG_ID_DRAFT, name: 'DRAFT' };
+
     const activities: Activity[] = [];
 
     for (const activity of activitiesExtendedWithErrors) {
@@ -778,15 +783,12 @@ export class ImportService {
           });
 
       if (isDryRun) {
-        // Preview the "Draft" tag which createActivity() assigns in a real run
-        const draftTag = tags.find(({ id: tagId }) => {
-          return tagId === TAG_ID_DRAFT;
+        const previewTags = getTagsWithDraftTag({
+          date,
+          draftTag,
+          type,
+          tags: validatedTags
         });
-
-        const previewTags =
-          draftTag && isDraftTagToBeAssigned({ date, type })
-            ? uniqBy([...validatedTags, draftTag], 'id')
-            : validatedTags;
 
         order = {
           comment,

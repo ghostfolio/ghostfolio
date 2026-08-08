@@ -162,15 +162,15 @@ export class TagService {
     }
   }
 
-  public async validateTagIdsForAccount({
+  public async validateTagIdsWithoutDraftTag({
     tagIds,
     userId
   }: {
     tagIds: string[];
     userId: string;
   }) {
-    // The "DRAFT" tag qualifies an individual activity and cannot be assigned
-    // to an account
+    // The "DRAFT" tag qualifies an individual activity and can therefore
+    // neither be assigned to an account nor to all activities of a holding
     if (tagIds?.includes(TAG_ID_DRAFT)) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),

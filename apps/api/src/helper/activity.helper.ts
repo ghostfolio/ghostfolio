@@ -5,6 +5,7 @@ import {
 
 import { Prisma, Type as ActivityType } from '@prisma/client';
 import { endOfToday, isAfter } from 'date-fns';
+import { uniqBy } from 'lodash';
 
 export const WHERE_ACTIVITY_NOT_DRAFT: Prisma.OrderWhereInput = {
   tags: {
@@ -13,6 +14,28 @@ export const WHERE_ACTIVITY_NOT_DRAFT: Prisma.OrderWhereInput = {
     }
   }
 };
+
+export function getTagsWithDraftTag<T extends { id: string }>({
+  date,
+  draftTag,
+  endOfTodayDate = endOfToday(),
+  storedDate,
+  tags,
+  type
+}: {
+  date: Date;
+  draftTag: T;
+  endOfTodayDate?: Date;
+  storedDate?: Date;
+  tags: T[];
+  type: ActivityType;
+}) {
+  if (!isDraftTagToBeAssigned({ date, endOfTodayDate, storedDate, type })) {
+    return tags;
+  }
+
+  return uniqBy([...tags, draftTag], 'id');
+}
 
 export function isActivityInFuture({
   date,
