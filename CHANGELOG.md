@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Resolved an issue with unknown country names in the country weightings of the _Financial Modeling Prep_ service
+- Resolved an issue with unknown country names in the data enhancer for asset profile data via _Trackinsight_
+
 ## 3.45.0 - 2026-08-08
 
 ### Added
