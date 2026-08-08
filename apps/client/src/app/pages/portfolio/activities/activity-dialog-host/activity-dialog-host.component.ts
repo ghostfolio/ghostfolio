@@ -18,8 +18,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Observable, of, Subject } from 'rxjs';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
 import {
+  catchError,
   distinctUntilChanged,
   map,
   switchMap,
@@ -78,41 +79,21 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
                   return { activity, user };
                 })
               );
+            }),
+            catchError(() => {
+              this.navigateBack();
+
+              return EMPTY;
             })
           );
         }),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe({
-        error: () => {
-          this.navigateBack();
-        },
-        next: ({ activity, user }) => {
-          if (mode === 'update') {
-            if (
-              !activity ||
-              !hasPermission(user?.permissions, permissions.updateActivity) ||
-              this.isReadOnlyMode(user)
-            ) {
-              this.navigateBack();
-
-              return;
-            }
-
-            this.openDialog({ activity, user, isUpdate: true });
-
-            return;
-          }
-
-          if (mode === 'clone' && !activity) {
-            this.navigateBack();
-
-            return;
-          }
-
-          // Cloning creates a new activity as well
+      .subscribe(({ activity, user }) => {
+        if (mode === 'update') {
           if (
-            !hasPermission(user?.permissions, permissions.createActivity) ||
+            !activity ||
+            !hasPermission(user?.permissions, permissions.updateActivity) ||
             this.isReadOnlyMode(user)
           ) {
             this.navigateBack();
@@ -120,21 +101,41 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
             return;
           }
 
-          this.openDialog({
-            user,
-            activity: {
-              ...activity,
-              accountId: activity?.accountId,
-              assetProfile: activity?.assetProfile ?? null,
-              date: new Date(),
-              fee: 0,
-              id: null,
-              type: activity?.type ?? 'BUY',
-              unitPrice: null
-            },
-            isUpdate: false
-          });
+          this.openDialog({ activity, user, isUpdate: true });
+
+          return;
         }
+
+        if (mode === 'clone' && !activity) {
+          this.navigateBack();
+
+          return;
+        }
+
+        // Cloning creates a new activity as well
+        if (
+          !hasPermission(user?.permissions, permissions.createActivity) ||
+          this.isReadOnlyMode(user)
+        ) {
+          this.navigateBack();
+
+          return;
+        }
+
+        this.openDialog({
+          user,
+          activity: {
+            ...activity,
+            accountId: activity?.accountId,
+            assetProfile: activity?.assetProfile ?? null,
+            date: new Date(),
+            fee: 0,
+            id: null,
+            type: activity?.type ?? 'BUY',
+            unitPrice: null
+          },
+          isUpdate: false
+        });
       });
   }
 

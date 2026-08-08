@@ -324,7 +324,9 @@ export class GfActivitiesPageComponent implements OnInit {
 
     this.hasPermissionToCreateActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.createActivity);
+      hasPermission(this.user.permissions, permissions.createActivity) &&
+      !this.user.settings?.isRestrictedView;
+
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
       hasPermission(this.user.permissions, permissions.deleteActivity);
