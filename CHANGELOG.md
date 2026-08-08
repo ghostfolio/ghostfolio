@@ -67,6 +67,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Handled an exception in the country weightings parsing of the _Financial Modeling Prep_ service
 
+### Changed
+
+- Increased the timeout of the portfolio snapshot computation processor from 30 to 120 seconds
+
+### Fixed
+
+- Fixed the portfolio calculator to degrade gracefully instead of failing every portfolio and account endpoint when a snapshot computation job stalls
+
 ## 3.42.0 - 2026-08-04
 
 ### Changed
