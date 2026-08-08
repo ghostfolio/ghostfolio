@@ -243,6 +243,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `dotenv` from version `17.2.3` to `17.4.2`
 - Upgraded `dotenv-expand` from version `12.0.3` to `13.0.0`
 - Upgraded `fuse.js` from version `7.3.0` to `7.5.0`
+- Added support for starting the server and the client in parallel during development
 
 ### Fixed
 
