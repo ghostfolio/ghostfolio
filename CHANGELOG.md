@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a _Coverage_ rule to the _Emergency Fund_ section on the _X-ray_ page
+- Added the business logic and tests for stock splits of an asset profile (experimental)
 
 ### Changed
 
