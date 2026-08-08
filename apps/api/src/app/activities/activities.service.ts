@@ -8,6 +8,8 @@ import {
   WHERE_ACCOUNT_NOT_EXCLUDED
 } from '@ghostfolio/api/helper/account.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { adjustActivityBySplits } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.helper';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -66,7 +68,8 @@ export class ActivitiesService {
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+    private readonly assetProfileSplitService: AssetProfileSplitService
   ) {}
 
   public areCashActivitiesExcludedByFilters(filters: Filter[] = []) {
@@ -899,6 +902,34 @@ export class ActivitiesService {
       userCurrency,
       userId,
       withExcludedAccountsAndActivities: false // TODO
+    });
+
+    const assetProfiles = uniqBy(
+      activities.activities.map(({ assetProfile }) => {
+        return {
+          dataSource: assetProfile.dataSource,
+          symbol: assetProfile.symbol
+        };
+      }),
+      ({ dataSource, symbol }) => {
+        return getAssetProfileIdentifier({ dataSource, symbol });
+      }
+    );
+    const splitsByAssetProfile =
+      await this.assetProfileSplitService.getSplitsByAssetProfiles(
+        assetProfiles
+      );
+
+    activities.activities = activities.activities.map((activity) => {
+      const key = getAssetProfileIdentifier({
+        dataSource: activity.assetProfile.dataSource,
+        symbol: activity.assetProfile.symbol
+      });
+
+      return adjustActivityBySplits(
+        activity,
+        splitsByAssetProfile.get(key) ?? []
+      );
     });
 
     if (withCash && !this.areCashActivitiesExcludedByFilters(filters)) {
