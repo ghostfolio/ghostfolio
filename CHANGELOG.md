@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the validation of the market data items in the market data update endpoint
+
+### Fixed
+
+- Fixed the date normalization in the market data endpoints in time zones with a non-zero _UTC_ offset
+
 ## 3.45.0 - 2026-08-08
 
 ### Added
