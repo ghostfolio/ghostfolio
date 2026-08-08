@@ -182,8 +182,6 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
   }
 
   private isReadOnlyMode(user: User) {
-    // Mirrors the conditions under which the accounts page offers the creation
-    // and the modification of an account
     return (
       !!this.impersonationStorageService.getId() ||
       !!user?.settings?.isRestrictedView
