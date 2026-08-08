@@ -74,6 +74,7 @@ describe('PortfolioService', () => {
       null,
       null,
       null,
+      null,
       null
     );
 
