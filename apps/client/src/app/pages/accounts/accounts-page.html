@@ -15,7 +15,6 @@
         [totalBalanceInBaseCurrency]="totalBalanceInBaseCurrency"
         [totalValueInBaseCurrency]="totalValueInBaseCurrency"
         (accountDeleted)="onDeleteAccount($event)"
-        (accountToUpdate)="onUpdateAccount($event)"
         (transferBalance)="onTransferBalance()"
       />
     </div>
@@ -26,6 +25,10 @@
     hasPermissionToCreateAccount &&
     !user.settings.isRestrictedView
   ) {
-    <gf-fab [queryParams]="{ createDialog: true }" />
+    <gf-fab
+      [routerLink]="internalRoutes.accounts.subRoutes.create.routerLink"
+    />
   }
 </div>
+
+<router-outlet />

@@ -176,6 +176,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.initialize();
+
+        this.refreshUser();
       });
   }
 
@@ -195,6 +197,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.initialize();
+
+        this.refreshUser();
       });
   }
 
@@ -412,5 +416,12 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.fetchActivities();
     this.fetchChart();
     this.fetchPortfolioHoldings();
+  }
+
+  private refreshUser() {
+    this.userService
+      .get(true)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 }
