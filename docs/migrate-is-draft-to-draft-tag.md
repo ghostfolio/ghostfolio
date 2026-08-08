@@ -1,7 +1,10 @@
 # Migrating `isDraft` to a `DRAFT` tag
 
-Follows the precedent set by `Account.isExcluded` → `EXCLUDE_FROM_ANALYSIS`
-(commit `263e064fd`, migration `20260801103609_removed_is_excluded_from_account`).
+Follows the precedent set by `Account.isExcluded` → `EXCLUDE_FROM_ANALYSIS`, which retired
+that column in two releases: [`79e382a8f`](https://github.com/ghostfolio/ghostfolio/commit/79e382a8f)
+made the tag fully functional and deprecated the column, and
+[`263e064fd`](https://github.com/ghostfolio/ghostfolio/commit/263e064fd) removed it in a
+single migration that backfilled and dropped in one step.
 
 ## Motivation
 
@@ -82,13 +85,29 @@ the excluded / non-excluded split runs. The migration preserves it.
 to fetch for a date that has not happened, so no tag decision may reach that code path.
 This is the one piece of `isDraft` that must _not_ become user-owned.
 
-## Steps
+## Release 1 — introduce the tag, deprecate `isDraft`
+
+The tag becomes the single source of truth for every read. The column stays in the database
+as an exact mirror of the tag, deprecated and unread, so that release 2 is a pure deletion.
 
 ### 1 — Introduce the tag
 
-- `TAG_ID_DRAFT` in [config.ts:343](../libs/common/src/lib/config.ts#L343), added to `TAG_IDS_SYSTEM`
-- ``DRAFT: $localize`Draft` `` in [i18n.ts:22](../libs/ui/src/lib/i18n.ts#L22)
-- entry in [seed.mts:11](../prisma/seed.mts#L11)
+- `TAG_ID_DRAFT` in [config.ts](../libs/common/src/lib/config.ts), added to `TAG_IDS_SYSTEM`
+- ``DRAFT: $localize`Draft` `` in [i18n.ts](../libs/ui/src/lib/i18n.ts)
+- entry in [seed.mts](../prisma/seed.mts)
+
+The migration creates the `Tag` row and backfills `_OrderToTag` from `isDraft = true`. It
+cannot be left to the seed even though `seed.mts` uses `createMany({ skipDuplicates: true })`
+and runs on every start — [docker/entrypoint.sh](../docker/entrypoint.sh) runs
+`prisma migrate deploy` _before_ `prisma db seed`, so the backfill's foreign key has to
+create its own target.
+
+> **Why the backfill ships here and not with the drop.** Reads move to the tag in this same
+> release. Without the backfill, every existing `isDraft = true` row would read as _not_ a
+> draft the moment it deploys, and a future-dated `BUY` would re-enter the portfolio as a
+> holding the user does not own yet. `isExcluded` could defer its backfill because its
+> release 1 read `isExcluded || tag`; this migration reads the tag alone, so the data has to
+> be there first. Step 6 is what makes that safe to revert.
 
 Rename and delete guarding in the admin control panel comes free —
 [tags.controller.ts:73](../apps/api/src/app/endpoints/tags/tags.controller.ts#L73) already
@@ -98,62 +117,62 @@ rejects anything `isSystemTag` matches.
 
 `DRAFT` is the first system tag not assignable to accounts.
 
-- **client** — filter it out of `tagsAvailable` in [create-or-update-account-dialog.component.ts:94](../apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.component.ts#L94)
+- **client** — filter it out of `tagsAvailable` in [create-or-update-account-dialog.component.ts](../apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.component.ts)
 - **server** — no guard exists today. `tagService.validateTagIds` only checks ownership, and
-  [account.service.ts:173](../apps/api/src/app/account/account.service.ts#L173) and
-  [:313](../apps/api/src/app/account/account.service.ts#L313) connect `tagIds` straight
-  through. Both need an explicit rejection.
+  [account.service.ts](../apps/api/src/app/account/account.service.ts) connects `tagIds`
+  straight through on create and update. Both go through `validateTagIdsForAccount` instead.
 
-### 3 — Read helper
+### 3 — Helpers
 
-`isDraftActivity({ tags })` in [helper.ts](../libs/common/src/lib/helper.ts#L489), mirroring
-`isAccountExcluded` directly above it.
+Mirroring [account.helper.ts](../apps/api/src/helper/account.helper.ts) field for field:
+
+- `isDraftActivity({ tags })` in [helper.ts](../libs/common/src/lib/helper.ts), next to
+  `isAccountExcluded` — the shared read predicate
+- `WHERE_ACTIVITY_NOT_DRAFT` in [activity.helper.ts](../apps/api/src/helper/activity.helper.ts),
+  next to `WHERE_ACCOUNT_NOT_EXCLUDED` — the Prisma equivalent
+- `isActivityInFuture({ date })`, next to `isAccountBalanceInFuture` — the date predicate that
+  keeps data gathering off the tag
+- `isDraftTagToBeAssigned({ date, storedDate, type })` — the transition rule above
 
 ### 4 — Auto-assign on write
 
-Apply the transition rule in `createActivity`, `updateActivity` and `import.service`.
+Apply the transition rule in `createActivity`, `updateActivity` and the import dry run.
 
-> **Leave the existing `isDraft` computation exactly where it is.** Add the tag write
-> _beside_ it; do not refactor it yet. Lifting it out of the profile-editability `else` at
-> [activities.service.ts:935-993](../apps/api/src/app/activities/activities.service.ts#L935-L993)
-> is what un-exempts `MANUAL` + `BUY`, and doing that here would change what the column
-> stores — a future-dated MANUAL BUY would start dropping out of the portfolio on update.
-> That refactor belongs in step 5, alongside removing the column writes.
-
-So the column keeps its legacy rule while the tag gets the new one. They diverge by design:
-the tag is what step 5 promotes to source of truth, and it will have been maintained
-correctly since this step.
-
-Also move the Basic-subscriber tag visibility fix from step 8 forward into this step —
-otherwise Basic users spend a release being auto-tagged with a tag they cannot see.
+`updateActivity` needs the stored date to evaluate the rule. The controller already loads the
+activity as `originalActivity` to authorize the request
+([activities.controller.ts:316](../apps/api/src/app/activities/activities.controller.ts#L316)),
+so it passes the date down rather than the service issuing a second query.
 
 ### 5 — Switch reads to the tag
 
 The DB filter at [activities.service.ts:639](../apps/api/src/app/activities/activities.service.ts#L639)
-becomes `tags: { none: { id: TAG_ID_DRAFT } }`.
+becomes `WHERE_ACTIVITY_NOT_DRAFT`.
 
 > **Gotcha:** `where.tags` is already assigned at
-> [:757](../apps/api/src/app/activities/activities.service.ts#L757) and `where.OR` at
-> [:755](../apps/api/src/app/activities/activities.service.ts#L755). A second assignment
+> [:766](../apps/api/src/app/activities/activities.service.ts#L766) and `where.OR` at
+> [:764](../apps/api/src/app/activities/activities.service.ts#L764). A second assignment
 > silently clobbers the first, so this must go through the existing `andConditions` array.
 
 Field reads to convert:
 
 - [activities-table.component.ts:280](../libs/ui/src/lib/activities-table/activities-table.component.ts#L280) and [:360](../libs/ui/src/lib/activities-table/activities-table.component.ts#L360)
-- badge and ICS gate at [activities-table.component.html:180](../libs/ui/src/lib/activities-table/activities-table.component.html#L180) and [:511](../libs/ui/src/lib/activities-table/activities-table.component.html#L511)
-- gather gate at [activities.controller.ts:290](../apps/api/src/app/activities/activities.controller.ts#L290)
-- [portfolio.service.ts:2076](../apps/api/src/app/portfolio/portfolio.service.ts#L2076)
+- badge and ICS gate at [activities-table.component.html:180](../libs/ui/src/lib/activities-table/activities-table.component.html#L180) and [:516](../libs/ui/src/lib/activities-table/activities-table.component.html#L516)
+- [portfolio.service.ts:2104](../apps/api/src/app/portfolio/portfolio.service.ts#L2104)
+
+The two gather gates ([activities.controller.ts:290](../apps/api/src/app/activities/activities.controller.ts#L290)
+and [activities.service.ts:1005](../apps/api/src/app/activities/activities.service.ts#L1005))
+convert to `isActivityInFuture` instead — they are date questions, not tag questions.
 
 In the two count loops the guard **moves** rather than disappears — off the record count,
 onto the money sums:
 
-- [account.service.ts:231-236](../apps/api/src/app/account/account.service.ts#L231-L236) —
+- [account.service.ts:242](../apps/api/src/app/account/account.service.ts#L242) —
   count only, so the loop collapses to `activitiesCount = account.activities.length`.
   Its `include` needs nothing added.
 - [portfolio.service.ts:195-232](../apps/api/src/app/portfolio/portfolio.service.ts#L195-L232) —
   the count becomes unconditional, and the `DIVIDEND` / `INTEREST` cases gain the draft
   guard the count gives up (see below). This loop reads raw Prisma rows, so its `include`
-  at [:176](../apps/api/src/app/portfolio/portfolio.service.ts#L176) needs `tags` added to
+  at [:178](../apps/api/src/app/portfolio/portfolio.service.ts#L178) needs `tags` added to
   `activities` — the existing `tags: true` there is the _account's_ tags, not the
   activities'.
 
@@ -167,34 +186,58 @@ draft check, which is what makes the record-vs-money principle hold in both dire
 `INTEREST` is exempt from auto-assignment, so the guard there only bites when the user
 tags an interest activity by hand — applied anyway for consistency.
 
-### 6 — Migrate and drop
+### 6 — Reduce `isDraft` to a mirror
 
-This is an expand / migrate / contract sequence, so it splits in two. Join table is
-`_OrderToTag`, `A` = order, `B` = tag, PK `(A, B)`.
+The column is no longer computed from the date at any write site. It is written as
+`isDraftActivity({ tags })` over the tag list the same statement persists, which makes it
+exact rather than merely close.
 
-#### 6a — Create and backfill (ships **with step 4**, before any read switches)
+This is what carries the release. It keeps the deprecated field truthful for API consumers
+during the deprecation window, and it makes release 1 revertible by deploy rather than by
+database restore: roll the code back and the column is still correct for every row, because
+every write since the deploy mirrored the tag and the backfill covered everything before it.
 
-```sql
--- Create the "DRAFT" tag if it does not exist yet
-INSERT INTO "Tag" ("id", "name")
-VALUES ('<uuid>', 'DRAFT')
-ON CONFLICT DO NOTHING;
+Lifting the computation out of the profile-editability `else` at
+[activities.service.ts:991-1005](../apps/api/src/app/activities/activities.service.ts#L991-L1005)
+is what un-exempts `MANUAL` + `BUY`. That is safe now precisely because nothing reads the
+column any more.
 
--- Migrate activities with "isDraft" to the "DRAFT" tag
-INSERT INTO "_OrderToTag" ("A", "B")
-SELECT
-  "id",
-  '<uuid>'
-FROM "Order"
-WHERE "isDraft" = true
-ON CONFLICT DO NOTHING;
+Mark it in [schema.prisma](../prisma/schema.prisma), as `isExcluded` was:
+
+```prisma
+/// @deprecated Use the "Draft" tag (`TAG_ID_DRAFT`) instead
+isDraft Boolean @default(false)
 ```
 
-> **Ordering constraint:** the backfill must land before step 5. Existing rows carry
-> `isDraft = true` but no tag, so switching reads first would make every existing draft
-> non-draft and drop them straight into portfolio calculations.
+### 7 — Visibility
 
-#### 6b — Drop the column (ships **after** step 5 has been released and proven)
+- [user.service.ts:198](../apps/api/src/app/user/user.service.ts#L198) narrows `user.tags` to
+  _only_ `EXCLUDE_FROM_ANALYSIS` for Basic subscribers. `DRAFT` must be added, or Basic users
+  get auto-tagged drafts they cannot untag.
+- `DRAFT` **stays visible** in the portfolio filter list. The exclusion of
+  `EXCLUDE_FROM_ANALYSIS` at [portfolio-filter-form.util.ts:110](../libs/ui/src/lib/portfolio-filter-form/portfolio-filter-form.util.ts#L110)
+  is not extended to it — filtering for uncertain activities is the point of the tag.
+
+### 8 — Changelog
+
+```markdown
+### Added
+
+- Added the _Draft_ tag, assigned automatically to activities dated in the future
+
+### Changed
+
+- Deprecated the `isDraft` attribute of the activity in favor of the _Draft_ tag
+
+### Fixed
+
+- Fixed the dividend and interest of an account by excluding draft activities
+```
+
+## Release 2 — remove `isDraft`
+
+Ships once release 1 has been out and proven. The data moved in release 1, so this migration
+only drops:
 
 ```sql
 -- DropIndex
@@ -204,75 +247,41 @@ DROP INDEX "Order_isDraft_idx";
 ALTER TABLE "Order" DROP COLUMN "isDraft";
 ```
 
-Remove `isDraft` and `@@index([isDraft])` from [schema.prisma](../prisma/schema.prisma#L187).
+Keeping the drop in its own release is the entire point of the split: it is the one step that
+cannot be undone by a deploy.
 
-Keeping this in its own release means step 5 can be reverted with a deploy rather than a
-database restore, since the column is still there and still dual-written.
+Then remove the field:
 
-### 7 — Types and fixtures
-
-`Activity extends Order` loses `isDraft`. Drop it from the response rather than recomputing
-it — the client already receives `tags` and already derives `isExcludedFromAnalysis` that
-way, so deriving `isDraft` identically is the consistent end state.
-
+- `isDraft` and `@@index([isDraft])` from [schema.prisma](../prisma/schema.prisma)
+- the mirror writes in `createActivity`, `updateActivity` and the import dry run
 - `Omit` list in [export-response.interface.ts:18](../libs/common/src/lib/interfaces/responses/export-response.interface.ts#L18)
 - [portfolio-calculator-test-utils.ts:15](../apps/api/src/app/portfolio/calculator/portfolio-calculator-test-utils.ts#L15)
+- the synthetic `isDraft: false` literals at [activities.service.ts:530](../apps/api/src/app/activities/activities.service.ts#L530) and [import.service.ts:168](../apps/api/src/app/import/import.service.ts#L168)
 - 5 occurrences in [activities-table.component.stories.ts](../libs/ui/src/lib/activities-table/activities-table.component.stories.ts)
 
-### 8 — Visibility
+`Activity extends Order` loses `isDraft` with the schema. It is dropped from the response
+rather than recomputed — the client already receives `tags` and already derives
+`isExcludedFromAnalysis` that way, so deriving `isDraft` identically is the consistent end
+state.
 
-- [user.service.ts:197](../apps/api/src/app/user/user.service.ts#L197) narrows `user.tags` to
-  _only_ `EXCLUDE_FROM_ANALYSIS` for Basic subscribers. `DRAFT` must be added, or Basic users
-  get auto-tagged drafts they cannot untag. **Ship this with step 4**, not here — it needs to
-  land in the same release that starts assigning the tag.
-- `DRAFT` **stays visible** in the portfolio filter list. The exclusion of
-  `EXCLUDE_FROM_ANALYSIS` at [portfolio-filter-form.util.ts:110](../libs/ui/src/lib/portfolio-filter-form/portfolio-filter-form.util.ts#L110)
-  is not extended to it — filtering for uncertain activities is the point of the tag.
+Changelog, following the `isExcluded` precedent:
 
-### 9 — Changelog
+```markdown
+### Changed
 
-Under `### Changed`, following the `isExcluded` precedent:
+- Removed the deprecated `isDraft` attribute of the activity in favor of the _Draft_ tag including a data migration
+```
 
-> Removed the deprecated `isDraft` attribute of the activity in favor of the _Draft_ tag
-> including a data migration
+## Behavioural changes to call out in the pull request
 
-The dividend and interest correction is a pre-existing, already-released defect, so it earns
-its own entry under `### Fixed`:
+**Every existing draft becomes visible and removable.** Nothing recomputes the column today,
+so a future-dated activity whose date has since passed is excluded from the portfolio
+**permanently**. After the backfill those rows carry the _Draft_ tag and are still excluded —
+but the user can now see why, and remove it. That is a fix, though it will look like a change
+to anyone affected.
 
-> Fixed the dividend and interest of an account to disregard draft activities
+**`activitiesCount` starts including drafts**, which changes a visible number in the accounts
+table and enables the **Delete account** guard for accounts holding only drafts.
 
-## Behavioural change to call out in the pull request
-
-Nothing today recomputes a stored `isDraft`, so a future-dated activity whose date has since
-passed is excluded from the portfolio permanently. After the migration those rows carry the
-`DRAFT` tag and remain excluded — but the user can now see why, and remove it.
-
-That is a fix, though it will look like a change to anyone affected.
-
-## Release sequence
-
-The visibility boundary is the `Tag` row, not the code:
-[tag.service.ts:72-81](../apps/api/src/services/tag/tag.service.ts#L72-L81) returns every tag
-with `userId IS NULL`, so the moment that row exists the tag appears in every user's selector
-and in the admin tag management. Everything else can ship dark.
-
-| Release   | Contents                                                       | What the user sees                                                                        |
-| --------- | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| **A + B** | steps 1, 2, 3, 4, 6a, and the Basic-subscriber fix from step 8 | a new _Draft_ tag, auto-assigned; no behaviour change, `isDraft` still governs every read |
-| **C**     | steps 5, 7, 9, rest of step 8                                  | behaviour moves to the tag                                                                |
-| **D**     | step 6b                                                        | nothing                                                                                   |
-
-A and B are combined deliberately. On its own, A (the config constant, the i18n label,
-`isDraftActivity`, and the account guards) is genuinely invisible — `isSystemTag` cannot match
-a row that does not exist, the label names a tag nobody can select, the helper has no callers,
-and the guards reject a tag ID no row carries. But it is also entirely unreferenced code, so
-shipping it alone buys nothing. B is where the de-risking actually happens: the tag row and
-the backfill land while `isDraft` still governs every read, which makes C a pure deploy that
-reverts without touching the database.
-
-The property that makes A + B safe is that **step 4 does not modify the existing `isDraft`
-computation** — see the warning there. If that refactor leaks into this release, the release
-is no longer inert.
-
-C and D can be merged if fewer releases are preferred, at the cost of the rollback property
-described in 6b.
+**A `MANUAL` + `BUY` activity can now become a draft**, where the accidental carve-out
+previously prevented it on update.
