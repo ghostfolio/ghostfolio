@@ -365,7 +365,11 @@ export class ExchangeRateDataService {
       )}`
     );
 
-    return undefined;
+    Logger.warn(
+      `No exchange rate data found for ${aFromCurrency} -> ${aToCurrency} on ${aDate.toISOString()}, returning original value as fallback`,
+      'ExchangeRateDataService'
+    );
+    return aValue;
   }
 
   private async getExchangeRates({
