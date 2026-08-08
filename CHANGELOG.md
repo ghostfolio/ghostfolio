@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a _Coverage_ rule to the _Emergency Fund_ section on the _X-ray_ page
 
+### Added
+
+- Added an option to use the annualized performance as the annual interest rate in the _FIRE_ calculator
+
 ### Changed
 
 - Aligned the x-axis of the dividend and investment timeline charts on the analysis page

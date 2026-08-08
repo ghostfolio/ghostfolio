@@ -120,6 +120,10 @@ export class UpdateUserSettingDto {
   @IsOptional()
   savingsRate?: number;
 
+  @IsBoolean()
+  @IsOptional()
+  useAnnualizedPerformanceRate?: boolean;
+
   @IsIn(['DEFAULT', 'ZEN'] as ViewMode[])
   @IsOptional()
   viewMode?: ViewMode;
