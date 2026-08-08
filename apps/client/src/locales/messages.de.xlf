@@ -8234,7 +8234,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage" datatype="html">
         <source>Coverage</source>
-        <target state="new">Coverage</target>
+        <target state="translated">Deckung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">145</context>
@@ -8242,7 +8242,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.over" datatype="html">
         <source>The assets tagged as emergency fund exceed your emergency fund of ${emergencyFund} ${baseCurrency}</source>
-        <target state="new">The assets tagged as emergency fund exceed your emergency fund of ${emergencyFund} ${baseCurrency}</target>
+        <target state="translated">Die als Notfallfonds getaggten Vermögenswerte übersteigen deinen Notfallfonds von ${emergencyFund} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">147</context>
@@ -8250,7 +8250,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.under" datatype="html">
         <source>Your emergency fund of ${emergencyFund} ${baseCurrency} is not covered</source>
-        <target state="new">Your emergency fund of ${emergencyFund} ${baseCurrency} is not covered</target>
+        <target state="translated">Dein Notfallfonds von ${emergencyFund} ${baseCurrency} ist nicht gedeckt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">151</context>
@@ -8258,7 +8258,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.unset" datatype="html">
         <source>No emergency fund amount has been set to determine the coverage</source>
-        <target state="new">No emergency fund amount has been set to determine the coverage</target>
+        <target state="translated">Es wurde kein Betrag für den Notfallfonds festgelegt, um die Deckung zu bestimmen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">155</context>
@@ -8266,7 +8266,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.true" datatype="html">
         <source>Your emergency fund of ${emergencyFund} ${baseCurrency} is covered</source>
-        <target state="new">Your emergency fund of ${emergencyFund} ${baseCurrency} is covered</target>
+        <target state="translated">Dein Notfallfonds von ${emergencyFund} ${baseCurrency} ist gedeckt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">158</context>
@@ -8274,7 +8274,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
         <source>Setup</source>
-        <target state="new">Einrichtung</target>
+        <target state="translated">Einrichtung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">161</context>
