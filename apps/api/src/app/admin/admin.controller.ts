@@ -19,7 +19,8 @@ import {
 } from '@ghostfolio/common/dtos';
 import {
   canDeleteAssetProfile,
-  getAssetProfileIdentifier
+  getAssetProfileIdentifier,
+  getStartOfUtcDate
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
@@ -55,7 +56,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
-import { isDate, parseISO } from 'date-fns';
+import { isValid } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
@@ -201,9 +202,9 @@ export class AdminController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<MarketData> {
-    const date = parseISO(dateString);
+    const date = getStartOfUtcDate(dateString);
 
-    if (!isDate(date)) {
+    if (!isValid(date)) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST

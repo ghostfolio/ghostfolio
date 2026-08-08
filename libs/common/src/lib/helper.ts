@@ -403,7 +403,7 @@ export function getNumberFormatGroup(aLocale = getLocale()) {
   })?.value;
 }
 
-export function getStartOfUtcDate(aDate: Date) {
+export function getStartOfUtcDate(aDate: Date | string) {
   const date = new Date(aDate);
   date.setUTCHours(0, 0, 0, 0);
 
