@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the _Draft_ tag, assigned automatically to activities dated in the future
 
+### Changed
+
+- Deprecated the `isDraft` attribute of the activity in favor of the _Draft_ tag
+
+### Fixed
+
+- Fixed the dividend and interest of an account by excluding draft activities
+
 ## 3.45.0 - 2026-08-08
 
 ### Added
