@@ -45,18 +45,17 @@ export const LogoByUrl: Story = {
   }
 };
 
+export const LogoOnError: Story = {
+  args: {
+    size: 'large',
+    tooltip: 'Unknown',
+    url: 'https://unknown.ghostfol.io'
+  }
+};
+
 export const Placeholder: Story = {
   args: {
     hasPlaceholder: true,
     size: 'large'
-  }
-};
-
-export const PlaceholderOnError: Story = {
-  args: {
-    hasPlaceholder: true,
-    size: 'large',
-    tooltip: 'Unknown',
-    url: 'https://unknown.ghostfol.io'
   }
 };
