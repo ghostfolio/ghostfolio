@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the activities import to reuse an existing account of the user by name and currency
 - Extended the activities import to resolve an ISIN to the symbol of the data provider
 - Improved the style of the placeholder in the entity logo component
+- Migrated the create, detail and edit account dialogs to dedicated routes
 - Improved the language localization for German (`de`)
 
 ### Fixed

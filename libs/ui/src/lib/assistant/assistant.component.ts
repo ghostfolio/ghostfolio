@@ -612,7 +612,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             return {
               id,
               name,
-              routerLink: internalRoutes.accounts.routerLink,
+              routerLink:
+                internalRoutes.accounts.subRoutes.detail.routerLink(id),
               mode: SearchMode.ACCOUNT as const
             };
           });
