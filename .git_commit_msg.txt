@@ -1,0 +1,14 @@
+merge: Resolve merge conflicts with upstream main
+
+### 為什麼改 (Why)
+
+- **變更目標**：同步 Ghostfolio 官方最新 upstream/main 主線，並解除合流衝突。
+- **動機與痛點**：使 PR 能在 GitHub 上呈現綠色可直接合併狀態 (Able to merge)。
+
+### 改了什麼 (What)
+
+- **合流衝突解除**：成功合併 `CHANGELOG.md` (放置於 3.44.0 區塊)、`config.ts` (`as const` 與 `zh-TW`) 及 `user-account-settings.html`。
+
+### 驗證狀態 (Verification)
+
+- [x] 衝突全數解除，0 Conflict Markers。

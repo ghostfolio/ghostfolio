@@ -61,8 +61,10 @@
                     href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
                       language
                     }}.xlf"
+                    rel="noreferrer noopener"
                     target="_blank"
                     >here</a
+
                   >.
                 </div>
               }
@@ -91,6 +93,12 @@
                       >Community</ng-container
                     >)</mat-option
                   >
+                  <mat-option value="zh-TW"
+                    >Chinese / 繁體中文 (<ng-container i18n
+                      >Community</ng-container
+                    >)</mat-option
+                  >
+
                   <mat-option value="es"
                     >Español (<ng-container i18n>Community</ng-container
                     >)</mat-option
@@ -328,12 +336,14 @@
                   <input
                     formControlName="accessToken"
                     matInput
+                    placeholder="Security Token"
                     [type]="isAccessTokenHidden ? 'password' : 'text'"
                   />
                   <button
                     class="mx-2"
                     mat-icon-button
                     matSuffix
+                    title="Toggle Security Token Visibility"
                     type="button"
                     (click)="isAccessTokenHidden = !isAccessTokenHidden"
                   >
@@ -345,6 +355,7 @@
                     />
                   </button>
                 </mat-form-field>
+
                 <button
                   class="mt-2"
                   color="warn"
