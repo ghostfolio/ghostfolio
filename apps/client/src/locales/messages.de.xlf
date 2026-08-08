@@ -655,7 +655,7 @@
       </trans-unit>
       <trans-unit id="8155924822307560615" datatype="html">
         <source>Update Account</source>
-        <target state="new">Update Account</target>
+        <target state="translated">Konto bearbeiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">87</context>
@@ -1295,7 +1295,7 @@
       </trans-unit>
       <trans-unit id="1259421956660976189" datatype="html">
         <source>Add Account</source>
-        <target state="new">Add Account</target>
+        <target state="translated">Konto hinzufügen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">73</context>
