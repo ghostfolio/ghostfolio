@@ -89,7 +89,10 @@ export class AccountService {
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
     (AccountWithBalance & {
-      activities?: (Order & { SymbolProfile?: SymbolProfile })[];
+      activities?: (Order & {
+        SymbolProfile?: SymbolProfile;
+        tags?: Pick<Tag, 'id'>[];
+      })[];
       balances?: AccountBalance[];
       platform?: Platform;
       tags?: Tag[];
@@ -172,7 +175,7 @@ export class AccountService {
     tagIds?: string[];
     userId: string;
   }): Promise<Account> {
-    await this.tagService.validateTagIds({ tagIds, userId });
+    await this.tagService.validateTagIdsWithoutDraftTag({ tagIds, userId });
 
     const account = await this.prismaService.account.create({
       data: {
@@ -237,15 +240,10 @@ export class AccountService {
     });
 
     return accounts.map((account) => {
-      let activitiesCount = 0;
-
-      for (const { isDraft } of account.activities) {
-        if (!isDraft) {
-          activitiesCount += 1;
-        }
-      }
-
-      const result = { ...account, activitiesCount };
+      const result = {
+        ...account,
+        activitiesCount: account.activities.length
+      };
 
       delete result.activities;
 
@@ -317,7 +315,7 @@ export class AccountService {
     userId: string;
     where: Prisma.AccountWhereUniqueInput;
   }): Promise<Account> {
-    await this.tagService.validateTagIds({ tagIds, userId });
+    await this.tagService.validateTagIdsWithoutDraftTag({ tagIds, userId });
 
     const account = await this.prismaService.account.update({
       data: {

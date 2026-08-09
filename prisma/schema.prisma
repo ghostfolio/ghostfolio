@@ -183,6 +183,7 @@ model Order {
   date            DateTime
   fee             Float
   id              String        @id @default(uuid())
+  /// @deprecated Use the "Draft" tag (`TAG_ID_DRAFT`) instead
   isDraft         Boolean       @default(false)
   quantity        Float
   symbolProfileId String

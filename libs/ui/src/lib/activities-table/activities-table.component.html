@@ -177,7 +177,7 @@
       <td *matCellDef="let element" class="line-height-normal px-1" mat-cell>
         <div class="align-items-center d-flex text-nowrap">
           <span class="text-truncate">{{ element.assetProfile?.name }}</span>
-          @if (element.isDraft) {
+          @if (isDraftActivity(element)) {
             <span class="badge badge-secondary ml-1" i18n>Draft</span>
           }
         </div>
@@ -513,7 +513,7 @@
           </a>
           <button
             mat-menu-item
-            [disabled]="!element.isDraft"
+            [disabled]="!isDraftActivity(element)"
             (click)="onExportDraft(element.id)"
           >
             <span class="align-items-center d-flex">

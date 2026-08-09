@@ -7,12 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Draft_ tag, assigned automatically to activities dated in the future
+
 ### Changed
 
+- Deprecated the `isDraft` attribute of the activity in favor of the _Draft_ tag
+- Changed the activities count of an account to include draft activities
+- Extended the _Draft_ tag to activities with a custom asset profile of type `BUY`
 - Improved the language localization for German (`de`)
 
 ### Fixed
 
+- Fixed the dividend and interest of an account by excluding draft activities
 - Resolved an issue with unknown country names in the country weightings of the _Financial Modeling Prep_ service
 - Resolved an issue with unknown country names in the data enhancer for asset profile data via _Trackinsight_
 

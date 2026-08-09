@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
@@ -287,9 +288,9 @@ export class ActivitiesController {
       userId: this.request.user.id
     });
 
-    if (dataSource && !activity.isDraft) {
+    if (dataSource && !isActivityInFuture({ date: activity.date })) {
       // Gather symbol data in the background, if data source is set
-      // (not MANUAL) and not draft
+      // (not MANUAL) and the date is not in the future
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
@@ -369,6 +370,7 @@ export class ActivitiesController {
         }),
         user: { connect: { id: this.request.user.id } }
       },
+      originalDate: originalActivity.date,
       userId: this.request.user.id,
       where: {
         id
