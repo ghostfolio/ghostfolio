@@ -40,18 +40,18 @@ recomputed on every write cannot express that; a tag can.
 "Newly becomes" is what makes this one rule rather than separate create and update cases:
 
 - **create / import** — `date > endOfToday()`
-- **update** — `date > endOfToday() && storedDate <= endOfToday()`
+- **update** — `date > endOfToday() && originalDate <= endOfToday()`
 
-The stored-date comparison is essential. Without it, correcting a fee on a future-dated
+The original-date comparison is essential. Without it, correcting a fee on a future-dated
 activity the user deliberately untagged would silently re-tag it, undoing their choice.
 
 Two consequences of keying the rule on the date transition alone, both intentional:
 
 - **Changing only the type does not assign the tag.** A future-dated `FEE` edited into a
-  `BUY` keeps its date, so `storedDate` is already in the future and the rule declines. The
-  old code recomputed from the date and would have marked it a draft. Widening the rule to
-  the type transition would mean re-tagging activities the user untagged, which is the
-  behaviour the stored-date comparison exists to prevent.
+  `BUY` keeps its date, so `originalDate` is already in the future and the rule declines.
+  The old code recomputed from the date and would have marked it a draft. Widening the
+  rule to the type transition would mean re-tagging activities the user untagged, which is
+  the behaviour the original-date comparison exists to prevent.
 - **An update that does not send `tags` leaves them untouched.** `tags` is optional in
   `UpdateOrderDto`, and treating an absent list as an empty one would let a partial update
   drop the tag with no way for the rule to restore it. Such an update still gains the tag
@@ -166,8 +166,8 @@ Mirroring [account.helper.ts](../apps/api/src/helper/account.helper.ts) field fo
   next to `WHERE_ACCOUNT_NOT_EXCLUDED` — the Prisma equivalent
 - `isActivityInFuture({ date })`, next to `isAccountBalanceInFuture` — the date predicate that
   keeps data gathering off the tag
-- `isDraftTagToBeAssigned({ date, storedDate, type })` — the transition rule above
-- `getTagsWithDraftTag({ date, draftTag, storedDate, tags, type })` — applies that rule to a
+- `isDraftTagToBeAssigned({ date, originalDate, type })` — the transition rule above
+- `getTagsWithDraftTag({ date, draftTag, originalDate, tags, type })` — applies that rule to a
   tag list. Generic over the tag shape, because the write paths pass `{ id }` while the
   import preview needs the full `Tag` for its response
 
