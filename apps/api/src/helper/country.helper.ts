@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { countries } from 'countries-list';
 
 export function getCountryCodeByName({
@@ -15,6 +16,12 @@ export function getCountryCodeByName({
     if (country.name === name) {
       return code;
     }
+  }
+
+  if (name) {
+    const logger = new Logger('getCountryCodeByName');
+
+    logger.warn(`Could not map the country "${name}" to a code`);
   }
 
   return undefined;

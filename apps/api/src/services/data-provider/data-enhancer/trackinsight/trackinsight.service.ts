@@ -16,6 +16,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://www.trackinsight.com';
 
   private static countriesMapping = {
+    'Czech Republic': 'CZ',
     'Republic of Korea': 'KR',
     'Russian Federation': 'RU',
     Turkey: 'TR',
@@ -125,13 +126,14 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       for (const [name, value] of Object.entries<any>(
         holdings?.countries ?? {}
       )) {
-        response.countries.push({
-          code: getCountryCodeByName({
-            name,
-            aliases: TrackinsightDataEnhancerService.countriesMapping
-          }),
-          weight: value.weight
+        const code = getCountryCodeByName({
+          name,
+          aliases: TrackinsightDataEnhancerService.countriesMapping
         });
+
+        if (code) {
+          response.countries.push({ code, weight: value.weight });
+        }
       }
     }
 
