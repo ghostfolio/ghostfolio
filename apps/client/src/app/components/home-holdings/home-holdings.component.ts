@@ -3,12 +3,15 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AssetProfileIdentifier,
   PortfolioPosition,
-  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
+import {
+  HoldingType,
+  HoldingsViewMode,
+  ToggleOption
+} from '@ghostfolio/common/types';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';

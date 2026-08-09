@@ -12,8 +12,14 @@
           !isLoading() && option.value !== optionFormControl.value
       }"
       [disabled]="isLoading()"
+      [title]="option.title ?? ''"
       [value]="option.value"
-      >{{ option.label }}</mat-radio-button
     >
+      @if (option.iconName) {
+        <ion-icon class="d-block" [name]="option.iconName" />
+      } @else {
+        <span>{{ option.label }}</span>
+      }
+    </mat-radio-button>
   }
 </mat-radio-group>

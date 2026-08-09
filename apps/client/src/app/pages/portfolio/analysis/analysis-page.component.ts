@@ -13,7 +13,6 @@ import {
   PortfolioInvestmentsResponse,
   PortfolioPerformance,
   PortfolioPosition,
-  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
 import {
@@ -21,7 +20,11 @@ import {
   hasReadRestrictedAccessPermission,
   permissions
 } from '@ghostfolio/common/permissions';
-import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
+import type {
+  AiPromptMode,
+  GroupBy,
+  ToggleOption
+} from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
