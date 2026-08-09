@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the activities count of an account to include draft activities
 - Extended the _Draft_ tag to activities with a custom asset profile of type `BUY`
 - Improved the language localization for German (`de`)
+- Upgraded `bull-board` from version `8.1.2` to `8.6.0`
 
 ### Fixed
 
