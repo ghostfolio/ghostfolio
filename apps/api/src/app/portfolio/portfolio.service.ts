@@ -179,7 +179,14 @@ export class PortfolioService {
           activities: {
             include: {
               SymbolProfile: true,
-              tags: { select: { id: true }, where: { id: TAG_ID_DRAFT } }
+              tags: {
+                select: {
+                  id: true
+                },
+                where: {
+                  id: TAG_ID_DRAFT
+                }
+              }
             }
           },
           platform: true,

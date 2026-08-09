@@ -19,18 +19,18 @@ export function getTagsWithDraftTag<T extends { id: string }>({
   date,
   draftTag,
   endOfTodayDate = endOfToday(),
-  storedDate,
+  originalDate,
   tags,
   type
 }: {
   date: Date;
   draftTag: T;
   endOfTodayDate?: Date;
-  storedDate?: Date;
+  originalDate?: Date;
   tags: T[];
   type: ActivityType;
 }) {
-  if (!isDraftTagToBeAssigned({ date, endOfTodayDate, storedDate, type })) {
+  if (!isDraftTagToBeAssigned({ date, endOfTodayDate, originalDate, type })) {
     return tags;
   }
 
@@ -50,12 +50,12 @@ export function isActivityInFuture({
 export function isDraftTagToBeAssigned({
   date,
   endOfTodayDate = endOfToday(),
-  storedDate,
+  originalDate,
   type
 }: {
   date: Date;
   endOfTodayDate?: Date;
-  storedDate?: Date;
+  originalDate?: Date;
   type: ActivityType;
 }) {
   if (NON_INVESTMENT_ACTIVITY_TYPES.includes(type)) {
@@ -68,7 +68,7 @@ export function isDraftTagToBeAssigned({
 
   // Assign only when the date newly moves into the future, so that a tag the
   // user has removed is not restored by an unrelated change
-  return storedDate
-    ? !isActivityInFuture({ endOfTodayDate, date: storedDate })
+  return originalDate
+    ? !isActivityInFuture({ endOfTodayDate, date: originalDate })
     : true;
 }

@@ -370,7 +370,7 @@ export class ActivitiesController {
         }),
         user: { connect: { id: this.request.user.id } }
       },
-      storedDate: originalActivity.date,
+      originalDate: originalActivity.date,
       userId: this.request.user.id,
       where: {
         id

@@ -980,7 +980,7 @@ export class ActivitiesService {
 
   public async updateActivity({
     data,
-    storedDate,
+    originalDate,
     userId,
     where
   }: {
@@ -992,7 +992,7 @@ export class ActivitiesService {
       tags?: { id: string }[];
       type?: ActivityType;
     };
-    storedDate: Date;
+    originalDate: Date;
     userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
@@ -1049,7 +1049,7 @@ export class ActivitiesService {
 
     if (areTagsProvided) {
       const tagsToSet = getTagsWithDraftTag({
-        storedDate,
+        originalDate,
         tags,
         date: data.date as Date,
         draftTag: { id: TAG_ID_DRAFT },
@@ -1060,7 +1060,7 @@ export class ActivitiesService {
       tagsToUpdate = { set: tagsToSet };
     } else if (
       isDraftTagToBeAssigned({
-        storedDate,
+        originalDate,
         date: data.date as Date,
         type: data.type
       })
