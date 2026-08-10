@@ -115,10 +115,6 @@ export class GfSymbolAutocompleteComponent
   }
 
   public ngOnInit() {
-    if (this.disabled) {
-      this.control.disable();
-    }
-
     this.control.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
