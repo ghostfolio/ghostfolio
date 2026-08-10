@@ -31,8 +31,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  FormControl,
+  FormGroup,
   NonNullableFormBuilder,
-  FormsModule,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
@@ -59,7 +60,6 @@ import { catchError } from 'rxjs/operators';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
     GfCurrencySelectorComponent,
     GfValueComponent,
     IonIcon,
@@ -79,8 +79,11 @@ import { catchError } from 'rxjs/operators';
 })
 export class GfUserAccountSettingsComponent implements OnInit {
   protected readonly appearancePlaceholder = $localize`Auto`;
-  protected readonly baseCurrencyForm = inject(NonNullableFormBuilder).group({
-    baseCurrency: [{ value: '', disabled: true }]
+  protected readonly baseCurrencyForm = new FormGroup({
+    baseCurrency: new FormControl<string | null>({
+      disabled: true,
+      value: null
+    })
   });
   protected closeUserAccountMailHref: string;
   protected readonly currencies: string[] = [];
@@ -185,10 +188,9 @@ export class GfUserAccountSettingsComponent implements OnInit {
             permissions.updateViewMode
           );
 
-          this.baseCurrencyForm.setValue(
-            { baseCurrency: this.user.settings.baseCurrency ?? '' },
-            { emitEvent: false }
-          );
+          this.baseCurrencyForm.setValue({
+            baseCurrency: this.user.settings.baseCurrency ?? null
+          });
 
           if (this.hasPermissionToUpdateUserSettings) {
             this.baseCurrencyForm.enable({ emitEvent: false });

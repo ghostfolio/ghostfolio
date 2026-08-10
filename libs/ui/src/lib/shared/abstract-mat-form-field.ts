@@ -169,8 +169,6 @@ export abstract class AbstractMatFormField<T>
       this.control.enable({ emitEvent: false });
     }
 
-    this.disabled = isDisabled;
-
     this.stateChanges.next();
   }
 

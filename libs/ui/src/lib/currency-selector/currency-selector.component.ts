@@ -30,7 +30,6 @@ import {
   MatAutocomplete,
   MatAutocompleteModule,
   MatAutocompleteOrigin,
-  MatAutocompleteTrigger,
   MatOption
 } from '@angular/material/autocomplete';
 import {
@@ -79,9 +78,6 @@ export class GfCurrencySelectorComponent
   public filteredCurrencies: string[] = [];
   public readonly formControlName = input.required<string>();
 
-  private readonly autocompleteTrigger = viewChild.required(
-    MatAutocompleteTrigger
-  );
   private readonly destroyRef = inject(DestroyRef);
   private readonly formField = inject(MAT_FORM_FIELD);
   private readonly input = viewChild.required(MatInput);
@@ -115,6 +111,10 @@ export class GfCurrencySelectorComponent
     return !this.control.value;
   }
 
+  public override get value() {
+    return super.value;
+  }
+
   public override set value(value: string | null) {
     this.control.setValue(value);
     super.value = value;
@@ -131,10 +131,6 @@ export class GfCurrencySelectorComponent
   }
 
   public ngOnInit() {
-    if (this.disabled) {
-      this.control.disable();
-    }
-
     const formGroup = this.formGroupDirective.form;
 
     if (formGroup) {
@@ -177,18 +173,17 @@ export class GfCurrencySelectorComponent
     }
   }
 
-  public override onBlur() {
+  public onPanelClosed() {
     // Typing clears the selected currency, so restore the last selection once
-    // the user leaves the field without picking an option. The panel is still
-    // open while an option is being clicked, in which case the selection
-    // itself provides the new value.
-    if (!super.value && !this.autocompleteTrigger().panelOpen) {
-      this.value = this.lastSelectedCurrency;
-
-      this.changeDetectorRef.markForCheck();
+    // the panel closes without an option having been picked. An empty input is
+    // left untouched to allow clearing the currency.
+    if (super.value || !this.control.value) {
+      return;
     }
 
-    super.onBlur();
+    this.value = this.lastSelectedCurrency;
+
+    this.changeDetectorRef.markForCheck();
   }
 
   public onUpdateCurrency({ option }: { option: MatOption<string> }) {
