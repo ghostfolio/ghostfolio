@@ -14,6 +14,7 @@ import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -31,6 +32,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NonNullableFormBuilder,
+  FormBuilder,
   FormsModule,
   ReactiveFormsModule,
   Validators
@@ -59,6 +61,7 @@ import { catchError } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
+    GfCurrencySelectorComponent,
     GfValueComponent,
     IonIcon,
     MatButtonModule,
@@ -78,6 +81,9 @@ import { catchError } from 'rxjs/operators';
 export class GfUserAccountSettingsComponent implements OnInit {
   protected readonly appearancePlaceholder = $localize`Auto`;
   protected readonly baseCurrency: string;
+  protected readonly baseCurrencyForm = inject(FormBuilder).group({
+    baseCurrency: ['']
+  });
   protected closeUserAccountMailHref: string;
   protected readonly currencies: string[] = [];
   protected readonly deleteOwnUserForm = inject(NonNullableFormBuilder).group({
@@ -182,6 +188,17 @@ export class GfUserAccountSettingsComponent implements OnInit {
             permissions.updateViewMode
           );
 
+          this.baseCurrencyForm.setValue(
+            { baseCurrency: this.user.settings.baseCurrency ?? null },
+            { emitEvent: false }
+          );
+
+          if (this.hasPermissionToUpdateUserSettings) {
+            this.baseCurrencyForm.enable({ emitEvent: false });
+          } else {
+            this.baseCurrencyForm.disable({ emitEvent: false });
+          }
+
           if (this.user.settings.locale) {
             this.locales.push(this.user.settings.locale);
           }
@@ -191,6 +208,16 @@ export class GfUserAccountSettingsComponent implements OnInit {
           this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
+        }
+      });
+
+    this.baseCurrencyForm.controls.baseCurrency.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => {
+        // The currency selector emits null while the user is typing and only
+        // emits a currency once an option has been selected
+        if (value && value !== this.user?.settings.baseCurrency) {
+          this.onChangeUserSetting('baseCurrency', value);
         }
       });
 

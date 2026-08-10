@@ -174,6 +174,14 @@ export class GfCurrencySelectorComponent
     super.value = option.value;
   }
 
+  public setDisabledState(isDisabled: boolean) {
+    if (isDisabled) {
+      this.control.disable({ emitEvent: false });
+    } else {
+      this.control.enable({ emitEvent: false });
+    }
+  }
+
   private filter(value: string) {
     const filterValue = value.toLowerCase();
 

@@ -8,20 +8,12 @@
             <div class="align-items-center d-flex pt-1 pt-1 w-50">
               <ng-container i18n>Base Currency</ng-container>
             </div>
-            <div class="pl-1 w-50">
+            <div class="pl-1 w-50" [formGroup]="baseCurrencyForm">
               <mat-form-field appearance="outline" class="w-100 without-hint">
-                <mat-select
-                  name="baseCurrency"
-                  [disabled]="!hasPermissionToUpdateUserSettings"
-                  [value]="user.settings.baseCurrency"
-                  (selectionChange)="
-                    onChangeUserSetting('baseCurrency', $event.value)
-                  "
-                >
-                  @for (currency of currencies; track currency) {
-                    <mat-option [value]="currency">{{ currency }}</mat-option>
-                  }
-                </mat-select>
+                <gf-currency-selector
+                  formControlName="baseCurrency"
+                  [currencies]="currencies"
+                />
               </mat-form-field>
             </div>
           </div>
