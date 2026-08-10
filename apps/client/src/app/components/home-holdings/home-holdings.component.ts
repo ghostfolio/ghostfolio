@@ -27,11 +27,8 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Router, RouterModule } from '@angular/router';
-import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { gridOutline, reorderFourOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -39,14 +36,10 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule,
     GfHoldingsTableComponent,
     GfToggleComponent,
     GfTreemapChartComponent,
-    IonIcon,
     MatButtonModule,
-    MatButtonToggleModule,
-    ReactiveFormsModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -62,17 +55,29 @@ export class GfHomeHoldingsComponent implements OnInit {
   protected hasPermissionToAccessHoldingsChart: boolean;
   protected hasPermissionToCreateActivity: boolean;
   protected holdings: PortfolioPosition[] | undefined;
+  protected holdingsViewMode: HoldingsViewMode =
+    GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE;
+  protected readonly holdingsViewModeOptions: ToggleOption[] = [
+    {
+      iconName: 'reorder-four-outline',
+      title: $localize`Table`,
+      value: 'TABLE'
+    },
+    {
+      iconName: 'grid-outline',
+      title: $localize`Chart`,
+      value: 'CHART'
+    }
+  ];
   protected holdingType: HoldingType = 'ACTIVE';
   protected readonly holdingTypeOptions: ToggleOption[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
+  protected isHoldingsViewModeToggleDisabled = true;
   protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
   protected user: User;
-  protected readonly viewModeFormControl = new FormControl<HoldingsViewMode>(
-    GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
-  );
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -121,26 +126,22 @@ export class GfHomeHoldingsComponent implements OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
 
-    this.viewModeFormControl.valueChanges
+  protected onChangeHoldingsViewMode(aHoldingsViewMode: HoldingsViewMode) {
+    this.holdingsViewMode = aHoldingsViewMode;
+
+    this.dataService
+      .putUserSetting({ holdingsViewMode: aHoldingsViewMode })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((holdingsViewMode) => {
-        if (!holdingsViewMode) {
-          return;
-        }
-
-        this.dataService
-          .putUserSetting({ holdingsViewMode })
+      .subscribe(() => {
+        this.userService
+          .get(true)
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
-            this.userService
-              .get(true)
-              .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe((user) => {
-                this.user = user;
+          .subscribe((user) => {
+            this.user = user;
 
-                this.changeDetectorRef.markForCheck();
-              });
+            this.changeDetectorRef.markForCheck();
           });
       });
   }
@@ -173,26 +174,22 @@ export class GfHomeHoldingsComponent implements OnInit {
   }
 
   private initialize() {
-    this.viewModeFormControl.disable({ emitEvent: false });
+    this.isHoldingsViewModeToggleDisabled = true;
 
     if (
       this.hasPermissionToAccessHoldingsChart &&
       this.holdingType === 'ACTIVE'
     ) {
-      this.viewModeFormControl.enable({ emitEvent: false });
+      this.isHoldingsViewModeToggleDisabled = false;
 
-      this.viewModeFormControl.setValue(
+      this.holdingsViewMode =
         this.deviceType === 'mobile'
           ? GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
           : (this.user?.settings?.holdingsViewMode ??
-              GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE),
-        { emitEvent: false }
-      );
-    } else if (this.holdingType === 'CLOSED') {
-      this.viewModeFormControl.setValue(
-        GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
-        { emitEvent: false }
-      );
+            GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE);
+    } else {
+      this.holdingsViewMode =
+        GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE;
     }
 
     this.holdings = undefined;
