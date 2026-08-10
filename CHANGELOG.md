@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reused the currency selector component in the user account settings
 - Extended the toggle component to support icons
 
+### Fixed
+
+- Fixed the handling of the disabled state in the currency selector and symbol autocomplete components
+- Fixed the restoration of the current selection in the currency selector component when leaving the field without picking an option
+
 ## 3.46.0 - 2026-08-09
 
 ### Added
