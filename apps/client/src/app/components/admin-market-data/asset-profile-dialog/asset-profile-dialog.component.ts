@@ -848,13 +848,12 @@ export class GfAssetProfileDialogComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(({ price }) => {
+        const currency = this.assetProfileForm.controls.currency.value;
+
         this.notificationService.alert({
-          title:
-            $localize`The current market price is` +
-            ' ' +
-            price +
-            ' ' +
-            this.assetProfileForm.controls.currency.value
+          title: `${$localize`The current market price is`} ${price}${
+            currency ? ` ${currency}` : ''
+          }`
         });
       });
   }
