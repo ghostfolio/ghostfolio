@@ -217,7 +217,7 @@
                 <span i18n>Me</span>
               </span>
             </button>
-            @for (accessItem of user()?.access; track accessItem) {
+            @for (accessItem of user()?.access; track accessItem.id) {
               <button mat-menu-item (click)="impersonateAccount(accessItem.id)">
                 <span class="align-items-center d-flex">
                   <ion-icon
