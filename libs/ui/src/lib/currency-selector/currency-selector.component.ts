@@ -30,6 +30,7 @@ import {
   MatAutocomplete,
   MatAutocompleteModule,
   MatAutocompleteOrigin,
+  MatAutocompleteTrigger,
   MatOption
 } from '@angular/material/autocomplete';
 import {
@@ -78,9 +79,13 @@ export class GfCurrencySelectorComponent
   public filteredCurrencies: string[] = [];
   public readonly formControlName = input.required<string>();
 
+  private readonly autocompleteTrigger = viewChild.required(
+    MatAutocompleteTrigger
+  );
   private readonly destroyRef = inject(DestroyRef);
   private readonly formField = inject(MAT_FORM_FIELD);
   private readonly input = viewChild.required(MatInput);
+  private lastSelectedCurrency: string | null = null;
 
   public constructor(
     public override readonly _elementRef: ElementRef,
@@ -113,6 +118,8 @@ export class GfCurrencySelectorComponent
   public override set value(value: string | null) {
     this.control.setValue(value);
     super.value = value;
+
+    this.lastSelectedCurrency = value;
   }
 
   public focus() {
@@ -170,16 +177,24 @@ export class GfCurrencySelectorComponent
     }
   }
 
-  public onUpdateCurrency({ option }: { option: MatOption<string> }) {
-    super.value = option.value;
+  public override onBlur() {
+    // Typing clears the selected currency, so restore the last selection once
+    // the user leaves the field without picking an option. The panel is still
+    // open while an option is being clicked, in which case the selection
+    // itself provides the new value.
+    if (!super.value && !this.autocompleteTrigger().panelOpen) {
+      this.value = this.lastSelectedCurrency;
+
+      this.changeDetectorRef.markForCheck();
+    }
+
+    super.onBlur();
   }
 
-  public setDisabledState(isDisabled: boolean) {
-    if (isDisabled) {
-      this.control.disable({ emitEvent: false });
-    } else {
-      this.control.enable({ emitEvent: false });
-    }
+  public onUpdateCurrency({ option }: { option: MatOption<string> }) {
+    super.value = option.value;
+
+    this.lastSelectedCurrency = option.value;
   }
 
   private filter(value: string) {

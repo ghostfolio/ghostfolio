@@ -9,7 +9,12 @@ import {
   Input,
   OnDestroy
 } from '@angular/core';
-import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NgControl,
+  Validators
+} from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
@@ -23,6 +28,7 @@ export abstract class AbstractMatFormField<T>
   @HostBinding('attr.aria-describedBy') public describedBy = '';
 
   public readonly autofilled: boolean;
+  public abstract readonly control: FormControl;
   public errorState: boolean;
   public focused = false;
   public readonly stateChanges = new Subject<void>();
@@ -154,6 +160,18 @@ export abstract class AbstractMatFormField<T>
 
   public setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
+  }
+
+  public setDisabledState(isDisabled: boolean) {
+    if (isDisabled) {
+      this.control.disable({ emitEvent: false });
+    } else {
+      this.control.enable({ emitEvent: false });
+    }
+
+    this.disabled = isDisabled;
+
+    this.stateChanges.next();
   }
 
   public writeValue(value: T) {

@@ -32,7 +32,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NonNullableFormBuilder,
-  FormBuilder,
   FormsModule,
   ReactiveFormsModule,
   Validators
@@ -80,9 +79,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class GfUserAccountSettingsComponent implements OnInit {
   protected readonly appearancePlaceholder = $localize`Auto`;
-  protected readonly baseCurrency: string;
-  protected readonly baseCurrencyForm = inject(FormBuilder).group({
-    baseCurrency: ['']
+  protected readonly baseCurrencyForm = inject(NonNullableFormBuilder).group({
+    baseCurrency: [{ value: '', disabled: true }]
   });
   protected closeUserAccountMailHref: string;
   protected readonly currencies: string[] = [];
@@ -135,9 +133,8 @@ export class GfUserAccountSettingsComponent implements OnInit {
   private readonly webAuthnService = inject(WebAuthnService);
 
   public constructor() {
-    const { baseCurrency, currencies } = this.dataService.fetchInfo();
+    const { currencies } = this.dataService.fetchInfo();
 
-    this.baseCurrency = baseCurrency;
     this.currencies = currencies;
 
     this.userService.stateChanged
@@ -189,7 +186,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
           );
 
           this.baseCurrencyForm.setValue(
-            { baseCurrency: this.user.settings.baseCurrency ?? null },
+            { baseCurrency: this.user.settings.baseCurrency ?? '' },
             { emitEvent: false }
           );
 
