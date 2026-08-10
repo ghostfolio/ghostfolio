@@ -9,6 +9,14 @@
       background-color: rgba(var(--dark-dividers));
     }
 
+    &.mat-mdc-radio-disabled {
+      ::ng-deep {
+        label {
+          color: rgba(var(--dark-disabled-text));
+        }
+      }
+    }
+
     ::ng-deep {
       .mdc-radio {
         display: none;
@@ -29,6 +37,14 @@
     &.mat-mdc-radio-checked {
       background-color: rgba(var(--light-dividers));
       border: 1px solid rgba(var(--light-disabled-text));
+    }
+
+    &.mat-mdc-radio-disabled {
+      ::ng-deep {
+        label {
+          color: rgba(var(--light-disabled-text));
+        }
+      }
     }
 
     ::ng-deep {

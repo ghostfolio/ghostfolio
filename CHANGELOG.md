@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Reused the currency selector component in the user account settings
+- Extended the toggle component to support a disabled state
 - Extended the toggle component to support icons
+- Reused the currency selector component in the user account settings
 
 ### Fixed
 

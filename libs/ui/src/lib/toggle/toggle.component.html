@@ -9,9 +9,11 @@
       [class]="{
         'cursor-default': option.value === optionFormControl.value,
         'cursor-pointer':
-          !isLoading() && option.value !== optionFormControl.value
+          !isDisabled() &&
+          !isLoading() &&
+          option.value !== optionFormControl.value
       }"
-      [disabled]="isLoading()"
+      [disabled]="isDisabled() || isLoading()"
       [title]="option.title ?? ''"
       [value]="option.value"
     >

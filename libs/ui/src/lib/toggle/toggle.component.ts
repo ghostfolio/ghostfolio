@@ -20,6 +20,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 })
 export class GfToggleComponent {
   public readonly defaultValue = input.required<string>();
+  public readonly isDisabled = input<boolean>(false);
   public readonly isLoading = input<boolean>(false);
   public readonly options = input<ToggleOption[]>([]);
 

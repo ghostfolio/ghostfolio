@@ -26,6 +26,22 @@ type Story = StoryObj<GfToggleComponent>;
 export const Default: Story = {
   args: {
     defaultValue: '1d',
+    isDisabled: false,
+    isLoading: false,
+    options: [
+      { label: 'Today', value: '1d' },
+      { label: 'YTD', value: 'ytd' },
+      { label: '1Y', value: '1y' },
+      { label: '5Y', value: '5y' },
+      { label: 'Max', value: 'max' }
+    ]
+  }
+};
+
+export const Disabled: Story = {
+  args: {
+    defaultValue: '1d',
+    isDisabled: true,
     isLoading: false,
     options: [
       { label: 'Today', value: '1d' },
@@ -40,6 +56,7 @@ export const Default: Story = {
 export const WithIcons: Story = {
   args: {
     defaultValue: 'TABLE',
+    isDisabled: false,
     isLoading: false,
     options: [
       {
