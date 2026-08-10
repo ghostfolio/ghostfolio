@@ -1,4 +1,4 @@
-import { ToggleOption } from '@ghostfolio/common/interfaces';
+import { ToggleOption } from '@ghostfolio/common/types';
 
 import {
   ChangeDetectionStrategy,
@@ -9,10 +9,11 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
+import { IonIcon } from '@ionic/angular/standalone';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatRadioModule, ReactiveFormsModule],
+  imports: [IonIcon, MatRadioModule, ReactiveFormsModule],
   selector: 'gf-toggle',
   styleUrls: ['./toggle.component.scss'],
   templateUrl: './toggle.component.html'

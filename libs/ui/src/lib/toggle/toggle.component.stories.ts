@@ -1,17 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
+import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
+import { addIcons } from 'ionicons';
+import { gridOutline, reorderFourOutline } from 'ionicons/icons';
 
 import { GfToggleComponent } from './toggle.component';
+
+addIcons({ gridOutline, reorderFourOutline });
 
 export default {
   title: 'Toggle',
   component: GfToggleComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, MatRadioModule, ReactiveFormsModule]
+      imports: [CommonModule, IonIcon, MatRadioModule, ReactiveFormsModule]
     })
   ]
 } as Meta<GfToggleComponent>;
@@ -28,6 +33,25 @@ export const Default: Story = {
       { label: '1Y', value: '1y' },
       { label: '5Y', value: '5y' },
       { label: 'Max', value: 'max' }
+    ]
+  }
+};
+
+export const WithIcons: Story = {
+  args: {
+    defaultValue: 'TABLE',
+    isLoading: false,
+    options: [
+      {
+        iconName: 'reorder-four-outline',
+        title: 'Table',
+        value: 'TABLE'
+      },
+      {
+        iconName: 'grid-outline',
+        title: 'Chart',
+        value: 'CHART'
+      }
     ]
   }
 };
