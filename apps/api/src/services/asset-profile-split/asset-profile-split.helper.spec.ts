@@ -2,6 +2,7 @@ import {
   activityDummyData,
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import * as commonHelper from '@ghostfolio/common/helper';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
@@ -39,7 +40,7 @@ describe('adjustActivityBySplits', () => {
   });
 
   it('only adjusts activities before the split calendar date', () => {
-    const split = createSplit('2024-06-15T12:00:00Z', 2, 1);
+    const split = createSplit('2024-06-15T00:00:00Z', 2, 1);
     const activityOnSplitDate = createActivity('2024-06-15T18:00:00Z');
     const activityAfterSplit = createActivity('2024-06-16T00:00:00Z');
 
@@ -56,6 +57,23 @@ describe('adjustActivityBySplits', () => {
     expect(adjustedActivityOnSplitDate).not.toBe(activityOnSplitDate);
     expect(adjustedActivityAfterSplit).toEqual(activityAfterSplit);
     expect(adjustedActivityAfterSplit).not.toBe(activityAfterSplit);
+  });
+
+  it('compares stored UTC split dates without normalizing them locally', () => {
+    const resetHoursSpy = jest
+      .spyOn(commonHelper, 'resetHours')
+      .mockReturnValue(new Date('2024-06-14T00:00:00Z'));
+
+    try {
+      const activity = createActivity('2024-06-14T12:00:00Z');
+      const split = createSplit('2024-06-15T00:00:00Z', 2, 1);
+
+      const adjustedActivity = adjustActivityBySplits(activity, [split]);
+
+      expect(adjustedActivity.quantity).toBe(20);
+    } finally {
+      resetHoursSpy.mockRestore();
+    }
   });
 });
 

@@ -13,7 +13,7 @@ export function adjustActivityBySplits(
   let splitFactor = new Big(1);
 
   for (const split of splits) {
-    if (isBefore(activityDate, resetHours(split.date))) {
+    if (isBefore(activityDate, split.date)) {
       splitFactor = splitFactor.mul(split.numerator).div(split.denominator);
     }
   }
