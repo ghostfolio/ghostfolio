@@ -167,7 +167,12 @@ export class AssetProfilesController {
         permissions.deleteAssetProfileSplitOfOwnAssetProfile
     });
 
-    return this.assetProfilesService.deleteSplit({ id, symbolProfileId });
+    return this.assetProfilesService.deleteSplit({
+      dataSource,
+      id,
+      symbol,
+      symbolProfileId
+    });
   }
 
   @HasPermission(permissions.accessAdminControl)

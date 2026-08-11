@@ -72,12 +72,14 @@ export class AssetProfilesService {
   }
 
   public async deleteSplit({
+    dataSource,
     id,
+    symbol,
     symbolProfileId
   }: {
     id: string;
     symbolProfileId: string;
-  }) {
+  } & AssetProfileIdentifier) {
     const isDeleted = await this.assetProfileSplitService.deleteById({
       id,
       symbolProfileId
@@ -88,6 +90,7 @@ export class AssetProfilesService {
     }
 
     await this.emitPortfolioChangedEvents(symbolProfileId);
+    await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
   }
 
   private async emitPortfolioChangedEvents(symbolProfileId: string) {

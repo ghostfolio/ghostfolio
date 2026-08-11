@@ -33,10 +33,10 @@ describe('AssetProfilesService', () => {
       { gatherSymbol } as unknown as DataGatheringService,
       null,
       null,
+      { emit } as unknown as EventEmitter2,
       null,
       { order: { findMany } } as never,
-      null,
-      { emit } as unknown as EventEmitter2
+      null
     );
   });
 
@@ -83,10 +83,10 @@ describe('AssetProfilesService', () => {
         { gatherSymbol } as unknown as DataGatheringService,
         null,
         null,
+        { emit } as unknown as EventEmitter2,
         null,
         { order: { findMany } } as never,
-        null,
-        { emit } as unknown as EventEmitter2
+        null
       );
 
       await assetProfilesService.createSplit({
@@ -117,7 +117,9 @@ describe('AssetProfilesService', () => {
 
       await expect(
         assetProfilesService.deleteSplit({
+          dataSource: DataSource.YAHOO,
           id: 'split-id',
+          symbol: 'AAPL',
           symbolProfileId: 'profile-id'
         })
       ).rejects.toBeInstanceOf(NotFoundException);
@@ -131,7 +133,9 @@ describe('AssetProfilesService', () => {
 
       await expect(
         assetProfilesService.deleteSplit({
+          dataSource: DataSource.YAHOO,
           id: 'split-id',
+          symbol: 'AAPL',
           symbolProfileId: 'profile-id'
         })
       ).resolves.toBeUndefined();
@@ -143,6 +147,10 @@ describe('AssetProfilesService', () => {
       expect(emit.mock.calls.map(([, event]) => event.getUserId())).toEqual([
         'user-1'
       ]);
+      expect(gatherSymbol).toHaveBeenCalledWith({
+        dataSource: DataSource.YAHOO,
+        symbol: 'AAPL'
+      });
     });
   });
 });
