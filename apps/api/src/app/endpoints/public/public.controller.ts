@@ -78,7 +78,7 @@ export class PublicController {
     ] = await Promise.all([
       this.portfolioService.getDetails({
         filters,
-        impersonationId: access.userId,
+        impersonationId: undefined,
         userId: user.id,
         withMarkets: true
       }),

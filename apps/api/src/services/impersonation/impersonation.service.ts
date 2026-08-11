@@ -12,7 +12,11 @@ export class ImpersonationService {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  public async validateImpersonationId(aId = '') {
+  public async validateImpersonationId(aId?: string) {
+    if (!aId) {
+      return null;
+    }
+
     if (this.request.user) {
       const accessObject = await this.prismaService.access.findFirst({
         where: {
@@ -29,7 +33,13 @@ export class ImpersonationService {
           permissions.impersonateAllUsers
         )
       ) {
-        return aId;
+        // The identifier is a user id in this case, hence verify its existence
+        const user = await this.prismaService.user.findUnique({
+          select: { id: true },
+          where: { id: aId }
+        });
+
+        return user?.id ?? null;
       }
     } else {
       // Public access

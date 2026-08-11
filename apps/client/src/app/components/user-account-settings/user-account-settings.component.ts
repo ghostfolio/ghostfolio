@@ -1,3 +1,4 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
   KEY_STAY_SIGNED_IN,
   KEY_TOKEN,
@@ -90,6 +91,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected readonly deleteOwnUserForm = inject(NonNullableFormBuilder).group({
     accessToken: ['', Validators.required]
   });
+  protected hasImpersonationId: boolean;
   protected hasPermissionToDeleteOwnUser: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
@@ -129,6 +131,9 @@ export class GfUserAccountSettingsComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly notificationService = inject(NotificationService);
   private readonly settingsStorageService = inject(SettingsStorageService);
   private readonly snackBar = inject(MatSnackBar);
@@ -139,6 +144,17 @@ export class GfUserAccountSettingsComponent implements OnInit {
     const { currencies } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+
+        this.updateBaseCurrencyFormState();
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -192,11 +208,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
             baseCurrency: this.user.settings.baseCurrency ?? null
           });
 
-          if (this.hasPermissionToUpdateUserSettings) {
-            this.baseCurrencyForm.enable({ emitEvent: false });
-          } else {
-            this.baseCurrencyForm.disable({ emitEvent: false });
-          }
+          this.updateBaseCurrencyFormState();
 
           if (this.user.settings.locale) {
             this.locales.push(this.user.settings.locale);
@@ -430,5 +442,15 @@ export class GfUserAccountSettingsComponent implements OnInit {
     this.isWebAuthnEnabled = this.webAuthnService.isEnabled() ?? false;
 
     this.changeDetectorRef.markForCheck();
+  }
+
+  private updateBaseCurrencyFormState() {
+    // The base currency belongs to the impersonated user while a change would be
+    // applied to the authenticated user
+    if (!this.hasImpersonationId && this.hasPermissionToUpdateUserSettings) {
+      this.baseCurrencyForm.enable({ emitEvent: false });
+    } else {
+      this.baseCurrencyForm.disable({ emitEvent: false });
+    }
   }
 }

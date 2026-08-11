@@ -45,7 +45,8 @@ import {
   getSum,
   isAccountExcluded,
   isDraftActivity,
-  parseDate
+  parseDate,
+  resolveUserSettings
 } from '@ghostfolio/common/helper';
 import {
   AccountsResponse,
@@ -195,10 +196,10 @@ export class PortfolioService {
         orderBy: { name: 'asc' }
       }),
       this.getDetails({
+        userId,
         withExcludedAccounts,
         filters: filtersWithoutSearchQueryFilter,
-        impersonationId: userId,
-        userId: this.request.user.id
+        impersonationId: undefined
       }),
       this.userService.user({ id: userId })
     ]);
@@ -355,10 +356,12 @@ export class PortfolioService {
 
   public getDividends({
     activities,
-    groupBy
+    groupBy,
+    userCurrency
   }: {
     activities: Activity[];
     groupBy?: GroupBy;
+    userCurrency: string;
   }): InvestmentItem[] {
     let dividends = activities.map(({ currency, date, value }) => {
       return {
@@ -366,7 +369,7 @@ export class PortfolioService {
         investment: this.exchangeRateDataService.toCurrency(
           value,
           currency,
-          this.getUserCurrency()
+          userCurrency
         )
       };
     });
@@ -1142,7 +1145,16 @@ export class PortfolioService {
     userId: string;
   }): Promise<PortfolioReportResponse> {
     userId = await this.getUserId(impersonationId, userId);
-    const userSettings = this.request.user.settings.settings as UserSettings;
+
+    const user = await this.userService.user({ id: userId });
+
+    // The rules are evaluated against the portfolio of the (potentially
+    // impersonated) user, while the translations follow the language of the
+    // authenticated user
+    const userSettings = resolveUserSettings({
+      impersonationUserSettings: user?.settings?.settings as UserSettings,
+      userSettings: this.request.user.settings.settings as UserSettings
+    });
 
     const { accounts, holdings, markets, marketsAdvanced, summary } =
       await this.getDetails({
@@ -2148,11 +2160,7 @@ export class PortfolioService {
   }
 
   private getUserCurrency(aUser?: UserWithSettings) {
-    return (
-      aUser?.settings?.settings.baseCurrency ??
-      this.request.user?.settings?.settings.baseCurrency ??
-      DEFAULT_CURRENCY
-    );
+    return aUser?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
   }
 
   private async getUserId(aImpersonationId: string, aUserId: string) {
