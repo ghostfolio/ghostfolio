@@ -1,3 +1,4 @@
+import { INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
@@ -9,6 +10,10 @@ export function adjustActivityBySplits(
   activity: Activity,
   splits: AssetProfileSplit[]
 ): Activity {
+  if (!INVESTMENT_ACTIVITY_TYPES.includes(activity.type)) {
+    return activity;
+  }
+
   const activityDate = resetHours(activity.date);
   let splitFactor = new Big(1);
 

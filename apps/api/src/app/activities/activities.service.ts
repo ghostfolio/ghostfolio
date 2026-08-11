@@ -68,6 +68,7 @@ export class ActivitiesService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
@@ -76,8 +77,7 @@ export class ActivitiesService {
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService,
-    private readonly tagService: TagService,
-    private readonly assetProfileSplitService: AssetProfileSplitService
+    private readonly tagService: TagService
   ) {}
 
   public areCashActivitiesExcludedByFilters(filters: Filter[] = []) {

@@ -4,6 +4,10 @@ import {
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import {
+  INVESTMENT_ACTIVITY_TYPES,
+  NON_INVESTMENT_ACTIVITY_TYPES
+} from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
 
@@ -24,6 +28,7 @@ describe('ActivitiesService', () => {
     activitiesService = new ActivitiesService(
       null,
       accountService as unknown as AccountService,
+      { getSplitsBySymbolProfileIds } as unknown as AssetProfileSplitService,
       null,
       null,
       null,
@@ -32,8 +37,7 @@ describe('ActivitiesService', () => {
       null,
       null,
       null,
-      null,
-      { getSplitsBySymbolProfileIds } as unknown as AssetProfileSplitService
+      null
     );
   });
 
@@ -150,8 +154,8 @@ describe('ActivitiesService', () => {
       expect(result.activities[0].unitPrice).toBe(100);
     });
 
-    it.each(['DIVIDEND', 'INTEREST', 'LIABILITY'])(
-      'preserves the value of %s activities',
+    it.each(INVESTMENT_ACTIVITY_TYPES)(
+      'adjusts %s activities',
       async (type) => {
         const activity = createActivity({ symbol: 'AAPL' });
         activity.type = type as Activity['type'];
@@ -163,6 +167,22 @@ describe('ActivitiesService', () => {
         expect(result.quantity).toBe(20);
         expect(result.unitPrice).toBe(50);
         expect(result.quantity * result.unitPrice).toBe(1000);
+      }
+    );
+
+    it.each(NON_INVESTMENT_ACTIVITY_TYPES)(
+      'leaves %s activities unchanged',
+      async (type) => {
+        const activity = createActivity({ symbol: 'AAPL' });
+        activity.type = type as Activity['type'];
+
+        const result = await getAdjustedActivity(activity, [
+          createSplit('2021-01-01', 2, 1)
+        ]);
+
+        expect(result).toBe(activity);
+        expect(result.quantity).toBe(10);
+        expect(result.unitPrice).toBe(100);
       }
     );
 
