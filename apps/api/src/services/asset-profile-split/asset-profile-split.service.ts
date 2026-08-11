@@ -1,8 +1,5 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import {
-  getAssetProfileIdentifier,
-  resetHours
-} from '@ghostfolio/common/helper';
+import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
@@ -59,40 +56,28 @@ export class AssetProfileSplitService {
    * Returns the splits of all given asset profiles, grouped by their
    * data-source/symbol identifier.
    */
-  public async getSplitsByAssetProfiles(
-    assetProfiles: AssetProfileIdentifier[]
+  public async getSplitsBySymbolProfileIds(
+    symbolProfileIds: string[]
   ): Promise<Map<string, AssetProfileSplit[]>> {
     const splitsByAssetProfile = new Map<string, AssetProfileSplit[]>();
 
-    for (const assetProfile of assetProfiles) {
-      splitsByAssetProfile.set(getAssetProfileIdentifier(assetProfile), []);
+    for (const symbolProfileId of symbolProfileIds) {
+      splitsByAssetProfile.set(symbolProfileId, []);
     }
 
-    if (assetProfiles.length === 0) {
+    if (symbolProfileIds.length === 0) {
       return splitsByAssetProfile;
     }
 
     const splits = await this.prismaService.assetProfileSplit.findMany({
-      include: {
-        symbolProfile: {
-          select: {
-            dataSource: true,
-            symbol: true
-          }
-        }
-      },
       orderBy: [{ date: 'asc' }],
       where: {
-        symbolProfile: {
-          OR: assetProfiles
-        }
+        symbolProfileId: { in: symbolProfileIds }
       }
     });
 
-    for (const { symbolProfile, ...split } of splits) {
-      splitsByAssetProfile
-        .get(getAssetProfileIdentifier(symbolProfile))
-        ?.push(split);
+    for (const split of splits) {
+      splitsByAssetProfile.get(split.symbolProfileId)?.push(split);
     }
 
     return splitsByAssetProfile;

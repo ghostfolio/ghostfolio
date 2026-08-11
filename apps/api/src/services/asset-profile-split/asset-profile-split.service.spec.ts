@@ -1,6 +1,4 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { AssetProfileSplit, DataSource } from '@prisma/client';
 
@@ -58,50 +56,36 @@ describe('AssetProfileSplitService', () => {
     });
   });
 
-  describe('getSplitsByAssetProfiles', () => {
+  describe('getSplitsBySymbolProfileIds', () => {
     it('fetches and groups all splits with one ordered query', async () => {
-      const assetProfiles: AssetProfileIdentifier[] = [
-        { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
-        { dataSource: DataSource.YAHOO, symbol: 'MSFT' }
-      ];
+      const symbolProfileIds = ['aapl-profile', 'msft-profile'];
       const aaplSplit = createSplit({
         date: new Date('2020-08-31'),
-        symbolProfile: assetProfiles[0]
+        symbolProfileId: symbolProfileIds[0]
       });
       const msftSplit = createSplit({
         date: new Date('2021-09-16'),
-        symbolProfile: assetProfiles[1]
+        symbolProfileId: symbolProfileIds[1]
       });
 
-      findMany.mockResolvedValue([
-        { ...aaplSplit, symbolProfile: assetProfiles[0] },
-        { ...msftSplit, symbolProfile: assetProfiles[1] }
-      ]);
+      findMany.mockResolvedValue([aaplSplit, msftSplit]);
 
       const splits =
-        await assetProfileSplitService.getSplitsByAssetProfiles(assetProfiles);
+        await assetProfileSplitService.getSplitsBySymbolProfileIds(
+          symbolProfileIds
+        );
 
       expect(findMany).toHaveBeenCalledTimes(1);
       expect(findMany).toHaveBeenCalledWith({
-        include: {
-          symbolProfile: {
-            select: {
-              dataSource: true,
-              symbol: true
-            }
-          }
-        },
         orderBy: [{ date: 'asc' }],
         where: {
-          symbolProfile: {
-            OR: assetProfiles
-          }
+          symbolProfileId: { in: symbolProfileIds }
         }
       });
       expect(splits).toEqual(
         new Map([
-          [getAssetProfileIdentifier(assetProfiles[0]), [aaplSplit]],
-          [getAssetProfileIdentifier(assetProfiles[1]), [msftSplit]]
+          [symbolProfileIds[0], [aaplSplit]],
+          [symbolProfileIds[1], [msftSplit]]
         ])
       );
     });
@@ -169,18 +153,18 @@ describe('AssetProfileSplitService', () => {
 
 function createSplit({
   date,
-  symbolProfile
+  symbolProfileId
 }: {
   date: Date;
-  symbolProfile: AssetProfileIdentifier;
+  symbolProfileId: string;
 }): AssetProfileSplit {
   return {
     createdAt: date,
     date,
     denominator: 1,
-    id: `${symbolProfile.symbol}-split`,
+    id: `${symbolProfileId}-split`,
     numerator: 2,
-    symbolProfileId: `${symbolProfile.symbol}-profile`,
+    symbolProfileId,
     updatedAt: date
   };
 }

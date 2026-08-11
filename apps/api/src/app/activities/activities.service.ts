@@ -60,7 +60,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday } from 'date-fns';
-import { groupBy, uniqBy } from 'lodash';
+import { groupBy, uniq, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
@@ -932,36 +932,27 @@ export class ActivitiesService {
       withExcludedAccountsAndActivities: false // TODO
     });
 
-    const assetProfiles = uniqBy(
+    const symbolProfileIds = uniq(
       activities.activities.map(({ assetProfile }) => {
-        return {
-          dataSource: assetProfile.dataSource,
-          symbol: assetProfile.symbol
-        };
-      }),
-      ({ dataSource, symbol }) => {
-        return getAssetProfileIdentifier({ dataSource, symbol });
-      }
+        return assetProfile.id;
+      })
     );
-    const splitsByAssetProfile =
-      await this.assetProfileSplitService.getSplitsByAssetProfiles(
-        assetProfiles
+    const splitsBySymbolProfileId =
+      await this.assetProfileSplitService.getSplitsBySymbolProfileIds(
+        symbolProfileIds
       );
 
-    const hasSplits = [...splitsByAssetProfile.values()].some((splits) => {
+    const hasSplits = [...splitsBySymbolProfileId.values()].some((splits) => {
       return splits.length > 0;
     });
 
     if (hasSplits) {
       activities.activities = activities.activities.map((activity) => {
-        const key = getAssetProfileIdentifier({
-          dataSource: activity.assetProfile.dataSource,
-          symbol: activity.assetProfile.symbol
-        });
+        const key = activity.assetProfile.id;
 
         return adjustActivityBySplits(
           activity,
-          splitsByAssetProfile.get(key) ?? []
+          splitsBySymbolProfileId.get(key) ?? []
         );
       });
     }
