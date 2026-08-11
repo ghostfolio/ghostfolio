@@ -652,8 +652,6 @@ export class PortfolioController {
     const report = await this.portfolioService.getReport({ userId });
 
     if (
-      // The evaluations of the rules interpolate absolute values, hence they
-      // are withheld from a restricted view
       hasReadRestrictedAccessPermission({
         accesses: this.request.user?.accessesGet,
         impersonationId: accessId

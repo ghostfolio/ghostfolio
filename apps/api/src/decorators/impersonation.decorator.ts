@@ -5,8 +5,10 @@ import type {
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-// Provides the impersonation context of the request, which requires the
-// ImpersonationGuard to be applied to the route
+/**
+ * Provides the impersonation context of the request, which requires the
+ * ImpersonationGuard to be applied to the route
+ */
 export const Impersonation = createParamDecorator(
   (_data: unknown, context: ExecutionContext): ImpersonationContext => {
     const { impersonation, user } = context

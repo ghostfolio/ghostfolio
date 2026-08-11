@@ -38,8 +38,8 @@ export class ImpersonationService {
     });
 
     return {
-      isActive: true,
       accessId: impersonationId,
+      isActive: true,
       userId: impersonatedUserId,
       userSettings: {
         ...((settings?.settings ?? {}) as UserSettings),
