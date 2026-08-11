@@ -181,8 +181,9 @@ export class UserController {
         return !isUserSettingOfAuthenticatedUser(key);
       })
     ) {
-      // While impersonating, the presented settings of the impersonated user
-      // must not be written back to the authenticated user
+      // While impersonating, only the settings which stay with the
+      // authenticated user can be changed, as the update is always written
+      // back to the authenticated user
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
