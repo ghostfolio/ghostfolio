@@ -249,6 +249,10 @@ export class PortfolioService {
           }
         }
 
+        const quantityOfHolding = filterBySymbol
+          ? (details.accounts[account.id]?.quantity ?? 0)
+          : undefined;
+
         const valueInBaseCurrency =
           details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
@@ -264,6 +268,7 @@ export class PortfolioService {
             account.currency,
             userCurrency
           ),
+          quantity: quantityOfHolding,
           value: this.exchangeRateDataService.toCurrency(
             valueInBaseCurrency,
             userCurrency,
@@ -2194,6 +2199,10 @@ export class PortfolioService {
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};
 
+    const { SYMBOL: [filterBySymbol] = [] } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
     let currentAccounts: (AccountWithBalance & {
       Order?: Order[];
       platform?: Platform;
@@ -2205,7 +2214,7 @@ export class PortfolioService {
     } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
       currentAccounts = await this.accountService.accounts({
         include: { platform: true, tags: true },
-        where: { id: filters[0].id }
+        where: { userId, id: filters[0].id }
       });
     } else {
       const accountIds = Array.from(
@@ -2233,39 +2242,43 @@ export class PortfolioService {
     // Iterate over the accounts plus a null entry to group activities without
     // an account into the unknown bucket
     for (const account of [...currentAccounts, null]) {
+      const currentAccountId = account?.id || UNKNOWN_KEY;
+      const currentPlatformId = account?.platformId || UNKNOWN_KEY;
+
       const ordersByAccount = activities.filter(({ accountId }) => {
         return account ? accountId === account.id : !accountId;
       });
 
       if (account) {
-        accounts[account.id] = {
-          balance: account.balance,
-          currency: account.currency,
-          name: account.name,
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            account.balance,
-            account.currency,
-            userCurrency
-          )
-        };
-
-        if (platforms[account.platformId || UNKNOWN_KEY]?.valueInBaseCurrency) {
-          platforms[account.platformId || UNKNOWN_KEY].valueInBaseCurrency +=
-            this.exchangeRateDataService.toCurrency(
+        // The cash balance is not part of a holding and would distort the value
+        // and thus the allocation per account and platform
+        const balanceInBaseCurrency = filterBySymbol
+          ? 0
+          : this.exchangeRateDataService.toCurrency(
               account.balance,
               account.currency,
               userCurrency
             );
+
+        accounts[currentAccountId] = {
+          balance: account.balance,
+          currency: account.currency,
+          name: account.name,
+          valueInBaseCurrency: balanceInBaseCurrency
+        };
+
+        if (platforms[currentPlatformId]) {
+          platforms[currentPlatformId].valueInBaseCurrency = new Big(
+            platforms[currentPlatformId].valueInBaseCurrency
+          )
+            .plus(balanceInBaseCurrency)
+            .toNumber();
         } else {
-          platforms[account.platformId || UNKNOWN_KEY] = {
+          platforms[currentPlatformId] = {
             balance: account.balance,
             currency: account.currency,
             name: account.platform?.name,
-            valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-              account.balance,
-              account.currency,
-              userCurrency
-            )
+            valueInBaseCurrency: balanceInBaseCurrency
           };
         }
       }
@@ -2274,23 +2287,30 @@ export class PortfolioService {
         continue;
       }
 
+      let quantityOfAccount = new Big(0);
       let valueOfAccountInBaseCurrency = new Big(0);
 
       for (const { assetProfile, quantity, type } of ordersByAccount) {
+        const currentQuantityOfSymbol = new Big(quantity).mul(getFactor(type));
+
+        quantityOfAccount = quantityOfAccount.plus(currentQuantityOfSymbol);
+
         valueOfAccountInBaseCurrency = valueOfAccountInBaseCurrency.plus(
-          new Big(quantity)
-            .mul(getFactor(type))
-            .mul(
-              portfolioItemsNow[assetProfile.symbol]
-                ?.marketPriceInBaseCurrency ?? 0
-            )
+          currentQuantityOfSymbol.mul(
+            portfolioItemsNow[assetProfile.symbol]?.marketPriceInBaseCurrency ??
+              0
+          )
         );
       }
 
-      const currentAccountId = account?.id || UNKNOWN_KEY;
-      const currentPlatformId = account?.platformId || UNKNOWN_KEY;
+      // The quantity is only meaningful if the activities are filtered by a
+      // single holding
+      const quantityOfHolding = filterBySymbol
+        ? quantityOfAccount.toNumber()
+        : undefined;
 
       if (accounts[currentAccountId]) {
+        accounts[currentAccountId].quantity = quantityOfHolding;
         accounts[currentAccountId].valueInBaseCurrency = new Big(
           accounts[currentAccountId].valueInBaseCurrency
         )
@@ -2301,6 +2321,7 @@ export class PortfolioService {
           balance: 0,
           currency: account?.currency,
           name: account?.name,
+          quantity: quantityOfHolding,
           valueInBaseCurrency: valueOfAccountInBaseCurrency.toNumber()
         };
       }
