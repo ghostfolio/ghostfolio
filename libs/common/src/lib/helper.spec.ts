@@ -12,8 +12,10 @@ import {
   isCurrency,
   isCurrencySymbol,
   isSplitRatio,
-  isValidCustomAssetProfileSymbol
+  isValidCustomAssetProfileSymbol,
+  resolveUserSettings
 } from '@ghostfolio/common/helper';
+import { UserSettings } from '@ghostfolio/common/interfaces';
 
 describe('Helper', () => {
   describe('Extract number from string', () => {
@@ -378,6 +380,91 @@ describe('Helper', () => {
       expect(
         isValidCustomAssetProfileSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
       ).toEqual(true);
+    });
+  });
+
+  describe('Resolve user settings', () => {
+    const userSettings: UserSettings = {
+      baseCurrency: 'CHF',
+      colorScheme: 'DARK',
+      dateRange: '1y',
+      emergencyFund: 10000,
+      language: 'de',
+      locale: 'de-CH',
+      savingsRate: 500,
+      viewMode: 'DEFAULT'
+    };
+
+    const impersonationUserSettings: UserSettings = {
+      baseCurrency: 'USD',
+      colorScheme: 'LIGHT',
+      dateRange: 'ytd',
+      emergencyFund: 25000,
+      language: 'en',
+      locale: 'en-US',
+      savingsRate: 1000,
+      viewMode: 'ZEN'
+    };
+
+    it('Without impersonation', () => {
+      expect(
+        resolveUserSettings({
+          userSettings,
+          impersonationUserSettings: undefined
+        })
+      ).toEqual(userSettings);
+    });
+
+    it('Portfolio settings follow the impersonated user', () => {
+      const { baseCurrency, emergencyFund, savingsRate } = resolveUserSettings({
+        impersonationUserSettings,
+        userSettings
+      });
+
+      expect({ baseCurrency, emergencyFund, savingsRate }).toEqual({
+        baseCurrency: 'USD',
+        emergencyFund: 25000,
+        savingsRate: 1000
+      });
+    });
+
+    it('Presentation settings stay with the authenticated user', () => {
+      const { colorScheme, dateRange, language, locale, viewMode } =
+        resolveUserSettings({ impersonationUserSettings, userSettings });
+
+      expect({ colorScheme, dateRange, language, locale, viewMode }).toEqual({
+        colorScheme: 'DARK',
+        dateRange: '1y',
+        language: 'de',
+        locale: 'de-CH',
+        viewMode: 'DEFAULT'
+      });
+    });
+
+    it('Unknown settings default to the impersonated user', () => {
+      // A setting which is not classified as presentation must not leak from
+      // the authenticated user into the impersonated portfolio
+      expect(
+        resolveUserSettings({
+          userSettings: { annualInterestRate: 3 },
+          impersonationUserSettings: { annualInterestRate: 5 }
+        }).annualInterestRate
+      ).toEqual(5);
+    });
+
+    it('Impersonated user without settings', () => {
+      expect(
+        resolveUserSettings({
+          userSettings,
+          impersonationUserSettings: {}
+        })
+      ).toEqual({
+        colorScheme: 'DARK',
+        dateRange: '1y',
+        language: 'de',
+        locale: 'de-CH',
+        viewMode: 'DEFAULT'
+      });
     });
   });
 });

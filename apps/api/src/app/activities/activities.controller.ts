@@ -1,3 +1,4 @@
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
@@ -54,7 +55,8 @@ export class ActivitiesController {
     private readonly dataProviderService: DataProviderService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly impersonationService: ImpersonationService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Delete()
@@ -169,8 +171,9 @@ export class ActivitiesController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
+    const userId = impersonationUserId || this.request.user.id;
 
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
+    const { settings } = await this.userService.user({ id: userId });
 
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
@@ -180,10 +183,10 @@ export class ActivitiesController {
       sortDirection,
       startDate,
       take,
-      userCurrency,
+      userId,
       includeDrafts: true,
       types: activityTypes,
-      userId: impersonationUserId || this.request.user.id,
+      userCurrency: settings.settings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
@@ -200,12 +203,14 @@ export class ActivitiesController {
   ): Promise<ActivityResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
+    const userId = impersonationUserId || this.request.user.id;
+
+    const { settings } = await this.userService.user({ id: userId });
 
     const { activities } = await this.activitiesService.getActivities({
-      userCurrency,
+      userId,
       includeDrafts: true,
-      userId: impersonationUserId || this.request.user.id,
+      userCurrency: settings.settings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 

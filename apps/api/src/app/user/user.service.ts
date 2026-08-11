@@ -41,6 +41,7 @@ import {
   THROTTLE_DAILY_TTL
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { resolveUserSettings } from '@ghostfolio/common/helper';
 import {
   User as IUser,
   ReferralPartner,
@@ -163,9 +164,12 @@ export class UserService {
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const baseCurrency =
-      (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
-      (settings.settings as UserSettings)?.baseCurrency;
+    const resolvedUserSettings = resolveUserSettings({
+      impersonationUserSettings: impersonationUserId
+        ? ((impersonationUserSettings?.settings ?? {}) as UserSettings)
+        : undefined,
+      userSettings: settings.settings as UserSettings
+    });
 
     let referralPartners: ReferralPartner[];
 
@@ -220,9 +224,9 @@ export class UserService {
       }),
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
-        ...(settings.settings as UserSettings),
-        baseCurrency,
-        locale: (settings.settings as UserSettings)?.locale ?? locale
+        ...resolvedUserSettings,
+        baseCurrency: resolvedUserSettings.baseCurrency ?? DEFAULT_CURRENCY,
+        locale: resolvedUserSettings.locale ?? locale
       }
     };
   }
