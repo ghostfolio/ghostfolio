@@ -12,6 +12,7 @@ import type { Granularity } from './granularity.type';
 import type { GroupBy } from './group-by.type';
 import type { HoldingType } from './holding-type.type';
 import type { HoldingsViewMode } from './holdings-view-mode.type';
+import type { ImpersonationContext } from './impersonation-context.type';
 import type { MarketAdvanced } from './market-advanced.type';
 import type { MarketDataPreset } from './market-data-preset.type';
 import type { MarketState } from './market-state.type';
@@ -42,6 +43,7 @@ export type {
   GroupBy,
   HoldingType,
   HoldingsViewMode,
+  ImpersonationContext,
   Market,
   MarketAdvanced,
   MarketDataPreset,

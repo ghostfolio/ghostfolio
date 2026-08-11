@@ -1,20 +1,22 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { CreateWatchlistItemDto } from '@ghostfolio/common/dtos';
 import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import {
+  ImpersonationContext,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
   Body,
   Controller,
   Delete,
   Get,
-  Headers,
   HttpException,
   Inject,
   Param,
@@ -32,7 +34,6 @@ import { WatchlistService } from './watchlist.service';
 @Controller('watchlist')
 export class WatchlistController {
   public constructor(
-    private readonly impersonationService: ImpersonationService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly watchlistService: WatchlistService
   ) {}
@@ -81,17 +82,12 @@ export class WatchlistController {
 
   @Get()
   @HasPermission(permissions.readWatchlist)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getWatchlistItems(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
+    @Impersonation() { userId }: ImpersonationContext
   ): Promise<WatchlistResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
-    const watchlist = await this.watchlistService.getWatchlistItems(
-      impersonationUserId || this.request.user.id
-    );
+    const watchlist = await this.watchlistService.getWatchlistItems(userId);
 
     return {
       watchlist
