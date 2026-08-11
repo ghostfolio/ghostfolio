@@ -12,8 +12,10 @@ import {
   isCurrency,
   isCurrencySymbol,
   isSplitRatio,
-  isValidCustomAssetProfileSymbol
+  isValidCustomAssetProfileSymbol,
+  resolveUserSettings
 } from '@ghostfolio/common/helper';
+import { UserSettings } from '@ghostfolio/common/interfaces';
 
 describe('Helper', () => {
   describe('Extract number from string', () => {
@@ -378,6 +380,120 @@ describe('Helper', () => {
       expect(
         isValidCustomAssetProfileSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
       ).toEqual(true);
+    });
+  });
+
+  describe('Resolve user settings', () => {
+    const userSettings: UserSettings = {
+      baseCurrency: 'CHF',
+      colorScheme: 'DARK',
+      dateRange: '1y',
+      emergencyFund: 10000,
+      language: 'de',
+      locale: 'de-CH',
+      savingsRate: 500,
+      viewMode: 'DEFAULT'
+    };
+
+    const impersonationUserSettings: UserSettings = {
+      baseCurrency: 'USD',
+      colorScheme: 'LIGHT',
+      dateRange: 'ytd',
+      emergencyFund: 25000,
+      language: 'en',
+      locale: 'en-US',
+      savingsRate: 1000,
+      viewMode: 'ZEN'
+    };
+
+    it('Without impersonation', () => {
+      expect(
+        resolveUserSettings({
+          userSettings,
+          impersonationUserSettings: undefined
+        })
+      ).toEqual(userSettings);
+    });
+
+    it('Portfolio settings follow the impersonated user', () => {
+      const { baseCurrency, emergencyFund, savingsRate } = resolveUserSettings({
+        impersonationUserSettings,
+        userSettings
+      });
+
+      expect({ baseCurrency, emergencyFund, savingsRate }).toEqual({
+        baseCurrency: 'USD',
+        emergencyFund: 25000,
+        savingsRate: 1000
+      });
+    });
+
+    it('Presentation settings stay with the authenticated user', () => {
+      const { colorScheme, dateRange, language, locale, viewMode } =
+        resolveUserSettings({ impersonationUserSettings, userSettings });
+
+      expect({ colorScheme, dateRange, language, locale, viewMode }).toEqual({
+        colorScheme: 'DARK',
+        dateRange: '1y',
+        language: 'de',
+        locale: 'de-CH',
+        viewMode: 'DEFAULT'
+      });
+    });
+
+    it('Filters stay with the authenticated user', () => {
+      // The filters are always written back to the authenticated user, so
+      // reading them from the impersonated user would overwrite them
+      const { 'filters.accounts': filtersAccounts } = resolveUserSettings({
+        impersonationUserSettings: {
+          'filters.accounts': ['3b3c2b5d-5a4f-4b0a-9d4f-9b1f5e6a7c8d']
+        },
+        userSettings: {
+          'filters.accounts': ['0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d']
+        }
+      });
+
+      expect(filtersAccounts).toEqual(['0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d']);
+    });
+
+    it('Presentation settings unset for the authenticated user do not leak', () => {
+      // An unset presentation setting must not fall back to the impersonated
+      // user, otherwise their appearance and language apply to the
+      // authenticated user
+      const { colorScheme, language, locale } = resolveUserSettings({
+        impersonationUserSettings,
+        userSettings: { baseCurrency: 'CHF' }
+      });
+
+      expect(colorScheme).toBeUndefined();
+      expect(language).toBeUndefined();
+      expect(locale).toBeUndefined();
+    });
+
+    it('Unknown settings default to the impersonated user', () => {
+      // A setting which is not classified as presentation must not leak from
+      // the authenticated user into the impersonated portfolio
+      expect(
+        resolveUserSettings({
+          userSettings: { annualInterestRate: 3 },
+          impersonationUserSettings: { annualInterestRate: 5 }
+        }).annualInterestRate
+      ).toEqual(5);
+    });
+
+    it('Impersonated user without settings', () => {
+      expect(
+        resolveUserSettings({
+          userSettings,
+          impersonationUserSettings: {}
+        })
+      ).toEqual({
+        colorScheme: 'DARK',
+        dateRange: '1y',
+        language: 'de',
+        locale: 'de-CH',
+        viewMode: 'DEFAULT'
+      });
     });
   });
 });

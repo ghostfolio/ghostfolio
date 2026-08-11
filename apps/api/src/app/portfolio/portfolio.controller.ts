@@ -368,7 +368,8 @@ export class PortfolioController {
 
     let dividends = this.portfolioService.getDividends({
       activities,
-      groupBy
+      groupBy,
+      userCurrency
     });
 
     if (
