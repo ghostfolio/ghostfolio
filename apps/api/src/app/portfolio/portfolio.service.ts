@@ -501,6 +501,7 @@ export class PortfolioService {
   public async getDetails({
     dateRange = DEFAULT_DATE_RANGE,
     filters,
+    user: userFromCaller,
     userId,
     withExcludedAccounts = false,
     withMarkets = false,
@@ -508,12 +509,14 @@ export class PortfolioService {
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
+    user?: UserWithSettings;
     userId: string;
     withExcludedAccounts?: boolean;
     withMarkets?: boolean;
     withSummary?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
-    const user = await this.userService.user({ id: userId });
+    const user =
+      userFromCaller ?? (await this.userService.user({ id: userId }));
     const userCurrency = this.getUserCurrency(user);
 
     const emergencyFund = new Big(
@@ -1133,6 +1136,7 @@ export class PortfolioService {
 
     const { accounts, holdings, markets, marketsAdvanced, summary } =
       await this.getDetails({
+        user,
         userId,
         withMarkets: true,
         withSummary: true

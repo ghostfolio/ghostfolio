@@ -441,6 +441,20 @@ describe('Helper', () => {
       });
     });
 
+    it('Benchmark stays with the authenticated user', () => {
+      // The benchmark is a comparison of the person looking at the screen and
+      // is gated by their subscription, so it must not follow the impersonated
+      // user
+      const { benchmark } = resolveUserSettings({
+        impersonationUserSettings: {
+          benchmark: '82fd8dcc-4a0e-4dd0-b6cb-7b8a4b03e6b1'
+        },
+        userSettings: { benchmark: '1e5a0e6a-1b8b-4d0e-9f0a-4c2b3d5e6f7a' }
+      });
+
+      expect(benchmark).toEqual('1e5a0e6a-1b8b-4d0e-9f0a-4c2b3d5e6f7a');
+    });
+
     it('Filters stay with the authenticated user', () => {
       // The filters are always written back to the authenticated user, so
       // reading them from the impersonated user would overwrite them
@@ -475,8 +489,8 @@ describe('Helper', () => {
       // the authenticated user into the impersonated portfolio
       expect(
         resolveUserSettings({
-          userSettings: { annualInterestRate: 3 },
-          impersonationUserSettings: { annualInterestRate: 5 }
+          impersonationUserSettings: { annualInterestRate: 5 },
+          userSettings: { annualInterestRate: 3 }
         }).annualInterestRate
       ).toEqual(5);
     });

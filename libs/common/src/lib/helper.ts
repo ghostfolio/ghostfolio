@@ -67,6 +67,7 @@ export const DATE_FORMAT_YEARLY = 'yyyy';
 // authenticated user, so reading them from the impersonated user would
 // overwrite the filters of the authenticated user.
 const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
+  'benchmark',
   'colorScheme',
   'dateRange',
   'filters.accounts',
