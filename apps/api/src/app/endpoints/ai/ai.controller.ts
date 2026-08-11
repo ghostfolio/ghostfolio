@@ -46,7 +46,6 @@ export class AiController {
     const prompt = await this.aiService.getPrompt({
       filters,
       mode,
-      impersonationId: undefined,
       languageCode: this.request.user.settings.settings.language,
       userCurrency: this.request.user.settings.settings.baseCurrency,
       userId: this.request.user.id

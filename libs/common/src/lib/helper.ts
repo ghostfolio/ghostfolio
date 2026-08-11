@@ -66,7 +66,7 @@ export const DATE_FORMAT_YEARLY = 'yyyy';
 // The filters are included because they are always written back to the
 // authenticated user, so reading them from the impersonated user would
 // overwrite the filters of the authenticated user.
-const PRESENTATION_USER_SETTINGS_KEYS: (keyof UserSettings)[] = [
+const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
   'colorScheme',
   'dateRange',
   'filters.accounts',
@@ -607,6 +607,12 @@ export function isSystemTag(tag?: { id: string }) {
   });
 }
 
+export function isUserSettingOfAuthenticatedUser(aKey: string) {
+  return USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.includes(
+    aKey as keyof UserSettings
+  );
+}
+
 export function isValidCustomAssetProfileSymbol(aSymbol: string) {
   return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
 }
@@ -708,7 +714,7 @@ export function resolveUserSettings({
   return {
     ...impersonationUserSettings,
     ...Object.fromEntries(
-      PRESENTATION_USER_SETTINGS_KEYS.map((key) => {
+      USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.map((key) => {
         return [key, userSettings?.[key]];
       })
     )

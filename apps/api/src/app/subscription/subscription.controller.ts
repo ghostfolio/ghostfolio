@@ -1,3 +1,4 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -31,6 +32,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { SubscriptionService } from './subscription.service';
 
+@AllowDuringImpersonation()
 @Controller('subscription')
 export class SubscriptionController {
   private readonly logger = new Logger(SubscriptionController.name);

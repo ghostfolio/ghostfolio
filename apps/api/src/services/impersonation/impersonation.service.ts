@@ -1,52 +1,92 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import { UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type {
+  ImpersonationContext,
+  UserWithSettings
+} from '@ghostfolio/common/types';
 
-import { Inject, Injectable } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ImpersonationService {
-  public constructor(
-    private readonly prismaService: PrismaService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
-  public async validateImpersonationId(aId?: string) {
-    if (!aId) {
+  public async resolve({
+    impersonationId,
+    user
+  }: {
+    impersonationId?: string;
+    user?: UserWithSettings;
+  }): Promise<ImpersonationContext> {
+    const impersonatedUserId = await this.validateImpersonationId({
+      impersonationId,
+      user
+    });
+
+    if (!impersonatedUserId) {
+      return {
+        isActive: false,
+        userId: user?.id,
+        userSettings: user?.settings?.settings ?? {}
+      };
+    }
+
+    const settings = await this.prismaService.settings.findUnique({
+      where: { userId: impersonatedUserId }
+    });
+
+    return {
+      isActive: true,
+      accessId: impersonationId,
+      userId: impersonatedUserId,
+      userSettings: {
+        ...((settings?.settings ?? {}) as UserSettings),
+        baseCurrency:
+          (settings?.settings as UserSettings)?.baseCurrency ?? DEFAULT_CURRENCY
+      }
+    };
+  }
+
+  public async validateImpersonationId({
+    impersonationId,
+    user
+  }: {
+    impersonationId?: string;
+    user?: UserWithSettings;
+  }) {
+    if (!impersonationId) {
       return null;
     }
 
-    if (this.request.user) {
+    if (user) {
       const accessObject = await this.prismaService.access.findFirst({
         where: {
-          granteeUserId: this.request.user.id,
-          id: aId
+          granteeUserId: user.id,
+          id: impersonationId
         }
       });
 
       if (accessObject?.userId) {
         return accessObject.userId;
       } else if (
-        hasPermission(
-          this.request.user.permissions,
-          permissions.impersonateAllUsers
-        )
+        hasPermission(user.permissions, permissions.impersonateAllUsers)
       ) {
         // The identifier is a user id in this case, hence verify its existence
-        const user = await this.prismaService.user.findUnique({
+        const impersonatedUser = await this.prismaService.user.findUnique({
           select: { id: true },
-          where: { id: aId }
+          where: { id: impersonationId }
         });
 
-        return user?.id ?? null;
+        return impersonatedUser?.id ?? null;
       }
     } else {
       // Public access
       const accessObject = await this.prismaService.access.findFirst({
         where: {
           granteeUserId: null,
-          user: { id: aId }
+          user: { id: impersonationId }
         }
       });
 
