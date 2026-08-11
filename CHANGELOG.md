@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the quantity to the accounts tab of the holding detail dialog (experimental)
 
+### Changed
+
+- Refactored the impersonation mode to resolve the impersonated user once per request in a guard instead of in every endpoint
+- Restricted the modification of data in impersonation mode to the data of the authenticated user
+- Restricted the update of the user settings in impersonation mode to the settings of the authenticated user
+
 ### Fixed
 
 - Fixed the allocation in the accounts tab of the holding detail dialog caused by floating-point rounding
