@@ -116,7 +116,9 @@ export class GfAccountsTableComponent {
       columns.push('value');
     }
 
-    columns.push('currency');
+    if (this.showBalance() || this.showValue()) {
+      columns.push('currency');
+    }
 
     if (this.showValueInBaseCurrency()) {
       columns.push('valueInBaseCurrency');
