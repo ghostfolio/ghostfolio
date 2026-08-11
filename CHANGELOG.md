@@ -9,10 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the user settings (like the base currency, the emergency fund and the savings rate) to be taken from the impersonated user instead of the authenticated user
-- Fixed the base currency of the activities to be taken from the impersonated user
-- Fixed the account aggregations to be calculated for the impersonated user
-- Fixed the base currency of the dividends to be taken from the impersonated user
+- Fixed the account aggregations in impersonation mode to be based on the impersonated user
+- Fixed the base currency of the activities in impersonation mode to be based on the impersonated user
+- Fixed the base currency of the dividends in impersonation mode to be based on the impersonated user
+- Fixed the base currency of the user account settings in impersonation mode to be disabled
+- Fixed the benchmark selector of the performance chart on the analysis page in impersonation mode to be disabled
+- Fixed the emergency fund of the _X-ray_ page in impersonation mode to be based on the impersonated user
+- Fixed the savings rate of the _FIRE_ calculator in impersonation mode to be presented
+- Fixed the user settings in impersonation mode to be based on the impersonated user
 - Fixed the validation of the impersonation identifier of an unknown user
 
 ## 3.47.0 - 2026-08-10
