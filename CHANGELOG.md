@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the quantity to the accounts tab of the holding detail dialog (experimental)
 
+### Changed
+
+- Improved the performance of the _X-ray_ page by resolving the user only once per request
+- Refactored the impersonation mode to resolve the impersonated user once per request in a guard instead of in every endpoint
+- Restricted the modification of data in impersonation mode to the data of the authenticated user
+- Restricted the update of the user settings in impersonation mode to the settings of the authenticated user
+
 ### Fixed
 
 - Fixed the allocation in the accounts tab of the holding detail dialog caused by floating-point rounding
@@ -19,8 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the base currency of the activities in impersonation mode to be based on the impersonated user
 - Fixed the base currency of the dividends in impersonation mode to be based on the impersonated user
 - Fixed the base currency of the user account settings in impersonation mode to be disabled
-- Fixed the benchmark selector of the performance chart on the analysis page in impersonation mode to be disabled
+- Fixed the benchmark of the performance chart in impersonation mode to be based on the authenticated user
 - Fixed the emergency fund of the _X-ray_ page in impersonation mode to be based on the impersonated user
+- Fixed the redaction of the emergency fund, projected total amount and savings rate in a restricted view
+- Fixed the rules of the _X-ray_ page to be withheld in a restricted view
 - Fixed the savings rate of the _FIRE_ calculator in impersonation mode to be presented
 - Fixed the user settings in impersonation mode to be based on the impersonated user
 - Fixed the validation of the impersonation identifier of an unknown user

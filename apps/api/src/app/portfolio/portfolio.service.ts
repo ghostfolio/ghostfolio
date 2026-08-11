@@ -25,7 +25,6 @@ import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.s
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   getAnnualizedPerformancePercent,
@@ -126,7 +125,6 @@ export class PortfolioService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly i18nService: I18nService,
-    private readonly impersonationService: ImpersonationService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -198,8 +196,7 @@ export class PortfolioService {
       this.getDetails({
         userId,
         withExcludedAccounts,
-        filters: filtersWithoutSearchQueryFilter,
-        impersonationId: undefined
+        filters: filtersWithoutSearchQueryFilter
       }),
       this.userService.user({ id: userId })
     ]);
@@ -389,16 +386,12 @@ export class PortfolioService {
   public async getHoldings({
     dateRange,
     filters,
-    impersonationId,
     userId
   }: {
     dateRange: DateRange;
     filters?: Filter[];
-    impersonationId: string;
     userId: string;
   }) {
-    userId = await this.getUserId(impersonationId, userId);
-
     const { SEARCH_QUERY: [filterBySearchQuery] = [] } = groupBy(
       filters,
       ({ type }) => {
@@ -412,7 +405,6 @@ export class PortfolioService {
 
     const { holdings: holdingsMap } = await this.getDetails({
       dateRange,
-      impersonationId,
       userId,
       filters: filtersWithoutSearchQueryFilter
     });
@@ -437,16 +429,13 @@ export class PortfolioService {
     dateRange,
     filters,
     groupBy,
-    impersonationId,
     userId
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     groupBy?: GroupBy;
-    impersonationId: string;
     userId: string;
   }): Promise<PortfolioInvestmentsResponse> {
-    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
     const savingsRate = (user.settings?.settings as UserSettings)?.savingsRate;
@@ -517,7 +506,7 @@ export class PortfolioService {
   public async getDetails({
     dateRange = DEFAULT_DATE_RANGE,
     filters,
-    impersonationId,
+    user: userFromCaller,
     userId,
     withExcludedAccounts = false,
     withMarkets = false,
@@ -525,14 +514,14 @@ export class PortfolioService {
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
-    impersonationId: string;
+    user?: UserWithSettings;
     userId: string;
     withExcludedAccounts?: boolean;
     withMarkets?: boolean;
     withSummary?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
-    userId = await this.getUserId(impersonationId, userId);
-    const user = await this.userService.user({ id: userId });
+    const user =
+      userFromCaller ?? (await this.userService.user({ id: userId }));
     const userCurrency = this.getUserCurrency(user);
 
     const emergencyFund = new Big(
@@ -766,7 +755,6 @@ export class PortfolioService {
     if (withSummary) {
       summary = await this.getSummary({
         filteredValueInBaseCurrency,
-        impersonationId,
         portfolioCalculator,
         userCurrency,
         userId,
@@ -792,14 +780,11 @@ export class PortfolioService {
 
   public async getHolding({
     dataSource,
-    impersonationId,
     symbol,
     userId
   }: {
-    impersonationId?: string;
     userId: string;
   } & AssetProfileIdentifier): Promise<PortfolioHoldingResponse> {
-    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
@@ -1041,16 +1026,13 @@ export class PortfolioService {
   public async getPerformance({
     dateRange = DEFAULT_DATE_RANGE,
     filters,
-    impersonationId,
     userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
-    impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
-    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
@@ -1143,14 +1125,10 @@ export class PortfolioService {
   }
 
   public async getReport({
-    impersonationId,
     userId
   }: {
-    impersonationId: string;
     userId: string;
   }): Promise<PortfolioReportResponse> {
-    userId = await this.getUserId(impersonationId, userId);
-
     const user = await this.userService.user({ id: userId });
 
     // The rules are evaluated against the portfolio of the (potentially
@@ -1163,7 +1141,7 @@ export class PortfolioService {
 
     const { accounts, holdings, markets, marketsAdvanced, summary } =
       await this.getDetails({
-        impersonationId,
+        user,
         userId,
         withMarkets: true,
         withSummary: true
@@ -1925,7 +1903,6 @@ export class PortfolioService {
     balanceInBaseCurrency,
     emergencyFundHoldingsValueInBaseCurrency,
     filteredValueInBaseCurrency,
-    impersonationId,
     portfolioCalculator,
     userCurrency,
     userId
@@ -1933,12 +1910,10 @@ export class PortfolioService {
     balanceInBaseCurrency: number;
     emergencyFundHoldingsValueInBaseCurrency: number;
     filteredValueInBaseCurrency: Big;
-    impersonationId: string;
     portfolioCalculator: PortfolioCalculator;
     userCurrency: string;
     userId: string;
   }): Promise<PortfolioSummary> {
-    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
     const { activities } = await this.activitiesService.getActivities({
@@ -1971,7 +1946,6 @@ export class PortfolioService {
     } = await portfolioCalculator.getSnapshot();
 
     const { performance } = await this.getPerformance({
-      impersonationId,
       userId
     });
 
@@ -2166,13 +2140,6 @@ export class PortfolioService {
 
   private getUserCurrency(aUser?: UserWithSettings) {
     return aUser?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
-  }
-
-  private async getUserId(aImpersonationId: string, aUserId: string) {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(aImpersonationId);
-
-    return impersonationUserId || aUserId;
   }
 
   private getUserPerformanceCalculationType(
