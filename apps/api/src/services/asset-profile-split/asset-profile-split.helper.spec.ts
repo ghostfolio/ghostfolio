@@ -54,9 +54,9 @@ describe('adjustActivityBySplits', () => {
     );
 
     expect(adjustedActivityOnSplitDate).toEqual(activityOnSplitDate);
-    expect(adjustedActivityOnSplitDate).not.toBe(activityOnSplitDate);
+    expect(adjustedActivityOnSplitDate).toBe(activityOnSplitDate);
     expect(adjustedActivityAfterSplit).toEqual(activityAfterSplit);
-    expect(adjustedActivityAfterSplit).not.toBe(activityAfterSplit);
+    expect(adjustedActivityAfterSplit).toBe(activityAfterSplit);
   });
 
   it('compares stored UTC split dates without normalizing them locally', () => {

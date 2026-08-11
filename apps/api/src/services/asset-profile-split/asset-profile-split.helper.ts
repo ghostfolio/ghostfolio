@@ -19,7 +19,7 @@ export function adjustActivityBySplits(
   }
 
   if (splitFactor.eq(1)) {
-    return { ...activity };
+    return activity;
   }
 
   return {

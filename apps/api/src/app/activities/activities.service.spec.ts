@@ -44,7 +44,7 @@ describe('ActivitiesService', () => {
       const result = await getAdjustedActivity(activity, []);
 
       expect(result).toEqual(activity);
-      expect(result).not.toBe(activity);
+      expect(result).toBe(activity);
     });
 
     it.each([

@@ -948,17 +948,23 @@ export class ActivitiesService {
         assetProfiles
       );
 
-    activities.activities = activities.activities.map((activity) => {
-      const key = getAssetProfileIdentifier({
-        dataSource: activity.assetProfile.dataSource,
-        symbol: activity.assetProfile.symbol
-      });
-
-      return adjustActivityBySplits(
-        activity,
-        splitsByAssetProfile.get(key) ?? []
-      );
+    const hasSplits = [...splitsByAssetProfile.values()].some((splits) => {
+      return splits.length > 0;
     });
+
+    if (hasSplits) {
+      activities.activities = activities.activities.map((activity) => {
+        const key = getAssetProfileIdentifier({
+          dataSource: activity.assetProfile.dataSource,
+          symbol: activity.assetProfile.symbol
+        });
+
+        return adjustActivityBySplits(
+          activity,
+          splitsByAssetProfile.get(key) ?? []
+        );
+      });
+    }
 
     if (withCash && !this.areCashActivitiesExcludedByFilters(filters)) {
       const cashDetails = await this.accountService.getCashDetails({
