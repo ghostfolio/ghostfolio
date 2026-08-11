@@ -2214,7 +2214,7 @@ export class PortfolioService {
     } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
       currentAccounts = await this.accountService.accounts({
         include: { platform: true, tags: true },
-        where: { id: filters[0].id }
+        where: { userId, id: filters[0].id }
       });
     } else {
       const accountIds = Array.from(
@@ -2242,39 +2242,43 @@ export class PortfolioService {
     // Iterate over the accounts plus a null entry to group activities without
     // an account into the unknown bucket
     for (const account of [...currentAccounts, null]) {
+      const currentAccountId = account?.id || UNKNOWN_KEY;
+      const currentPlatformId = account?.platformId || UNKNOWN_KEY;
+
       const ordersByAccount = activities.filter(({ accountId }) => {
         return account ? accountId === account.id : !accountId;
       });
 
       if (account) {
-        accounts[account.id] = {
-          balance: account.balance,
-          currency: account.currency,
-          name: account.name,
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            account.balance,
-            account.currency,
-            userCurrency
-          )
-        };
-
-        if (platforms[account.platformId || UNKNOWN_KEY]?.valueInBaseCurrency) {
-          platforms[account.platformId || UNKNOWN_KEY].valueInBaseCurrency +=
-            this.exchangeRateDataService.toCurrency(
+        // The cash balance is not part of a holding and would distort the value
+        // and thus the allocation per account and platform
+        const balanceInBaseCurrency = filterBySymbol
+          ? 0
+          : this.exchangeRateDataService.toCurrency(
               account.balance,
               account.currency,
               userCurrency
             );
+
+        accounts[currentAccountId] = {
+          balance: account.balance,
+          currency: account.currency,
+          name: account.name,
+          valueInBaseCurrency: balanceInBaseCurrency
+        };
+
+        if (platforms[currentPlatformId]) {
+          platforms[currentPlatformId].valueInBaseCurrency = new Big(
+            platforms[currentPlatformId].valueInBaseCurrency
+          )
+            .plus(balanceInBaseCurrency)
+            .toNumber();
         } else {
-          platforms[account.platformId || UNKNOWN_KEY] = {
+          platforms[currentPlatformId] = {
             balance: account.balance,
             currency: account.currency,
             name: account.platform?.name,
-            valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-              account.balance,
-              account.currency,
-              userCurrency
-            )
+            valueInBaseCurrency: balanceInBaseCurrency
           };
         }
       }
@@ -2298,9 +2302,6 @@ export class PortfolioService {
           )
         );
       }
-
-      const currentAccountId = account?.id || UNKNOWN_KEY;
-      const currentPlatformId = account?.platformId || UNKNOWN_KEY;
 
       // The quantity is only meaningful if the activities are filtered by a
       // single holding

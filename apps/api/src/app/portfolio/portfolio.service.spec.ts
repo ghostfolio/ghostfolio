@@ -606,5 +606,67 @@ describe('PortfolioService', () => {
 
       expect(accounts[account.id].quantity).toBeUndefined();
     });
+
+    it('should only consider accounts of the current user if the activities are filtered by a single account', async () => {
+      const accountsSpy = jest.spyOn(accountService, 'accounts');
+
+      await getValueOfAccountsAndPlatforms({
+        activities: [],
+        filters: [{ id: account.id, type: 'ACCOUNT' }],
+        portfolioItemsNow: {},
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accountsSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { userId: userDummyData.id, id: account.id }
+        })
+      );
+    });
+
+    it('should exclude the cash balance if the activities are filtered by a single holding', async () => {
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [{ id: 'AAPL', type: 'SYMBOL' }],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 1 * 10 (activity), without the balance of 100
+      expect(accounts[account.id].valueInBaseCurrency).toBe(10);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(10);
+    });
+
+    it('should not accumulate rounding errors of the balances of accounts sharing a platform', async () => {
+      const platformId = randomUUID();
+
+      jest.spyOn(accountService, 'getAccounts').mockResolvedValue([
+        { ...account, platformId, balance: 0.1, id: randomUUID() },
+        { ...account, platformId, balance: 0.2, id: randomUUID() }
+      ] as unknown as AccountWithBalance[]);
+
+      const { platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [],
+        filters: [],
+        portfolioItemsNow: {},
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 0.1 (balance) + 0.2 (balance)
+      expect(platforms[platformId].valueInBaseCurrency).toBe(0.3);
+    });
   });
 });
