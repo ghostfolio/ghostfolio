@@ -8,7 +8,6 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
@@ -30,7 +29,6 @@ describe('PortfolioService', () => {
   let configurationService: ConfigurationService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
-  let impersonationService: ImpersonationService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioService: PortfolioService;
   let symbolProfileService: SymbolProfileService;
@@ -77,8 +75,6 @@ describe('PortfolioService', () => {
       null
     );
 
-    impersonationService = new ImpersonationService(null, null);
-
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
       null,
@@ -110,7 +106,6 @@ describe('PortfolioService', () => {
       dataProviderService,
       exchangeRateDataService,
       null,
-      impersonationService,
       null,
       null,
       symbolProfileService,
@@ -246,10 +241,6 @@ describe('PortfolioService', () => {
         .mockReturnValue(DataSource.YAHOO);
 
       jest
-        .spyOn(impersonationService, 'validateImpersonationId')
-        .mockResolvedValue(null);
-
-      jest
         .spyOn(symbolProfileService, 'getSymbolProfiles')
         .mockResolvedValue([]);
 
@@ -331,7 +322,6 @@ describe('PortfolioService', () => {
 
       const { holdings } = await portfolioService.getDetails({
         filters: [],
-        impersonationId: userDummyData.id,
         userId: userDummyData.id
       });
 
@@ -371,10 +361,6 @@ describe('PortfolioService', () => {
         .spyOn(activitiesService, 'getActivities')
         .mockResolvedValue({ activities: [], count: 0 });
 
-      jest
-        .spyOn(impersonationService, 'validateImpersonationId')
-        .mockResolvedValue(null);
-
       jest.spyOn(portfolioService, 'getPerformance').mockResolvedValue({
         performance: {
           currentValueInBaseCurrency: 3000,
@@ -408,7 +394,6 @@ describe('PortfolioService', () => {
         balanceInBaseCurrency: 1000,
         emergencyFundHoldingsValueInBaseCurrency: 0,
         filteredValueInBaseCurrency: new Big(3000),
-        impersonationId: undefined,
         userCurrency: 'CHF',
         userId: userDummyData.id
       });

@@ -163,9 +163,8 @@ export class UserService {
     ]);
 
     const resolvedUserSettings = resolveUserSettings({
-      impersonationUserSettings: impersonationUserId
-        ? ((impersonationUser?.settings?.settings ?? {}) as UserSettings)
-        : undefined,
+      impersonationUserSettings: impersonationUser?.settings
+        ?.settings as UserSettings,
       userSettings: settings.settings as UserSettings
     });
 
