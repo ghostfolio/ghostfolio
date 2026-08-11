@@ -2262,38 +2262,54 @@ export class PortfolioService {
         }
       }
 
-      for (const { account, assetProfile, quantity, type } of ordersByAccount) {
-        const currentValueOfSymbolInBaseCurrency =
-          getFactor(type) *
-          quantity *
-          (portfolioItemsNow[assetProfile.symbol]?.marketPriceInBaseCurrency ??
-            0);
+      if (ordersByAccount.length === 0) {
+        continue;
+      }
 
-        if (accounts[account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
-          accounts[account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
-            currentValueOfSymbolInBaseCurrency;
-        } else {
-          accounts[account?.id || UNKNOWN_KEY] = {
-            balance: 0,
-            currency: account?.currency,
-            name: account?.name,
-            valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
-          };
-        }
+      let valueOfAccountInBaseCurrency = new Big(0);
 
-        if (
-          platforms[account?.platformId || UNKNOWN_KEY]?.valueInBaseCurrency
-        ) {
-          platforms[account?.platformId || UNKNOWN_KEY].valueInBaseCurrency +=
-            currentValueOfSymbolInBaseCurrency;
-        } else {
-          platforms[account?.platformId || UNKNOWN_KEY] = {
-            balance: 0,
-            currency: account?.currency,
-            name: account?.platform?.name,
-            valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
-          };
-        }
+      for (const { assetProfile, quantity, type } of ordersByAccount) {
+        valueOfAccountInBaseCurrency = valueOfAccountInBaseCurrency.plus(
+          new Big(quantity)
+            .mul(getFactor(type))
+            .mul(
+              portfolioItemsNow[assetProfile.symbol]
+                ?.marketPriceInBaseCurrency ?? 0
+            )
+        );
+      }
+
+      const currentAccountId = account?.id || UNKNOWN_KEY;
+      const currentPlatformId = account?.platformId || UNKNOWN_KEY;
+
+      if (accounts[currentAccountId]) {
+        accounts[currentAccountId].valueInBaseCurrency = new Big(
+          accounts[currentAccountId].valueInBaseCurrency
+        )
+          .plus(valueOfAccountInBaseCurrency)
+          .toNumber();
+      } else {
+        accounts[currentAccountId] = {
+          balance: 0,
+          currency: account?.currency,
+          name: account?.name,
+          valueInBaseCurrency: valueOfAccountInBaseCurrency.toNumber()
+        };
+      }
+
+      if (platforms[currentPlatformId]) {
+        platforms[currentPlatformId].valueInBaseCurrency = new Big(
+          platforms[currentPlatformId].valueInBaseCurrency
+        )
+          .plus(valueOfAccountInBaseCurrency)
+          .toNumber();
+      } else {
+        platforms[currentPlatformId] = {
+          balance: 0,
+          currency: account?.currency,
+          name: account?.platform?.name,
+          valueInBaseCurrency: valueOfAccountInBaseCurrency.toNumber()
+        };
       }
     }
 
