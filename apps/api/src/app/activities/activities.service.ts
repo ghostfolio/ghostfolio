@@ -7,6 +7,12 @@ import {
   isAccountBalanceInFuture,
   WHERE_ACCOUNT_NOT_EXCLUDED
 } from '@ghostfolio/api/helper/account.helper';
+import {
+  getTagsWithDraftTag,
+  isActivityInFuture,
+  isDraftTagToBeAssigned,
+  WHERE_ACTIVITY_NOT_DRAFT
+} from '@ghostfolio/api/helper/activity.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { adjustActivityBySplits } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.helper';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
@@ -23,11 +29,13 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
   NON_INVESTMENT_ACTIVITY_TYPES,
+  TAG_ID_DRAFT,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
   canDeleteAssetProfile,
   getAssetProfileIdentifier,
+  isDraftActivity,
   isValidCustomAssetProfileSymbol
 } from '@ghostfolio/common/helper';
 import {
@@ -51,7 +59,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday, isAfter } from 'date-fns';
+import { endOfToday } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
@@ -115,7 +123,7 @@ export class ActivitiesService {
     tags,
     userId
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    await this.tagService.validateTagIds({
+    await this.tagService.validateTagIdsWithoutDraftTag({
       userId,
       tagIds: tags.map(({ id }) => {
         return id;
@@ -123,6 +131,7 @@ export class ActivitiesService {
     });
 
     const activities = await this.prismaService.order.findMany({
+      include: { tags: { select: { id: true } } },
       where: {
         userId,
         SymbolProfile: {
@@ -132,20 +141,31 @@ export class ActivitiesService {
       }
     });
 
+    const tagsToAssign = tags.map(({ id }) => {
+      return { id };
+    });
+
     await Promise.all(
-      activities.map(({ id }) =>
-        this.prismaService.order.update({
+      activities.map((activity) => {
+        // The set operation replaces all existing connections with the provided
+        // ones, hence the "Draft" tag of an individual activity is carried over
+        const isDraft = isDraftActivity(activity);
+
+        const tagsToSet = isDraft
+          ? [...tagsToAssign, { id: TAG_ID_DRAFT }]
+          : tagsToAssign;
+
+        return this.prismaService.order.update({
           data: {
+            // @deprecated Mirrors the "Draft" tag until the attribute is removed
+            isDraft,
             tags: {
-              // The set operation replaces all existing connections with the provided ones
-              set: tags.map((tag) => {
-                return { id: tag.id };
-              })
+              set: tagsToSet
             }
           },
-          where: { id }
-        })
-      )
+          where: { id: activity.id }
+        });
+      })
     );
 
     this.eventEmitter.emit(
@@ -264,17 +284,21 @@ export class ActivitiesService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type)
-      ? false
-      : isAfter(data.date as Date, endOfToday());
+    const tagsToConnect = getTagsWithDraftTag({
+      tags,
+      date: data.date as Date,
+      draftTag: { id: TAG_ID_DRAFT },
+      type: data.type
+    });
 
     const activity = await this.prismaService.order.create({
       data: {
         ...orderData,
         account,
-        isDraft,
+        // @deprecated Mirrors the "Draft" tag until the attribute is removed
+        isDraft: isDraftActivity({ tags: tagsToConnect }),
         tags: {
-          connect: tags
+          connect: tagsToConnect
         }
       },
       include: { SymbolProfile: true }
@@ -640,8 +664,12 @@ export class ActivitiesService {
       };
     }
 
-    if (includeDrafts === false) {
-      where.isDraft = false;
+    const isFilteredByDraftTag = filtersByTag.some(({ id }) => {
+      return id === TAG_ID_DRAFT;
+    });
+
+    if (includeDrafts === false && !isFilteredByDraftTag) {
+      andConditions.push(WHERE_ACTIVITY_NOT_DRAFT);
     }
 
     if (filtersByAssetClass.length > 0) {
@@ -983,6 +1011,7 @@ export class ActivitiesService {
 
   public async updateActivity({
     data,
+    originalDate,
     userId,
     where
   }: {
@@ -994,9 +1023,11 @@ export class ActivitiesService {
       tags?: { id: string }[];
       type?: ActivityType;
     };
+    originalDate: Date;
     userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
+    const areTagsProvided = data.tags !== undefined;
     const tags = data.tags ?? [];
 
     await this.tagService.validateTagIds({
@@ -1010,8 +1041,6 @@ export class ActivitiesService {
       data.comment = null;
     }
 
-    let isDraft = false;
-
     if (
       NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
@@ -1022,10 +1051,9 @@ export class ActivitiesService {
     } else {
       delete data.SymbolProfile.update;
 
-      isDraft = isAfter(data.date as Date, endOfToday());
-
-      if (!isDraft) {
-        // Gather symbol data of order in the background, if not draft
+      if (!isActivityInFuture({ date: data.date as Date })) {
+        // Gather symbol data of order in the background, if the date is not in
+        // the future
         this.dataGatheringService.gatherSymbols({
           dataGatheringItems: [
             {
@@ -1045,14 +1073,40 @@ export class ActivitiesService {
     delete data.symbol;
     delete data.tags;
 
+    // Leave the tags untouched if the request does not provide them, so that a
+    // partial update cannot drop the "Draft" tag
+    let isDraft: boolean;
+    let tagsToUpdate: Prisma.OrderUpdateInput['tags'];
+
+    if (areTagsProvided) {
+      const tagsToSet = getTagsWithDraftTag({
+        originalDate,
+        tags,
+        date: data.date as Date,
+        draftTag: { id: TAG_ID_DRAFT },
+        type: data.type
+      });
+
+      isDraft = isDraftActivity({ tags: tagsToSet });
+      tagsToUpdate = { set: tagsToSet };
+    } else if (
+      isDraftTagToBeAssigned({
+        originalDate,
+        date: data.date as Date,
+        type: data.type
+      })
+    ) {
+      isDraft = true;
+      tagsToUpdate = { connect: { id: TAG_ID_DRAFT } };
+    }
+
     const activity = await this.prismaService.order.update({
       where,
       data: {
         ...data,
+        // @deprecated Mirrors the "Draft" tag until the attribute is removed
         isDraft,
-        tags: {
-          set: tags
-        }
+        tags: tagsToUpdate
       }
     });
 

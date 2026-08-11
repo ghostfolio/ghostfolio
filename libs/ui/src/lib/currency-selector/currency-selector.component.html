@@ -13,6 +13,7 @@
 
 <mat-autocomplete
   #currencyAutocomplete="matAutocomplete"
+  (closed)="onPanelClosed()"
   (optionSelected)="onUpdateCurrency($event)"
 >
   @for (currency of filteredCurrencies; track currency) {

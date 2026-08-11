@@ -23,6 +23,7 @@ import type { PropertyKey } from './property-key.type';
 import type { RequestWithUser } from './request-with-user.type';
 import type { SectorName } from './sector-name.type';
 import type { SubscriptionOfferKey } from './subscription-offer-key.type';
+import type { ToggleOption } from './toggle-option.type';
 import type { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
 
@@ -52,6 +53,7 @@ export type {
   RequestWithUser,
   SectorName,
   SubscriptionOfferKey,
+  ToggleOption,
   UserWithSettings,
   ViewMode
 };

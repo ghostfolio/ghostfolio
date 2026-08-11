@@ -5,11 +5,10 @@ import {
   HistoricalDataItem,
   InfoItem,
   MarketDataOfMarketsResponse,
-  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { FearAndGreedIndexMode } from '@ghostfolio/common/types';
+import { FearAndGreedIndexMode, ToggleOption } from '@ghostfolio/common/types';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfFearAndGreedIndexComponent } from '@ghostfolio/ui/fear-and-greed-index';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';

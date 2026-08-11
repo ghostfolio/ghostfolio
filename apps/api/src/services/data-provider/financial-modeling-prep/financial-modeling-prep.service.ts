@@ -169,9 +169,6 @@ export class FinancialModelingPrepService
             .then((res) => res.json());
 
           response.countries = etfCountryWeightings
-            .filter(({ country: countryName }) => {
-              return countryName.toLowerCase() !== 'other';
-            })
             .map(({ country: countryName, weightPercentage }) => {
               return {
                 code: getCountryCodeByName({
@@ -180,6 +177,9 @@ export class FinancialModelingPrepService
                 }),
                 weight: parseFloat(`${weightPercentage}`) / 100
               };
+            })
+            .filter(({ code }) => {
+              return !!code;
             });
 
           const etfHoldings = await this.fetchService
