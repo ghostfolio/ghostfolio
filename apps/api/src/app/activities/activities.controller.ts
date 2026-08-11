@@ -1,4 +1,3 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
@@ -8,16 +7,19 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DEFAULT_CURRENCY,
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import {
   ActivitiesResponse,
-  ActivityResponse
+  ActivityResponse,
+  UserSettings
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -55,8 +57,8 @@ export class ActivitiesController {
     private readonly dataProviderService: DataProviderService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly impersonationService: ImpersonationService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    private readonly prismaService: PrismaService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Delete()
@@ -173,7 +175,7 @@ export class ActivitiesController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userId = impersonationUserId || this.request.user.id;
 
-    const { settings } = await this.userService.user({ id: userId });
+    const userCurrency = await this.getUserCurrency(impersonationUserId);
 
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
@@ -183,10 +185,10 @@ export class ActivitiesController {
       sortDirection,
       startDate,
       take,
+      userCurrency,
       userId,
       includeDrafts: true,
       types: activityTypes,
-      userCurrency: settings.settings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
@@ -205,12 +207,12 @@ export class ActivitiesController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userId = impersonationUserId || this.request.user.id;
 
-    const { settings } = await this.userService.user({ id: userId });
+    const userCurrency = await this.getUserCurrency(impersonationUserId);
 
     const { activities } = await this.activitiesService.getActivities({
+      userCurrency,
       userId,
       includeDrafts: true,
-      userCurrency: settings.settings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
@@ -381,5 +383,19 @@ export class ActivitiesController {
         id
       }
     });
+  }
+
+  private async getUserCurrency(impersonationUserId: string) {
+    if (!impersonationUserId) {
+      return this.request.user.settings.settings.baseCurrency;
+    }
+
+    const settings = await this.prismaService.settings.findUnique({
+      where: { userId: impersonationUserId }
+    });
+
+    return (
+      (settings?.settings as UserSettings)?.baseCurrency ?? DEFAULT_CURRENCY
+    );
   }
 }

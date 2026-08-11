@@ -88,7 +88,6 @@ export class GfAnalysisPageComponent implements OnInit {
   protected dividendsByGroup: InvestmentItem[];
   protected readonly dividendTimelineDataLabel = $localize`Dividend`;
   protected hasPermissionToReadAiPrompt: boolean;
-  protected hasPermissionToUpdateUserSettings: boolean;
   protected impersonationId: string | null;
   protected investments: InvestmentItem[];
   protected readonly investmentTimelineDataLabel = $localize`Invested Capital`;
@@ -173,11 +172,6 @@ export class GfAnalysisPageComponent implements OnInit {
           this.hasPermissionToReadAiPrompt = hasPermission(
             this.user.permissions,
             permissions.readAiPrompt
-          );
-
-          this.hasPermissionToUpdateUserSettings = hasPermission(
-            this.user.permissions,
-            permissions.updateUserSettings
           );
 
           this.update();

@@ -59,7 +59,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
-import { Prisma, Role, Settings, User } from '@prisma/client';
+import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { isNil, without } from 'lodash';
 import { createHmac } from 'node:crypto';
@@ -128,7 +128,7 @@ export class UserService {
       accounts,
       activitiesCount,
       firstActivity,
-      impersonationUserSettings,
+      impersonationUser,
       tagsForUser
     ] = await Promise.all([
       this.prismaService.access.findMany({
@@ -157,16 +157,14 @@ export class UserService {
         where: { userId: impersonationUserId || user.id }
       }),
       impersonationUserId
-        ? this.prismaService.settings.findUnique({
-            where: { userId: impersonationUserId }
-          })
-        : Promise.resolve<Settings>(null),
+        ? this.user({ id: impersonationUserId })
+        : Promise.resolve<UserWithSettings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
     const resolvedUserSettings = resolveUserSettings({
       impersonationUserSettings: impersonationUserId
-        ? ((impersonationUserSettings?.settings ?? {}) as UserSettings)
+        ? ((impersonationUser?.settings?.settings ?? {}) as UserSettings)
         : undefined,
       userSettings: settings.settings as UserSettings
     });

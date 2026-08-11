@@ -2,7 +2,6 @@ import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/accou
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
-import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
@@ -40,8 +39,7 @@ import { ActivitiesService } from './activities.service';
     SymbolProfileModule,
     TagModule,
     TransformDataSourceInRequestModule,
-    TransformDataSourceInResponseModule,
-    UserModule
+    TransformDataSourceInResponseModule
   ],
   providers: [AccountBalanceService, AccountService, ActivitiesService]
 })

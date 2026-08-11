@@ -137,9 +137,7 @@
         [benchmarkDataItems]="benchmarkDataItems"
         [benchmarks]="benchmarks"
         [colorScheme]="user?.settings?.colorScheme"
-        [hasPermissionToUpdateUserSettings]="
-          hasPermissionToUpdateUserSettings && !impersonationId
-        "
+        [hasPermissionToUpdateUserSettings]="!impersonationId"
         [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
         [locale]="user?.settings?.locale"
         [performanceDataItems]="performanceDataItemsInPercentage"
