@@ -1,4 +1,5 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -25,6 +26,7 @@ import {
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import { groupBy } from 'lodash';
 
@@ -37,6 +39,7 @@ export class AssetProfilesService {
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
@@ -62,6 +65,7 @@ export class AssetProfilesService {
       symbolProfileId
     });
 
+    await this.emitPortfolioChangedEvents(symbolProfileId);
     await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
 
     return assetProfileSplit;
@@ -81,6 +85,23 @@ export class AssetProfilesService {
 
     if (!isDeleted) {
       throw new NotFoundException();
+    }
+
+    await this.emitPortfolioChangedEvents(symbolProfileId);
+  }
+
+  private async emitPortfolioChangedEvents(symbolProfileId: string) {
+    const users = await this.prismaService.order.findMany({
+      distinct: ['userId'],
+      select: { userId: true },
+      where: { symbolProfileId }
+    });
+
+    for (const { userId } of users) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({ userId })
+      );
     }
   }
 
