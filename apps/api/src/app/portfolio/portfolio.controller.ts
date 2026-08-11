@@ -647,13 +647,20 @@ export class PortfolioController {
   @Get('report')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
   public async getReport(
-    @Impersonation() { userId }: ImpersonationContext
+    @Impersonation() { accessId, userId }: ImpersonationContext
   ): Promise<PortfolioReportResponse> {
     const report = await this.portfolioService.getReport({ userId });
 
     if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription?.type === SubscriptionType.Basic
+      // The evaluations of the rules interpolate absolute values, hence they
+      // are withheld from a restricted view
+      hasReadRestrictedAccessPermission({
+        accesses: this.request.user?.accessesGet,
+        impersonationId: accessId
+      }) ||
+      isRestrictedView(this.request.user) ||
+      (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        this.request.user.subscription?.type === SubscriptionType.Basic)
     ) {
       for (const category of report.xRay.categories) {
         category.rules = null;
