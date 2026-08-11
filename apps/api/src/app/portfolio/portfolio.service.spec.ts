@@ -510,5 +510,43 @@ describe('PortfolioService', () => {
       expect(accounts[UNKNOWN_KEY]).toBeUndefined();
       expect(platforms[UNKNOWN_KEY]).toBeUndefined();
     });
+
+    it('should not accumulate rounding errors of activities cancelling each other out', async () => {
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.1,
+            type: 'BUY'
+          },
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.2,
+            type: 'BUY'
+          },
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.3,
+            type: 'SELL'
+          }
+        ],
+        filters: [],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 1234.5678 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 100 (balance) + 0 (activities)
+      expect(accounts[account.id].valueInBaseCurrency).toBe(100);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(100);
+    });
   });
 });

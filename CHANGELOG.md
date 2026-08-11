@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the allocation in the accounts tab of the holding detail dialog caused by floating-point rounding
 - Fixed the account aggregations in impersonation mode to be based on the impersonated user
 - Fixed the base currency of the activities in impersonation mode to be based on the impersonated user
 - Fixed the base currency of the dividends in impersonation mode to be based on the impersonated user
