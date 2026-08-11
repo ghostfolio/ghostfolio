@@ -249,6 +249,10 @@ export class PortfolioService {
           }
         }
 
+        const quantityOfHolding = filterBySymbol
+          ? (details.accounts[account.id]?.quantity ?? 0)
+          : undefined;
+
         const valueInBaseCurrency =
           details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
@@ -264,6 +268,7 @@ export class PortfolioService {
             account.currency,
             userCurrency
           ),
+          quantity: quantityOfHolding,
           value: this.exchangeRateDataService.toCurrency(
             valueInBaseCurrency,
             userCurrency,
@@ -2194,6 +2199,10 @@ export class PortfolioService {
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};
 
+    const { SYMBOL: [filterBySymbol] = [] } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
     let currentAccounts: (AccountWithBalance & {
       Order?: Order[];
       platform?: Platform;
@@ -2274,23 +2283,33 @@ export class PortfolioService {
         continue;
       }
 
+      let quantityOfAccount = new Big(0);
       let valueOfAccountInBaseCurrency = new Big(0);
 
       for (const { assetProfile, quantity, type } of ordersByAccount) {
+        const currentQuantityOfSymbol = new Big(quantity).mul(getFactor(type));
+
+        quantityOfAccount = quantityOfAccount.plus(currentQuantityOfSymbol);
+
         valueOfAccountInBaseCurrency = valueOfAccountInBaseCurrency.plus(
-          new Big(quantity)
-            .mul(getFactor(type))
-            .mul(
-              portfolioItemsNow[assetProfile.symbol]
-                ?.marketPriceInBaseCurrency ?? 0
-            )
+          currentQuantityOfSymbol.mul(
+            portfolioItemsNow[assetProfile.symbol]?.marketPriceInBaseCurrency ??
+              0
+          )
         );
       }
 
       const currentAccountId = account?.id || UNKNOWN_KEY;
       const currentPlatformId = account?.platformId || UNKNOWN_KEY;
 
+      // The quantity is only meaningful if the activities are filtered by a
+      // single holding
+      const quantityOfHolding = filterBySymbol
+        ? quantityOfAccount.toNumber()
+        : undefined;
+
       if (accounts[currentAccountId]) {
+        accounts[currentAccountId].quantity = quantityOfHolding;
         accounts[currentAccountId].valueInBaseCurrency = new Big(
           accounts[currentAccountId].valueInBaseCurrency
         )
@@ -2301,6 +2320,7 @@ export class PortfolioService {
           balance: 0,
           currency: account?.currency,
           name: account?.name,
+          quantity: quantityOfHolding,
           valueInBaseCurrency: valueOfAccountInBaseCurrency.toNumber()
         };
       }

@@ -426,7 +426,10 @@ describe('PortfolioService', () => {
       return (
         portfolioService as unknown as {
           getValueOfAccountsAndPlatforms: (aArgs: object) => Promise<{
-            accounts: Record<string, { valueInBaseCurrency: number }>;
+            accounts: Record<
+              string,
+              { quantity?: number; valueInBaseCurrency: number }
+            >;
             platforms: Record<string, { valueInBaseCurrency: number }>;
           }>;
         }
@@ -443,6 +446,10 @@ describe('PortfolioService', () => {
     };
 
     beforeEach(() => {
+      jest
+        .spyOn(accountService, 'accounts')
+        .mockResolvedValue([account] as unknown as AccountWithBalance[]);
+
       jest
         .spyOn(accountService, 'getAccounts')
         .mockResolvedValue([account] as unknown as AccountWithBalance[]);
@@ -547,6 +554,57 @@ describe('PortfolioService', () => {
       // 100 (balance) + 0 (activities)
       expect(accounts[account.id].valueInBaseCurrency).toBe(100);
       expect(platforms[account.platformId].valueInBaseCurrency).toBe(100);
+    });
+
+    it('should aggregate the quantity per account if the activities are filtered by a single holding', async () => {
+      const { accounts } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.1,
+            type: 'BUY'
+          },
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.2,
+            type: 'BUY'
+          }
+        ],
+        filters: [{ id: 'AAPL', type: 'SYMBOL' }],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accounts[account.id].quantity).toBe(0.3);
+    });
+
+    it('should not expose a quantity if the activities are not filtered by a single holding', async () => {
+      const { accounts } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accounts[account.id].quantity).toBeUndefined();
     });
   });
 });

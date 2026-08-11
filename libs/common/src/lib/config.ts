@@ -113,6 +113,7 @@ export const DEFAULT_REDACTED_PATHS = [
   'accounts[*].comment',
   'accounts[*].dividendInBaseCurrency',
   'accounts[*].interestInBaseCurrency',
+  'accounts[*].quantity',
   'accounts[*].value',
   'accounts[*].valueInBaseCurrency',
   'activities[*].account.comment',

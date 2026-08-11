@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the quantity to the accounts tab of the holding detail dialog
+
 ### Fixed
 
 - Fixed the allocation in the accounts tab of the holding detail dialog caused by floating-point rounding
