@@ -24,7 +24,6 @@ import {
 } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
-  isDraftActivity,
   isValidCustomAssetProfileSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -168,7 +167,6 @@ export class ImportService {
             feeInAssetProfileCurrency: 0,
             feeInBaseCurrency: 0,
             id: assetProfile.id,
-            isDraft: false,
             symbolProfileId: assetProfile.id,
             type: 'DIVIDEND',
             unitPrice: marketPrice,
@@ -803,7 +801,6 @@ export class ImportService {
           accountUserId: undefined,
           createdAt: new Date(),
           id: randomUUID(),
-          isDraft: isDraftActivity({ tags: previewTags }),
           SymbolProfile: {
             assetClass,
             assetSubClass,

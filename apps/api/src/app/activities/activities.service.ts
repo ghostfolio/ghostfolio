@@ -146,16 +146,12 @@ export class ActivitiesService {
       activities.map((activity) => {
         // The set operation replaces all existing connections with the provided
         // ones, hence the "Draft" tag of an individual activity is carried over
-        const isDraft = isDraftActivity(activity);
-
-        const tagsToSet = isDraft
+        const tagsToSet = isDraftActivity(activity)
           ? [...tagsToAssign, { id: TAG_ID_DRAFT }]
           : tagsToAssign;
 
         return this.prismaService.order.update({
           data: {
-            // @deprecated Mirrors the "Draft" tag until the attribute is removed
-            isDraft,
             tags: {
               set: tagsToSet
             }
@@ -292,8 +288,6 @@ export class ActivitiesService {
       data: {
         ...orderData,
         account,
-        // @deprecated Mirrors the "Draft" tag until the attribute is removed
-        isDraft: isDraftActivity({ tags: tagsToConnect }),
         tags: {
           connect: tagsToConnect
         }
@@ -542,7 +536,6 @@ export class ActivitiesService {
           feeInAssetProfileCurrency: 0,
           feeInBaseCurrency: 0,
           id: balanceItem.id,
-          isDraft: false,
           quantity: 1,
           symbolProfileId: account.currency,
           type: ActivityType.BUY,
@@ -1044,20 +1037,18 @@ export class ActivitiesService {
 
     // Leave the tags untouched if the request does not provide them, so that a
     // partial update cannot drop the "Draft" tag
-    let isDraft: boolean;
     let tagsToUpdate: Prisma.OrderUpdateInput['tags'];
 
     if (areTagsProvided) {
-      const tagsToSet = getTagsWithDraftTag({
-        originalDate,
-        tags,
-        date: data.date as Date,
-        draftTag: { id: TAG_ID_DRAFT },
-        type: data.type
-      });
-
-      isDraft = isDraftActivity({ tags: tagsToSet });
-      tagsToUpdate = { set: tagsToSet };
+      tagsToUpdate = {
+        set: getTagsWithDraftTag({
+          originalDate,
+          tags,
+          date: data.date as Date,
+          draftTag: { id: TAG_ID_DRAFT },
+          type: data.type
+        })
+      };
     } else if (
       isDraftTagToBeAssigned({
         originalDate,
@@ -1065,7 +1056,6 @@ export class ActivitiesService {
         type: data.type
       })
     ) {
-      isDraft = true;
       tagsToUpdate = { connect: { id: TAG_ID_DRAFT } };
     }
 
@@ -1073,8 +1063,6 @@ export class ActivitiesService {
       where,
       data: {
         ...data,
-        // @deprecated Mirrors the "Draft" tag until the attribute is removed
-        isDraft,
         tags: tagsToUpdate
       }
     });
