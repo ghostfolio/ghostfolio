@@ -166,7 +166,9 @@ export class AccessController {
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
           permissions: data.permissions,
-          scopes: getScopesOfAccess({ permissions: data.permissions }),
+          scopes: getScopesOfAccess({
+            permissions: data.permissions ?? originalAccess.permissions
+          }),
           settings: this.accessService.buildSettings(data.filters)
         },
         where: { id }
