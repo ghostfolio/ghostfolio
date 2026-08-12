@@ -12,6 +12,7 @@ import type { Granularity } from './granularity.type';
 import type { GroupBy } from './group-by.type';
 import type { HoldingType } from './holding-type.type';
 import type { HoldingsViewMode } from './holdings-view-mode.type';
+import type { ImpersonationContext } from './impersonation-context.type';
 import type { MarketAdvanced } from './market-advanced.type';
 import type { MarketDataPreset } from './market-data-preset.type';
 import type { MarketState } from './market-state.type';
@@ -23,6 +24,7 @@ import type { PropertyKey } from './property-key.type';
 import type { RequestWithUser } from './request-with-user.type';
 import type { SectorName } from './sector-name.type';
 import type { SubscriptionOfferKey } from './subscription-offer-key.type';
+import type { ToggleOption } from './toggle-option.type';
 import type { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
 
@@ -41,6 +43,7 @@ export type {
   GroupBy,
   HoldingType,
   HoldingsViewMode,
+  ImpersonationContext,
   Market,
   MarketAdvanced,
   MarketDataPreset,
@@ -52,6 +55,7 @@ export type {
   RequestWithUser,
   SectorName,
   SubscriptionOfferKey,
+  ToggleOption,
   UserWithSettings,
   ViewMode
 };

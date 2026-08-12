@@ -51,13 +51,37 @@ import {
   AssetProfileIdentifier,
   AssetProfileItem,
   Benchmark,
-  PortfolioPosition
+  PortfolioPosition,
+  UserSettings
 } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
+
+// Settings which describe the person looking at the screen rather than the
+// portfolio being looked at. They stay with the authenticated user while
+// impersonating. Every other setting follows the impersonated user.
+// The filters are included because they are always written back to the
+// authenticated user, so reading them from the impersonated user would
+// overwrite the filters of the authenticated user.
+const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
+  'benchmark',
+  'colorScheme',
+  'dateRange',
+  'filters.accounts',
+  'filters.assetClasses',
+  'filters.dataSource',
+  'filters.symbol',
+  'filters.tags',
+  'holdingsViewMode',
+  'isExperimentalFeatures',
+  'isRestrictedView',
+  'language',
+  'locale',
+  'viewMode'
+];
 
 export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
   assetProfile: T,
@@ -584,6 +608,12 @@ export function isSystemTag(tag?: { id: string }) {
   });
 }
 
+export function isUserSettingOfAuthenticatedUser(aKey: string) {
+  return USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.includes(
+    aKey as keyof UserSettings
+  );
+}
+
 export function isValidCustomAssetProfileSymbol(aSymbol: string) {
   return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
 }
@@ -669,4 +699,25 @@ export function resolveMarketCondition(
   } else {
     return { emoji: undefined };
   }
+}
+
+export function resolveUserSettings({
+  impersonationUserSettings,
+  userSettings
+}: {
+  impersonationUserSettings?: UserSettings;
+  userSettings: UserSettings;
+}): UserSettings {
+  if (!impersonationUserSettings) {
+    return { ...userSettings };
+  }
+
+  return {
+    ...impersonationUserSettings,
+    ...Object.fromEntries(
+      USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.map((key) => {
+        return [key, userSettings?.[key]];
+      })
+    )
+  };
 }

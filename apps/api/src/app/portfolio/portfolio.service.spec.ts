@@ -8,7 +8,6 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
@@ -30,7 +29,6 @@ describe('PortfolioService', () => {
   let configurationService: ConfigurationService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
-  let impersonationService: ImpersonationService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioService: PortfolioService;
   let symbolProfileService: SymbolProfileService;
@@ -77,8 +75,6 @@ describe('PortfolioService', () => {
       null
     );
 
-    impersonationService = new ImpersonationService(null, null);
-
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
       null,
@@ -110,7 +106,6 @@ describe('PortfolioService', () => {
       dataProviderService,
       exchangeRateDataService,
       null,
-      impersonationService,
       null,
       null,
       symbolProfileService,
@@ -246,10 +241,6 @@ describe('PortfolioService', () => {
         .mockReturnValue(DataSource.YAHOO);
 
       jest
-        .spyOn(impersonationService, 'validateImpersonationId')
-        .mockResolvedValue(null);
-
-      jest
         .spyOn(symbolProfileService, 'getSymbolProfiles')
         .mockResolvedValue([]);
 
@@ -331,7 +322,6 @@ describe('PortfolioService', () => {
 
       const { holdings } = await portfolioService.getDetails({
         filters: [],
-        impersonationId: userDummyData.id,
         userId: userDummyData.id
       });
 
@@ -371,10 +361,6 @@ describe('PortfolioService', () => {
         .spyOn(activitiesService, 'getActivities')
         .mockResolvedValue({ activities: [], count: 0 });
 
-      jest
-        .spyOn(impersonationService, 'validateImpersonationId')
-        .mockResolvedValue(null);
-
       jest.spyOn(portfolioService, 'getPerformance').mockResolvedValue({
         performance: {
           currentValueInBaseCurrency: 3000,
@@ -408,7 +394,6 @@ describe('PortfolioService', () => {
         balanceInBaseCurrency: 1000,
         emergencyFundHoldingsValueInBaseCurrency: 0,
         filteredValueInBaseCurrency: new Big(3000),
-        impersonationId: undefined,
         userCurrency: 'CHF',
         userId: userDummyData.id
       });
@@ -426,7 +411,10 @@ describe('PortfolioService', () => {
       return (
         portfolioService as unknown as {
           getValueOfAccountsAndPlatforms: (aArgs: object) => Promise<{
-            accounts: Record<string, { valueInBaseCurrency: number }>;
+            accounts: Record<
+              string,
+              { quantity?: number; valueInBaseCurrency: number }
+            >;
             platforms: Record<string, { valueInBaseCurrency: number }>;
           }>;
         }
@@ -443,6 +431,10 @@ describe('PortfolioService', () => {
     };
 
     beforeEach(() => {
+      jest
+        .spyOn(accountService, 'accounts')
+        .mockResolvedValue([account] as unknown as AccountWithBalance[]);
+
       jest
         .spyOn(accountService, 'getAccounts')
         .mockResolvedValue([account] as unknown as AccountWithBalance[]);
@@ -509,6 +501,157 @@ describe('PortfolioService', () => {
 
       expect(accounts[UNKNOWN_KEY]).toBeUndefined();
       expect(platforms[UNKNOWN_KEY]).toBeUndefined();
+    });
+
+    it('should not accumulate rounding errors of activities cancelling each other out', async () => {
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.1,
+            type: 'BUY'
+          },
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.2,
+            type: 'BUY'
+          },
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.3,
+            type: 'SELL'
+          }
+        ],
+        filters: [],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 1234.5678 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 100 (balance) + 0 (activities)
+      expect(accounts[account.id].valueInBaseCurrency).toBe(100);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(100);
+    });
+
+    it('should aggregate the quantity per account if the activities are filtered by a single holding', async () => {
+      const { accounts } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.1,
+            type: 'BUY'
+          },
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 0.2,
+            type: 'BUY'
+          }
+        ],
+        filters: [{ id: 'AAPL', type: 'SYMBOL' }],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accounts[account.id].quantity).toBe(0.3);
+    });
+
+    it('should not expose a quantity if the activities are not filtered by a single holding', async () => {
+      const { accounts } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accounts[account.id].quantity).toBeUndefined();
+    });
+
+    it('should only consider accounts of the current user if the activities are filtered by a single account', async () => {
+      const accountsSpy = jest.spyOn(accountService, 'accounts');
+
+      await getValueOfAccountsAndPlatforms({
+        activities: [],
+        filters: [{ id: account.id, type: 'ACCOUNT' }],
+        portfolioItemsNow: {},
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accountsSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { userId: userDummyData.id, id: account.id }
+        })
+      );
+    });
+
+    it('should exclude the cash balance if the activities are filtered by a single holding', async () => {
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [{ id: 'AAPL', type: 'SYMBOL' }],
+        portfolioItemsNow: {
+          AAPL: { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 1 * 10 (activity), without the balance of 100
+      expect(accounts[account.id].valueInBaseCurrency).toBe(10);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(10);
+    });
+
+    it('should not accumulate rounding errors of the balances of accounts sharing a platform', async () => {
+      const platformId = randomUUID();
+
+      jest.spyOn(accountService, 'getAccounts').mockResolvedValue([
+        { ...account, platformId, balance: 0.1, id: randomUUID() },
+        { ...account, platformId, balance: 0.2, id: randomUUID() }
+      ] as unknown as AccountWithBalance[]);
+
+      const { platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [],
+        filters: [],
+        portfolioItemsNow: {},
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 0.1 (balance) + 0.2 (balance)
+      expect(platforms[platformId].valueInBaseCurrency).toBe(0.3);
     });
   });
 });
