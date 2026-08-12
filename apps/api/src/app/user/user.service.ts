@@ -129,7 +129,7 @@ export class UserService {
     const [
       access,
       accounts,
-      activitiesCount,
+      activitiesGroupedByType,
       firstActivity,
       impersonationUser,
       tagsForUser
@@ -150,7 +150,10 @@ export class UserService {
           userId: impersonationUserId || user.id
         }
       }),
-      this.prismaService.order.count({
+      this.prismaService.order.groupBy({
+        _count: { _all: true },
+        by: ['type'],
+        orderBy: { type: 'asc' },
         where: { userId: impersonationUserId || user.id }
       }),
       this.prismaService.order.findFirst({
@@ -164,6 +167,17 @@ export class UserService {
         : Promise.resolve<UserWithSettings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
+
+    const activitiesCount = activitiesGroupedByType.reduce(
+      (count, { _count }) => {
+        return count + _count._all;
+      },
+      0
+    );
+
+    const activityTypes = activitiesGroupedByType.map(({ type }) => {
+      return type;
+    });
 
     const resolvedUserSettings = resolveUserSettings({
       impersonationUserSettings: impersonationUser?.settings
@@ -209,6 +223,7 @@ export class UserService {
 
     return {
       activitiesCount,
+      activityTypes,
       id,
       permissions,
       referralPartners,

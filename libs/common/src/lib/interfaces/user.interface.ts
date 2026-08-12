@@ -1,7 +1,7 @@
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 
-import { Access, Tag } from '@prisma/client';
+import { Access, Tag, Type as ActivityType } from '@prisma/client';
 
 import { ReferralPartner } from './referral-partner.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
@@ -13,6 +13,7 @@ export interface User {
   access: Pick<Access, 'alias' | 'id' | 'permissions' | 'scopes'>[];
   accounts: AccountWithPlatform[];
   activitiesCount: number;
+  activityTypes: ActivityType[];
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
