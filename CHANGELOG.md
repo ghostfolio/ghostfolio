@@ -9,13 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the scopes to the access, which express what a grantee may do on behalf of the granting user
+- Added the scopes to the access
 
 ### Changed
 
 - Changed the redaction of the monetary values in impersonation mode to be based on the scopes of the access
-- Extended the user endpoint by the scopes in force
 - Deprecated the `permissions` attribute of the access in favor of the scopes
+- Extended the `GET api/v1/user` endpoint by the scopes
 - Removed the deprecated `isDraft` attribute of the activity in favor of the _Draft_ tag
 
 ## 3.48.1 - 2026-08-11
