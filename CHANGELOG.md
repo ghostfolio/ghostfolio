@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the support to edit an activity in the holding detail dialog from experimental to general availability
 - Removed the deprecated `isDraft` attribute of the activity in favor of the _Draft_ tag
 - Improved the language localization for German (`de`)
+- Upgraded `Node.js` from version `22` to `24` (`Dockerfile`)
+- Upgraded the `Node.js` engine from version `>=22.18.0` to `>=24.19.0` (`package.json`)
 
 ## 3.48.1 - 2026-08-11
 
