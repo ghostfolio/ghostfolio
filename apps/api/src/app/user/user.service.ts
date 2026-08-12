@@ -62,7 +62,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
-import { isNil, min, without } from 'lodash';
+import { isNil, without } from 'lodash';
 import { createHmac } from 'node:crypto';
 
 @Injectable()
@@ -152,6 +152,7 @@ export class UserService {
       this.prismaService.order.groupBy({
         _min: { date: true },
         by: ['type'],
+        orderBy: { _min: { date: 'asc' } },
         where: { userId: impersonationUserId || user.id }
       }),
       impersonationUserId
@@ -160,20 +161,18 @@ export class UserService {
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const activitiesCount = impersonationUser
-      ? impersonationUser.activitiesCount
+    const activitiesCount = impersonationUserId
+      ? (impersonationUser?.activitiesCount ?? 0)
       : user.activitiesCount;
 
-    const activityTypes = activitiesGroupedByType.map(({ type }) => {
-      return type;
-    });
+    const activityTypes = activitiesGroupedByType
+      .map(({ type }) => {
+        return type;
+      })
+      .sort();
 
     const dateOfFirstActivity =
-      min(
-        activitiesGroupedByType.map(({ _min }) => {
-          return _min.date;
-        })
-      ) ?? new Date();
+      activitiesGroupedByType[0]?._min.date ?? new Date();
 
     const resolvedUserSettings = resolveUserSettings({
       impersonationUserSettings: impersonationUser?.settings
@@ -345,7 +344,6 @@ export class UserService {
       settings: settings as UserWithSettings['settings'],
       thirdPartyId,
       updatedAt,
-      activityCount: analytics?.activityCount,
       dataProviderGhostfolioDailyRequests:
         analytics?.dataProviderGhostfolioDailyRequests ?? 0
     };

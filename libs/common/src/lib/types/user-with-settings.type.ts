@@ -7,7 +7,6 @@ import { Account, Settings, User } from '@prisma/client';
 export type UserWithSettings = User & {
   accounts: Account[];
   activitiesCount: number;
-  activityCount: number;
   dataProviderGhostfolioDailyRequests: number;
   permissions?: string[];
   settings: Settings & { settings: UserSettings };

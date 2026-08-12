@@ -2,7 +2,9 @@
   class="align-items-center d-flex justify-content-end justify-content-lg-between"
 >
   <div class="d-none d-lg-flex">
-    @if (hasPermissionToFilterByType) {
+    @if (
+      hasPermissionToFilterByType && activityTypesTranslationMap().size > 0
+    ) {
       <mat-form-field appearance="outline" class="without-hint">
         <mat-label i18n>Type</mat-label>
         <mat-select multiple [formControl]="typesFilter">

@@ -176,7 +176,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   protected readonly activityTypesTranslationMap = computed(() => {
     const translationMap = new Map<ActivityType, string>();
 
-    for (const activityType of this.activityTypes()) {
+    for (const activityType of this.activityTypes() ?? []) {
       translationMap.set(activityType, translate(activityType));
     }
 
