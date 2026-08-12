@@ -48,29 +48,32 @@ export class AccessController {
       where: { userId: this.request.user.id }
     });
 
-    return accessesWithGranteeUser.map(
-      ({ alias, granteeUser, id, permissions, settings }) => {
-        if (granteeUser) {
-          return {
-            alias,
-            id,
-            permissions,
-            grantee: granteeUser?.id,
-            settings: settings as AccessSettings,
-            type: 'PRIVATE'
-          };
-        }
+    return accessesWithGranteeUser.map((accessItem) => {
+      const { alias, granteeUser, id, permissions, settings } = accessItem;
+      const scopes = getScopesOfAccess(accessItem);
 
+      if (granteeUser) {
         return {
           alias,
           id,
           permissions,
-          grantee: 'Public',
+          scopes,
+          grantee: granteeUser?.id,
           settings: settings as AccessSettings,
-          type: 'PUBLIC'
+          type: 'PRIVATE'
         };
       }
-    );
+
+      return {
+        alias,
+        id,
+        permissions,
+        scopes,
+        grantee: 'Public',
+        settings: settings as AccessSettings,
+        type: 'PUBLIC'
+      };
+    });
   }
 
   @HasPermission(permissions.createAccess)
