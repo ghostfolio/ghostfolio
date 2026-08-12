@@ -165,11 +165,9 @@ export class UserService {
       ? (impersonationUser?.activitiesCount ?? 0)
       : user.activitiesCount;
 
-    const activityTypes = activitiesGroupedByType
-      .map(({ type }) => {
-        return type;
-      })
-      .sort();
+    const activityTypes = activitiesGroupedByType.map(({ type }) => {
+      return type;
+    });
 
     const datesOfFirstActivityByType = activitiesGroupedByType.map(
       ({ _min }) => {
