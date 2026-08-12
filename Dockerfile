@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:22-slim AS builder
+FROM --platform=$BUILDPLATFORM node:24-slim AS builder
 
 # Build application and add additional files
 WORKDIR /ghostfolio
@@ -40,6 +40,12 @@ WORKDIR /ghostfolio/dist/apps/api
 COPY ./package-lock.json /ghostfolio/dist/apps/api/
 
 RUN npm install
+
+# The Prisma CLI is a dev dependency and therefore not part of the generated
+# package.json, but prisma generate needs to resolve it from the same
+# node_modules directory as @prisma/client
+RUN npm install prisma@$(node -p "require('/ghostfolio/package.json').devDependencies.prisma")
+
 COPY .config /ghostfolio/dist/apps/api/.config/
 COPY prisma /ghostfolio/dist/apps/api/prisma/
 
@@ -49,7 +55,7 @@ COPY package.json /ghostfolio/dist/apps/api/
 RUN npm run database:generate-typings
 
 # Image to run, copy everything needed from builder
-FROM node:22-slim
+FROM node:24-slim
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 ENV NODE_ENV=production
 

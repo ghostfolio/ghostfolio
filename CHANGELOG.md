@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Removed the support for the `linux/arm/v7` platform of the _Docker_ image
+- Upgraded `Node.js` from version `22` to `24` (`Dockerfile`)
+- Upgraded the `Node.js` engine from version `>=22.18.0` to `>=24.19.0` (`package.json`)
+
+### Todo
+
+- **Breaking Change**: The `linux/arm/v7` (32-bit `ARM`) platform of the _Docker_ image is no longer supported, since `Node.js` version `24` does not provide builds for it. Please switch to a 64-bit operating system (`linux/arm64`) to keep using _Ghostfolio_ on `ARM` devices.
+
 ## 3.49.0 - 2026-08-12
 
 ### Changed
