@@ -1,3 +1,4 @@
+import { getScopesOfOwnAccess } from '@ghostfolio/common/scopes';
 import type {
   ImpersonationContext,
   RequestWithUser
@@ -18,6 +19,7 @@ export const Impersonation = createParamDecorator(
     return (
       impersonation ?? {
         isActive: false,
+        scopes: getScopesOfOwnAccess(),
         userId: user?.id,
         userSettings: user?.settings?.settings ?? {}
       }

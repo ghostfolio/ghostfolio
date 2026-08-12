@@ -2,12 +2,18 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  getScopesOfAccess,
+  getScopesOfOwnAccess,
+  getScopesOfUnrestrictedImpersonation
+} from '@ghostfolio/common/scopes';
 import type {
   ImpersonationContext,
   UserWithSettings
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { Access } from '@prisma/client';
 
 @Injectable()
 export class ImpersonationService {
@@ -20,14 +26,13 @@ export class ImpersonationService {
     impersonationId?: string;
     user?: UserWithSettings;
   }): Promise<ImpersonationContext> {
-    const impersonatedUserId = await this.validateImpersonationId({
-      impersonationId,
-      user
-    });
+    const { access, userId: impersonatedUserId } =
+      await this.validateImpersonation({ impersonationId, user });
 
     if (!impersonatedUserId) {
       return {
         isActive: false,
+        scopes: getScopesOfOwnAccess(),
         userId: user?.id,
         userSettings: user?.settings?.settings ?? {}
       };
@@ -40,6 +45,11 @@ export class ImpersonationService {
     return {
       accessId: impersonationId,
       isActive: true,
+      // An access which has not been granted explicitly originates from the
+      // permission to impersonate all users
+      scopes: access
+        ? getScopesOfAccess(access)
+        : getScopesOfUnrestrictedImpersonation(),
       userId: impersonatedUserId,
       userSettings: {
         ...((settings?.settings ?? {}) as UserSettings),
@@ -56,8 +66,23 @@ export class ImpersonationService {
     impersonationId?: string;
     user?: UserWithSettings;
   }) {
+    const { userId } = await this.validateImpersonation({
+      impersonationId,
+      user
+    });
+
+    return userId;
+  }
+
+  private async validateImpersonation({
+    impersonationId,
+    user
+  }: {
+    impersonationId?: string;
+    user?: UserWithSettings;
+  }): Promise<{ access?: Access; userId: string | null }> {
     if (!impersonationId) {
-      return null;
+      return { userId: null };
     }
 
     if (user) {
@@ -69,7 +94,7 @@ export class ImpersonationService {
       });
 
       if (accessObject?.userId) {
-        return accessObject.userId;
+        return { access: accessObject, userId: accessObject.userId };
       } else if (
         hasPermission(user.permissions, permissions.impersonateAllUsers)
       ) {
@@ -79,7 +104,7 @@ export class ImpersonationService {
           where: { id: impersonationId }
         });
 
-        return impersonatedUser?.id ?? null;
+        return { userId: impersonatedUser?.id ?? null };
       }
     } else {
       // Public access
@@ -91,10 +116,10 @@ export class ImpersonationService {
       });
 
       if (accessObject?.userId) {
-        return accessObject.userId;
+        return { access: accessObject, userId: accessObject.userId };
       }
     }
 
-    return null;
+    return { userId: null };
   }
 }

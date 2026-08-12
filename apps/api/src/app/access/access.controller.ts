@@ -6,6 +6,7 @@ import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
+import { getScopesOfAccess } from '@ghostfolio/common/scopes';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -95,6 +96,7 @@ export class AccessController {
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
+        scopes: getScopesOfAccess({ permissions: data.permissions }),
         settings: this.accessService.buildSettings(data.filters),
         user: { connect: { id: this.request.user.id } }
       });
@@ -164,6 +166,7 @@ export class AccessController {
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
           permissions: data.permissions,
+          scopes: getScopesOfAccess({ permissions: data.permissions }),
           settings: this.accessService.buildSettings(data.filters)
         },
         where: { id }

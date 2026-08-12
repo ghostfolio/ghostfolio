@@ -15,6 +15,7 @@ model Access {
   granteeUserId String?
   id            String             @id @default(uuid())
   permissions   AccessPermission[] @default([READ_RESTRICTED])
+  scopes        String[]           @default([])
   settings      Json               @default("{}")
   updatedAt     DateTime           @updatedAt
   userId        String
