@@ -636,8 +636,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       if (totalUnits.eq(0)) {
         // Reset tracking variables when position is fully closed
+        totalInvestment = new Big(0);
         totalInvestmentFromBuyTransactions = new Big(0);
         totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
+        totalInvestmentWithCurrencyEffect = new Big(0);
         totalQuantityFromBuyTransactions = new Big(0);
       }
 
