@@ -8,4 +8,7 @@ DROP INDEX "Order_type_idx";
 DROP INDEX "Order_userId_idx";
 
 -- CreateIndex
-CREATE INDEX "Order_userId_type_idx" ON "Order"("userId", "type");
+CREATE INDEX "Order_symbolProfileId_idx" ON "Order"("symbolProfileId");
+
+-- CreateIndex
+CREATE INDEX "Order_userId_date_type_idx" ON "Order"("userId", "date", "type");

@@ -62,7 +62,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
-import { isNil, without } from 'lodash';
+import { isNil, min, without } from 'lodash';
 import { createHmac } from 'node:crypto';
 
 @Injectable()
@@ -130,7 +130,6 @@ export class UserService {
       access,
       accounts,
       activitiesGroupedByType,
-      firstActivity,
       impersonationUser,
       tagsForUser
     ] = await Promise.all([
@@ -151,15 +150,8 @@ export class UserService {
         }
       }),
       this.prismaService.order.groupBy({
-        _count: { _all: true },
+        _min: { date: true },
         by: ['type'],
-        orderBy: { type: 'asc' },
-        where: { userId: impersonationUserId || user.id }
-      }),
-      this.prismaService.order.findFirst({
-        orderBy: {
-          date: 'asc'
-        },
         where: { userId: impersonationUserId || user.id }
       }),
       impersonationUserId
@@ -168,16 +160,20 @@ export class UserService {
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const activitiesCount = activitiesGroupedByType.reduce(
-      (count, { _count }) => {
-        return count + _count._all;
-      },
-      0
-    );
+    const activitiesCount = impersonationUser
+      ? impersonationUser.activitiesCount
+      : user.activitiesCount;
 
     const activityTypes = activitiesGroupedByType.map(({ type }) => {
       return type;
     });
+
+    const dateOfFirstActivity =
+      min(
+        activitiesGroupedByType.map(({ _min }) => {
+          return _min.date;
+        })
+      ) ?? new Date();
 
     const resolvedUserSettings = resolveUserSettings({
       impersonationUserSettings: impersonationUser?.settings
@@ -224,6 +220,7 @@ export class UserService {
     return {
       activitiesCount,
       activityTypes,
+      dateOfFirstActivity,
       id,
       permissions,
       referralPartners,
@@ -242,7 +239,6 @@ export class UserService {
       accounts: accounts.sort((a, b) => {
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
       }),
-      dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...resolvedUserSettings,
         baseCurrency: resolvedUserSettings.baseCurrency ?? DEFAULT_CURRENCY,
@@ -340,6 +336,7 @@ export class UserService {
     const user: UserWithSettings = {
       accessToken,
       accounts,
+      activitiesCount,
       authChallenge,
       createdAt,
       id,
