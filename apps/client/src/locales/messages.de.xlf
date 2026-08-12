@@ -6790,7 +6790,7 @@
       </trans-unit>
       <trans-unit id="572144971466916440" datatype="html">
         <source>Derived from the portfolio you are viewing</source>
-        <target state="new">Derived from the portfolio you are viewing</target>
+        <target state="translated">Abgeleitet vom Portfolio, das du betrachtest</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">27</context>

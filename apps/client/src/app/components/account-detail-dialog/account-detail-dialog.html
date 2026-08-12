@@ -160,7 +160,6 @@
           [showActions]="
             data.hasPermissionToCreateActivity &&
             !data.impersonationId &&
-            user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "
           [sortColumn]="sortColumn"
