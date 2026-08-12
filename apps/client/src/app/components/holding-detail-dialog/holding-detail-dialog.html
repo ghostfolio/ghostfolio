@@ -392,7 +392,6 @@
           [showActions]="
             data.hasPermissionToCreateActivity &&
             !data.impersonationId &&
-            user?.settings?.isExperimentalFeatures &&
             !user?.settings?.isRestrictedView
           "
           [showNameColumn]="false"
