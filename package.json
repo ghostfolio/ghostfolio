@@ -185,7 +185,7 @@
     "@types/jest": "30.0.0",
     "@types/jsonpath": "0.2.4",
     "@types/lodash": "4.17.24",
-    "@types/node": "22.15.17",
+    "@types/node": "24.13.3",
     "@types/papaparse": "5.5.2",
     "@types/passport-google-oauth20": "2.0.17",
     "@types/passport-openidconnect": "0.1.3",
@@ -215,6 +215,6 @@
     "webpack-cli": "7.1.0"
   },
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=24.19.0"
   }
 }
