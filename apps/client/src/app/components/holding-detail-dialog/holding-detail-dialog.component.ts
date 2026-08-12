@@ -647,7 +647,12 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
     this.dataService
       .postActivity(activity)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        switchMap(() => {
+          return this.userService.get(true);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => {
         this.router.navigate(
           internalRoutes.portfolio.subRoutes.activities.routerLink

@@ -197,8 +197,9 @@ model Order {
 
   @@index([accountId])
   @@index([date])
-  @@index([symbolProfileId])
+  @@index([symbolProfileId, date])
   @@index([userId, date, type])
+  @@index([userId, type])
 }
 
 model Platform {

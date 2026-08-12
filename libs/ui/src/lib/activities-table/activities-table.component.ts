@@ -173,14 +173,14 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     return routerLinks;
   });
 
-  protected readonly activityTypesTranslationMap = computed(() => {
-    const translationMap = new Map<ActivityType, string>();
-
-    for (const activityType of this.activityTypes() ?? []) {
-      translationMap.set(activityType, translate(activityType));
-    }
-
-    return translationMap;
+  protected readonly activityTypeOptions = computed(() => {
+    return (this.activityTypes() ?? [])
+      .map((activityType) => {
+        return { key: activityType, value: translate(activityType) };
+      })
+      .sort((a, b) => {
+        return a.value.localeCompare(b.value);
+      });
   });
 
   protected readonly displayedColumns = computed(() => {
@@ -385,13 +385,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.notificationService.alert({
       title: aComment
     });
-  }
-
-  public sortByValue(
-    a: { key: ActivityType; value: string },
-    b: { key: ActivityType; value: string }
-  ) {
-    return a.value.localeCompare(b.value);
   }
 
   public toggleAllRows() {
