@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the wording of the _X-ray_ page to use a neutral form
 - Moved the support to clone an activity in the account detail dialog from experimental to general availability
 - Moved the support to clone an activity in the holding detail dialog from experimental to general availability
 - Moved the support to edit an activity in the account detail dialog from experimental to general availability
