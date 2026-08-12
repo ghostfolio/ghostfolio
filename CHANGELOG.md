@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the type filter of the activities table component to only list the activity types in use (experimental)
+- Improved the indexes of the order database table
 
 ## 3.55.0 - 2026-08-19
 
