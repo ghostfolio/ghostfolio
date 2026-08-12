@@ -40,6 +40,12 @@ WORKDIR /ghostfolio/dist/apps/api
 COPY ./package-lock.json /ghostfolio/dist/apps/api/
 
 RUN npm install
+
+# The Prisma CLI is a dev dependency and therefore not part of the generated
+# package.json, but prisma generate needs to resolve it from the same
+# node_modules directory as @prisma/client
+RUN npm install prisma@$(node -p "require('/ghostfolio/package.json').devDependencies.prisma")
+
 COPY .config /ghostfolio/dist/apps/api/.config/
 COPY prisma /ghostfolio/dist/apps/api/prisma/
 
