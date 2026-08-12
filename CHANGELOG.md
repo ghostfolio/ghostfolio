@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the redaction of the monetary values in impersonation mode to be based on the scopes of the access
 - Deprecated the `permissions` attribute of the access in favor of the scopes
+- Extended the `GET api/v1/access` endpoint by the scopes
 - Extended the `GET api/v1/user` endpoint by the scopes
 - Removed the deprecated `isDraft` attribute of the activity in favor of the _Draft_ tag
 
