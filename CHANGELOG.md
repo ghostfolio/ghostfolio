@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the support to clone an activity in the account detail dialog from experimental to general availability
+- Moved the support to clone an activity in the holding detail dialog from experimental to general availability
+- Moved the support to edit an activity in the account detail dialog from experimental to general availability
+- Moved the support to edit an activity in the holding detail dialog from experimental to general availability
 - Removed the deprecated `isDraft` attribute of the activity in favor of the _Draft_ tag
 
 ## 3.48.1 - 2026-08-11
