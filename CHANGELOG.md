@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refreshed the cryptocurrencies list
 
+### Fixed
+
+- Resolved an error when fetching dividends from _Yahoo Finance_ for date ranges without events
+
 ## 3.49.0 - 2026-08-12
 
 ### Changed
