@@ -1253,6 +1253,19 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.pocketsmith.com'
   },
   {
+    categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'portfolio-coach',
+    languages: ['English'],
+    name: 'Portfolio Coach',
+    origin: 'GB',
+    platforms: ['WEB'],
+    pricingPerYear: '£120',
+    slogan: 'Know your wealth. Ask it anything.',
+    url: 'https://portfoliocoach.co.uk'
+  },
+  {
     categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING'],
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -1275,6 +1288,18 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$360',
     slogan: 'Tools for Better Investors',
     url: 'https://www.portfoliovisualizer.com'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'portfolioglance',
+    languages: ['English', 'Polski'],
+    name: 'PortfolioGlance',
+    origin: 'PL',
+    platforms: ['WEB'],
+    slogan: 'One look. Clear picture of your portfolio.',
+    url: 'https://www.portfolioglance.com'
   },
   {
     categories: ['STOCK_TRACKING'],
@@ -1550,6 +1575,19 @@ export const personalFinanceTools: Product[] = [
     slogan:
       'Your financial life in a spreadsheet, automatically updated each day',
     url: 'https://tiller.com'
+  },
+  {
+    categories: ['CRYPTOCURRENCY', 'DIVIDEND_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'tinywallet',
+    languages: ['Deutsch', 'English'],
+    name: 'TinyWallet',
+    origin: 'DE',
+    platforms: ['WEB'],
+    pricingPerYear: '€35',
+    slogan: 'Your key to empowered wealth management',
+    url: 'https://www.tinywallet.de'
   },
   {
     founded: 2011,

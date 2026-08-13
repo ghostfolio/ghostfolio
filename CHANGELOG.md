@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Refreshed the cryptocurrencies list
+
 ### Fixed
 
 - Fixed the missing mapping for Turkey in the country weightings of the _Financial Modeling Prep_ service
