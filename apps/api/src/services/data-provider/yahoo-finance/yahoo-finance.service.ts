@@ -22,6 +22,7 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
+import { StatusCodes } from 'http-status-codes';
 import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
 import { ChartResultArray } from 'yahoo-finance2/esm/src/modules/chart';
@@ -41,6 +42,9 @@ import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
+  private static readonly DELISTED_ERROR_MESSAGE =
+    'No data found, symbol may be delisted';
+
   private readonly logger = new Logger(YahooFinanceService.name);
 
   private readonly yahooFinance = new YahooFinance({
@@ -107,12 +111,23 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      this.logger.error(
-        `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
-          from,
-          DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
-      );
+      const message = `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
+        from,
+        DATE_FORMAT
+      )} to ${format(to, DATE_FORMAT)}`;
+
+      if (error.message === YahooFinanceService.DELISTED_ERROR_MESSAGE) {
+        this.logger.warn(
+          `${message}: ${YahooFinanceService.DELISTED_ERROR_MESSAGE}`
+        );
+      } else if (
+        error.name === 'HTTPError' &&
+        error.code === StatusCodes.TOO_MANY_REQUESTS
+      ) {
+        this.logger.warn(`${message}: Rate limit exceeded`);
+      } else {
+        this.logger.error(`${message}: [${error.name}] ${error.message}`);
+      }
 
       return {};
     }
@@ -155,7 +170,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      if (error.message === 'No data found, symbol may be delisted') {
+      if (error.message === YahooFinanceService.DELISTED_ERROR_MESSAGE) {
         throw new AssetProfileDelistedError(
           `No data found, ${symbol} (${this.getName()}) may be delisted`
         );
