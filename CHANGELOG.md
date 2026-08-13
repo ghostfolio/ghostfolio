@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the currency of the cash balance update when creating an activity to use the activity's currency instead of the asset profile's currency
+- Fixed the cash balance update related to activities in a custom currency
 
 ## 3.49.0 - 2026-08-12
 
