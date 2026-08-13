@@ -136,10 +136,6 @@ export class YahooFinanceService implements DataProviderInterface {
   }: GetHistoricalParams): Promise<{
     [date: string]: DataProviderHistoricalResponse;
   }> {
-    if (isSameDay(from, to)) {
-      to = addDays(to, 1);
-    }
-
     try {
       const historicalResult = this.convertToHistoricalResult(
         await this.yahooFinance.chart(
@@ -149,7 +145,10 @@ export class YahooFinanceService implements DataProviderInterface {
           {
             interval: '1d',
             period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
+            period2: format(
+              isSameDay(from, to) ? addDays(to, 1) : to,
+              DATE_FORMAT
+            )
           }
         )
       );
