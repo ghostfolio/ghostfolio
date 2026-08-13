@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Resolved an issue in the portfolio calculator where closed position performance was overstated due to a rounded division in sell activities
+- Fixed the performance of closed positions in the portfolio calculator caused by a rounding remainder in the investment
 
 ## 3.49.0 - 2026-08-12
 
