@@ -340,7 +340,13 @@ export class DataProviderService implements OnModuleInit {
     from: Date;
     granularity: Granularity;
     to: Date;
-  } & AssetProfileIdentifier) {
+  } & AssetProfileIdentifier): Promise<{
+    [date: string]: DataProviderHistoricalResponse;
+  }> {
+    if (!isValid(from) || !isValid(to)) {
+      return {};
+    }
+
     return this.getDataProvider(DataSource[dataSource]).getDividends({
       from,
       granularity,

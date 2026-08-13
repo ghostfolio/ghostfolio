@@ -1,4 +1,3 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
@@ -22,7 +21,7 @@ import {
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import { addDays, format, isSameDay, isValid } from 'date-fns';
+import { addDays, format, isSameDay } from 'date-fns';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
@@ -56,7 +55,6 @@ export class YahooFinanceService implements DataProviderInterface {
   });
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService,
     private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
   ) {}
@@ -83,18 +81,9 @@ export class YahooFinanceService implements DataProviderInterface {
   public async getDividends({
     from,
     granularity = 'day',
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol,
     to
   }: GetDividendsParams) {
-    if (!isValid(from) || !isValid(to)) {
-      this.logger.error(
-        `Could not get dividends for ${symbol} (${this.getName()}): Invalid date range`
-      );
-
-      return {};
-    }
-
     try {
       const historicalResult = this.convertToDividendResult(
         await this.yahooFinance.chart(
@@ -109,9 +98,6 @@ export class YahooFinanceService implements DataProviderInterface {
               isSameDay(from, to) ? addDays(to, 1) : to,
               DATE_FORMAT
             )
-          },
-          {
-            fetchOptions: { signal: AbortSignal.timeout(requestTimeout) }
           }
         )
       );
@@ -154,7 +140,6 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public async getHistorical({
     from,
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol,
     to
   }: GetHistoricalParams): Promise<{
@@ -173,9 +158,6 @@ export class YahooFinanceService implements DataProviderInterface {
               isSameDay(from, to) ? addDays(to, 1) : to,
               DATE_FORMAT
             )
-          },
-          {
-            fetchOptions: { signal: AbortSignal.timeout(requestTimeout) }
           }
         )
       );
