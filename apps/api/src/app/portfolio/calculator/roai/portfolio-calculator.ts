@@ -532,15 +532,18 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           );
       } else if (order.type === 'SELL') {
         if (totalUnits.gt(0)) {
+          const remainingUnits = totalUnits.minus(order.quantity);
+
           transactionInvestment = totalInvestment
+            .mul(remainingUnits)
             .div(totalUnits)
-            .mul(order.quantity)
-            .mul(getFactor(order.type));
+            .minus(totalInvestment);
+
           transactionInvestmentWithCurrencyEffect =
             totalInvestmentWithCurrencyEffect
+              .mul(remainingUnits)
               .div(totalUnits)
-              .mul(order.quantity)
-              .mul(getFactor(order.type));
+              .minus(totalInvestmentWithCurrencyEffect);
         }
       }
 
@@ -636,10 +639,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       if (totalUnits.eq(0)) {
         // Reset tracking variables when position is fully closed
-        totalInvestment = new Big(0);
         totalInvestmentFromBuyTransactions = new Big(0);
         totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
-        totalInvestmentWithCurrencyEffect = new Big(0);
         totalQuantityFromBuyTransactions = new Big(0);
       }
 
