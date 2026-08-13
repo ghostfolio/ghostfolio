@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the missing mapping for Turkey in the country weightings of the _Financial Modeling Prep_ service
-- Fixed the missing mapping for Turkey in the data enhancer for asset profile data via _Yahoo Finance_
+- Fixed the missing mapping for Czech Republic and Turkey in the data enhancer for asset profile data via _Yahoo Finance_
 
 ## 3.49.0 - 2026-08-12
 
