@@ -1,3 +1,4 @@
+import { getCountryCodeByName } from '@ghostfolio/api/helper/country.helper';
 import { getSectorName } from '@ghostfolio/api/helper/sector.helper';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
@@ -18,12 +19,15 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { isISIN } from 'class-validator';
-import { countries } from 'countries-list';
 import YahooFinance from 'yahoo-finance2';
 import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
+  private static countriesMapping = {
+    Turkey: 'TR'
+  };
+
   private static sectorsMapping: Record<string, SectorName> = {
     basic_materials: 'Basic Materials',
     communication_services: 'Communication Services',
@@ -246,15 +250,14 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       ) {
         // Add country if asset is stock and country available
 
-        try {
-          const [code] = Object.entries(countries).find(([, country]) => {
-            return country.name === assetProfile.summaryProfile?.country;
-          });
+        const code = getCountryCodeByName({
+          aliases: YahooFinanceDataEnhancerService.countriesMapping,
+          name: assetProfile.summaryProfile.country
+        });
 
-          if (code) {
-            response.countries = [{ code, weight: 1 }];
-          }
-        } catch {}
+        if (code) {
+          response.countries = [{ code, weight: 1 }];
+        }
 
         if (assetProfile.summaryProfile?.sector) {
           response.sectors = [
