@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the missing mapping for Czech Republic and Turkey in the data enhancer for asset profile data via _Yahoo Finance_
 - Resolved an error when fetching dividends from _Yahoo Finance_ for date ranges without events
 
+### Fixed
+
+- Fixed the currency of the cash balance update when creating an activity to use the activity's currency instead of the asset profile's currency
+
 ## 3.49.0 - 2026-08-12
 
 ### Changed
