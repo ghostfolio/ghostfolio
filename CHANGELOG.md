@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed the cash balance update related to activities in a custom currency
+
 ## 3.50.0 - 2026-08-13
 
 ### Changed
@@ -18,10 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the missing mapping for Turkey in the country weightings of the _Financial Modeling Prep_ service
 - Fixed the missing mapping for Czech Republic and Turkey in the data enhancer for asset profile data via _Yahoo Finance_
 - Resolved an error when fetching dividends from _Yahoo Finance_ for date ranges without events
-
-### Fixed
-
-- Fixed the cash balance update related to activities in a custom currency
 
 ## 3.49.0 - 2026-08-12
 
