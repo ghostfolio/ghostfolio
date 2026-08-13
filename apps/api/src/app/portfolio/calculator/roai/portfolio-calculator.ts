@@ -187,15 +187,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalLiabilities = new Big(0);
     let totalLiabilitiesInBaseCurrency = new Big(0);
+    let totalQuantity = new Big(0);
     let totalQuantityFromBuyTransactions = new Big(0);
-    let totalUnits = new Big(0);
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
-    // Clone orders to keep the original values in this.orders
+    // Deep clone as the items are enriched below and the originals are shared
     let orders: PortfolioOrderItem[] = cloneDeep(
-      this.activities.filter(({ assetProfile }) => {
-        return assetProfile.symbol === symbol;
+      this.activities.filter((activities) => {
+        return activities.assetProfile.symbol === symbol;
       })
     );
 
@@ -295,10 +295,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       !unitPriceAtEndDate ||
       (!unitPriceAtStartDate && isBefore(dateOfFirstTransaction, start))
     ) {
-      // A missing market price can only affect the units which are held. The
-      // dividends, the interest and the liabilities do not hold any units and
-      // are therefore not in error.
-      const hasActivitiesWithUnits = orders.some(({ type }) => {
+      // A missing market price can only affect the quantity which is held. The
+      // dividends, the interest and the liabilities do not hold any quantity
+      // and are therefore not in error.
+      const hasActivitiesWithQuantity = orders.some(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       });
 
@@ -316,7 +316,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
-        hasErrors: hasActivitiesWithUnits,
+        hasErrors: hasActivitiesWithQuantity,
         initialValue: new Big(0),
         initialValueWithCurrencyEffect: new Big(0),
         investmentValuesAccumulated: {},
@@ -489,12 +489,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         order.unitPriceFromMarketData?.mul(exchangeRateAtOrderDate ?? 1) ??
         new Big(0);
 
-      const valueOfInvestmentBeforeTransaction = totalUnits.mul(
+      const valueOfInvestmentBeforeTransaction = totalQuantity.mul(
         marketPriceInBaseCurrency
       );
 
       const valueOfInvestmentBeforeTransactionWithCurrencyEffect =
-        totalUnits.mul(marketPriceInBaseCurrencyWithCurrencyEffect);
+        totalQuantity.mul(marketPriceInBaseCurrencyWithCurrencyEffect);
 
       if (!investmentAtStartDate && i >= indexOfStartOrder) {
         investmentAtStartDate = totalInvestment ?? new Big(0);
@@ -531,18 +531,18 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             transactionInvestmentWithCurrencyEffect
           );
       } else if (order.type === 'SELL') {
-        if (totalUnits.gt(0)) {
-          const remainingUnits = totalUnits.minus(order.quantity);
+        if (totalQuantity.gt(0)) {
+          const remainingQuantity = totalQuantity.minus(order.quantity);
 
           transactionInvestment = totalInvestment
-            .mul(remainingUnits)
-            .div(totalUnits)
+            .mul(remainingQuantity)
+            .div(totalQuantity)
             .minus(totalInvestment);
 
           transactionInvestmentWithCurrencyEffect =
             totalInvestmentWithCurrencyEffect
-              .mul(remainingUnits)
-              .div(totalUnits)
+              .mul(remainingQuantity)
+              .div(totalQuantity)
               .minus(totalInvestmentWithCurrencyEffect);
         }
       }
@@ -592,11 +592,13 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         order.feeInBaseCurrencyWithCurrencyEffect ?? 0
       );
 
-      totalUnits = totalUnits.plus(order.quantity.mul(getFactor(order.type)));
+      totalQuantity = totalQuantity.plus(
+        order.quantity.mul(getFactor(order.type))
+      );
 
-      const valueOfInvestment = totalUnits.mul(marketPriceInBaseCurrency);
+      const valueOfInvestment = totalQuantity.mul(marketPriceInBaseCurrency);
 
-      const valueOfInvestmentWithCurrencyEffect = totalUnits.mul(
+      const valueOfInvestmentWithCurrencyEffect = totalQuantity.mul(
         marketPriceInBaseCurrencyWithCurrencyEffect
       );
 
@@ -637,7 +639,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             totalQuantityFromBuyTransactions
           );
 
-      if (totalUnits.eq(0)) {
+      if (totalQuantity.eq(0)) {
         // Reset tracking variables when position is fully closed
         totalInvestmentFromBuyTransactions = new Big(0);
         totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
@@ -830,14 +832,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           )
         : new Big(0);
 
-    const feesPerUnit = totalUnits.gt(0)
-      ? fees.minus(feesAtStartDate).div(totalUnits)
+    const feesPerUnit = totalQuantity.gt(0)
+      ? fees.minus(feesAtStartDate).div(totalQuantity)
       : new Big(0);
 
-    const feesPerUnitWithCurrencyEffect = totalUnits.gt(0)
+    const feesPerUnitWithCurrencyEffect = totalQuantity.gt(0)
       ? feesWithCurrencyEffect
           .minus(feesAtStartDateWithCurrencyEffect)
-          .div(totalUnits)
+          .div(totalQuantity)
       : new Big(0);
 
     const netPerformancePercentage =
@@ -1009,7 +1011,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       grossPerformance: totalGrossPerformance,
       grossPerformanceWithCurrencyEffect:
         totalGrossPerformanceWithCurrencyEffect,
-      hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
+      hasErrors: totalQuantity.gt(0) && (!initialValue || !unitPriceAtEndDate),
       netPerformance: totalNetPerformance,
       timeWeightedInvestment:
         timeWeightedAverageInvestmentBetweenStartAndEndDate,
