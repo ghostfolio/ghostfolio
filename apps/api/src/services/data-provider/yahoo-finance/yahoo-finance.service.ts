@@ -22,7 +22,7 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
-import { StatusCodes } from 'http-status-codes';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
 import { ChartResultArray } from 'yahoo-finance2/esm/src/modules/chart';
@@ -81,10 +81,6 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol,
     to
   }: GetDividendsParams) {
-    if (isSameDay(from, to)) {
-      to = addDays(to, 1);
-    }
-
     try {
       const historicalResult = this.convertToDividendResult(
         await this.yahooFinance.chart(
@@ -95,7 +91,10 @@ export class YahooFinanceService implements DataProviderInterface {
             events: 'dividends',
             interval: granularity === 'month' ? '1mo' : '1d',
             period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
+            period2: format(
+              isSameDay(from, to) ? addDays(to, 1) : to,
+              DATE_FORMAT
+            )
           }
         )
       );
@@ -114,19 +113,16 @@ export class YahooFinanceService implements DataProviderInterface {
       const message = `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
         from,
         DATE_FORMAT
-      )} to ${format(to, DATE_FORMAT)}`;
+      )} to ${format(to, DATE_FORMAT)}: [${error?.name}] ${error?.message}`;
 
-      if (error.message === YahooFinanceService.DELISTED_ERROR_MESSAGE) {
-        this.logger.warn(
-          `${message}: ${YahooFinanceService.DELISTED_ERROR_MESSAGE}`
-        );
-      } else if (
-        error.name === 'HTTPError' &&
-        error.code === StatusCodes.TOO_MANY_REQUESTS
+      if (
+        error?.code === StatusCodes.TOO_MANY_REQUESTS ||
+        error?.message === YahooFinanceService.DELISTED_ERROR_MESSAGE ||
+        error?.message?.includes(getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS))
       ) {
-        this.logger.warn(`${message}: Rate limit exceeded`);
+        this.logger.warn(message);
       } else {
-        this.logger.error(`${message}: [${error.name}] ${error.message}`);
+        this.logger.error(message);
       }
 
       return {};
