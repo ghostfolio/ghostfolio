@@ -56,7 +56,8 @@ export class FinancialModelingPrepService
   private static countriesMapping = {
     'Korea (the Republic of)': 'KR',
     'Russian Federation': 'RU',
-    'Taiwan (Province of China)': 'TW'
+    'Taiwan (Province of China)': 'TW',
+    Turkey: 'TR'
   };
 
   private readonly logger = new Logger(FinancialModelingPrepService.name);
