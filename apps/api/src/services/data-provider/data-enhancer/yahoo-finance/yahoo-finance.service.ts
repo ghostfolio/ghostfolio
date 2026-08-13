@@ -25,6 +25,7 @@ import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   private static countriesMapping = {
+    'Czech Republic': 'CZ',
     Turkey: 'TR'
   };
 
