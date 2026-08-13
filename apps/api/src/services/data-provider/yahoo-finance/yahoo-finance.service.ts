@@ -343,9 +343,11 @@ export class YahooFinanceService implements DataProviderInterface {
   private convertToDividendResult(
     result: ChartResultArray
   ): HistoricalDividendsResult {
-    return result.events.dividends.map(({ amount: dividends, date }) => {
-      return { date, dividends };
-    });
+    return (result.events?.dividends ?? []).map(
+      ({ amount: dividends, date }) => {
+        return { date, dividends };
+      }
+    );
   }
 
   private convertToHistoricalResult(
