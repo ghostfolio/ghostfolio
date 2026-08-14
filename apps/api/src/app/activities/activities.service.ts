@@ -308,7 +308,7 @@ export class ActivitiesService {
         accountId,
         userId,
         amount: amount.toNumber(),
-        currency: data.SymbolProfile.connectOrCreate.create.currency,
+        currency: activity.currency ?? activity.SymbolProfile.currency,
         date: data.date as Date
       });
     }
