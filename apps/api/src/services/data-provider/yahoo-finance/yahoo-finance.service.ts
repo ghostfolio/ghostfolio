@@ -216,7 +216,7 @@ export class YahooFinanceService implements DataProviderInterface {
       try {
         quotes = await this.yahooFinance.quote(yahooFinanceSymbols);
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error(error.message);
 
         this.logger.warn('Fallback to yahooFinance.quoteSummary()');
 
@@ -244,7 +244,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       return {};
     }
@@ -352,7 +352,7 @@ export class YahooFinanceService implements DataProviderInterface {
       if (error?.name === 'BadRequestError') {
         this.logger.warn(`Could not search for "${query}": ${error.message}`);
       } else {
-        this.logger.error(error);
+        this.logger.error(error.message);
       }
     }
 

@@ -135,7 +135,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         response.url = url;
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     }
 
     return response;
@@ -280,7 +280,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           `No data found, ${aSymbol} (${this.getName()}) may be delisted`
         );
       } else {
-        this.logger.error(error);
+        this.logger.error(error.message);
       }
     }
 

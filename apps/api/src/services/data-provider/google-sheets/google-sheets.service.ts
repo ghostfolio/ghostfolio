@@ -144,7 +144,7 @@ export class GoogleSheetsService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     }
 
     return {};
