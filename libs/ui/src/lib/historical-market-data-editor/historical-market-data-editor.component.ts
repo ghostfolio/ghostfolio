@@ -123,75 +123,79 @@ export class GfHistoricalMarketDataEditorComponent
   }
 
   public ngOnChanges() {
-    if (this.dateOfFirstActivity) {
-      let date = this.dateOfFirstActivity;
+    const startDate =
+      this.dateOfFirstActivity ?? first(this.marketData())?.date;
 
-      const missingMarketData: { date: Date; marketPrice?: number }[] = [];
+    if (!startDate) {
+      return;
+    }
 
-      if (this.historicalDataItems()?.[0]?.date) {
-        while (
-          isBefore(
-            date,
-            parse(this.historicalDataItems()[0].date, DATE_FORMAT, new Date())
-          )
-        ) {
-          missingMarketData.push({
-            date,
-            marketPrice: undefined
-          });
+    let date = startDate;
 
-          date = addDays(date, 1);
-        }
+    const missingMarketData: { date: Date; marketPrice?: number }[] = [];
+
+    if (this.historicalDataItems()?.[0]?.date) {
+      while (
+        isBefore(
+          date,
+          parse(this.historicalDataItems()[0].date, DATE_FORMAT, new Date())
+        )
+      ) {
+        missingMarketData.push({
+          date,
+          marketPrice: undefined
+        });
+
+        date = addDays(date, 1);
+      }
+    }
+
+    const marketDataItems = [...missingMarketData, ...this.marketData()];
+
+    const lastDate = last(marketDataItems)?.date;
+    if (!lastDate || !isToday(lastDate)) {
+      marketDataItems.push({ date: new Date() });
+    }
+
+    this.marketDataByMonth = {};
+
+    for (const marketDataItem of marketDataItems) {
+      const currentDay = parseInt(format(marketDataItem.date, 'd'), 10);
+      const key = format(marketDataItem.date, 'yyyy-MM');
+
+      if (!this.marketDataByMonth[key]) {
+        this.marketDataByMonth[key] = {};
       }
 
-      const marketDataItems = [...missingMarketData, ...this.marketData()];
+      this.marketDataByMonth[key][
+        currentDay < 10 ? `0${currentDay}` : currentDay
+      ] = {
+        date: marketDataItem.date,
+        day: currentDay,
+        marketPrice: marketDataItem.marketPrice
+      };
+    }
 
-      const lastDate = last(marketDataItems)?.date;
-      if (!lastDate || !isToday(lastDate)) {
-        marketDataItems.push({ date: new Date() });
-      }
+    // Fill up missing months
+    const dates = Object.keys(this.marketDataByMonth).sort();
+    const startDateString = first(dates);
+    const endDateString = last(dates);
 
-      this.marketDataByMonth = {};
+    if (endDateString) {
+      const endDate = parseISO(endDateString);
 
-      for (const marketDataItem of marketDataItems) {
-        const currentDay = parseInt(format(marketDataItem.date, 'd'), 10);
-        const key = format(marketDataItem.date, 'yyyy-MM');
+      let currentDate = min([
+        startDate,
+        ...(startDateString ? [parseISO(startDateString)] : [])
+      ]);
 
+      while (isBefore(currentDate, endDate)) {
+        const key = format(currentDate, 'yyyy-MM');
         if (!this.marketDataByMonth[key]) {
           this.marketDataByMonth[key] = {};
         }
 
-        this.marketDataByMonth[key][
-          currentDay < 10 ? `0${currentDay}` : currentDay
-        ] = {
-          date: marketDataItem.date,
-          day: currentDay,
-          marketPrice: marketDataItem.marketPrice
-        };
-      }
-
-      // Fill up missing months
-      const dates = Object.keys(this.marketDataByMonth).sort();
-      const startDateString = first(dates);
-      const startDate = min([
-        this.dateOfFirstActivity,
-        ...(startDateString ? [parseISO(startDateString)] : [])
-      ]);
-      const endDateString = last(dates);
-
-      if (endDateString) {
-        const endDate = parseISO(endDateString);
-
-        let currentDate = startDate;
-
-        while (isBefore(currentDate, endDate)) {
-          const key = format(currentDate, 'yyyy-MM');
-          if (!this.marketDataByMonth[key]) {
-            this.marketDataByMonth[key] = {};
-          }
-
-          currentDate = addMonths(currentDate, 1);
-        }
+        currentDate = addMonths(currentDate, 1);
       }
     }
   }
