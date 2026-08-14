@@ -26,6 +26,7 @@ import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   private static countriesMapping = {
     'Czech Republic': 'CZ',
+    Macau: 'MO',
     Turkey: 'TR'
   };
 
