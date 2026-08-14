@@ -18,7 +18,7 @@ export function getCountryCodeByName({
     }
   }
 
-  if (name) {
+  if (name && name.toLowerCase() !== 'other') {
     const logger = new Logger('getCountryCodeByName');
 
     logger.warn(`Could not map the country "${name}" to a code`);

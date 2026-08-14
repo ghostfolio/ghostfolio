@@ -23,7 +23,7 @@
                   [currencies]="currencies"
                 />
                 @if (hasImpersonationId) {
-                  <mat-hint class="mt-1 text-muted" i18n
+                  <mat-hint class="mt-1 text-muted text-truncate" i18n
                     >Derived from the portfolio you are viewing</mat-hint
                   >
                 }
@@ -176,7 +176,7 @@
                     <mat-option [value]="locale">{{ locale }}</mat-option>
                   }
                 </mat-select>
-                <mat-hint class="d-flex mt-2 text-muted">
+                <mat-hint class="d-flex mt-2 text-muted text-truncate">
                   <gf-value
                     [deviceType]="deviceType()"
                     [isDate]="true"

@@ -322,7 +322,7 @@ export class DataGatheringService {
         });
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     } finally {
       return undefined;
     }
