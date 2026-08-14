@@ -100,9 +100,15 @@ export class BenchmarksService {
         format(startDate, DATE_FORMAT)
       ];
 
-    const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
-      return isSameDay(date, startDate);
-    })?.marketPrice;
+    // The start date is exclusive for calendar year date ranges, hence it is
+    // not part of the chart and needs to be queried separately
+    const marketDataItemAtStartDate = await this.marketDataService.get({
+      dataSource,
+      symbol,
+      date: startDate
+    });
+
+    const marketPriceAtStartDate = marketDataItemAtStartDate?.marketPrice;
 
     if (!marketPriceAtStartDate) {
       this.logger.error(
@@ -139,7 +145,7 @@ export class BenchmarksService {
     }
 
     const includesEndDate = isSameDay(
-      parseDate(marketData.at(-1).date),
+      parseDate(marketData.at(-1)?.date),
       endDate
     );
 
