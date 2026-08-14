@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the cash balance update related to activities in a custom currency
+- Fixed the empty historical market data of the asset profile dialog of the admin control panel for asset profiles without activities
 - Fixed the missing mapping for Czech Republic in the country weightings of the _Financial Modeling Prep_ service
 - Fixed the missing mapping for Macau in the data enhancer for asset profile data via _Yahoo Finance_
 - Fixed the outdated exchange rates of currency pairs which are calculated indirectly via the base currency
