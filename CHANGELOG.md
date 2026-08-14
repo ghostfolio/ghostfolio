@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ### Fixed
 
 - Fixed the cash balance update related to activities in a custom currency
+- Fixed the missing mapping for Czech Republic in the country weightings of the _Financial Modeling Prep_ service
 - Fixed the missing mapping for Macau in the data enhancer for asset profile data via _Yahoo Finance_
 
 ## 3.50.0 - 2026-08-13
