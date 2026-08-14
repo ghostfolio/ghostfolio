@@ -41,7 +41,6 @@ import {
   parse,
   parseISO
 } from 'date-fns';
-import { first, last } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { parse as csvToJson } from 'papaparse';
@@ -123,8 +122,7 @@ export class GfHistoricalMarketDataEditorComponent
   }
 
   public ngOnChanges() {
-    const startDate =
-      this.dateOfFirstActivity ?? first(this.marketData())?.date;
+    const startDate = this.dateOfFirstActivity ?? this.marketData()[0]?.date;
 
     if (!startDate) {
       return;
@@ -152,7 +150,7 @@ export class GfHistoricalMarketDataEditorComponent
 
     const marketDataItems = [...missingMarketData, ...this.marketData()];
 
-    const lastDate = last(marketDataItems)?.date;
+    const lastDate = marketDataItems.at(-1)?.date;
     if (!lastDate || !isToday(lastDate)) {
       marketDataItems.push({ date: new Date() });
     }
@@ -178,8 +176,8 @@ export class GfHistoricalMarketDataEditorComponent
 
     // Fill up missing months
     const dates = Object.keys(this.marketDataByMonth).sort();
-    const startDateString = first(dates);
-    const endDateString = last(dates);
+    const startDateString = dates[0];
+    const endDateString = dates.at(-1);
 
     if (endDateString) {
       const endDate = parseISO(endDateString);
