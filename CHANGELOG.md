@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Simplified the error log output of the data provider and queue services by omitting the stack trace
 - Improved the language localization for German (`de`)
 
 ### Fixed

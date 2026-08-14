@@ -141,7 +141,7 @@ export class DataProviderService implements OnModuleInit {
         );
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -427,7 +427,7 @@ export class DataProviderService implements OnModuleInit {
         return r;
       }, {});
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     } finally {
       return response;
     }
@@ -548,7 +548,7 @@ export class DataProviderService implements OnModuleInit {
         result[getAssetProfileIdentifier({ dataSource, symbol })] = data;
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }

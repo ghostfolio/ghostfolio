@@ -198,7 +198,7 @@ export class SymbolService {
       results.items = items;
       return results;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
