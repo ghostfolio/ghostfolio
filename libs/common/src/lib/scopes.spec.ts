@@ -1,5 +1,6 @@
 import {
   SCOPES_OF_READ_ACCESS,
+  SCOPES_OF_READ_RESTRICTED_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
   getScopesOfAccess,
   getScopesOfOwnAccess,
@@ -11,7 +12,7 @@ import {
 describe('Scopes', () => {
   describe('Scopes of read access', () => {
     // A new scope which reads data has to be added here deliberately, because
-    // an access with the permission to read receives this list
+    // an access which reads data receives this list
     it('Covers every read scope', () => {
       expect(SCOPES_OF_READ_ACCESS).toEqual([
         scopes.accountRead,
@@ -55,68 +56,43 @@ describe('Scopes', () => {
   });
 
   describe('Get scopes of access', () => {
-    it('Scopes take precedence over the permissions', () => {
+    it('Gives the scopes of the access', () => {
       expect(
         getScopesOfAccess({
           granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
-          permissions: ['READ'],
+          scopes: [scopes.portfolioRead, scopes.portfolioReadValues]
+        })
+      ).toEqual([scopes.portfolioRead, scopes.portfolioReadValues]);
+    });
+
+    it('Without the scope to read the values', () => {
+      expect(
+        getScopesOfAccess({
+          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
           scopes: [scopes.portfolioRead]
-        })
-      ).toEqual([scopes.portfolioRead]);
-    });
-
-    it('Derive from the permission to read', () => {
-      // An access created before the scopes have been introduced has no scopes
-      expect(
-        getScopesOfAccess({
-          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
-          permissions: ['READ'],
-          scopes: []
-        })
-      ).toContain(scopes.portfolioReadValues);
-    });
-
-    it('Derive from the permission to read restricted', () => {
-      expect(
-        getScopesOfAccess({
-          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
-          permissions: ['READ_RESTRICTED'],
-          scopes: []
         })
       ).not.toContain(scopes.portfolioReadValues);
     });
 
-    it('The permission to read gives no write scope', () => {
-      const scopesOfAccess = getScopesOfAccess({
-        granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
-        permissions: ['READ'],
-        scopes: []
-      });
-
-      for (const scope of SCOPES_OF_WRITE_ACCESS) {
-        expect(scopesOfAccess).not.toContain(scope);
-      }
-    });
-
-    it('Without permissions and scopes', () => {
+    it('Without scopes', () => {
       expect(
         getScopesOfAccess({
           granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d'
         })
-      ).not.toContain(scopes.portfolioReadValues);
+      ).toEqual([]);
     });
   });
 
   describe('Get scopes of public access', () => {
     it('Allows reading the portfolio', () => {
-      expect(getScopesOfAccess({ permissions: ['READ_RESTRICTED'] })).toContain(
-        scopes.portfolioRead
-      );
+      expect(
+        getScopesOfAccess({ scopes: [...SCOPES_OF_READ_RESTRICTED_ACCESS] })
+      ).toContain(scopes.portfolioRead);
     });
 
     it('Excludes the accounts and the watchlist', () => {
       const scopesOfAccess = getScopesOfAccess({
-        permissions: ['READ_RESTRICTED']
+        scopes: [...SCOPES_OF_READ_RESTRICTED_ACCESS]
       });
 
       expect(scopesOfAccess).not.toContain(scopes.accountRead);
@@ -135,10 +111,10 @@ describe('Scopes', () => {
       ).toEqual([scopes.portfolioRead]);
     });
 
-    it('Cannot be widened by the permission to read', () => {
-      expect(getScopesOfAccess({ permissions: ['READ'] })).not.toContain(
-        scopes.portfolioReadValues
-      );
+    it('Cannot expose the monetary values', () => {
+      expect(
+        getScopesOfAccess({ scopes: [...SCOPES_OF_READ_ACCESS] })
+      ).not.toContain(scopes.portfolioReadValues);
     });
   });
 

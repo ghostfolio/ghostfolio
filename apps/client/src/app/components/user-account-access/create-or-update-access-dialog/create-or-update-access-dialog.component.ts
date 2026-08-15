@@ -1,6 +1,12 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  SCOPES_OF_READ_ACCESS,
+  SCOPES_OF_READ_RESTRICTED_ACCESS,
+  hasScope,
+  scopes
+} from '@ghostfolio/common/scopes';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -40,7 +46,6 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AccessPermission } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -111,8 +116,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         access?.grantee ?? null,
         isPublic ? null : Validators.required
       ],
-      permissions: [
-        access?.permissions[0] ?? AccessPermission.READ_RESTRICTED,
+      hasScopeToReadValues: [
+        hasScope(access?.scopes, scopes.portfolioReadValues),
         Validators.required
       ],
       type: [
@@ -139,7 +144,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((accessType) => {
         const granteeUserIdControl = this.accessForm.get('granteeUserId');
-        const permissionsControl = this.accessForm.get('permissions');
+        const hasScopeToReadValuesControl = this.accessForm.get(
+          'hasScopeToReadValues'
+        );
 
         if (accessType === 'PRIVATE') {
           granteeUserIdControl?.setValidators(Validators.required);
@@ -147,9 +154,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-          permissionsControl?.setValue(
-            access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
-          );
+          // A public access never exposes the monetary values
+          hasScopeToReadValuesControl?.setValue(false);
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -172,6 +178,16 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  // The dialog offers the read access only. The write scopes are not granted
+  // here yet.
+  private buildScopes() {
+    return [
+      ...(this.accessForm.get('hasScopeToReadValues')?.value
+        ? SCOPES_OF_READ_ACCESS
+        : SCOPES_OF_READ_RESTRICTED_ACCESS)
+    ];
+  }
+
   private buildFilters(): Filter[] {
     return getFiltersFromPortfolioFilterFormValue(
       this.accessForm.get('filters')?.value
@@ -185,7 +201,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       alias: this.accessForm.get('alias')?.value,
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      permissions: [this.accessForm.get('permissions')?.value]
+      scopes: this.buildScopes()
     };
 
     try {
@@ -244,7 +260,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: accessId,
-      permissions: [this.accessForm.get('permissions')?.value]
+      scopes: this.buildScopes()
     };
 
     try {
