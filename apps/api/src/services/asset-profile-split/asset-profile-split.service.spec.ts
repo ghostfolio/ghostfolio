@@ -56,38 +56,33 @@ describe('AssetProfileSplitService', () => {
     });
   });
 
-  describe('getSplitsBySymbolProfileIds', () => {
-    it('fetches and groups all splits with one ordered query', async () => {
-      const symbolProfileIds = ['aapl-profile', 'msft-profile'];
-      const aaplSplit = createSplit({
-        date: new Date('2020-08-31'),
-        symbolProfileId: symbolProfileIds[0]
+  describe('getSplitsByUserId', () => {
+    it('fetches the splits of the asset profiles held by the user with one ordered query', async () => {
+      const splits = [
+        createStoredSplit('2020-08-31'),
+        createStoredSplit('2021-09-16')
+      ];
+
+      findMany.mockResolvedValue(splits);
+
+      const result = await assetProfileSplitService.getSplitsByUserId({
+        userId: 'user-id'
       });
-      const msftSplit = createSplit({
-        date: new Date('2021-09-16'),
-        symbolProfileId: symbolProfileIds[1]
-      });
 
-      findMany.mockResolvedValue([aaplSplit, msftSplit]);
-
-      const splits =
-        await assetProfileSplitService.getSplitsBySymbolProfileIds(
-          symbolProfileIds
-        );
-
+      expect(result).toBe(splits);
       expect(findMany).toHaveBeenCalledTimes(1);
       expect(findMany).toHaveBeenCalledWith({
         orderBy: [{ date: 'asc' }],
         where: {
-          symbolProfileId: { in: symbolProfileIds }
+          symbolProfile: {
+            activities: {
+              some: {
+                userId: 'user-id'
+              }
+            }
+          }
         }
       });
-      expect(splits).toEqual(
-        new Map([
-          [symbolProfileIds[0], [aaplSplit]],
-          [symbolProfileIds[1], [msftSplit]]
-        ])
-      );
     });
   });
 
@@ -150,24 +145,6 @@ describe('AssetProfileSplitService', () => {
     });
   });
 });
-
-function createSplit({
-  date,
-  symbolProfileId
-}: {
-  date: Date;
-  symbolProfileId: string;
-}): AssetProfileSplit {
-  return {
-    createdAt: date,
-    date,
-    denominator: 1,
-    id: `${symbolProfileId}-split`,
-    numerator: 2,
-    symbolProfileId,
-    updatedAt: date
-  };
-}
 
 function createStoredSplit(date: string): AssetProfileSplit {
   const splitDate = new Date(date);

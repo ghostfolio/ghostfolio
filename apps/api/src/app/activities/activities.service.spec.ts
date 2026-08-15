@@ -18,17 +18,17 @@ import { ActivitiesService } from './activities.service';
 
 describe('ActivitiesService', () => {
   let activitiesService: ActivitiesService;
-  let getSplitsBySymbolProfileIds: jest.Mock;
+  let getSplitsByUserId: jest.Mock;
   let accountService: { getCashDetails: jest.Mock };
 
   beforeEach(() => {
-    getSplitsBySymbolProfileIds = jest.fn();
+    getSplitsByUserId = jest.fn().mockResolvedValue([]);
     accountService = { getCashDetails: jest.fn() };
 
     activitiesService = new ActivitiesService(
       null,
       accountService as unknown as AccountService,
-      { getSplitsBySymbolProfileIds } as unknown as AssetProfileSplitService,
+      { getSplitsByUserId } as unknown as AssetProfileSplitService,
       null,
       null,
       null,
@@ -137,12 +137,10 @@ describe('ActivitiesService', () => {
         activities: [activity],
         count: 1
       });
-      getSplitsBySymbolProfileIds.mockResolvedValue(
-        new Map([
-          ['YAHOO-MSFT-profile', [split]],
-          ['MANUAL-AAPL-profile', [split]]
-        ])
-      );
+      getSplitsByUserId.mockResolvedValue([
+        { ...split, symbolProfileId: 'YAHOO-MSFT-profile' },
+        { ...split, symbolProfileId: 'MANUAL-AAPL-profile' }
+      ]);
 
       const result =
         await activitiesService.getActivitiesForPortfolioCalculator({
@@ -195,9 +193,7 @@ describe('ActivitiesService', () => {
         activities: [activity],
         count: 1
       });
-      getSplitsBySymbolProfileIds.mockResolvedValue(
-        new Map([['YAHOO-AAPL-profile', [split]]])
-      );
+      getSplitsByUserId.mockResolvedValue([split]);
 
       const result =
         await activitiesService.getActivitiesForPortfolioCalculator({
@@ -212,9 +208,7 @@ describe('ActivitiesService', () => {
         userId: 'user-id',
         withExcludedAccountsAndActivities: false
       });
-      expect(getSplitsBySymbolProfileIds).toHaveBeenCalledWith([
-        'YAHOO-AAPL-profile'
-      ]);
+      expect(getSplitsByUserId).toHaveBeenCalledWith({ userId: 'user-id' });
       expect(result.activities[0]).toMatchObject({
         quantity: 20,
         unitPrice: 50,
@@ -243,9 +237,7 @@ describe('ActivitiesService', () => {
         count: 1
       });
       accountService.getCashDetails.mockResolvedValue({ accounts: [] });
-      getSplitsBySymbolProfileIds.mockResolvedValue(
-        new Map([['YAHOO-AAPL-profile', [split]]])
-      );
+      getSplitsByUserId.mockResolvedValue([split]);
 
       const result =
         await activitiesService.getActivitiesForPortfolioCalculator({
@@ -254,9 +246,7 @@ describe('ActivitiesService', () => {
           withCash: true
         });
 
-      expect(getSplitsBySymbolProfileIds).toHaveBeenCalledWith([
-        'YAHOO-AAPL-profile'
-      ]);
+      expect(getSplitsByUserId).toHaveBeenCalledWith({ userId: 'user-id' });
       expect(result.activities).toEqual([
         expect.objectContaining({
           assetProfile: expect.objectContaining({ symbol: 'AAPL' }),
@@ -274,8 +264,10 @@ describe('ActivitiesService', () => {
         activities: [activity],
         count: 1
       });
-      getSplitsBySymbolProfileIds.mockResolvedValue(
-        new Map([[activity.assetProfile.id, splits]])
+      getSplitsByUserId.mockResolvedValue(
+        splits.map((split) => {
+          return { ...split, symbolProfileId: activity.assetProfile.id };
+        })
       );
 
       const result =
@@ -339,7 +331,7 @@ function createSplit(
     denominator,
     id: `${dateString}-${numerator}-${denominator}`,
     numerator,
-    symbolProfileId: 'aapl-profile',
+    symbolProfileId: 'YAHOO-AAPL-profile',
     updatedAt: date
   };
 }

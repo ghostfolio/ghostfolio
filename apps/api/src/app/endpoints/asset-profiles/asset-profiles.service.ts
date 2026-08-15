@@ -38,8 +38,8 @@ export class AssetProfilesService {
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
@@ -65,8 +65,10 @@ export class AssetProfilesService {
       symbolProfileId
     });
 
-    await this.emitPortfolioChangedEvents(symbolProfileId);
-    await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+    await this.gatherSymbolAndEmitPortfolioChangedEvents({
+      dataSource,
+      symbol
+    });
 
     return assetProfileSplit;
   }
@@ -89,23 +91,10 @@ export class AssetProfilesService {
       throw new NotFoundException();
     }
 
-    await this.emitPortfolioChangedEvents(symbolProfileId);
-    await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
-  }
-
-  private async emitPortfolioChangedEvents(symbolProfileId: string) {
-    const users = await this.prismaService.order.findMany({
-      distinct: ['userId'],
-      select: { userId: true },
-      where: { symbolProfileId }
+    await this.gatherSymbolAndEmitPortfolioChangedEvents({
+      dataSource,
+      symbol
     });
-
-    for (const { userId } of users) {
-      this.eventEmitter.emit(
-        PortfolioChangedEvent.getName(),
-        new PortfolioChangedEvent({ userId })
-      );
-    }
   }
 
   public async getAssetProfile({
@@ -447,6 +436,47 @@ export class AssetProfilesService {
     }
 
     return assetProfile;
+  }
+
+  private async emitPortfolioChangedEvents({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    const userIds = await this.activitiesService.getUserIdsByAssetProfile({
+      dataSource,
+      symbol
+    });
+
+    for (const userId of userIds) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({ userId })
+      );
+    }
+  }
+
+  /**
+   * Gathers the market data of the given asset profile and invalidates the
+   * portfolio snapshots of the affected users as soon as it is available.
+   * Emitting the events earlier would recompute the snapshots from
+   * split-adjusted quantities and not yet split-adjusted market prices.
+   */
+  private async gatherSymbolAndEmitPortfolioChangedEvents({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    const jobs = await this.dataGatheringService.gatherSymbol({
+      dataSource,
+      symbol
+    });
+
+    void Promise.allSettled(
+      jobs.map((job) => {
+        return job.finished();
+      })
+    ).then(() => {
+      return this.emitPortfolioChangedEvents({ dataSource, symbol });
+    });
   }
 
   private getAssetProfileDataUpdate({

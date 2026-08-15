@@ -126,7 +126,7 @@ describe('PortfolioCalculator', () => {
       accountBalanceService,
       accountService,
       {
-        getSplitsBySymbolProfileIds: jest.fn().mockResolvedValue(new Map())
+        getSplitsByUserId: jest.fn().mockResolvedValue([])
       } as unknown as AssetProfileSplitService,
       null,
       null,

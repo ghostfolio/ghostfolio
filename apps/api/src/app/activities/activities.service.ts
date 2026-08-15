@@ -60,7 +60,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday } from 'date-fns';
-import { groupBy, uniq, uniqBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
@@ -918,34 +918,23 @@ export class ActivitiesService {
     /** Whether to include cash activities in the result. */
     withCash?: boolean;
   }) {
-    const activities = await this.getActivities({
-      filters,
-      userCurrency,
-      userId,
-      withExcludedAccountsAndActivities: false // TODO
-    });
+    const [activities, splits] = await Promise.all([
+      this.getActivities({
+        filters,
+        userCurrency,
+        userId,
+        withExcludedAccountsAndActivities: false // TODO
+      }),
+      this.assetProfileSplitService.getSplitsByUserId({ userId })
+    ]);
 
-    const symbolProfileIds = uniq(
-      activities.activities.map(({ assetProfile }) => {
-        return assetProfile.id;
-      })
-    );
-    const splitsBySymbolProfileId =
-      await this.assetProfileSplitService.getSplitsBySymbolProfileIds(
-        symbolProfileIds
-      );
+    if (splits.length > 0) {
+      const splitsBySymbolProfileId = groupBy(splits, 'symbolProfileId');
 
-    const hasSplits = [...splitsBySymbolProfileId.values()].some((splits) => {
-      return splits.length > 0;
-    });
-
-    if (hasSplits) {
       activities.activities = activities.activities.map((activity) => {
-        const key = activity.assetProfile.id;
-
         return adjustActivityBySplits(
           activity,
-          splitsBySymbolProfileId.get(key) ?? []
+          splitsBySymbolProfileId[activity.assetProfile.id] ?? []
         );
       });
     }
@@ -989,6 +978,29 @@ export class ActivitiesService {
       activitiesCount: _count as number,
       dateOfFirstActivity: _min.date
     };
+  }
+
+  /**
+   * Returns the id of every user who has an activity for the given asset
+   * profile, including draft activities and activities of excluded accounts
+   */
+  public async getUserIdsByAssetProfile({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier): Promise<string[]> {
+    const activitiesByUser = await this.prismaService.order.groupBy({
+      by: ['userId'],
+      where: {
+        SymbolProfile: {
+          dataSource,
+          symbol
+        }
+      }
+    });
+
+    return activitiesByUser.map(({ userId }) => {
+      return userId;
+    });
   }
 
   public async order(

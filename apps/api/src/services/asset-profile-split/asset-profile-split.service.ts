@@ -53,34 +53,30 @@ export class AssetProfileSplitService {
   }
 
   /**
-   * Returns the splits of all given asset profiles, grouped by their
-   * data-source/symbol identifier.
+   * Returns the splits of all asset profiles the given user has activities
+   * for, in ascending order by date
    */
-  public async getSplitsBySymbolProfileIds(
-    symbolProfileIds: string[]
-  ): Promise<Map<string, AssetProfileSplit[]>> {
-    const splitsByAssetProfile = new Map<string, AssetProfileSplit[]>();
-
-    for (const symbolProfileId of symbolProfileIds) {
-      splitsByAssetProfile.set(symbolProfileId, []);
-    }
-
-    if (symbolProfileIds.length === 0) {
-      return splitsByAssetProfile;
-    }
-
-    const splits = await this.prismaService.assetProfileSplit.findMany({
-      orderBy: [{ date: 'asc' }],
+  public async getSplitsByUserId({
+    userId
+  }: {
+    userId: string;
+  }): Promise<AssetProfileSplit[]> {
+    return this.prismaService.assetProfileSplit.findMany({
+      orderBy: [
+        {
+          date: 'asc'
+        }
+      ],
       where: {
-        symbolProfileId: { in: symbolProfileIds }
+        symbolProfile: {
+          activities: {
+            some: {
+              userId
+            }
+          }
+        }
       }
     });
-
-    for (const split of splits) {
-      splitsByAssetProfile.get(split.symbolProfileId)?.push(split);
-    }
-
-    return splitsByAssetProfile;
   }
 
   public async upsert({

@@ -15,26 +15,44 @@ export function adjustActivityBySplits(
   }
 
   const activityDate = resetHours(activity.date);
-  let splitFactor = new Big(1);
+
+  // Accumulate both parts of the ratio and divide only once, so that the
+  // cumulative split factor of consecutive splits stays exact
+  let denominator = new Big(1);
+  let numerator = new Big(1);
 
   for (const split of splits) {
+    // Skip malformed splits to not break the portfolio calculation of every
+    // user holding this asset profile
+    if (split.denominator <= 0 || split.numerator <= 0) {
+      continue;
+    }
+
     if (isBefore(activityDate, split.date)) {
-      splitFactor = splitFactor.mul(split.numerator).div(split.denominator);
+      denominator = denominator.mul(split.denominator);
+      numerator = numerator.mul(split.numerator);
     }
   }
 
-  if (splitFactor.eq(1)) {
+  if (numerator.eq(denominator)) {
     return activity;
   }
 
   return {
     ...activity,
-    quantity: new Big(activity.quantity).mul(splitFactor).toNumber(),
-    unitPrice: new Big(activity.unitPrice).div(splitFactor).toNumber(),
+    quantity: new Big(activity.quantity)
+      .mul(numerator)
+      .div(denominator)
+      .toNumber(),
+    unitPrice: new Big(activity.unitPrice)
+      .mul(denominator)
+      .div(numerator)
+      .toNumber(),
     unitPriceInAssetProfileCurrency: new Big(
       activity.unitPriceInAssetProfileCurrency
     )
-      .div(splitFactor)
+      .mul(denominator)
+      .div(numerator)
       .toNumber()
   };
 }
