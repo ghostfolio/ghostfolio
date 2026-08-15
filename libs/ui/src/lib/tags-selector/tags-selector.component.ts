@@ -72,6 +72,7 @@ export class GfTagsSelectorComponent
   );
   public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
   public readonly tagInputControl = new FormControl('');
+  public readonly tagNameToCreate = signal<string | null>(null);
   public readonly tagsSelected = signal<SelectedTag[]>([]);
 
   private readonly tagInput =
@@ -81,7 +82,7 @@ export class GfTagsSelectorComponent
     this.tagInputControl.valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe((value) => {
-        this.filteredOptions.next(this.filterTags(value ?? ''));
+        this.updateFilters(value ?? '');
       });
 
     addIcons({ addCircleOutline, closeOutline });
@@ -179,6 +180,24 @@ export class GfTagsSelectorComponent
       });
   }
 
+  private getTagNameToCreate(query: string = ''): string | null {
+    const name = query.trim();
+
+    if (!name) {
+      return null;
+    }
+
+    const isTagNameTaken = [
+      ...(this.tagsAvailable ?? []),
+      ...(this.tagsReadOnly ?? []),
+      ...(this.tagsSelected() ?? [])
+    ].some((tag) => {
+      return tag.name.toLowerCase() === name.toLowerCase();
+    });
+
+    return isTagNameTaken ? null : name;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private onChange = (_value: SelectedTag[]): void => {
     // ControlValueAccessor onChange callback
@@ -188,7 +207,8 @@ export class GfTagsSelectorComponent
     // ControlValueAccessor onTouched callback
   };
 
-  private updateFilters() {
-    this.filteredOptions.next(this.filterTags());
+  private updateFilters(query: string = '') {
+    this.filteredOptions.next(this.filterTags(query));
+    this.tagNameToCreate.set(this.getTagNameToCreate(query));
   }
 }

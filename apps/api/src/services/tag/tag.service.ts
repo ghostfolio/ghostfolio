@@ -10,9 +10,23 @@ export class TagService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async createTag(data: Prisma.TagCreateInput) {
-    return this.prismaService.tag.create({
-      data
-    });
+    try {
+      return await this.prismaService.tag.create({
+        data
+      });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.CONFLICT),
+          StatusCodes.CONFLICT
+        );
+      }
+
+      throw error;
+    }
   }
 
   public async deleteTag(where: Prisma.TagWhereUniqueInput): Promise<Tag> {
