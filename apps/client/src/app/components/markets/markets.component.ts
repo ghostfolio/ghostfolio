@@ -43,7 +43,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './markets.html'
 })
 export class GfMarketsComponent implements OnInit {
-  protected readonly benchmarks = signal<Benchmark[]>([]);
+  protected readonly benchmarks = signal<Benchmark[] | undefined>(undefined);
 
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
