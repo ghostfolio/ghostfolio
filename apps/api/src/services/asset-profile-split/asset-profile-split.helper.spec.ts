@@ -103,11 +103,11 @@ function createSplit(
   const splitDate = new Date(date);
 
   return {
+    denominator,
+    numerator,
     createdAt: splitDate,
     date: splitDate,
-    denominator,
     id: `${date}-${numerator}-${denominator}`,
-    numerator,
     symbolProfileId: 'aapl-profile',
     updatedAt: splitDate
   };

@@ -265,11 +265,11 @@ function createSplit({
   const splitDate = parseDate(date);
 
   return {
+    denominator,
+    numerator,
     createdAt: splitDate,
     date: splitDate,
-    denominator,
     id: `${date}-${numerator}-${denominator}`,
-    numerator,
     symbolProfileId: 'msft-profile',
     updatedAt: splitDate
   };
