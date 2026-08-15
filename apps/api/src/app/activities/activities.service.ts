@@ -393,41 +393,32 @@ export class ActivitiesService {
     types?: ActivityType[];
     userId: string;
   }): Promise<number> {
+    const where = this.getWhereClause({
+      endDate,
+      filters,
+      startDate,
+      types,
+      userId,
+      includeDrafts: true,
+      withExcludedAccountsAndActivities: true
+    });
+
     const activities = await this.prismaService.order.findMany({
-      select: {
-        id: true,
-        symbolProfileId: true
-      },
-      where: this.getWhereClause({
-        endDate,
-        filters,
-        startDate,
-        types,
-        userId,
-        includeDrafts: true,
-        withExcludedAccountsAndActivities: true
-      })
+      where,
+      distinct: ['symbolProfileId'],
+      select: { symbolProfileId: true }
     });
 
-    const { count } = await this.prismaService.order.deleteMany({
-      where: {
-        id: {
-          in: activities.map(({ id }) => {
-            return id;
-          })
-        }
-      }
-    });
+    const { count } = await this.prismaService.order.deleteMany({ where });
 
-    const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfilesByIds(
+    const [benchmarkAssetProfiles, symbolProfiles] = await Promise.all([
+      this.benchmarkService.getBenchmarkAssetProfiles(),
+      this.symbolProfileService.getSymbolProfilesByIds(
         activities.map(({ symbolProfileId }) => {
           return symbolProfileId;
         })
-      );
-
-    const benchmarkAssetProfiles =
-      await this.benchmarkService.getBenchmarkAssetProfiles();
+      )
+    ]);
 
     for (const {
       activitiesCount,
