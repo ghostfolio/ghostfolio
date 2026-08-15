@@ -81,8 +81,8 @@ export class GfTagsSelectorComponent
   public constructor() {
     this.tagInputControl.valueChanges
       .pipe(takeUntilDestroyed())
-      .subscribe((value) => {
-        this.updateFilters(value ?? '');
+      .subscribe(() => {
+        this.updateFilters();
       });
 
     addIcons({ addCircleOutline, closeOutline });
@@ -162,9 +162,8 @@ export class GfTagsSelectorComponent
     this.updateFilters();
   }
 
-  private filterTags(query: string = ''): SelectedTag[] {
-    const tags = this.tagsSelected() ?? [];
-    const tagIds = [...tags, ...(this.tagsReadOnly ?? [])].map(({ id }) => {
+  private filterTags(query: string): SelectedTag[] {
+    const tagIds = this.getTagsSelectedAndReadOnly().map(({ id }) => {
       return id;
     });
 
@@ -180,7 +179,7 @@ export class GfTagsSelectorComponent
       });
   }
 
-  private getTagNameToCreate(query: string = ''): string | null {
+  private getTagNameToCreate(query: string): string | null {
     const name = query.trim();
 
     if (!name) {
@@ -189,13 +188,16 @@ export class GfTagsSelectorComponent
 
     const isExistingTagName = [
       ...(this.tagsAvailable ?? []),
-      ...(this.tagsReadOnly ?? []),
-      ...(this.tagsSelected() ?? [])
+      ...this.getTagsSelectedAndReadOnly()
     ].some((tag) => {
       return tag.name.toLowerCase() === name.toLowerCase();
     });
 
     return isExistingTagName ? null : name;
+  }
+
+  private getTagsSelectedAndReadOnly(): SelectedTag[] {
+    return [...this.tagsSelected(), ...(this.tagsReadOnly ?? [])];
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -207,7 +209,9 @@ export class GfTagsSelectorComponent
     // ControlValueAccessor onTouched callback
   };
 
-  private updateFilters(query: string = '') {
+  private updateFilters() {
+    const query = this.tagInputControl.value ?? '';
+
     this.filteredOptions.next(this.filterTags(query));
     this.tagNameToCreate.set(this.getTagNameToCreate(query));
   }

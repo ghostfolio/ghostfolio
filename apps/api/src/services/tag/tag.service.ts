@@ -15,17 +15,7 @@ export class TagService {
         data
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new HttpException(
-          getReasonPhrase(StatusCodes.CONFLICT),
-          StatusCodes.CONFLICT
-        );
-      }
-
-      throw error;
+      throw this.getExceptionForError(error);
     }
   }
 
@@ -135,10 +125,14 @@ export class TagService {
     data: Prisma.TagUpdateInput;
     where: Prisma.TagWhereUniqueInput;
   }): Promise<Tag> {
-    return this.prismaService.tag.update({
-      data,
-      where
-    });
+    try {
+      return await this.prismaService.tag.update({
+        data,
+        where
+      });
+    } catch (error) {
+      throw this.getExceptionForError(error);
+    }
   }
 
   public async validateTagIds({
@@ -193,5 +187,19 @@ export class TagService {
     }
 
     return this.validateTagIds({ tagIds, userId });
+  }
+
+  private getExceptionForError(error: unknown) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      return new HttpException(
+        getReasonPhrase(StatusCodes.CONFLICT),
+        StatusCodes.CONFLICT
+      );
+    }
+
+    return error;
   }
 }
