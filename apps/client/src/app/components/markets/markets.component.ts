@@ -122,7 +122,7 @@ export class GfMarketsComponent implements OnInit {
           this.benchmarks.set([]);
         },
         next: ({ benchmarks }) => {
-          this.benchmarks.set(benchmarks);
+          this.benchmarks.set(benchmarks ?? []);
         }
       });
   }

@@ -63,7 +63,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   templateUrl: './benchmark.component.html'
 })
 export class GfBenchmarkComponent {
-  public readonly benchmarks = input.required<Benchmark[] | undefined>();
+  public readonly benchmarks = input<Benchmark[]>();
   public readonly deviceType = input.required<string>();
   public readonly hasPermissionToDeleteItem = input<boolean>();
   public readonly locale = input(getLocale());
@@ -115,6 +115,8 @@ export class GfBenchmarkComponent {
         this.dataSource.sortingDataAccessor = getLowercase;
 
         this.dataSource.sort = this.sort() ?? null;
+      } else {
+        this.dataSource.data = [];
       }
     });
 
