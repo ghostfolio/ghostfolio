@@ -1,17 +1,24 @@
+import type { Request } from 'express';
 import ms from 'ms';
+import type {
+  SessionStore,
+  SessionStoreCallback,
+  SessionStoreContext,
+  SessionVerifyCallback
+} from 'passport-openidconnect';
 
 /**
  * Custom state store for OIDC authentication that doesn't rely on express-session.
  * This store manages OAuth2 state parameters in memory with automatic cleanup.
  */
-export class OidcStateStore {
+export class OidcStateStore implements SessionStore {
   private readonly STATE_EXPIRY_MS = ms('10 minutes');
 
   private stateMap = new Map<
     string,
     {
       appState?: unknown;
-      ctx: { issued?: Date; maxAge?: number; nonce?: string };
+      ctx: SessionStoreContext;
       meta?: unknown;
       timestamp: number;
     }
@@ -22,11 +29,11 @@ export class OidcStateStore {
    * Signature matches passport-openidconnect SessionStore
    */
   public store(
-    _req: unknown,
-    _meta: unknown,
+    _req: Request,
+    ctx: SessionStoreContext,
     appState: unknown,
-    ctx: { maxAge?: number; nonce?: string; issued?: Date },
-    callback: (err: Error | null, handle?: string) => void
+    meta: unknown,
+    callback: SessionStoreCallback
   ) {
     try {
       // Generate a unique handle for this state
@@ -35,7 +42,7 @@ export class OidcStateStore {
       this.stateMap.set(handle, {
         appState,
         ctx,
-        meta: _meta,
+        meta,
         timestamp: Date.now()
       });
 
@@ -53,13 +60,9 @@ export class OidcStateStore {
    * Signature matches passport-openidconnect SessionStore
    */
   public verify(
-    _req: unknown,
+    _req: Request,
     handle: string,
-    callback: (
-      err: Error | null,
-      appState?: unknown,
-      ctx?: { maxAge?: number; nonce?: string; issued?: Date }
-    ) => void
+    callback: SessionVerifyCallback
   ) {
     try {
       const data = this.stateMap.get(handle);
