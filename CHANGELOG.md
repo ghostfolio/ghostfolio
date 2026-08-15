@@ -19,12 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated the `permissions` attribute of the access in favor of the scopes
 - Extended the `GET api/v1/access` endpoint by the scopes
 - Extended the `GET api/v1/user` endpoint by the scopes
+- Improved the performance of deleting activities by loading only the required data
 
 ### Fixed
 
 - Fixed the missing currency conversion of the dividends on the analysis page
 - Fixed the missing error state in the watchlist
 - Fixed the missing loading indicator in the benchmarks of the markets overview
+- Fixed the incorrect error log output when deleting activities
 
 ## 3.51.0 - 2026-08-14
 

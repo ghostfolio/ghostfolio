@@ -393,36 +393,32 @@ export class ActivitiesService {
     types?: ActivityType[];
     userId: string;
   }): Promise<number> {
-    const { activities } = await this.getActivities({
+    const where = this.getWhereClause({
       endDate,
       filters,
       startDate,
       types,
       userId,
       includeDrafts: true,
-      userCurrency: undefined,
       withExcludedAccountsAndActivities: true
     });
 
-    const { count } = await this.prismaService.order.deleteMany({
-      where: {
-        id: {
-          in: activities.map(({ id }) => {
-            return id;
-          })
-        }
-      }
+    const activities = await this.prismaService.order.findMany({
+      where,
+      distinct: ['symbolProfileId'],
+      select: { symbolProfileId: true }
     });
 
-    const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfilesByIds(
+    const { count } = await this.prismaService.order.deleteMany({ where });
+
+    const [benchmarkAssetProfiles, symbolProfiles] = await Promise.all([
+      this.benchmarkService.getBenchmarkAssetProfiles(),
+      this.symbolProfileService.getSymbolProfilesByIds(
         activities.map(({ symbolProfileId }) => {
           return symbolProfileId;
         })
-      );
-
-    const benchmarkAssetProfiles =
-      await this.benchmarkService.getBenchmarkAssetProfiles();
+      )
+    ]);
 
     for (const {
       activitiesCount,
@@ -627,164 +623,19 @@ export class ActivitiesService {
       { date: 'asc' }
     ];
 
-    const andConditions: Prisma.OrderWhereInput[] = [];
-    const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
-
-    if (endDate) {
-      andConditions.push({ date: { lte: endDate } });
-    }
-
-    if (startDate) {
-      andConditions.push({ date: { gt: startDate } });
-    }
-
-    const {
-      ACCOUNT: filtersByAccount = [],
-      ASSET_CLASS: filtersByAssetClass = [],
-      DATA_SOURCE: [filterByDataSource] = [],
-      SEARCH_QUERY: [filterBySearchQuery] = [],
-      SYMBOL: [filterBySymbol] = [],
-      TAG: filtersByTag = []
-    } = groupBy(filters, ({ type }) => {
-      return type;
-    });
-
-    if (filtersByAccount.length > 0) {
-      where.accountId = {
-        in: filtersByAccount.map(({ id }) => {
-          return id;
-        })
-      };
-    }
-
-    const isFilteredByDraftTag = filtersByTag.some(({ id }) => {
-      return id === TAG_ID_DRAFT;
-    });
-
-    if (includeDrafts === false && !isFilteredByDraftTag) {
-      andConditions.push(WHERE_ACTIVITY_NOT_DRAFT);
-    }
-
-    if (filtersByAssetClass.length > 0) {
-      where.SymbolProfile = {
-        OR: [
-          {
-            AND: [
-              {
-                OR: filtersByAssetClass.map(({ id }) => {
-                  return { assetClass: AssetClass[id] };
-                })
-              },
-              {
-                OR: [
-                  { assetProfileOverrides: { is: null } },
-                  { assetProfileOverrides: { assetClass: null } }
-                ]
-              }
-            ]
-          },
-          {
-            assetProfileOverrides: {
-              OR: filtersByAssetClass.map(({ id }) => {
-                return { assetClass: AssetClass[id] };
-              })
-            }
-          }
-        ]
-      };
-    }
-
-    if (filterByDataSource && filterBySymbol) {
-      if (where.SymbolProfile) {
-        where.SymbolProfile = {
-          AND: [
-            where.SymbolProfile,
-            {
-              AND: [
-                { dataSource: filterByDataSource.id as DataSource },
-                { symbol: filterBySymbol.id }
-              ]
-            }
-          ]
-        };
-      } else {
-        where.SymbolProfile = {
-          AND: [
-            { dataSource: filterByDataSource.id as DataSource },
-            { symbol: filterBySymbol.id }
-          ]
-        };
-      }
-    }
-
-    if (filterBySearchQuery) {
-      const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
-        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
-        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
-        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
-        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
-      ];
-
-      if (where.SymbolProfile) {
-        where.SymbolProfile = {
-          AND: [
-            where.SymbolProfile,
-            {
-              OR: searchQueryWhereInput
-            }
-          ]
-        };
-      } else {
-        where.SymbolProfile = {
-          OR: searchQueryWhereInput
-        };
-      }
-    }
-
-    if (filtersByTag.length > 0) {
-      andConditions.push({
-        OR: [
-          {
-            tags: {
-              some: {
-                OR: filtersByTag.map(({ id }) => {
-                  return { id };
-                })
-              }
-            }
-          },
-          {
-            account: {
-              tags: {
-                some: {
-                  OR: filtersByTag.map(({ id }) => {
-                    return { tagId: id };
-                  })
-                }
-              }
-            }
-          }
-        ]
-      });
-    }
-
     if (sortColumn) {
       orderBy = [{ [sortColumn]: sortDirection }];
     }
 
-    if (types?.length > 0) {
-      where.type = { in: types };
-    }
-
-    if (withExcludedAccountsAndActivities === false) {
-      where.OR = [{ account: null }, { account: WHERE_ACCOUNT_NOT_EXCLUDED }];
-
-      where.tags = {
-        none: {
-          id: TAG_ID_EXCLUDE_FROM_ANALYSIS
-        }
-      };
-    }
+    const where = this.getWhereClause({
+      endDate,
+      filters,
+      includeDrafts,
+      startDate,
+      types,
+      userId,
+      withExcludedAccountsAndActivities
+    });
 
     const [orders, count] = await Promise.all([
       this.orders({
@@ -1111,6 +962,181 @@ export class ActivitiesService {
     );
 
     return activity;
+  }
+
+  private getWhereClause({
+    endDate,
+    filters,
+    includeDrafts,
+    startDate,
+    types,
+    userId,
+    withExcludedAccountsAndActivities
+  }: {
+    endDate?: Date;
+    filters?: Filter[];
+    includeDrafts: boolean;
+    startDate?: Date;
+    types?: ActivityType[];
+    userId: string;
+    withExcludedAccountsAndActivities: boolean;
+  }): Prisma.OrderWhereInput {
+    const andConditions: Prisma.OrderWhereInput[] = [];
+    const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
+
+    if (endDate) {
+      andConditions.push({ date: { lte: endDate } });
+    }
+
+    if (startDate) {
+      andConditions.push({ date: { gt: startDate } });
+    }
+
+    const {
+      ACCOUNT: filtersByAccount = [],
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SEARCH_QUERY: [filterBySearchQuery] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
+    if (filtersByAccount.length > 0) {
+      where.accountId = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
+    }
+
+    const isFilteredByDraftTag = filtersByTag.some(({ id }) => {
+      return id === TAG_ID_DRAFT;
+    });
+
+    if (includeDrafts === false && !isFilteredByDraftTag) {
+      andConditions.push(WHERE_ACTIVITY_NOT_DRAFT);
+    }
+
+    if (filtersByAssetClass.length > 0) {
+      where.SymbolProfile = {
+        OR: [
+          {
+            AND: [
+              {
+                OR: filtersByAssetClass.map(({ id }) => {
+                  return { assetClass: AssetClass[id] };
+                })
+              },
+              {
+                OR: [
+                  { assetProfileOverrides: { is: null } },
+                  { assetProfileOverrides: { assetClass: null } }
+                ]
+              }
+            ]
+          },
+          {
+            assetProfileOverrides: {
+              OR: filtersByAssetClass.map(({ id }) => {
+                return { assetClass: AssetClass[id] };
+              })
+            }
+          }
+        ]
+      };
+    }
+
+    if (filterByDataSource && filterBySymbol) {
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              AND: [
+                { dataSource: filterByDataSource.id as DataSource },
+                { symbol: filterBySymbol.id }
+              ]
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          AND: [
+            { dataSource: filterByDataSource.id as DataSource },
+            { symbol: filterBySymbol.id }
+          ]
+        };
+      }
+    }
+
+    if (filterBySearchQuery) {
+      const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
+        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
+      ];
+
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              OR: searchQueryWhereInput
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          OR: searchQueryWhereInput
+        };
+      }
+    }
+
+    if (filtersByTag.length > 0) {
+      andConditions.push({
+        OR: [
+          {
+            tags: {
+              some: {
+                OR: filtersByTag.map(({ id }) => {
+                  return { id };
+                })
+              }
+            }
+          },
+          {
+            account: {
+              tags: {
+                some: {
+                  OR: filtersByTag.map(({ id }) => {
+                    return { tagId: id };
+                  })
+                }
+              }
+            }
+          }
+        ]
+      });
+    }
+
+    if (types?.length > 0) {
+      where.type = { in: types };
+    }
+
+    if (withExcludedAccountsAndActivities === false) {
+      where.OR = [{ account: null }, { account: WHERE_ACCOUNT_NOT_EXCLUDED }];
+
+      where.tags = {
+        none: {
+          id: TAG_ID_EXCLUDE_FROM_ANALYSIS
+        }
+      };
+    }
+
+    return where;
   }
 
   private async orders(params: {
