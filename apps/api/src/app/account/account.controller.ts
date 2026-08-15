@@ -2,8 +2,8 @@ import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/accou
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
@@ -18,6 +18,7 @@ import {
   AccountsResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
+import { scopes } from '@ghostfolio/common/scopes';
 import type {
   ImpersonationContext,
   RequestWithUser
@@ -84,7 +85,7 @@ export class AccountController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getAllAccounts(
@@ -107,7 +108,7 @@ export class AccountController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
     @Impersonation() { userId }: ImpersonationContext,
@@ -124,7 +125,7 @@ export class AccountController {
   }
 
   @Get(':id/balances')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountBalancesById(
     @Impersonation() { userId, userSettings }: ImpersonationContext,

@@ -19,6 +19,9 @@ export class UpdateAccessDto {
   @IsString()
   id: string;
 
+  /**
+   * @deprecated Use the scopes instead
+   */
   @IsEnum(AccessPermission, { each: true })
   @IsOptional()
   permissions?: AccessPermission[];

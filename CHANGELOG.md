@@ -10,7 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the business logic and tests for stock splits of an asset profile (experimental)
+- Added the scopes to the access
 - Added an index for `symbolProfileId` to the order database table
+
+### Changed
+
+- Changed the redaction of the monetary values in impersonation mode to be based on the scopes of the access
+- Deprecated the `permissions` attribute of the access in favor of the scopes
+- Extended the `GET api/v1/access` endpoint by the scopes
+- Extended the `GET api/v1/user` endpoint by the scopes
 
 ## 3.51.0 - 2026-08-14
 
