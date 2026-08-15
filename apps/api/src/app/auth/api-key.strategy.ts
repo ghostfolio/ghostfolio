@@ -66,7 +66,16 @@ export class ApiKeyStrategy extends PassportStrategy(
     try {
       const { id } = await this.apiKeyService.getUserByApiKey(apiKey);
 
-      return this.userService.user({ id });
+      const user = await this.userService.user({ id });
+
+      if (!user) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.UNAUTHORIZED),
+          StatusCodes.UNAUTHORIZED
+        );
+      }
+
+      return user;
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.UNAUTHORIZED),
