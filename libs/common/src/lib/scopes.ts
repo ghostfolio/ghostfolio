@@ -11,6 +11,7 @@ export const scopes = {
   activityRead: 'activity:read',
   portfolioRead: 'portfolio:read',
   portfolioReadValues: 'portfolio:read:values',
+  portfolioWrite: 'portfolio:write',
   watchlistRead: 'watchlist:read'
 } as const;
 
@@ -21,13 +22,17 @@ const SCOPES_OF_PUBLIC_ACCESS: Scope[] = [
   scopes.portfolioRead
 ];
 
-const SCOPES_OF_READ_ACCESS = Object.values(scopes);
+const SCOPES_OF_READ_RESTRICTED_ACCESS: Scope[] = [
+  scopes.accountRead,
+  scopes.activityRead,
+  scopes.portfolioRead,
+  scopes.watchlistRead
+];
 
-const SCOPES_OF_READ_RESTRICTED_ACCESS = SCOPES_OF_READ_ACCESS.filter(
-  (scope) => {
-    return scope !== scopes.portfolioReadValues;
-  }
-);
+const SCOPES_OF_READ_ACCESS: Scope[] = [
+  ...SCOPES_OF_READ_RESTRICTED_ACCESS,
+  scopes.portfolioReadValues
+];
 
 export function getScopesOfAccess({
   granteeUserId,

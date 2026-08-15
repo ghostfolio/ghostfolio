@@ -3,7 +3,6 @@ import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.servic
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
@@ -19,10 +18,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
-import type {
-  ImpersonationContext,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -30,16 +26,12 @@ import {
   Delete,
   Get,
   HttpException,
-  Inject,
   Param,
   Post,
   Put,
   Query,
-  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -51,19 +43,21 @@ export class AccountController {
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly apiService: ApiService,
-    private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly portfolioService: PortfolioService
   ) {}
 
   @Delete(':id')
   @HasPermission(permissions.deleteAccount)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
+  @RequiresScope(scopes.portfolioWrite)
+  public async deleteAccount(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ): Promise<AccountModel> {
     const account = await this.accountService.accountWithActivities(
       {
         id_userId: {
           id,
-          userId: this.request.user.id
+          userId
         }
       },
       { activities: true }
@@ -79,7 +73,7 @@ export class AccountController {
     return this.accountService.deleteAccount({
       id_userId: {
         id,
-        userId: this.request.user.id
+        userId
       }
     });
   }
@@ -140,9 +134,10 @@ export class AccountController {
 
   @HasPermission(permissions.createAccount)
   @Post()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioWrite)
   public async createAccount(
-    @Body() data: CreateAccountDto
+    @Body() data: CreateAccountDto,
+    @Impersonation() { userId }: ImpersonationContext
   ): Promise<AccountModel> {
     const { balance, tags: tagIds, ...accountData } = data;
 
@@ -153,12 +148,12 @@ export class AccountController {
       return this.accountService.createAccount({
         balance,
         tagIds,
+        userId,
         data: {
           ...accountData,
           platform: { connect: { id: platformId } },
-          user: { connect: { id: this.request.user.id } }
-        },
-        userId: this.request.user.id
+          user: { connect: { id: userId } }
+        }
       });
     } else {
       delete accountData.platformId;
@@ -166,24 +161,23 @@ export class AccountController {
       return this.accountService.createAccount({
         balance,
         tagIds,
+        userId,
         data: {
           ...accountData,
-          user: { connect: { id: this.request.user.id } }
-        },
-        userId: this.request.user.id
+          user: { connect: { id: userId } }
+        }
       });
     }
   }
 
   @HasPermission(permissions.updateAccount)
   @Post('transfer-balance')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioWrite)
   public async transferAccountBalance(
-    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
+    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto,
+    @Impersonation() { userId }: ImpersonationContext
   ) {
-    const accountsOfUser = await this.accountService.getAccounts(
-      this.request.user.id
-    );
+    const accountsOfUser = await this.accountService.getAccounts(userId);
 
     const accountFrom = accountsOfUser.find(({ id }) => {
       return id === accountIdFrom;
@@ -215,28 +209,32 @@ export class AccountController {
     }
 
     await this.accountService.updateAccountBalance({
+      userId,
       accountId: accountFrom.id,
       amount: -balance,
-      currency: accountFrom.currency,
-      userId: this.request.user.id
+      currency: accountFrom.currency
     });
 
     await this.accountService.updateAccountBalance({
+      userId,
       accountId: accountTo.id,
       amount: balance,
-      currency: accountFrom.currency,
-      userId: this.request.user.id
+      currency: accountFrom.currency
     });
   }
 
   @HasPermission(permissions.updateAccount)
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
+  @RequiresScope(scopes.portfolioWrite)
+  public async update(
+    @Body() data: UpdateAccountDto,
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ) {
     const originalAccount = await this.accountService.account({
       id_userId: {
         id,
-        userId: this.request.user.id
+        userId
       }
     });
 
@@ -256,16 +254,16 @@ export class AccountController {
       return this.accountService.updateAccount({
         balance,
         tagIds,
+        userId,
         data: {
           ...accountData,
           platform: { connect: { id: platformId } },
-          user: { connect: { id: this.request.user.id } }
+          user: { connect: { id: userId } }
         },
-        userId: this.request.user.id,
         where: {
           id_userId: {
             id,
-            userId: this.request.user.id
+            userId
           }
         }
       });
@@ -276,18 +274,18 @@ export class AccountController {
       return this.accountService.updateAccount({
         balance,
         tagIds,
+        userId,
         data: {
           ...accountData,
           platform: originalAccount.platformId
             ? { disconnect: true }
             : undefined,
-          user: { connect: { id: this.request.user.id } }
+          user: { connect: { id: userId } }
         },
-        userId: this.request.user.id,
         where: {
           id_userId: {
             id,
-            userId: this.request.user.id
+            userId
           }
         }
       });

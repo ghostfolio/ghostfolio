@@ -1,7 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -34,11 +33,9 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -59,9 +56,10 @@ export class ActivitiesController {
 
   @Delete()
   @HasPermission(permissions.deleteActivity)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioWrite)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
+    @Impersonation() { userId }: ImpersonationContext,
     @Query()
     {
       accounts,
@@ -94,18 +92,21 @@ export class ActivitiesController {
       endDate,
       filters,
       startDate,
-      types: activityTypes,
-      userId: this.request.user.id
+      userId,
+      types: activityTypes
     });
   }
 
   @Delete(':id')
   @HasPermission(permissions.deleteActivity)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteActivity(@Param('id') id: string): Promise<Order> {
+  @RequiresScope(scopes.portfolioWrite)
+  public async deleteActivity(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ): Promise<Order> {
     const activity = await this.activitiesService.order({
       id,
-      userId: this.request.user.id
+      userId
     });
 
     if (!activity) {
@@ -208,9 +209,12 @@ export class ActivitiesController {
 
   @HasPermission(permissions.createActivity)
   @Post()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioWrite)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async createActivity(@Body() data: CreateOrderDto): Promise<Order> {
+  public async createActivity(
+    @Body() data: CreateOrderDto,
+    @Impersonation() { userId }: ImpersonationContext
+  ): Promise<Order> {
     try {
       await this.dataProviderService.validateActivities({
         activitiesDto: [
@@ -248,6 +252,7 @@ export class ActivitiesController {
 
     const activity = await this.activitiesService.createActivity({
       ...data,
+      userId,
       date: parseISO(data.date),
       SymbolProfile: {
         connectOrCreate: {
@@ -267,8 +272,7 @@ export class ActivitiesController {
       tags: data.tags?.map((id) => {
         return { id };
       }),
-      user: { connect: { id: this.request.user.id } },
-      userId: this.request.user.id
+      user: { connect: { id: userId } }
     });
 
     if (dataSource && !isActivityInFuture({ date: activity.date })) {
@@ -291,15 +295,16 @@ export class ActivitiesController {
 
   @HasPermission(permissions.updateActivity)
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioWrite)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async updateActivity(
-    @Param('id') id: string,
-    @Body() data: UpdateOrderDto
+    @Body() data: UpdateOrderDto,
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
   ) {
     const originalActivity = await this.activitiesService.order({
       id,
-      userId: this.request.user.id
+      userId
     });
 
     if (!originalActivity) {
@@ -332,7 +337,7 @@ export class ActivitiesController {
         account: accountId
           ? {
               connect: {
-                id_userId: { id: accountId, userId: this.request.user.id }
+                id_userId: { id: accountId, userId }
               }
             }
           : { disconnect: true },
@@ -352,10 +357,10 @@ export class ActivitiesController {
         tags: data.tags?.map((id) => {
           return { id };
         }),
-        user: { connect: { id: this.request.user.id } }
+        user: { connect: { id: userId } }
       },
+      userId,
       originalDate: originalActivity.date,
-      userId: this.request.user.id,
       where: {
         id
       }

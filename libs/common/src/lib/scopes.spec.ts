@@ -39,6 +39,16 @@ describe('Scopes', () => {
       ).not.toContain(scopes.portfolioReadValues);
     });
 
+    it('The permission to read does not give the write scope', () => {
+      expect(
+        getScopesOfAccess({
+          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+          permissions: ['READ'],
+          scopes: []
+        })
+      ).not.toContain(scopes.portfolioWrite);
+    });
+
     it('Without permissions and scopes', () => {
       expect(
         getScopesOfAccess({
@@ -92,6 +102,7 @@ describe('Scopes', () => {
         scopes.activityRead,
         scopes.portfolioRead,
         scopes.portfolioReadValues,
+        scopes.portfolioWrite,
         scopes.watchlistRead
       ]);
     });
