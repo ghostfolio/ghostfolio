@@ -511,9 +511,7 @@
           </div>
         </div>
       </mat-tab>
-      <!-- Splits are not applied to the portfolio calculation yet, hence the
-      tab to manage them is disabled -->
-      @if (false && user?.settings?.isExperimentalFeatures) {
+      @if (user?.settings?.isExperimentalFeatures) {
         <mat-tab>
           <ng-template mat-tab-label>
             <ion-icon name="git-compare-outline" />

@@ -195,6 +195,7 @@ model Order {
 
   @@index([accountId])
   @@index([date])
+  @@index([symbolProfileId])
   @@index([type])
   @@index([userId])
 }

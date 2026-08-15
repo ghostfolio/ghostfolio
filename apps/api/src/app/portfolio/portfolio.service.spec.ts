@@ -66,6 +66,7 @@ describe('PortfolioService', () => {
       accountService,
       null,
       null,
+      null,
       dataProviderService,
       null,
       exchangeRateDataService,

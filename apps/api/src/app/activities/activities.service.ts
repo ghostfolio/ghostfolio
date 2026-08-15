@@ -14,6 +14,8 @@ import {
   WHERE_ACTIVITY_NOT_DRAFT
 } from '@ghostfolio/api/helper/activity.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { adjustActivityBySplits } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.helper';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -66,6 +68,7 @@ export class ActivitiesService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
@@ -915,12 +918,26 @@ export class ActivitiesService {
     /** Whether to include cash activities in the result. */
     withCash?: boolean;
   }) {
-    const activities = await this.getActivities({
-      filters,
-      userCurrency,
-      userId,
-      withExcludedAccountsAndActivities: false // TODO
-    });
+    const [activities, splits] = await Promise.all([
+      this.getActivities({
+        filters,
+        userCurrency,
+        userId,
+        withExcludedAccountsAndActivities: false // TODO
+      }),
+      this.assetProfileSplitService.getSplitsByUserId({ userId })
+    ]);
+
+    if (splits.length > 0) {
+      const splitsBySymbolProfileId = groupBy(splits, 'symbolProfileId');
+
+      activities.activities = activities.activities.map((activity) => {
+        return adjustActivityBySplits(
+          activity,
+          splitsBySymbolProfileId[activity.assetProfile.id] ?? []
+        );
+      });
+    }
 
     if (withCash && !this.areCashActivitiesExcludedByFilters(filters)) {
       const cashDetails = await this.accountService.getCashDetails({
@@ -961,6 +978,25 @@ export class ActivitiesService {
       activitiesCount: _count as number,
       dateOfFirstActivity: _min.date
     };
+  }
+
+  /**
+   * Returns the id of every user who has an activity for the given asset
+   * profile, including draft activities and activities of excluded accounts
+   */
+  public async getUserIdsBySymbolProfileId(
+    symbolProfileId: string
+  ): Promise<string[]> {
+    const activitiesByUser = await this.prismaService.order.groupBy({
+      by: ['userId'],
+      where: {
+        symbolProfileId
+      }
+    });
+
+    return activitiesByUser.map(({ userId }) => {
+      return userId;
+    });
   }
 
   public async order(
