@@ -99,7 +99,10 @@ export class AccessController {
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
-        scopes: getScopesOfAccess({ permissions: data.permissions }),
+        scopes: getScopesOfAccess({
+          granteeUserId: data.granteeUserId,
+          permissions: data.permissions
+        }),
         settings: this.accessService.buildSettings(data.filters),
         user: { connect: { id: this.request.user.id } }
       });
@@ -170,6 +173,7 @@ export class AccessController {
             : { disconnect: true },
           permissions: data.permissions,
           scopes: getScopesOfAccess({
+            granteeUserId: data.granteeUserId,
             permissions: data.permissions ?? originalAccess.permissions
           }),
           settings: this.accessService.buildSettings(data.filters)

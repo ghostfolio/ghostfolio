@@ -14,6 +14,11 @@ export const scopes = {
   watchlistRead: 'watchlist:read'
 } as const;
 
+const SCOPES_OF_PUBLIC_ACCESS: string[] = [
+  scopes.activityRead,
+  scopes.portfolioRead
+];
+
 const SCOPES_OF_READ_RESTRICTED_ACCESS = [
   scopes.accountRead,
   scopes.activityRead,
@@ -27,21 +32,33 @@ const SCOPES_OF_READ_ACCESS = [
 ];
 
 export function getScopesOfAccess({
+  granteeUserId,
   permissions,
   scopes
 }: {
+  granteeUserId?: string | null;
   permissions?: AccessPermission[];
   scopes?: string[];
 }): string[] {
-  if (scopes?.length) {
-    return scopes;
+  let scopesOfAccess = scopes;
+
+  if (!scopesOfAccess?.length) {
+    // TODO: Remove the derivation from the permissions once they have been
+    // dropped from the access
+    scopesOfAccess = permissions?.includes('READ')
+      ? SCOPES_OF_READ_ACCESS
+      : SCOPES_OF_READ_RESTRICTED_ACCESS;
   }
 
-  // TODO: Remove the derivation from the permissions once they have been
-  // dropped from the access
-  return permissions?.includes('READ')
-    ? SCOPES_OF_READ_ACCESS
-    : SCOPES_OF_READ_RESTRICTED_ACCESS;
+  if (granteeUserId) {
+    return scopesOfAccess;
+  }
+
+  // An access which has not been granted to a user is public, hence it is
+  // narrowed to the scopes exposed by the public endpoints
+  return scopesOfAccess.filter((scope) => {
+    return SCOPES_OF_PUBLIC_ACCESS.includes(scope);
+  });
 }
 
 /**

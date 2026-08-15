@@ -11,6 +11,7 @@ describe('Scopes', () => {
     it('Scopes take precedence over the permissions', () => {
       expect(
         getScopesOfAccess({
+          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
           permissions: ['READ'],
           scopes: [scopes.portfolioRead]
         })
@@ -20,18 +21,65 @@ describe('Scopes', () => {
     it('Derive from the permission to read', () => {
       // An access created before the scopes have been introduced has no scopes
       expect(
-        getScopesOfAccess({ permissions: ['READ'], scopes: [] })
+        getScopesOfAccess({
+          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+          permissions: ['READ'],
+          scopes: []
+        })
       ).toContain(scopes.portfolioReadValues);
     });
 
     it('Derive from the permission to read restricted', () => {
       expect(
-        getScopesOfAccess({ permissions: ['READ_RESTRICTED'], scopes: [] })
+        getScopesOfAccess({
+          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+          permissions: ['READ_RESTRICTED'],
+          scopes: []
+        })
       ).not.toContain(scopes.portfolioReadValues);
     });
 
     it('Without permissions and scopes', () => {
-      expect(getScopesOfAccess({})).not.toContain(scopes.portfolioReadValues);
+      expect(
+        getScopesOfAccess({
+          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d'
+        })
+      ).not.toContain(scopes.portfolioReadValues);
+    });
+  });
+
+  describe('Get scopes of public access', () => {
+    it('Allows reading the portfolio', () => {
+      expect(getScopesOfAccess({ permissions: ['READ_RESTRICTED'] })).toContain(
+        scopes.portfolioRead
+      );
+    });
+
+    it('Excludes the accounts and the watchlist', () => {
+      const scopesOfAccess = getScopesOfAccess({
+        permissions: ['READ_RESTRICTED']
+      });
+
+      expect(scopesOfAccess).not.toContain(scopes.accountRead);
+      expect(scopesOfAccess).not.toContain(scopes.watchlistRead);
+    });
+
+    it('Cannot be widened by the scopes', () => {
+      expect(
+        getScopesOfAccess({
+          scopes: [
+            scopes.portfolioRead,
+            scopes.portfolioReadValues,
+            scopes.watchlistRead
+          ]
+        })
+      ).toEqual([scopes.portfolioRead]);
+    });
+
+    it('Cannot be widened by the permission to read', () => {
+      expect(getScopesOfAccess({ permissions: ['READ'] })).not.toContain(
+        scopes.portfolioReadValues
+      );
     });
   });
 
