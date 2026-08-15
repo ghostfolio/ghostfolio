@@ -7,40 +7,52 @@ import { AccessPermission } from '@prisma/client';
  * the authenticated user and never widen it.
  */
 export const scopes = {
+  accountCreate: 'account:create',
+  accountDelete: 'account:delete',
   accountRead: 'account:read',
-  accountWrite: 'account:write',
+  accountUpdate: 'account:update',
+  activityCreate: 'activity:create',
+  activityDelete: 'activity:delete',
   activityRead: 'activity:read',
-  activityWrite: 'activity:write',
+  activityUpdate: 'activity:update',
   portfolioRead: 'portfolio:read',
   portfolioReadValues: 'portfolio:read:values',
-  watchlistRead: 'watchlist:read',
-  watchlistWrite: 'watchlist:write'
+  watchlistCreate: 'watchlist:create',
+  watchlistDelete: 'watchlist:delete',
+  watchlistRead: 'watchlist:read'
 } as const;
 
 export type Scope = (typeof scopes)[keyof typeof scopes];
+
+/**
+ * Scopes which change data. A new one has to be added here, so that the
+ * ImpersonationWriteGuard keeps blocking the writes it does not cover.
+ */
+export const SCOPES_OF_WRITE_ACCESS: Scope[] = [
+  scopes.accountCreate,
+  scopes.accountDelete,
+  scopes.accountUpdate,
+  scopes.activityCreate,
+  scopes.activityDelete,
+  scopes.activityUpdate,
+  scopes.watchlistCreate,
+  scopes.watchlistDelete
+];
 
 const SCOPES_OF_PUBLIC_ACCESS: Scope[] = [
   scopes.activityRead,
   scopes.portfolioRead
 ];
 
-const SCOPES_OF_READ_RESTRICTED_ACCESS: Scope[] = [
-  scopes.accountRead,
-  scopes.activityRead,
-  scopes.portfolioRead,
-  scopes.watchlistRead
-];
+const SCOPES_OF_READ_ACCESS: Scope[] = Object.values(scopes).filter((scope) => {
+  return !SCOPES_OF_WRITE_ACCESS.includes(scope);
+});
 
-const SCOPES_OF_READ_ACCESS: Scope[] = [
-  ...SCOPES_OF_READ_RESTRICTED_ACCESS,
-  scopes.portfolioReadValues
-];
-
-export const SCOPES_OF_WRITE_ACCESS: Scope[] = [
-  scopes.accountWrite,
-  scopes.activityWrite,
-  scopes.watchlistWrite
-];
+const SCOPES_OF_READ_RESTRICTED_ACCESS: Scope[] = SCOPES_OF_READ_ACCESS.filter(
+  (scope) => {
+    return scope !== scopes.portfolioReadValues;
+  }
+);
 
 export function getScopesOfAccess({
   granteeUserId,

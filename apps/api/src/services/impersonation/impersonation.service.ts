@@ -1,3 +1,5 @@
+import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { UserSettings } from '@ghostfolio/common/interfaces';
@@ -17,7 +19,11 @@ import { Access } from '@prisma/client';
 
 @Injectable()
 export class ImpersonationService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly configurationService: ConfigurationService,
+    private readonly prismaService: PrismaService,
+    private readonly subscriptionService: SubscriptionService
+  ) {}
 
   public async resolve({
     impersonationId,
@@ -34,13 +40,21 @@ export class ImpersonationService {
         isActive: false,
         scopes: getScopesOfOwnAccess(),
         userId: user?.id,
-        userSettings: user?.settings?.settings ?? {}
+        userSettings: user?.settings?.settings ?? {},
+        userSubscription: user?.subscription
       };
     }
 
-    const settings = await this.prismaService.settings.findUnique({
-      where: { userId: impersonatedUserId }
+    const isSubscriptionEnabled = this.configurationService.get(
+      'ENABLE_FEATURE_SUBSCRIPTION'
+    );
+
+    const impersonatedUser = await this.prismaService.user.findUnique({
+      include: { settings: true, subscriptions: isSubscriptionEnabled },
+      where: { id: impersonatedUserId }
     });
+
+    const settings = impersonatedUser?.settings?.settings as UserSettings;
 
     return {
       accessId: impersonationId,
@@ -52,10 +66,16 @@ export class ImpersonationService {
         : getScopesOfUnrestrictedImpersonation(),
       userId: impersonatedUserId,
       userSettings: {
-        ...((settings?.settings ?? {}) as UserSettings),
-        baseCurrency:
-          (settings?.settings as UserSettings)?.baseCurrency ?? DEFAULT_CURRENCY
-      }
+        ...(settings ?? {}),
+        baseCurrency: settings?.baseCurrency ?? DEFAULT_CURRENCY
+      },
+      userSubscription:
+        isSubscriptionEnabled && impersonatedUser
+          ? await this.subscriptionService.getSubscription({
+              createdAt: impersonatedUser.createdAt,
+              subscriptions: impersonatedUser.subscriptions ?? []
+            })
+          : undefined
     };
   }
 

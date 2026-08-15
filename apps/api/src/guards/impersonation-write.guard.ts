@@ -1,7 +1,7 @@
 import { ALLOW_DURING_IMPERSONATION_KEY } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
-import { Scope } from '@ghostfolio/common/scopes';
+import { SCOPES_OF_WRITE_ACCESS, Scope } from '@ghostfolio/common/scopes';
 
 import {
   CanActivate,
@@ -18,9 +18,11 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
  * impersonated user. The header is evaluated instead of the resolved context to
  * fail closed, also for an identifier which cannot be resolved.
  *
- * A route which declares the scopes it requires is left to the ScopeGuard,
- * which evaluates the resolved context. This guard is global, hence it runs
- * before the guards of the route and cannot read the context itself.
+ * A route which declares a write scope is left to the ScopeGuard, which
+ * evaluates the resolved context. This guard is global, hence it runs before
+ * the guards of the route and cannot read the context itself. A route which
+ * declares read scopes only is still blocked here, so that a read access can
+ * never reach a handler which changes data.
  */
 @Injectable()
 export class ImpersonationWriteGuard implements CanActivate {
@@ -56,7 +58,11 @@ export class ImpersonationWriteGuard implements CanActivate {
       [context.getHandler(), context.getClass()]
     );
 
-    if (requiredScopes?.length) {
+    const requiresWriteScope = requiredScopes?.some((scope) => {
+      return SCOPES_OF_WRITE_ACCESS.includes(scope);
+    });
+
+    if (requiresWriteScope) {
       return true;
     }
 

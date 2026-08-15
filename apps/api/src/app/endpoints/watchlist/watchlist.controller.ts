@@ -30,7 +30,7 @@ export class WatchlistController {
 
   @Post()
   @HasPermission(permissions.createWatchlistItem)
-  @RequiresScope(scopes.watchlistWrite)
+  @RequiresScope(scopes.watchlistCreate)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createWatchlistItem(
     @Body() data: CreateWatchlistItemDto,
@@ -45,7 +45,7 @@ export class WatchlistController {
 
   @Delete(':dataSource/:symbol')
   @HasPermission(permissions.deleteWatchlistItem)
-  @RequiresScope(scopes.watchlistWrite)
+  @RequiresScope(scopes.watchlistDelete)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteWatchlistItem(
     @Impersonation() { userId }: ImpersonationContext,

@@ -8,6 +8,23 @@ import {
 } from '@ghostfolio/common/scopes';
 
 describe('Scopes', () => {
+  describe('Scopes of write access', () => {
+    // A new scope which changes data has to be added here deliberately,
+    // because the read scopes are derived by the exclusion of this list
+    it('Covers every write scope', () => {
+      expect(SCOPES_OF_WRITE_ACCESS).toEqual([
+        scopes.accountCreate,
+        scopes.accountDelete,
+        scopes.accountUpdate,
+        scopes.activityCreate,
+        scopes.activityDelete,
+        scopes.activityUpdate,
+        scopes.watchlistCreate,
+        scopes.watchlistDelete
+      ]);
+    });
+  });
+
   describe('Get scopes of access', () => {
     it('Scopes take precedence over the permissions', () => {
       expect(
@@ -101,14 +118,19 @@ describe('Scopes', () => {
     // granted to the owner of the data
     it('Covers every scope', () => {
       expect(getScopesOfOwnAccess()).toEqual([
+        scopes.accountCreate,
+        scopes.accountDelete,
         scopes.accountRead,
-        scopes.accountWrite,
+        scopes.accountUpdate,
+        scopes.activityCreate,
+        scopes.activityDelete,
         scopes.activityRead,
-        scopes.activityWrite,
+        scopes.activityUpdate,
         scopes.portfolioRead,
         scopes.portfolioReadValues,
-        scopes.watchlistRead,
-        scopes.watchlistWrite
+        scopes.watchlistCreate,
+        scopes.watchlistDelete,
+        scopes.watchlistRead
       ]);
     });
   });

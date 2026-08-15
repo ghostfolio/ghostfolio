@@ -2,6 +2,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -13,7 +14,8 @@ import {
   Post,
   Delete,
   HttpException,
-  Param
+  Param,
+  UseInterceptors
 } from '@nestjs/common';
 import { AccountBalance } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -29,7 +31,8 @@ export class AccountBalanceController {
 
   @HasPermission(permissions.createAccountBalance)
   @Post()
-  @RequiresScope(scopes.accountWrite)
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async createAccountBalance(
     @Body() data: CreateAccountBalanceDto,
     @Impersonation() { userId }: ImpersonationContext
@@ -58,7 +61,8 @@ export class AccountBalanceController {
 
   @HasPermission(permissions.deleteAccountBalance)
   @Delete(':id')
-  @RequiresScope(scopes.accountWrite)
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async deleteAccountBalance(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string

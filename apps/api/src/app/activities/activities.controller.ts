@@ -11,6 +11,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   ActivitiesResponse,
   ActivityResponse
@@ -56,7 +57,7 @@ export class ActivitiesController {
 
   @Delete()
   @HasPermission(permissions.deleteActivity)
-  @RequiresScope(scopes.activityWrite)
+  @RequiresScope(scopes.activityDelete)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
     @Impersonation() { userId }: ImpersonationContext,
@@ -99,7 +100,8 @@ export class ActivitiesController {
 
   @Delete(':id')
   @HasPermission(permissions.deleteActivity)
-  @RequiresScope(scopes.activityWrite)
+  @RequiresScope(scopes.activityDelete)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async deleteActivity(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
@@ -209,14 +211,24 @@ export class ActivitiesController {
 
   @HasPermission(permissions.createActivity)
   @Post()
-  @RequiresScope(scopes.activityWrite)
+  @RequiresScope(scopes.activityCreate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createActivity(
     @Body() data: CreateOrderDto,
-    @Impersonation() { userId }: ImpersonationContext
+    @Impersonation() { userId, userSubscription }: ImpersonationContext
   ): Promise<Order> {
+    // A premium data source requires the subscription of the authenticated
+    // user and the subscription of the owner of the activity, hence the more
+    // restrictive one is evaluated
+    const subscription =
+      userSubscription?.type === SubscriptionType.Basic
+        ? userSubscription
+        : this.request.user.subscription;
+
     try {
       await this.dataProviderService.validateActivities({
+        subscription,
         activitiesDto: [
           {
             currency: data.currency,
@@ -225,8 +237,7 @@ export class ActivitiesController {
             type: data.type
           }
         ],
-        maxActivitiesToImport: 1,
-        user: this.request.user
+        maxActivitiesToImport: 1
       });
     } catch (error) {
       throw new HttpException(
@@ -295,7 +306,8 @@ export class ActivitiesController {
 
   @HasPermission(permissions.updateActivity)
   @Put(':id')
-  @RequiresScope(scopes.activityWrite)
+  @RequiresScope(scopes.activityUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async updateActivity(
     @Body() data: UpdateOrderDto,
@@ -331,13 +343,14 @@ export class ActivitiesController {
     delete data.dataSource;
 
     return this.activitiesService.updateActivity({
+      userId,
       data: {
         ...data,
         date,
         account: accountId
           ? {
               connect: {
-                id_userId: { id: accountId, userId }
+                id_userId: { userId, id: accountId }
               }
             }
           : { disconnect: true },
@@ -359,7 +372,6 @@ export class ActivitiesController {
         }),
         user: { connect: { id: userId } }
       },
-      userId,
       originalDate: originalActivity.date,
       where: {
         id

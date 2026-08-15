@@ -1,4 +1,3 @@
-import { getScopesOfOwnAccess } from '@ghostfolio/common/scopes';
 import type {
   ImpersonationContext,
   RequestWithUser
@@ -7,22 +6,23 @@ import type {
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
 /**
- * Provides the impersonation context of the request, which requires the
- * ImpersonationGuard to be applied to the route
+ * Provides the impersonation context of the request, which the
+ * ImpersonationGuard resolves. A missing context is a mistake in the setup of
+ * the route and fails loudly, because a fallback to the own access would let a
+ * handler change data without any scope being evaluated.
  */
 export const Impersonation = createParamDecorator(
   (_data: unknown, context: ExecutionContext): ImpersonationContext => {
-    const { impersonation, user } = context
+    const { impersonation } = context
       .switchToHttp()
       .getRequest<RequestWithUser>();
 
-    return (
-      impersonation ?? {
-        isActive: false,
-        scopes: getScopesOfOwnAccess(),
-        userId: user?.id,
-        userSettings: user?.settings?.settings ?? {}
-      }
-    );
+    if (!impersonation) {
+      throw new Error(
+        'The impersonation context is missing. Apply the RequiresScope decorator or the ImpersonationGuard to the route.'
+      );
+    }
+
+    return impersonation;
   }
 );
