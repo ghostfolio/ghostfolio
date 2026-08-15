@@ -8,11 +8,13 @@ import { AccessPermission } from '@prisma/client';
  */
 export const scopes = {
   accountRead: 'account:read',
+  accountWrite: 'account:write',
   activityRead: 'activity:read',
+  activityWrite: 'activity:write',
   portfolioRead: 'portfolio:read',
   portfolioReadValues: 'portfolio:read:values',
-  portfolioWrite: 'portfolio:write',
-  watchlistRead: 'watchlist:read'
+  watchlistRead: 'watchlist:read',
+  watchlistWrite: 'watchlist:write'
 } as const;
 
 export type Scope = (typeof scopes)[keyof typeof scopes];
@@ -32,6 +34,12 @@ const SCOPES_OF_READ_RESTRICTED_ACCESS: Scope[] = [
 const SCOPES_OF_READ_ACCESS: Scope[] = [
   ...SCOPES_OF_READ_RESTRICTED_ACCESS,
   scopes.portfolioReadValues
+];
+
+export const SCOPES_OF_WRITE_ACCESS: Scope[] = [
+  scopes.accountWrite,
+  scopes.activityWrite,
+  scopes.watchlistWrite
 ];
 
 export function getScopesOfAccess({

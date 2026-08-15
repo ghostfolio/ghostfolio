@@ -48,7 +48,7 @@ export class AccountController {
 
   @Delete(':id')
   @HasPermission(permissions.deleteAccount)
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.accountWrite)
   public async deleteAccount(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
@@ -134,7 +134,7 @@ export class AccountController {
 
   @HasPermission(permissions.createAccount)
   @Post()
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.accountWrite)
   public async createAccount(
     @Body() data: CreateAccountDto,
     @Impersonation() { userId }: ImpersonationContext
@@ -172,7 +172,7 @@ export class AccountController {
 
   @HasPermission(permissions.updateAccount)
   @Post('transfer-balance')
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.accountWrite)
   public async transferAccountBalance(
     @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto,
     @Impersonation() { userId }: ImpersonationContext
@@ -225,7 +225,7 @@ export class AccountController {
 
   @HasPermission(permissions.updateAccount)
   @Put(':id')
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.accountWrite)
   public async update(
     @Body() data: UpdateAccountDto,
     @Impersonation() { userId }: ImpersonationContext,

@@ -29,7 +29,7 @@ export class AccountBalanceController {
 
   @HasPermission(permissions.createAccountBalance)
   @Post()
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.accountWrite)
   public async createAccountBalance(
     @Body() data: CreateAccountBalanceDto,
     @Impersonation() { userId }: ImpersonationContext
@@ -58,7 +58,7 @@ export class AccountBalanceController {
 
   @HasPermission(permissions.deleteAccountBalance)
   @Delete(':id')
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.accountWrite)
   public async deleteAccountBalance(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string

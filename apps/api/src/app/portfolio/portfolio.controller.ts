@@ -655,7 +655,7 @@ export class PortfolioController {
 
   @HasPermission(permissions.updateActivity)
   @Put('holding/:dataSource/:symbol/tags')
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.activityWrite)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async updateHoldingTags(
     @Body() data: UpdateHoldingTagsDto,

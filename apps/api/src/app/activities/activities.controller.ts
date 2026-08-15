@@ -56,7 +56,7 @@ export class ActivitiesController {
 
   @Delete()
   @HasPermission(permissions.deleteActivity)
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.activityWrite)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
     @Impersonation() { userId }: ImpersonationContext,
@@ -99,7 +99,7 @@ export class ActivitiesController {
 
   @Delete(':id')
   @HasPermission(permissions.deleteActivity)
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.activityWrite)
   public async deleteActivity(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
@@ -209,7 +209,7 @@ export class ActivitiesController {
 
   @HasPermission(permissions.createActivity)
   @Post()
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.activityWrite)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createActivity(
     @Body() data: CreateOrderDto,
@@ -295,7 +295,7 @@ export class ActivitiesController {
 
   @HasPermission(permissions.updateActivity)
   @Put(':id')
-  @RequiresScope(scopes.portfolioWrite)
+  @RequiresScope(scopes.activityWrite)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async updateActivity(
     @Body() data: UpdateOrderDto,

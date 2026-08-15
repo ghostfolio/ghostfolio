@@ -1,4 +1,5 @@
 import {
+  SCOPES_OF_WRITE_ACCESS,
   getScopesOfAccess,
   getScopesOfOwnAccess,
   getScopesOfUnrestrictedImpersonation,
@@ -39,14 +40,16 @@ describe('Scopes', () => {
       ).not.toContain(scopes.portfolioReadValues);
     });
 
-    it('The permission to read does not give the write scope', () => {
-      expect(
-        getScopesOfAccess({
-          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
-          permissions: ['READ'],
-          scopes: []
-        })
-      ).not.toContain(scopes.portfolioWrite);
+    it('The permission to read gives no write scope', () => {
+      const scopesOfAccess = getScopesOfAccess({
+        granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+        permissions: ['READ'],
+        scopes: []
+      });
+
+      for (const scope of SCOPES_OF_WRITE_ACCESS) {
+        expect(scopesOfAccess).not.toContain(scope);
+      }
     });
 
     it('Without permissions and scopes', () => {
@@ -99,11 +102,13 @@ describe('Scopes', () => {
     it('Covers every scope', () => {
       expect(getScopesOfOwnAccess()).toEqual([
         scopes.accountRead,
+        scopes.accountWrite,
         scopes.activityRead,
+        scopes.activityWrite,
         scopes.portfolioRead,
         scopes.portfolioReadValues,
-        scopes.portfolioWrite,
-        scopes.watchlistRead
+        scopes.watchlistRead,
+        scopes.watchlistWrite
       ]);
     });
   });
@@ -111,13 +116,21 @@ describe('Scopes', () => {
   describe('Get scopes of unrestricted impersonation', () => {
     // A new scope has to be added here deliberately to confirm that it is
     // granted to an administrator impersonating an arbitrary user
-    it('Covers every scope but the monetary values', () => {
+    it('Covers every read scope but the monetary values', () => {
       expect(getScopesOfUnrestrictedImpersonation()).toEqual([
         scopes.accountRead,
         scopes.activityRead,
         scopes.portfolioRead,
         scopes.watchlistRead
       ]);
+    });
+
+    it('Gives no write scope', () => {
+      const scopesOfImpersonation = getScopesOfUnrestrictedImpersonation();
+
+      for (const scope of SCOPES_OF_WRITE_ACCESS) {
+        expect(scopesOfImpersonation).not.toContain(scope);
+      }
     });
   });
 
