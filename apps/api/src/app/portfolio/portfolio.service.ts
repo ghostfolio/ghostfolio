@@ -358,21 +358,15 @@ export class PortfolioService {
 
   public getDividends({
     activities,
-    groupBy,
-    userCurrency
+    groupBy
   }: {
     activities: Activity[];
     groupBy?: GroupBy;
-    userCurrency: string;
   }): InvestmentItem[] {
-    let dividends = activities.map(({ currency, date, value }) => {
+    let dividends = activities.map(({ date, valueInBaseCurrency }) => {
       return {
         date: format(date, DATE_FORMAT),
-        investment: this.exchangeRateDataService.toCurrency(
-          value,
-          currency,
-          userCurrency
-        )
+        investment: valueInBaseCurrency
       };
     });
 
