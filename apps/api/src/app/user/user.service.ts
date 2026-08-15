@@ -168,25 +168,25 @@ export class UserService {
       userSettings: settings.settings as UserSettings
     });
 
-    let referralPartners: ReferralPartner[];
+    let referralPartners: ReferralPartner[] = [];
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      subscription.type === SubscriptionType.Basic
+      subscription?.type === SubscriptionType.Basic
     ) {
       referralPartners = await this.propertyService.getByKey<ReferralPartner[]>(
         PROPERTY_REFERRAL_PARTNERS
       );
     }
 
-    let systemMessage: SystemMessage;
+    let systemMessage: SystemMessage | undefined;
 
     const systemMessageProperty =
       await this.propertyService.getByKey<SystemMessage>(
         PROPERTY_SYSTEM_MESSAGE
       );
 
-    if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
+    if (subscription?.type && systemMessageProperty?.targetGroups?.includes(subscription.type)) {
       systemMessage = systemMessageProperty;
     }
 
@@ -194,7 +194,7 @@ export class UserService {
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      subscription.type === SubscriptionType.Basic
+      subscription?.type === SubscriptionType.Basic
     ) {
       tags = tags.filter(({ id }) => {
         return [TAG_ID_DRAFT, TAG_ID_EXCLUDE_FROM_ANALYSIS].includes(id);
