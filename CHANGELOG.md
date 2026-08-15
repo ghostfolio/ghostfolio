@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the business logic and tests for stock splits of an asset profile (experimental)
 - Added the scopes to the access
+- Added an index for `symbolProfileId` to the order database table
 
 ### Changed
 

@@ -138,7 +138,9 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createAccount,
         permissions.createAccountBalance,
         permissions.createActivity,
-        permissions.createAssetProfileSplitOfOwnAssetProfile,
+        // TODO: Grant createAssetProfileSplitOfOwnAssetProfile and
+        // deleteAssetProfileSplitOfOwnAssetProfile once the stock splits
+        // feature is no longer experimental
         permissions.createMarketDataOfOwnAssetProfile,
         permissions.createOwnTag,
         permissions.createWatchlistItem,
@@ -146,7 +148,6 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccount,
         permissions.deleteAccountBalance,
         permissions.deleteActivity,
-        permissions.deleteAssetProfileSplitOfOwnAssetProfile,
         permissions.deleteAuthDevice,
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
