@@ -88,6 +88,11 @@ export class BenchmarksService {
       return { marketData };
     }
 
+    const baselineDate =
+      chart.length > 0
+        ? resetHours(parseDate(chart[0].date))
+        : resetHours(startDate);
+
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         startDate,
@@ -97,17 +102,17 @@ export class BenchmarksService {
 
     const exchangeRateAtStartDate =
       exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-        format(startDate, DATE_FORMAT)
+        format(baselineDate, DATE_FORMAT)
       ];
 
     const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
-      return isSameDay(date, startDate);
+      return isSameDay(date, baselineDate);
     })?.marketPrice;
 
     if (!marketPriceAtStartDate) {
       this.logger.error(
         `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
-          startDate,
+          baselineDate,
           DATE_FORMAT
         )}`
       );
