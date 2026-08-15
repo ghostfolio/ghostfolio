@@ -66,6 +66,7 @@ export class GfAccountsTableComponent {
   public readonly showAllocationInPercentage = input<boolean>();
   public readonly showBalance = input(true);
   public readonly showFooter = input(true);
+  public readonly showQuantity = input<boolean>();
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(true);
   public readonly totalBalanceInBaseCurrency = input<number>();
@@ -103,6 +104,10 @@ export class GfAccountsTableComponent {
       columns.push('activitiesCount');
     }
 
+    if (this.showQuantity()) {
+      columns.push('quantity');
+    }
+
     if (this.showBalance()) {
       columns.push('balance');
     }
@@ -111,7 +116,9 @@ export class GfAccountsTableComponent {
       columns.push('value');
     }
 
-    columns.push('currency');
+    if (this.showBalance() || this.showValue()) {
+      columns.push('currency');
+    }
 
     if (this.showValueInBaseCurrency()) {
       columns.push('valueInBaseCurrency');

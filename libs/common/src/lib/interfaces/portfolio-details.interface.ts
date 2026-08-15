@@ -10,6 +10,8 @@ export interface PortfolioDetails {
       balance: number;
       currency: string;
       name: string;
+      /** Only set if the activities are filtered by a single holding */
+      quantity?: number;
       valueInBaseCurrency: number;
       valueInPercentage?: number;
     };

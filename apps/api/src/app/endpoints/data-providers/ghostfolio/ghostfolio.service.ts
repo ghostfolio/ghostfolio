@@ -115,7 +115,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -157,7 +157,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -199,7 +199,7 @@ export class GhostfolioService {
 
       return result;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -226,7 +226,7 @@ export class GhostfolioService {
 
       return marketDataOfMarkets;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -314,7 +314,7 @@ export class GhostfolioService {
 
       return results;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -393,7 +393,7 @@ export class GhostfolioService {
 
       return results;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }

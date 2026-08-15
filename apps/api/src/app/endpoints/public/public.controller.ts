@@ -78,7 +78,6 @@ export class PublicController {
     ] = await Promise.all([
       this.portfolioService.getDetails({
         filters,
-        impersonationId: access.userId,
         userId: user.id,
         withMarkets: true
       }),
@@ -86,7 +85,6 @@ export class PublicController {
         return this.portfolioService.getPerformance({
           dateRange,
           filters,
-          impersonationId: undefined,
           userId: user.id
         });
       })

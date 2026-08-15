@@ -41,6 +41,7 @@ import {
   THROTTLE_DAILY_TTL
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { resolveUserSettings } from '@ghostfolio/common/helper';
 import {
   User as IUser,
   ReferralPartner,
@@ -58,7 +59,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
-import { Prisma, Role, Settings, User } from '@prisma/client';
+import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { isNil, without } from 'lodash';
 import { createHmac } from 'node:crypto';
@@ -127,7 +128,7 @@ export class UserService {
       accounts,
       activitiesCount,
       firstActivity,
-      impersonationUserSettings,
+      impersonationUser,
       tagsForUser
     ] = await Promise.all([
       this.prismaService.access.findMany({
@@ -156,16 +157,16 @@ export class UserService {
         where: { userId: impersonationUserId || user.id }
       }),
       impersonationUserId
-        ? this.prismaService.settings.findUnique({
-            where: { userId: impersonationUserId }
-          })
-        : Promise.resolve<Settings>(null),
+        ? this.user({ id: impersonationUserId })
+        : Promise.resolve<UserWithSettings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
-    const baseCurrency =
-      (impersonationUserSettings?.settings as UserSettings)?.baseCurrency ??
-      (settings.settings as UserSettings)?.baseCurrency;
+    const resolvedUserSettings = resolveUserSettings({
+      impersonationUserSettings: impersonationUser?.settings
+        ?.settings as UserSettings,
+      userSettings: settings.settings as UserSettings
+    });
 
     let referralPartners: ReferralPartner[];
 
@@ -220,9 +221,9 @@ export class UserService {
       }),
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
-        ...(settings.settings as UserSettings),
-        baseCurrency,
-        locale: (settings.settings as UserSettings)?.locale ?? locale
+        ...resolvedUserSettings,
+        baseCurrency: resolvedUserSettings.baseCurrency ?? DEFAULT_CURRENCY,
+        locale: resolvedUserSettings.locale ?? locale
       }
     };
   }

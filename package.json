@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "3.47.0",
+  "version": "3.51.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -107,7 +107,7 @@
     "color": "5.0.3",
     "cookie-parser": "1.4.7",
     "countries-and-timezones": "3.9.0",
-    "countries-list": "3.4.0",
+    "countries-list": "3.4.1",
     "countup.js": "2.10.1",
     "date-fns": "4.4.0",
     "dotenv": "17.4.2",

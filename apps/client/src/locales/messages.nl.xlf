@@ -202,11 +202,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">196</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">231</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
@@ -250,7 +250,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">327</context>
+          <context context-type="linenumber">347</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
@@ -294,7 +294,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">338</context>
+          <context context-type="linenumber">358</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
@@ -310,7 +310,7 @@
         <target state="translated">Wil je deze rekening echt verwijderen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.ts</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8282940047848889809" datatype="html">
@@ -834,7 +834,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">280</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5047379499293213623" datatype="html">
@@ -842,7 +842,7 @@
         <target state="translated">Activiteiten beheren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="504959340312049745" datatype="html">
@@ -878,7 +878,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">327</context>
+          <context context-type="linenumber">332</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/user-account-registration-dialog/user-account-registration-dialog.html</context>
@@ -1098,7 +1098,7 @@
         <target state="translated">Allocatie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
@@ -1314,7 +1314,7 @@
         <target state="translated">Wil je deze aanmeldingsmethode echt verwijderen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
-          <context context-type="linenumber">326</context>
+          <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5186999845658578027" datatype="html">
@@ -1358,7 +1358,7 @@
         <target state="translated">Presentatie weergave</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="54566436799650845" datatype="html">
@@ -1366,7 +1366,7 @@
         <target state="translated">Basisvaluta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5463045633785723738" datatype="html">
@@ -1386,7 +1386,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">156</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9210529516601016341" datatype="html">
@@ -1394,7 +1394,7 @@
         <target state="translated">Datum- en getalnotatie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">158</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4558422042251216201" datatype="html">
@@ -1402,7 +1402,7 @@
         <target state="translated">Zen-modus</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">244</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -1414,7 +1414,7 @@
         <target state="translated">Aanmelden met vingerafdruk</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">257</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2128755808672960949" datatype="html">
@@ -1426,7 +1426,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">295</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
@@ -1494,7 +1494,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">410</context>
+          <context context-type="linenumber">409</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
@@ -1582,7 +1582,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">161</context>
         </context-group>
       </trans-unit>
       <trans-unit id="962765493084218985" datatype="html">
@@ -2153,6 +2153,10 @@
           <context context-type="linenumber">196</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">228</context>
         </context-group>
@@ -2190,7 +2194,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">305</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
@@ -2566,7 +2570,7 @@
         <target state="translated">Taal</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4190182554887994764" datatype="html">
@@ -2762,7 +2766,7 @@
         <target state="translated">Maandelijks</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6130372166370766747" datatype="html">
@@ -2802,7 +2806,7 @@
         <target state="translated">Angst</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -2814,7 +2818,7 @@
         <target state="translated">Hebzucht</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -2854,7 +2858,7 @@
         <target state="translated">Experimentele functies</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">278</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1931353503905413384" datatype="html">
@@ -2910,11 +2914,11 @@
         <target state="translated">Automatisch</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">82</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8664947843178872012" datatype="html">
@@ -2922,11 +2926,11 @@
         <target state="translated">Account Sluiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">358</context>
+          <context context-type="linenumber">363</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">366</context>
+          <context context-type="linenumber">371</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8671234314555525900" datatype="html">
@@ -2934,7 +2938,7 @@
         <target state="translated">Weergave</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4102764207131986196" datatype="html">
@@ -2950,7 +2954,7 @@
         <target state="translated">Licht</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">211</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3892161059518616136" datatype="html">
@@ -2958,7 +2962,7 @@
         <target state="translated">Donker</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="112783260724635106" datatype="html">
@@ -3350,7 +3354,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5957846001261659229" datatype="html">
@@ -3462,7 +3466,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -3606,7 +3610,7 @@
         <target state="translated">Jaarlijks</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="72640258012696878" datatype="html">
@@ -3706,7 +3710,7 @@
         <target state="translated">Bescherming voor gevoelige informatie zoals absoluut rendement en hoeveelheden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6337822466854281629" datatype="html">
@@ -3714,7 +3718,7 @@
         <target state="translated">Afleidingsvrije ervaring voor roerige tijden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">241</context>
+          <context context-type="linenumber">246</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6342682425862972636" datatype="html">
@@ -3730,7 +3734,7 @@
         <target state="translated">Voorproefje van nieuwe functionaliteit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">280</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5451369123952965511" datatype="html">
@@ -4217,6 +4221,14 @@
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="8308132509772582313" datatype="html">
+        <source>Adjust the rules below and set custom thresholds to align with a personal investment strategy.</source>
+        <target state="new">Adjust the rules below and set custom thresholds to align with a personal investment strategy.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="8319378030525016917" datatype="html">
         <source>Asset profile has been saved</source>
         <target state="translated">Het activaprofiel is opgeslagen.</target>
@@ -4426,7 +4438,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">317</context>
+          <context context-type="linenumber">337</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5003799027167349722" datatype="html">
@@ -4486,7 +4498,7 @@
         <target state="translated">Verwijder om veiligheidsredenen eerst alle activiteiten en rekeningen voordat uw Ghostfolio account kan worden gesloten.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">369</context>
+          <context context-type="linenumber">374</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8258520439439632724" datatype="html">
@@ -5034,7 +5046,7 @@
         <target state="translated">Biometrische authenticatie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3824165347269033834" datatype="html">
@@ -5126,7 +5138,7 @@
         <target state="translated">Exporteer Data</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="linenumber">310</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8298612418414367990" datatype="html">
@@ -6192,7 +6204,7 @@
         <target state="translated">Contant Saldo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1885119601668566713" datatype="html">
@@ -6220,7 +6232,7 @@
         <target state="translated">Als er een vertaling ontbreekt, kunt u ons helpen deze <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>here<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> uit te breiden.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4405333887341433096" datatype="html">
@@ -6228,7 +6240,7 @@
         <target state="translated">De huidige markt waarde is</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">853</context>
+          <context context-type="linenumber">854</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6563391987554512024" datatype="html">
@@ -6312,7 +6324,7 @@
         <target state="translated">Investering</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">109</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
@@ -6593,7 +6605,7 @@
         <target state="translated">Actief</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7860418101283165917" datatype="html">
@@ -6601,7 +6613,7 @@
         <target state="translated">Gesloten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5306473977542913614" datatype="html">
@@ -6693,7 +6705,7 @@
         <target state="translated">Wilt u uw Ghostfolio account echt sluiten?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">294</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4943376738492797606" datatype="html">
@@ -6709,7 +6721,7 @@
         <target state="translated">Gevarenzone</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">314</context>
+          <context context-type="linenumber">319</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4310394964982912017" datatype="html">
@@ -6717,7 +6729,7 @@
         <target state="translated">Account Sluiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">378</context>
+          <context context-type="linenumber">383</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4931386094893319473" datatype="html">
@@ -6760,12 +6772,20 @@
           <context context-type="linenumber">408</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="572144971466916440" datatype="html">
+        <source>Derived from the portfolio you are viewing</source>
+        <target state="new">Derived from the portfolio you are viewing</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="5724720497710437101" datatype="html">
         <source>Oops! There was an error setting up biometric authentication.</source>
         <target state="translated">Oeps! Er is een fout opgetreden met het instellen van de biometrische authenticatie.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
-          <context context-type="linenumber">375</context>
+          <context context-type="linenumber">413</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7215101881367554791" datatype="html">
@@ -6788,16 +6808,16 @@
         <source>Table</source>
         <target state="translated">Tabel</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.component.ts</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7798195225890418363" datatype="html">
         <source>Chart</source>
         <target state="translated">Grafiek</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.component.ts</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6494963320544261750" datatype="html">
@@ -6841,27 +6861,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">95</context>
+          <context context-type="linenumber">100</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
@@ -6869,19 +6885,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -6890,6 +6910,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">116</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1274567513688786374" datatype="html">
+        <source>Ghostfolio X-ray uses static analysis to uncover potential issues and risks in the portfolio.</source>
+        <target state="new">Ghostfolio X-ray uses static analysis to uncover potential issues and risks in the portfolio.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1284643802050750978" datatype="html">
@@ -7041,7 +7069,7 @@
         <target state="translated">Inactief</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2159130950882492111" datatype="html">
@@ -7562,14 +7590,6 @@
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5806117524908922510" datatype="html">
-        <source>Ghostfolio X-ray uses static analysis to uncover potential issues and risks in your portfolio. Adjust the rules below and set custom thresholds to align with your personal investment strategy.</source>
-        <target state="translated">Ghostfolio X-ray gebruikt statische analyse om potentiële problemen en risico’s in uw portefeuille te ontdekken. Pas de onderstaande regels aan en stel aangepaste drempelwaarden in die aansluiten bij uw persoonlijke beleggingsstrategie.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="5881876145178332550" datatype="html">
         <source>of</source>
         <target state="translated">van</target>
@@ -7675,15 +7695,15 @@
         <target state="translated">van</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="140710645823112071" datatype="html">
-        <source>rules align with your portfolio.</source>
-        <target state="translated">regels die aansluiten bij uw portefeuille.</target>
+      <trans-unit id="6923918313254424829" datatype="html">
+        <source>rules align with the portfolio.</source>
+        <target state="new">regels die aansluiten bij uw portefeuille.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3768927257183755959" datatype="html">
@@ -7791,7 +7811,7 @@
         <target state="translated">AI-prompt is naar het klembord gekopieerd</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">222</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1616747898909934803" datatype="html">
@@ -7879,7 +7899,7 @@
         <target state="translated">Open Duck.ai</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5674286808255988565" datatype="html">
@@ -8148,7 +8168,7 @@
         <target state="translated">Prestatieberekening</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="322229249598827754" datatype="html">
@@ -8265,16 +8285,16 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.over" datatype="html">
-        <source>The assets tagged as emergency fund exceed your emergency fund of ${emergencyFund} ${baseCurrency}</source>
-        <target state="new">The assets tagged as emergency fund exceed your emergency fund of ${emergencyFund} ${baseCurrency}</target>
+        <source>The assets tagged as emergency fund exceed the emergency fund of ${emergencyFund} ${baseCurrency}</source>
+        <target state="new">The assets tagged as emergency fund exceed the emergency fund of ${emergencyFund} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.under" datatype="html">
-        <source>Your emergency fund of ${emergencyFund} ${baseCurrency} is not covered</source>
-        <target state="new">Your emergency fund of ${emergencyFund} ${baseCurrency} is not covered</target>
+        <source>The emergency fund of ${emergencyFund} ${baseCurrency} is not covered</source>
+        <target state="new">The emergency fund of ${emergencyFund} ${baseCurrency} is not covered</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">151</context>
@@ -8289,8 +8309,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.true" datatype="html">
-        <source>Your emergency fund of ${emergencyFund} ${baseCurrency} is covered</source>
-        <target state="new">Your emergency fund of ${emergencyFund} ${baseCurrency} is covered</target>
+        <source>The emergency fund of ${emergencyFund} ${baseCurrency} is covered</source>
+        <target state="new">The emergency fund of ${emergencyFund} ${baseCurrency} is covered</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">158</context>
@@ -8329,16 +8349,16 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.false" datatype="html">
-        <source>The fees do exceed ${thresholdMax}% of your total investment volume (${feeRatio}%)</source>
-        <target state="translated">De kosten overschrijden ${thresholdMax}% van uw totale investeringsvolume (${feeRatio}%)</target>
+        <source>The fees do exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</source>
+        <target state="new">De kosten overschrijden ${thresholdMax}% van uw totale investeringsvolume (${feeRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.true" datatype="html">
-        <source>The fees do not exceed ${thresholdMax}% of your total investment volume (${feeRatio}%)</source>
-        <target state="translated">De kosten bedragen maximaal ${thresholdMax}% van uw totale investeringsvolume (${feeRatio}%)</target>
+        <source>The fees do not exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</source>
+        <target state="new">De kosten bedragen maximaal ${thresholdMax}% van uw totale investeringsvolume (${feeRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">174</context>
@@ -8385,16 +8405,16 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
-        <source>Your net worth is managed by a single account</source>
-        <target state="translated">Uw nettowaarde wordt beheerd door één enkele account</target>
+        <source>The net worth is managed by a single account</source>
+        <target state="new">Uw nettowaarde wordt beheerd door één enkele account</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
-        <source>Your net worth is managed by ${accountsLength} accounts</source>
-        <target state="translated">Uw nettowaarde wordt beheerd door ${accountsLength}-accounts</target>
+        <source>The net worth is managed by ${accountsLength} accounts</source>
+        <target state="new">Uw nettowaarde wordt beheerd door ${accountsLength}-accounts</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -8519,16 +8539,16 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false" datatype="html">
-        <source>Over ${thresholdMax}% of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%)</source>
-        <target state="translated">Meer dan ${thresholdMax}% van uw huidige investering bedraagt ​​${maxAccountName} (${maxInvestmentRatio}%)</target>
+        <source>Over ${thresholdMax}% of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%)</source>
+        <target state="new">Meer dan ${thresholdMax}% van uw huidige investering bedraagt ​​${maxAccountName} (${maxInvestmentRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.true" datatype="html">
-        <source>The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}%</source>
-        <target state="translated">Het grootste deel van uw huidige investering bedraagt ​​${maxAccountName} (${maxInvestmentRatio}%) en bedraagt ​​niet meer dan ${thresholdMax}%</target>
+        <source>The major part of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}%</source>
+        <target state="new">Het grootste deel van uw huidige investering bedraagt ​​${maxAccountName} (${maxInvestmentRatio}%) en bedraagt ​​niet meer dan ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">24</context>
@@ -8543,24 +8563,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
-        <source>The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De aandelenbijdrage van uw huidige investering (${equityValueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The equity contribution of the current investment (${equityValueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De aandelenbijdrage van uw huidige investering (${equityValueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
-        <source>The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De inbreng in eigen vermogen van uw huidige investering (${equityValueRatio}%) ligt onder de ${thresholdMin}%</target>
+        <source>The equity contribution of the current investment (${equityValueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De inbreng in eigen vermogen van uw huidige investering (${equityValueRatio}%) ligt onder de ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
-        <source>The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De aandelenbijdrage van uw huidige investering (${equityValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The equity contribution of the current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De aandelenbijdrage van uw huidige investering (${equityValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">51</context>
@@ -8575,24 +8595,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
-        <source>The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
-        <source>The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
-        <source>The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">66</context>
@@ -8607,16 +8627,16 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
-        <source>The major part of your current investment is not in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
-        <target state="translated">Het grootste deel van uw huidige investering staat niet in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency})</target>
+        <source>The major part of the current investment is not in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
+        <target state="new">Het grootste deel van uw huidige investering staat niet in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
-        <source>The major part of your current investment is in your base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
-        <target state="translated">Het grootste deel van uw huidige investering bevindt zich in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency})</target>
+        <source>The major part of the current investment is in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
+        <target state="new">Het grootste deel van uw huidige investering bevindt zich in uw basisvaluta (${baseCurrencyValueRatio}% in ${baseCurrency})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">92</context>
@@ -8631,16 +8651,16 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
-        <source>Over ${thresholdMax}% of your current investment is in ${currency} (${maxValueRatio}%)</source>
-        <target state="translated">Meer dan ${thresholdMax}% van uw huidige investering is in ${currency} (${maxValueRatio}%)</target>
+        <source>Over ${thresholdMax}% of the current investment is in ${currency} (${maxValueRatio}%)</source>
+        <target state="new">Meer dan ${thresholdMax}% van uw huidige investering is in ${currency} (${maxValueRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
-        <source>The major part of your current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}%</source>
-        <target state="translated">Het grootste deel van uw huidige investering is in ${currency} (${maxValueRatio}%) en overschrijdt ${thresholdMax}% niet</target>
+        <source>The major part of the current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}%</source>
+        <target state="new">Het grootste deel van uw huidige investering is in ${currency} (${maxValueRatio}%) en overschrijdt ${thresholdMax}% niet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">101</context>
@@ -8688,7 +8708,7 @@
         <target state="translated">Aandelen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -8700,7 +8720,7 @@
         <target state="translated">Cryptovaluta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -8808,24 +8828,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.min" datatype="html">
-        <source>Your buying power is below ${thresholdMin} ${baseCurrency}</source>
-        <target state="translated">Uw koopkracht ligt onder ${thresholdMin} ${baseCurrency}</target>
+        <source>The buying power is below ${thresholdMin} ${baseCurrency}</source>
+        <target state="new">Uw koopkracht ligt onder ${thresholdMin} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.zero" datatype="html">
-        <source>Your buying power is 0 ${baseCurrency}</source>
-        <target state="translated">Uw koopkracht is 0 ${baseCurrency}</target>
+        <source>The buying power is 0 ${baseCurrency}</source>
+        <target state="new">Uw koopkracht is 0 ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.true" datatype="html">
-        <source>Your buying power exceeds ${thresholdMin} ${baseCurrency}</source>
-        <target state="translated">Uw koopkracht overschrijdt ${thresholdMin} ${baseCurrency}</target>
+        <source>The buying power exceeds ${thresholdMin} ${baseCurrency}</source>
+        <target state="new">Uw koopkracht overschrijdt ${thresholdMin} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">80</context>
@@ -8856,24 +8876,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
-        <source>The developed markets contribution of your current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van ontwikkelde markten aan je huidige investering (${developedMarketsValueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van ontwikkelde markten aan je huidige investering (${developedMarketsValueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
-        <source>The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van ontwikkelde markten aan je huidige investering (${developedMarketsValueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van ontwikkelde markten aan je huidige investering (${developedMarketsValueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
-        <source>The developed markets contribution of your current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van ontwikkelde markten aan je huidige investering (${developedMarketsValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van ontwikkelde markten aan je huidige investering (${developedMarketsValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">122</context>
@@ -8888,24 +8908,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
-        <source>The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van opkomende markten aan je huidige investering (${emergingMarketsValueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van opkomende markten aan je huidige investering (${emergingMarketsValueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
-        <source>The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van opkomende markten aan je huidige investering (${emergingMarketsValueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van opkomende markten aan je huidige investering (${emergingMarketsValueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
-        <source>The emerging markets contribution of your current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van opkomende markten aan je huidige investering (${emergingMarketsValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van opkomende markten aan je huidige investering (${emergingMarketsValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">140</context>
@@ -8920,8 +8940,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false.invalid" datatype="html">
-        <source>Your net worth is managed by 0 accounts</source>
-        <target state="translated">Je nettovermogen wordt beheerd door 0 accounts</target>
+        <source>The net worth is managed by 0 accounts</source>
+        <target state="new">Je nettovermogen wordt beheerd door 0 accounts</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">33</context>
@@ -8936,24 +8956,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.max" datatype="html">
-        <source>The Asia-Pacific market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Azië-Pacific markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Azië-Pacific markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.min" datatype="html">
-        <source>The Asia-Pacific market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van de Azië-Pacific markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van de Azië-Pacific markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.true" datatype="html">
-        <source>The Asia-Pacific market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Azië-Pacific markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Azië-Pacific markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">191</context>
@@ -8968,24 +8988,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.max" datatype="html">
-        <source>The Emerging Markets contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de opkomende markten aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The Emerging Markets contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de opkomende markten aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.min" datatype="html">
-        <source>The Emerging Markets contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van de opkomende markten aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The Emerging Markets contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van de opkomende markten aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">203</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.true" datatype="html">
-        <source>The Emerging Markets contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de opkomende markten aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The Emerging Markets contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de opkomende markten aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">207</context>
@@ -9000,24 +9020,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.max" datatype="html">
-        <source>The Europe market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Europese markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The Europe market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Europese markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">213</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.min" datatype="html">
-        <source>The Europe market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van de Europese markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The Europe market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van de Europese markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.true" datatype="html">
-        <source>The Europe market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Europese markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The Europe market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Europese markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">221</context>
@@ -9032,24 +9052,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.max" datatype="html">
-        <source>The Japan market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Japanse markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The Japan market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Japanse markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.min" datatype="html">
-        <source>The Japan market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van de Japanse markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The Japan market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van de Japanse markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.true" datatype="html">
-        <source>The Japan market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Japanse markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The Japan market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Japanse markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">235</context>
@@ -9064,24 +9084,24 @@
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.max" datatype="html">
-        <source>The North America market contribution of your current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Noord-Amerikaanse markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
+        <source>The North America market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Noord-Amerikaanse markt aan je huidige investering (${valueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">241</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.min" datatype="html">
-        <source>The North America market contribution of your current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">De bijdrage van de Noord-Amerikaanse markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
+        <source>The North America market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
+        <target state="new">De bijdrage van de Noord-Amerikaanse markt aan je huidige investering (${valueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">245</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.true" datatype="html">
-        <source>The North America market contribution of your current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">De bijdrage van de Noord-Amerikaanse markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <source>The North America market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
+        <target state="new">De bijdrage van de Noord-Amerikaanse markt aan je huidige investering (${valueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">249</context>

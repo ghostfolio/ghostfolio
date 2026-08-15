@@ -9,6 +9,8 @@ export type AccountWithValue = AccountWithBalance & {
   dividendInBaseCurrency: number;
   interestInBaseCurrency: number;
   platform?: Platform;
+  /** Only set if the accounts are filtered by a single holding */
+  quantity?: number;
   tags?: Tag[];
   value: number;
   valueInBaseCurrency: number;

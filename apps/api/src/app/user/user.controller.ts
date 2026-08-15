@@ -1,15 +1,16 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
 import { decodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
-  HEADER_KEY_IMPERSONATION,
   THROTTLE_SIGNUP_LIMIT,
   THROTTLE_SIGNUP_TTL
 } from '@ghostfolio/common/config';
@@ -18,6 +19,7 @@ import {
   UpdateOwnAccessTokenDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
+import { isUserSettingOfAuthenticatedUser } from '@ghostfolio/common/helper';
 import {
   AccessTokenResponse,
   User,
@@ -25,7 +27,10 @@ import {
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type {
+  ImpersonationContext,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -51,11 +56,11 @@ import { merge, size } from 'lodash';
 
 import { UserService } from './user.service';
 
+@AllowDuringImpersonation()
 @Controller('user')
 export class UserController {
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly impersonationService: ImpersonationService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -119,18 +124,15 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getUser(
     @Headers('accept-language') acceptLanguage: string,
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
+    @Impersonation() { isActive, userId }: ImpersonationContext
   ): Promise<User> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
     return this.userService.getUser({
-      impersonationUserId,
+      impersonationUserId: isActive ? userId : undefined,
       locale: acceptLanguage?.split(',')?.[0],
       user: this.request.user
     });
@@ -167,9 +169,27 @@ export class UserController {
   }
 
   @Put('setting')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async updateUserSetting(@Body() data: UpdateUserSettingDto) {
+  public async updateUserSetting(
+    @Body() data: UpdateUserSettingDto,
+    @Impersonation() { isActive }: ImpersonationContext
+  ) {
+    if (
+      isActive &&
+      Object.keys(data).some((key) => {
+        return !isUserSettingOfAuthenticatedUser(key);
+      })
+    ) {
+      // While impersonating, only the settings which stay with the
+      // authenticated user can be changed, as the update is always written
+      // back to the authenticated user
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     if (
       size(data) === 1 &&
       (data.benchmark || data.dateRange) &&

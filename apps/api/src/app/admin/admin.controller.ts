@@ -1,3 +1,4 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -61,6 +62,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AdminService } from './admin.service';
 import { PropertyKeyPipe } from './pipes/property-key.pipe';
 
+@AllowDuringImpersonation()
 @Controller('admin')
 export class AdminController {
   private readonly logger = new Logger(AdminController.name);

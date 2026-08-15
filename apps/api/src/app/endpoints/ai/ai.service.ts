@@ -70,14 +70,12 @@ export class AiService {
 
   public async getPrompt({
     filters,
-    impersonationId,
     languageCode,
     mode,
     userCurrency,
     userId
   }: {
     filters?: Filter[];
-    impersonationId: string;
     languageCode: string;
     mode: AiPromptMode;
     userCurrency: string;
@@ -85,7 +83,6 @@ export class AiService {
   }) {
     const { holdings } = await this.portfolioService.getDetails({
       filters,
-      impersonationId,
       userId
     });
 
