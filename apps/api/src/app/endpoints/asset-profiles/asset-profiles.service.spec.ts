@@ -15,7 +15,7 @@ describe('AssetProfilesService', () => {
   let emit: jest.Mock;
   let finished: jest.Mock;
   let gatherSymbol: jest.Mock;
-  let getUserIdsByAssetProfile: jest.Mock;
+  let getUserIdsBySymbolProfileId: jest.Mock;
   let upsert: jest.Mock;
 
   beforeEach(() => {
@@ -23,11 +23,11 @@ describe('AssetProfilesService', () => {
     emit = jest.fn();
     finished = jest.fn().mockResolvedValue(undefined);
     gatherSymbol = jest.fn().mockResolvedValue([{ finished }]);
-    getUserIdsByAssetProfile = jest.fn().mockResolvedValue([]);
+    getUserIdsBySymbolProfileId = jest.fn().mockResolvedValue([]);
     upsert = jest.fn();
 
     assetProfilesService = new AssetProfilesService(
-      { getUserIdsByAssetProfile } as unknown as ActivitiesService,
+      { getUserIdsBySymbolProfileId } as unknown as ActivitiesService,
       {
         deleteById,
         upsert
@@ -73,7 +73,7 @@ describe('AssetProfilesService', () => {
 
     it('invalidates portfolio snapshots for users holding the asset', async () => {
       upsert.mockResolvedValue({} as AssetProfileSplit);
-      getUserIdsByAssetProfile.mockResolvedValue(['user-1', 'user-2']);
+      getUserIdsBySymbolProfileId.mockResolvedValue(['user-1', 'user-2']);
 
       await assetProfilesService.createSplit({
         dataSource: DataSource.YAHOO,
@@ -85,10 +85,7 @@ describe('AssetProfilesService', () => {
       });
       await flushPendingPromises();
 
-      expect(getUserIdsByAssetProfile).toHaveBeenCalledWith({
-        dataSource: DataSource.YAHOO,
-        symbol: 'AAPL'
-      });
+      expect(getUserIdsBySymbolProfileId).toHaveBeenCalledWith('profile-id');
       expect(emit.mock.calls.map(([, event]) => event.getUserId())).toEqual([
         'user-1',
         'user-2'
@@ -105,7 +102,7 @@ describe('AssetProfilesService', () => {
         })
       );
       upsert.mockResolvedValue({} as AssetProfileSplit);
-      getUserIdsByAssetProfile.mockResolvedValue(['user-1']);
+      getUserIdsBySymbolProfileId.mockResolvedValue(['user-1']);
 
       await assetProfilesService.createSplit({
         dataSource: DataSource.YAHOO,
@@ -148,7 +145,7 @@ describe('AssetProfilesService', () => {
 
     it('deletes an existing split using its profile scope', async () => {
       deleteById.mockResolvedValue(true);
-      getUserIdsByAssetProfile.mockResolvedValue(['user-1']);
+      getUserIdsBySymbolProfileId.mockResolvedValue(['user-1']);
 
       await expect(
         assetProfilesService.deleteSplit({

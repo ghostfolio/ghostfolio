@@ -984,17 +984,13 @@ export class ActivitiesService {
    * Returns the id of every user who has an activity for the given asset
    * profile, including draft activities and activities of excluded accounts
    */
-  public async getUserIdsByAssetProfile({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier): Promise<string[]> {
+  public async getUserIdsBySymbolProfileId(
+    symbolProfileId: string
+  ): Promise<string[]> {
     const activitiesByUser = await this.prismaService.order.groupBy({
       by: ['userId'],
       where: {
-        SymbolProfile: {
-          dataSource,
-          symbol
-        }
+        symbolProfileId
       }
     });
 

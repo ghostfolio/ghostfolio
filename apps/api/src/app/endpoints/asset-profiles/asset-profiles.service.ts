@@ -67,7 +67,8 @@ export class AssetProfilesService {
 
     await this.gatherSymbolAndEmitPortfolioChangedEvents({
       dataSource,
-      symbol
+      symbol,
+      symbolProfileId
     });
 
     return assetProfileSplit;
@@ -93,7 +94,8 @@ export class AssetProfilesService {
 
     await this.gatherSymbolAndEmitPortfolioChangedEvents({
       dataSource,
-      symbol
+      symbol,
+      symbolProfileId
     });
   }
 
@@ -438,14 +440,9 @@ export class AssetProfilesService {
     return assetProfile;
   }
 
-  private async emitPortfolioChangedEvents({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
-    const userIds = await this.activitiesService.getUserIdsByAssetProfile({
-      dataSource,
-      symbol
-    });
+  private async emitPortfolioChangedEvents(symbolProfileId: string) {
+    const userIds =
+      await this.activitiesService.getUserIdsBySymbolProfileId(symbolProfileId);
 
     for (const userId of userIds) {
       this.eventEmitter.emit(
@@ -463,8 +460,9 @@ export class AssetProfilesService {
    */
   private async gatherSymbolAndEmitPortfolioChangedEvents({
     dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
+    symbol,
+    symbolProfileId
+  }: { symbolProfileId: string } & AssetProfileIdentifier) {
     const jobs = await this.dataGatheringService.gatherSymbol({
       dataSource,
       symbol
@@ -475,7 +473,7 @@ export class AssetProfilesService {
         return job.finished();
       })
     ).then(() => {
-      return this.emitPortfolioChangedEvents({ dataSource, symbol });
+      return this.emitPortfolioChangedEvents(symbolProfileId);
     });
   }
 
