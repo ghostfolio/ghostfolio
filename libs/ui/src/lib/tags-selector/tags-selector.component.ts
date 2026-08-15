@@ -187,7 +187,7 @@ export class GfTagsSelectorComponent
       return null;
     }
 
-    const isTagNameTaken = [
+    const isExistingTagName = [
       ...(this.tagsAvailable ?? []),
       ...(this.tagsReadOnly ?? []),
       ...(this.tagsSelected() ?? [])
@@ -195,7 +195,7 @@ export class GfTagsSelectorComponent
       return tag.name.toLowerCase() === name.toLowerCase();
     });
 
-    return isTagNameTaken ? null : name;
+    return isExistingTagName ? null : name;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
