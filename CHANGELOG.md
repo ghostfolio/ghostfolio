@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated the `permissions` attribute of the access in favor of the scopes
 - Extended the `GET api/v1/access` endpoint by the scopes
 - Extended the `GET api/v1/user` endpoint by the scopes
+- Improved the performance of deleting activities by loading only the required data
+
+### Fixed
+
+- Fixed the incorrect error log output when deleting activities
 
 ### Fixed
 
