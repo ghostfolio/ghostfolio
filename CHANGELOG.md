@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the `GET api/v1/access` endpoint by the scopes
 - Extended the `GET api/v1/user` endpoint by the scopes
 
+### Fixed
+
+- Fixed the missing currency conversion of the dividends on the analysis page
+
 ## 3.51.0 - 2026-08-14
 
 ### Changed
