@@ -2,8 +2,6 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
-import { ScopeGuard } from '@ghostfolio/api/guards/scope.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { CreateWatchlistItemDto } from '@ghostfolio/common/dtos';
@@ -86,12 +84,6 @@ export class WatchlistController {
   @Get()
   @HasPermission(permissions.readWatchlist)
   @RequiresScope(scopes.watchlistRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getWatchlistItems(
     @Impersonation() { userId }: ImpersonationContext

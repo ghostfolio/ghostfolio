@@ -2,8 +2,6 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
-import { ScopeGuard } from '@ghostfolio/api/guards/scope.guard';
 import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -124,12 +122,6 @@ export class ActivitiesController {
 
   @Get()
   @RequiresScope(scopes.activityRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
@@ -187,12 +179,6 @@ export class ActivitiesController {
 
   @Get(':id')
   @RequiresScope(scopes.activityRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getActivityById(

@@ -84,22 +84,29 @@ describe('Scopes', () => {
   });
 
   describe('Get scopes of own access', () => {
+    // A new scope has to be added here deliberately to confirm that it is
+    // granted to the owner of the data
     it('Covers every scope', () => {
-      expect(getScopesOfOwnAccess()).toEqual(Object.values(scopes));
+      expect(getScopesOfOwnAccess()).toEqual([
+        scopes.accountRead,
+        scopes.activityRead,
+        scopes.portfolioRead,
+        scopes.portfolioReadValues,
+        scopes.watchlistRead
+      ]);
     });
   });
 
   describe('Get scopes of unrestricted impersonation', () => {
-    it('Excludes the monetary values', () => {
-      expect(getScopesOfUnrestrictedImpersonation()).not.toContain(
-        scopes.portfolioReadValues
-      );
-    });
-
-    it('Allows reading the portfolio', () => {
-      expect(getScopesOfUnrestrictedImpersonation()).toContain(
-        scopes.portfolioRead
-      );
+    // A new scope has to be added here deliberately to confirm that it is
+    // granted to an administrator impersonating an arbitrary user
+    it('Covers every scope but the monetary values', () => {
+      expect(getScopesOfUnrestrictedImpersonation()).toEqual([
+        scopes.accountRead,
+        scopes.activityRead,
+        scopes.portfolioRead,
+        scopes.watchlistRead
+      ]);
     });
   });
 

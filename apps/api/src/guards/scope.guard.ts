@@ -1,5 +1,5 @@
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
-import { hasScope } from '@ghostfolio/common/scopes';
+import { hasScope, Scope } from '@ghostfolio/common/scopes';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -14,14 +14,14 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 /**
  * Denies a request whose impersonation context does not cover the scopes
  * required by the route. It has to be applied after the ImpersonationGuard,
- * which resolves the context.
+ * which resolves the context, hence the RequiresScope decorator applies both.
  */
 @Injectable()
 export class ScopeGuard implements CanActivate {
   public constructor(private readonly reflector: Reflector) {}
 
   public canActivate(context: ExecutionContext): boolean {
-    const requiredScopes = this.reflector.getAllAndOverride<string[]>(
+    const requiredScopes = this.reflector.getAllAndOverride<Scope[]>(
       REQUIRES_SCOPE_KEY,
       [context.getHandler(), context.getClass()]
     );

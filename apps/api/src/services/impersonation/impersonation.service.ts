@@ -59,21 +59,6 @@ export class ImpersonationService {
     };
   }
 
-  public async validateImpersonationId({
-    impersonationId,
-    user
-  }: {
-    impersonationId?: string;
-    user?: UserWithSettings;
-  }) {
-    const { userId } = await this.validateImpersonation({
-      impersonationId,
-      user
-    });
-
-    return userId;
-  }
-
   private async validateImpersonation({
     impersonationId,
     user

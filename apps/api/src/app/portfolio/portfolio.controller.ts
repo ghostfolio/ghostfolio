@@ -3,8 +3,6 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
-import { ScopeGuard } from '@ghostfolio/api/guards/scope.guard';
 import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
@@ -73,12 +71,6 @@ export class PortfolioController {
 
   @Get('details')
   @RequiresScope(scopes.portfolioRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
@@ -320,12 +312,6 @@ export class PortfolioController {
 
   @Get('dividends')
   @RequiresScope(scopes.portfolioRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getDividends(
     @Impersonation()
@@ -402,12 +388,6 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @RequiresScope(scopes.portfolioRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   public async getHolding(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('dataSource') dataSource: DataSource,
@@ -431,12 +411,6 @@ export class PortfolioController {
 
   @Get('holdings')
   @RequiresScope(scopes.portfolioRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
@@ -475,12 +449,6 @@ export class PortfolioController {
 
   @Get('investments')
   @RequiresScope(scopes.portfolioRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getInvestments(
     @Impersonation()
@@ -553,12 +521,6 @@ export class PortfolioController {
 
   @Get('performance')
   @RequiresScope(scopes.portfolioRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(PerformanceLoggingInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
@@ -670,12 +632,6 @@ export class PortfolioController {
 
   @Get('report')
   @RequiresScope(scopes.portfolioRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   public async getReport(
     @Impersonation()
     { scopes: impersonationScopes, userId }: ImpersonationContext

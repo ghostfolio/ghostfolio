@@ -229,7 +229,6 @@ export class GfUserAccountAccessComponent implements OnInit {
           grantee: access.grantee === 'Public' ? undefined : access.grantee,
           id: access.id,
           permissions: access.permissions,
-          scopes: access.scopes,
           settings: access.settings,
           type: access.type
         }

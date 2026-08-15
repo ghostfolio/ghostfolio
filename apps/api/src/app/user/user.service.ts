@@ -287,7 +287,6 @@ export class UserService {
             activities: true
           }
         },
-        accessesGet: true,
         accounts: {
           include: { platform: true }
         },
@@ -304,7 +303,6 @@ export class UserService {
 
     const {
       _count,
-      accessesGet,
       accessToken,
       accounts,
       analytics,
@@ -322,7 +320,6 @@ export class UserService {
     const activitiesCount = _count?.activities ?? 0;
 
     const user: UserWithSettings = {
-      accessesGet,
       accessToken,
       accounts,
       authChallenge,

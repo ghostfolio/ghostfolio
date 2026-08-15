@@ -14,34 +14,30 @@ export const scopes = {
   watchlistRead: 'watchlist:read'
 } as const;
 
-const SCOPES_OF_PUBLIC_ACCESS: string[] = [
+export type Scope = (typeof scopes)[keyof typeof scopes];
+
+const SCOPES_OF_PUBLIC_ACCESS: Scope[] = [
   scopes.activityRead,
   scopes.portfolioRead
 ];
 
-const SCOPES_OF_READ_RESTRICTED_ACCESS = [
-  scopes.accountRead,
-  scopes.activityRead,
-  scopes.portfolioRead,
-  scopes.watchlistRead
-];
+const SCOPES_OF_READ_ACCESS = Object.values(scopes);
 
-const SCOPES_OF_READ_ACCESS = [
-  ...SCOPES_OF_READ_RESTRICTED_ACCESS,
-  scopes.portfolioReadValues
-];
+const SCOPES_OF_READ_RESTRICTED_ACCESS = SCOPES_OF_READ_ACCESS.filter(
+  (scope) => {
+    return scope !== scopes.portfolioReadValues;
+  }
+);
 
 export function getScopesOfAccess({
   granteeUserId,
   permissions,
-  scopes
+  scopes: scopesOfAccess
 }: {
   granteeUserId?: string | null;
   permissions?: AccessPermission[];
   scopes?: string[];
 }): string[] {
-  let scopesOfAccess = scopes;
-
   if (!scopesOfAccess?.length) {
     // TODO: Remove the derivation from the permissions once they have been
     // dropped from the access
@@ -51,13 +47,13 @@ export function getScopesOfAccess({
   }
 
   if (granteeUserId) {
-    return scopesOfAccess;
+    return [...scopesOfAccess];
   }
 
   // An access which has not been granted to a user is public, hence it is
   // narrowed to the scopes exposed by the public endpoints
-  return scopesOfAccess.filter((scope) => {
-    return SCOPES_OF_PUBLIC_ACCESS.includes(scope);
+  return SCOPES_OF_PUBLIC_ACCESS.filter((scope) => {
+    return scopesOfAccess.includes(scope);
   });
 }
 
@@ -74,9 +70,9 @@ export function getScopesOfOwnAccess(): string[] {
  * the monetary values
  */
 export function getScopesOfUnrestrictedImpersonation(): string[] {
-  return SCOPES_OF_READ_RESTRICTED_ACCESS;
+  return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
 }
 
-export function hasScope(aScopes: string[] = [], aScope: string) {
+export function hasScope(aScopes: string[] = [], aScope: Scope) {
   return aScopes.includes(aScope);
 }

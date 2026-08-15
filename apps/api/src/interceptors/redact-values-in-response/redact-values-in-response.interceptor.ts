@@ -28,8 +28,9 @@ export class RedactValuesInResponseInterceptor<T> implements NestInterceptor<
           .switchToHttp()
           .getRequest<RequestWithUser>();
 
-        // A missing impersonation context originates from a public request,
-        // which must not expose any monetary value
+        // A missing impersonation context originates from a public request or
+        // from a route without the ImpersonationGuard, hence the monetary
+        // values are redacted to never expose them unintentionally
         if (
           !hasScope(impersonation?.scopes, scopes.portfolioReadValues) ||
           isRestrictedView(user)

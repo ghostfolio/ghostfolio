@@ -4,8 +4,6 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
-import { ScopeGuard } from '@ghostfolio/api/guards/scope.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
@@ -88,12 +86,6 @@ export class AccountController {
 
   @Get()
   @RequiresScope(scopes.accountRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getAllAccounts(
@@ -117,12 +109,6 @@ export class AccountController {
 
   @Get(':id')
   @RequiresScope(scopes.accountRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
     @Impersonation() { userId }: ImpersonationContext,
@@ -140,12 +126,6 @@ export class AccountController {
 
   @Get(':id/balances')
   @RequiresScope(scopes.accountRead)
-  @UseGuards(
-    AuthGuard('jwt'),
-    HasPermissionGuard,
-    ImpersonationGuard,
-    ScopeGuard
-  )
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountBalancesById(
     @Impersonation() { userId, userSettings }: ImpersonationContext,
