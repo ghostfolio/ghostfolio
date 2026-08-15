@@ -117,8 +117,13 @@ export class GfMarketsComponent implements OnInit {
     this.dataService
       .fetchBenchmarks()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ benchmarks }) => {
-        this.benchmarks.set(benchmarks);
+      .subscribe({
+        error: () => {
+          this.benchmarks.set([]);
+        },
+        next: ({ benchmarks }) => {
+          this.benchmarks.set(benchmarks);
+        }
       });
   }
 
