@@ -23,11 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the incorrect error log output when deleting activities
-
-### Fixed
-
 - Fixed the missing currency conversion of the dividends on the analysis page
+- Fixed the incorrect error log output when deleting activities
 
 ## 3.51.0 - 2026-08-14
 
