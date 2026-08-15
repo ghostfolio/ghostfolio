@@ -256,6 +256,9 @@ export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
 export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
 
+export const HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED =
+  'The impersonation identifier cannot be resolved';
+
 export const MAX_TOP_HOLDINGS = 50;
 
 export const NUMERICAL_PRECISION_THRESHOLD_3_FIGURES = 100;

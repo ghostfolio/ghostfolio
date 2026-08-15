@@ -18,10 +18,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
-import type {
-  ImpersonationContext,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -29,14 +26,12 @@ import {
   Delete,
   Get,
   HttpException,
-  Inject,
   Param,
   Post,
   Put,
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -51,8 +46,7 @@ export class ActivitiesController {
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
-    private readonly dataGatheringService: DataGatheringService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly dataGatheringService: DataGatheringService
   ) {}
 
   @Delete()
@@ -216,7 +210,12 @@ export class ActivitiesController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createActivity(
     @Body() data: CreateOrderDto,
-    @Impersonation() { userId, userSubscription }: ImpersonationContext
+    @Impersonation()
+    {
+      authenticatedUserSubscription,
+      userId,
+      userSubscription
+    }: ImpersonationContext
   ): Promise<Order> {
     // A premium data source requires the subscription of the authenticated
     // user and the subscription of the owner of the activity, hence the more
@@ -224,7 +223,7 @@ export class ActivitiesController {
     const subscription =
       userSubscription?.type === SubscriptionType.Basic
         ? userSubscription
-        : this.request.user.subscription;
+        : authenticatedUserSubscription;
 
     try {
       await this.dataProviderService.validateActivities({

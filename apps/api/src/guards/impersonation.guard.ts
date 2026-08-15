@@ -1,5 +1,8 @@
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  HEADER_KEY_IMPERSONATION,
+  HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED
+} from '@ghostfolio/common/config';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -35,8 +38,13 @@ export class ImpersonationGuard implements CanActivate {
     });
 
     if (impersonationId && !request.impersonation.isActive) {
+      // The message is distinct from any other forbidden response, so that the
+      // client can remove the stale identifier instead of failing every request
       throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
+        {
+          error: getReasonPhrase(StatusCodes.FORBIDDEN),
+          message: HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED
+        },
         StatusCodes.FORBIDDEN
       );
     }

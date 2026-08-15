@@ -37,6 +37,7 @@ export class ImpersonationService {
 
     if (!impersonatedUserId) {
       return {
+        authenticatedUserSubscription: user?.subscription,
         isActive: false,
         scopes: getScopesOfOwnAccess(),
         userId: user?.id,
@@ -58,6 +59,7 @@ export class ImpersonationService {
 
     return {
       accessId: impersonationId,
+      authenticatedUserSubscription: user?.subscription,
       isActive: true,
       // An access which has not been granted explicitly originates from the
       // permission to impersonate all users

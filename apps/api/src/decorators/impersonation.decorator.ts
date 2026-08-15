@@ -3,7 +3,11 @@ import type {
   RequestWithUser
 } from '@ghostfolio/common/types';
 
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  InternalServerErrorException
+} from '@nestjs/common';
 
 /**
  * Provides the impersonation context of the request, which the
@@ -18,7 +22,7 @@ export const Impersonation = createParamDecorator(
       .getRequest<RequestWithUser>();
 
     if (!impersonation) {
-      throw new Error(
+      throw new InternalServerErrorException(
         'The impersonation context is missing. Apply the RequiresScope decorator or the ImpersonationGuard to the route.'
       );
     }

@@ -1,4 +1,5 @@
 import {
+  SCOPES_OF_READ_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
   getScopesOfAccess,
   getScopesOfOwnAccess,
@@ -8,9 +9,23 @@ import {
 } from '@ghostfolio/common/scopes';
 
 describe('Scopes', () => {
+  describe('Scopes of read access', () => {
+    // A new scope which reads data has to be added here deliberately, because
+    // an access with the permission to read receives this list
+    it('Covers every read scope', () => {
+      expect(SCOPES_OF_READ_ACCESS).toEqual([
+        scopes.accountRead,
+        scopes.activityRead,
+        scopes.portfolioRead,
+        scopes.portfolioReadValues,
+        scopes.watchlistRead
+      ]);
+    });
+  });
+
   describe('Scopes of write access', () => {
     // A new scope which changes data has to be added here deliberately,
-    // because the read scopes are derived by the exclusion of this list
+    // because the ImpersonationWriteGuard blocks the writes it does not cover
     it('Covers every write scope', () => {
       expect(SCOPES_OF_WRITE_ACCESS).toEqual([
         scopes.accountCreate,
@@ -22,6 +37,20 @@ describe('Scopes', () => {
         scopes.watchlistCreate,
         scopes.watchlistDelete
       ]);
+    });
+  });
+
+  describe('Scopes of read and write access', () => {
+    // A new scope has to belong to exactly one of the two lists. A scope which
+    // belongs to neither list is granted to nobody, and a write scope which is
+    // missing from SCOPES_OF_WRITE_ACCESS is granted to every read access.
+    it('Cover every scope exactly once', () => {
+      const scopesOfReadAndWriteAccess = [
+        ...SCOPES_OF_READ_ACCESS,
+        ...SCOPES_OF_WRITE_ACCESS
+      ].sort();
+
+      expect(scopesOfReadAndWriteAccess).toEqual(Object.values(scopes).sort());
     });
   });
 

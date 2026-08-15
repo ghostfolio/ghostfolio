@@ -1,3 +1,4 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
@@ -203,6 +204,9 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
@@ -586,10 +590,12 @@ export class GfHoldingDetailDialogComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOwnTag = hasPermission(
-            this.user?.permissions,
-            permissions.createOwnTag
-          );
+          // A tag created during an impersonation belongs to the authenticated
+          // user, hence it cannot be assigned to the data of the impersonated
+          // user
+          this.hasPermissionToCreateOwnTag =
+            !this.impersonationStorageService.getId() &&
+            hasPermission(this.user?.permissions, permissions.createOwnTag);
 
           this.tagsAvailable =
             this.user?.tags

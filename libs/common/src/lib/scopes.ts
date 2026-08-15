@@ -25,10 +25,20 @@ export const scopes = {
 export type Scope = (typeof scopes)[keyof typeof scopes];
 
 /**
- * Scopes which change data. A new one has to be added here, so that the
- * ImpersonationWriteGuard keeps blocking the writes it does not cover.
+ * Scopes which read data
  */
-export const SCOPES_OF_WRITE_ACCESS: Scope[] = [
+export const SCOPES_OF_READ_ACCESS: readonly Scope[] = [
+  scopes.accountRead,
+  scopes.activityRead,
+  scopes.portfolioRead,
+  scopes.portfolioReadValues,
+  scopes.watchlistRead
+];
+
+/**
+ * Scopes which change data
+ */
+export const SCOPES_OF_WRITE_ACCESS: readonly Scope[] = [
   scopes.accountCreate,
   scopes.accountDelete,
   scopes.accountUpdate,
@@ -39,20 +49,15 @@ export const SCOPES_OF_WRITE_ACCESS: Scope[] = [
   scopes.watchlistDelete
 ];
 
-const SCOPES_OF_PUBLIC_ACCESS: Scope[] = [
+const SCOPES_OF_PUBLIC_ACCESS: readonly Scope[] = [
   scopes.activityRead,
   scopes.portfolioRead
 ];
 
-const SCOPES_OF_READ_ACCESS: Scope[] = Object.values(scopes).filter((scope) => {
-  return !SCOPES_OF_WRITE_ACCESS.includes(scope);
-});
-
-const SCOPES_OF_READ_RESTRICTED_ACCESS: Scope[] = SCOPES_OF_READ_ACCESS.filter(
-  (scope) => {
+const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
+  SCOPES_OF_READ_ACCESS.filter((scope) => {
     return scope !== scopes.portfolioReadValues;
-  }
-);
+  });
 
 export function getScopesOfAccess({
   granteeUserId,
@@ -63,22 +68,24 @@ export function getScopesOfAccess({
   permissions?: AccessPermission[];
   scopes?: string[];
 }): string[] {
-  if (!scopesOfAccess?.length) {
+  let scopesToEvaluate: readonly string[] = scopesOfAccess ?? [];
+
+  if (!scopesToEvaluate.length) {
     // TODO: Remove the derivation from the permissions once they have been
     // dropped from the access
-    scopesOfAccess = permissions?.includes('READ')
+    scopesToEvaluate = permissions?.includes('READ')
       ? SCOPES_OF_READ_ACCESS
       : SCOPES_OF_READ_RESTRICTED_ACCESS;
   }
 
   if (granteeUserId) {
-    return [...scopesOfAccess];
+    return [...scopesToEvaluate];
   }
 
   // An access which has not been granted to a user is public, hence it is
   // narrowed to the scopes exposed by the public endpoints
   return SCOPES_OF_PUBLIC_ACCESS.filter((scope) => {
-    return scopesOfAccess.includes(scope);
+    return scopesToEvaluate.includes(scope);
   });
 }
 

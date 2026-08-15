@@ -1,10 +1,14 @@
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  HEADER_KEY_IMPERSONATION,
+  HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED
+} from '@ghostfolio/common/config';
 import { getScopesOfOwnAccess, scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import { HttpException } from '@nestjs/common';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
+import { StatusCodes } from 'http-status-codes';
 
 import { ImpersonationGuard } from './impersonation.guard';
 
@@ -73,5 +77,22 @@ describe('Impersonation guard', () => {
     });
 
     await expect(guard.canActivate(context)).rejects.toThrow(HttpException);
+  });
+
+  // The client relies on this message to remove the stale identifier
+  it('Denies an identifier which cannot be resolved with a distinct message', async () => {
+    const { context } = createExecutionContext('a-revoked-access-id');
+
+    const guard = createGuard({
+      userId,
+      isActive: false,
+      scopes: getScopesOfOwnAccess(),
+      userSettings: {}
+    });
+
+    await expect(guard.canActivate(context)).rejects.toMatchObject({
+      response: { message: HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED },
+      status: StatusCodes.FORBIDDEN
+    });
   });
 });
