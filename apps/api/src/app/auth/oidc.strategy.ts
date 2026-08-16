@@ -15,9 +15,9 @@ import { OidcStateStore } from './oidc-state.store';
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
-  private readonly logger = new Logger(OidcStrategy.name);
-
   private static readonly stateStore = new OidcStateStore();
+
+  private readonly logger = new Logger(OidcStrategy.name);
 
   public constructor(
     private readonly authService: AuthService,
@@ -48,11 +48,6 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         params?.sub ??
         context?.claims?.sub;
 
-      const jwt = await this.authService.validateOAuthLogin({
-        thirdPartyId,
-        provider: Provider.OIDC
-      });
-
       if (!thirdPartyId) {
         this.logger.error(
           `Missing subject identifier in OIDC response from ${issuer}`
@@ -60,6 +55,11 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
 
         throw new Error('Missing subject identifier in OIDC response');
       }
+
+      const jwt = await this.authService.validateOAuthLogin({
+        thirdPartyId,
+        provider: Provider.OIDC
+      });
 
       return { jwt };
     } catch (error) {
