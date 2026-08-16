@@ -20,7 +20,6 @@
     "strictTemplates": false
   },
   "compilerOptions": {
-    "lib": ["dom", "es2022"],
     "module": "preserve",
     "strictNullChecks": true
   }

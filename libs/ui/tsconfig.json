@@ -14,7 +14,6 @@
     }
   ],
   "compilerOptions": {
-    "lib": ["dom", "es2022"],
     "module": "preserve",
     "target": "es2021",
     // TODO: Remove once solved in tsconfig.base.json
