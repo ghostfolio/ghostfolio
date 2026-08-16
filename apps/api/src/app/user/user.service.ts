@@ -53,6 +53,7 @@ import {
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
+import { getScopesOfAccess } from '@ghostfolio/common/scopes';
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -115,10 +116,12 @@ export class UserService {
   public async getUser({
     impersonationUserId,
     locale = DEFAULT_LOCALE,
+    scopes,
     user
   }: {
     impersonationUserId: string;
     locale?: string;
+    scopes: string[];
     user: UserWithSettings;
   }): Promise<IUser> {
     const { id, permissions, settings, subscription } = user;
@@ -209,6 +212,7 @@ export class UserService {
       id,
       permissions,
       referralPartners,
+      scopes,
       subscription,
       systemMessage,
       tags,
@@ -216,7 +220,8 @@ export class UserService {
         return {
           alias: accessItem.alias,
           id: accessItem.id,
-          permissions: accessItem.permissions
+          permissions: accessItem.permissions,
+          scopes: getScopesOfAccess(accessItem)
         };
       }),
       accounts: accounts.sort((a, b) => {
@@ -285,7 +290,6 @@ export class UserService {
             activities: true
           }
         },
-        accessesGet: true,
         accounts: {
           include: { platform: true }
         },
@@ -302,7 +306,6 @@ export class UserService {
 
     const {
       _count,
-      accessesGet,
       accessToken,
       accounts,
       analytics,
@@ -320,7 +323,6 @@ export class UserService {
     const activitiesCount = _count?.activities ?? 0;
 
     const user: UserWithSettings = {
-      accessesGet,
       accessToken,
       accounts,
       authChallenge,

@@ -14,7 +14,9 @@ model Access {
   granteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
   granteeUserId String?
   id            String             @id @default(uuid())
+  /// @deprecated Use the scopes instead
   permissions   AccessPermission[] @default([READ_RESTRICTED])
+  scopes        String[]           @default([])
   settings      Json               @default("{}")
   updatedAt     DateTime           @updatedAt
   userId        String
@@ -195,6 +197,7 @@ model Order {
 
   @@index([accountId])
   @@index([date])
+  @@index([symbolProfileId])
   @@index([type])
   @@index([userId])
 }

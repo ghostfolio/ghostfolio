@@ -247,15 +247,18 @@ export class GfUserAccountAccessComponent implements OnInit {
   }
 
   private update() {
-    this.accessesGet = this.user.access.map(({ alias, id, permissions }) => {
-      return {
-        id,
-        permissions,
-        alias: alias ?? '',
-        grantee: $localize`Me`,
-        type: 'PRIVATE'
-      };
-    });
+    this.accessesGet = this.user.access.map(
+      ({ alias, id, permissions, scopes }) => {
+        return {
+          id,
+          permissions,
+          scopes,
+          alias: alias ?? '',
+          grantee: $localize`Me`,
+          type: 'PRIVATE'
+        };
+      }
+    );
 
     this.dataService
       .fetchAccesses()

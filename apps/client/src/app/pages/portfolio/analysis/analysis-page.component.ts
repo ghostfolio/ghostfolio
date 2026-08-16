@@ -1,6 +1,5 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
 import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
@@ -15,11 +14,8 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import {
-  hasPermission,
-  hasReadRestrictedAccessPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import type {
   AiPromptMode,
   GroupBy,
@@ -88,7 +84,6 @@ export class GfAnalysisPageComponent implements OnInit {
   protected dividendsByGroup: InvestmentItem[];
   protected readonly dividendTimelineDataLabel = $localize`Dividend`;
   protected hasPermissionToReadAiPrompt: boolean;
-  protected impersonationId: string | null;
   protected investments: InvestmentItem[];
   protected readonly investmentTimelineDataLabel = $localize`Invested Capital`;
   protected investmentsByGroup: InvestmentItem[];
@@ -126,9 +121,6 @@ export class GfAnalysisPageComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly impersonationStorageService = inject(
-    ImpersonationStorageService
-  );
   private readonly snackBar = inject(MatSnackBar);
   private readonly userService = inject(UserService);
 
@@ -150,15 +142,6 @@ export class GfAnalysisPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((impersonationId) => {
-        this.impersonationId = impersonationId;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
@@ -247,10 +230,8 @@ export class GfAnalysisPageComponent implements OnInit {
 
   protected showValuesInPercentage() {
     return (
-      hasReadRestrictedAccessPermission({
-        accesses: this.user?.access,
-        impersonationId: this.impersonationId
-      }) || this.user?.settings?.isRestrictedView
+      !hasScope(this.user?.scopes, scopes.portfolioReadValues) ||
+      this.user?.settings?.isRestrictedView
     );
   }
 

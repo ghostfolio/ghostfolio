@@ -17,11 +17,8 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import {
-  hasPermission,
-  hasReadRestrictedAccessPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
@@ -229,10 +226,8 @@ export class GfAllocationsPageComponent implements OnInit {
 
   protected showValuesInPercentage() {
     return (
-      hasReadRestrictedAccessPermission({
-        accesses: this.user?.access,
-        impersonationId: this.impersonationId
-      }) || this.user?.settings?.isRestrictedView
+      !hasScope(this.user?.scopes, scopes.portfolioReadValues) ||
+      this.user?.settings?.isRestrictedView
     );
   }
 

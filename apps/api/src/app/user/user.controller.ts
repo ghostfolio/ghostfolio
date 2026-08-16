@@ -129,9 +129,10 @@ export class UserController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getUser(
     @Headers('accept-language') acceptLanguage: string,
-    @Impersonation() { isActive, userId }: ImpersonationContext
+    @Impersonation() { isActive, scopes, userId }: ImpersonationContext
   ): Promise<User> {
     return this.userService.getUser({
+      scopes,
       impersonationUserId: isActive ? userId : undefined,
       locale: acceptLanguage?.split(',')?.[0],
       user: this.request.user

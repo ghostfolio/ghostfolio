@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed the internal server error on a failed social login by redirecting to the login page
+
+## 3.52.0 - 2026-08-15
+
+### Added
+
+- Added the business logic and tests for stock splits of an asset profile (experimental)
+- Added the scopes to the access
+- Added an index for `symbolProfileId` to the order database table
+
+### Changed
+
+- Restricted the creation of tags to unique names in the tags selector component
+- Changed the redaction of the monetary values in impersonation mode to be based on the scopes of the access
+- Deprecated the `permissions` attribute of the access in favor of the scopes
+- Extended the `GET api/v1/access` endpoint by the scopes
+- Extended the `GET api/v1/user` endpoint by the scopes
+- Improved the performance of deleting activities by loading only the required data
+
+### Fixed
+
+- Fixed the missing currency conversion of the dividends on the analysis page
+- Fixed the missing error state in the watchlist
+- Fixed the missing loading indicator in the benchmarks of the markets overview
+- Fixed the incorrect error log output when deleting activities
+
 ## 3.51.0 - 2026-08-14
 
 ### Changed

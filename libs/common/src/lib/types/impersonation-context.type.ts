@@ -8,6 +8,7 @@ import { UserSettings } from '@ghostfolio/common/interfaces';
 export interface ImpersonationContext {
   accessId?: string;
   isActive: boolean;
+  scopes: string[];
   userId: string;
   userSettings: UserSettings;
 }
