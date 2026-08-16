@@ -99,6 +99,11 @@ export class WebAuthService {
   ): Promise<AuthDeviceDto> {
     const user = this.request.user;
     const expectedChallenge = user.authChallenge;
+
+    if (!expectedChallenge) {
+      throw new Error('Missing authentication challenge');
+    }
+
     let verification: VerifiedRegistrationResponse;
 
     try {
@@ -213,7 +218,7 @@ export class WebAuthService {
           id: isoBase64URL.fromBuffer(device.credentialId),
           publicKey: device.credentialPublicKey
         },
-        expectedChallenge: `${user.authChallenge}`,
+        expectedChallenge: `${user?.authChallenge}`,
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID,
         requireUserVerification: false,
@@ -243,7 +248,7 @@ export class WebAuthService {
       });
 
       return this.jwtService.sign({
-        id: user.id
+        id: user?.id
       });
     }
 
