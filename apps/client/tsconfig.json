@@ -22,7 +22,6 @@
   "compilerOptions": {
     "lib": ["dom", "es2022"],
     "module": "preserve",
-    "strictNullChecks": true,
-    "target": "es2020"
+    "strictNullChecks": true
   }
 }
