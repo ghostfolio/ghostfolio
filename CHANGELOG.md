@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `angular` from version `21.2.7` to `21.2.19`
+
 ### Fixed
 
 - Fixed the internal server error on a failed social login by redirecting to the login page
