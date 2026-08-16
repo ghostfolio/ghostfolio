@@ -89,6 +89,18 @@ export const personalFinanceTools: Product[] = [
     url: 'https://amsflow.com'
   },
   {
+    categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
+    founded: 2025,
+    hasFreePlan: true,
+    key: 'anantys',
+    languages: ['English', 'Français'],
+    name: 'Anantys',
+    origin: 'FR',
+    platforms: ['WEB'],
+    slogan: 'The investment copilot with no conflict of interest',
+    url: 'https://anantys.com'
+  },
+  {
     categories: ['STOCK_TRACKING'],
     founded: 2018,
     hasFreePlan: true,
@@ -177,6 +189,18 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$100',
     slogan: 'Stock Portfolio Tracker for Smart Investors',
     url: 'https://beanvest.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    founded: 2021,
+    hasFreePlan: true,
+    key: 'blossom-social',
+    languages: ['English'],
+    name: 'Blossom Social',
+    origin: 'CA',
+    platforms: ['ANDROID', 'IOS'],
+    slogan: 'Real Portfolios, Trades & Market Insights',
+    url: 'https://blossomsocial.com'
   },
   {
     categories: ['BUDGETING'],
@@ -419,6 +443,19 @@ export const personalFinanceTools: Product[] = [
     url: 'https://divvydiary.com'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'ETF_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'donkycapital',
+    languages: ['English', 'Italiano'],
+    name: 'DonkyCapital',
+    origin: 'IT',
+    platforms: ['ANDROID', 'WEB'],
+    pricingPerYear: '€57.48',
+    slogan: 'The Portfolio Tracker that replaces your spreadsheets',
+    url: 'https://www.donkycapital.com'
+  },
+  {
     categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     founded: 2009,
     hasSelfHostingAbility: false,
@@ -486,6 +523,20 @@ export const personalFinanceTools: Product[] = [
     origin: 'CH',
     slogan: 'Investment Management Platforms',
     url: 'https://www.expersoft.com'
+  },
+  {
+    categories: ['ETF_TRACKING', 'INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    founded: 2008,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'extraetf',
+    languages: ['Deutsch', 'English'],
+    name: 'extraETF',
+    origin: 'DE',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: '€89.99',
+    slogan: 'Die besten ETFs finden, vergleichen und beobachten',
+    url: 'https://extraetf.com'
   },
   {
     categories: ['INVESTMENT_RESEARCH'],
@@ -795,6 +846,18 @@ export const personalFinanceTools: Product[] = [
     useAnonymously: true
   },
   {
+    categories: ['CRYPTOCURRENCY', 'ETF_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'inwestuje',
+    languages: ['Polski'],
+    name: 'inwestuje.app',
+    origin: 'PL',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Inwestujesz? Śledź swój majątek w jednym miejscu',
+    url: 'https://inwestuje.app'
+  },
+  {
     categories: ['ETF_TRACKING'],
     founded: 2011,
     hasFreePlan: true,
@@ -1077,6 +1140,24 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.morningstar.com/mm'
   },
   {
+    categories: ['CRYPTOCURRENCY', 'ETF_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    key: 'my-stocks-portfolio',
+    languages: [
+      'Deutsch',
+      'English',
+      'Français',
+      'Türkçe',
+      '简体中文',
+      '繁體中文'
+    ],
+    name: 'My Stocks Portfolio & Market',
+    platforms: ['ANDROID', 'IOS'],
+    pricingPerYear: '$49.99',
+    slogan: 'Keep track of and visualize your investments throughout your day',
+    url: 'https://peeksoft.co'
+  },
+  {
     categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1087,6 +1168,19 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$36',
     slogan: 'Your Personal Finance Command Center',
     url: 'https://myfinancetools.io'
+  },
+  {
+    categories: ['CRYPTOCURRENCY', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'myfund',
+    languages: ['English', 'Polski'],
+    name: 'MyFund',
+    origin: 'PL',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: 'PLN 36.10',
+    slogan: 'Manage all your assets and accounts in one place',
+    url: 'https://myfund.pl'
   },
   {
     categories: ['CRYPTOCURRENCY'],
@@ -1147,6 +1241,20 @@ export const personalFinanceTools: Product[] = [
     regions: ['AT', 'CH', 'DE'],
     slogan: 'Dein Vermögen immer im Blick',
     url: 'https://www.parqet.com'
+  },
+  {
+    categories: ['FINANCIAL_PLANNING', 'STOCK_TRACKING'],
+    founded: 2017,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'passiv',
+    languages: ['English'],
+    name: 'Passiv',
+    origin: 'CA',
+    platforms: ['WEB'],
+    pricingPerYear: '$99',
+    slogan: 'Autopilot for your Portfolio',
+    url: 'https://passiv.com'
   },
   {
     categories: ['NET_WORTH_TRACKING'],
@@ -1253,6 +1361,19 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.pocketsmith.com'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'portfeo',
+    languages: ['Polski'],
+    name: 'Portfeo',
+    origin: 'PL',
+    platforms: ['WEB'],
+    pricingPerYear: 'PLN 168',
+    slogan: 'Wszystkie Twoje inwestycje w jednym miejscu',
+    url: 'https://www.portfeo.pl'
+  },
+  {
     categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1277,6 +1398,19 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '€60',
     slogan: 'Manage all your portfolios',
     url: 'https://portfoliodividendtracker.com'
+  },
+  {
+    categories: ['STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'portfolio-trader',
+    languages: ['English'],
+    name: 'Portfolio Trader',
+    origin: 'AU',
+    platforms: ['IOS'],
+    slogan:
+      'Professional stock portfolio tracking for iPhone, iPad and Apple Watch',
+    url: 'https://www.iportfoliotrader.com'
   },
   {
     categories: ['INVESTMENT_RESEARCH'],
@@ -1371,6 +1505,19 @@ export const personalFinanceTools: Product[] = [
     slogan:
       'Your entire financial life in one app, monitored continuously by agents',
     url: 'https://rallies.ai'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
+    founded: 2014,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'rentablo',
+    languages: ['Deutsch'],
+    name: 'Rentablo',
+    origin: 'DE',
+    platforms: ['WEB'],
+    slogan: 'Das kostenfreie Tool für Ihren Finanzerfolg',
+    url: 'https://www.rentablo.de'
   },
   {
     categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
@@ -1590,6 +1737,32 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.tinywallet.de'
   },
   {
+    categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'trackinv',
+    languages: ['English'],
+    name: 'TrackinV',
+    platforms: ['WEB'],
+    pricingPerYear: '€40',
+    slogan: 'See your real investment performance — across every broker',
+    url: 'https://trackinv.com'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'trackyourdividends',
+    languages: ['English'],
+    name: 'TrackYourDividends',
+    origin: 'US',
+    platforms: ['WEB'],
+    pricingPerYear: '$99.99',
+    slogan:
+      'Follow the Performance, Payments, and Diversification of Your Dividend Portfolio',
+    url: 'https://www.trackyourdividends.com'
+  },
+  {
     founded: 2011,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -1600,6 +1773,19 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$360',
     slogan: 'The Trading Journal to Improve Your Trading Performance',
     url: 'https://www.tradervue.com'
+  },
+  {
+    categories: ['CRYPTOCURRENCY', 'ETF_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'treestep',
+    languages: ['English', 'Français'],
+    name: 'Treestep',
+    origin: 'FR',
+    platforms: ['WEB'],
+    pricingPerYear: '€80.04',
+    slogan: 'Investing that never bores you',
+    url: 'https://www.treestep.fr'
   },
   {
     categories: ['STOCK_TRACKING', 'TAX_REPORTING'],
