@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `Nx` from version `23.0.2` to `23.1.1`
+- Upgraded `storybook` from version `10.1.10` to `10.5.7`
+
 ### Fixed
 
 - Fixed the internal server error on a failed social login by redirecting to the login page

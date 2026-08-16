@@ -69,7 +69,7 @@ import { OidcStrategy } from './oidc.strategy';
         const issuer = configurationService.get('OIDC_ISSUER');
         const scope = configurationService.get('OIDC_SCOPE');
 
-        const callbackUrl =
+        const callbackURL =
           configurationService.get('OIDC_CALLBACK_URL') ||
           `${configurationService.get('ROOT_URL')}/api/auth/oidc/callback`;
 
@@ -114,15 +114,26 @@ import { OidcStrategy } from './oidc.strategy';
           }
         }
 
+        const clientID = configurationService.get('OIDC_CLIENT_ID');
+        const clientSecret = configurationService.get('OIDC_CLIENT_SECRET');
+
+        if (!clientID || !clientSecret || !issuer) {
+          logger.error(
+            'OIDC configuration incomplete: issuer, clientID, or clientSecret missing'
+          );
+
+          throw new Error('OIDC configuration incomplete');
+        }
+
         const options: StrategyOptions = {
           authorizationURL,
+          callbackURL,
+          clientID,
+          clientSecret,
           issuer,
           scope,
           tokenURL,
-          userInfoURL,
-          callbackURL: callbackUrl,
-          clientID: configurationService.get('OIDC_CLIENT_ID'),
-          clientSecret: configurationService.get('OIDC_CLIENT_SECRET')
+          userInfoURL
         };
 
         return new OidcStrategy(authService, options);

@@ -56,22 +56,20 @@ export class ApiKeyStrategy extends PassportStrategy(
   }
 
   private async validateApiKey(apiKey: string) {
-    if (!apiKey) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.UNAUTHORIZED),
-        StatusCodes.UNAUTHORIZED
-      );
+    if (apiKey) {
+      try {
+        const { id } = await this.apiKeyService.getUserByApiKey(apiKey);
+        const user = await this.userService.user({ id });
+
+        if (user) {
+          return user;
+        }
+      } catch {}
     }
 
-    try {
-      const { id } = await this.apiKeyService.getUserByApiKey(apiKey);
-
-      return this.userService.user({ id });
-    } catch {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.UNAUTHORIZED),
-        StatusCodes.UNAUTHORIZED
-      );
-    }
+    throw new HttpException(
+      getReasonPhrase(StatusCodes.UNAUTHORIZED),
+      StatusCodes.UNAUTHORIZED
+    );
   }
 }
