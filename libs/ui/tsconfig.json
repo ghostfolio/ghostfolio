@@ -15,10 +15,10 @@
   ],
   "compilerOptions": {
     "module": "preserve",
-    "target": "es2021",
     // TODO: Remove once solved in tsconfig.base.json
     "strict": false,
     "strictNullChecks": true,
+    "useDefineForClassFields": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
