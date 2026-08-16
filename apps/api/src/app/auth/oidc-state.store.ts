@@ -26,7 +26,6 @@ export class OidcStateStore implements SessionStore {
 
   /**
    * Store request state.
-   * Signature matches passport-openidconnect SessionStore
    */
   public store(
     _req: Request,
@@ -57,7 +56,6 @@ export class OidcStateStore implements SessionStore {
 
   /**
    * Verify request state.
-   * Signature matches passport-openidconnect SessionStore
    */
   public verify(
     _req: Request,

@@ -117,10 +117,11 @@ import { OidcStrategy } from './oidc.strategy';
         const clientID = configurationService.get('OIDC_CLIENT_ID');
         const clientSecret = configurationService.get('OIDC_CLIENT_SECRET');
 
-        if (!issuer || !clientID || !clientSecret) {
+        if (!clientID || !clientSecret || !issuer) {
           logger.error(
             'OIDC configuration incomplete: issuer, clientID, or clientSecret missing'
           );
+
           throw new Error('OIDC configuration incomplete');
         }
 
