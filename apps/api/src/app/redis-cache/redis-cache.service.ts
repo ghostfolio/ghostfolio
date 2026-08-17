@@ -4,7 +4,6 @@ import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import Keyv from 'keyv';
 import ms from 'ms';
 import { createHash, randomUUID } from 'node:crypto';
 
@@ -12,7 +11,7 @@ import { createHash, randomUUID } from 'node:crypto';
 export class RedisCacheService {
   private readonly logger = new Logger(RedisCacheService.name);
 
-  private client: Keyv;
+  private client: Cache["stores"][0];
 
   public constructor(
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
