@@ -11,7 +11,7 @@ import { createHash, randomUUID } from 'node:crypto';
 export class RedisCacheService {
   private readonly logger = new Logger(RedisCacheService.name);
 
-  private client: Cache["stores"][0];
+  private client: Cache['stores'][0];
 
   public constructor(
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
