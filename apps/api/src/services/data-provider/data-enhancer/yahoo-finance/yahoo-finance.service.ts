@@ -254,6 +254,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
         const code = getCountryCodeByName({
           aliases: YahooFinanceDataEnhancerService.countriesMapping,
+          dataSource: this.getName(),
           name: assetProfile.summaryProfile.country
         });
 
