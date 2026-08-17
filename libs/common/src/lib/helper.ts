@@ -261,6 +261,21 @@ export function extractNumberFromString({
   }
 }
 
+export function formatAssetProfileName({
+  assetSubClass,
+  name
+}: {
+  assetSubClass?: AssetSubClass;
+  name?: string;
+}) {
+  if (assetSubClass === 'CRYPTOCURRENCY') {
+    // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
+    return name?.replace(new RegExp(` ${DEFAULT_CURRENCY}$`), '');
+  }
+
+  return name;
+}
+
 export function formatMonthAndYear({
   date,
   locale

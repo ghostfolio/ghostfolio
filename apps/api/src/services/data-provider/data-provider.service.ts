@@ -17,6 +17,7 @@ import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   DATE_FORMAT,
+  formatAssetProfileName,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol,
   getStartOfUtcDate,
@@ -125,7 +126,11 @@ export class DataProviderService implements OnModuleInit {
                   symbol,
                   dataSource: DataSource[dataSource]
                 })
-              ] = { ...assetProfile, symbol };
+              ] = {
+                ...assetProfile,
+                symbol,
+                name: formatAssetProfileName(assetProfile)
+              };
             }
           })
         );
@@ -897,16 +902,7 @@ export class DataProviderService implements OnModuleInit {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 
-        if (
-          lookupItem.assetSubClass === 'CRYPTOCURRENCY' &&
-          user?.settings?.settings.isExperimentalFeatures
-        ) {
-          // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
-          lookupItem.name = lookupItem.name.replace(
-            new RegExp(` ${DEFAULT_CURRENCY}$`),
-            ''
-          );
-        }
+        lookupItem.name = formatAssetProfileName(lookupItem);
 
         return lookupItem;
       })
