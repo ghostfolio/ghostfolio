@@ -175,6 +175,7 @@ export class FinancialModelingPrepService
               return {
                 code: getCountryCodeByName({
                   aliases: FinancialModelingPrepService.countriesMapping,
+                  dataSource: this.getName(),
                   name: countryName
                 }),
                 weight: parseFloat(`${weightPercentage}`) / 100
