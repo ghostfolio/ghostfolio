@@ -110,8 +110,8 @@ export class ActivitiesController {
 
     if (!activity) {
       throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
       );
     }
 
@@ -298,13 +298,14 @@ export class ActivitiesController {
     @Body() data: UpdateOrderDto
   ) {
     const originalActivity = await this.activitiesService.order({
-      id
+      id,
+      userId: this.request.user.id
     });
 
-    if (!originalActivity || originalActivity.userId !== this.request.user.id) {
+    if (!originalActivity) {
       throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
       );
     }
 
