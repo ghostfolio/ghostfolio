@@ -301,7 +301,7 @@ export class ActivitiesController {
       id
     });
 
-    if (!originalActivity || originalActivity.userId !== this.request.user.id) {
+    if (originalActivity?.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
