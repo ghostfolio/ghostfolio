@@ -1,13 +1,12 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   CreateAccountDto,
   TransferBalanceDto,
@@ -19,14 +18,17 @@ import {
   AccountsResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type {
+  ImpersonationContext,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
   Body,
   Controller,
   Delete,
   Get,
-  Headers,
   HttpException,
   Inject,
   Param,
@@ -49,10 +51,8 @@ export class AccountController {
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly apiService: ApiService,
-    private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Delete(':id')
@@ -85,18 +85,15 @@ export class AccountController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getAllAccounts(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId }: ImpersonationContext,
     @Query('dataSource') filterByDataSource?: string,
     @Query('query') filterBySearchQuery?: string,
     @Query('symbol') filterBySymbol?: string
   ): Promise<AccountsResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByDataSource,
       filterBySearchQuery,
@@ -105,25 +102,22 @@ export class AccountController {
 
     return this.portfolioService.getAccountsWithAggregations({
       filters,
-      userId: impersonationUserId || this.request.user.id,
+      userId,
       withExcludedAccounts: true
     });
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<AccountResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
     const accountsWithAggregations =
       await this.portfolioService.getAccountsWithAggregations({
+        userId,
         filters: [{ id, type: 'ACCOUNT' }],
-        userId: impersonationUserId || this.request.user.id,
         withExcludedAccounts: true
       });
 
@@ -131,22 +125,16 @@ export class AccountController {
   }
 
   @Get(':id/balances')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountBalancesById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<AccountBalancesResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-    const userId = impersonationUserId || this.request.user.id;
-
-    const { settings } = await this.userService.user({ id: userId });
-
     return this.accountBalanceService.getAccountBalances({
       userId,
       filters: [{ id, type: 'ACCOUNT' }],
-      userCurrency: settings.settings.baseCurrency
+      userCurrency: userSettings.baseCurrency
     });
   }
 

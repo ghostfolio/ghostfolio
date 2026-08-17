@@ -7,9 +7,10 @@ import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetailsResponse,
-  Filter
+  Filter,
+  UserSettings
 } from '@ghostfolio/common/interfaces';
-import { DateRange, UserWithSettings } from '@ghostfolio/common/types';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { format, isSameDay } from 'date-fns';
@@ -32,28 +33,26 @@ export class BenchmarksService {
     dateRange,
     endDate = new Date(),
     filters,
-    impersonationId,
     startDate,
     symbol,
-    user,
+    userId,
+    userSettings,
     withExcludedAccounts
   }: {
     dateRange: DateRange;
     endDate?: Date;
     filters?: Filter[];
-    impersonationId: string;
     startDate: Date;
-    user: UserWithSettings;
+    userId: string;
+    userSettings: UserSettings;
     withExcludedAccounts?: boolean;
   } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetailsResponse> {
     const marketData: { date: string; value: number }[] = [];
-    const userCurrency = user.settings.settings.baseCurrency;
-    const userId = user.id;
+    const userCurrency = userSettings.baseCurrency;
 
     const { chart } = await this.portfolioService.getPerformance({
       dateRange,
       filters,
-      impersonationId,
       userId,
       withExcludedAccounts
     });

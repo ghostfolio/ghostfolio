@@ -1,4 +1,5 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -25,6 +26,7 @@ import {
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import { groupBy } from 'lodash';
 
@@ -36,6 +38,7 @@ export class AssetProfilesService {
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
@@ -62,18 +65,24 @@ export class AssetProfilesService {
       symbolProfileId
     });
 
-    await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+    await this.gatherSymbolAndEmitPortfolioChangedEvents({
+      dataSource,
+      symbol,
+      symbolProfileId
+    });
 
     return assetProfileSplit;
   }
 
   public async deleteSplit({
+    dataSource,
     id,
+    symbol,
     symbolProfileId
   }: {
     id: string;
     symbolProfileId: string;
-  }) {
+  } & AssetProfileIdentifier) {
     const isDeleted = await this.assetProfileSplitService.deleteById({
       id,
       symbolProfileId
@@ -82,6 +91,12 @@ export class AssetProfilesService {
     if (!isDeleted) {
       throw new NotFoundException();
     }
+
+    await this.gatherSymbolAndEmitPortfolioChangedEvents({
+      dataSource,
+      symbol,
+      symbolProfileId
+    });
   }
 
   public async getAssetProfile({
@@ -423,6 +438,43 @@ export class AssetProfilesService {
     }
 
     return assetProfile;
+  }
+
+  private async emitPortfolioChangedEvents(symbolProfileId: string) {
+    const userIds =
+      await this.activitiesService.getUserIdsBySymbolProfileId(symbolProfileId);
+
+    for (const userId of userIds) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({ userId })
+      );
+    }
+  }
+
+  /**
+   * Gathers the market data of the given asset profile and invalidates the
+   * portfolio snapshots of the affected users as soon as it is available.
+   * Emitting the events earlier would recompute the snapshots from
+   * split-adjusted quantities and not yet split-adjusted market prices.
+   */
+  private async gatherSymbolAndEmitPortfolioChangedEvents({
+    dataSource,
+    symbol,
+    symbolProfileId
+  }: { symbolProfileId: string } & AssetProfileIdentifier) {
+    const jobs = await this.dataGatheringService.gatherSymbol({
+      dataSource,
+      symbol
+    });
+
+    void Promise.allSettled(
+      jobs.map((job) => {
+        return job.finished();
+      })
+    ).then(() => {
+      return this.emitPortfolioChangedEvents(symbolProfileId);
+    });
   }
 
   private getAssetProfileDataUpdate({

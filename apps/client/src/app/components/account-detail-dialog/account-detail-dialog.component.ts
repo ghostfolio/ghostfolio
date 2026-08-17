@@ -14,11 +14,8 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import {
-  hasPermission,
-  hasReadRestrictedAccessPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
@@ -176,6 +173,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.initialize();
+
+        this.refreshUser();
       });
   }
 
@@ -195,6 +194,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.initialize();
+
+        this.refreshUser();
       });
   }
 
@@ -229,10 +230,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
 
   protected showValuesInPercentage() {
     return (
-      hasReadRestrictedAccessPermission({
-        accesses: this.user?.access,
-        impersonationId: this.data.impersonationId
-      }) || this.user?.settings?.isRestrictedView
+      !hasScope(this.user?.scopes, scopes.portfolioReadValues) ||
+      this.user?.settings?.isRestrictedView
     );
   }
 
@@ -412,5 +411,12 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.fetchActivities();
     this.fetchChart();
     this.fetchPortfolioHoldings();
+  }
+
+  private refreshUser() {
+    this.userService
+      .get(true)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 }

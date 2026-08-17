@@ -113,7 +113,7 @@ export class RapidApiService implements DataProviderInterface {
         }
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     }
 
     return {};

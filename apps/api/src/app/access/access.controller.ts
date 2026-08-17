@@ -1,3 +1,4 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -5,6 +6,7 @@ import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
+import { getScopesOfAccess } from '@ghostfolio/common/scopes';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -26,6 +28,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccessService } from './access.service';
 
+@AllowDuringImpersonation()
 @Controller('access')
 export class AccessController {
   public constructor(
@@ -45,29 +48,32 @@ export class AccessController {
       where: { userId: this.request.user.id }
     });
 
-    return accessesWithGranteeUser.map(
-      ({ alias, granteeUser, id, permissions, settings }) => {
-        if (granteeUser) {
-          return {
-            alias,
-            id,
-            permissions,
-            grantee: granteeUser?.id,
-            settings: settings as AccessSettings,
-            type: 'PRIVATE'
-          };
-        }
+    return accessesWithGranteeUser.map((accessItem) => {
+      const { alias, granteeUser, id, permissions, settings } = accessItem;
+      const scopes = getScopesOfAccess(accessItem);
 
+      if (granteeUser) {
         return {
           alias,
           id,
           permissions,
-          grantee: 'Public',
+          scopes,
+          grantee: granteeUser?.id,
           settings: settings as AccessSettings,
-          type: 'PUBLIC'
+          type: 'PRIVATE'
         };
       }
-    );
+
+      return {
+        alias,
+        id,
+        permissions,
+        scopes,
+        grantee: 'Public',
+        settings: settings as AccessSettings,
+        type: 'PUBLIC'
+      };
+    });
   }
 
   @HasPermission(permissions.createAccess)
@@ -93,6 +99,10 @@ export class AccessController {
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
+        scopes: getScopesOfAccess({
+          granteeUserId: data.granteeUserId,
+          permissions: data.permissions
+        }),
         settings: this.accessService.buildSettings(data.filters),
         user: { connect: { id: this.request.user.id } }
       });
@@ -162,6 +172,10 @@ export class AccessController {
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
           permissions: data.permissions,
+          scopes: getScopesOfAccess({
+            granteeUserId: data.granteeUserId,
+            permissions: data.permissions ?? originalAccess.permissions
+          }),
           settings: this.accessService.buildSettings(data.filters)
         },
         where: { id }

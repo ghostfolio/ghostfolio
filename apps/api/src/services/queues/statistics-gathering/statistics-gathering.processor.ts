@@ -143,7 +143,7 @@ export class StatisticsGatheringProcessor {
 
       return pull_count;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -173,7 +173,7 @@ export class StatisticsGatheringProcessor {
         value
       });
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -192,7 +192,7 @@ export class StatisticsGatheringProcessor {
 
       return stargazers_count;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -221,7 +221,7 @@ export class StatisticsGatheringProcessor {
 
       return data.attributes.availability / 100;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }

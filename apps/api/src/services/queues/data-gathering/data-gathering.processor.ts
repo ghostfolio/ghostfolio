@@ -85,7 +85,7 @@ export class DataGatheringProcessor {
         return job.discard();
       }
 
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -198,7 +198,7 @@ export class DataGatheringProcessor {
         return job.discard();
       }
 
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }

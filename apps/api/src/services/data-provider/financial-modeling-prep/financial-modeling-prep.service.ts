@@ -54,9 +54,11 @@ export class FinancialModelingPrepService
   implements DataProviderInterface, OnModuleInit
 {
   private static countriesMapping = {
+    'Czech Republic': 'CZ',
     'Korea (the Republic of)': 'KR',
     'Russian Federation': 'RU',
-    'Taiwan (Province of China)': 'TW'
+    'Taiwan (Province of China)': 'TW',
+    Turkey: 'TR'
   };
 
   private readonly logger = new Logger(FinancialModelingPrepService.name);
@@ -169,9 +171,6 @@ export class FinancialModelingPrepService
             .then((res) => res.json());
 
           response.countries = etfCountryWeightings
-            .filter(({ country: countryName }) => {
-              return countryName.toLowerCase() !== 'other';
-            })
             .map(({ country: countryName, weightPercentage }) => {
               return {
                 code: getCountryCodeByName({
@@ -180,6 +179,9 @@ export class FinancialModelingPrepService
                 }),
                 weight: parseFloat(`${weightPercentage}`) / 100
               };
+            })
+            .filter(({ code }) => {
+              return !!code;
             });
 
           const etfHoldings = await this.fetchService

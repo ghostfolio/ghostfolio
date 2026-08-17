@@ -1,3 +1,4 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -41,6 +42,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AssetProfilesService } from './asset-profiles.service';
 
+@AllowDuringImpersonation()
 @Controller('asset-profiles')
 export class AssetProfilesController {
   public constructor(
@@ -167,7 +169,12 @@ export class AssetProfilesController {
         permissions.deleteAssetProfileSplitOfOwnAssetProfile
     });
 
-    return this.assetProfilesService.deleteSplit({ id, symbolProfileId });
+    return this.assetProfilesService.deleteSplit({
+      dataSource,
+      id,
+      symbol,
+      symbolProfileId
+    });
   }
 
   @HasPermission(permissions.accessAdminControl)

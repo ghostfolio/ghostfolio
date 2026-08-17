@@ -52,6 +52,33 @@ export class AssetProfileSplitService {
     });
   }
 
+  /**
+   * Returns the splits of all asset profiles the given user has activities
+   * for, in ascending order by date
+   */
+  public async getSplitsByUserId({
+    userId
+  }: {
+    userId: string;
+  }): Promise<AssetProfileSplit[]> {
+    return this.prismaService.assetProfileSplit.findMany({
+      orderBy: [
+        {
+          date: 'asc'
+        }
+      ],
+      where: {
+        symbolProfile: {
+          activities: {
+            some: {
+              userId
+            }
+          }
+        }
+      }
+    });
+  }
+
   public async upsert({
     date,
     denominator,

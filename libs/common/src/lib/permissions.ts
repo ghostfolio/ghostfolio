@@ -1,6 +1,6 @@
 import { UserWithSettings } from '@ghostfolio/common/types';
 
-import { Access, Role } from '@prisma/client';
+import { Role } from '@prisma/client';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
@@ -138,7 +138,9 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createAccount,
         permissions.createAccountBalance,
         permissions.createActivity,
-        permissions.createAssetProfileSplitOfOwnAssetProfile,
+        // TODO: Grant createAssetProfileSplitOfOwnAssetProfile and
+        // deleteAssetProfileSplitOfOwnAssetProfile once the stock splits
+        // feature is no longer experimental
         permissions.createMarketDataOfOwnAssetProfile,
         permissions.createOwnTag,
         permissions.createWatchlistItem,
@@ -146,7 +148,6 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccount,
         permissions.deleteAccountBalance,
         permissions.deleteActivity,
-        permissions.deleteAssetProfileSplitOfOwnAssetProfile,
         permissions.deleteAuthDevice,
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
@@ -195,24 +196,6 @@ export function hasPermission(
   aPermission: string
 ) {
   return aPermissions.includes(aPermission);
-}
-
-export function hasReadRestrictedAccessPermission({
-  accesses = [],
-  impersonationId
-}: {
-  accesses?: Pick<Access, 'id' | 'permissions'>[];
-  impersonationId: string | null;
-}) {
-  if (!impersonationId) {
-    return false;
-  }
-
-  const access = accesses.find(({ id }) => {
-    return id === impersonationId;
-  });
-
-  return access?.permissions?.includes('READ_RESTRICTED') ?? true;
 }
 
 export function hasRole(aUser: UserWithSettings, aRole: Role) {

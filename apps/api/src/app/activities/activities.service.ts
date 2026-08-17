@@ -7,7 +7,15 @@ import {
   isAccountBalanceInFuture,
   WHERE_ACCOUNT_NOT_EXCLUDED
 } from '@ghostfolio/api/helper/account.helper';
+import {
+  getTagsWithDraftTag,
+  isActivityInFuture,
+  isDraftTagToBeAssigned,
+  WHERE_ACTIVITY_NOT_DRAFT
+} from '@ghostfolio/api/helper/activity.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { adjustActivityBySplits } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.helper';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -21,11 +29,13 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
   NON_INVESTMENT_ACTIVITY_TYPES,
+  TAG_ID_DRAFT,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
   canDeleteAssetProfile,
   getAssetProfileIdentifier,
+  isDraftActivity,
   isValidCustomAssetProfileSymbol
 } from '@ghostfolio/common/helper';
 import {
@@ -49,7 +59,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday, isAfter } from 'date-fns';
+import { endOfToday } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
@@ -58,6 +68,7 @@ export class ActivitiesService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly assetProfileSplitService: AssetProfileSplitService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
@@ -112,7 +123,7 @@ export class ActivitiesService {
     tags,
     userId
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    await this.tagService.validateTagIds({
+    await this.tagService.validateTagIdsWithoutDraftTag({
       userId,
       tagIds: tags.map(({ id }) => {
         return id;
@@ -120,6 +131,7 @@ export class ActivitiesService {
     });
 
     const activities = await this.prismaService.order.findMany({
+      include: { tags: { select: { id: true } } },
       where: {
         userId,
         SymbolProfile: {
@@ -129,20 +141,27 @@ export class ActivitiesService {
       }
     });
 
+    const tagsToAssign = tags.map(({ id }) => {
+      return { id };
+    });
+
     await Promise.all(
-      activities.map(({ id }) =>
-        this.prismaService.order.update({
+      activities.map((activity) => {
+        // The set operation replaces all existing connections with the provided
+        // ones, hence the "Draft" tag of an individual activity is carried over
+        const tagsToSet = isDraftActivity(activity)
+          ? [...tagsToAssign, { id: TAG_ID_DRAFT }]
+          : tagsToAssign;
+
+        return this.prismaService.order.update({
           data: {
             tags: {
-              // The set operation replaces all existing connections with the provided ones
-              set: tags.map((tag) => {
-                return { id: tag.id };
-              })
+              set: tagsToSet
             }
           },
-          where: { id }
-        })
-      )
+          where: { id: activity.id }
+        });
+      })
     );
 
     this.eventEmitter.emit(
@@ -261,17 +280,19 @@ export class ActivitiesService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type)
-      ? false
-      : isAfter(data.date as Date, endOfToday());
+    const tagsToConnect = getTagsWithDraftTag({
+      tags,
+      date: data.date as Date,
+      draftTag: { id: TAG_ID_DRAFT },
+      type: data.type
+    });
 
     const activity = await this.prismaService.order.create({
       data: {
         ...orderData,
         account,
-        isDraft,
         tags: {
-          connect: tags
+          connect: tagsToConnect
         }
       },
       include: { SymbolProfile: true }
@@ -290,7 +311,7 @@ export class ActivitiesService {
         accountId,
         userId,
         amount: amount.toNumber(),
-        currency: data.SymbolProfile.connectOrCreate.create.currency,
+        currency: activity.currency ?? activity.SymbolProfile.currency,
         date: data.date as Date
       });
     }
@@ -372,36 +393,32 @@ export class ActivitiesService {
     types?: ActivityType[];
     userId: string;
   }): Promise<number> {
-    const { activities } = await this.getActivities({
+    const where = this.getWhereClause({
       endDate,
       filters,
       startDate,
       types,
       userId,
       includeDrafts: true,
-      userCurrency: undefined,
       withExcludedAccountsAndActivities: true
     });
 
-    const { count } = await this.prismaService.order.deleteMany({
-      where: {
-        id: {
-          in: activities.map(({ id }) => {
-            return id;
-          })
-        }
-      }
+    const activities = await this.prismaService.order.findMany({
+      where,
+      distinct: ['symbolProfileId'],
+      select: { symbolProfileId: true }
     });
 
-    const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfilesByIds(
+    const { count } = await this.prismaService.order.deleteMany({ where });
+
+    const [benchmarkAssetProfiles, symbolProfiles] = await Promise.all([
+      this.benchmarkService.getBenchmarkAssetProfiles(),
+      this.symbolProfileService.getSymbolProfilesByIds(
         activities.map(({ symbolProfileId }) => {
           return symbolProfileId;
         })
-      );
-
-    const benchmarkAssetProfiles =
-      await this.benchmarkService.getBenchmarkAssetProfiles();
+      )
+    ]);
 
     for (const {
       activitiesCount,
@@ -518,7 +535,6 @@ export class ActivitiesService {
           feeInAssetProfileCurrency: 0,
           feeInBaseCurrency: 0,
           id: balanceItem.id,
-          isDraft: false,
           quantity: 1,
           symbolProfileId: account.currency,
           type: ActivityType.BUY,
@@ -607,160 +623,19 @@ export class ActivitiesService {
       { date: 'asc' }
     ];
 
-    const andConditions: Prisma.OrderWhereInput[] = [];
-    const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
-
-    if (endDate) {
-      andConditions.push({ date: { lte: endDate } });
-    }
-
-    if (startDate) {
-      andConditions.push({ date: { gt: startDate } });
-    }
-
-    const {
-      ACCOUNT: filtersByAccount = [],
-      ASSET_CLASS: filtersByAssetClass = [],
-      DATA_SOURCE: [filterByDataSource] = [],
-      SEARCH_QUERY: [filterBySearchQuery] = [],
-      SYMBOL: [filterBySymbol] = [],
-      TAG: filtersByTag = []
-    } = groupBy(filters, ({ type }) => {
-      return type;
-    });
-
-    if (filtersByAccount.length > 0) {
-      where.accountId = {
-        in: filtersByAccount.map(({ id }) => {
-          return id;
-        })
-      };
-    }
-
-    if (includeDrafts === false) {
-      where.isDraft = false;
-    }
-
-    if (filtersByAssetClass.length > 0) {
-      where.SymbolProfile = {
-        OR: [
-          {
-            AND: [
-              {
-                OR: filtersByAssetClass.map(({ id }) => {
-                  return { assetClass: AssetClass[id] };
-                })
-              },
-              {
-                OR: [
-                  { assetProfileOverrides: { is: null } },
-                  { assetProfileOverrides: { assetClass: null } }
-                ]
-              }
-            ]
-          },
-          {
-            assetProfileOverrides: {
-              OR: filtersByAssetClass.map(({ id }) => {
-                return { assetClass: AssetClass[id] };
-              })
-            }
-          }
-        ]
-      };
-    }
-
-    if (filterByDataSource && filterBySymbol) {
-      if (where.SymbolProfile) {
-        where.SymbolProfile = {
-          AND: [
-            where.SymbolProfile,
-            {
-              AND: [
-                { dataSource: filterByDataSource.id as DataSource },
-                { symbol: filterBySymbol.id }
-              ]
-            }
-          ]
-        };
-      } else {
-        where.SymbolProfile = {
-          AND: [
-            { dataSource: filterByDataSource.id as DataSource },
-            { symbol: filterBySymbol.id }
-          ]
-        };
-      }
-    }
-
-    if (filterBySearchQuery) {
-      const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
-        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
-        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
-        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
-        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
-      ];
-
-      if (where.SymbolProfile) {
-        where.SymbolProfile = {
-          AND: [
-            where.SymbolProfile,
-            {
-              OR: searchQueryWhereInput
-            }
-          ]
-        };
-      } else {
-        where.SymbolProfile = {
-          OR: searchQueryWhereInput
-        };
-      }
-    }
-
-    if (filtersByTag.length > 0) {
-      andConditions.push({
-        OR: [
-          {
-            tags: {
-              some: {
-                OR: filtersByTag.map(({ id }) => {
-                  return { id };
-                })
-              }
-            }
-          },
-          {
-            account: {
-              tags: {
-                some: {
-                  OR: filtersByTag.map(({ id }) => {
-                    return { tagId: id };
-                  })
-                }
-              }
-            }
-          }
-        ]
-      });
-    }
-
     if (sortColumn) {
       orderBy = [{ [sortColumn]: sortDirection }];
     }
 
-    if (types?.length > 0) {
-      where.type = { in: types };
-    }
-
-    if (withExcludedAccountsAndActivities === false) {
-      where.OR = [{ account: null }, { account: WHERE_ACCOUNT_NOT_EXCLUDED }];
-
-      where.tags = {
-        none: {
-          id: TAG_ID_EXCLUDE_FROM_ANALYSIS
-        }
-      };
-    }
+    const where = this.getWhereClause({
+      endDate,
+      filters,
+      includeDrafts,
+      startDate,
+      types,
+      userId,
+      withExcludedAccountsAndActivities
+    });
 
     const [orders, count] = await Promise.all([
       this.orders({
@@ -894,12 +769,26 @@ export class ActivitiesService {
     /** Whether to include cash activities in the result. */
     withCash?: boolean;
   }) {
-    const activities = await this.getActivities({
-      filters,
-      userCurrency,
-      userId,
-      withExcludedAccountsAndActivities: false // TODO
-    });
+    const [activities, splits] = await Promise.all([
+      this.getActivities({
+        filters,
+        userCurrency,
+        userId,
+        withExcludedAccountsAndActivities: false // TODO
+      }),
+      this.assetProfileSplitService.getSplitsByUserId({ userId })
+    ]);
+
+    if (splits.length > 0) {
+      const splitsBySymbolProfileId = groupBy(splits, 'symbolProfileId');
+
+      activities.activities = activities.activities.map((activity) => {
+        return adjustActivityBySplits(
+          activity,
+          splitsBySymbolProfileId[activity.assetProfile.id] ?? []
+        );
+      });
+    }
 
     if (withCash && !this.areCashActivitiesExcludedByFilters(filters)) {
       const cashDetails = await this.accountService.getCashDetails({
@@ -942,6 +831,25 @@ export class ActivitiesService {
     };
   }
 
+  /**
+   * Returns the id of every user who has an activity for the given asset
+   * profile, including draft activities and activities of excluded accounts
+   */
+  public async getUserIdsBySymbolProfileId(
+    symbolProfileId: string
+  ): Promise<string[]> {
+    const activitiesByUser = await this.prismaService.order.groupBy({
+      by: ['userId'],
+      where: {
+        symbolProfileId
+      }
+    });
+
+    return activitiesByUser.map(({ userId }) => {
+      return userId;
+    });
+  }
+
   public async order(
     orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
   ): Promise<Order | null> {
@@ -952,6 +860,7 @@ export class ActivitiesService {
 
   public async updateActivity({
     data,
+    originalDate,
     userId,
     where
   }: {
@@ -963,9 +872,11 @@ export class ActivitiesService {
       tags?: { id: string }[];
       type?: ActivityType;
     };
+    originalDate: Date;
     userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
+    const areTagsProvided = data.tags !== undefined;
     const tags = data.tags ?? [];
 
     await this.tagService.validateTagIds({
@@ -979,8 +890,6 @@ export class ActivitiesService {
       data.comment = null;
     }
 
-    let isDraft = false;
-
     if (
       NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
@@ -991,10 +900,9 @@ export class ActivitiesService {
     } else {
       delete data.SymbolProfile.update;
 
-      isDraft = isAfter(data.date as Date, endOfToday());
-
-      if (!isDraft) {
-        // Gather symbol data of order in the background, if not draft
+      if (!isActivityInFuture({ date: data.date as Date })) {
+        // Gather symbol data of order in the background, if the date is not in
+        // the future
         this.dataGatheringService.gatherSymbols({
           dataGatheringItems: [
             {
@@ -1014,14 +922,35 @@ export class ActivitiesService {
     delete data.symbol;
     delete data.tags;
 
+    // Leave the tags untouched if the request does not provide them, so that a
+    // partial update cannot drop the "Draft" tag
+    let tagsToUpdate: Prisma.OrderUpdateInput['tags'];
+
+    if (areTagsProvided) {
+      tagsToUpdate = {
+        set: getTagsWithDraftTag({
+          originalDate,
+          tags,
+          date: data.date as Date,
+          draftTag: { id: TAG_ID_DRAFT },
+          type: data.type
+        })
+      };
+    } else if (
+      isDraftTagToBeAssigned({
+        originalDate,
+        date: data.date as Date,
+        type: data.type
+      })
+    ) {
+      tagsToUpdate = { connect: { id: TAG_ID_DRAFT } };
+    }
+
     const activity = await this.prismaService.order.update({
       where,
       data: {
         ...data,
-        isDraft,
-        tags: {
-          set: tags
-        }
+        tags: tagsToUpdate
       }
     });
 
@@ -1033,6 +962,181 @@ export class ActivitiesService {
     );
 
     return activity;
+  }
+
+  private getWhereClause({
+    endDate,
+    filters,
+    includeDrafts,
+    startDate,
+    types,
+    userId,
+    withExcludedAccountsAndActivities
+  }: {
+    endDate?: Date;
+    filters?: Filter[];
+    includeDrafts: boolean;
+    startDate?: Date;
+    types?: ActivityType[];
+    userId: string;
+    withExcludedAccountsAndActivities: boolean;
+  }): Prisma.OrderWhereInput {
+    const andConditions: Prisma.OrderWhereInput[] = [];
+    const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
+
+    if (endDate) {
+      andConditions.push({ date: { lte: endDate } });
+    }
+
+    if (startDate) {
+      andConditions.push({ date: { gt: startDate } });
+    }
+
+    const {
+      ACCOUNT: filtersByAccount = [],
+      ASSET_CLASS: filtersByAssetClass = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SEARCH_QUERY: [filterBySearchQuery] = [],
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
+    if (filtersByAccount.length > 0) {
+      where.accountId = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
+    }
+
+    const isFilteredByDraftTag = filtersByTag.some(({ id }) => {
+      return id === TAG_ID_DRAFT;
+    });
+
+    if (includeDrafts === false && !isFilteredByDraftTag) {
+      andConditions.push(WHERE_ACTIVITY_NOT_DRAFT);
+    }
+
+    if (filtersByAssetClass.length > 0) {
+      where.SymbolProfile = {
+        OR: [
+          {
+            AND: [
+              {
+                OR: filtersByAssetClass.map(({ id }) => {
+                  return { assetClass: AssetClass[id] };
+                })
+              },
+              {
+                OR: [
+                  { assetProfileOverrides: { is: null } },
+                  { assetProfileOverrides: { assetClass: null } }
+                ]
+              }
+            ]
+          },
+          {
+            assetProfileOverrides: {
+              OR: filtersByAssetClass.map(({ id }) => {
+                return { assetClass: AssetClass[id] };
+              })
+            }
+          }
+        ]
+      };
+    }
+
+    if (filterByDataSource && filterBySymbol) {
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              AND: [
+                { dataSource: filterByDataSource.id as DataSource },
+                { symbol: filterBySymbol.id }
+              ]
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          AND: [
+            { dataSource: filterByDataSource.id as DataSource },
+            { symbol: filterBySymbol.id }
+          ]
+        };
+      }
+    }
+
+    if (filterBySearchQuery) {
+      const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
+        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
+      ];
+
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              OR: searchQueryWhereInput
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          OR: searchQueryWhereInput
+        };
+      }
+    }
+
+    if (filtersByTag.length > 0) {
+      andConditions.push({
+        OR: [
+          {
+            tags: {
+              some: {
+                OR: filtersByTag.map(({ id }) => {
+                  return { id };
+                })
+              }
+            }
+          },
+          {
+            account: {
+              tags: {
+                some: {
+                  OR: filtersByTag.map(({ id }) => {
+                    return { tagId: id };
+                  })
+                }
+              }
+            }
+          }
+        ]
+      });
+    }
+
+    if (types?.length > 0) {
+      where.type = { in: types };
+    }
+
+    if (withExcludedAccountsAndActivities === false) {
+      where.OR = [{ account: null }, { account: WHERE_ACCOUNT_NOT_EXCLUDED }];
+
+      where.tags = {
+        none: {
+          id: TAG_ID_EXCLUDE_FROM_ANALYSIS
+        }
+      };
+    }
+
+    return where;
   }
 
   private async orders(params: {

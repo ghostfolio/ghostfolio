@@ -5,6 +5,169 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.53.0 - 2026-08-16
+
+### Changed
+
+- Upgraded `angular` from version `21.2.7` to `21.2.19`
+- Upgraded `Nx` from version `23.0.2` to `23.1.1`
+- Upgraded `storybook` from version `10.1.10` to `10.5.7`
+
+### Fixed
+
+- Fixed the internal server error on a failed social login by redirecting to the login page
+
+## 3.52.0 - 2026-08-15
+
+### Added
+
+- Added the business logic and tests for stock splits of an asset profile (experimental)
+- Added the scopes to the access
+- Added an index for `symbolProfileId` to the order database table
+
+### Changed
+
+- Restricted the creation of tags to unique names in the tags selector component
+- Changed the redaction of the monetary values in impersonation mode to be based on the scopes of the access
+- Deprecated the `permissions` attribute of the access in favor of the scopes
+- Extended the `GET api/v1/access` endpoint by the scopes
+- Extended the `GET api/v1/user` endpoint by the scopes
+- Improved the performance of deleting activities by loading only the required data
+
+### Fixed
+
+- Fixed the missing currency conversion of the dividends on the analysis page
+- Fixed the missing error state in the watchlist
+- Fixed the missing loading indicator in the benchmarks of the markets overview
+- Fixed the incorrect error log output when deleting activities
+
+## 3.51.0 - 2026-08-14
+
+### Changed
+
+- Simplified the error log output of the data provider and queue services by omitting the stack trace
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the cash balance update related to activities in a custom currency
+- Fixed the empty historical market data of the asset profile dialog of the admin control panel for asset profiles without activities
+- Fixed the missing mapping for Czech Republic in the country weightings of the _Financial Modeling Prep_ service
+- Fixed the missing mapping for Macau in the data enhancer for asset profile data via _Yahoo Finance_
+- Fixed the outdated exchange rates of currency pairs which are calculated indirectly via the base currency
+
+## 3.50.0 - 2026-08-13
+
+### Changed
+
+- Refreshed the cryptocurrencies list
+- Upgraded `countries-list` from version `3.4.0` to `3.4.1`
+
+### Fixed
+
+- Fixed the performance of closed positions in the portfolio calculator caused by a rounding remainder in the investment
+- Fixed the missing mapping for Turkey in the country weightings of the _Financial Modeling Prep_ service
+- Fixed the missing mapping for Czech Republic and Turkey in the data enhancer for asset profile data via _Yahoo Finance_
+- Resolved an error when fetching dividends from _Yahoo Finance_ for date ranges without events
+
+## 3.49.0 - 2026-08-12
+
+### Changed
+
+- Improved the wording of the _X-ray_ page to use a neutral form
+- Improved the style of the disabled base currency in the user account settings
+- Moved the support to clone an activity in the account detail dialog from experimental to general availability
+- Moved the support to clone an activity in the holding detail dialog from experimental to general availability
+- Moved the support to edit an activity in the account detail dialog from experimental to general availability
+- Moved the support to edit an activity in the holding detail dialog from experimental to general availability
+- Removed the deprecated `isDraft` attribute of the activity in favor of the _Draft_ tag
+- Improved the language localization for German (`de`)
+
+## 3.48.1 - 2026-08-11
+
+### Added
+
+- Added the quantity to the accounts tab of the holding detail dialog (experimental)
+
+### Changed
+
+- Improved the performance of the _X-ray_ page by resolving the user only once per request
+- Refactored the impersonation mode to resolve the impersonated user once per request in a guard instead of in every endpoint
+- Restricted the modification of data in impersonation mode to the data of the authenticated user
+- Restricted the update of the user settings in impersonation mode to the settings of the authenticated user
+
+### Fixed
+
+- Fixed the allocation in the accounts tab of the holding detail dialog caused by floating-point rounding
+- Fixed the allocation in the accounts tab of the holding detail dialog by excluding the cash balance of the account
+- Fixed the account aggregations in impersonation mode to be based on the impersonated user
+- Fixed the base currency of the activities in impersonation mode to be based on the impersonated user
+- Fixed the base currency of the dividends in impersonation mode to be based on the impersonated user
+- Fixed the base currency of the user account settings in impersonation mode to be disabled
+- Fixed the benchmark of the performance chart in impersonation mode to be based on the authenticated user
+- Fixed the emergency fund of the _X-ray_ page in impersonation mode to be based on the impersonated user
+- Fixed the redaction of the emergency fund, projected total amount and savings rate in a restricted view
+- Fixed the rules of the _X-ray_ page to be withheld in a restricted view
+- Fixed the savings rate of the _FIRE_ calculator in impersonation mode to be presented
+- Fixed the user settings in impersonation mode to be based on the impersonated user
+- Fixed the validation of the impersonation identifier of an unknown user
+
+## 3.47.0 - 2026-08-10
+
+### Changed
+
+- Extended the toggle component to support a disabled state
+- Extended the toggle component to support icons
+- Reused the toggle component on the portfolio holdings page
+- Reused the currency selector component in the user account settings
+
+### Fixed
+
+- Fixed the handling of the disabled state in the currency selector and symbol autocomplete components
+- Fixed the restoration of the current selection in the currency selector component when leaving the field without picking an option
+
+## 3.46.0 - 2026-08-09
+
+### Added
+
+- Added the _Draft_ tag, assigned automatically to activities dated in the future
+
+### Changed
+
+- Deprecated the `isDraft` attribute of the activity in favor of the _Draft_ tag
+- Changed the activities count of an account to include draft activities
+- Extended the _Draft_ tag to activities with a custom asset profile of type `BUY`
+- Improved the language localization for German (`de`)
+- Upgraded `bull-board` from version `8.1.2` to `8.6.0`
+
+### Fixed
+
+- Fixed the dividend and interest of an account by excluding draft activities
+- Resolved an issue with unknown country names in the country weightings of the _Financial Modeling Prep_ service
+- Resolved an issue with unknown country names in the data enhancer for asset profile data via _Trackinsight_
+
+## 3.45.0 - 2026-08-08
+
+### Added
+
+- Added a _Coverage_ rule to the _Emergency Fund_ section on the _X-ray_ page
+
+### Changed
+
+- Aligned the x-axis of the dividend and investment timeline charts on the analysis page
+- Improved the check for duplicates in the preview step of the activities import (regardless of the account)
+- Improved the check for duplicates in the preview step of the import dividends dialog (regardless of the account)
+- Extended the activities import to reuse an existing account of the user by name and currency
+- Extended the activities import to resolve an ISIN to the symbol of the data provider
+- Improved the style of the placeholder in the entity logo component
+- Migrated the create, detail and edit account dialogs to dedicated routes
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the check for duplicates in the preview step of the activities import for activities without a comment
+- Fixed the holdings mock data in the _Storybook_ story of the portfolio filter form component
+
 ## 3.44.0 - 2026-08-07
 
 ### Added

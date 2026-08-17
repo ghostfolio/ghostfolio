@@ -45,7 +45,10 @@ export class I18nService implements OnModuleInit {
 
     if (placeholders) {
       for (const [key, value] of Object.entries(placeholders)) {
-        translatedText = translatedText.replace(`\${${key}}`, String(value));
+        translatedText = translatedText.replace(
+          new RegExp(`\\$\\{${key}\\}`, 'g'),
+          String(value)
+        );
       }
     }
 

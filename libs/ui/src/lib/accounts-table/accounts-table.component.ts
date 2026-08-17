@@ -4,6 +4,7 @@ import {
   getLowercase,
   isAccountExcluded
 } from '@ghostfolio/common/helper';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -65,16 +66,34 @@ export class GfAccountsTableComponent {
   public readonly showAllocationInPercentage = input<boolean>();
   public readonly showBalance = input(true);
   public readonly showFooter = input(true);
+  public readonly showQuantity = input<boolean>();
   public readonly showValue = input(true);
   public readonly showValueInBaseCurrency = input(true);
   public readonly totalBalanceInBaseCurrency = input<number>();
   public readonly totalValueInBaseCurrency = input<number>();
 
   public readonly accountDeleted = output<string>();
-  public readonly accountToUpdate = output<AccountWithValue>();
   public readonly transferBalance = output<void>();
 
   public readonly sort = viewChild.required(MatSort);
+
+  protected readonly accountDialogRouterLinks = computed(() => {
+    const { detail, update } = internalRoutes.accounts.subRoutes;
+
+    const routerLinks = new Map<
+      string,
+      { detail: string[]; update: string[] }
+    >();
+
+    for (const { id } of this.accounts() ?? []) {
+      routerLinks.set(id, {
+        detail: detail.routerLink(id),
+        update: update.routerLink(id)
+      });
+    }
+
+    return routerLinks;
+  });
 
   protected readonly dataSource = new MatTableDataSource<AccountWithValue>([]);
 
@@ -85,6 +104,10 @@ export class GfAccountsTableComponent {
       columns.push('activitiesCount');
     }
 
+    if (this.showQuantity()) {
+      columns.push('quantity');
+    }
+
     if (this.showBalance()) {
       columns.push('balance');
     }
@@ -93,7 +116,9 @@ export class GfAccountsTableComponent {
       columns.push('value');
     }
 
-    columns.push('currency');
+    if (this.showBalance() || this.showValue()) {
+      columns.push('currency');
+    }
 
     if (this.showValueInBaseCurrency()) {
       columns.push('valueInBaseCurrency');
@@ -159,9 +184,9 @@ export class GfAccountsTableComponent {
 
   protected onOpenAccountDetailDialog(accountId: string) {
     if (this.hasPermissionToOpenDetails()) {
-      this.router.navigate([], {
-        queryParams: { accountId, accountDetailDialog: true }
-      });
+      void this.router.navigate(
+        internalRoutes.accounts.subRoutes.detail.routerLink(accountId)
+      );
     }
   }
 
@@ -173,9 +198,5 @@ export class GfAccountsTableComponent {
 
   protected onTransferBalance() {
     this.transferBalance.emit();
-  }
-
-  protected onUpdateAccount(aAccount: AccountWithValue) {
-    this.accountToUpdate.emit(aAccount);
   }
 }

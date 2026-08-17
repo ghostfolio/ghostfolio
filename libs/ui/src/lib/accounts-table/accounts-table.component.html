@@ -131,6 +131,26 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="quantity">
+      <th
+        *matHeaderCellDef
+        class="justify-content-end px-1"
+        mat-header-cell
+        mat-sort-header
+      >
+        <ng-container i18n>Quantity</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+        <gf-value
+          class="d-inline-block justify-content-end"
+          [isCurrency]="true"
+          [locale]="locale()"
+          [value]="element.quantity"
+        />
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
+
     <ng-container matColumnDef="balance">
       <th
         *matHeaderCellDef
@@ -307,18 +327,26 @@
           <ion-icon name="ellipsis-horizontal" />
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="onOpenAccountDetailDialog(element.id)">
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="wallet-outline" />
-              <span><ng-container i18n>View Details</ng-container>...</span>
-            </span>
-          </button>
-          <button mat-menu-item (click)="onUpdateAccount(element)">
+          @if (hasPermissionToOpenDetails()) {
+            <a
+              mat-menu-item
+              [routerLink]="accountDialogRouterLinks().get(element.id)?.detail"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="wallet-outline" />
+                <span><ng-container i18n>View Details</ng-container>...</span>
+              </span>
+            </a>
+          }
+          <a
+            mat-menu-item
+            [routerLink]="accountDialogRouterLinks().get(element.id)?.update"
+          >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="create-outline" />
               <span><ng-container i18n>Edit</ng-container>...</span>
             </span>
-          </button>
+          </a>
           <hr class="m-0" />
           <button
             mat-menu-item

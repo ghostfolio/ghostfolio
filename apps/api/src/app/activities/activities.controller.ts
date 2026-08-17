@@ -1,31 +1,33 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import {
-  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-  HEADER_KEY_IMPERSONATION
-} from '@ghostfolio/common/config';
+import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import {
   ActivitiesResponse,
   ActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type {
+  ImpersonationContext,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
   Body,
   Controller,
   Delete,
   Get,
-  Headers,
   HttpException,
   Inject,
   Param,
@@ -52,7 +54,6 @@ export class ActivitiesController {
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
     private readonly dataGatheringService: DataGatheringService,
-    private readonly impersonationService: ImpersonationService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -61,7 +62,6 @@ export class ActivitiesController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query()
     {
       accounts,
@@ -73,13 +73,6 @@ export class ActivitiesController {
       tags
     }: ActivitiesFilterDto
   ): Promise<number> {
-    if (impersonationId) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     let endDate: Date;
     let startDate: Date;
 
@@ -128,12 +121,12 @@ export class ActivitiesController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllActivities(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Query()
     {
       accounts,
@@ -166,11 +159,6 @@ export class ActivitiesController {
       filterByTags: tags
     });
 
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
-
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
       filters,
@@ -179,10 +167,10 @@ export class ActivitiesController {
       sortDirection,
       startDate,
       take,
-      userCurrency,
+      userId,
       includeDrafts: true,
       types: activityTypes,
-      userId: impersonationUserId || this.request.user.id,
+      userCurrency: userSettings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
@@ -190,21 +178,17 @@ export class ActivitiesController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getActivityById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<ActivityResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
-
     const { activities } = await this.activitiesService.getActivities({
-      userCurrency,
+      userId,
       includeDrafts: true,
-      userId: impersonationUserId || this.request.user.id,
+      userCurrency: userSettings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
@@ -287,9 +271,9 @@ export class ActivitiesController {
       userId: this.request.user.id
     });
 
-    if (dataSource && !activity.isDraft) {
+    if (dataSource && !isActivityInFuture({ date: activity.date })) {
       // Gather symbol data in the background, if data source is set
-      // (not MANUAL) and not draft
+      // (not MANUAL) and the date is not in the future
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
@@ -369,6 +353,7 @@ export class ActivitiesController {
         }),
         user: { connect: { id: this.request.user.id } }
       },
+      originalDate: originalActivity.date,
       userId: this.request.user.id,
       where: {
         id

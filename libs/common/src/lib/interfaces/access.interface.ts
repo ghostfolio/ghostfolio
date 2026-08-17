@@ -8,7 +8,13 @@ export interface Access {
   alias: string | null;
   grantee?: string;
   id: string;
+
+  /**
+   * @deprecated Use the scopes instead
+   */
   permissions: AccessPermission[];
+
+  scopes: string[];
   settings?: AccessSettings;
   type: AccessType;
 }

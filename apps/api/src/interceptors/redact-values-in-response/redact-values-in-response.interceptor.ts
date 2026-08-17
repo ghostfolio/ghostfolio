@@ -1,13 +1,8 @@
 import { redactPaths } from '@ghostfolio/api/helper/object.helper';
-import {
-  DEFAULT_REDACTED_PATHS,
-  HEADER_KEY_IMPERSONATION
-} from '@ghostfolio/common/config';
-import {
-  hasReadRestrictedAccessPermission,
-  isRestrictedView
-} from '@ghostfolio/common/permissions';
-import { UserWithSettings } from '@ghostfolio/common/types';
+import { DEFAULT_REDACTED_PATHS } from '@ghostfolio/common/config';
+import { isRestrictedView } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   CallHandler,
@@ -29,17 +24,15 @@ export class RedactValuesInResponseInterceptor<T> implements NestInterceptor<
   ): Observable<any> {
     return next.handle().pipe(
       map((data: any) => {
-        const { headers, user }: { headers: Headers; user: UserWithSettings } =
-          context.switchToHttp().getRequest();
+        const { impersonation, user } = context
+          .switchToHttp()
+          .getRequest<RequestWithUser>();
 
-        const impersonationId =
-          headers?.[HEADER_KEY_IMPERSONATION.toLowerCase()];
-
+        // A missing impersonation context originates from a public request or
+        // from a route without the ImpersonationGuard, hence the monetary
+        // values are redacted to never expose them unintentionally
         if (
-          hasReadRestrictedAccessPermission({
-            impersonationId,
-            accesses: user?.accessesGet
-          }) ||
+          !hasScope(impersonation?.scopes, scopes.portfolioReadValues) ||
           isRestrictedView(user)
         ) {
           data = redactPaths({

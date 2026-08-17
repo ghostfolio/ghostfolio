@@ -1,4 +1,5 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { TAG_ID_DRAFT } from '@ghostfolio/common/config';
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { Prisma, Tag } from '@prisma/client';
@@ -9,9 +10,13 @@ export class TagService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async createTag(data: Prisma.TagCreateInput) {
-    return this.prismaService.tag.create({
-      data
-    });
+    try {
+      return await this.prismaService.tag.create({
+        data
+      });
+    } catch (error) {
+      throw this.getExceptionForError(error);
+    }
   }
 
   public async deleteTag(where: Prisma.TagWhereUniqueInput): Promise<Tag> {
@@ -120,10 +125,14 @@ export class TagService {
     data: Prisma.TagUpdateInput;
     where: Prisma.TagWhereUniqueInput;
   }): Promise<Tag> {
-    return this.prismaService.tag.update({
-      data,
-      where
-    });
+    try {
+      return await this.prismaService.tag.update({
+        data,
+        where
+      });
+    } catch (error) {
+      throw this.getExceptionForError(error);
+    }
   }
 
   public async validateTagIds({
@@ -159,5 +168,38 @@ export class TagService {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  public async validateTagIdsWithoutDraftTag({
+    tagIds,
+    userId
+  }: {
+    tagIds: string[];
+    userId: string;
+  }) {
+    // The "DRAFT" tag qualifies an individual activity and can therefore
+    // neither be assigned to an account nor to all activities of a holding
+    if (tagIds?.includes(TAG_ID_DRAFT)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return this.validateTagIds({ tagIds, userId });
+  }
+
+  private getExceptionForError(error: unknown) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      return new HttpException(
+        getReasonPhrase(StatusCodes.CONFLICT),
+        StatusCodes.CONFLICT
+      );
+    }
+
+    return error;
   }
 }

@@ -10,13 +10,14 @@ import { UserSettings } from './user-settings.interface';
 
 // TODO: Compare with UserWithSettings
 export interface User {
-  access: Pick<Access, 'alias' | 'id' | 'permissions'>[];
+  access: Pick<Access, 'alias' | 'id' | 'permissions' | 'scopes'>[];
   accounts: AccountWithPlatform[];
   activitiesCount: number;
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
   referralPartners?: ReferralPartner[];
+  scopes: string[];
   settings: UserSettings;
   systemMessage?: SystemMessage;
   subscription: {

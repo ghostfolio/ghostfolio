@@ -1,34 +1,34 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import type {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Body,
   Controller,
   Delete,
   Get,
-  Headers,
   HttpException,
-  Inject,
   Param,
   Post,
   Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -36,13 +36,13 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { BenchmarksService } from './benchmarks.service';
 import { GetBenchmarkMarketDataDto } from './get-benchmark-market-data.dto';
 
+@AllowDuringImpersonation()
 @Controller('benchmarks')
 export class BenchmarksController {
   public constructor(
     private readonly apiService: ApiService,
     private readonly benchmarkService: BenchmarkService,
-    private readonly benchmarksService: BenchmarksService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly benchmarksService: BenchmarksService
   ) {}
 
   @HasPermission(permissions.accessAdminControl)
@@ -112,10 +112,10 @@ export class BenchmarksController {
   }
 
   @Get(':dataSource/:symbol/:startDateString')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getBenchmarkMarketDataForUser(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string,
@@ -147,12 +147,12 @@ export class BenchmarksController {
       dataSource,
       endDate,
       filters,
-      impersonationId,
       startDate,
       symbol,
+      userId,
+      userSettings,
       withExcludedAccounts,
-      dateRange: range,
-      user: this.request.user
+      dateRange: range
     });
   }
 }

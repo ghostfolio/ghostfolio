@@ -15,7 +15,6 @@ export interface ExportResponse {
     | 'accountUserId'
     | 'createdAt'
     | 'date'
-    | 'isDraft'
     | 'symbolProfileId'
     | 'updatedAt'
     | 'userId'

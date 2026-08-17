@@ -5,9 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { RouterModule } from '@angular/router';
+import { provideRouter, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { moduleMetadata } from '@storybook/angular';
+import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -92,6 +92,9 @@ export default {
   title: 'Accounts Table',
   component: GfAccountsTableComponent,
   decorators: [
+    applicationConfig({
+      providers: [provideRouter([])]
+    }),
     moduleMetadata({
       imports: [
         CommonModule,
@@ -136,6 +139,25 @@ export const Default: Story = {
     hasPermissionToOpenDetails: false,
     locale: 'en-US',
     showActions: false,
+    showActivitiesCount: true,
+    showAllocationInPercentage: false,
+    showBalance: true,
+    showFooter: true,
+    showValue: true,
+    showValueInBaseCurrency: true,
+    totalBalanceInBaseCurrency: 12428.2,
+    totalValueInBaseCurrency: 107971.70321466809
+  }
+};
+
+export const Actions: Story = {
+  args: {
+    accounts,
+    activitiesCount: 12,
+    baseCurrency: 'USD',
+    hasPermissionToOpenDetails: true,
+    locale: 'en-US',
+    showActions: true,
     showActivitiesCount: true,
     showAllocationInPercentage: false,
     showBalance: true,

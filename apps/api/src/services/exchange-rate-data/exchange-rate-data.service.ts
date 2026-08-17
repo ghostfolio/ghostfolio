@@ -261,8 +261,6 @@ export class ExchangeRateDataService {
         const factor2 = this.exchangeRates[`${DEFAULT_CURRENCY}${aToCurrency}`];
 
         factor = factor1 * factor2;
-
-        this.exchangeRates[`${aFromCurrency}${aToCurrency}`] = factor;
       }
     }
 

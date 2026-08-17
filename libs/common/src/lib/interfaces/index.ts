@@ -94,7 +94,6 @@ import type { SubscriptionOffer } from './subscription-offer.interface';
 import type { SymbolItem } from './symbol-item.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
-import type { ToggleOption } from './toggle-option.interface';
 import type { UserItem } from './user-item.interface';
 import type { UserSettings } from './user-settings.interface';
 import type { User } from './user.interface';
@@ -191,7 +190,6 @@ export {
   SymbolItem,
   SymbolMetrics,
   SystemMessage,
-  ToggleOption,
   User,
   UserItem,
   UserSettings,

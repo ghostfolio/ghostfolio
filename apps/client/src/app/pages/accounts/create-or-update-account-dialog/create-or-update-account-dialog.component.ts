@@ -1,4 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { TAG_ID_DRAFT } from '@ghostfolio/common/config';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
 import { getStringOrNull } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -92,12 +93,18 @@ export class GfCreateOrUpdateAccountDialogComponent {
     );
 
     this.tagsAvailable =
-      this.data.user?.tags?.map((tag) => {
-        return {
-          ...tag,
-          name: translate(tag.name)
-        };
-      }) ?? [];
+      this.data.user?.tags
+        ?.filter(({ id }) => {
+          // The "DRAFT" tag qualifies an individual activity and cannot be
+          // assigned to an account
+          return id !== TAG_ID_DRAFT;
+        })
+        .map((tag) => {
+          return {
+            ...tag,
+            name: translate(tag.name)
+          };
+        }) ?? [];
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],

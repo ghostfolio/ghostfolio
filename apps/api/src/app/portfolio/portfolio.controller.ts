@@ -1,6 +1,7 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
   hasNotDefinedValuesInObject,
@@ -12,12 +13,8 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import {
-  HEADER_KEY_IMPERSONATION,
-  UNKNOWN_KEY
-} from '@ghostfolio/common/config';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   PortfolioDetails,
@@ -28,18 +25,17 @@ import {
   PortfolioPerformanceResponse,
   PortfolioReportResponse
 } from '@ghostfolio/common/interfaces';
-import {
-  hasReadRestrictedAccessPermission,
-  isRestrictedView,
-  permissions
-} from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { isRestrictedView, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import type {
+  ImpersonationContext,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
   Body,
   Controller,
   Get,
-  Headers,
   HttpException,
   Inject,
   Param,
@@ -69,19 +65,18 @@ export class PortfolioController {
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
-    private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Get('details')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation()
+    { scopes: impersonationScopes, userId }: ImpersonationContext,
     @Query()
     {
       accounts: filterByAccounts,
@@ -120,10 +115,9 @@ export class PortfolioController {
       summary
     } = await this.portfolioService.getDetails({
       filters,
-      impersonationId,
+      userId,
       withMarkets,
       dateRange: range,
-      userId: this.request.user.id,
       withSummary: true
     });
 
@@ -134,10 +128,7 @@ export class PortfolioController {
     let portfolioSummary = summary;
 
     if (
-      hasReadRestrictedAccessPermission({
-        impersonationId,
-        accesses: this.request.user?.accessesGet
-      }) ||
+      !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
       isRestrictedView(this.request.user)
     ) {
       const totalInvestment = Object.values(holdings)
@@ -178,10 +169,7 @@ export class PortfolioController {
 
     if (
       hasDetails === false ||
-      hasReadRestrictedAccessPermission({
-        impersonationId,
-        accesses: this.request.user?.accessesGet
-      }) ||
+      !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
       isRestrictedView(this.request.user)
     ) {
       Object.values(markets ?? {}).forEach((market) => {
@@ -323,10 +311,11 @@ export class PortfolioController {
   }
 
   @Get('dividends')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getDividends(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation()
+    { scopes: impersonationScopes, userId, userSettings }: ImpersonationContext,
     @Query()
     {
       accounts,
@@ -346,12 +335,7 @@ export class PortfolioController {
       filterByTags: tags
     });
 
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-    const userId = impersonationUserId || this.request.user.id;
-
-    const { settings } = await this.userService.user({ id: userId });
-    const userCurrency = settings.settings.baseCurrency;
+    const userCurrency = userSettings.baseCurrency;
 
     const { endDate, startDate } = getIntervalFromDateRange({
       dateRange: range
@@ -372,10 +356,7 @@ export class PortfolioController {
     });
 
     if (
-      hasReadRestrictedAccessPermission({
-        impersonationId,
-        accesses: this.request.user?.accessesGet
-      }) ||
+      !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
       isRestrictedView(this.request.user)
     ) {
       const maxDividend = dividends.reduce(
@@ -405,17 +386,16 @@ export class PortfolioController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   public async getHolding(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId }: ImpersonationContext,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<PortfolioHoldingResponse> {
     const holding = await this.portfolioService.getHolding({
       dataSource,
-      impersonationId,
       symbol,
-      userId: this.request.user.id
+      userId
     });
 
     if (!holding) {
@@ -429,12 +409,12 @@ export class PortfolioController {
   }
 
   @Get('holdings')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getHoldings(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId }: ImpersonationContext,
     @Query()
     {
       accounts,
@@ -459,19 +439,19 @@ export class PortfolioController {
 
     const holdings = await this.portfolioService.getHoldings({
       filters,
-      impersonationId,
-      dateRange: range,
-      userId: this.request.user.id
+      userId,
+      dateRange: range
     });
 
     return { holdings };
   }
 
   @Get('investments')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getInvestments(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation()
+    { scopes: impersonationScopes, userId }: ImpersonationContext,
     @Query()
     {
       accounts,
@@ -495,16 +475,12 @@ export class PortfolioController {
       await this.portfolioService.getInvestments({
         filters,
         groupBy,
-        impersonationId,
-        dateRange: range,
-        userId: this.request.user.id
+        userId,
+        dateRange: range
       });
 
     if (
-      hasReadRestrictedAccessPermission({
-        impersonationId,
-        accesses: this.request.user?.accessesGet
-      }) ||
+      !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
       isRestrictedView(this.request.user)
     ) {
       const maxInvestment = investments.reduce(
@@ -543,13 +519,14 @@ export class PortfolioController {
   }
 
   @Get('performance')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   @UseInterceptors(PerformanceLoggingInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @Version('2')
   public async getPerformanceV2(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation()
+    { scopes: impersonationScopes, userId }: ImpersonationContext,
     @Query()
     {
       accounts,
@@ -571,17 +548,13 @@ export class PortfolioController {
 
     const performanceInformation = await this.portfolioService.getPerformance({
       filters,
-      impersonationId,
+      userId,
       withExcludedAccounts,
-      dateRange: range,
-      userId: this.request.user.id
+      dateRange: range
     });
 
     if (
-      hasReadRestrictedAccessPermission({
-        impersonationId,
-        accesses: this.request.user?.accessesGet
-      }) ||
+      !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
       isRestrictedView(this.request.user) ||
       this.request.user.settings.settings.viewMode === 'ZEN'
     ) {
@@ -657,18 +630,18 @@ export class PortfolioController {
   }
 
   @Get('report')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   public async getReport(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
+    @Impersonation()
+    { scopes: impersonationScopes, userId }: ImpersonationContext
   ): Promise<PortfolioReportResponse> {
-    const report = await this.portfolioService.getReport({
-      impersonationId,
-      userId: this.request.user.id
-    });
+    const report = await this.portfolioService.getReport({ userId });
 
     if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription?.type === SubscriptionType.Basic
+      !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
+      isRestrictedView(this.request.user) ||
+      (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        this.request.user.subscription?.type === SubscriptionType.Basic)
     ) {
       for (const category of report.xRay.categories) {
         category.rules = null;
