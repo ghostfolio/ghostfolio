@@ -1,5 +1,6 @@
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
+import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
@@ -17,8 +18,6 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { Account } from '@prisma/client';
 
 import {
   TransferBalanceDialogParams,
@@ -29,12 +28,11 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    GfEntityLogoComponent,
+    GfAccountSelectorComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     ReactiveFormsModule
   ],
   selector: 'gf-transfer-balance-dialog',
@@ -42,10 +40,13 @@ import {
   templateUrl: 'transfer-balance-dialog.html'
 })
 export class GfTransferBalanceDialogComponent {
-  protected readonly accounts: Account[] =
+  protected readonly accounts: AccountWithPlatform[] =
     inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA).accounts;
 
   protected currency: string;
+
+  protected readonly labelFrom = $localize`From`;
+  protected readonly labelTo = $localize`To`;
 
   protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup(
     {
@@ -60,18 +61,6 @@ export class GfTransferBalanceDialogComponent {
 
   private readonly dialogRef =
     inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
-
-  protected get selectedFromAccount() {
-    return this.getAccountById(
-      this.transferBalanceForm.controls.fromAccount.value
-    );
-  }
-
-  protected get selectedToAccount() {
-    return this.getAccountById(
-      this.transferBalanceForm.controls.toAccount.value
-    );
-  }
 
   public ngOnInit() {
     this.transferBalanceForm.controls.fromAccount.valueChanges.subscribe(

@@ -11,7 +11,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
@@ -59,7 +59,7 @@ import { ActivityType } from './types/activity-type.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    GfEntityLogoComponent,
+    GfAccountSelectorComponent,
     GfSymbolAutocompleteComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
@@ -98,6 +98,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
   protected hasPermissionToCreateOwnTag: boolean;
   protected isLoading = false;
   protected readonly isToday = isToday;
+  protected readonly labelAccount = $localize`Account`;
   protected mode: 'create' | 'update';
   protected tagsAvailable: Tag[] = [];
   protected total = 0;
@@ -119,12 +120,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
   public constructor() {
     addIcons({ calendarClearOutline, refreshOutline });
-  }
-
-  protected get selectedAccount() {
-    return this.data.accounts.find(({ id }) => {
-      return id === this.activityForm.get('accountId')?.value;
-    });
   }
 
   public ngOnInit() {

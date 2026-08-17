@@ -1,0 +1,44 @@
+<mat-form-field
+  appearance="outline"
+  class="w-100"
+  [class.without-hint]="!hasHint()"
+>
+  <mat-label>{{ label() }}</mat-label>
+  <mat-select
+    [errorStateMatcher]="errorStateMatcher"
+    [formControl]="control"
+    (closed)="onPanelClosed()"
+  >
+    <mat-select-trigger>
+      <div class="d-flex">
+        @if (selectedAccount()) {
+          <gf-entity-logo
+            class="mr-1"
+            [hasPlaceholder]="true"
+            [tooltip]="selectedAccount()?.platform?.name ?? ''"
+            [url]="selectedAccount()?.platform?.url ?? ''"
+          />
+        }
+        <span>{{ selectedAccount()?.name }}</span>
+      </div>
+    </mat-select-trigger>
+
+    @if (hasNullOption()) {
+      <mat-option [value]="null" />
+    }
+
+    @for (account of accounts(); track account.id) {
+      <mat-option [value]="account.id">
+        <div class="d-flex">
+          <gf-entity-logo
+            class="mr-1"
+            [hasPlaceholder]="true"
+            [tooltip]="account.platform?.name ?? ''"
+            [url]="account.platform?.url ?? ''"
+          />
+          <span>{{ account.name }}</span>
+        </div>
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
