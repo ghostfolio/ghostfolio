@@ -6,6 +6,7 @@ import {
 import {
   CreateAssetProfileSplitDto,
   CreatePlatformDto,
+  MergeAssetProfileDto,
   UpdateAssetProfileDto,
   UpdatePlatformDto
 } from '@ghostfolio/common/dtos';
@@ -186,6 +187,16 @@ export class AdminService {
     const url = `/api/v1/symbol/${dataSource}/${encodeURIComponent(symbol)}/${dateString}`;
 
     return this.http.get<DataProviderHistoricalResponse>(url);
+  }
+
+  public mergeAssetProfile(
+    { dataSource, symbol }: AssetProfileIdentifier,
+    targetAssetProfile: MergeAssetProfileDto
+  ) {
+    return this.http.post<EnhancedAssetProfile>(
+      `/api/v1/admin/profile-data/${dataSource}/${encodeURIComponent(symbol)}/merge`,
+      targetAssetProfile
+    );
   }
 
   public patchAssetProfile(

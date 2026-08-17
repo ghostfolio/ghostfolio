@@ -797,13 +797,10 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
 
     this.patchAssetProfileIdentifier({
-      getErrorMessage: (error) => {
-        if (error.status === StatusCodes.CONFLICT) {
-          // TODO: Ask if the user wants to merge the two asset profiles
-
-          return $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`;
-        }
-
+      conflictFn: () => {
+        this.mergeAssetProfile(newAssetProfileIdentifier);
+      },
+      getErrorMessage: () => {
         return $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`;
       },
       title: $localize`Do you really want to convert this asset profile to ${newAssetProfileIdentifier.symbol} (${newAssetProfileIdentifier.dataSource})?`,
@@ -907,11 +904,52 @@ export class GfAssetProfileDialogComponent implements OnInit {
     return null;
   }
 
+  private mergeAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.adminService
+          .mergeAssetProfile(
+            {
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            },
+            { dataSource, symbol }
+          )
+          .pipe(
+            catchError(() => {
+              this.snackBar.open(
+                '😞 ' +
+                  $localize`An error occurred while merging this asset profile into ${symbol} (${dataSource}).`,
+                undefined,
+                {
+                  duration: ms('3 seconds')
+                }
+              );
+
+              return EMPTY;
+            }),
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe((mergedAssetProfile) => {
+            this.dialogRef.close({
+              dataSource: mergedAssetProfile.dataSource,
+              symbol: mergedAssetProfile.symbol
+            });
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      message: $localize`The activities and the missing historical market data of this asset profile are moved to ${symbol} (${dataSource}). Then this asset profile is deleted. This action cannot be undone.`,
+      title: $localize`${symbol} (${dataSource}) is already in use. Do you really want to merge this asset profile into it?`
+    });
+  }
+
   private patchAssetProfileIdentifier({
+    conflictFn,
     getErrorMessage,
     title,
     updateAssetProfileDto
   }: {
+    conflictFn?: () => void;
     getErrorMessage: (error: HttpErrorResponse) => string;
     title: string;
     updateAssetProfileDto: UpdateAssetProfileDto;
@@ -929,9 +967,13 @@ export class GfAssetProfileDialogComponent implements OnInit {
           )
           .pipe(
             catchError((error: HttpErrorResponse) => {
-              this.snackBar.open(getErrorMessage(error), undefined, {
-                duration: ms('3 seconds')
-              });
+              if (error.status === StatusCodes.CONFLICT && conflictFn) {
+                conflictFn();
+              } else {
+                this.snackBar.open(getErrorMessage(error), undefined, {
+                  duration: ms('3 seconds')
+                });
+              }
 
               return EMPTY;
             }),

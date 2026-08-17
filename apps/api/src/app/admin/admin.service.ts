@@ -1,12 +1,15 @@
 import { environment } from '@ghostfolio/api/environments/environment';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   ghostfolioPrefix,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
@@ -16,13 +19,15 @@ import {
   applyAssetProfileOverrides,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol,
-  hasGhostfolioPrefix
+  hasGhostfolioPrefix,
+  isCurrencySymbol
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminUserResponse,
   AdminUsersResponse,
-  AssetProfileIdentifier
+  AssetProfileIdentifier,
+  EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 import { PropertyKey } from '@ghostfolio/common/types';
 
@@ -47,7 +52,9 @@ import { randomUUID } from 'node:crypto';
 @Injectable()
 export class AdminService {
   public constructor(
+    private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
+    private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
@@ -231,6 +238,203 @@ export class AdminService {
     ]);
 
     return { count, users };
+  }
+
+  /**
+   * Merges the source asset profile into the target asset profile. The
+   * activities and the watchlist entries are moved to the target asset profile
+   * and the market data and the splits which are missing there are copied.
+   * The metadata of the source asset profile is discarded, because the target
+   * asset profile is the authoritative one. Then the source asset profile is
+   * deleted and the market data of the target asset profile is gathered again.
+   */
+  public async mergeAssetProfile(
+    sourceAssetProfileIdentifier: AssetProfileIdentifier,
+    targetAssetProfileIdentifier: AssetProfileIdentifier
+  ): Promise<EnhancedAssetProfile> {
+    if (
+      getAssetProfileIdentifier(sourceAssetProfileIdentifier) ===
+      getAssetProfileIdentifier(targetAssetProfileIdentifier)
+    ) {
+      throw new BadRequestException(
+        'The source and the target asset profile must be different'
+      );
+    }
+
+    if (
+      isCurrencySymbol(sourceAssetProfileIdentifier.symbol) ||
+      isCurrencySymbol(targetAssetProfileIdentifier.symbol)
+    ) {
+      throw new BadRequestException(
+        'The asset profile of a currency cannot be merged'
+      );
+    }
+
+    const [sourceAssetProfile, targetAssetProfile] = await Promise.all([
+      this.prismaService.symbolProfile.findUnique({
+        include: { watchedBy: { select: { id: true } } },
+        where: {
+          dataSource_symbol: {
+            dataSource: sourceAssetProfileIdentifier.dataSource,
+            symbol: sourceAssetProfileIdentifier.symbol
+          }
+        }
+      }),
+      this.prismaService.symbolProfile.findUnique({
+        include: { watchedBy: { select: { id: true } } },
+        where: {
+          dataSource_symbol: {
+            dataSource: targetAssetProfileIdentifier.dataSource,
+            symbol: targetAssetProfileIdentifier.symbol
+          }
+        }
+      })
+    ]);
+
+    if (!sourceAssetProfile || !targetAssetProfile) {
+      throw new NotFoundException(
+        'The source or the target asset profile does not exist'
+      );
+    }
+
+    // An activity without a currency inherits the currency of its asset
+    // profile, hence a merge into an asset profile with another currency
+    // would change the value of the moved activities
+    if (sourceAssetProfile.currency !== targetAssetProfile.currency) {
+      throw new BadRequestException(
+        `The currency of the source asset profile (${sourceAssetProfile.currency}) does not match the currency of the target asset profile (${targetAssetProfile.currency})`
+      );
+    }
+
+    const [marketDataItems, splits] = await Promise.all([
+      this.prismaService.marketData.findMany({
+        select: { date: true, marketPrice: true, state: true },
+        where: {
+          dataSource: sourceAssetProfileIdentifier.dataSource,
+          symbol: sourceAssetProfileIdentifier.symbol
+        }
+      }),
+      this.prismaService.assetProfileSplit.findMany({
+        select: { date: true, denominator: true, numerator: true },
+        where: { symbolProfileId: sourceAssetProfile.id }
+      })
+    ]);
+
+    const userIdsWatchingTargetAssetProfile = new Set(
+      targetAssetProfile.watchedBy.map(({ id }) => {
+        return id;
+      })
+    );
+
+    const usersToConnect = sourceAssetProfile.watchedBy.filter(({ id }) => {
+      return !userIdsWatchingTargetAssetProfile.has(id);
+    });
+
+    const benchmarkAssetProfiles =
+      await this.benchmarkService.getBenchmarkAssetProfiles();
+
+    const isSourceAssetProfileBenchmark = benchmarkAssetProfiles.some(
+      ({ id }) => {
+        return id === sourceAssetProfile.id;
+      }
+    );
+
+    if (isSourceAssetProfileBenchmark) {
+      // A benchmark refers to the id of its asset profile, which cannot be
+      // resolved anymore after the source asset profile is deleted
+      await this.benchmarkService.addBenchmark(targetAssetProfileIdentifier);
+      await this.benchmarkService.deleteBenchmark(sourceAssetProfileIdentifier);
+    }
+
+    const operations: Prisma.PrismaPromise<unknown>[] = [
+      this.prismaService.order.updateMany({
+        data: { symbolProfileId: targetAssetProfile.id },
+        where: { symbolProfileId: sourceAssetProfile.id }
+      }),
+      this.prismaService.symbolProfile.update({
+        data: {
+          watchedBy: {
+            connect: usersToConnect.map(({ id }) => {
+              return { id };
+            })
+          }
+        },
+        where: { id: targetAssetProfile.id }
+      }),
+      this.prismaService.marketData.createMany({
+        data: marketDataItems.map(({ date, marketPrice, state }) => {
+          return {
+            date,
+            marketPrice,
+            state,
+            dataSource: targetAssetProfileIdentifier.dataSource,
+            symbol: targetAssetProfileIdentifier.symbol
+          };
+        }),
+        skipDuplicates: true
+      }),
+      // The splits are copied as well, because they adjust the activities
+      // which are moved to the target asset profile
+      this.prismaService.assetProfileSplit.createMany({
+        data: splits.map(({ date, denominator, numerator }) => {
+          return {
+            date,
+            denominator,
+            numerator,
+            symbolProfileId: targetAssetProfile.id
+          };
+        }),
+        skipDuplicates: true
+      }),
+      // The market data has no relation to the asset profile and is therefore
+      // not deleted in cascade
+      this.prismaService.marketData.deleteMany({
+        where: {
+          dataSource: sourceAssetProfileIdentifier.dataSource,
+          symbol: sourceAssetProfileIdentifier.symbol
+        }
+      }),
+      this.prismaService.symbolProfile.delete({
+        where: { id: sourceAssetProfile.id }
+      })
+    ];
+
+    try {
+      await this.prismaService.$transaction(operations);
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    // The moved activities can start before the first market data item of the
+    // target asset profile. The market data is not gathered with force,
+    // because that replaces the market data which has just been copied.
+    const earliestActivity = await this.prismaService.order.findFirst({
+      orderBy: { date: 'asc' },
+      select: { date: true },
+      where: { symbolProfileId: targetAssetProfile.id }
+    });
+
+    if (earliestActivity) {
+      await this.dataGatheringService.gatherSymbols({
+        dataGatheringItems: [
+          {
+            ...targetAssetProfileIdentifier,
+            date: earliestActivity.date
+          }
+        ],
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      });
+    }
+
+    const [mergedAssetProfile] =
+      await this.symbolProfileService.getSymbolProfiles([
+        targetAssetProfileIdentifier
+      ]);
+
+    return mergedAssetProfile;
   }
 
   public async patchAssetProfileData(
