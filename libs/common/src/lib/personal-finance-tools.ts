@@ -150,6 +150,19 @@ export const personalFinanceTools: Product[] = [
   },
   {
     categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'bankin',
+    languages: ['English', 'Français'],
+    name: 'Bankin’',
+    origin: 'FR',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: '€39.99',
+    slogan: 'L’app tout-en-1 pour mieux gérer son argent',
+    url: 'https://www.bankin.com'
+  },
+  {
+    categories: ['BUDGETING'],
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'banktivity',
@@ -189,6 +202,19 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$100',
     slogan: 'Stock Portfolio Tracker for Smart Investors',
     url: 'https://beanvest.com'
+  },
+  {
+    categories: ['BUDGETING'],
+    founded: 2022,
+    hasSelfHostingAbility: false,
+    isArchived: true,
+    key: 'billi',
+    languages: ['English'],
+    name: 'Billi',
+    origin: 'CA',
+    platforms: ['ANDROID', 'IOS'],
+    slogan: 'Be Money Mindful',
+    url: 'https://billi.webflow.io'
   },
   {
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
@@ -479,6 +505,19 @@ export const personalFinanceTools: Product[] = [
     url: 'https://8figures.com'
   },
   {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'emma',
+    languages: ['English'],
+    name: 'Emma',
+    origin: 'GB',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: '£41.99',
+    slogan: 'Take control of your money',
+    url: 'https://emma-app.com'
+  },
+  {
     categories: ['WEALTH_MANAGEMENT'],
     founded: 2010,
     hasFreePlan: false,
@@ -636,6 +675,18 @@ export const personalFinanceTools: Product[] = [
     url: 'https://fincite.de'
   },
   {
+    categories: ['BUDGETING'],
+    hasSelfHostingAbility: false,
+    key: 'fintable',
+    languages: ['English'],
+    name: 'Fintable',
+    origin: 'CA',
+    platforms: ['WEB'],
+    pricingPerYear: '$84.00',
+    slogan: 'Sync your bank to spreadsheets',
+    url: 'https://fintable.io'
+  },
+  {
     categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasSelfHostingAbility: false,
@@ -672,6 +723,19 @@ export const personalFinanceTools: Product[] = [
     url: 'https://firekit.space'
   },
   {
+    categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'flow',
+    languages: ['English', 'Nederlands'],
+    name: 'Flow',
+    origin: 'NL',
+    platforms: ['ANDROID', 'IOS'],
+    pricingPerYear: '€23.88',
+    slogan: 'Your money on autopilot',
+    url: 'https://flowyour.money'
+  },
+  {
     categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -682,6 +746,18 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$65',
     slogan: 'Take control over your investments',
     url: 'https://www.folishare.com'
+  },
+  {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'frollo',
+    languages: ['English'],
+    name: 'Frollo',
+    origin: 'AU',
+    platforms: ['ANDROID', 'IOS'],
+    slogan: 'Feel good about money',
+    url: 'https://www.frollo.com.au'
   },
   {
     categories: ['STOCK_TRACKING'],
@@ -917,6 +993,19 @@ export const personalFinanceTools: Product[] = [
     origin: 'CH',
     slogan: 'Sustainability insights for wealth managers',
     url: 'https://leafs.ch'
+  },
+  {
+    categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'lumio',
+    languages: ['English'],
+    name: 'Lumio',
+    origin: 'GB',
+    platforms: ['ANDROID', 'IOS'],
+    pricingPerYear: '£26.99',
+    slogan: 'Couples finances, made easy',
+    url: 'https://www.lumio-app.com'
   },
   {
     categories: ['BUDGETING'],
@@ -1624,6 +1713,19 @@ export const personalFinanceTools: Product[] = [
     url: 'https://simplywall.st'
   },
   {
+    categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'snoop',
+    languages: ['English'],
+    name: 'Snoop',
+    origin: 'GB',
+    platforms: ['ANDROID', 'IOS'],
+    pricingPerYear: '£47.99',
+    slogan: 'Cut the cost of living and build your savings',
+    url: 'https://snoop.app'
+  },
+  {
     categories: ['STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
@@ -1635,6 +1737,19 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$80',
     slogan: 'Simple and powerful portfolio tracker',
     url: 'https://snowball-analytics.com'
+  },
+  {
+    categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'spendee',
+    languages: ['English'],
+    name: 'Spendee',
+    origin: 'CZ',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: '$14.99',
+    slogan: 'The only app that gets your money into shape',
+    url: 'https://www.spendee.com'
   },
   {
     key: 'splashmoney',
