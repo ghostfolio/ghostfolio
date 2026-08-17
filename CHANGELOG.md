@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the improved symbol lookup results by removing the currency from the name of cryptocurrencies from experimental to general availability
 - Upgraded `ng-extract-i18n-merge` from `3.3.0` to `3.4.0`
 
 ## 3.53.0 - 2026-08-16
