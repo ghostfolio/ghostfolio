@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `ng-extract-i18n-merge` from `3.3.0` to `3.4.0`
 
+### Fixed
+
+- Fixed the missing mapping for Macau in the data enhancer for asset profile data via _Trackinsight_
+
 ## 3.53.0 - 2026-08-16
 
 ### Changed
