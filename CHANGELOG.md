@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to merge an asset profile into an existing asset profile in the asset profile dialog of the admin control panel
+
 ### Changed
 
 - Improved the performance of the portfolio snapshot calculation by indexing the activities
