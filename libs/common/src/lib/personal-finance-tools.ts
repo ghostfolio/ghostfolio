@@ -255,6 +255,33 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.boldin.com'
   },
   {
+    categories: [
+      'BUDGETING',
+      'CRYPTOCURRENCY',
+      'NET_WORTH_TRACKING',
+      'STOCK_TRACKING'
+    ],
+    founded: 2014,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'budgetbakers',
+    languages: [
+      'Čeština',
+      'Deutsch',
+      'English',
+      'Español',
+      'Français',
+      'Italiano',
+      'Українська',
+      'עברית'
+    ],
+    name: 'BudgetBakers',
+    origin: 'CZ',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    slogan: 'Your Finances in One Place',
+    url: 'https://budgetbakers.com'
+  },
+  {
     categories: ['BUDGETING'],
     key: 'budgetpulse',
     name: 'BudgetPulse',
@@ -841,6 +868,18 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '€59.99',
     slogan: 'Prenez enfin le contrôle de votre argent',
     url: 'https://get-gustav.com'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'helvestor',
+    languages: ['Deutsch'],
+    name: 'Helvestor',
+    origin: 'CH',
+    platforms: ['IOS', 'WEB'],
+    slogan: 'Dein Vermögen im Überblick',
+    url: 'https://www.helvestor.ch'
   },
   {
     categories: ['NET_WORTH_TRACKING'],
@@ -1850,6 +1889,19 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '€35',
     slogan: 'Your key to empowered wealth management',
     url: 'https://www.tinywallet.de'
+  },
+  {
+    categories: ['BUDGETING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'todays-budget',
+    languages: ['Deutsch', 'English', 'Español', 'Français', '日本語'],
+    name: 'Today’s Budget',
+    origin: 'DE',
+    platforms: ['IOS'],
+    pricingPerYear: '$24.99',
+    slogan: 'Make your money go further with daily budgets',
+    url: 'https://www.todays-budget.com'
   },
   {
     categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
