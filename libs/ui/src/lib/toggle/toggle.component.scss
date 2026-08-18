@@ -17,6 +17,13 @@
       }
     }
 
+    ion-icon {
+      height: var(
+        --mat-radio-label-text-line-height,
+        var(--mat-sys-body-medium-line-height)
+      );
+    }
+
     ::ng-deep {
       .mdc-radio {
         display: none;
