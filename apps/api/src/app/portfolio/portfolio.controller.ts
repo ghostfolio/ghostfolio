@@ -3,10 +3,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import {
-  hasNotDefinedValuesInObject,
-  nullifyValuesInObject
-} from '@ghostfolio/api/helper/object.helper';
+import { nullifyValuesInObject } from '@ghostfolio/api/helper/object.helper';
 import { PerformanceLoggingInterceptor } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -121,7 +118,7 @@ export class PortfolioController {
       withSummary: true
     });
 
-    if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
+    if (hasErrors) {
       hasError = true;
     }
 
