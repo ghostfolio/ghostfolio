@@ -8,7 +8,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
-import { getSum } from '@ghostfolio/common/helper';
+import { getSum, isCashPosition } from '@ghostfolio/common/helper';
 import {
   AccessSettings,
   PublicPortfolioResponse
@@ -21,11 +21,7 @@ import {
   Param,
   UseInterceptors
 } from '@nestjs/common';
-import {
-  AssetClass,
-  AssetSubClass,
-  Type as ActivityType
-} from '@prisma/client';
+import { Type as ActivityType } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -178,23 +174,19 @@ export class PublicController {
         assetProfile: {
           ...portfolioPosition.assetProfile,
           assetClass:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetClass
               : undefined,
           assetClassLabel:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetClassLabel
               : undefined,
           assetSubClass:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetSubClass
               : undefined,
           assetSubClassLabel:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetSubClassLabel
               : undefined,
           holdings: portfolioPosition.assetProfile.holdings?.map(
