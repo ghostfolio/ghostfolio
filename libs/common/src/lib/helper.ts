@@ -553,6 +553,14 @@ export function isAccountExcluded(account?: { tags?: { id: string }[] }) {
   );
 }
 
+export function isCashPosition({
+  assetSubClass
+}: {
+  assetSubClass?: AssetSubClass;
+} = {}) {
+  return assetSubClass === AssetSubClass.CASH;
+}
+
 export function isCurrency(aCurrency: string) {
   if (!aCurrency) {
     return false;

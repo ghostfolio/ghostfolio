@@ -1,7 +1,8 @@
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   getAssetProfileIdentifier,
-  getCountryName
+  getCountryName,
+  isCashPosition
 } from '@ghostfolio/common/helper';
 import {
   InfoItem,
@@ -34,7 +35,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssetClass } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -191,8 +191,9 @@ export class GfPublicPageComponent implements OnInit {
         value: position.allocationInPercentage
       };
 
-      if (position.assetProfile.assetClass !== AssetClass.LIQUIDITY) {
-        // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
+      if (!isCashPosition(position.assetProfile)) {
+        // Prepare analysis data by continents, countries, holdings and sectors
+        // except for cash
 
         if (position.assetProfile.countries.length > 0) {
           for (const country of position.assetProfile.countries) {
