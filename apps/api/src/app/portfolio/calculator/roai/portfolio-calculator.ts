@@ -21,7 +21,7 @@ import {
   isBefore,
   isThisYear
 } from 'date-fns';
-import { cloneDeep, sortBy } from 'lodash';
+import { sortBy } from 'lodash';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
@@ -192,12 +192,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
-    // Deep clone as the items are enriched below and the originals are shared
-    let orders: PortfolioOrderItem[] = cloneDeep(
-      this.activities.filter((activities) => {
-        return activities.assetProfile.symbol === symbol;
-      })
-    );
+    let orders: PortfolioOrderItem[] = (
+      this.activitiesBySymbol[symbol] ?? []
+    ).map((activity) => {
+      return { ...activity };
+    });
 
     const isCash = orders[0]?.assetProfile?.assetSubClass === 'CASH';
 
@@ -392,7 +391,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           order.unitPriceFromMarketData =
             marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
         }
-      } else {
+      } else if (dateString >= orders[0].date) {
         orders.push({
           assetProfile,
           date: dateString,
