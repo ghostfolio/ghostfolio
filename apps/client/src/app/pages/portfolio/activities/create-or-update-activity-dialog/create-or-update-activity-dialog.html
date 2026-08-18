@@ -77,45 +77,14 @@
       </mat-form-field>
     </div>
     <div [class.mb-3]="mode === 'update'">
-      <mat-form-field
-        appearance="outline"
-        class="w-100"
+      <gf-account-selector
+        formControlName="accountId"
+        [accounts]="data.accounts"
         [class.mb-1]="mode === 'create'"
-        [class.without-hint]="mode === 'create'"
-      >
-        <mat-label i18n>Account</mat-label>
-        <mat-select formControlName="accountId">
-          <mat-select-trigger>
-            <div class="d-flex">
-              @if (selectedAccount) {
-                <gf-entity-logo
-                  class="mr-1"
-                  [hasPlaceholder]="true"
-                  [tooltip]="selectedAccount?.platform?.name"
-                  [url]="selectedAccount?.platform?.url"
-                />
-              }
-              <span>{{ selectedAccount?.name }}</span>
-            </div>
-          </mat-select-trigger>
-
-          <mat-option [value]="null" />
-
-          @for (account of data.accounts; track account) {
-            <mat-option [value]="account.id">
-              <div class="d-flex">
-                <gf-entity-logo
-                  class="mr-1"
-                  [hasPlaceholder]="true"
-                  [tooltip]="account.platform?.name"
-                  [url]="account.platform?.url"
-                />
-                <span>{{ account.name }}</span>
-              </div>
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+        [hasHint]="mode !== 'create'"
+        [hasNullOption]="true"
+        [label]="labelAccount"
+      />
     </div>
     <div class="mb-3" [class.d-none]="mode === 'update'">
       <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n

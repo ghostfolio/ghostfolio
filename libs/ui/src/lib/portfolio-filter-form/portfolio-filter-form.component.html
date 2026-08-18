@@ -1,24 +1,12 @@
 <form [formGroup]="filterForm">
   <div class="mb-3">
-    <mat-form-field appearance="outline" class="w-100 without-hint">
-      <mat-label i18n>Account</mat-label>
-      <mat-select formControlName="account">
-        <mat-option [value]="null" />
-        @for (account of accounts(); track account.id) {
-          <mat-option [value]="account.id">
-            <div class="d-flex">
-              <gf-entity-logo
-                class="mr-1"
-                [hasPlaceholder]="true"
-                [tooltip]="account.platform?.name ?? ''"
-                [url]="account.platform?.url ?? ''"
-              />
-              <span>{{ account.name }}</span>
-            </div>
-          </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <gf-account-selector
+      formControlName="account"
+      [accounts]="accounts()"
+      [hasHint]="false"
+      [hasNullOption]="true"
+      [label]="labelAccount"
+    />
   </div>
   <div class="mb-3">
     <mat-form-field appearance="outline" class="w-100 without-hint">
