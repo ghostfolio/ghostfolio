@@ -4224,7 +4224,7 @@
       </trans-unit>
       <trans-unit id="8308132509772582313" datatype="html">
         <source>Adjust the rules below and set custom thresholds to align with a personal investment strategy.</source>
-        <target state="translated">Ajusta los límites de las reglas aquí abajo para alinearlas con tu estrategia personal de inversión.</target>
+        <target state="translated">Ajusta las reglas aquí más abajo y personaliza los límites para alinearlos con la estrategia personal de inversión.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">12</context>
@@ -6915,7 +6915,7 @@
       </trans-unit>
       <trans-unit id="1274567513688786374" datatype="html">
         <source>Ghostfolio X-ray uses static analysis to uncover potential issues and risks in the portfolio.</source>
-        <target state="translated">Ghostfolio X-ray usa el análisis estático para descrubir problemas o riegos potenciales en tu cartera.</target>
+        <target state="translated">Ghostfolio X-ray usa el análisis estático para detectar problemas y riegos potenciales en la cartera.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">7</context>
@@ -7701,7 +7701,7 @@
       </trans-unit>
       <trans-unit id="6923918313254424829" datatype="html">
         <source>rules align with the portfolio.</source>
-        <target state="translated">reglas se alinean con tu cartera.</target>
+        <target state="translated">reglas alineadas con la cartera.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">65</context>
@@ -8351,7 +8351,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.false" datatype="html">
         <source>The fees do exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</source>
-        <target state="translated">Las comisiones superan el ${thresholdMax}% de tu volumen total de inversión (${feeRatio}%)</target>
+        <target state="translated">Las comisiones superan el ${thresholdMax}% del volumen total de la inversión (${feeRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">170</context>
@@ -8359,7 +8359,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.true" datatype="html">
         <source>The fees do not exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</source>
-        <target state="translated">Las comisiones no superan el ${thresholdMax}% de tu volumen total de inversión (${feeRatio}%)</target>
+        <target state="translated">Las comisiones no superan el ${thresholdMax}% del volumen total de la inversión (${feeRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">174</context>
@@ -8407,7 +8407,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source>The net worth is managed by a single account</source>
-        <target state="translated">Tu patrimonio neto está gestionado por una única cuenta</target>
+        <target state="translated">El patrimonio neto está gestionado por una única cuenta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">30</context>
@@ -8415,7 +8415,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source>The net worth is managed by ${accountsLength} accounts</source>
-        <target state="translated">Tu patrimonio neto está gestionado por ${accountsLength} cuentas</target>
+        <target state="translated">El patrimonio neto está gestionado por ${accountsLength} cuentas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -8541,7 +8541,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false" datatype="html">
         <source>Over ${thresholdMax}% of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%)</source>
-        <target state="translated">Más del ${thresholdMax}% de tu inversión actual está en ${maxAccountName} (${maxInvestmentRatio}%)</target>
+        <target state="translated">Más del ${thresholdMax}% de la inversión actual está en ${maxAccountName} (${maxInvestmentRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">17</context>
@@ -8549,7 +8549,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.true" datatype="html">
         <source>The major part of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}%</source>
-        <target state="translated">La mayor parte de tu inversión actual está en ${maxAccountName} (${maxInvestmentRatio}%) y no excede el ${thresholdMax}%</target>
+        <target state="translated">La mayor parte de la inversión actual está en ${maxAccountName} (${maxInvestmentRatio}%) y no excede el ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">24</context>
@@ -8565,7 +8565,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
         <source>The equity contribution of the current investment (${equityValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución de renta variable de tu inversión actual (${equityValueRatio}%) supera el ${thresholdMax}%</target>
+        <target state="translated">La contribución de renta variable de la inversión actual (${equityValueRatio}%) supera el ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">43</context>
@@ -8573,7 +8573,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
         <source>The equity contribution of the current investment (${equityValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución de renta variable de tu inversión actual (${equityValueRatio}%) está por debajo del ${thresholdMin}%</target>
+        <target state="translated">La contribución de renta variable de la inversión actual (${equityValueRatio}%) está por debajo del ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">47</context>
@@ -8581,7 +8581,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
         <source>The equity contribution of the current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución de renta variable de tu inversión actual (${equityValueRatio}%) está dentro del rango entre ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución de renta variable de la inversión actual (${equityValueRatio}%) está dentro del rango entre ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">51</context>
@@ -8597,7 +8597,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
         <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución de renta fija de tu inversión actual (${fixedIncomeValueRatio}%) supera el ${thresholdMax}%</target>
+        <target state="translated">La contribución de renta fija de la inversión actual (${fixedIncomeValueRatio}%) supera el ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">57</context>
@@ -8605,7 +8605,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
         <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución de renta fija de tu inversión actual (${fixedIncomeValueRatio}%) está por debajo del ${thresholdMin}%</target>
+        <target state="translated">La contribución de renta fija de la inversión actual (${fixedIncomeValueRatio}%) está por debajo del ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">61</context>
@@ -8613,7 +8613,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
         <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución de renta fija de tu inversión actual (${fixedIncomeValueRatio}%) está dentro del rango entre ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución de renta fija de la inversión actual (${fixedIncomeValueRatio}%) está dentro del rango entre ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">66</context>
@@ -8629,7 +8629,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
         <source>The major part of the current investment is not in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
-        <target state="translated">La mayor parte de tu inversión actual no está en tu divisa base (${baseCurrencyValueRatio}% en ${baseCurrency})</target>
+        <target state="translated">La mayor parte de la inversión actual no está en tu divisa base (${baseCurrencyValueRatio}% en ${baseCurrency})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">88</context>
@@ -8637,7 +8637,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
         <source>The major part of the current investment is in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
-        <target state="translated">La mayor parte de tu inversión actual está en tu divisa base (${baseCurrencyValueRatio}% en ${baseCurrency})</target>
+        <target state="translated">La mayor parte de la inversión actual está en tu divisa base (${baseCurrencyValueRatio}% en ${baseCurrency})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">92</context>
@@ -8653,7 +8653,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
         <source>Over ${thresholdMax}% of the current investment is in ${currency} (${maxValueRatio}%)</source>
-        <target state="translated">Más del ${thresholdMax}% de tu inversión actual está en ${currency} (${maxValueRatio}%)</target>
+        <target state="translated">Más del ${thresholdMax}% de la inversión actual está en ${currency} (${maxValueRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">97</context>
@@ -8661,7 +8661,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source>The major part of the current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}%</source>
-        <target state="translated">La mayor parte de tu inversión actual está en ${currency} (${maxValueRatio}%) y no supera el ${thresholdMax}%</target>
+        <target state="translated">La mayor parte de la inversión actual está en ${currency} (${maxValueRatio}%) y no supera el ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">101</context>
@@ -8830,7 +8830,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.min" datatype="html">
         <source>The buying power is below ${thresholdMin} ${baseCurrency}</source>
-        <target state="translated">Tu poder adquisitivo está por debajo de ${thresholdMin} ${baseCurrency}</target>
+        <target state="translated">El poder adquisitivo está por debajo de ${thresholdMin} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">73</context>
@@ -8838,7 +8838,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.zero" datatype="html">
         <source>The buying power is 0 ${baseCurrency}</source>
-        <target state="translated">Tu poder adquisitivo es 0 ${baseCurrency}</target>
+        <target state="translated">El poder adquisitivo es 0 ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">77</context>
@@ -8846,7 +8846,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.true" datatype="html">
         <source>The buying power exceeds ${thresholdMin} ${baseCurrency}</source>
-        <target state="translated">Tu poder adquisitivo supera ${thresholdMin} ${baseCurrency}</target>
+        <target state="translated">El poder adquisitivo supera ${thresholdMin} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">80</context>
@@ -8878,7 +8878,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
         <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución a mercados desarrollados de tu inversión actual (${developedMarketsValueRatio}%) supera ${thresholdMax}%</target>
+        <target state="translated">La contribución a mercados desarrollados de la inversión actual (${developedMarketsValueRatio}%) supera ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">112</context>
@@ -8886,7 +8886,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
         <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución a mercados desarrollados de tu inversión actual (${developedMarketsValueRatio}%) es inferior a ${thresholdMin}%</target>
+        <target state="translated">La contribución a mercados desarrollados de la inversión actual (${developedMarketsValueRatio}%) es inferior a ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">117</context>
@@ -8894,7 +8894,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
         <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución a mercados desarrollados de tu inversión actual (${developedMarketsValueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución a mercados desarrollados de la inversión actual (${developedMarketsValueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">122</context>
@@ -8910,7 +8910,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución a mercados emergentes de tu inversión actual (${emergingMarketsValueRatio}%) supera ${thresholdMax}%</target>
+        <target state="translated">La contribución a mercados emergentes de la inversión actual (${emergingMarketsValueRatio}%) supera ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">130</context>
@@ -8918,7 +8918,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución a mercados emergentes de tu inversión actual (${emergingMarketsValueRatio}%) es inferior a ${thresholdMin}%</target>
+        <target state="translated">La contribución a mercados emergentes de la inversión actual (${emergingMarketsValueRatio}%) es inferior a ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">135</context>
@@ -8926,7 +8926,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución a mercados emergentes de tu inversión actual (${emergingMarketsValueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución a mercados emergentes de la inversión actual (${emergingMarketsValueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">140</context>
@@ -8942,7 +8942,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false.invalid" datatype="html">
         <source>The net worth is managed by 0 accounts</source>
-        <target state="translated">Tu patrimonio neto es administrado por 0 cuentas</target>
+        <target state="translated">El patrimonio neto es administrado por 0 cuentas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">33</context>
@@ -8958,7 +8958,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.max" datatype="html">
         <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado Asiático-Pacífico de tu inversión actual (${valueRatio}%) supera ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado Asiático-Pacífico de la inversión actual (${valueRatio}%) supera ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">183</context>
@@ -8966,7 +8966,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.min" datatype="html">
         <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución al mercado Asiático-Pacífico de tu inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
+        <target state="translated">La contribución al mercado Asiático-Pacífico de la inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">187</context>
@@ -8974,7 +8974,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.true" datatype="html">
         <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado Asiático-Pacífico de tu inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado Asiático-Pacífico de la inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">191</context>
@@ -8990,7 +8990,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source>The Emerging Markets contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución a mercados emergentes de tu inversión actual (${valueRatio}%) supera ${thresholdMax}%</target>
+        <target state="translated">La contribución a mercados emergentes de la inversión actual (${valueRatio}%) supera ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">199</context>
@@ -8998,7 +8998,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source>The Emerging Markets contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución a mercados emergentes de tu inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
+        <target state="translated">La contribución a mercados emergentes de la inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">203</context>
@@ -9006,7 +9006,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source>The Emerging Markets contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución a mercados emergentes de tu inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución a mercados emergentes de la inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">207</context>
@@ -9022,7 +9022,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.max" datatype="html">
         <source>The Europe market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado europeo de tu inversión actual (${valueRatio}%) supera ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado europeo de la inversión actual (${valueRatio}%) supera ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">213</context>
@@ -9030,7 +9030,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.min" datatype="html">
         <source>The Europe market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución al mercado europeo de tu inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
+        <target state="translated">La contribución al mercado europeo de la inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">217</context>
@@ -9038,7 +9038,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.true" datatype="html">
         <source>The Europe market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado europeo de tu inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado europeo de la inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">221</context>
@@ -9054,7 +9054,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.max" datatype="html">
         <source>The Japan market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado japonés de tu inversión actual (${valueRatio}%) supera el ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado japonés de la inversión actual (${valueRatio}%) supera el ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">227</context>
@@ -9062,7 +9062,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.min" datatype="html">
         <source>The Japan market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución al mercado japonés de tu inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
+        <target state="translated">La contribución al mercado japonés de la inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">231</context>
@@ -9070,7 +9070,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.true" datatype="html">
         <source>The Japan market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado japonés de tu inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado japonés de la inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">235</context>
@@ -9086,7 +9086,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.max" datatype="html">
         <source>The North America market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado de América del Norte de tu inversión actual (${valueRatio}%) supera el ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado de América del Norte de la inversión actual (${valueRatio}%) supera el ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">241</context>
@@ -9094,7 +9094,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.min" datatype="html">
         <source>The North America market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="translated">La contribución al mercado de América del Norte de tu inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
+        <target state="translated">La contribución al mercado de América del Norte de la inversión actual (${valueRatio}%) es inferior a ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">245</context>
@@ -9102,7 +9102,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.true" datatype="html">
         <source>The North America market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="translated">La contribución al mercado de América del Norte de tu inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
+        <target state="translated">La contribución al mercado de América del Norte de la inversión actual (${valueRatio}%) está dentro del rango de ${thresholdMin}% y ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">249</context>
