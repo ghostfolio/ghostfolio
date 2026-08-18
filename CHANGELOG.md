@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the cash positions being included in the by continent, by country and by sector charts on the allocations page and the public page
+- Fixed the allocations in percentage exceeding 100% in the restricted view
 - Fixed the missing mapping for Macau in the data enhancer for asset profile data via _Trackinsight_
 
 ## 3.53.0 - 2026-08-16
