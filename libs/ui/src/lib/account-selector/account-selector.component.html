@@ -7,6 +7,7 @@
   <mat-select
     [errorStateMatcher]="errorStateMatcher"
     [formControl]="control"
+    [required]="isRequired()"
     (closed)="onPanelClosed()"
   >
     <mat-select-trigger>

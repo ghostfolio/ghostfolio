@@ -7,6 +7,7 @@ import {
   computed,
   inject,
   input,
+  OnInit,
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -14,7 +15,8 @@ import {
   ControlValueAccessor,
   FormControl,
   NgControl,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,9 +34,12 @@ import { MatSelectModule } from '@angular/material/select';
   selector: 'gf-account-selector',
   templateUrl: './account-selector.component.html'
 })
-export class GfAccountSelectorComponent implements ControlValueAccessor {
+export class GfAccountSelectorComponent
+  implements ControlValueAccessor, OnInit
+{
   public readonly accounts = input.required<AccountWithPlatform[]>();
   public readonly control = new FormControl<string | null>(null);
+
   public readonly errorStateMatcher: ErrorStateMatcher = {
     isErrorState: () => {
       const control = this.ngControl?.control;
@@ -42,9 +47,12 @@ export class GfAccountSelectorComponent implements ControlValueAccessor {
       return !!(control?.invalid && (control.dirty || control.touched));
     }
   };
+
   public readonly hasHint = input(true);
   public readonly hasNullOption = input(false);
+  public readonly isRequired = signal(false);
   public readonly label = input.required<string>();
+
   public readonly selectedAccount = computed(() => {
     const selectedAccountId = this.selectedAccountId();
 
@@ -57,6 +65,7 @@ export class GfAccountSelectorComponent implements ControlValueAccessor {
     optional: true,
     self: true
   });
+
   private readonly selectedAccountId = signal<string | null>(null);
 
   public constructor() {
@@ -72,6 +81,12 @@ export class GfAccountSelectorComponent implements ControlValueAccessor {
         this.selectedAccountId.set(accountId);
         this.onChange(accountId);
       });
+  }
+
+  public ngOnInit() {
+    this.isRequired.set(
+      this.ngControl?.control?.hasValidator(Validators.required) ?? false
+    );
   }
 
   public onPanelClosed() {
