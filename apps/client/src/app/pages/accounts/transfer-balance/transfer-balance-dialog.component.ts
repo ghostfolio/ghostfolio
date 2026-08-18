@@ -13,7 +13,6 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -62,19 +61,14 @@ export class GfTransferBalanceDialogComponent {
     });
   });
 
-  protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup(
-    {
-      balance: new FormControl<number | string | null>('', Validators.required),
-      fromAccount: new FormControl<string | null>('', Validators.required),
-      toAccount: new FormControl<string | null>(
-        { disabled: true, value: '' },
-        Validators.required
-      )
-    },
-    {
-      validators: this.compareAccounts
-    }
-  );
+  protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup({
+    balance: new FormControl<number | string | null>('', Validators.required),
+    fromAccount: new FormControl<string | null>('', Validators.required),
+    toAccount: new FormControl<string | null>(
+      { disabled: true, value: null },
+      Validators.required
+    )
+  });
 
   private readonly dialogRef =
     inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
@@ -97,11 +91,11 @@ export class GfTransferBalanceDialogComponent {
         if (id) {
           if (toAccountControl.value === id) {
             toAccountControl.setValue(null);
+            toAccountControl.markAsPristine();
+            toAccountControl.markAsUntouched();
           }
 
           toAccountControl.enable();
-        } else {
-          toAccountControl.disable();
         }
       }
     );
@@ -119,19 +113,6 @@ export class GfTransferBalanceDialogComponent {
     };
 
     this.dialogRef.close({ account });
-  }
-
-  private compareAccounts(
-    formGroup: TransferBalanceForm
-  ): ValidationErrors | null {
-    const accountFrom = formGroup.controls.fromAccount;
-    const accountTo = formGroup.controls.toAccount;
-
-    if (accountFrom.value === accountTo.value) {
-      return { invalid: true };
-    }
-
-    return null;
   }
 
   private getAccountById(aId: string | null) {
