@@ -145,7 +145,7 @@ export class BenchmarkService {
   public async addBenchmark({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile> | undefined> {
+  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile> | null> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,
@@ -154,23 +154,14 @@ export class BenchmarkService {
     });
 
     if (!assetProfile) {
-      return;
+      return null;
     }
 
-    let benchmarks =
-      (await this.propertyService.getByKey<BenchmarkProperty[]>(
-        PROPERTY_BENCHMARKS,
-        { skipCache: true }
-      )) ?? [];
+    const benchmarks = await this.getBenchmarksProperty();
 
     benchmarks.push({ symbolProfileId: assetProfile.id });
 
-    benchmarks = uniqBy(benchmarks, 'symbolProfileId');
-
-    await this.propertyService.put({
-      key: PROPERTY_BENCHMARKS,
-      value: JSON.stringify(benchmarks)
-    });
+    await this.putBenchmarksProperty(uniqBy(benchmarks, 'symbolProfileId'));
 
     return {
       dataSource,
@@ -195,20 +186,13 @@ export class BenchmarkService {
       return null;
     }
 
-    let benchmarks =
-      (await this.propertyService.getByKey<BenchmarkProperty[]>(
-        PROPERTY_BENCHMARKS,
-        { skipCache: true }
-      )) ?? [];
+    const benchmarks = await this.getBenchmarksProperty();
 
-    benchmarks = benchmarks.filter(({ symbolProfileId }) => {
-      return symbolProfileId !== assetProfile.id;
-    });
-
-    await this.propertyService.put({
-      key: PROPERTY_BENCHMARKS,
-      value: JSON.stringify(benchmarks)
-    });
+    await this.putBenchmarksProperty(
+      benchmarks.filter((benchmark) => {
+        return benchmark.symbolProfileId !== assetProfile.id;
+      })
+    );
 
     return {
       dataSource,
@@ -230,6 +214,37 @@ export class BenchmarkService {
     } else {
       return 'NEUTRAL_MARKET';
     }
+  }
+
+  public async moveBenchmark({
+    sourceSymbolProfileId,
+    targetSymbolProfileId
+  }: {
+    sourceSymbolProfileId: string;
+    targetSymbolProfileId: string;
+  }) {
+    const benchmarks = await this.getBenchmarksProperty();
+
+    const sourceBenchmark = benchmarks.find((benchmark) => {
+      return benchmark.symbolProfileId === sourceSymbolProfileId;
+    });
+
+    if (!sourceBenchmark) {
+      return;
+    }
+
+    const movedBenchmarks = benchmarks
+      .filter((benchmark) => {
+        return benchmark.symbolProfileId !== sourceSymbolProfileId;
+      })
+      .concat({
+        ...sourceBenchmark,
+        symbolProfileId: targetSymbolProfileId
+      });
+
+    await this.putBenchmarksProperty(
+      uniqBy(movedBenchmarks, 'symbolProfileId')
+    );
   }
 
   private async calculateAndCacheBenchmarks({
@@ -322,5 +337,21 @@ export class BenchmarkService {
     }
 
     return benchmarks;
+  }
+
+  private async getBenchmarksProperty(): Promise<BenchmarkProperty[]> {
+    return (
+      (await this.propertyService.getByKey<BenchmarkProperty[]>(
+        PROPERTY_BENCHMARKS,
+        { skipCache: true }
+      )) ?? []
+    );
+  }
+
+  private async putBenchmarksProperty(benchmarks: BenchmarkProperty[]) {
+    await this.propertyService.put({
+      key: PROPERTY_BENCHMARKS,
+      value: JSON.stringify(benchmarks)
+    });
   }
 }

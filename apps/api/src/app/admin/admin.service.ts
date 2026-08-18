@@ -1,4 +1,6 @@
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -37,6 +39,7 @@ import {
   Injectable,
   NotFoundException
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
   AssetSubClass,
@@ -52,10 +55,12 @@ import { randomUUID } from 'node:crypto';
 @Injectable()
 export class AdminService {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
@@ -330,22 +335,6 @@ export class AdminService {
       return !userIdsWatchingTargetAssetProfile.has(id);
     });
 
-    const benchmarkAssetProfiles =
-      await this.benchmarkService.getBenchmarkAssetProfiles();
-
-    const isSourceAssetProfileBenchmark = benchmarkAssetProfiles.some(
-      ({ id }) => {
-        return id === sourceAssetProfile.id;
-      }
-    );
-
-    if (isSourceAssetProfileBenchmark) {
-      // A benchmark refers to the id of its asset profile, which cannot be
-      // resolved anymore after the source asset profile is deleted
-      await this.benchmarkService.addBenchmark(targetAssetProfileIdentifier);
-      await this.benchmarkService.deleteBenchmark(sourceAssetProfileIdentifier);
-    }
-
     const operations: Prisma.PrismaPromise<unknown>[] = [
       this.prismaService.order.updateMany({
         data: { symbolProfileId: targetAssetProfile.id },
@@ -408,6 +397,11 @@ export class AdminService {
       );
     }
 
+    await this.benchmarkService.moveBenchmark({
+      sourceSymbolProfileId: sourceAssetProfile.id,
+      targetSymbolProfileId: targetAssetProfile.id
+    });
+
     // The moved activities can start before the first market data item of the
     // target asset profile. The market data is not gathered with force,
     // because that replaces the market data which has just been copied.
@@ -418,7 +412,7 @@ export class AdminService {
     });
 
     if (earliestActivity) {
-      await this.dataGatheringService.gatherSymbols({
+      const jobs = await this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
             ...targetAssetProfileIdentifier,
@@ -426,6 +420,18 @@ export class AdminService {
           }
         ],
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      });
+
+      // The portfolio snapshots are invalidated as soon as the market data is
+      // available. Emitting the events earlier would recompute the snapshots
+      // from split-adjusted quantities and not yet split-adjusted market
+      // prices.
+      void Promise.allSettled(
+        jobs.map((job) => {
+          return job.finished();
+        })
+      ).then(() => {
+        return this.emitPortfolioChangedEvents(targetAssetProfile.id);
       });
     }
 
@@ -641,6 +647,18 @@ export class AdminService {
     return this.prismaService.user.count({
       where
     });
+  }
+
+  private async emitPortfolioChangedEvents(symbolProfileId: string) {
+    const userIds =
+      await this.activitiesService.getUserIdsBySymbolProfileId(symbolProfileId);
+
+    for (const userId of userIds) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({ userId })
+      );
+    }
   }
 
   private async getUsersWithAnalytics({
