@@ -93,8 +93,7 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  // TODO
-  describe.skip('get current positions', () => {
+  describe('get current positions', () => {
     it.only('with BTCUSD buy and sell partially', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2018-01-01').getTime());
 
@@ -157,7 +156,6 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('13298.425356'),
         errors: [],
-        grossPerformanceWithCurrencyEffect: new Big('26516.208701400000064086'),
         hasErrors: false,
         positions: [
           {
@@ -171,9 +169,9 @@ describe('PortfolioCalculator', () => {
             fee: new Big('0'),
             feeInBaseCurrency: new Big('0'),
             grossPerformance: new Big('27172.74').mul(0.97373),
-            grossPerformancePercentage: new Big('0.4241983590271396608571'),
+            grossPerformancePercentage: new Big('42.41978276196153750666'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.4164017412624815597008'
+              '41.6401219622042072686'
             ),
             grossPerformanceWithCurrencyEffect: new Big(
               '26516.208701400000064086'
@@ -183,9 +181,9 @@ describe('PortfolioCalculator', () => {
             marketPrice: 13657.2,
             marketPriceInBaseCurrency: 13298.425356,
             netPerformance: new Big('27172.74').mul(0.97373),
-            netPerformancePercentage: new Big('0.4241983590271396608571'),
+            netPerformancePercentage: new Big('42.41978276196153750666'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.417188277288666871633')
+              max: new Big('41.72313811883729606471')
             },
             netPerformanceWithCurrencyEffectMap: {
               max: new Big('26516.208701400000064086')
@@ -193,9 +191,9 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'BTCUSD',
             tags: [],
-            timeWeightedInvestment: new Big('623.73914366102470265325'),
+            timeWeightedInvestment: new Big('623.73992504096715328467'),
             timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '636.79389574611155533947'
+              '636.79469348020066587024'
             ),
             valueInBaseCurrency: new Big('13298.425356')
           }
@@ -210,11 +208,11 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
           netPerformance: new Big('27172.74').mul(0.97373).toNumber(),
-          netPerformanceInPercentage: 42.41983590271396609433,
-          netPerformanceInPercentageWithCurrencyEffect: 41.64017412624815597854,
-          netPerformanceWithCurrencyEffect: 26516.208701400000064086,
-          totalInvestment: 318.542667299999967957,
-          totalInvestmentValueWithCurrencyEffect: 318.542667299999967957
+          netPerformanceInPercentage: 42.419782761961535,
+          netPerformanceInPercentageWithCurrencyEffect: 41.640121962204205,
+          netPerformanceWithCurrencyEffect: 26516.2087014,
+          totalInvestment: 312.0123039,
+          totalInvestmentValueWithCurrencyEffect: 318.54266729999995
         })
       );
 
@@ -224,6 +222,7 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
+        { date: '2014-12-01', investment: 0 },
         { date: '2015-01-01', investment: 637.0853345999999 },
         { date: '2015-02-01', investment: 0 },
         { date: '2015-03-01', investment: 0 },
@@ -264,6 +263,7 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByYear).toEqual([
+        { date: '2014-01-01', investment: 0 },
         { date: '2015-01-01', investment: 637.0853345999999 },
         { date: '2016-01-01', investment: 0 },
         { date: '2017-01-01', investment: -318.54266729999995 },
