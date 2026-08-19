@@ -63,7 +63,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   templateUrl: './benchmark.component.html'
 })
 export class GfBenchmarkComponent {
-  public readonly benchmarks = input.required<Benchmark[]>();
+  public readonly benchmarks = input<Benchmark[]>();
   public readonly deviceType = input.required<string>();
   public readonly hasPermissionToDeleteItem = input<boolean>();
   public readonly locale = input(getLocale());
@@ -76,6 +76,7 @@ export class GfBenchmarkComponent {
   protected readonly sort = viewChild(MatSort);
 
   protected readonly dataSource = new MatTableDataSource<Benchmark>([]);
+
   protected readonly displayedColumns = computed(() => {
     return [
       ...(this.showIcon() ? ['icon'] : []),
@@ -89,7 +90,11 @@ export class GfBenchmarkComponent {
       'actions'
     ];
   });
-  protected isLoading = true;
+
+  protected readonly isLoading = computed(() => {
+    return !this.benchmarks();
+  });
+
   protected readonly isNumber = isNumber;
   protected readonly resolveMarketCondition = resolveMarketCondition;
   protected readonly round = round;
@@ -110,8 +115,8 @@ export class GfBenchmarkComponent {
         this.dataSource.sortingDataAccessor = getLowercase;
 
         this.dataSource.sort = this.sort() ?? null;
-
-        this.isLoading = false;
+      } else {
+        this.dataSource.data = [];
       }
     });
 

@@ -1,8 +1,9 @@
+import { AccountWithPlatform } from '@ghostfolio/common/types';
+
 import { FormControl, FormGroup } from '@angular/forms';
-import { Account } from '@prisma/client';
 
 export interface TransferBalanceDialogParams {
-  accounts: Account[];
+  accounts: AccountWithPlatform[];
 }
 
 export type TransferBalanceForm = FormGroup<{

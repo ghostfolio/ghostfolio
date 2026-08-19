@@ -55,12 +55,12 @@
             </mat-option>
           }
 
-          @if (hasPermissionToCreateTag && tagInputControl.value) {
-            <mat-option [value]="tagInputControl.value.trim()">
+          @if (hasPermissionToCreateTag && tagNameToCreate()) {
+            <mat-option [value]="tagNameToCreate()">
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="add-circle-outline" />
                 <ng-container i18n>Create</ng-container> "{{
-                  tagInputControl.value.trim()
+                  tagNameToCreate()
                 }}"
               </span>
             </mat-option>

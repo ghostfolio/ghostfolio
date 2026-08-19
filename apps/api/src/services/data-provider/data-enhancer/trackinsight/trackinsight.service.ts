@@ -17,6 +17,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
   private static countriesMapping = {
     'Czech Republic': 'CZ',
+    Macau: 'MO',
     'Republic of Korea': 'KR',
     'Russian Federation': 'RU',
     Turkey: 'TR',
@@ -128,7 +129,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       )) {
         const code = getCountryCodeByName({
           name,
-          aliases: TrackinsightDataEnhancerService.countriesMapping
+          aliases: TrackinsightDataEnhancerService.countriesMapping,
+          dataSource: this.getName()
         });
 
         if (code) {

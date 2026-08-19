@@ -5,7 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.54.0 - 2026-08-18
+
+### Changed
+
+- Improved the style of the toggle component
+- Moved the improved symbol lookup results by removing the currency from the name of cryptocurrencies from experimental to general availability
+- Extracted the account selector to a reusable component
+- Upgraded `ng-extract-i18n-merge` from `3.3.0` to `3.4.0`
+
+### Fixed
+
+- Fixed the missing mapping for Macau in the data enhancer for asset profile data via _Trackinsight_
+
+## 3.53.0 - 2026-08-16
+
+### Changed
+
+- Upgraded `angular` from version `21.2.7` to `21.2.19`
+- Upgraded `Nx` from version `23.0.2` to `23.1.1`
+- Upgraded `storybook` from version `10.1.10` to `10.5.7`
+
+### Fixed
+
+- Fixed the internal server error on a failed social login by redirecting to the login page
+
+## 3.52.0 - 2026-08-15
 
 ### Added
 
@@ -15,10 +40,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restricted the creation of tags to unique names in the tags selector component
 - Changed the redaction of the monetary values in impersonation mode to be based on the scopes of the access
 - Deprecated the `permissions` attribute of the access in favor of the scopes
 - Extended the `GET api/v1/access` endpoint by the scopes
 - Extended the `GET api/v1/user` endpoint by the scopes
+- Improved the performance of deleting activities by loading only the required data
+
+### Fixed
+
+- Fixed the missing currency conversion of the dividends on the analysis page
+- Fixed the missing error state in the watchlist
+- Fixed the missing loading indicator in the benchmarks of the markets overview
+- Fixed the incorrect error log output when deleting activities
 
 ## 3.51.0 - 2026-08-14
 

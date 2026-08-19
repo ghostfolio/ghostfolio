@@ -573,7 +573,7 @@ export class ImportService {
         // If there is no asset profile or if the asset profile belongs to a
         // different user, then reuse the custom asset profile of the user or
         // create a new asset profile
-        if (!existingAssetProfile || existingAssetProfile.userId !== user.id) {
+        if (existingAssetProfile?.userId !== user.id) {
           // Check if the user has a custom asset profile with the same name.
           // Skip asset profiles with a legacy free-text symbol as they would
           // fail the symbol validation on a future import.
