@@ -276,7 +276,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     const unitPriceAtStartDate = marketSymbolMap[startDateString]?.[symbol];
     let unitPriceAtEndDate = marketSymbolMap[endDateString]?.[symbol];
 
-    let latestActivity = orders.at(-1);
+    const latestActivity = orders.at(-1);
 
     if (
       dataSource === 'MANUAL' &&
@@ -367,7 +367,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       unitPrice: unitPriceAtEndDate
     });
 
-    let lastUnitPrice: Big;
+    // Fall back to the unit price at the end date for the chart dates before
+    // the first known market price of the symbol
+    let lastUnitPrice = unitPriceAtEndDate;
 
     const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
 
@@ -392,29 +394,25 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           order.unitPriceFromMarketData =
             marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
         }
-      } else if (dateString < dateStringOfFirstActivity) {
-        // No synthetic order is needed before the first activity of this holding
-        lastUnitPrice = marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
-
-        continue;
       } else {
-        orders.push({
-          assetProfile,
-          date: dateString,
-          fee: new Big(0),
-          feeInBaseCurrency: new Big(0),
-          quantity: new Big(0),
-          type: 'BUY',
-          unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice,
-          unitPriceFromMarketData:
-            marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice
-        });
+        const unitPrice =
+          marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
+
+        if (dateString >= dateStringOfFirstActivity) {
+          orders.push({
+            assetProfile,
+            unitPrice,
+            date: dateString,
+            fee: new Big(0),
+            feeInBaseCurrency: new Big(0),
+            quantity: new Big(0),
+            type: 'BUY',
+            unitPriceFromMarketData: unitPrice
+          });
+        }
+
+        lastUnitPrice = unitPrice;
       }
-
-      latestActivity = orders.at(-1);
-
-      lastUnitPrice =
-        latestActivity.unitPriceFromMarketData ?? latestActivity.unitPrice;
     }
 
     // Sort orders so that the start and end placeholder order are at the correct
