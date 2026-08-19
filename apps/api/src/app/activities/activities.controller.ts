@@ -217,9 +217,8 @@ export class ActivitiesController {
       userSubscription
     }: ImpersonationContext
   ): Promise<Order> {
-    // A premium data source requires the subscription of the authenticated
-    // user and the subscription of the owner of the activity, hence the more
-    // restrictive one is evaluated
+    // Evaluate the more restrictive subscription of the authenticated user
+    // and the owner of the activity
     const subscription =
       userSubscription?.type === SubscriptionType.Basic
         ? userSubscription
