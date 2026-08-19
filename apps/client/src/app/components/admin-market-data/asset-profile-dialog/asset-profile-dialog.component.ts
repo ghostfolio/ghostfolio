@@ -798,9 +798,11 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
 
     this.patchAssetProfileIdentifier({
-      conflictFn: () => {
-        this.mergeAssetProfile(newAssetProfileIdentifier);
-      },
+      conflictFn: this.user?.settings?.isExperimentalFeatures
+        ? () => {
+            this.mergeAssetProfile(newAssetProfileIdentifier);
+          }
+        : undefined,
       getErrorMessage: () => {
         return $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`;
       },
