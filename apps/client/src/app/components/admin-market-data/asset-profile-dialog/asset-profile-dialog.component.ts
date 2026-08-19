@@ -955,8 +955,14 @@ export class GfAssetProfileDialogComponent implements OnInit {
           });
       },
       confirmType: ConfirmationDialogType.Warn,
-      message: $localize`The data of this asset profile is moved to ${symbol} (${dataSource}). Then this asset profile is deleted. This action cannot be undone.`,
-      title: $localize`${symbol} (${dataSource}) is already in use. Do you really want to merge this asset profile into it?`
+      message:
+        $localize`The data of this asset profile is moved to ${symbol} (${dataSource}) and this asset profile is deleted.` +
+        ' ' +
+        $localize`This action cannot be undone.`,
+      title:
+        $localize`${symbol} (${dataSource}) is already in use.` +
+        ' ' +
+        $localize`Do you really want to merge this asset profile into it?`
     });
   }
 
