@@ -142,7 +142,7 @@ export class PublicController {
       latestActivities,
       markets,
       alias: access.alias,
-      holdings: {},
+      holdings: [],
       performance: {
         '1d': {
           relativeChange:
@@ -160,7 +160,7 @@ export class PublicController {
     };
 
     const totalValue = getSum(
-      Object.values(holdings).map(({ assetProfile, marketPrice, quantity }) => {
+      holdings.map(({ assetProfile, marketPrice, quantity }) => {
         return new Big(
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
@@ -171,33 +171,32 @@ export class PublicController {
       })
     ).toNumber();
 
-    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-      publicPortfolioResponse.holdings[symbol] = {
-        allocationInPercentage:
-          portfolioPosition.valueInBaseCurrency / totalValue,
+    for (const holding of holdings) {
+      publicPortfolioResponse.holdings.push({
+        allocationInPercentage: holding.valueInBaseCurrency / totalValue,
         assetProfile: {
-          ...portfolioPosition.assetProfile,
+          ...holding.assetProfile,
           assetClass:
             hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
-              ? portfolioPosition.assetProfile.assetClass
+            holding.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? holding.assetProfile.assetClass
               : undefined,
           assetClassLabel:
             hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
-              ? portfolioPosition.assetProfile.assetClassLabel
+            holding.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? holding.assetProfile.assetClassLabel
               : undefined,
           assetSubClass:
             hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
-              ? portfolioPosition.assetProfile.assetSubClass
+            holding.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? holding.assetProfile.assetSubClass
               : undefined,
           assetSubClassLabel:
             hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
-              ? portfolioPosition.assetProfile.assetSubClassLabel
+            holding.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? holding.assetProfile.assetSubClassLabel
               : undefined,
-          holdings: portfolioPosition.assetProfile.holdings?.map(
+          holdings: holding.assetProfile.holdings?.map(
             ({ allocationInPercentage, name }) => {
               return { allocationInPercentage, name };
             }
@@ -211,12 +210,12 @@ export class PublicController {
                 sectors: []
               })
         },
-        dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
-        markets: hasDetails ? portfolioPosition.markets : undefined,
+        dateOfFirstActivity: holding.dateOfFirstActivity,
+        markets: hasDetails ? holding.markets : undefined,
         netPerformancePercentWithCurrencyEffect:
-          portfolioPosition.netPerformancePercentWithCurrencyEffect,
-        valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
-      };
+          holding.netPerformancePercentWithCurrencyEffect,
+        valueInPercentage: holding.valueInBaseCurrency / totalValue
+      });
     }
 
     return publicPortfolioResponse;

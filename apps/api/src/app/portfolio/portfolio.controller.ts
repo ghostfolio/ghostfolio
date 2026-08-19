@@ -128,13 +128,13 @@ export class PortfolioController {
       !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
       isRestrictedView(this.request.user)
     ) {
-      const totalInvestment = Object.values(holdings)
+      const totalInvestment = holdings
         .map(({ investment }) => {
           return investment;
         })
         .reduce((a, b) => a + b, 0);
 
-      const totalValue = Object.values(holdings)
+      const totalValue = holdings
         .filter(({ assetProfile }) => {
           return (
             assetProfile.assetClass !== AssetClass.LIQUIDITY &&
@@ -148,11 +148,9 @@ export class PortfolioController {
           return a + b;
         }, 0);
 
-      for (const [, portfolioPosition] of Object.entries(holdings)) {
-        portfolioPosition.investment =
-          portfolioPosition.investment / totalInvestment;
-        portfolioPosition.valueInPercentage =
-          portfolioPosition.valueInBaseCurrency / totalValue;
+      for (const holding of holdings) {
+        holding.investment = holding.investment / totalInvestment;
+        holding.valueInPercentage = holding.valueInBaseCurrency / totalValue;
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
@@ -204,8 +202,8 @@ export class PortfolioController {
       ]);
     }
 
-    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-      holdings[symbol] = {
+    for (const [index, portfolioPosition] of holdings.entries()) {
+      holdings[index] = {
         ...portfolioPosition,
         assetProfile: {
           ...portfolioPosition.assetProfile,

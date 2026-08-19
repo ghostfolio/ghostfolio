@@ -115,10 +115,10 @@ describe('PortfolioService', () => {
   });
 
   describe('getAggregatedMarkets', () => {
-    const getAggregatedMarkets = (holdings: object) => {
+    const getAggregatedMarkets = (holdings: object[]) => {
       return (
         portfolioService as unknown as {
-          getAggregatedMarkets: (aHoldings: object) => {
+          getAggregatedMarkets: (aHoldings: object[]) => {
             markets: Record<
               string,
               { valueInBaseCurrency: number; valueInPercentage: number }
@@ -130,9 +130,9 @@ describe('PortfolioService', () => {
     };
 
     it('should distribute holdings with countries to their market and route holdings without countries (e.g. commodities, cryptocurrencies) to the unknown bucket', () => {
-      const holdings = {
-        'GC=F': {
-          // Gold
+      const holdings = [
+        {
+          // Gold (GC=F)
           assetProfile: { countries: [] },
           markets: { developedMarkets: 0, emergingMarkets: 0, otherMarkets: 0 },
           marketsAdvanced: {
@@ -145,7 +145,8 @@ describe('PortfolioService', () => {
           },
           valueInBaseCurrency: 500
         },
-        MSFT: {
+        {
+          // MSFT
           assetProfile: { countries: [{ code: 'US', weight: 1 }] },
           markets: { developedMarkets: 1, emergingMarkets: 0, otherMarkets: 0 },
           marketsAdvanced: {
@@ -158,7 +159,7 @@ describe('PortfolioService', () => {
           },
           valueInBaseCurrency: 1000
         }
-      };
+      ];
 
       const { markets, marketsAdvanced } = getAggregatedMarkets(holdings);
 
@@ -325,9 +326,14 @@ describe('PortfolioService', () => {
         userId: userDummyData.id
       });
 
-      expect(holdings['USD']).toBeDefined();
-      expect(holdings['USD'].assetProfile.dataSource).toBe(DataSource.YAHOO);
-      expect(holdings['USD'].assetProfile.symbol).toBe('USD');
+      expect(holdings).toEqual([
+        expect.objectContaining({
+          assetProfile: expect.objectContaining({
+            dataSource: DataSource.YAHOO,
+            symbol: 'USD'
+          })
+        })
+      ]);
     });
   });
 
@@ -450,22 +456,22 @@ describe('PortfolioService', () => {
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 1,
             type: 'BUY'
           },
           {
             account: null,
             accountId: null,
-            assetProfile: { symbol: 'BABA' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'BABA' },
             quantity: 2,
             type: 'BUY'
           }
         ],
         filters: [],
         portfolioItemsNow: {
-          AAPL: { marketPriceInBaseCurrency: 10 },
-          BABA: { marketPriceInBaseCurrency: 20 }
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 },
+          'YAHOO-BABA': { marketPriceInBaseCurrency: 20 }
         },
         userCurrency: 'USD',
         userId: userDummyData.id
@@ -486,14 +492,14 @@ describe('PortfolioService', () => {
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 1,
             type: 'BUY'
           }
         ],
         filters: [],
         portfolioItemsNow: {
-          AAPL: { marketPriceInBaseCurrency: 10 }
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 }
         },
         userCurrency: 'USD',
         userId: userDummyData.id
@@ -509,28 +515,28 @@ describe('PortfolioService', () => {
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 0.1,
             type: 'BUY'
           },
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 0.2,
             type: 'BUY'
           },
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 0.3,
             type: 'SELL'
           }
         ],
         filters: [],
         portfolioItemsNow: {
-          AAPL: { marketPriceInBaseCurrency: 1234.5678 }
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 1234.5678 }
         },
         userCurrency: 'USD',
         userId: userDummyData.id
@@ -547,21 +553,21 @@ describe('PortfolioService', () => {
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 0.1,
             type: 'BUY'
           },
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 0.2,
             type: 'BUY'
           }
         ],
         filters: [{ id: 'AAPL', type: 'SYMBOL' }],
         portfolioItemsNow: {
-          AAPL: { marketPriceInBaseCurrency: 10 }
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 }
         },
         userCurrency: 'USD',
         userId: userDummyData.id
@@ -576,14 +582,14 @@ describe('PortfolioService', () => {
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 1,
             type: 'BUY'
           }
         ],
         filters: [],
         portfolioItemsNow: {
-          AAPL: { marketPriceInBaseCurrency: 10 }
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 }
         },
         userCurrency: 'USD',
         userId: userDummyData.id
@@ -616,14 +622,14 @@ describe('PortfolioService', () => {
           {
             account,
             accountId: account.id,
-            assetProfile: { symbol: 'AAPL' },
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
             quantity: 1,
             type: 'BUY'
           }
         ],
         filters: [{ id: 'AAPL', type: 'SYMBOL' }],
         portfolioItemsNow: {
-          AAPL: { marketPriceInBaseCurrency: 10 }
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 }
         },
         userCurrency: 'USD',
         userId: userDummyData.id
