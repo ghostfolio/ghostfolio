@@ -871,7 +871,7 @@
       </trans-unit>
       <trans-unit id="1029620928611278483" datatype="html">
         <source>An error occurred while merging this asset profile into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</source>
-        <target state="new">An error occurred while merging this asset profile into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
+        <target state="translated">Beim Zusammenführen dieses Anlageprofils mit <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) ist ein Fehler aufgetreten.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">942</context>
@@ -3587,7 +3587,7 @@
       </trans-unit>
       <trans-unit id="472895619516205802" datatype="html">
         <source>This action cannot be undone.</source>
-        <target state="new">This action cannot be undone.</target>
+        <target state="translated">Diese Aktion kann nicht rückgängig gemacht werden.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">961</context>
@@ -4131,7 +4131,7 @@
       </trans-unit>
       <trans-unit id="9099220454364126737" datatype="html">
         <source>This asset profile cannot be merged into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</source>
-        <target state="new">This asset profile cannot be merged into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
+        <target state="translated">Dieses Anlageprofil kann nicht mit <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) zusammengeführt werden.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">920</context>
@@ -4215,7 +4215,7 @@
       </trans-unit>
       <trans-unit id="7719274775614264692" datatype="html">
         <source>The data of this asset profile is moved to <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) and this asset profile is deleted.</source>
-        <target state="new">The data of this asset profile is moved to <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) and this asset profile is deleted.</target>
+        <target state="translated">Die Daten dieses Anlageprofils werden nach <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) verschoben und dieses Anlageprofil wird gelöscht.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">959</context>
@@ -5881,7 +5881,7 @@
       </trans-unit>
       <trans-unit id="4272904080612853299" datatype="html">
         <source>Do you really want to merge this asset profile into it?</source>
-        <target state="new">Do you really want to merge this asset profile into it?</target>
+        <target state="translated">Möchtest du dieses Anlageprofil wirklich damit zusammenführen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">965</context>
@@ -8169,7 +8169,7 @@
       </trans-unit>
       <trans-unit id="3606972039333274390" datatype="html">
         <source><x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) is already in use.</source>
-        <target state="new"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>) wird bereits verwendet.</target>
+        <target state="translated"><x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) wird bereits verwendet.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">963</context>
