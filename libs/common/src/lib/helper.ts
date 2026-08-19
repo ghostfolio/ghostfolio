@@ -185,9 +185,8 @@ export function canDeleteAssetProfile({
     activitiesCount === 0 &&
     !isBenchmark &&
     !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
+    !isFearAndGreedIndexSymbol(symbol) &&
     !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
-    symbol !== ghostfolioFearAndGreedIndexSymbolCryptocurrencies &&
-    symbol !== ghostfolioFearAndGreedIndexSymbolStocks &&
     watchedByCount === 0
   );
 }
@@ -200,6 +199,12 @@ export function canDeleteUser({
   userId: string;
 }): boolean {
   return currentUserId !== userId;
+}
+
+export function canMergeAssetProfile({
+  symbol
+}: Pick<AssetProfileItem, 'symbol'>): boolean {
+  return !isCurrencySymbol(symbol) && !isFearAndGreedIndexSymbol(symbol);
 }
 
 export function canOpenHoldingDetail({
@@ -582,6 +587,13 @@ export function isDraftActivity(activity?: { tags?: { id: string }[] }) {
     activity?.tags?.some(({ id }) => {
       return id === TAG_ID_DRAFT;
     }) === true
+  );
+}
+
+export function isFearAndGreedIndexSymbol(aSymbol: string) {
+  return (
+    aSymbol === ghostfolioFearAndGreedIndexSymbolCryptocurrencies ||
+    aSymbol === ghostfolioFearAndGreedIndexSymbolStocks
   );
 }
 

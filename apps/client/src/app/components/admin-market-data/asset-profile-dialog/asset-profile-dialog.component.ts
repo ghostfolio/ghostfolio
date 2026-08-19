@@ -916,15 +916,13 @@ export class GfAssetProfileDialogComponent implements OnInit {
             { dataSource, symbol }
           )
           .pipe(
-            catchError(() => {
-              this.snackBar.open(
-                '😞 ' +
+            catchError(({ error }: HttpErrorResponse) => {
+              this.notificationService.alert({
+                message:
+                  error?.message ??
                   $localize`An error occurred while merging this asset profile into ${symbol} (${dataSource}).`,
-                undefined,
-                {
-                  duration: ms('3 seconds')
-                }
-              );
+                title: $localize`Error`
+              });
 
               return EMPTY;
             }),
@@ -938,7 +936,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
           });
       },
       confirmType: ConfirmationDialogType.Warn,
-      message: $localize`The activities and the missing historical market data of this asset profile are moved to ${symbol} (${dataSource}). Then this asset profile is deleted. This action cannot be undone.`,
+      message: $localize`The data of this asset profile is moved to ${symbol} (${dataSource}). Then this asset profile is deleted. This action cannot be undone.`,
       title: $localize`${symbol} (${dataSource}) is already in use. Do you really want to merge this asset profile into it?`
     });
   }

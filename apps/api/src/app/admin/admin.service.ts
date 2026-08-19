@@ -19,10 +19,10 @@ import {
 } from '@ghostfolio/common/config';
 import {
   applyAssetProfileOverrides,
+  canMergeAssetProfile,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol,
-  hasGhostfolioPrefix,
-  isCurrencySymbol
+  hasGhostfolioPrefix
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
@@ -37,6 +37,8 @@ import {
   BadRequestException,
   HttpException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -54,6 +56,8 @@ import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class AdminService {
+  private readonly logger = new Logger(AdminService.name);
+
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly benchmarkService: BenchmarkService,
@@ -266,13 +270,15 @@ export class AdminService {
       );
     }
 
-    if (
-      isCurrencySymbol(sourceAssetProfileIdentifier.symbol) ||
-      isCurrencySymbol(targetAssetProfileIdentifier.symbol)
-    ) {
-      throw new BadRequestException(
-        'The asset profile of a currency cannot be merged'
-      );
+    for (const assetProfileIdentifier of [
+      sourceAssetProfileIdentifier,
+      targetAssetProfileIdentifier
+    ]) {
+      if (!canMergeAssetProfile(assetProfileIdentifier)) {
+        throw new BadRequestException(
+          `The asset profile ${getAssetProfileIdentifier(assetProfileIdentifier)} cannot be merged`
+        );
+      }
     }
 
     const [sourceAssetProfile, targetAssetProfile] = await Promise.all([
@@ -388,57 +394,51 @@ export class AdminService {
       })
     ];
 
+    const mergeDescription = `${getAssetProfileIdentifier(
+      sourceAssetProfileIdentifier
+    )} into ${getAssetProfileIdentifier(targetAssetProfileIdentifier)}`;
+
     try {
       await this.prismaService.$transaction(operations);
-    } catch {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.BAD_REQUEST),
-        StatusCodes.BAD_REQUEST
+    } catch (error) {
+      this.logger.error(
+        `Could not merge the asset profile ${mergeDescription}`,
+        error.stack
       );
+
+      throw new InternalServerErrorException(error.message);
     }
 
-    await this.benchmarkService.moveBenchmark({
-      sourceSymbolProfileId: sourceAssetProfile.id,
-      targetSymbolProfileId: targetAssetProfile.id
-    });
-
-    // The moved activities can start before the first market data item of the
-    // target asset profile. The market data is not gathered with force,
-    // because that replaces the market data which has just been copied.
-    const earliestActivity = await this.prismaService.order.findFirst({
-      orderBy: { date: 'asc' },
-      select: { date: true },
-      where: { symbolProfileId: targetAssetProfile.id }
-    });
-
-    if (earliestActivity) {
-      const jobs = await this.dataGatheringService.gatherSymbols({
-        dataGatheringItems: [
-          {
-            ...targetAssetProfileIdentifier,
-            date: earliestActivity.date
-          }
-        ],
-        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+    // The merge is committed at this point. The steps below only update
+    // derived data, thus an error must not fail the request. Otherwise the
+    // admin would retry a merge which has already been done.
+    try {
+      await this.benchmarkService.moveBenchmark({
+        sourceSymbolProfileId: sourceAssetProfile.id,
+        targetSymbolProfileId: targetAssetProfile.id
       });
 
-      // The portfolio snapshots are invalidated as soon as the market data is
-      // available. Emitting the events earlier would recompute the snapshots
-      // from split-adjusted quantities and not yet split-adjusted market
-      // prices.
-      void Promise.allSettled(
-        jobs.map((job) => {
-          return job.finished();
-        })
-      ).then(() => {
-        return this.emitPortfolioChangedEvents(targetAssetProfile.id);
+      await this.gatherMarketDataAndEmitPortfolioChangedEvents({
+        ...targetAssetProfileIdentifier,
+        symbolProfileId: targetAssetProfile.id
       });
+    } catch (error) {
+      this.logger.error(
+        `The asset profile ${mergeDescription} has been merged, but the derived data could not be updated`,
+        error.stack
+      );
     }
 
     const [mergedAssetProfile] =
       await this.symbolProfileService.getSymbolProfiles([
         targetAssetProfileIdentifier
       ]);
+
+    if (!mergedAssetProfile) {
+      throw new NotFoundException(
+        `The asset profile ${getAssetProfileIdentifier(targetAssetProfileIdentifier)} does not exist`
+      );
+    }
 
     return mergedAssetProfile;
   }
@@ -659,6 +659,60 @@ export class AdminService {
         new PortfolioChangedEvent({ userId })
       );
     }
+  }
+
+  /**
+   * Gathers the market data of the given asset profile, starting at the date
+   * of its earliest activity, and invalidates the portfolio snapshots of the
+   * affected users as soon as the market data is available.
+   */
+  private async gatherMarketDataAndEmitPortfolioChangedEvents({
+    dataSource,
+    symbol,
+    symbolProfileId
+  }: { symbolProfileId: string } & AssetProfileIdentifier) {
+    // The activities of the asset profile can start before its first market
+    // data item. The market data is not gathered with force, because a forced
+    // gathering deletes the market data of the days which the data provider
+    // does not return.
+    const earliestActivity = await this.prismaService.order.findFirst({
+      orderBy: { date: 'asc' },
+      select: { date: true },
+      where: { symbolProfileId }
+    });
+
+    if (!earliestActivity) {
+      return;
+    }
+
+    const jobs = await this.dataGatheringService.gatherSymbols({
+      dataGatheringItems: [
+        {
+          dataSource,
+          symbol,
+          date: earliestActivity.date
+        }
+      ],
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+    });
+
+    // The portfolio snapshots are invalidated as soon as the market data is
+    // available. Emitting the events earlier would recompute the snapshots
+    // from split-adjusted quantities and not yet split-adjusted market prices.
+    void Promise.allSettled(
+      jobs.map((job) => {
+        return job.finished();
+      })
+    )
+      .then(() => {
+        return this.emitPortfolioChangedEvents(symbolProfileId);
+      })
+      .catch((error) => {
+        this.logger.error(
+          `Could not emit the portfolio changed events for ${getAssetProfileIdentifier({ dataSource, symbol })}`,
+          error.stack
+        );
+      });
   }
 
   private async getUsersWithAnalytics({
