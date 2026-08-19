@@ -171,33 +171,32 @@ export class PublicController {
       })
     ).toNumber();
 
-    for (const portfolioPosition of holdings) {
+    for (const holding of holdings) {
       publicPortfolioResponse.holdings.push({
-        allocationInPercentage:
-          portfolioPosition.valueInBaseCurrency / totalValue,
+        allocationInPercentage: holding.valueInBaseCurrency / totalValue,
         assetProfile: {
-          ...portfolioPosition.assetProfile,
+          ...holding.assetProfile,
           assetClass:
             hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
-              ? portfolioPosition.assetProfile.assetClass
+            holding.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? holding.assetProfile.assetClass
               : undefined,
           assetClassLabel:
             hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
-              ? portfolioPosition.assetProfile.assetClassLabel
+            holding.assetProfile.assetClass === AssetClass.LIQUIDITY
+              ? holding.assetProfile.assetClassLabel
               : undefined,
           assetSubClass:
             hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
-              ? portfolioPosition.assetProfile.assetSubClass
+            holding.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? holding.assetProfile.assetSubClass
               : undefined,
           assetSubClassLabel:
             hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
-              ? portfolioPosition.assetProfile.assetSubClassLabel
+            holding.assetProfile.assetSubClass === AssetSubClass.CASH
+              ? holding.assetProfile.assetSubClassLabel
               : undefined,
-          holdings: portfolioPosition.assetProfile.holdings?.map(
+          holdings: holding.assetProfile.holdings?.map(
             ({ allocationInPercentage, name }) => {
               return { allocationInPercentage, name };
             }
@@ -211,11 +210,11 @@ export class PublicController {
                 sectors: []
               })
         },
-        dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
-        markets: hasDetails ? portfolioPosition.markets : undefined,
+        dateOfFirstActivity: holding.dateOfFirstActivity,
+        markets: hasDetails ? holding.markets : undefined,
         netPerformancePercentWithCurrencyEffect:
-          portfolioPosition.netPerformancePercentWithCurrencyEffect,
-        valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
+          holding.netPerformancePercentWithCurrencyEffect,
+        valueInPercentage: holding.valueInBaseCurrency / totalValue
       });
     }
 
