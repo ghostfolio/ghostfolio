@@ -3,10 +3,7 @@ import { PortfolioCalculatorPosition } from '@ghostfolio/api/app/portfolio/inter
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import {
-  DATE_FORMAT,
-  getAssetProfileIdentifier
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   SymbolMetrics
@@ -198,9 +195,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     // Copy the items as they are enriched below. A shallow copy is sufficient
     // because only top-level properties are written.
     let orders: PortfolioOrderItem[] = (
-      this.activitiesByAssetProfileIdentifier[
-        getAssetProfileIdentifier({ dataSource, symbol })
-      ] ?? []
+      this.activitiesBySymbol[symbol] ?? []
     ).map((activity) => {
       return { ...activity };
     });
@@ -275,7 +270,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     }
 
     const dateStringOfFirstActivity = orders[0].date;
-    const dateOfFirstActivity = new Date(dateStringOfFirstActivity);
+    const dateOfFirstActivity = parseDate(dateStringOfFirstActivity);
 
     const endDateString = format(end, DATE_FORMAT);
     const startDateString = format(start, DATE_FORMAT);

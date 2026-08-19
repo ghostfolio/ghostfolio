@@ -22,7 +22,6 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
-  getAssetProfileIdentifier,
   getSum,
   parseDate,
   resetHours
@@ -73,8 +72,8 @@ export abstract class PortfolioCalculator {
 
   protected accountBalanceItems: HistoricalDataItem[];
   protected activities: PortfolioOrder[];
-  protected activitiesByAssetProfileIdentifier: {
-    [assetProfileIdentifier: string]: PortfolioOrder[];
+  protected activitiesBySymbol: {
+    [symbol: string]: PortfolioOrder[];
   };
 
   private configurationService: ConfigurationService;
@@ -166,12 +165,9 @@ export abstract class PortfolioCalculator {
         return a.date?.localeCompare(b.date);
       });
 
-    this.activitiesByAssetProfileIdentifier = groupBy(
-      this.activities,
-      ({ assetProfile }) => {
-        return getAssetProfileIdentifier(assetProfile);
-      }
-    );
+    this.activitiesBySymbol = groupBy(this.activities, ({ assetProfile }) => {
+      return assetProfile.symbol;
+    });
 
     this.portfolioSnapshotService = portfolioSnapshotService;
     this.redisCacheService = redisCacheService;
