@@ -9,10 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the holdings in the portfolio endpoints from a map keyed by the symbol to an array
 - Improved the performance of the portfolio snapshot calculation by indexing the activities
 - Upgraded `angular` from version `21.2.19` to `22.1.2`
 - Upgraded `ngx-device-detector` from version `11.0.0` to `12.0.0`
 - Upgraded `ngx-markdown` from version `21.2.0` to `22.0.0`
+
+### Fixed
+
+- Fixed the portfolio calculation for holdings with the same symbol from different data sources
 
 ## 3.54.0 - 2026-08-18
 
