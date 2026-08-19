@@ -1,15 +1,12 @@
 import { getDateFormatString } from '@ghostfolio/common/helper';
 
-import { Inject, forwardRef } from '@angular/core';
+import { Inject } from '@angular/core';
 import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material/core';
 import { addYears, format, getYear, parse } from 'date-fns';
 
 export class CustomDateAdapter extends NativeDateAdapter {
-  public constructor(
-    @Inject(MAT_DATE_LOCALE) public override locale: string,
-    @Inject(forwardRef(() => MAT_DATE_LOCALE)) matDateLocale: string
-  ) {
-    super(matDateLocale);
+  public constructor(@Inject(MAT_DATE_LOCALE) public override locale: string) {
+    super();
   }
 
   /**
