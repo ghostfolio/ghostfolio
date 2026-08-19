@@ -107,8 +107,6 @@ export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT =
   ms('30 seconds');
 
-// The paths without a prefix apply to a response which is a single activity or
-// account, hence they mirror the activities[*] and accounts[*] entries below
 export const DEFAULT_REDACTED_PATHS = [
   'account.comment',
   'accounts[*].balance',
