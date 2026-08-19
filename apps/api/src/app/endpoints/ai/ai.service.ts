@@ -91,7 +91,7 @@ export class AiService {
         return { name, align: align ?? 'left' };
       });
 
-    const holdingsTableRows = Object.values(holdings)
+    const holdingsTableRows = holdings
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
       })

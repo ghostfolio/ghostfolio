@@ -142,7 +142,7 @@ export class PublicController {
       latestActivities,
       markets,
       alias: access.alias,
-      holdings: {},
+      holdings: [],
       performance: {
         '1d': {
           relativeChange:
@@ -160,7 +160,7 @@ export class PublicController {
     };
 
     const totalValue = getSum(
-      Object.values(holdings).map(({ assetProfile, marketPrice, quantity }) => {
+      holdings.map(({ assetProfile, marketPrice, quantity }) => {
         return new Big(
           this.exchangeRateDataService.toCurrency(
             quantity * marketPrice,
@@ -171,8 +171,8 @@ export class PublicController {
       })
     ).toNumber();
 
-    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-      publicPortfolioResponse.holdings[symbol] = {
+    for (const portfolioPosition of holdings) {
+      publicPortfolioResponse.holdings.push({
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
         assetProfile: {
@@ -216,7 +216,7 @@ export class PublicController {
         netPerformancePercentWithCurrencyEffect:
           portfolioPosition.netPerformancePercentWithCurrencyEffect,
         valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
-      };
+      });
     }
 
     return publicPortfolioResponse;

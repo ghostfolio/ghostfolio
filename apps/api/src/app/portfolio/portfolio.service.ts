@@ -397,13 +397,11 @@ export class PortfolioService {
       return type !== 'SEARCH_QUERY';
     });
 
-    const { holdings: holdingsMap } = await this.getDetails({
+    let { holdings } = await this.getDetails({
       dateRange,
       userId,
       filters: filtersWithoutSearchQueryFilter
     });
-
-    let holdings = Object.values(holdingsMap);
 
     if (filterBySearchQuery) {
       const fuse = new Fuse(holdings, {
@@ -546,7 +544,7 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const holdings: PortfolioDetails['holdings'] = {};
+    const holdings: PortfolioDetails['holdings'] = [];
 
     const {
       HOLDING_TYPE: [filterByHoldingType] = [],
@@ -586,9 +584,12 @@ export class PortfolioService {
       ] = symbolProfile;
     }
 
-    const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
+    const portfolioItemsNow: {
+      [assetProfileIdentifier: string]: TimelinePosition;
+    } = {};
+
     for (const position of positions) {
-      portfolioItemsNow[position.symbol] = position;
+      portfolioItemsNow[getAssetProfileIdentifier(position)] = position;
     }
 
     for (const {
@@ -643,7 +644,7 @@ export class PortfolioService {
         }));
       }
 
-      holdings[symbol] = {
+      holdings.push({
         activitiesCount,
         markets,
         marketsAdvanced,
@@ -694,7 +695,7 @@ export class PortfolioService {
           netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ?? 0,
         quantity: quantity.toNumber(),
         valueInBaseCurrency: valueInBaseCurrency.toNumber()
-      };
+      });
     }
 
     const { accounts, platforms } = await this.getValueOfAccountsAndPlatforms({
@@ -730,11 +731,23 @@ export class PortfolioService {
         valueInBaseCurrency: emergencyFundInCash
       };
 
-      holdings[userCurrency] = {
+      const emergencyFundCashHolding = {
         ...emergencyFundCashPositions[userCurrency],
         investment: emergencyFundInCash,
         valueInBaseCurrency: emergencyFundInCash
       };
+
+      const indexOfHoldingInBaseCurrency = holdings.findIndex(
+        ({ assetProfile }) => {
+          return assetProfile.symbol === userCurrency;
+        }
+      );
+
+      if (indexOfHoldingInBaseCurrency >= 0) {
+        holdings[indexOfHoldingInBaseCurrency] = emergencyFundCashHolding;
+      } else {
+        holdings.push(emergencyFundCashHolding);
+      }
     }
 
     let markets: PortfolioDetails['markets'];
@@ -1157,7 +1170,7 @@ export class PortfolioService {
       userSettings
     }).toNumber();
 
-    const hasOpenHoldings = Object.keys(holdings).length > 0;
+    const hasOpenHoldings = holdings.length > 0;
 
     const marketsAdvancedTotalInBaseCurrency = getSum(
       Object.values(marketsAdvanced).map(({ valueInBaseCurrency }) => {
@@ -1234,13 +1247,13 @@ export class PortfolioService {
                 new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  Object.values(holdings),
+                  holdings,
                   userSettings.language
                 ),
                 new CurrencyClusterRiskCurrentInvestment(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  Object.values(holdings),
+                  holdings,
                   userSettings.language
                 )
               ],
@@ -1261,13 +1274,13 @@ export class PortfolioService {
                   this.exchangeRateDataService,
                   this.i18nService,
                   userSettings.language,
-                  Object.values(holdings)
+                  holdings
                 ),
                 new AssetClassClusterRiskFixedIncome(
                   this.exchangeRateDataService,
                   this.i18nService,
                   userSettings.language,
-                  Object.values(holdings)
+                  holdings
                 )
               ],
               userSettings
@@ -1428,7 +1441,7 @@ export class PortfolioService {
     });
   }
 
-  private getAggregatedMarkets(holdings: Record<string, PortfolioPosition>): {
+  private getAggregatedMarkets(holdings: PortfolioPosition[]): {
     markets: PortfolioDetails['markets'];
     marketsAdvanced: PortfolioDetails['marketsAdvanced'];
   } {
@@ -1493,7 +1506,7 @@ export class PortfolioService {
       }
     };
 
-    for (const [, position] of Object.entries(holdings)) {
+    for (const position of holdings) {
       const value = position.valueInBaseCurrency;
 
       if (position.assetProfile.countries.length > 0) {
@@ -1574,7 +1587,7 @@ export class PortfolioService {
     userCurrency: string;
     value: Big;
   }) {
-    const cashPositions: PortfolioDetails['holdings'] = {
+    const cashPositions: { [currency: string]: PortfolioPosition } = {
       [userCurrency]: this.getInitialCashPosition({
         balance: 0,
         currency: userCurrency
@@ -1603,12 +1616,10 @@ export class PortfolioService {
       }
     }
 
-    for (const symbol of Object.keys(cashPositions)) {
+    for (const cashPosition of Object.values(cashPositions)) {
       // Calculate allocations for each currency
-      cashPositions[symbol].allocationInPercentage = value.gt(0)
-        ? new Big(cashPositions[symbol].valueInBaseCurrency)
-            .div(value)
-            .toNumber()
+      cashPosition.allocationInPercentage = value.gt(0)
+        ? new Big(cashPosition.valueInBaseCurrency).div(value).toNumber()
         : 0;
     }
 
@@ -1715,7 +1726,7 @@ export class PortfolioService {
   }) {
     // TODO: Use current value of activities instead of holdings
     // tagged with EMERGENCY_FUND_TAG_ID
-    const emergencyFundHoldings = Object.values(holdings).filter(({ tags }) => {
+    const emergencyFundHoldings = holdings.filter(({ tags }) => {
       return (
         tags?.some(({ id }) => {
           return id === TAG_ID_EMERGENCY_FUND;
@@ -2258,8 +2269,8 @@ export class PortfolioService {
 
         valueOfAccountInBaseCurrency = valueOfAccountInBaseCurrency.plus(
           currentQuantityOfSymbol.mul(
-            portfolioItemsNow[assetProfile.symbol]?.marketPriceInBaseCurrency ??
-              0
+            portfolioItemsNow[getAssetProfileIdentifier(assetProfile)]
+              ?.marketPriceInBaseCurrency ?? 0
           )
         );
       }
