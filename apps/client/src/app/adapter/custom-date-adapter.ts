@@ -1,13 +1,11 @@
 import { getDateFormatString } from '@ghostfolio/common/helper';
 
-import { Inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material/core';
 import { addYears, format, getYear, parse } from 'date-fns';
 
 export class CustomDateAdapter extends NativeDateAdapter {
-  public constructor(@Inject(MAT_DATE_LOCALE) public override locale: string) {
-    super();
-  }
+  public override locale = inject<string>(MAT_DATE_LOCALE);
 
   /**
    * Formats a date as a string
