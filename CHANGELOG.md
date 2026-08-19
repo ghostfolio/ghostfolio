@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the performance of the portfolio snapshot calculation by indexing the activities by symbol and skipping the creation of placeholder orders before the first activity of a holding
+- Improved the performance of the portfolio snapshot calculation by indexing the activities by data source and symbol and skipping the creation of placeholder orders before the first activity of a holding
 
 ## 3.54.0 - 2026-08-18
 
