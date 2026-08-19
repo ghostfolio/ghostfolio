@@ -148,11 +148,9 @@ export class PortfolioController {
           return a + b;
         }, 0);
 
-      for (const portfolioPosition of holdings) {
-        portfolioPosition.investment =
-          portfolioPosition.investment / totalInvestment;
-        portfolioPosition.valueInPercentage =
-          portfolioPosition.valueInBaseCurrency / totalValue;
+      for (const holding of holdings) {
+        holding.investment = holding.investment / totalInvestment;
+        holding.valueInPercentage = holding.valueInBaseCurrency / totalValue;
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
