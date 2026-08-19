@@ -1,5 +1,8 @@
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getCountryName } from '@ghostfolio/common/helper';
+import {
+  getAssetProfileIdentifier,
+  getCountryName
+} from '@ghostfolio/common/helper';
 import {
   InfoItem,
   PortfolioPosition,
@@ -67,7 +70,7 @@ export class GfPublicPageComponent implements OnInit {
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
   protected hasPermissionForSubscription: boolean;
-  protected holdings: PublicPortfolioResponse['holdings'][string][];
+  protected holdings: PublicPortfolioResponse['holdings'];
   protected info: InfoItem;
   protected isLoading = true;
   protected latestActivitiesDataSource: MatTableDataSource<
@@ -78,7 +81,7 @@ export class GfPublicPageComponent implements OnInit {
   };
   protected readonly pageSize = Number.MAX_SAFE_INTEGER;
   protected positions: {
-    [symbol: string]: Pick<
+    [assetProfileIdentifier: string]: Pick<
       PortfolioPosition['assetProfile'],
       'currency' | 'name'
     > & {
@@ -175,12 +178,14 @@ export class GfPublicPageComponent implements OnInit {
       }
     };
 
-    for (const [symbol, position] of Object.entries(
-      this.publicPortfolioDetails.holdings
-    )) {
+    for (const position of this.publicPortfolioDetails.holdings) {
+      const assetProfileIdentifier = getAssetProfileIdentifier(
+        position.assetProfile
+      );
+
       this.holdings.push(position);
 
-      this.positions[symbol] = {
+      this.positions[assetProfileIdentifier] = {
         currency: position.assetProfile.currency,
         name: position.assetProfile.name,
         value: position.allocationInPercentage
@@ -199,10 +204,7 @@ export class GfPublicPageComponent implements OnInit {
             } else {
               this.continents[continent] = {
                 name: translate(continent),
-                value:
-                  weight *
-                  (this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency ?? 0)
+                value: weight * (position.valueInBaseCurrency ?? 0)
               };
             }
 
@@ -212,21 +214,16 @@ export class GfPublicPageComponent implements OnInit {
             } else {
               this.countries[code] = {
                 name: getCountryName({ code }),
-                value:
-                  weight *
-                  (this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency ?? 0)
+                value: weight * (position.valueInBaseCurrency ?? 0)
               };
             }
           }
         } else {
           this.continents[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
-            0;
+            position.valueInBaseCurrency ?? 0;
 
           this.countries[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
-            0;
+            position.valueInBaseCurrency ?? 0;
         }
 
         if (position.assetProfile.sectors.length > 0) {
@@ -239,23 +236,18 @@ export class GfPublicPageComponent implements OnInit {
             } else {
               this.sectors[name] = {
                 name: translate(name),
-                value:
-                  weight *
-                  (this.publicPortfolioDetails.holdings[symbol]
-                    .valueInBaseCurrency ?? 0)
+                value: weight * (position.valueInBaseCurrency ?? 0)
               };
             }
           }
         } else {
-          this.sectors[UNKNOWN_KEY].value +=
-            this.publicPortfolioDetails.holdings[symbol].valueInBaseCurrency ??
-            0;
+          this.sectors[UNKNOWN_KEY].value += position.valueInBaseCurrency ?? 0;
         }
       }
 
-      this.symbols[symbol] = {
-        symbol,
-        name: position.assetProfile.name ?? symbol,
+      this.symbols[assetProfileIdentifier] = {
+        name: position.assetProfile.name ?? position.assetProfile.symbol,
+        symbol: position.assetProfile.symbol,
         value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
           : (position.valueInPercentage ?? 0)

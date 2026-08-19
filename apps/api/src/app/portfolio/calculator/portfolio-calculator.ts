@@ -22,6 +22,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
+  getAssetProfileIdentifier,
   getSum,
   parseDate,
   resetHours
@@ -72,8 +73,8 @@ export abstract class PortfolioCalculator {
 
   protected accountBalanceItems: HistoricalDataItem[];
   protected activities: PortfolioOrder[];
-  protected activitiesBySymbol: {
-    [symbol: string]: PortfolioOrder[];
+  protected activitiesByAssetProfileIdentifier: {
+    [assetProfileIdentifier: string]: PortfolioOrder[];
   };
 
   private configurationService: ConfigurationService;
@@ -165,9 +166,12 @@ export abstract class PortfolioCalculator {
         return a.date?.localeCompare(b.date);
       });
 
-    this.activitiesBySymbol = groupBy(this.activities, ({ assetProfile }) => {
-      return assetProfile.symbol;
-    });
+    this.activitiesByAssetProfileIdentifier = groupBy(
+      this.activities,
+      ({ assetProfile }) => {
+        return getAssetProfileIdentifier(assetProfile);
+      }
+    );
 
     this.portfolioSnapshotService = portfolioSnapshotService;
     this.redisCacheService = redisCacheService;
@@ -221,8 +225,8 @@ export abstract class PortfolioCalculator {
       };
     }
 
-    const cashSymbols = new Set<string>();
-    const currencies: { [symbol: string]: string } = {};
+    const cashAssetProfileIdentifiers = new Set<string>();
+    const currencies: { [assetProfileIdentifier: string]: string } = {};
     const dataGatheringItems: DataGatheringItem[] = [];
     let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
@@ -244,7 +248,7 @@ export abstract class PortfolioCalculator {
         });
       }
 
-      currencies[symbol] = currency;
+      currencies[getAssetProfileIdentifier({ dataSource, symbol })] = currency;
     }
 
     for (let i = 0; i < transactionPoints.length; i++) {
@@ -280,7 +284,7 @@ export abstract class PortfolioCalculator {
     this.dataProviderInfos = dataProviderInfos;
 
     const marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
+      [date: string]: { [assetProfileIdentifier: string]: Big };
     } = {};
 
     for (const marketSymbol of marketSymbols) {
@@ -291,9 +295,8 @@ export abstract class PortfolioCalculator {
       }
 
       if (marketSymbol.marketPrice) {
-        marketSymbolMap[date][marketSymbol.symbol] = new Big(
-          marketSymbol.marketPrice
-        );
+        marketSymbolMap[date][getAssetProfileIdentifier(marketSymbol)] =
+          new Big(marketSymbol.marketPrice);
       }
     }
 
@@ -346,8 +349,8 @@ export abstract class PortfolioCalculator {
       };
     } = {};
 
-    const valuesBySymbol: {
-      [symbol: string]: {
+    const valuesByAssetProfileIdentifier: {
+      [assetProfileIdentifier: string]: {
         currentValues: { [date: string]: Big };
         currentValuesWithCurrencyEffect: { [date: string]: Big };
         investmentValuesAccumulated: { [date: string]: Big };
@@ -362,8 +365,11 @@ export abstract class PortfolioCalculator {
     } = {};
 
     for (const item of lastTransactionPoint.items) {
+      const assetProfileIdentifier = getAssetProfileIdentifier(item);
+
       const marketPriceInBaseCurrency = (
-        marketSymbolMap[endDateString]?.[item.symbol] ?? item.averagePrice
+        marketSymbolMap[endDateString]?.[assetProfileIdentifier] ??
+        item.averagePrice
       ).mul(
         exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
           endDateString
@@ -421,31 +427,32 @@ export abstract class PortfolioCalculator {
       // contributes nothing but its balance to the performance calculation. It
       // is therefore excluded from the value and the investment, while still
       // contributing to the net worth.
-      valuesBySymbol[item.symbol] = isCashInBaseCurrency
-        ? {
-            currentValues: {},
-            currentValuesWithCurrencyEffect: {},
-            investmentValuesAccumulated: {},
-            investmentValuesAccumulatedWithCurrencyEffect: {},
-            investmentValuesWithCurrencyEffect: {},
-            netPerformanceValues: {},
-            netPerformanceValuesWithCurrencyEffect: {},
-            netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect,
-            timeWeightedInvestmentValues: {},
-            timeWeightedInvestmentValuesWithCurrencyEffect: {}
-          }
-        : {
-            currentValues,
-            currentValuesWithCurrencyEffect,
-            investmentValuesAccumulated,
-            investmentValuesAccumulatedWithCurrencyEffect,
-            investmentValuesWithCurrencyEffect,
-            netPerformanceValues,
-            netPerformanceValuesWithCurrencyEffect,
-            timeWeightedInvestmentValues,
-            timeWeightedInvestmentValuesWithCurrencyEffect,
-            netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect
-          };
+      valuesByAssetProfileIdentifier[assetProfileIdentifier] =
+        isCashInBaseCurrency
+          ? {
+              currentValues: {},
+              currentValuesWithCurrencyEffect: {},
+              investmentValuesAccumulated: {},
+              investmentValuesAccumulatedWithCurrencyEffect: {},
+              investmentValuesWithCurrencyEffect: {},
+              netPerformanceValues: {},
+              netPerformanceValuesWithCurrencyEffect: {},
+              netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect,
+              timeWeightedInvestmentValues: {},
+              timeWeightedInvestmentValuesWithCurrencyEffect: {}
+            }
+          : {
+              currentValues,
+              currentValuesWithCurrencyEffect,
+              investmentValuesAccumulated,
+              investmentValuesAccumulatedWithCurrencyEffect,
+              investmentValuesWithCurrencyEffect,
+              netPerformanceValues,
+              netPerformanceValuesWithCurrencyEffect,
+              timeWeightedInvestmentValues,
+              timeWeightedInvestmentValuesWithCurrencyEffect,
+              netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect
+            };
 
       positions.push({
         timeWeightedInvestment,
@@ -474,7 +481,9 @@ export abstract class PortfolioCalculator {
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
         marketPrice:
-          marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? 1,
+          marketSymbolMap[endDateString]?.[
+            assetProfileIdentifier
+          ]?.toNumber() ?? 1,
         marketPriceInBaseCurrency: marketPriceInBaseCurrency?.toNumber() ?? 1,
         netPerformance: !hasErrors ? (netPerformance ?? null) : null,
         netPerformancePercentage: !hasErrors
@@ -493,7 +502,7 @@ export abstract class PortfolioCalculator {
       });
 
       if (item.assetSubClass === AssetSubClass.CASH) {
-        cashSymbols.add(item.symbol);
+        cashAssetProfileIdentifiers.add(assetProfileIdentifier);
 
         totalCashInBaseCurrency =
           totalCashInBaseCurrency.plus(valueInBaseCurrency);
@@ -519,8 +528,11 @@ export abstract class PortfolioCalculator {
     }
 
     for (const dateString of chartDates) {
-      for (const symbol of Object.keys(valuesBySymbol)) {
-        const symbolValues = valuesBySymbol[symbol];
+      for (const assetProfileIdentifier of Object.keys(
+        valuesByAssetProfileIdentifier
+      )) {
+        const symbolValues =
+          valuesByAssetProfileIdentifier[assetProfileIdentifier];
 
         const currentValue =
           symbolValues.currentValues?.[dateString] ?? new Big(0);
@@ -569,7 +581,7 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalCashValueWithCurrencyEffect ?? new Big(0)
           ).add(
-            cashSymbols.has(symbol)
+            cashAssetProfileIdentifiers.has(assetProfileIdentifier)
               ? netWorthValueWithCurrencyEffect
               : new Big(0)
           ),
@@ -879,7 +891,7 @@ export abstract class PortfolioCalculator {
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
+      [date: string]: { [assetProfileIdentifier: string]: Big };
     };
     start: Date;
   } & AssetProfileIdentifier): SymbolMetrics;
@@ -977,7 +989,9 @@ export abstract class PortfolioCalculator {
   @LogPerformance
   private computeTransactionPoints() {
     this.transactionPoints = [];
-    const symbols: { [symbol: string]: TransactionPointSymbol } = {};
+    const symbols: {
+      [assetProfileIdentifier: string]: TransactionPointSymbol;
+    } = {};
 
     let lastDate: string = null;
     let lastTransactionPoint: TransactionPoint = null;
@@ -1001,7 +1015,9 @@ export abstract class PortfolioCalculator {
       const skipErrors = !!assetProfile.userId; // Skip errors for custom asset profiles
       const symbol = assetProfile.symbol;
 
-      const oldAccumulatedSymbol = symbols[symbol];
+      const assetProfileIdentifier = getAssetProfileIdentifier(assetProfile);
+
+      const oldAccumulatedSymbol = symbols[assetProfileIdentifier];
 
       if (oldAccumulatedSymbol) {
         let investment = oldAccumulatedSymbol.investment;
@@ -1083,12 +1099,12 @@ export abstract class PortfolioCalculator {
         'id'
       );
 
-      symbols[symbol] = currentTransactionPointItem;
+      symbols[assetProfileIdentifier] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
 
-      const newItems = items.filter(({ symbol }) => {
-        return symbol !== assetProfile.symbol;
+      const newItems = items.filter((item) => {
+        return getAssetProfileIdentifier(item) !== assetProfileIdentifier;
       });
 
       newItems.push(currentTransactionPointItem);

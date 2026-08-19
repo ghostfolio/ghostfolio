@@ -8,6 +8,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   canOpenHoldingDetail,
+  getAssetProfileIdentifier,
   getCountryName
 } from '@ghostfolio/common/helper';
 import {
@@ -87,7 +88,7 @@ export class GfAllocationsPageComponent implements OnInit {
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
   protected holdings: {
-    [symbol: string]: Pick<
+    [assetProfileIdentifier: string]: Pick<
       PortfolioPosition['assetProfile'],
       | 'assetClass'
       | 'assetClassLabel'
@@ -329,7 +330,7 @@ export class GfAllocationsPageComponent implements OnInit {
     this.portfolioDetails = {
       accounts: {},
       createdAt: new Date(),
-      holdings: {},
+      holdings: [],
       platforms: {},
       summary: undefined
     };
@@ -369,10 +370,12 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
-    for (const [symbol, position] of Object.entries(
-      this.portfolioDetails.holdings
-    )) {
-      this.holdings[symbol] = {
+    for (const position of this.portfolioDetails.holdings) {
+      const assetProfileIdentifier = getAssetProfileIdentifier(
+        position.assetProfile
+      );
+
+      this.holdings[assetProfileIdentifier] = {
         assetClass:
           position.assetProfile.assetClass || (UNKNOWN_KEY as AssetClass),
         assetClassLabel: position.assetProfile.assetClassLabel ?? UNKNOWN_KEY,
@@ -498,15 +501,15 @@ export class GfAllocationsPageComponent implements OnInit {
         }
       }
 
-      if (this.holdings[symbol].assetSubClass === 'ETF') {
-        this.totalValueInEtf += this.holdings[symbol].value;
+      if (this.holdings[assetProfileIdentifier].assetSubClass === 'ETF') {
+        this.totalValueInEtf += this.holdings[assetProfileIdentifier].value;
       }
 
-      this.symbols[symbol] = {
-        symbol,
+      this.symbols[assetProfileIdentifier] = {
         dataSource: position.assetProfile.dataSource,
         isClickable: canOpenHoldingDetail(position),
         name: position.assetProfile.name ?? '',
+        symbol: position.assetProfile.symbol,
         value:
           (isNumber(position.valueInBaseCurrency)
             ? position.valueInBaseCurrency
@@ -558,8 +561,8 @@ export class GfAllocationsPageComponent implements OnInit {
           name,
           allocationInPercentage:
             this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
-          parents: Object.entries(this.portfolioDetails.holdings)
-            .map(([symbol, holding]) => {
+          parents: this.portfolioDetails.holdings
+            .map((holding) => {
               if (holding.assetProfile.holdings.length > 0) {
                 const currentParentHolding = holding.assetProfile.holdings.find(
                   (parentHolding) => {
@@ -573,11 +576,11 @@ export class GfAllocationsPageComponent implements OnInit {
                 return currentParentHolding &&
                   isNumber(currentParentHolding.valueInBaseCurrency)
                   ? {
-                      symbol,
                       allocationInPercentage:
                         currentParentHolding.valueInBaseCurrency / value,
                       name: holding.assetProfile.name ?? '',
                       position: holding,
+                      symbol: holding.assetProfile.symbol,
                       valueInBaseCurrency:
                         currentParentHolding.valueInBaseCurrency
                     }
