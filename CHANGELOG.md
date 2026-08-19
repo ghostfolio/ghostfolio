@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the performance of the portfolio snapshot calculation by indexing the activities
+- Improved the language localization for Spanish (`es`)
 - Upgraded `angular` from version `21.2.19` to `22.1.2`
 - Upgraded `ngx-device-detector` from version `11.0.0` to `12.0.0`
 - Upgraded `ngx-markdown` from version `21.2.0` to `22.0.0`
