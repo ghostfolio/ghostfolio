@@ -64,10 +64,7 @@ export class GfTransferBalanceDialogComponent {
   protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup({
     balance: new FormControl<number | string | null>('', Validators.required),
     fromAccount: new FormControl<string | null>('', Validators.required),
-    toAccount: new FormControl<string | null>(
-      { disabled: true, value: null },
-      Validators.required
-    )
+    toAccount: new FormControl<string | null>(null, Validators.required)
   });
 
   private readonly dialogRef =
@@ -88,14 +85,10 @@ export class GfTransferBalanceDialogComponent {
 
         const toAccountControl = this.transferBalanceForm.controls.toAccount;
 
-        if (id) {
-          if (toAccountControl.value === id) {
-            toAccountControl.setValue(null);
-            toAccountControl.markAsPristine();
-            toAccountControl.markAsUntouched();
-          }
-
-          toAccountControl.enable();
+        if (id && toAccountControl.value === id) {
+          toAccountControl.setValue(null);
+          toAccountControl.markAsPristine();
+          toAccountControl.markAsUntouched();
         }
       }
     );
