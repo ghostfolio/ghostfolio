@@ -15,6 +15,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
 import {
+  MergeAssetProfileDto,
   UpdateAssetProfileDto,
   UpdatePropertyDto
 } from '@ghostfolio/common/dtos';
@@ -297,6 +298,21 @@ export class AdminController {
     }
 
     return this.adminService.deleteProfileData({ dataSource, symbol });
+  }
+
+  @HasPermission(permissions.accessAdminControl)
+  @Post('profile-data/:dataSource/:symbol/merge')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  public async mergeAssetProfile(
+    @Body() targetAssetProfile: MergeAssetProfileDto,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<EnhancedAssetProfile> {
+    return this.adminService.mergeAssetProfile(
+      { dataSource, symbol },
+      targetAssetProfile
+    );
   }
 
   @HasPermission(permissions.accessAdminControl)

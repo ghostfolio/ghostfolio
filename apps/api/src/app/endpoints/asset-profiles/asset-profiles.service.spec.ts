@@ -66,6 +66,7 @@ describe('AssetProfilesService', () => {
       });
       expect(gatherSymbol).toHaveBeenCalledWith({
         dataSource: data.dataSource,
+        force: true,
         symbol: data.symbol
       });
       expect(result).toBe(split);
@@ -166,6 +167,7 @@ describe('AssetProfilesService', () => {
       ]);
       expect(gatherSymbol).toHaveBeenCalledWith({
         dataSource: DataSource.YAHOO,
+        force: true,
         symbol: 'AAPL'
       });
     });

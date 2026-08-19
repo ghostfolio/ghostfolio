@@ -8,6 +8,7 @@ import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   canDeleteAssetProfile,
+  canMergeAssetProfile,
   DATE_FORMAT,
   getCountryName,
   getCurrencyFromSymbol,
@@ -797,13 +798,12 @@ export class GfAssetProfileDialogComponent implements OnInit {
     }
 
     this.patchAssetProfileIdentifier({
-      getErrorMessage: (error) => {
-        if (error.status === StatusCodes.CONFLICT) {
-          // TODO: Ask if the user wants to merge the two asset profiles
-
-          return $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`;
-        }
-
+      conflictFn: this.user?.settings?.isExperimentalFeatures
+        ? () => {
+            this.mergeAssetProfile(newAssetProfileIdentifier);
+          }
+        : undefined,
+      getErrorMessage: () => {
         return $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`;
       },
       title: $localize`Do you really want to convert this asset profile to ${newAssetProfileIdentifier.symbol} (${newAssetProfileIdentifier.dataSource})?`,
@@ -907,11 +907,72 @@ export class GfAssetProfileDialogComponent implements OnInit {
     return null;
   }
 
+  private mergeAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
+    if (
+      !canMergeAssetProfile({
+        isBenchmark: this.isBenchmark,
+        splitsCount: this.splits.length,
+        symbol: this.data.symbol
+      }) ||
+      !canMergeAssetProfile({ symbol })
+    ) {
+      this.notificationService.alert({
+        message: $localize`This asset profile cannot be merged into ${symbol} (${dataSource}).`,
+        title: $localize`Error`
+      });
+
+      return;
+    }
+
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.adminService
+          .mergeAssetProfile(
+            {
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            },
+            { dataSource, symbol }
+          )
+          .pipe(
+            catchError(({ error }: HttpErrorResponse) => {
+              this.notificationService.alert({
+                message:
+                  error?.message ??
+                  $localize`An error occurred while merging this asset profile into ${symbol} (${dataSource}).`,
+                title: $localize`Error`
+              });
+
+              return EMPTY;
+            }),
+            takeUntilDestroyed(this.destroyRef)
+          )
+          .subscribe((mergedAssetProfile) => {
+            this.dialogRef.close({
+              dataSource: mergedAssetProfile.dataSource,
+              symbol: mergedAssetProfile.symbol
+            });
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      message:
+        $localize`The data of this asset profile is moved to ${symbol} (${dataSource}) and this asset profile is deleted.` +
+        ' ' +
+        $localize`This action cannot be undone.`,
+      title:
+        $localize`${symbol} (${dataSource}) is already in use.` +
+        ' ' +
+        $localize`Do you really want to merge this asset profile into it?`
+    });
+  }
+
   private patchAssetProfileIdentifier({
+    conflictFn,
     getErrorMessage,
     title,
     updateAssetProfileDto
   }: {
+    conflictFn?: () => void;
     getErrorMessage: (error: HttpErrorResponse) => string;
     title: string;
     updateAssetProfileDto: UpdateAssetProfileDto;
@@ -929,9 +990,13 @@ export class GfAssetProfileDialogComponent implements OnInit {
           )
           .pipe(
             catchError((error: HttpErrorResponse) => {
-              this.snackBar.open(getErrorMessage(error), undefined, {
-                duration: ms('3 seconds')
-              });
+              if (error.status === StatusCodes.CONFLICT && conflictFn) {
+                conflictFn();
+              } else {
+                this.snackBar.open(getErrorMessage(error), undefined, {
+                  duration: ms('3 seconds')
+                });
+              }
 
               return EMPTY;
             }),
