@@ -63,7 +63,7 @@ export class GfTransferBalanceDialogComponent {
 
   protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup({
     balance: new FormControl<number | string | null>('', Validators.required),
-    fromAccount: new FormControl<string | null>('', Validators.required),
+    fromAccount: new FormControl<string | null>(null, Validators.required),
     toAccount: new FormControl<string | null>(null, Validators.required)
   });
 
