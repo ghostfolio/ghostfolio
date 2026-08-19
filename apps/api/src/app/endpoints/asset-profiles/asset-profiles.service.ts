@@ -25,13 +25,15 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import { groupBy } from 'lodash';
 
 @Injectable()
 export class AssetProfilesService {
+  private readonly logger = new Logger(AssetProfilesService.name);
+
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly assetProfileSplitService: AssetProfileSplitService,
@@ -135,9 +137,16 @@ export class AssetProfilesService {
       jobs.map((job) => {
         return job.finished();
       })
-    ).then(() => {
-      return this.emitPortfolioChangedEvents(symbolProfileId);
-    });
+    )
+      .then(() => {
+        return this.emitPortfolioChangedEvents(symbolProfileId);
+      })
+      .catch((error) => {
+        this.logger.error(
+          `Could not emit the portfolio changed events of the asset profile ${getAssetProfileIdentifier({ dataSource, symbol })}`,
+          error.stack
+        );
+      });
   }
 
   public async getAssetProfile({

@@ -247,10 +247,10 @@ export class AdminService {
   /**
    * Merges the source asset profile into the target asset profile. The
    * activities, the watchlist entries and the market data which is missing
-   * there are moved to the target asset profile. The metadata and the splits
-   * of the source asset profile are discarded, because the target asset
-   * profile is the authoritative one. Then the source asset profile is deleted
-   * and the market data of the target asset profile is gathered again.
+   * there are moved to the target asset profile. The metadata of the source
+   * asset profile is discarded, because the target asset profile is the
+   * authoritative one. Then the source asset profile is deleted and the market
+   * data of the target asset profile is gathered again.
    */
   public async mergeAssetProfile(
     sourceAssetProfileIdentifier: AssetProfileIdentifier,
@@ -290,7 +290,6 @@ export class AdminService {
         }
       }),
       this.prismaService.symbolProfile.findUnique({
-        include: { watchedBy: { select: { id: true } } },
         where: {
           dataSource_symbol: {
             dataSource: targetAssetProfileIdentifier.dataSource,
@@ -324,22 +323,16 @@ export class AdminService {
       );
     }
 
-    const [benchmarkAssetProfiles, splitsCount] = await Promise.all([
-      this.benchmarkService.getBenchmarkAssetProfiles(),
+    const [isBenchmark, splitsCount] = await Promise.all([
+      this.benchmarkService.isBenchmark(sourceAssetProfile.id),
       this.prismaService.assetProfileSplit.count({
-        where: { symbolProfileId: sourceAssetProfile.id }
+        where: {
+          symbolProfileId: {
+            in: [sourceAssetProfile.id, targetAssetProfile.id]
+          }
+        }
       })
     ]);
-
-    // A benchmark and a split are referenced by the id of the asset profile,
-    // which the merge deletes. A benchmark is referenced globally and in the
-    // settings of every user. A split adjusts every activity of its asset
-    // profile, thus copying it would adjust the activities which the target
-    // asset profile already has and discarding it would remove the adjustment
-    // of the moved activities.
-    const isBenchmark = benchmarkAssetProfiles.some(({ id }) => {
-      return id === sourceAssetProfile.id;
-    });
 
     if (
       !canMergeAssetProfile({
@@ -349,7 +342,7 @@ export class AdminService {
       })
     ) {
       throw new BadRequestException(
-        `The asset profile ${getAssetProfileIdentifier(sourceAssetProfileIdentifier)} cannot be merged. Remove its benchmark and its splits before the merge.`
+        `The asset profile ${getAssetProfileIdentifier(sourceAssetProfileIdentifier)} cannot be merged. Remove the benchmark and the splits before the merge.`
       );
     }
 
@@ -455,8 +448,12 @@ export class AdminService {
       ]);
 
     if (!mergedAssetProfile) {
-      throw new NotFoundException(
-        `The asset profile ${getAssetProfileIdentifier(targetAssetProfileIdentifier)} does not exist`
+      this.logger.error(
+        `The asset profile ${mergeDescription} has been merged, but the merged asset profile could not be read`
+      );
+
+      throw new InternalServerErrorException(
+        `The asset profile ${mergeDescription} has been merged, but the merged asset profile could not be read. Reload the page.`
       );
     }
 

@@ -277,7 +277,7 @@ export class DataGatheringService {
     date,
     force = true,
     symbol
-  }: { force?: boolean } & DataGatheringItem) {
+  }: DataGatheringItem) {
     const dataGatheringItems = (await this.getSymbolsMax())
       .filter((dataGatheringItem) => {
         return (

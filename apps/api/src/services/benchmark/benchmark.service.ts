@@ -216,6 +216,14 @@ export class BenchmarkService {
     }
   }
 
+  public async isBenchmark(symbolProfileId: string): Promise<boolean> {
+    const benchmarks = await this.getBenchmarksProperty();
+
+    return benchmarks.some((benchmark) => {
+      return benchmark.symbolProfileId === symbolProfileId;
+    });
+  }
+
   private async calculateAndCacheBenchmarks({
     enableSharing = false
   }): Promise<BenchmarkResponse['benchmarks']> {

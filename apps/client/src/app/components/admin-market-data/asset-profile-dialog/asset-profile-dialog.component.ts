@@ -915,7 +915,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
       !canMergeAssetProfile({ symbol })
     ) {
       this.notificationService.alert({
-        message: $localize`This asset profile cannot be merged into ${symbol} (${dataSource}). Remove its benchmark and its splits, then try again.`,
+        message: $localize`This asset profile cannot be merged into ${symbol} (${dataSource}).`,
         title: $localize`Error`
       });
 
