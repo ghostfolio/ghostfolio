@@ -3,7 +3,10 @@ import { PortfolioCalculatorPosition } from '@ghostfolio/api/app/portfolio/inter
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   SymbolMetrics
@@ -192,8 +195,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
+    // Copy the items as they are enriched below. A shallow copy is sufficient
+    // because only top-level properties are written.
     let orders: PortfolioOrderItem[] = (
-      this.activitiesBySymbol[symbol] ?? []
+      this.activitiesByAssetProfileIdentifier[
+        getAssetProfileIdentifier({ dataSource, symbol })
+      ] ?? []
     ).map((activity) => {
       return { ...activity };
     });
