@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the style of the toggle component
 - Moved the improved symbol lookup results by removing the currency from the name of cryptocurrencies from experimental to general availability
 - Extracted the account selector to a reusable component
+- Updated `angular-developer` skills
 - Upgraded `ng-extract-i18n-merge` from `3.3.0` to `3.4.0`
 
 ### Fixed
