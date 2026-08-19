@@ -216,37 +216,6 @@ export class BenchmarkService {
     }
   }
 
-  public async moveBenchmark({
-    sourceSymbolProfileId,
-    targetSymbolProfileId
-  }: {
-    sourceSymbolProfileId: string;
-    targetSymbolProfileId: string;
-  }) {
-    const benchmarks = await this.getBenchmarksProperty();
-
-    const sourceBenchmark = benchmarks.find((benchmark) => {
-      return benchmark.symbolProfileId === sourceSymbolProfileId;
-    });
-
-    if (!sourceBenchmark) {
-      return;
-    }
-
-    const movedBenchmarks = benchmarks
-      .filter((benchmark) => {
-        return benchmark.symbolProfileId !== sourceSymbolProfileId;
-      })
-      .concat({
-        ...sourceBenchmark,
-        symbolProfileId: targetSymbolProfileId
-      });
-
-    await this.putBenchmarksProperty(
-      uniqBy(movedBenchmarks, 'symbolProfileId')
-    );
-  }
-
   private async calculateAndCacheBenchmarks({
     enableSharing = false
   }): Promise<BenchmarkResponse['benchmarks']> {

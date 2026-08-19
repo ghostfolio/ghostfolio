@@ -99,6 +99,47 @@ export class AssetProfilesService {
     });
   }
 
+  /**
+   * Gathers the market data of the given asset profile and invalidates the
+   * portfolio snapshots of the affected users as soon as it is available.
+   * Emitting the events earlier would recompute the snapshots from
+   * split-adjusted quantities and not yet split-adjusted market prices.
+   *
+   * With withImmediateInvalidation the snapshots are invalidated a second
+   * time, before the gathering. This is necessary if the snapshots are already
+   * wrong without new market data, because the invalidation after the
+   * gathering is held in memory and is therefore lost if the process restarts.
+   */
+  public async gatherSymbolAndEmitPortfolioChangedEvents({
+    dataSource,
+    force = true,
+    symbol,
+    symbolProfileId,
+    withImmediateInvalidation = false
+  }: {
+    force?: boolean;
+    symbolProfileId: string;
+    withImmediateInvalidation?: boolean;
+  } & AssetProfileIdentifier) {
+    if (withImmediateInvalidation) {
+      await this.emitPortfolioChangedEvents(symbolProfileId);
+    }
+
+    const jobs = await this.dataGatheringService.gatherSymbol({
+      dataSource,
+      force,
+      symbol
+    });
+
+    void Promise.allSettled(
+      jobs.map((job) => {
+        return job.finished();
+      })
+    ).then(() => {
+      return this.emitPortfolioChangedEvents(symbolProfileId);
+    });
+  }
+
   public async getAssetProfile({
     dataSource,
     symbol
@@ -450,31 +491,6 @@ export class AssetProfilesService {
         new PortfolioChangedEvent({ userId })
       );
     }
-  }
-
-  /**
-   * Gathers the market data of the given asset profile and invalidates the
-   * portfolio snapshots of the affected users as soon as it is available.
-   * Emitting the events earlier would recompute the snapshots from
-   * split-adjusted quantities and not yet split-adjusted market prices.
-   */
-  private async gatherSymbolAndEmitPortfolioChangedEvents({
-    dataSource,
-    symbol,
-    symbolProfileId
-  }: { symbolProfileId: string } & AssetProfileIdentifier) {
-    const jobs = await this.dataGatheringService.gatherSymbol({
-      dataSource,
-      symbol
-    });
-
-    void Promise.allSettled(
-      jobs.map((job) => {
-        return job.finished();
-      })
-    ).then(() => {
-      return this.emitPortfolioChangedEvents(symbolProfileId);
-    });
   }
 
   private getAssetProfileDataUpdate({

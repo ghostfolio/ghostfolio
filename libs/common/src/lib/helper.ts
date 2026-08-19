@@ -202,9 +202,18 @@ export function canDeleteUser({
 }
 
 export function canMergeAssetProfile({
+  isBenchmark = false,
+  splitsCount = 0,
   symbol
-}: Pick<AssetProfileItem, 'symbol'>): boolean {
-  return !isCurrencySymbol(symbol) && !isFearAndGreedIndexSymbol(symbol);
+}: Pick<AssetProfileItem, 'isBenchmark' | 'symbol'> & {
+  splitsCount?: number;
+}): boolean {
+  return (
+    !isBenchmark &&
+    !isCurrencySymbol(symbol) &&
+    !isFearAndGreedIndexSymbol(symbol) &&
+    splitsCount === 0
+  );
 }
 
 export function canOpenHoldingDetail({

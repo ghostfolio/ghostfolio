@@ -1,6 +1,5 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { AssetProfilesService } from '@ghostfolio/api/app/endpoints/asset-profiles/asset-profiles.service';
 import { environment } from '@ghostfolio/api/environments/environment';
-import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -8,10 +7,8 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
-  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   ghostfolioPrefix,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
@@ -35,13 +32,13 @@ import { PropertyKey } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
+  ConflictException,
   HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException
 } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
   AssetSubClass,
@@ -59,12 +56,10 @@ export class AdminService {
   private readonly logger = new Logger(AdminService.name);
 
   public constructor(
-    private readonly activitiesService: ActivitiesService,
+    private readonly assetProfilesService: AssetProfilesService,
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
-    private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
-    private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
@@ -251,11 +246,11 @@ export class AdminService {
 
   /**
    * Merges the source asset profile into the target asset profile. The
-   * activities and the watchlist entries are moved to the target asset profile
-   * and the market data and the splits which are missing there are copied.
-   * The metadata of the source asset profile is discarded, because the target
-   * asset profile is the authoritative one. Then the source asset profile is
-   * deleted and the market data of the target asset profile is gathered again.
+   * activities, the watchlist entries and the market data which is missing
+   * there are moved to the target asset profile. The metadata and the splits
+   * of the source asset profile are discarded, because the target asset
+   * profile is the authoritative one. Then the source asset profile is deleted
+   * and the market data of the target asset profile is gathered again.
    */
   public async mergeAssetProfile(
     sourceAssetProfileIdentifier: AssetProfileIdentifier,
@@ -270,6 +265,9 @@ export class AdminService {
       );
     }
 
+    // The rules of the symbol apply to both asset profiles and are examined
+    // first. The remaining rules apply to the source asset profile only,
+    // because the merge deletes it
     for (const assetProfileIdentifier of [
       sourceAssetProfileIdentifier,
       targetAssetProfileIdentifier
@@ -317,28 +315,50 @@ export class AdminService {
       );
     }
 
-    const [marketDataItems, splits] = await Promise.all([
-      this.prismaService.marketData.findMany({
-        select: { date: true, marketPrice: true, state: true },
-        where: {
-          dataSource: sourceAssetProfileIdentifier.dataSource,
-          symbol: sourceAssetProfileIdentifier.symbol
-        }
-      }),
-      this.prismaService.assetProfileSplit.findMany({
-        select: { date: true, denominator: true, numerator: true },
+    // A user asset profile must not become accessible to another user and a
+    // user must not become unable to be deleted, because the activities of the
+    // source asset profile would keep a reference to it
+    if (sourceAssetProfile.userId !== targetAssetProfile.userId) {
+      throw new BadRequestException(
+        'The source and the target asset profile must belong to the same user'
+      );
+    }
+
+    const [benchmarkAssetProfiles, splitsCount] = await Promise.all([
+      this.benchmarkService.getBenchmarkAssetProfiles(),
+      this.prismaService.assetProfileSplit.count({
         where: { symbolProfileId: sourceAssetProfile.id }
       })
     ]);
 
-    const userIdsWatchingTargetAssetProfile = new Set(
-      targetAssetProfile.watchedBy.map(({ id }) => {
-        return id;
-      })
-    );
+    // A benchmark and a split are referenced by the id of the asset profile,
+    // which the merge deletes. A benchmark is referenced globally and in the
+    // settings of every user. A split adjusts every activity of its asset
+    // profile, thus copying it would adjust the activities which the target
+    // asset profile already has and discarding it would remove the adjustment
+    // of the moved activities.
+    const isBenchmark = benchmarkAssetProfiles.some(({ id }) => {
+      return id === sourceAssetProfile.id;
+    });
 
-    const usersToConnect = sourceAssetProfile.watchedBy.filter(({ id }) => {
-      return !userIdsWatchingTargetAssetProfile.has(id);
+    if (
+      !canMergeAssetProfile({
+        isBenchmark,
+        splitsCount,
+        symbol: sourceAssetProfileIdentifier.symbol
+      })
+    ) {
+      throw new BadRequestException(
+        `The asset profile ${getAssetProfileIdentifier(sourceAssetProfileIdentifier)} cannot be merged. Remove its benchmark and its splits before the merge.`
+      );
+    }
+
+    const marketDataItems = await this.prismaService.marketData.findMany({
+      select: { date: true, marketPrice: true, state: true },
+      where: {
+        dataSource: sourceAssetProfileIdentifier.dataSource,
+        symbol: sourceAssetProfileIdentifier.symbol
+      }
     });
 
     const operations: Prisma.PrismaPromise<unknown>[] = [
@@ -349,7 +369,7 @@ export class AdminService {
       this.prismaService.symbolProfile.update({
         data: {
           watchedBy: {
-            connect: usersToConnect.map(({ id }) => {
+            connect: sourceAssetProfile.watchedBy.map(({ id }) => {
               return { id };
             })
           }
@@ -364,19 +384,6 @@ export class AdminService {
             state,
             dataSource: targetAssetProfileIdentifier.dataSource,
             symbol: targetAssetProfileIdentifier.symbol
-          };
-        }),
-        skipDuplicates: true
-      }),
-      // The splits are copied as well, because they adjust the activities
-      // which are moved to the target asset profile
-      this.prismaService.assetProfileSplit.createMany({
-        data: splits.map(({ date, denominator, numerator }) => {
-          return {
-            date,
-            denominator,
-            numerator,
-            symbolProfileId: targetAssetProfile.id
           };
         }),
         skipDuplicates: true
@@ -406,25 +413,38 @@ export class AdminService {
         error.stack
       );
 
-      throw new InternalServerErrorException(error.message);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new ConflictException(
+          `The asset profile ${mergeDescription} could not be merged, because it has been changed in the meantime`
+        );
+      }
+
+      throw new InternalServerErrorException(
+        `The asset profile ${mergeDescription} could not be merged`
+      );
     }
 
-    // The merge is committed at this point. The steps below only update
-    // derived data, thus an error must not fail the request. Otherwise the
-    // admin would retry a merge which has already been done.
+    // The merge is committed at this point. The gathering of the market data
+    // only updates derived data, thus an error must not fail the request.
+    // Otherwise the admin would retry a merge which has already been done.
     try {
-      await this.benchmarkService.moveBenchmark({
-        sourceSymbolProfileId: sourceAssetProfile.id,
-        targetSymbolProfileId: targetAssetProfile.id
-      });
-
-      await this.gatherMarketDataAndEmitPortfolioChangedEvents({
-        ...targetAssetProfileIdentifier,
-        symbolProfileId: targetAssetProfile.id
-      });
+      // The activities now refer to the market data of the target asset
+      // profile, hence the portfolio snapshots are already wrong and are
+      // invalidated immediately. The market data is not gathered with force,
+      // because a forced gathering deletes the market data of the days which
+      // the data provider does not return, including the days which have been
+      // copied from the source asset profile.
+      await this.assetProfilesService.gatherSymbolAndEmitPortfolioChangedEvents(
+        {
+          ...targetAssetProfileIdentifier,
+          force: false,
+          symbolProfileId: targetAssetProfile.id,
+          withImmediateInvalidation: true
+        }
+      );
     } catch (error) {
       this.logger.error(
-        `The asset profile ${mergeDescription} has been merged, but the derived data could not be updated`,
+        `The asset profile ${mergeDescription} has been merged, but the market data could not be gathered`,
         error.stack
       );
     }
@@ -647,72 +667,6 @@ export class AdminService {
     return this.prismaService.user.count({
       where
     });
-  }
-
-  private async emitPortfolioChangedEvents(symbolProfileId: string) {
-    const userIds =
-      await this.activitiesService.getUserIdsBySymbolProfileId(symbolProfileId);
-
-    for (const userId of userIds) {
-      this.eventEmitter.emit(
-        PortfolioChangedEvent.getName(),
-        new PortfolioChangedEvent({ userId })
-      );
-    }
-  }
-
-  /**
-   * Gathers the market data of the given asset profile, starting at the date
-   * of its earliest activity, and invalidates the portfolio snapshots of the
-   * affected users as soon as the market data is available.
-   */
-  private async gatherMarketDataAndEmitPortfolioChangedEvents({
-    dataSource,
-    symbol,
-    symbolProfileId
-  }: { symbolProfileId: string } & AssetProfileIdentifier) {
-    // The activities of the asset profile can start before its first market
-    // data item. The market data is not gathered with force, because a forced
-    // gathering deletes the market data of the days which the data provider
-    // does not return.
-    const earliestActivity = await this.prismaService.order.findFirst({
-      orderBy: { date: 'asc' },
-      select: { date: true },
-      where: { symbolProfileId }
-    });
-
-    if (!earliestActivity) {
-      return;
-    }
-
-    const jobs = await this.dataGatheringService.gatherSymbols({
-      dataGatheringItems: [
-        {
-          dataSource,
-          symbol,
-          date: earliestActivity.date
-        }
-      ],
-      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
-    });
-
-    // The portfolio snapshots are invalidated as soon as the market data is
-    // available. Emitting the events earlier would recompute the snapshots
-    // from split-adjusted quantities and not yet split-adjusted market prices.
-    void Promise.allSettled(
-      jobs.map((job) => {
-        return job.finished();
-      })
-    )
-      .then(() => {
-        return this.emitPortfolioChangedEvents(symbolProfileId);
-      })
-      .catch((error) => {
-        this.logger.error(
-          `Could not emit the portfolio changed events for ${getAssetProfileIdentifier({ dataSource, symbol })}`,
-          error.stack
-        );
-      });
   }
 
   private async getUsersWithAnalytics({

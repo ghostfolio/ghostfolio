@@ -8,6 +8,7 @@ import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   canDeleteAssetProfile,
+  canMergeAssetProfile,
   DATE_FORMAT,
   getCountryName,
   getCurrencyFromSymbol,
@@ -905,6 +906,22 @@ export class GfAssetProfileDialogComponent implements OnInit {
   }
 
   private mergeAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
+    if (
+      !canMergeAssetProfile({
+        isBenchmark: this.isBenchmark,
+        splitsCount: this.splits.length,
+        symbol: this.data.symbol
+      }) ||
+      !canMergeAssetProfile({ symbol })
+    ) {
+      this.notificationService.alert({
+        message: $localize`This asset profile cannot be merged into ${symbol} (${dataSource}). Remove its benchmark and its splits, then try again.`,
+        title: $localize`Error`
+      });
+
+      return;
+    }
+
     this.notificationService.confirm({
       confirmFn: () => {
         this.adminService
