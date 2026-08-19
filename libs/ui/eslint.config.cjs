@@ -1,66 +1,58 @@
-const { FlatCompat } = require('@eslint/eslintrc');
-const js = require('@eslint/js');
 const baseConfig = require('../../eslint.config.cjs');
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended
-});
+const angularEslintPlugin = require('@angular-eslint/eslint-plugin');
+const typescriptEslintPlugin = require('@typescript-eslint/eslint-plugin');
+const angularTemplateEslintPlugin = require('@angular-eslint/eslint-plugin-template');
+const angularTemplateParser = require('@angular-eslint/template-parser');
 
 module.exports = [
   {
     ignores: ['**/dist']
   },
   ...baseConfig,
-  ...compat
-    .config({
-      extends: [
-        'plugin:@nx/angular',
-        'plugin:@angular-eslint/template/process-inline-templates'
-      ]
-    })
-    .map((config) => ({
-      ...config,
-      files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
-      rules: {
-        ...config.rules,
-        '@angular-eslint/directive-selector': [
-          'error',
-          {
-            type: 'attribute',
-            prefix: 'gf',
-            style: 'camelCase'
-          }
-        ],
-        '@angular-eslint/component-selector': [
-          'error',
-          {
-            type: 'element',
-            prefix: 'gf',
-            style: 'kebab-case'
-          }
-        ],
-        '@angular-eslint/prefer-inject': 'off',
-        '@angular-eslint/prefer-standalone': 'off',
-        '@typescript-eslint/prefer-nullish-coalescing': 'error'
-      },
-      languageOptions: {
-        parserOptions: {
-          project: ['libs/ui/tsconfig.*?.json']
+  {
+    plugins: {
+      '@angular-eslint': angularEslintPlugin,
+      '@typescript-eslint': typescriptEslintPlugin
+    }
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    rules: {
+      '@angular-eslint/directive-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: 'gf',
+          style: 'camelCase'
         }
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: 'gf',
+          style: 'kebab-case'
+        }
+      ],
+      '@angular-eslint/prefer-inject': 'off',
+      '@angular-eslint/prefer-standalone': 'off',
+      '@typescript-eslint/prefer-nullish-coalescing': 'error'
+    },
+    languageOptions: {
+      parserOptions: {
+        project: ['libs/ui/tsconfig.*?.json']
       }
-    })),
-  ...compat
-    .config({
-      extends: ['plugin:@nx/angular-template']
-    })
-    .map((config) => ({
-      ...config,
-      files: ['**/*.html'],
-      rules: {
-        ...config.rules
-      }
-    })),
+    }
+  },
+  {
+    files: ['**/*.html'],
+    plugins: {
+      '@angular-eslint/template': angularTemplateEslintPlugin
+    },
+    languageOptions: {
+      parser: angularTemplateParser
+    }
+  },
   {
     ignores: ['**/*.stories.ts']
   }
