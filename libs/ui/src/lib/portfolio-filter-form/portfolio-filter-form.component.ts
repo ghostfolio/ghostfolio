@@ -28,14 +28,15 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { GfAccountSelectorComponent } from '../account-selector/account-selector.component';
+import { translate } from '../i18n';
 import { PortfolioFilterFormValue } from './interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
-    GfEntityLogoComponent,
+    GfAccountSelectorComponent,
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule
@@ -67,6 +68,8 @@ export class GfPortfolioFilterFormComponent
     holding: FormControl<PortfolioPosition | null>;
     tag: FormControl<string | null>;
   }>;
+
+  public readonly labelAccount = translate('ACCOUNT');
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);

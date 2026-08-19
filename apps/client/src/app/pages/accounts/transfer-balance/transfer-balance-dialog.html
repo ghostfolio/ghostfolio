@@ -7,72 +7,18 @@
   <h1 i18n mat-dialog-title>Transfer Cash Balance</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>From</mat-label>
-        <mat-select formControlName="fromAccount">
-          <mat-select-trigger>
-            <div class="d-flex">
-              @if (selectedFromAccount) {
-                <gf-entity-logo
-                  class="mr-1"
-                  [hasPlaceholder]="true"
-                  [tooltip]="selectedFromAccount?.platform?.name"
-                  [url]="selectedFromAccount?.platform?.url"
-                />
-              }
-              <span>{{ selectedFromAccount?.name }}</span>
-            </div>
-          </mat-select-trigger>
-
-          @for (account of accounts; track account) {
-            <mat-option [value]="account.id">
-              <div class="d-flex">
-                <gf-entity-logo
-                  class="mr-1"
-                  [hasPlaceholder]="true"
-                  [tooltip]="account.platform?.name"
-                  [url]="account.platform?.url"
-                />
-                <span>{{ account.name }}</span>
-              </div>
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      <gf-account-selector
+        formControlName="fromAccount"
+        [accounts]="accounts"
+        [label]="labelFrom"
+      />
     </div>
     <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>To</mat-label>
-        <mat-select formControlName="toAccount">
-          <mat-select-trigger>
-            <div class="d-flex">
-              @if (selectedToAccount) {
-                <gf-entity-logo
-                  class="mr-1"
-                  [hasPlaceholder]="true"
-                  [tooltip]="selectedToAccount?.platform?.name"
-                  [url]="selectedToAccount?.platform?.url"
-                />
-              }
-              <span>{{ selectedToAccount?.name }}</span>
-            </div>
-          </mat-select-trigger>
-
-          @for (account of accounts; track account) {
-            <mat-option [value]="account.id">
-              <div class="d-flex">
-                <gf-entity-logo
-                  class="mr-1"
-                  [hasPlaceholder]="true"
-                  [tooltip]="account.platform?.name"
-                  [url]="account.platform?.url"
-                />
-                <span>{{ account.name }}</span>
-              </div>
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
+      <gf-account-selector
+        formControlName="toAccount"
+        [accounts]="accounts"
+        [label]="labelTo"
+      />
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
