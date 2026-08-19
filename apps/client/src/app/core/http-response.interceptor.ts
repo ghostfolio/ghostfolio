@@ -1,5 +1,7 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
+import { HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED } from '@ghostfolio/common/config';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { DataService } from '@ghostfolio/ui/services';
@@ -30,6 +32,9 @@ export class HttpResponseInterceptor implements HttpInterceptor {
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;
 
   private readonly dataService = inject(DataService);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
   private readonly userService = inject(UserService);
@@ -46,6 +51,19 @@ export class HttpResponseInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === StatusCodes.FORBIDDEN) {
+          if (
+            error.error?.message ===
+            HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED
+          ) {
+            // A stale identifier fails every guarded request, hence it is
+            // removed to make the application usable again
+            this.impersonationStorageService.removeId();
+
+            window.location.reload();
+
+            return throwError(error);
+          }
+
           if (!this.snackBarRef) {
             if (this.info.isReadOnlyMode) {
               this.snackBarRef = this.snackBar.open(

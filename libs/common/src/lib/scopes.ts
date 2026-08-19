@@ -7,27 +7,57 @@ import { AccessPermission } from '@prisma/client';
  * the authenticated user and never widen it.
  */
 export const scopes = {
+  accountCreate: 'account:create',
+  accountDelete: 'account:delete',
   accountRead: 'account:read',
+  accountUpdate: 'account:update',
+  activityCreate: 'activity:create',
+  activityDelete: 'activity:delete',
   activityRead: 'activity:read',
+  activityUpdate: 'activity:update',
   portfolioRead: 'portfolio:read',
   portfolioReadValues: 'portfolio:read:values',
+  watchlistCreate: 'watchlist:create',
+  watchlistDelete: 'watchlist:delete',
   watchlistRead: 'watchlist:read'
 } as const;
 
 export type Scope = (typeof scopes)[keyof typeof scopes];
 
-const SCOPES_OF_PUBLIC_ACCESS: Scope[] = [
+/**
+ * Scopes which read data
+ */
+export const SCOPES_OF_READ_ACCESS: readonly Scope[] = [
+  scopes.accountRead,
+  scopes.activityRead,
+  scopes.portfolioRead,
+  scopes.portfolioReadValues,
+  scopes.watchlistRead
+];
+
+/**
+ * Scopes which change data
+ */
+export const SCOPES_OF_WRITE_ACCESS: readonly Scope[] = [
+  scopes.accountCreate,
+  scopes.accountDelete,
+  scopes.accountUpdate,
+  scopes.activityCreate,
+  scopes.activityDelete,
+  scopes.activityUpdate,
+  scopes.watchlistCreate,
+  scopes.watchlistDelete
+];
+
+const SCOPES_OF_PUBLIC_ACCESS: readonly Scope[] = [
   scopes.activityRead,
   scopes.portfolioRead
 ];
 
-const SCOPES_OF_READ_ACCESS = Object.values(scopes);
-
-const SCOPES_OF_READ_RESTRICTED_ACCESS = SCOPES_OF_READ_ACCESS.filter(
-  (scope) => {
+const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
+  SCOPES_OF_READ_ACCESS.filter((scope) => {
     return scope !== scopes.portfolioReadValues;
-  }
-);
+  });
 
 export function getScopesOfAccess({
   granteeUserId,
@@ -38,22 +68,24 @@ export function getScopesOfAccess({
   permissions?: AccessPermission[];
   scopes?: string[];
 }): string[] {
-  if (!scopesOfAccess?.length) {
+  let scopesToEvaluate: readonly string[] = scopesOfAccess ?? [];
+
+  if (!scopesToEvaluate.length) {
     // TODO: Remove the derivation from the permissions once they have been
     // dropped from the access
-    scopesOfAccess = permissions?.includes('READ')
+    scopesToEvaluate = permissions?.includes('READ')
       ? SCOPES_OF_READ_ACCESS
       : SCOPES_OF_READ_RESTRICTED_ACCESS;
   }
 
   if (granteeUserId) {
-    return [...scopesOfAccess];
+    return [...scopesToEvaluate];
   }
 
   // An access which has not been granted to a user is public, hence it is
   // narrowed to the scopes exposed by the public endpoints
   return SCOPES_OF_PUBLIC_ACCESS.filter((scope) => {
-    return scopesOfAccess.includes(scope);
+    return scopesToEvaluate.includes(scope);
   });
 }
 
