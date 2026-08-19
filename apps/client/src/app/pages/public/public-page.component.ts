@@ -93,7 +93,7 @@ export class GfPublicPageComponent implements OnInit {
     [name: string]: { name: string; value: number };
   };
   protected symbols: {
-    [name: string]: { name: string; symbol: string; value: number };
+    [symbol: string]: { name: string; symbol: string; value: number };
   };
   protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
 
@@ -245,13 +245,24 @@ export class GfPublicPageComponent implements OnInit {
         }
       }
 
-      this.symbols[assetProfileIdentifier] = {
-        name: position.assetProfile.name ?? position.assetProfile.symbol,
-        symbol: position.assetProfile.symbol,
-        value: isNumber(position.valueInBaseCurrency)
-          ? position.valueInBaseCurrency
-          : (position.valueInPercentage ?? 0)
-      };
+      const symbol = position.assetProfile.symbol;
+
+      const value = isNumber(position.valueInBaseCurrency)
+        ? position.valueInBaseCurrency
+        : (position.valueInPercentage ?? 0);
+
+      const symbolData = this.symbols[symbol];
+
+      if (symbolData) {
+        // Aggregate holdings with the same symbol from different data sources
+        symbolData.value += value;
+      } else {
+        this.symbols[symbol] = {
+          symbol,
+          value,
+          name: position.assetProfile.name ?? symbol
+        };
+      }
     }
   }
 }

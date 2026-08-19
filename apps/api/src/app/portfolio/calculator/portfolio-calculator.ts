@@ -527,48 +527,51 @@ export abstract class PortfolioCalculator {
       }
     }
 
+    const assetProfileIdentifiers = Object.keys(valuesByAssetProfileIdentifier);
+
     for (const dateString of chartDates) {
-      for (const assetProfileIdentifier of Object.keys(
-        valuesByAssetProfileIdentifier
-      )) {
-        const symbolValues =
+      for (const assetProfileIdentifier of assetProfileIdentifiers) {
+        const assetProfileValues =
           valuesByAssetProfileIdentifier[assetProfileIdentifier];
 
         const currentValue =
-          symbolValues.currentValues?.[dateString] ?? new Big(0);
+          assetProfileValues.currentValues?.[dateString] ?? new Big(0);
 
         const currentValueWithCurrencyEffect =
-          symbolValues.currentValuesWithCurrencyEffect?.[dateString] ??
+          assetProfileValues.currentValuesWithCurrencyEffect?.[dateString] ??
           new Big(0);
 
         const investmentValueAccumulated =
-          symbolValues.investmentValuesAccumulated?.[dateString] ?? new Big(0);
+          assetProfileValues.investmentValuesAccumulated?.[dateString] ??
+          new Big(0);
 
         const investmentValueAccumulatedWithCurrencyEffect =
-          symbolValues.investmentValuesAccumulatedWithCurrencyEffect?.[
+          assetProfileValues.investmentValuesAccumulatedWithCurrencyEffect?.[
             dateString
           ] ?? new Big(0);
 
         const investmentValueWithCurrencyEffect =
-          symbolValues.investmentValuesWithCurrencyEffect?.[dateString] ??
+          assetProfileValues.investmentValuesWithCurrencyEffect?.[dateString] ??
           new Big(0);
 
         const netPerformanceValue =
-          symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
+          assetProfileValues.netPerformanceValues?.[dateString] ?? new Big(0);
 
         const netPerformanceValueWithCurrencyEffect =
-          symbolValues.netPerformanceValuesWithCurrencyEffect?.[dateString] ??
-          new Big(0);
+          assetProfileValues.netPerformanceValuesWithCurrencyEffect?.[
+            dateString
+          ] ?? new Big(0);
 
         const netWorthValueWithCurrencyEffect =
-          symbolValues.netWorthValuesWithCurrencyEffect?.[dateString] ??
+          assetProfileValues.netWorthValuesWithCurrencyEffect?.[dateString] ??
           new Big(0);
 
         const timeWeightedInvestmentValue =
-          symbolValues.timeWeightedInvestmentValues?.[dateString] ?? new Big(0);
+          assetProfileValues.timeWeightedInvestmentValues?.[dateString] ??
+          new Big(0);
 
         const timeWeightedInvestmentValueWithCurrencyEffect =
-          symbolValues.timeWeightedInvestmentValuesWithCurrencyEffect?.[
+          assetProfileValues.timeWeightedInvestmentValuesWithCurrencyEffect?.[
             dateString
           ] ?? new Big(0);
 
@@ -989,7 +992,7 @@ export abstract class PortfolioCalculator {
   @LogPerformance
   private computeTransactionPoints() {
     this.transactionPoints = [];
-    const symbols: {
+    const transactionPointSymbols: {
       [assetProfileIdentifier: string]: TransactionPointSymbol;
     } = {};
 
@@ -1017,7 +1020,8 @@ export abstract class PortfolioCalculator {
 
       const assetProfileIdentifier = getAssetProfileIdentifier(assetProfile);
 
-      const oldAccumulatedSymbol = symbols[assetProfileIdentifier];
+      const oldAccumulatedSymbol =
+        transactionPointSymbols[assetProfileIdentifier];
 
       if (oldAccumulatedSymbol) {
         let investment = oldAccumulatedSymbol.investment;
@@ -1099,7 +1103,8 @@ export abstract class PortfolioCalculator {
         'id'
       );
 
-      symbols[assetProfileIdentifier] = currentTransactionPointItem;
+      transactionPointSymbols[assetProfileIdentifier] =
+        currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
 
@@ -1110,7 +1115,10 @@ export abstract class PortfolioCalculator {
       newItems.push(currentTransactionPointItem);
 
       newItems.sort((a, b) => {
-        return a.symbol?.localeCompare(b.symbol);
+        return (
+          a.symbol?.localeCompare(b.symbol) ||
+          a.dataSource?.localeCompare(b.dataSource)
+        );
       });
 
       let fees = new Big(0);
