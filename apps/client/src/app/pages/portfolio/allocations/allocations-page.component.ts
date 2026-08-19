@@ -119,7 +119,7 @@ export class GfAllocationsPageComponent implements OnInit {
     [name: string]: { name: string; value: number };
   };
   protected symbols: {
-    [name: string]: {
+    [symbol: string]: {
       dataSource?: DataSource;
       isClickable?: boolean;
       name: string;
@@ -505,16 +505,27 @@ export class GfAllocationsPageComponent implements OnInit {
         this.totalValueInEtf += this.holdings[assetProfileIdentifier].value;
       }
 
-      this.symbols[assetProfileIdentifier] = {
-        dataSource: position.assetProfile.dataSource,
-        isClickable: canOpenHoldingDetail(position),
-        name: position.assetProfile.name ?? '',
-        symbol: position.assetProfile.symbol,
-        value:
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0
-      };
+      const symbol = position.assetProfile.symbol;
+
+      const value =
+        (isNumber(position.valueInBaseCurrency)
+          ? position.valueInBaseCurrency
+          : position.valueInPercentage) ?? 0;
+
+      const symbolData = this.symbols[symbol];
+
+      if (symbolData) {
+        // Aggregate holdings with the same symbol from different data sources
+        symbolData.value += value;
+      } else {
+        this.symbols[symbol] = {
+          symbol,
+          value,
+          dataSource: position.assetProfile.dataSource,
+          isClickable: canOpenHoldingDetail(position),
+          name: position.assetProfile.name ?? ''
+        };
+      }
     }
 
     this.markets = this.portfolioDetails.markets;

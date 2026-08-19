@@ -737,14 +737,20 @@ export class PortfolioService {
         valueInBaseCurrency: emergencyFundInCash
       };
 
-      const indexOfHoldingInBaseCurrency = holdings.findIndex(
+      const emergencyFundCashHoldingAssetProfileIdentifier =
+        getAssetProfileIdentifier(emergencyFundCashHolding.assetProfile);
+
+      const indexOfEmergencyFundCashHolding = holdings.findIndex(
         ({ assetProfile }) => {
-          return assetProfile.symbol === userCurrency;
+          return (
+            getAssetProfileIdentifier(assetProfile) ===
+            emergencyFundCashHoldingAssetProfileIdentifier
+          );
         }
       );
 
-      if (indexOfHoldingInBaseCurrency >= 0) {
-        holdings[indexOfHoldingInBaseCurrency] = emergencyFundCashHolding;
+      if (indexOfEmergencyFundCashHolding >= 0) {
+        holdings[indexOfEmergencyFundCashHolding] = emergencyFundCashHolding;
       } else {
         holdings.push(emergencyFundCashHolding);
       }
