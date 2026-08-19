@@ -267,7 +267,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
     }
 
-    const dateOfFirstTransaction = new Date(orders[0].date);
+    const dateStringOfFirstActivity = orders[0].date;
+    const dateOfFirstActivity = new Date(dateStringOfFirstActivity);
 
     const endDateString = format(end, DATE_FORMAT);
     const startDateString = format(start, DATE_FORMAT);
@@ -292,7 +293,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     if (
       !unitPriceAtEndDate ||
-      (!unitPriceAtStartDate && isBefore(dateOfFirstTransaction, start))
+      (!unitPriceAtStartDate && isBefore(dateOfFirstActivity, start))
     ) {
       // A missing market price can only affect the quantity which is held. The
       // dividends, the interest and the liabilities do not hold any quantity
@@ -391,7 +392,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           order.unitPriceFromMarketData =
             marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
         }
-      } else if (dateString >= orders[0].date) {
+      } else if (dateString < dateStringOfFirstActivity) {
+        // No synthetic order is needed before the first activity of this holding
+        lastUnitPrice = marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
+
+        continue;
+      } else {
         orders.push({
           assetProfile,
           date: dateString,
