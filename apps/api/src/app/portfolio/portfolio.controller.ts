@@ -2,7 +2,6 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
@@ -41,12 +40,10 @@ import {
   Param,
   Put,
   Query,
-  UseGuards,
   UseInterceptors,
   Version
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -656,17 +653,18 @@ export class PortfolioController {
 
   @HasPermission(permissions.updateActivity)
   @Put('holding/:dataSource/:symbol/tags')
+  @RequiresScope(scopes.activityUpdate)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateHoldingTags(
     @Body() data: UpdateHoldingTagsDto,
+    @Impersonation() { userId }: ImpersonationContext,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
     const holding = await this.portfolioService.getHolding({
       dataSource,
       symbol,
-      userId: this.request.user.id
+      userId
     });
 
     if (!holding) {
@@ -679,8 +677,8 @@ export class PortfolioController {
     await this.portfolioService.updateTags({
       dataSource,
       symbol,
-      tags: data.tags,
-      userId: this.request.user.id
+      userId,
+      tags: data.tags
     });
   }
 }

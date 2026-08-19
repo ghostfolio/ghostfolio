@@ -1,3 +1,4 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ASSET_CLASS_MAPPING, DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
@@ -115,6 +116,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateActivityDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private locale = inject<string>(MAT_DATE_LOCALE);
   private readonly userService = inject(UserService);
 
@@ -124,10 +128,13 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
   public ngOnInit() {
     this.currencyOfAssetProfile = this.data.activity?.assetProfile?.currency;
-    this.hasPermissionToCreateOwnTag = hasPermission(
-      this.data.user?.permissions,
-      permissions.createOwnTag
-    );
+
+    // A tag created during an impersonation belongs to the authenticated user,
+    // hence it cannot be assigned to the data of the impersonated user
+    this.hasPermissionToCreateOwnTag =
+      !this.impersonationStorageService.getId() &&
+      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
+
     this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 

@@ -450,11 +450,11 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
           .afterClosed()
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe((newAssetProfileIdentifier) => {
+            this.reloadData();
+
             if (newAssetProfileIdentifier) {
               this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
             } else {
-              this.reloadData();
-
               this.router.navigate(['.'], { relativeTo: this.route });
             }
           });
