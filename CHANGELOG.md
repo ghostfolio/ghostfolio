@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the sorting to be case-insensitive in the account selector component
 - Removed the deprecated `permissions` attribute of the access in favor of the scopes
 
 ## 3.55.0 - 2026-08-19
