@@ -4,10 +4,8 @@
     "outDir": "../../dist/out-tsc",
     "types": ["node"],
     "emitDecoratorMetadata": true,
-    "ignoreDeprecations": "6.0",
-    "moduleResolution": "node10",
     "target": "es2021",
-    "module": "commonjs"
+    "module": "preserve"
   },
   "exclude": ["**/*.spec.ts", "**/*.test.ts", "jest.config.ts"],
   "include": ["**/*.ts"]
