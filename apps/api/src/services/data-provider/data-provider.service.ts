@@ -39,7 +39,7 @@ import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
-import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
+import { groupBy, isEmpty, isNumber, omit, uniqWith } from 'lodash';
 import ms from 'ms';
 
 import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
@@ -272,19 +272,22 @@ export class DataProviderService implements OnModuleInit {
       });
 
       if (!assetProfiles[assetProfileIdentifier]) {
+        const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+          (assetProfile) => {
+            return (
+              assetProfile.dataSource === dataSource &&
+              assetProfile.symbol === symbol
+            );
+          }
+        );
+
+        // A custom asset profile of the import is created after the
+        // validation, thus the data provider cannot resolve it yet
         if (
-          (dataSource === DataSource.MANUAL && type === 'BUY') ||
+          (dataSource === DataSource.MANUAL &&
+            (type === 'BUY' || Boolean(assetProfileInImport))) ||
           NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
         ) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (assetProfile) => {
-              return (
-                assetProfile.dataSource === dataSource &&
-                assetProfile.symbol === symbol
-              );
-            }
-          );
-
           assetProfiles[assetProfileIdentifier] = {
             currency,
             dataSource,
@@ -309,18 +312,10 @@ export class DataProviderService implements OnModuleInit {
             )?.[assetProfileIdentifier] ?? assetProfile;
         } catch {}
 
-        if (!assetProfile?.name) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (profile) => {
-              return (
-                profile.dataSource === dataSource && profile.symbol === symbol
-              );
-            }
-          );
-
-          if (assetProfileInImport) {
-            Object.assign(assetProfile, assetProfileInImport);
-          }
+        if (!assetProfile?.name && assetProfileInImport) {
+          // Omit the market data, since it must not become part of the
+          // asset profile of the response
+          Object.assign(assetProfile, omit(assetProfileInImport, 'marketData'));
         }
 
         if (!assetProfile?.name) {
