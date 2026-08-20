@@ -3,15 +3,13 @@ import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService } from '@ghostfolio/ui/services';
 
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { EMPTY, Subject, catchError, finalize, forkJoin } from 'rxjs';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class AdminMarketDataService {
-  public constructor(
-    private adminService: AdminService,
-    private notificationService: NotificationService
-  ) {}
+  private readonly adminService = inject(AdminService);
+  private readonly notificationService = inject(NotificationService);
 
   public deleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     const assetProfileDeleted = new Subject<void>();

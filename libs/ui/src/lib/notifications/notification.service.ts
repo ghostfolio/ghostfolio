@@ -1,7 +1,7 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { isFunction } from 'lodash';
 
@@ -14,7 +14,7 @@ import {
 } from './interfaces/interfaces';
 import { GfPromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class NotificationService {
   private dialogMaxWidth: string;
   private dialogWidth: string;

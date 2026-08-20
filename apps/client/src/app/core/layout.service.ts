@@ -11,9 +11,10 @@ export class LayoutService {
 
   public shouldReloadContent$: Observable<void>;
 
+  private readonly shouldReloadSubject = new Subject<void>();
+
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly notificationService = inject(NotificationService);
-  private shouldReloadSubject = new Subject<void>();
 
   public constructor() {
     this.shouldReloadContent$ = this.shouldReloadSubject.asObservable();

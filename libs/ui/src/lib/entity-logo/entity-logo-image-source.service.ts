@@ -2,7 +2,7 @@ import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Service } from '@angular/core';
 
-// Required to allow mocking in Storybook
+// Must stay auto-provided so it can be mocked in Storybook
 @Service()
 export class EntityLogoImageSourceService {
   public getLogoUrlByAssetProfileIdentifier({
