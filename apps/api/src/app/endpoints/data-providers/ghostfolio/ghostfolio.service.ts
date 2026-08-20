@@ -13,10 +13,12 @@ import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD,
+  DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD_MAX_REQUESTS_FACTOR,
   DEFAULT_CURRENCY,
-  DERIVED_CURRENCIES
+  DERIVED_CURRENCIES,
+  PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS
 } from '@ghostfolio/common/config';
-import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
   getAssetProfileIdentifier,
   isValidSearchQuery
@@ -37,6 +39,7 @@ import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
+import { addMilliseconds, isBefore } from 'date-fns';
 import { isEmpty } from 'lodash';
 
 @Injectable()
@@ -321,9 +324,17 @@ export class GhostfolioService {
   }
 
   public async getStatus({ user }: { user: UserWithSettings }) {
+    const dailyRequestsMax = await this.getMaxDailyRequests();
+
     return {
-      dailyRequests: user.dataProviderGhostfolioDailyRequests,
-      dailyRequestsMax: await this.getMaxDailyRequests(),
+      dailyRequestsMax,
+      // Cap the reported requests, as they can exceed the reported limit
+      // within the setup period
+      dailyRequests: Math.min(
+        dailyRequestsMax,
+        user.dataProviderGhostfolioDailyRequests
+      ),
+      isWithinSetupPeriod: this.isWithinSetupPeriod({ user }),
       subscription: user.subscription
     };
   }
@@ -339,6 +350,28 @@ export class GhostfolioService {
       },
       where: { userId }
     });
+  }
+
+  public async isDailyRequestLimitExceeded({
+    user
+  }: {
+    user: UserWithSettings;
+  }) {
+    const maxDailyRequests = await this.getMaxDailyRequests();
+
+    if (user.dataProviderGhostfolioDailyRequests < maxDailyRequests) {
+      return false;
+    }
+
+    if (this.isWithinSetupPeriod({ user })) {
+      return (
+        user.dataProviderGhostfolioDailyRequests >=
+        maxDailyRequests *
+          DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD_MAX_REQUESTS_FACTOR
+      );
+    }
+
+    return true;
   }
 
   public async lookup({
@@ -419,5 +452,21 @@ export class GhostfolioService {
       .map((dataSource) => {
         return this.dataProviderService.getDataProvider(DataSource[dataSource]);
       });
+  }
+
+  private isWithinSetupPeriod({ user }: { user: UserWithSettings }) {
+    const subscribedAt = user.subscription?.subscribedAt;
+
+    if (!subscribedAt) {
+      return false;
+    }
+
+    return isBefore(
+      new Date(),
+      addMilliseconds(
+        subscribedAt,
+        DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD
+      )
+    );
   }
 }
