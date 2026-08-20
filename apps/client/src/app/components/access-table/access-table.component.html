@@ -25,6 +25,10 @@
             <ion-icon class="mr-1" name="lock-closed-outline" />
             <ng-container i18n>Restricted view</ng-container>
           }
+          @if (hasScopesToWrite(element)) {
+            <ion-icon class="ml-2 mr-1" name="create-outline" />
+            <ng-container i18n>Changes</ng-container>
+          }
         </div>
       </td>
     </ng-container>

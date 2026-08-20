@@ -10,6 +10,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { DataService } from '@ghostfolio/ui/services';
@@ -330,12 +331,12 @@ export class GfActivitiesPageComponent implements OnInit {
     this.user = aUser;
 
     this.hasPermissionToCreateActivity =
-      !this.hasImpersonationId &&
       hasPermission(this.user.permissions, permissions.createActivity) &&
+      hasScope(this.user.scopes, scopes.activityCreate) &&
       !this.user.settings?.isRestrictedView;
 
     this.hasPermissionToDeleteActivity =
-      !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.deleteActivity);
+      hasPermission(this.user.permissions, permissions.deleteActivity) &&
+      hasScope(this.user.scopes, scopes.activityDelete);
   }
 }

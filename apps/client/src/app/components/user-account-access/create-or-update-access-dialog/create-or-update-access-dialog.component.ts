@@ -4,6 +4,7 @@ import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import {
   SCOPES_OF_READ_ACCESS,
   SCOPES_OF_READ_RESTRICTED_ACCESS,
+  SCOPES_OF_WRITE_ACCESS,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
@@ -46,6 +47,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -62,6 +64,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSlideToggleModule,
     ReactiveFormsModule
   ],
   selector: 'gf-create-or-update-access-dialog',
@@ -120,6 +123,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         access?.scopes,
         scopes.portfolioReadValues
       ),
+      hasScopesToWrite: hasScope(access?.scopes, scopes.activityCreate),
       type: [
         { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
         Validators.required
@@ -149,6 +153,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           'hasScopeToReadValues'
         );
 
+        const hasScopesToWriteControl = this.accessForm.get('hasScopesToWrite');
+
         if (accessType === 'PRIVATE') {
           granteeUserIdControl?.setValidators(Validators.required);
           this.accessForm.get('filters')?.setValue(null);
@@ -156,8 +162,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
 
-          // A public access never exposes the monetary values
+          // A public access never exposes the monetary values and never
+          // changes data
           hasScopeToReadValuesControl?.setValue(false);
+          hasScopesToWriteControl?.setValue(false);
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -187,14 +195,17 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   /**
-   * The dialog offers the read access only. The write scopes are not granted
-   * here yet.
+   * The write access is granted as one unit, hence the dialog offers a single
+   * control for all write scopes
    */
   private buildScopes() {
     return [
       ...(this.accessForm.get('hasScopeToReadValues')?.value
         ? SCOPES_OF_READ_ACCESS
-        : SCOPES_OF_READ_RESTRICTED_ACCESS)
+        : SCOPES_OF_READ_RESTRICTED_ACCESS),
+      ...(this.accessForm.get('hasScopesToWrite')?.value
+        ? SCOPES_OF_WRITE_ACCESS
+        : [])
     ];
   }
 

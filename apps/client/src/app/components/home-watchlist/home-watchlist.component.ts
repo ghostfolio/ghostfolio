@@ -1,4 +1,3 @@
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import {
@@ -7,6 +6,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -44,7 +44,6 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
   templateUrl: './home-watchlist.html'
 })
 export class GfHomeWatchlistComponent implements OnInit {
-  protected hasImpersonationId: boolean;
   protected hasPermissionToCreateWatchlistItem: boolean;
   protected hasPermissionToDeleteWatchlistItem: boolean;
   protected user: User;
@@ -59,21 +58,11 @@ export class GfHomeWatchlistComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
-  private readonly impersonationStorageService = inject(
-    ImpersonationStorageService
-  );
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-      });
-
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
@@ -89,17 +78,15 @@ export class GfHomeWatchlistComponent implements OnInit {
           this.user = state.user;
 
           this.hasPermissionToCreateWatchlistItem =
-            !this.hasImpersonationId &&
             hasPermission(
               this.user.permissions,
               permissions.createWatchlistItem
-            );
+            ) && hasScope(this.user.scopes, scopes.watchlistCreate);
           this.hasPermissionToDeleteWatchlistItem =
-            !this.hasImpersonationId &&
             hasPermission(
               this.user.permissions,
               permissions.deleteWatchlistItem
-            );
+            ) && hasScope(this.user.scopes, scopes.watchlistDelete);
 
           this.changeDetectorRef.markForCheck();
         }

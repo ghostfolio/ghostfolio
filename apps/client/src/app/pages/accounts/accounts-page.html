@@ -8,9 +8,7 @@
         [baseCurrency]="user?.settings?.baseCurrency"
         [locale]="user?.settings?.locale"
         [showActions]="
-          !hasImpersonationId &&
-          hasPermissionToUpdateAccount &&
-          !user.settings.isRestrictedView
+          hasPermissionToUpdateAccount && !user.settings.isRestrictedView
         "
         [totalBalanceInBaseCurrency]="totalBalanceInBaseCurrency"
         [totalValueInBaseCurrency]="totalValueInBaseCurrency"
@@ -20,11 +18,7 @@
     </div>
   </div>
 
-  @if (
-    !hasImpersonationId &&
-    hasPermissionToCreateAccount &&
-    !user.settings.isRestrictedView
-  ) {
+  @if (hasPermissionToCreateAccount && !user.settings.isRestrictedView) {
     <gf-fab
       [routerLink]="internalRoutes.accounts.subRoutes.create.routerLink"
     />

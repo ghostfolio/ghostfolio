@@ -15,9 +15,7 @@
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [showActions]="
-          !hasImpersonationId &&
-          hasPermissionToDeleteActivity &&
-          !user.settings.isRestrictedView
+          hasPermissionToDeleteActivity && !user.settings.isRestrictedView
         "
         [sortColumn]="sortColumn"
         [sortDirection]="sortDirection"
@@ -36,11 +34,7 @@
     </div>
   </div>
 
-  @if (
-    !hasImpersonationId &&
-    hasPermissionToCreateActivity &&
-    !user.settings.isRestrictedView
-  ) {
+  @if (hasPermissionToCreateActivity && !user.settings.isRestrictedView) {
     <gf-fab
       [routerLink]="
         internalRoutes.portfolio.subRoutes.activities.subRoutes.create

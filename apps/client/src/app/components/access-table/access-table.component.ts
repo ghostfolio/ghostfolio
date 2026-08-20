@@ -105,6 +105,10 @@ export class GfAccessTableComponent {
     return hasScope(scopesOfAccess, scopes.portfolioReadValues);
   }
 
+  protected hasScopesToWrite({ scopes: scopesOfAccess }: Access) {
+    return hasScope(scopesOfAccess, scopes.activityCreate);
+  }
+
   protected onCopyUrlToClipboard(aId: string) {
     this.clipboard.copy(this.getPublicUrl(aId));
 

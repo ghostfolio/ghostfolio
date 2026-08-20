@@ -4,6 +4,7 @@ import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
@@ -95,14 +96,13 @@ export class GfAccountsPageComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateAccount = hasPermission(
-            this.user.permissions,
-            permissions.createAccount
-          );
-          this.hasPermissionToUpdateAccount = hasPermission(
-            this.user.permissions,
-            permissions.updateAccount
-          );
+          this.hasPermissionToCreateAccount =
+            hasPermission(this.user.permissions, permissions.createAccount) &&
+            hasScope(this.user.scopes, scopes.accountCreate);
+
+          this.hasPermissionToUpdateAccount =
+            hasPermission(this.user.permissions, permissions.updateAccount) &&
+            hasScope(this.user.scopes, scopes.accountUpdate);
 
           this.fetchAccounts();
         }

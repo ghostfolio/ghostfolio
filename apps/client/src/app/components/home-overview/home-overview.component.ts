@@ -1,6 +1,5 @@
 import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
@@ -15,6 +14,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -46,7 +46,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 })
 export class GfHomeOverviewComponent implements OnInit {
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
-  protected readonly hasImpersonationId = signal(false);
   protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
   protected readonly isLoadingPerformance = signal(true);
   protected readonly performance = signal<PortfolioPerformance | null>(null);
@@ -66,7 +65,10 @@ export class GfHomeOverviewComponent implements OnInit {
   );
 
   protected readonly hasPermissionToCreateActivity = computed(() => {
-    return hasPermission(this.user()?.permissions, permissions.createActivity);
+    return (
+      hasPermission(this.user()?.permissions, permissions.createActivity) &&
+      hasScope(this.user()?.scopes, scopes.activityCreate)
+    );
   });
 
   protected readonly showDetails = computed(() => {
@@ -86,9 +88,6 @@ export class GfHomeOverviewComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly impersonationStorageService = inject(
-    ImpersonationStorageService
-  );
   private readonly layoutService = inject(LayoutService);
   private readonly userService = inject(UserService);
 
@@ -104,13 +103,6 @@ export class GfHomeOverviewComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId.set(!!impersonationId);
-      });
-
     this.layoutService.shouldReloadContent$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
