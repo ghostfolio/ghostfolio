@@ -1,9 +1,9 @@
-import { MarketData } from '@ghostfolio/common/interfaces';
-
 import { DataSource } from '@prisma/client';
-import { IsArray, IsIn, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsIn, IsOptional, ValidateNested } from 'class-validator';
 
 import { CreateAssetProfileDto } from './create-asset-profile.dto';
+import { MarketDataDto } from './market-data.dto';
 
 export class CreateAssetProfileWithMarketDataDto extends CreateAssetProfileDto {
   @IsIn([DataSource.MANUAL], {
@@ -13,5 +13,7 @@ export class CreateAssetProfileWithMarketDataDto extends CreateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
-  marketData?: MarketData[];
+  @Type(() => MarketDataDto)
+  @ValidateNested({ each: true })
+  marketData?: MarketDataDto[];
 }
