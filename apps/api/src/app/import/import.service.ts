@@ -628,11 +628,12 @@ export class ImportService {
           // Insert or update market data
           const marketDataObjects = (
             assetProfileWithMarketData.marketData ?? []
-          ).map((marketData) => {
+          ).map(({ date, marketPrice }) => {
             return {
-              ...marketData,
+              marketPrice,
               symbol,
-              dataSource: assetProfileWithMarketData.dataSource
+              dataSource: assetProfileWithMarketData.dataSource,
+              date: parseISO(date)
             } as Prisma.MarketDataUpdateInput;
           });
 

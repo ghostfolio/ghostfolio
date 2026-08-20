@@ -28,7 +28,6 @@ import type {
   NullableLineChartItem
 } from './line-chart-item.interface';
 import type { LookupItem } from './lookup-item.interface';
-import type { MarketData } from './market-data.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
@@ -159,7 +158,6 @@ export {
   LineChartItem,
   LookupItem,
   LookupResponse,
-  MarketData,
   MarketDataOfMarketsResponse,
   NullableLineChartItem,
   OAuthResponse,
