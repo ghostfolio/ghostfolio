@@ -25,20 +25,17 @@ import { addDays, format, isSameDay } from 'date-fns';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
-import { ChartResultArray } from 'yahoo-finance2/esm/src/modules/chart';
-import {
+import type { ChartResultArray } from 'yahoo-finance2/modules/chart';
+import type {
   HistoricalDividendsResult,
   HistoricalHistoryResult
-} from 'yahoo-finance2/esm/src/modules/historical';
-import {
-  Quote,
-  QuoteResponseArray
-} from 'yahoo-finance2/esm/src/modules/quote';
-import {
+} from 'yahoo-finance2/modules/historical';
+import type { Quote, QuoteResponseArray } from 'yahoo-finance2/modules/quote';
+import type {
   Price,
   QuoteSummaryResult
-} from 'yahoo-finance2/esm/src/modules/quoteSummary';
-import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
+} from 'yahoo-finance2/modules/quoteSummary';
+import type { SearchQuoteNonYahoo } from 'yahoo-finance2/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
