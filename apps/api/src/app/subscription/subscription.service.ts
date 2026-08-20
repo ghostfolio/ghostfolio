@@ -192,6 +192,10 @@ export class SubscriptionService {
         return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
       });
 
+      const { createdAt: subscribedAt } = subscriptions.reduce((a, b) => {
+        return new Date(a.createdAt) < new Date(b.createdAt) ? a : b;
+      });
+
       let offerKey: SubscriptionOfferKey = price ? 'renewal' : 'default';
 
       if (isBefore(createdAt, parseDate('2023-01-01'))) {
@@ -208,6 +212,7 @@ export class SubscriptionService {
 
       return {
         offer,
+        subscribedAt,
         expiresAt: isBefore(new Date(), expiresAt) ? expiresAt : undefined,
         type: isBefore(new Date(), expiresAt)
           ? SubscriptionType.Premium
