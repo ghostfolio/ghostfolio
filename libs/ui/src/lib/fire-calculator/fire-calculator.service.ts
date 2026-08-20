@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Big } from 'big.js';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class FireCalculatorService {
   private readonly COMPOUND_PERIOD = 12;
 

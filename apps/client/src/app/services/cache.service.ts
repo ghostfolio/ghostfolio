@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class CacheService {
-  public constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   public flush() {
     return this.http.post<any>(`/api/v1/cache/flush`, {});

@@ -66,7 +66,7 @@ import type {
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
 import {
@@ -85,9 +85,7 @@ import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class DataService {
   private readonly http = inject(HttpClient);
 
