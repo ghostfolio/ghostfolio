@@ -117,7 +117,8 @@ export class GfUserAccountSettingsComponent implements OnInit {
     'pt',
     'tr',
     'uk',
-    'zh'
+    'zh',
+    'zh-TW'
   ];
   protected readonly previewDate = new Date().toISOString();
   protected readonly previewValue = 9999.99;

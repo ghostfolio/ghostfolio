@@ -203,7 +203,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for Traditional Chinese (`zh-TW`) locale
 - Added a live preview of the date and number format to the user settings
+
 - Added the country flag to the currency selector
 - Added a _Storybook_ story for the currency selector component
 - Added the platform logo to the account selectors in the transfer cash balance dialog
@@ -979,11 +981,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the icon column to the benchmark component
+>>>>>>> upstream/main
 - Added support for the `DIRECT_URL` environment variable to enable direct database connections
 
 ### Changed
 
 - Improved the pagination in the activities table of the account detail dialog
+
 - Improved the pagination in the activities table of the holding detail dialog
 - Randomized the placeholder in the assistant
 - Filtered out sectors with zero weight for ETF and mutual fund assets in the _Yahoo Finance_ data enhancer

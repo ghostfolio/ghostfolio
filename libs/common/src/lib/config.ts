@@ -351,7 +351,8 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'pt',
   'tr',
   'uk',
-  'zh'
+  'zh',
+  'zh-TW'
 ] as const;
 
 export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
