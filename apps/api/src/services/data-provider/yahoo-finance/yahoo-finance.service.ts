@@ -26,13 +26,16 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
 import { ChartResultArray } from 'yahoo-finance2/modules/chart';
-import {
+import type {
   HistoricalDividendsResult,
   HistoricalHistoryResult
 } from 'yahoo-finance2/modules/historical';
-import { Quote, QuoteResponseArray } from 'yahoo-finance2/modules/quote';
-import { Price, QuoteSummaryResult } from 'yahoo-finance2/modules/quoteSummary';
-import { SearchQuoteNonYahoo } from 'yahoo-finance2/modules/search';
+import type { Quote, QuoteResponseArray } from 'yahoo-finance2/modules/quote';
+import type {
+  Price,
+  QuoteSummaryResult
+} from 'yahoo-finance2/modules/quoteSummary';
+import type { SearchQuoteNonYahoo } from 'yahoo-finance2/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
