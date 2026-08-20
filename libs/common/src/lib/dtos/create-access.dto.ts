@@ -16,6 +16,7 @@ export class CreateAccessDto {
   @IsUUID()
   granteeUserId?: string;
 
+  @IsArray()
   @IsIn(Object.values(scopes), { each: true })
   @IsOptional()
   scopes?: Scope[];

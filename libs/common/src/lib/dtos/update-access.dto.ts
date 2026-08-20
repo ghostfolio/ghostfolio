@@ -19,6 +19,7 @@ export class UpdateAccessDto {
   @IsString()
   id: string;
 
+  @IsArray()
   @IsIn(Object.values(scopes), { each: true })
   @IsOptional()
   scopes?: Scope[];

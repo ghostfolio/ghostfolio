@@ -59,19 +59,24 @@ export const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
 
 export function getScopesOfAccess({
   granteeUserId,
-  scopes: scopesOfAccess = []
+  scopes: scopesOfAccess
 }: {
   granteeUserId?: string | null;
   scopes?: string[];
 }): string[] {
+  const scopesToEvaluate = scopesOfAccess ?? [];
+
   if (granteeUserId) {
-    return [...scopesOfAccess];
+    // TODO: Permit the write scopes once the dialog allows to configure them
+    return SCOPES_OF_READ_ACCESS.filter((scope) => {
+      return scopesToEvaluate.includes(scope);
+    });
   }
 
   // An access which has not been granted to a user is public, hence it is
   // narrowed to the scopes exposed by the public endpoints
   return SCOPES_OF_PUBLIC_ACCESS.filter((scope) => {
-    return scopesOfAccess.includes(scope);
+    return scopesToEvaluate.includes(scope);
   });
 }
 

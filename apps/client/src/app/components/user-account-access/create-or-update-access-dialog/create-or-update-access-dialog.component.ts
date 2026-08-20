@@ -116,10 +116,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         access?.grantee ?? null,
         isPublic ? null : Validators.required
       ],
-      hasScopeToReadValues: [
-        hasScope(access?.scopes, scopes.portfolioReadValues),
-        Validators.required
-      ],
+      hasScopeToReadValues: hasScope(
+        access?.scopes,
+        scopes.portfolioReadValues
+      ),
       type: [
         { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
         Validators.required
@@ -178,6 +178,12 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  private buildFilters(): Filter[] {
+    return getFiltersFromPortfolioFilterFormValue(
+      this.accessForm.get('filters')?.value
+    );
+  }
+
   // The dialog offers the read access only. The write scopes are not granted
   // here yet.
   private buildScopes() {
@@ -186,12 +192,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         ? SCOPES_OF_READ_ACCESS
         : SCOPES_OF_READ_RESTRICTED_ACCESS)
     ];
-  }
-
-  private buildFilters(): Filter[] {
-    return getFiltersFromPortfolioFilterFormValue(
-      this.accessForm.get('filters')?.value
-    );
   }
 
   private async createAccess() {

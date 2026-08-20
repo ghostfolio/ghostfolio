@@ -6,7 +6,6 @@ export interface Access {
   alias: string | null;
   grantee?: string;
   id: string;
-
   scopes: string[];
   settings?: AccessSettings;
   type: AccessType;

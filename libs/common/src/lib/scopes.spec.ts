@@ -81,6 +81,19 @@ describe('Scopes', () => {
         })
       ).toEqual([]);
     });
+
+    // TODO: Remove this expectation once the dialog allows to configure the
+    // write scopes
+    it('Gives no write scope', () => {
+      const scopesOfAccess = getScopesOfAccess({
+        granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+        scopes: [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS]
+      });
+
+      for (const scope of SCOPES_OF_WRITE_ACCESS) {
+        expect(scopesOfAccess).not.toContain(scope);
+      }
+    });
   });
 
   describe('Get scopes of public access', () => {
