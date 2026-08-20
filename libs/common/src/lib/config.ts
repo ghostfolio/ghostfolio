@@ -67,6 +67,9 @@ export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
   DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
 );
 
+export const DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD = ms('2 weeks');
+export const DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD_MAX_REQUESTS_FACTOR = 2;
+
 /**
  * The named date ranges, complemented by the calendar years like '2024',
  * '2023', '2022', etc.
