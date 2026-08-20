@@ -144,6 +144,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((accessType) => {
         const granteeUserIdControl = this.accessForm.get('granteeUserId');
+
         const hasScopeToReadValuesControl = this.accessForm.get(
           'hasScopeToReadValues'
         );
@@ -154,6 +155,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
+
           // A public access never exposes the monetary values
           hasScopeToReadValuesControl?.setValue(false);
         }
@@ -184,8 +186,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     );
   }
 
-  // The dialog offers the read access only. The write scopes are not granted
-  // here yet.
+  /**
+   * The dialog offers the read access only. The write scopes are not granted
+   * here yet.
+   */
   private buildScopes() {
     return [
       ...(this.accessForm.get('hasScopeToReadValues')?.value
