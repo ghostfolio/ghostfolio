@@ -63,7 +63,9 @@ export class GfAccountSelectorComponent
 
   public readonly sortedAccounts = computed(() => {
     return [...this.accounts()].sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      return (a.name ?? '')
+        .toLowerCase()
+        .localeCompare((b.name ?? '').toLowerCase());
     });
   });
 
