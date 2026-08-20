@@ -25,7 +25,7 @@ import { addDays, format, isSameDay } from 'date-fns';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { uniqBy } from 'lodash';
 import YahooFinance from 'yahoo-finance2';
-import { ChartResultArray } from 'yahoo-finance2/modules/chart';
+import type { ChartResultArray } from 'yahoo-finance2/modules/chart';
 import type {
   HistoricalDividendsResult,
   HistoricalHistoryResult
