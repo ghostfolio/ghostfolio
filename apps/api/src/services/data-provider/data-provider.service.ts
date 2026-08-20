@@ -298,14 +298,15 @@ export class DataProviderService implements OnModuleInit {
         let assetProfile: Partial<SymbolProfile> = { currency };
 
         try {
-          assetProfile = (
-            await this.getAssetProfiles([
-              {
-                dataSource,
-                symbol
-              }
-            ])
-          )?.[assetProfileIdentifier];
+          assetProfile =
+            (
+              await this.getAssetProfiles([
+                {
+                  dataSource,
+                  symbol
+                }
+              ])
+            )?.[assetProfileIdentifier] ?? assetProfile;
         } catch {}
 
         if (!assetProfile?.name) {

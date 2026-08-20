@@ -534,6 +534,12 @@ export class ImportService {
       }
     }
 
+    const assetProfilesToCreate: {
+      assetProfile: Prisma.SymbolProfileCreateInput;
+      assetProfileIdentifier: string;
+      marketDataObjects: Prisma.MarketDataUpdateInput[];
+    }[] = [];
+
     if (assetProfilesWithMarketDataDto?.length) {
       const customAssetProfileNames = assetProfilesWithMarketDataDto
         .filter(({ dataSource, name }) => {
@@ -557,6 +563,7 @@ export class ImportService {
         ]);
 
       for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
+        let assetProfileToCreate: Prisma.SymbolProfileCreateInput;
         let symbol = assetProfileWithMarketData.symbol;
 
         // Check if there is any existing asset profile
@@ -605,13 +612,10 @@ export class ImportService {
             assetProfile.symbol = symbol;
 
             if (!isDryRun) {
-              // Create a new asset profile
-              const assetProfileObject: Prisma.SymbolProfileCreateInput = {
+              assetProfileToCreate = {
                 ...assetProfile,
                 user: { connect: { id: user.id } }
               };
-
-              await this.symbolProfileService.add(assetProfileObject);
             }
           }
 
@@ -625,7 +629,6 @@ export class ImportService {
         }
 
         if (!isDryRun) {
-          // Insert or update market data
           const marketDataObjects = (
             assetProfileWithMarketData.marketData ?? []
           ).map((marketData) => {
@@ -636,7 +639,23 @@ export class ImportService {
             } as Prisma.MarketDataUpdateInput;
           });
 
-          await this.marketDataService.updateMany({ data: marketDataObjects });
+          if (assetProfileToCreate) {
+            // Create the new asset profile and its market data later, once it
+            // is known which activities are imported
+            assetProfilesToCreate.push({
+              marketDataObjects,
+              assetProfile: assetProfileToCreate,
+              assetProfileIdentifier: getAssetProfileIdentifier({
+                symbol,
+                dataSource: assetProfileWithMarketData.dataSource
+              })
+            });
+          } else {
+            // Insert or update market data
+            await this.marketDataService.updateMany({
+              data: marketDataObjects
+            });
+          }
         }
       }
     }
@@ -718,6 +737,37 @@ export class ImportService {
     const draftTag = tags.find(({ id }) => {
       return id === TAG_ID_DRAFT;
     }) ?? { id: TAG_ID_DRAFT, name: 'DRAFT' };
+
+    if (assetProfilesToCreate.length) {
+      // Create the new asset profiles of the activities to import only, so
+      // that no unused asset profile remains, for example if an activity is a
+      // duplicate. An asset profile which is created before the validation of
+      // the activities would stay behind, because the import is not rolled
+      // back on an error.
+      const assetProfileIdentifiersToImport = new Set(
+        activitiesExtendedWithErrors
+          .filter(({ error }) => {
+            return !error;
+          })
+          .map(({ assetProfile }) => {
+            return getAssetProfileIdentifier(assetProfile);
+          })
+      );
+
+      for (const {
+        assetProfile,
+        assetProfileIdentifier,
+        marketDataObjects
+      } of assetProfilesToCreate) {
+        if (!assetProfileIdentifiersToImport.has(assetProfileIdentifier)) {
+          continue;
+        }
+
+        await this.symbolProfileService.add(assetProfile);
+
+        await this.marketDataService.updateMany({ data: marketDataObjects });
+      }
+    }
 
     const activities: Activity[] = [];
 
