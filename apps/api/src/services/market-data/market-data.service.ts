@@ -2,8 +2,7 @@ import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.i
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT } from '@ghostfolio/common/config';
-import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
-import { resetHours } from '@ghostfolio/common/helper';
+import { getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
@@ -36,7 +35,7 @@ export class MarketDataService {
       where: {
         dataSource,
         symbol,
-        date: resetHours(date)
+        date: getStartOfUtcDate(date)
       }
     });
   }
@@ -156,14 +155,24 @@ export class MarketDataService {
     dataSource,
     symbol
   }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
+    const marketDataItems = data.map(({ date, marketPrice, state }) => {
+      return {
+        dataSource,
+        symbol,
+        date: getStartOfUtcDate(date as Date),
+        marketPrice: marketPrice as number,
+        state: state as MarketDataState
+      };
+    });
+
     await this.prismaService.$transaction(
       async (prisma) => {
-        if (data.length > 0) {
+        if (marketDataItems.length > 0) {
           let minTime = Infinity;
           let maxTime = -Infinity;
 
-          for (const { date } of data) {
-            const time = (date as Date).getTime();
+          for (const { date } of marketDataItems) {
+            const time = date.getTime();
 
             if (time < minTime) {
               minTime = time;
@@ -189,13 +198,7 @@ export class MarketDataService {
           });
 
           await prisma.marketData.createMany({
-            data: data.map(({ date, marketPrice, state }) => ({
-              dataSource,
-              symbol,
-              date: date as Date,
-              marketPrice: marketPrice as number,
-              state: state as MarketDataState
-            })),
+            data: marketDataItems,
             skipDuplicates: true
           });
         }
@@ -220,27 +223,6 @@ export class MarketDataService {
     });
   }
 
-  public async updateMarketData(params: {
-    data: {
-      state: MarketDataState;
-    } & UpdateMarketDataDto;
-    where: Prisma.MarketDataWhereUniqueInput;
-  }): Promise<MarketData> {
-    const { data, where } = params;
-
-    return this.prismaService.marketData.upsert({
-      where,
-      create: {
-        dataSource: where.dataSource_date_symbol.dataSource,
-        date: where.dataSource_date_symbol.date,
-        marketPrice: data.marketPrice,
-        state: data.state,
-        symbol: where.dataSource_date_symbol.symbol
-      },
-      update: { marketPrice: data.marketPrice, state: data.state }
-    });
-  }
-
   /**
    * Upsert market data by imitating missing upsertMany functionality
    * with $transaction
@@ -252,10 +234,12 @@ export class MarketDataService {
   }): Promise<MarketData[]> {
     const upsertPromises = data.map(
       ({ dataSource, date, marketPrice, symbol, state }) => {
+        const dateOfMarketData = getStartOfUtcDate(date as Date);
+
         return this.prismaService.marketData.upsert({
           create: {
             dataSource: dataSource as DataSource,
-            date: date as Date,
+            date: dateOfMarketData,
             marketPrice: marketPrice as number,
             state: state as MarketDataState,
             symbol: symbol as string
@@ -267,7 +251,7 @@ export class MarketDataService {
           where: {
             dataSource_date_symbol: {
               dataSource: dataSource as DataSource,
-              date: date as Date,
+              date: dateOfMarketData,
               symbol: symbol as string
             }
           }

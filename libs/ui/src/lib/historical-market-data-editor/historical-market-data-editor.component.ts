@@ -1,4 +1,4 @@
-import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
+import { MarketDataDto } from '@ghostfolio/common/dtos';
 import {
   DATE_FORMAT,
   getDateFormatString,
@@ -249,7 +249,7 @@ export class GfHistoricalMarketDataEditorComponent
 
   public onImportHistoricalData() {
     try {
-      const marketData = csvToJson<UpdateMarketDataDto>(
+      const marketData = csvToJson<MarketDataDto>(
         this.historicalDataForm.controls.historicalData.controls.csvString
           .value ?? '',
         {

@@ -1,11 +1,12 @@
-import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
+import { MarketDataDto } from '@ghostfolio/common/dtos';
 
 import { Type } from 'class-transformer';
-import { ArrayNotEmpty, IsArray } from 'class-validator';
+import { ArrayNotEmpty, IsArray, ValidateNested } from 'class-validator';
 
 export class UpdateBulkMarketDataDto {
   @ArrayNotEmpty()
   @IsArray()
-  @Type(() => UpdateMarketDataDto)
-  marketData: UpdateMarketDataDto[];
+  @Type(() => MarketDataDto)
+  @ValidateNested({ each: true })
+  marketData: MarketDataDto[];
 }
