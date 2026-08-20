@@ -9,7 +9,7 @@ export class LayoutService {
   public static readonly DEFAULT_NOTIFICATION_MAX_WIDTH = '50rem';
   public static readonly DEFAULT_NOTIFICATION_WIDTH = '75vw';
 
-  public shouldReloadContent$: Observable<void>;
+  public readonly shouldReloadContent$: Observable<void>;
 
   private readonly shouldReloadSubject = new Subject<void>();
 
