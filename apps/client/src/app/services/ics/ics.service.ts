@@ -1,13 +1,11 @@
 import { capitalize } from '@ghostfolio/common/helper';
 import { ExportResponse } from '@ghostfolio/common/interfaces';
 
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Type } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class IcsService {
   private readonly ICS_DATE_FORMAT = 'yyyyMMdd';
   private readonly ICS_LINE_BREAK = '\r\n';

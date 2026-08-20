@@ -24,14 +24,12 @@ import { DateRange } from '@ghostfolio/common/types';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { AssetProfileSplit, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { isNumber } from 'lodash';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class AdminService {
   private readonly environment = inject(GF_ENVIRONMENT);
   private readonly http = inject(HttpClient);

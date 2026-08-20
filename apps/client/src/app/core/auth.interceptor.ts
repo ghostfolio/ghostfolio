@@ -13,10 +13,10 @@ import {
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class AuthInterceptor implements HttpInterceptor {
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService

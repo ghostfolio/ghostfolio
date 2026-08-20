@@ -13,16 +13,14 @@ import {
 import { Activity } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Account, DataSource, Type as ActivityType } from '@prisma/client';
 import { isFinite, isNumber, isString } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { firstValueFrom } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class ImportActivitiesService {
   private static ACCOUNT_KEYS = ['account', 'accountid'];
   private static COMMENT_KEYS = ['comment', 'note'];
