@@ -3036,4 +3036,91 @@ describe('redactAttributes', () => {
     });
     console.timeEnd('redactAttributes execution time');
   });
+
+  // An activity is a response of its own, hence it has to be redacted like an
+  // entry of the activities of a portfolio
+  it('should redact an activity which is the response itself', () => {
+    expect(
+      redactPaths({
+        object: {
+          account: {
+            comment: 'Private note',
+            id: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+            name: 'Interactive Brokers Account'
+          },
+          assetProfile: {
+            name: 'Apple Inc',
+            symbol: 'AAPL',
+            symbolMapping: { YAHOO: 'AAPL' },
+            watchedByCount: 7
+          },
+          comment: 'Bought on a dip',
+          currency: 'USD',
+          date: '2021-11-30T23:00:00.000Z',
+          fee: 19.9,
+          feeInAssetProfileCurrency: 19.9,
+          feeInBaseCurrency: 18.2,
+          id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
+          quantity: 50,
+          type: 'BUY',
+          unitPrice: 220.79,
+          value: 11039.5,
+          valueInBaseCurrency: 10123.4
+        },
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toStrictEqual({
+      account: {
+        comment: null,
+        id: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+        name: 'Interactive Brokers Account'
+      },
+      assetProfile: {
+        name: 'Apple Inc',
+        symbol: 'AAPL',
+        symbolMapping: null,
+        watchedByCount: null
+      },
+      comment: null,
+      currency: 'USD',
+      date: '2021-11-30T23:00:00.000Z',
+      fee: null,
+      feeInAssetProfileCurrency: null,
+      feeInBaseCurrency: null,
+      id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
+      quantity: null,
+      type: 'BUY',
+      // A price per unit stays visible, like the average price and the market
+      // price of a holding
+      unitPrice: 220.79,
+      value: null,
+      valueInBaseCurrency: null
+    });
+  });
+
+  // The write endpoints return a row of the database, which has no relation
+  it('should redact an activity without the relations', () => {
+    expect(
+      redactPaths({
+        object: {
+          comment: 'Bought on a dip',
+          currency: 'USD',
+          fee: 19.9,
+          id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
+          quantity: 50,
+          type: 'BUY',
+          unitPrice: 220.79
+        },
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toStrictEqual({
+      comment: null,
+      currency: 'USD',
+      fee: null,
+      id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
+      quantity: null,
+      type: 'BUY',
+      unitPrice: 220.79
+    });
+  });
 });

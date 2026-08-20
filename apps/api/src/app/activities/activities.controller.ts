@@ -1,7 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -12,16 +11,14 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   ActivitiesResponse,
   ActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
-import type {
-  ImpersonationContext,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -29,16 +26,12 @@ import {
   Delete,
   Get,
   HttpException,
-  Inject,
   Param,
   Post,
   Put,
   Query,
-  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -53,15 +46,15 @@ export class ActivitiesController {
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
-    private readonly dataGatheringService: DataGatheringService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly dataGatheringService: DataGatheringService
   ) {}
 
   @Delete()
   @HasPermission(permissions.deleteActivity)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityDelete)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
+    @Impersonation() { userId }: ImpersonationContext,
     @Query()
     {
       accounts,
@@ -94,18 +87,22 @@ export class ActivitiesController {
       endDate,
       filters,
       startDate,
-      types: activityTypes,
-      userId: this.request.user.id
+      userId,
+      types: activityTypes
     });
   }
 
   @Delete(':id')
   @HasPermission(permissions.deleteActivity)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteActivity(@Param('id') id: string): Promise<Order> {
+  @RequiresScope(scopes.activityDelete)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async deleteActivity(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ): Promise<Order> {
     const activity = await this.activitiesService.order({
       id,
-      userId: this.request.user.id
+      userId
     });
 
     if (!activity) {
@@ -208,11 +205,28 @@ export class ActivitiesController {
 
   @HasPermission(permissions.createActivity)
   @Post()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityCreate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async createActivity(@Body() data: CreateOrderDto): Promise<Order> {
+  public async createActivity(
+    @Body() data: CreateOrderDto,
+    @Impersonation()
+    {
+      authenticatedUserSubscription,
+      userId,
+      userSubscription
+    }: ImpersonationContext
+  ): Promise<Order> {
+    // Evaluate the more restrictive subscription of the authenticated user
+    // and the owner of the activity
+    const subscription =
+      userSubscription?.type === SubscriptionType.Basic
+        ? userSubscription
+        : authenticatedUserSubscription;
+
     try {
       await this.dataProviderService.validateActivities({
+        subscription,
         activitiesDto: [
           {
             currency: data.currency,
@@ -221,8 +235,7 @@ export class ActivitiesController {
             type: data.type
           }
         ],
-        maxActivitiesToImport: 1,
-        user: this.request.user
+        maxActivitiesToImport: 1
       });
     } catch (error) {
       throw new HttpException(
@@ -248,6 +261,7 @@ export class ActivitiesController {
 
     const activity = await this.activitiesService.createActivity({
       ...data,
+      userId,
       date: parseISO(data.date),
       SymbolProfile: {
         connectOrCreate: {
@@ -267,8 +281,7 @@ export class ActivitiesController {
       tags: data.tags?.map((id) => {
         return { id };
       }),
-      user: { connect: { id: this.request.user.id } },
-      userId: this.request.user.id
+      user: { connect: { id: userId } }
     });
 
     if (dataSource && !isActivityInFuture({ date: activity.date })) {
@@ -291,15 +304,17 @@ export class ActivitiesController {
 
   @HasPermission(permissions.updateActivity)
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async updateActivity(
-    @Param('id') id: string,
-    @Body() data: UpdateOrderDto
+    @Body() data: UpdateOrderDto,
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
   ) {
     const originalActivity = await this.activitiesService.order({
       id,
-      userId: this.request.user.id
+      userId
     });
 
     if (!originalActivity) {
@@ -326,13 +341,14 @@ export class ActivitiesController {
     delete data.dataSource;
 
     return this.activitiesService.updateActivity({
+      userId,
       data: {
         ...data,
         date,
         account: accountId
           ? {
               connect: {
-                id_userId: { id: accountId, userId: this.request.user.id }
+                id_userId: { userId, id: accountId }
               }
             }
           : { disconnect: true },
@@ -352,10 +368,9 @@ export class ActivitiesController {
         tags: data.tags?.map((id) => {
           return { id };
         }),
-        user: { connect: { id: this.request.user.id } }
+        user: { connect: { id: userId } }
       },
       originalDate: originalActivity.date,
-      userId: this.request.user.id,
       where: {
         id
       }
