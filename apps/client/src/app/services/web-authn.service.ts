@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
   startAuthentication,
   startRegistration
@@ -14,9 +14,7 @@ import {
 import { of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class WebAuthnService {
   private static readonly WEB_AUTH_N_DEVICE_ID = 'WEB_AUTH_N_DEVICE_ID';
 
