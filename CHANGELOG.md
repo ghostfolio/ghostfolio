@@ -16,8 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.56.0 - 2026-08-20
 
+### Added
+
+- Added the write access to the grant dialog and to the access table
+
 ### Changed
 
+- Changed the controls to create, to update and to delete data to be based on the scopes instead of the impersonation mode
 - Improved the sorting to be case-insensitive in the account selector component
 - Refactored the services to use the `@Service()` decorator of _Angular_
 - Removed the deprecated `permissions` attribute of the access in favor of the scopes
