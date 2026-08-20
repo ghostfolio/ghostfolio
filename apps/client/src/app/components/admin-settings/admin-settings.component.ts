@@ -83,7 +83,7 @@ export class GfAdminSettingsComponent implements OnInit {
     'actions'
   ];
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
-  public ghostfolioApiStatusTooltip = $localize`Additional requests are granted while you are setting up your instance`;
+  public readonly ghostfolioApiStatusTooltip = $localize`Additional requests are granted while you are setting up your instance`;
   public hasGhostfolioApiKey: boolean;
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;

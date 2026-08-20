@@ -235,15 +235,6 @@ export class GhostfolioService {
     }
   }
 
-  public async getMaxDailyRequests() {
-    return parseInt(
-      (await this.propertyService.getByKey<string>(
-        PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS
-      )) || '0',
-      10
-    );
-  }
-
   public async getQuotes({ requestTimeout, symbols }: GetQuotesParams) {
     const results: QuotesResponse = { quotes: {} };
 
@@ -452,6 +443,15 @@ export class GhostfolioService {
       .map((dataSource) => {
         return this.dataProviderService.getDataProvider(DataSource[dataSource]);
       });
+  }
+
+  private async getMaxDailyRequests() {
+    return parseInt(
+      (await this.propertyService.getByKey<string>(
+        PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS
+      )) || '0',
+      10
+    );
   }
 
   private isWithinSetupPeriod({ user }: { user: UserWithSettings }) {
