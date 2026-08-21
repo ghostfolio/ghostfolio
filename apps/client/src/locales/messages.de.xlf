@@ -371,7 +371,7 @@
       </trans-unit>
       <trans-unit id="4472298507300372923" datatype="html">
         <source>View and manage</source>
-        <target state="new">View and manage</target>
+        <target state="translated">Ansicht und Verwaltung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">23</context>
@@ -651,7 +651,7 @@
       </trans-unit>
       <trans-unit id="6249687295240367729" datatype="html">
         <source>Explore our guides to help you get started with investing and managing your finances.</source>
-        <target state="new">Explore our guides to help you get started with investing and managing your finances.</target>
+        <target state="translated">Entdecke unsere Ratgeber für den Einstieg in das Investieren und die Verwaltung deiner Finanzen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">21</context>
@@ -935,7 +935,7 @@
       </trans-unit>
       <trans-unit id="6623155069376115284" datatype="html">
         <source>Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Finde schnelle Antworten auf häufige Fragen zu Ghostfolio in unserem Bereich Häufig gestellte Fragen (FAQ).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">16</context>
@@ -3359,7 +3359,7 @@
       </trans-unit>
       <trans-unit id="3358797625330883274" datatype="html">
         <source>Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Finde schnelle Antworten auf häufige Fragen zum Self-Hosting von Ghostfolio in unserem Bereich Häufig gestellte Fragen (FAQ).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/self-hosting/self-hosting-page.html</context>
           <context context-type="linenumber">8</context>
@@ -3459,7 +3459,7 @@
       </trans-unit>
       <trans-unit id="641154803270226443" datatype="html">
         <source>Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Finde schnelle Antworten auf häufige Fragen zum vollständig verwalteten Ghostfolio Cloud-Angebot in unserem Bereich Häufig gestellte Fragen (FAQ).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/saas/saas-page.html</context>
           <context context-type="linenumber">8</context>
@@ -5399,7 +5399,7 @@
       </trans-unit>
       <trans-unit id="6952711292901447467" datatype="html">
         <source>Learn key financial terms and concepts in our comprehensive glossary.</source>
-        <target state="new">Learn key financial terms and concepts in our comprehensive glossary.</target>
+        <target state="translated">Lerne wichtige Finanzbegriffe und -konzepte in unserem umfassenden Lexikon kennen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -7106,7 +7106,7 @@
       </trans-unit>
       <trans-unit id="2655368253225791055" datatype="html">
         <source>Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is, explore its features, and learn about our privacy practices. Get all the information you need in one place.</source>
-        <target state="new">Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is, explore its features, and learn about our privacy practices. Get all the information you need in one place.</target>
+        <target state="translated">Finde schnelle Antworten auf häufige Fragen zu Ghostfolio in unserem Bereich Häufig gestellte Fragen (FAQ). Erfahre, was Ghostfolio ist, entdecke die Funktionen und lerne unsere Datenschutzpraktiken kennen. Erhalte alle Informationen, die du brauchst, an einem Ort.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/overview/faq-overview-page.html</context>
           <context context-type="linenumber">8</context>
@@ -7788,7 +7788,7 @@
       </trans-unit>
       <trans-unit id="9179002757707456211" datatype="html">
         <source>Access various market resources and tools to stay informed about financial markets.</source>
-        <target state="new">Access various market resources and tools to stay informed about financial markets.</target>
+        <target state="translated">Greife auf verschiedene Marktressourcen und Tools zu, um über die Finanzmärkte informiert zu bleiben.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">26</context>
@@ -8144,7 +8144,7 @@
       </trans-unit>
       <trans-unit id="8816331549575943119" datatype="html">
         <source>Additional requests are granted while you are setting up your instance</source>
-        <target state="new">Additional requests are granted while you are setting up your instance</target>
+        <target state="translated">Während du deine Instanz einrichtest, stehen dir zusätzliche Anfragen zur Verfügung.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
           <context context-type="linenumber">86</context>
