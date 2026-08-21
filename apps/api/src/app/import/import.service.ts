@@ -48,6 +48,8 @@ import { omit, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 import { ImportDataDto } from './import-data.dto';
+import { getAssetProfilesToCreate } from './import.helper';
+import { AssetProfileToCreate } from './interfaces/interfaces';
 
 @Injectable()
 export class ImportService {
@@ -534,10 +536,7 @@ export class ImportService {
       }
     }
 
-    const assetProfilesToCreate: {
-      assetProfile: Prisma.SymbolProfileCreateInput;
-      marketDataObjects: Prisma.MarketDataUpdateInput[];
-    }[] = [];
+    const assetProfilesToCreate: AssetProfileToCreate[] = [];
 
     if (assetProfilesWithMarketDataDto?.length) {
       const customAssetProfileNames = assetProfilesWithMarketDataDto
@@ -738,16 +737,18 @@ export class ImportService {
     // duplicate. An asset profile which is created before the validation of
     // the activities would stay behind, because the import is not rolled back
     // on an error.
-    for (const {
-      assetProfile,
-      marketDataObjects
-    } of this.getAssetProfilesToCreate({
-      activities: activitiesExtendedWithErrors,
-      assetProfiles: assetProfilesToCreate
-    })) {
-      await this.symbolProfileService.add(assetProfile);
+    if (!isDryRun) {
+      for (const {
+        assetProfile,
+        marketDataObjects
+      } of getAssetProfilesToCreate({
+        activities: activitiesExtendedWithErrors,
+        assetProfiles: assetProfilesToCreate
+      })) {
+        await this.symbolProfileService.add(assetProfile);
 
-      await this.marketDataService.updateMany({ data: marketDataObjects });
+        await this.marketDataService.updateMany({ data: marketDataObjects });
+      }
     }
 
     const activities: Activity[] = [];
@@ -1084,39 +1085,6 @@ export class ImportService {
     }
 
     return matchingAccountsOfUser[0];
-  }
-
-  /**
-   * Returns the asset profiles which at least one activity of the import uses.
-   * The asset profiles are created after the validation of the activities,
-   * thus an asset profile of an activity which is not imported must not be
-   * created.
-   */
-  private getAssetProfilesToCreate({
-    activities,
-    assetProfiles
-  }: {
-    activities: Partial<Activity>[];
-    assetProfiles: {
-      assetProfile: Prisma.SymbolProfileCreateInput;
-      marketDataObjects: Prisma.MarketDataUpdateInput[];
-    }[];
-  }) {
-    const assetProfileIdentifiersToImport = new Set(
-      activities
-        .filter(({ error }) => {
-          return !error;
-        })
-        .map(({ assetProfile }) => {
-          return getAssetProfileIdentifier(assetProfile);
-        })
-    );
-
-    return assetProfiles.filter(({ assetProfile }) => {
-      return assetProfileIdentifiersToImport.has(
-        getAssetProfileIdentifier(assetProfile)
-      );
-    });
   }
 
   private isUniqueAccount(accounts: AccountWithValue[]) {

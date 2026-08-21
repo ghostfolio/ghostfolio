@@ -273,10 +273,10 @@ export class DataProviderService implements OnModuleInit {
 
       if (!assetProfiles[assetProfileIdentifier]) {
         const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-          (assetProfile) => {
+          (assetProfileWithMarketData) => {
             return (
-              assetProfile.dataSource === dataSource &&
-              assetProfile.symbol === symbol
+              assetProfileWithMarketData.dataSource === dataSource &&
+              assetProfileWithMarketData.symbol === symbol
             );
           }
         );
