@@ -37,10 +37,12 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Permission</mat-label>
         <mat-select formControlName="accessLevel">
-          <mat-option i18n value="RESTRICTED_VIEW">Restricted view</mat-option>
+          <mat-option i18n value="READ_RESTRICTED">Restricted view</mat-option>
           @if (accessForm.get('type')?.value === 'PRIVATE') {
-            <mat-option i18n value="VIEW">View</mat-option>
-            <mat-option i18n value="CHANGE">View and change</mat-option>
+            <mat-option i18n value="READ">View</mat-option>
+            <mat-option i18n value="CREATE_READ_UPDATE_DELETE"
+              >View and manage</mat-option
+            >
           }
         </mat-select>
       </mat-form-field>

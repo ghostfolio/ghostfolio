@@ -156,7 +156,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
           // A public access never exposes the monetary values and never
           // changes data
-          this.accessForm.get('accessLevel')?.setValue('RESTRICTED_VIEW');
+          this.accessForm.get('accessLevel')?.setValue('READ_RESTRICTED');
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -187,9 +187,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private buildScopes(): Scope[] {
     switch (this.accessForm.get('accessLevel')?.value as AccessLevel) {
-      case 'CHANGE':
+      case 'CREATE_READ_UPDATE_DELETE':
         return [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
-      case 'VIEW':
+      case 'READ':
         return [...SCOPES_OF_READ_ACCESS];
       default:
         return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
@@ -241,12 +241,12 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         return hasScope(scopesOfAccess, scope);
       })
     ) {
-      return 'CHANGE';
+      return 'CREATE_READ_UPDATE_DELETE';
     }
 
     return hasScope(scopesOfAccess, scopes.portfolioReadValues)
-      ? 'VIEW'
-      : 'RESTRICTED_VIEW';
+      ? 'READ'
+      : 'READ_RESTRICTED';
   }
 
   private loadHoldings() {

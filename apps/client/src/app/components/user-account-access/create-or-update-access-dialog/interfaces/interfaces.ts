@@ -4,4 +4,5 @@ export interface CreateOrUpdateAccessDialogParams {
   access?: Access;
 }
 
-export type AccessLevel = 'CHANGE' | 'RESTRICTED_VIEW' | 'VIEW';
+export type AccessLevel =
+  'CREATE_READ_UPDATE_DELETE' | 'READ' | 'READ_RESTRICTED';
