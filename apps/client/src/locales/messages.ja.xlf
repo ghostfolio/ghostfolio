@@ -868,11 +868,11 @@
         <target state="translated">この資産プロファイルを削除してもよろしいですか？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4550487415324294802" datatype="html">
@@ -901,6 +901,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="641154803270226443" datatype="html">
+        <source>Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</source>
+        <target state="new">Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/faq/saas/saas-page.html</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6418462810730461014" datatype="html">
@@ -1335,6 +1343,14 @@
           <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6249687295240367729" datatype="html">
+        <source>Explore our guides to help you get started with investing and managing your finances.</source>
+        <target state="new">Explore our guides to help you get started with investing and managing your finances.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="2946339206559870823" datatype="html">
         <source>Set Message</source>
         <target state="translated">メッセージを設定</target>
@@ -1488,7 +1504,7 @@
         <target state="translated">プラットフォーム</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">225</context>
+          <context context-type="linenumber">230</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7886570921510760899" datatype="html">
@@ -1496,7 +1512,7 @@
         <target state="translated">タグ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">231</context>
+          <context context-type="linenumber">236</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/tags-selector/tags-selector.component.html</context>
@@ -1925,6 +1941,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/user-account-registration-dialog/user-account-registration-dialog.html</context>
           <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6623155069376115284" datatype="html">
+        <source>Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
+        <target state="new">Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6627551976444260400" datatype="html">
@@ -2956,7 +2980,7 @@
         <target state="translated">から</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/transfer-balance/transfer-balance-dialog.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1640609344969975994" datatype="html">
@@ -2964,7 +2988,7 @@
         <target state="translated">に</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/transfer-balance/transfer-balance-dialog.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
@@ -3667,6 +3691,14 @@
           <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6952711292901447467" datatype="html">
+        <source>Learn key financial terms and concepts in our comprehensive glossary.</source>
+        <target state="new">Learn key financial terms and concepts in our comprehensive glossary.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="6957860293614395750" datatype="html">
         <source>Use Ghostfolio anonymously and own your financial data.</source>
         <target state="translated">Ghostfolioを匿名で使用し、財務データを自分のものにしましょう。</target>
@@ -3808,7 +3840,7 @@
         <target state="translated">おっと！資産プロファイルを削除できませんでした。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2757886126432101326" datatype="html">
@@ -6152,6 +6184,14 @@
           <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="3358797625330883274" datatype="html">
+        <source>Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
+        <target state="new">Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/faq/self-hosting/self-hosting-page.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="8340410730497371637" datatype="html">
         <source>Communication Services</source>
         <target state="translated">通信サービス</target>
@@ -6325,7 +6365,7 @@
         <target state="translated">おっと！アクセスを許可できませんでした。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.component.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8728130687307671543" datatype="html">
@@ -6970,7 +7010,15 @@
         <target state="new">Oops! Could not delete the asset profile.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2655368253225791055" datatype="html">
+        <source>Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is, explore its features, and learn about our privacy practices. Get all the information you need in one place.</source>
+        <target state="new">Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is, explore its features, and learn about our privacy practices. Get all the information you need in one place.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/faq/overview/faq-overview-page.html</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2657610384052021428" datatype="html">
@@ -7090,7 +7138,7 @@
         <target state="new">Do you really want to delete these <x id="count" equiv-text="assetProfileCount"/> asset profiles?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
@@ -7254,7 +7302,7 @@
         <target state="new">Oops! Could not update access.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.component.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">283</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5322473252816589112" datatype="html">
@@ -7558,7 +7606,7 @@
         <target state="new">Set API key</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">201</context>
+          <context context-type="linenumber">206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6973601224334878334" datatype="html">
@@ -7672,7 +7720,7 @@
         <target state="new">of</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">165</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5649402767950535555" datatype="html">
@@ -7680,7 +7728,7 @@
         <target state="new">Do you really want to delete the API key?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5447138179385028199" datatype="html">
@@ -7688,7 +7736,7 @@
         <target state="new">Remove API key</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2054086082122997914" datatype="html">
@@ -7696,7 +7744,7 @@
         <target state="new">daily requests</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">167</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2224199164108745234" datatype="html">
@@ -7757,6 +7805,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9179002757707456211" datatype="html">
+        <source>Access various market resources and tools to stay informed about financial markets.</source>
+        <target state="new">Access various market resources and tools to stay informed about financial markets.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6923918313254424829" datatype="html">
@@ -7848,7 +7904,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
-          <context context-type="linenumber">257</context>
+          <context context-type="linenumber">255</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4060547242431613838" datatype="html">
@@ -7864,7 +7920,7 @@
         <target state="new">Please enter your Ghostfolio API key.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7825231215382064101" datatype="html">
@@ -8057,6 +8113,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8816331549575943119" datatype="html">
+        <source>Additional requests are granted while you are setting up your instance</source>
+        <target state="new">Additional requests are granted while you are setting up your instance</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8857575912903799298" datatype="html">
