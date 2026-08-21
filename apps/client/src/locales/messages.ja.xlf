@@ -433,7 +433,7 @@
       </trans-unit>
       <trans-unit id="4323470180912194028" datatype="html">
         <source>Copy</source>
-        <target state="new">Copy</target>
+        <target state="translated">コピー</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/notifications/alert-dialog/alert-dialog.html</context>
           <context context-type="linenumber">20</context>
@@ -661,7 +661,7 @@
       </trans-unit>
       <trans-unit id="4467323362722952678" datatype="html">
         <source>Unknown</source>
-        <target state="new">Unknown</target>
+        <target state="translated">不明</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">89</context>
@@ -713,7 +713,7 @@
       </trans-unit>
       <trans-unit id="1089827441260039381" datatype="html">
         <source>Delete Jobs</source>
-        <target state="new">Delete Jobs</target>
+        <target state="translated">ジョブを削除</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">193</context>
@@ -729,7 +729,7 @@
       </trans-unit>
       <trans-unit id="2671970132878857664" datatype="html">
         <source>Splits</source>
-        <target state="new">Splits</target>
+        <target state="translated">分割</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">518</context>
@@ -797,7 +797,7 @@
       </trans-unit>
       <trans-unit id="8410000928786197012" datatype="html">
         <source>Watch the Ghostfol.io Trailer on YouTube</source>
-        <target state="new">Watch the Ghostfol.io Trailer on YouTube</target>
+        <target state="translated">YouTube で Ghostfol.io のトレーラーを視聴</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">19</context>
@@ -833,7 +833,7 @@
       </trans-unit>
       <trans-unit id="1806667489382256324" datatype="html">
         <source>Category</source>
-        <target state="new">Category</target>
+        <target state="translated">カテゴリー</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">77</context>
@@ -857,7 +857,7 @@
       </trans-unit>
       <trans-unit id="2353112900480812851" datatype="html">
         <source>An error occurred while converting the data source to <x id="PH" equiv-text="DataSource.MANUAL"/>.</source>
-        <target state="new">An error occurred while converting the data source to <x id="PH" equiv-text="DataSource.MANUAL"/>.</target>
+        <target state="translated">データソースを <x id="PH" equiv-text="DataSource.MANUAL"/> に変換中にエラーが発生しました。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">526</context>
@@ -941,7 +941,7 @@
       </trans-unit>
       <trans-unit id="6131560364436366828" datatype="html">
         <source>Apply current market price</source>
-        <target state="new">Apply current market price</target>
+        <target state="translated">現在の市場価格を適用</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">220</context>
