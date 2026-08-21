@@ -111,6 +111,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     );
   }
 
+  public get canGrantWriteAccess() {
+    return this.hasExperimentalFeatures;
+  }
+
   public ngOnInit() {
     const access = this.data?.access;
     const isPublic = access?.type === 'PUBLIC';
