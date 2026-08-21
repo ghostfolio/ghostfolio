@@ -10,7 +10,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Service()
 export class AuthGuard {
@@ -59,6 +59,9 @@ export class AuthGuard {
 
             resolve(true);
             return EMPTY;
+          }),
+          finalize(() => {
+            resolve(false);
           })
         )
         .subscribe((user) => {
