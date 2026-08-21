@@ -97,6 +97,12 @@ export function getScopesOfUnrestrictedImpersonation(): string[] {
   return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
 }
 
+export function hasAnyScopeOfWriteAccess(aScopes: string[] = []) {
+  return SCOPES_OF_WRITE_ACCESS.some((scope) => {
+    return hasScope(aScopes, scope);
+  });
+}
+
 export function hasScope(aScopes: string[] = [], aScope: Scope) {
   return aScopes.includes(aScope);
 }

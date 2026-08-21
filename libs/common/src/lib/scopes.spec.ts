@@ -5,6 +5,7 @@ import {
   getScopesOfAccess,
   getScopesOfOwnAccess,
   getScopesOfUnrestrictedImpersonation,
+  hasAnyScopeOfWriteAccess,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
@@ -186,6 +187,22 @@ describe('Scopes', () => {
       for (const scope of SCOPES_OF_WRITE_ACCESS) {
         expect(scopesOfImpersonation).not.toContain(scope);
       }
+    });
+  });
+
+  describe('Has any scope of write access', () => {
+    it('Single write scope', () => {
+      expect(hasAnyScopeOfWriteAccess([scopes.activityUpdate])).toEqual(true);
+    });
+
+    it('Read scopes only', () => {
+      expect(hasAnyScopeOfWriteAccess([...SCOPES_OF_READ_ACCESS])).toEqual(
+        false
+      );
+    });
+
+    it('Without scopes', () => {
+      expect(hasAnyScopeOfWriteAccess(undefined)).toEqual(false);
     });
   });
 

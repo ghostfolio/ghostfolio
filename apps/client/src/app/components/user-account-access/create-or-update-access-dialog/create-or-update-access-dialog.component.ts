@@ -6,6 +6,7 @@ import {
   SCOPES_OF_READ_RESTRICTED_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
   Scope,
+  hasAnyScopeOfWriteAccess,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
@@ -186,7 +187,21 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private buildScopes(): Scope[] {
-    switch (this.accessForm.get('accessLevel')?.value as AccessLevel) {
+    const accessLevel = this.accessForm.get('accessLevel')
+      ?.value as AccessLevel;
+
+    const scopesOfAccess = this.data.access?.scopes ?? [];
+
+    if (
+      scopesOfAccess.length > 0 &&
+      accessLevel === this.getAccessLevel(scopesOfAccess)
+    ) {
+      return Object.values(scopes).filter((scope) => {
+        return hasScope(scopesOfAccess, scope);
+      });
+    }
+
+    switch (accessLevel) {
       case 'CREATE_READ_UPDATE_DELETE':
         return [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
       case 'READ':
@@ -236,11 +251,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private getAccessLevel(scopesOfAccess: string[] | undefined): AccessLevel {
-    if (
-      SCOPES_OF_WRITE_ACCESS.some((scope) => {
-        return hasScope(scopesOfAccess, scope);
-      })
-    ) {
+    if (hasAnyScopeOfWriteAccess(scopesOfAccess)) {
       return 'CREATE_READ_UPDATE_DELETE';
     }
 

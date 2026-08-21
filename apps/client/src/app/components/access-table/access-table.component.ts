@@ -2,7 +2,7 @@ import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import {
-  SCOPES_OF_WRITE_ACCESS,
+  hasAnyScopeOfWriteAccess,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
@@ -110,9 +110,7 @@ export class GfAccessTableComponent {
   }
 
   protected hasScopesToWrite({ scopes: scopesOfAccess }: Access) {
-    return SCOPES_OF_WRITE_ACCESS.some((scope) => {
-      return hasScope(scopesOfAccess, scope);
-    });
+    return hasAnyScopeOfWriteAccess(scopesOfAccess);
   }
 
   protected onCopyUrlToClipboard(aId: string) {

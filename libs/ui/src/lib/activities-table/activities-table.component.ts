@@ -116,7 +116,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Input() hasPermissionToFilterByType: boolean;
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
-  @Input() hasPermissionToUpdateActivity = true;
+  @Input() hasPermissionToUpdateActivity: boolean;
   @Input() locale = getLocale();
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;

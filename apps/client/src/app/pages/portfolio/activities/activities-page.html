@@ -7,15 +7,11 @@
         [dataSource]="dataSource"
         [deviceType]="deviceType"
         [hasActivities]="user?.activitiesCount > 0"
-        [hasPermissionToCreateActivity]="
-          hasPermissionToCreateActivity && !hasImpersonationId
-        "
+        [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
         [hasPermissionToFilterByType]="user?.settings?.isExperimentalFeatures"
-        [hasPermissionToImportActivities]="
-          hasPermissionToCreateActivity && !hasImpersonationId
-        "
+        [hasPermissionToImportActivities]="hasPermissionToImportActivities"
         [hasPermissionToUpdateActivity]="hasPermissionToUpdateActivity"
         [locale]="user?.settings?.locale"
         [pageIndex]="pageIndex"
@@ -43,7 +39,7 @@
     </div>
   </div>
 
-  @if (hasPermissionToCreateActivity && !user.settings.isRestrictedView) {
+  @if (hasPermissionToCreateActivity) {
     <gf-fab
       [routerLink]="
         internalRoutes.portfolio.subRoutes.activities.subRoutes.create

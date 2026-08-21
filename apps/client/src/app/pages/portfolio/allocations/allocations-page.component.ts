@@ -626,6 +626,10 @@ export class GfAllocationsPageComponent implements OnInit {
           !this.impersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
           !this.user?.settings?.isRestrictedView,
+        hasPermissionToUpdateActivity:
+          !this.impersonationId &&
+          hasPermission(this.user?.permissions, permissions.updateActivity) &&
+          !this.user?.settings?.isRestrictedView,
         impersonationId: this.impersonationId
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',

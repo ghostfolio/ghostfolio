@@ -112,7 +112,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
             if (
               !account ||
               !hasPermission(user?.permissions, permissions.updateAccount) ||
-              this.isReadOnlyMode(user, scopes.accountUpdate)
+              this.isWriteRestricted(user, scopes.accountUpdate)
             ) {
               this.navigateBack();
 
@@ -141,7 +141,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
 
           if (
             !hasPermission(user?.permissions, permissions.createAccount) ||
-            this.isReadOnlyMode(user, scopes.accountCreate)
+            this.isWriteRestricted(user, scopes.accountCreate)
           ) {
             this.navigateBack();
 
@@ -182,10 +182,9 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
     this.dialogRef?.close();
   }
 
-  private isReadOnlyMode(user: User, requiredScope: Scope) {
+  private isWriteRestricted(user: User, requiredScope: Scope) {
     return (
-      (!!this.impersonationStorageService.getId() &&
-        !hasScope(user?.scopes, requiredScope)) ||
+      !hasScope(user?.scopes, requiredScope) ||
       !!user?.settings?.isRestrictedView
     );
   }
@@ -222,6 +221,10 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
         hasPermissionToCreateActivity:
           !impersonationId &&
           hasPermission(user?.permissions, permissions.createActivity) &&
+          !user?.settings?.isRestrictedView,
+        hasPermissionToUpdateActivity:
+          !impersonationId &&
+          hasPermission(user?.permissions, permissions.updateActivity) &&
           !user?.settings?.isRestrictedView
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',

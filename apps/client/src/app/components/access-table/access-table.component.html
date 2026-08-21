@@ -18,16 +18,15 @@
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Permission</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
         <div class="align-items-center d-flex">
-          @if (hasScopeToReadValues(element)) {
+          @if (hasScopesToWrite(element)) {
+            <ion-icon class="mr-1" name="create-outline" />
+            <ng-container i18n>View and manage</ng-container>
+          } @else if (hasScopeToReadValues(element)) {
             <ion-icon class="mr-1" name="lock-open-outline" />
             <ng-container i18n>View</ng-container>
           } @else {
             <ion-icon class="mr-1" name="lock-closed-outline" />
             <ng-container i18n>Restricted view</ng-container>
-          }
-          @if (hasScopesToWrite(element)) {
-            <ion-icon class="ml-2 mr-1" name="create-outline" />
-            <ng-container i18n>Changes</ng-container>
           }
         </div>
       </td>

@@ -1,3 +1,4 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { User } from '@ghostfolio/common/interfaces';
@@ -48,6 +49,7 @@ export class GfAccountsPageComponent implements OnInit {
   protected totalValueInBaseCurrency = 0;
   protected user: User;
 
+  private hasImpersonationId: boolean;
   private isInitialFetch = true;
 
   private readonly deviceType = computed(
@@ -59,6 +61,9 @@ export class GfAccountsPageComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly notificationService = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -75,6 +80,13 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
+
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
@@ -137,6 +149,7 @@ export class GfAccountsPageComponent implements OnInit {
           this.totalValueInBaseCurrency = totalValueInBaseCurrency;
 
           if (
+            !this.hasImpersonationId &&
             this.accounts?.length <= 0 &&
             this.hasPermissionToCreateAccount &&
             this.isInitialFetch

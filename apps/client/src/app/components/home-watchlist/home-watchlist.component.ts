@@ -136,6 +136,15 @@ export class GfHomeWatchlistComponent implements OnInit {
       .subscribe((user) => {
         this.user = user;
 
+        if (
+          !hasPermission(user?.permissions, permissions.createWatchlistItem) ||
+          !hasScope(user?.scopes, scopes.watchlistCreate)
+        ) {
+          this.router.navigate(['.'], { relativeTo: this.route });
+
+          return;
+        }
+
         const dialogRef = this.dialog.open<
           GfCreateWatchlistItemDialogComponent,
           CreateWatchlistItemDialogParams

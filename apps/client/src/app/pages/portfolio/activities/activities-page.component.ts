@@ -77,6 +77,12 @@ export class GfActivitiesPageComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
+  protected get hasPermissionToImportActivities() {
+    // An import always writes to the own portfolio, hence it is not available
+    // while the user impersonates a different user
+    return this.hasPermissionToCreateActivity && !this.hasImpersonationId;
+  }
+
   public ngOnInit() {
     this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
 
