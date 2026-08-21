@@ -41,11 +41,7 @@
           [locale]="user?.settings?.locale"
           (holdingClicked)="onHoldingClicked($event)"
         />
-        @if (
-          !hasImpersonationId &&
-          hasPermissionToCreateActivity &&
-          holdings?.length > 0
-        ) {
+        @if (hasPermissionToCreateActivity && holdings?.length > 0) {
           <div class="text-center">
             <a
               class="mt-3"

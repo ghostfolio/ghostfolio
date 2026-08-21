@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the permission to manage data to the grant access dialog and to the access table to share the portfolio (experimental)
+
 ### Changed
 
 - Extended the account selector options to include the platform and currency

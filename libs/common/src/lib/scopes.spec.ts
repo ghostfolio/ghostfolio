@@ -5,6 +5,7 @@ import {
   getScopesOfAccess,
   getScopesOfOwnAccess,
   getScopesOfUnrestrictedImpersonation,
+  hasAnyScopeOfWriteAccess,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
@@ -82,17 +83,24 @@ describe('Scopes', () => {
       ).toEqual([]);
     });
 
-    // TODO: Remove this expectation once the dialog allows to configure the
-    // write scopes
-    it('Gives no write scope', () => {
+    it('Gives the write scopes', () => {
       const scopesOfAccess = getScopesOfAccess({
         granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
         scopes: [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS]
       });
 
       for (const scope of SCOPES_OF_WRITE_ACCESS) {
-        expect(scopesOfAccess).not.toContain(scope);
+        expect(scopesOfAccess).toContain(scope);
       }
+    });
+
+    it('Drops an unknown scope', () => {
+      expect(
+        getScopesOfAccess({
+          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+          scopes: [scopes.portfolioRead, 'portfolio:write']
+        })
+      ).toEqual([scopes.portfolioRead]);
     });
   });
 
@@ -128,6 +136,14 @@ describe('Scopes', () => {
       expect(
         getScopesOfAccess({ scopes: [...SCOPES_OF_READ_ACCESS] })
       ).not.toContain(scopes.portfolioReadValues);
+    });
+
+    // The dialog offers the write scopes for a private access only, hence this
+    // function is the sole barrier for a public access
+    it('Gives no write scope', () => {
+      expect(
+        getScopesOfAccess({ scopes: [...SCOPES_OF_WRITE_ACCESS] })
+      ).toEqual([]);
     });
   });
 
@@ -171,6 +187,22 @@ describe('Scopes', () => {
       for (const scope of SCOPES_OF_WRITE_ACCESS) {
         expect(scopesOfImpersonation).not.toContain(scope);
       }
+    });
+  });
+
+  describe('Has any scope of write access', () => {
+    it('Single write scope', () => {
+      expect(hasAnyScopeOfWriteAccess([scopes.activityUpdate])).toEqual(true);
+    });
+
+    it('Read scopes only', () => {
+      expect(hasAnyScopeOfWriteAccess([...SCOPES_OF_READ_ACCESS])).toEqual(
+        false
+      );
+    });
+
+    it('Without scopes', () => {
+      expect(hasAnyScopeOfWriteAccess(undefined)).toEqual(false);
     });
   });
 

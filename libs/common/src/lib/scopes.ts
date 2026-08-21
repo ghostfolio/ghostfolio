@@ -67,8 +67,9 @@ export function getScopesOfAccess({
   const scopesToEvaluate = scopesOfAccess ?? [];
 
   if (granteeUserId) {
-    // TODO: Permit the write scopes once the dialog allows to configure them
-    return SCOPES_OF_READ_ACCESS.filter((scope) => {
+    // An unknown scope is dropped, so that a scope which has been removed from
+    // the vocabulary cannot stay effective
+    return Object.values(scopes).filter((scope) => {
       return scopesToEvaluate.includes(scope);
     });
   }
@@ -94,6 +95,12 @@ export function getScopesOfOwnAccess(): string[] {
  */
 export function getScopesOfUnrestrictedImpersonation(): string[] {
   return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
+}
+
+export function hasAnyScopeOfWriteAccess(aScopes: string[] = []) {
+  return SCOPES_OF_WRITE_ACCESS.some((scope) => {
+    return hasScope(aScopes, scope);
+  });
 }
 
 export function hasScope(aScopes: string[] = [], aScope: Scope) {

@@ -4,6 +4,9 @@ import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import {
   SCOPES_OF_READ_ACCESS,
   SCOPES_OF_READ_RESTRICTED_ACCESS,
+  SCOPES_OF_WRITE_ACCESS,
+  Scope,
+  hasAnyScopeOfWriteAccess,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
@@ -49,7 +52,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
-import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
+import {
+  AccessLevel,
+  CreateOrUpdateAccessDialogParams
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,21 +111,22 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     );
   }
 
+  public get canGrantWriteAccess() {
+    return this.hasExperimentalFeatures;
+  }
+
   public ngOnInit() {
     const access = this.data?.access;
     const isPublic = access?.type === 'PUBLIC';
 
     this.accessForm = this.formBuilder.group({
+      accessLevel: this.getAccessLevel(access?.scopes),
       alias: [access?.alias ?? ''],
       filters: [null],
       granteeUserId: [
         access?.grantee ?? null,
         isPublic ? null : Validators.required
       ],
-      hasScopeToReadValues: hasScope(
-        access?.scopes,
-        scopes.portfolioReadValues
-      ),
       type: [
         { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
         Validators.required
@@ -145,10 +152,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       .subscribe((accessType) => {
         const granteeUserIdControl = this.accessForm.get('granteeUserId');
 
-        const hasScopeToReadValuesControl = this.accessForm.get(
-          'hasScopeToReadValues'
-        );
-
         if (accessType === 'PRIVATE') {
           granteeUserIdControl?.setValidators(Validators.required);
           this.accessForm.get('filters')?.setValue(null);
@@ -156,8 +159,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
 
-          // A public access never exposes the monetary values
-          hasScopeToReadValuesControl?.setValue(false);
+          // A public access never exposes the monetary values and never
+          // changes data
+          this.accessForm.get('accessLevel')?.setValue('READ_RESTRICTED');
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -186,16 +190,29 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     );
   }
 
-  /**
-   * The dialog offers the read access only. The write scopes are not granted
-   * here yet.
-   */
-  private buildScopes() {
-    return [
-      ...(this.accessForm.get('hasScopeToReadValues')?.value
-        ? SCOPES_OF_READ_ACCESS
-        : SCOPES_OF_READ_RESTRICTED_ACCESS)
-    ];
+  private buildScopes(): Scope[] {
+    const accessLevel = this.accessForm.get('accessLevel')
+      ?.value as AccessLevel;
+
+    const scopesOfAccess = this.data.access?.scopes ?? [];
+
+    if (
+      scopesOfAccess.length > 0 &&
+      accessLevel === this.getAccessLevel(scopesOfAccess)
+    ) {
+      return Object.values(scopes).filter((scope) => {
+        return hasScope(scopesOfAccess, scope);
+      });
+    }
+
+    switch (accessLevel) {
+      case 'CREATE_READ_UPDATE_DELETE':
+        return [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
+      case 'READ':
+        return [...SCOPES_OF_READ_ACCESS];
+      default:
+        return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
+    }
   }
 
   private async createAccess() {
@@ -235,6 +252,16 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private getAccessLevel(scopesOfAccess: string[] | undefined): AccessLevel {
+    if (hasAnyScopeOfWriteAccess(scopesOfAccess)) {
+      return 'CREATE_READ_UPDATE_DELETE';
+    }
+
+    return hasScope(scopesOfAccess, scopes.portfolioReadValues)
+      ? 'READ'
+      : 'READ_RESTRICTED';
   }
 
   private loadHoldings() {

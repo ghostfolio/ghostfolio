@@ -1,9 +1,9 @@
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { Activity, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { Scope, hasScope, scopes } from '@ghostfolio/common/scopes';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -46,9 +46,6 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
-  private readonly impersonationStorageService = inject(
-    ImpersonationStorageService
-  );
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
@@ -94,7 +91,7 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
           if (
             !activity ||
             !hasPermission(user?.permissions, permissions.updateActivity) ||
-            this.isReadOnlyMode(user)
+            this.isWriteRestricted(user, scopes.activityUpdate)
           ) {
             this.navigateBack();
 
@@ -115,7 +112,7 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
         // Cloning creates a new activity as well
         if (
           !hasPermission(user?.permissions, permissions.createActivity) ||
-          this.isReadOnlyMode(user)
+          this.isWriteRestricted(user, scopes.activityCreate)
         ) {
           this.navigateBack();
 
@@ -156,9 +153,9 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
     this.dialogRef?.close();
   }
 
-  private isReadOnlyMode(user: User) {
+  private isWriteRestricted(user: User, requiredScope: Scope) {
     return (
-      !!this.impersonationStorageService.getId() ||
+      !hasScope(user?.scopes, requiredScope) ||
       !!user?.settings?.isRestrictedView
     );
   }

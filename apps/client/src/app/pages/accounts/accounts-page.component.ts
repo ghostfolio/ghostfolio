@@ -4,6 +4,7 @@ import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
@@ -41,13 +42,14 @@ export class GfAccountsPageComponent implements OnInit {
   protected accounts: AccountWithValue[];
   protected activitiesCount = 0;
   protected hasPermissionToCreateAccount: boolean;
+  protected hasPermissionToDeleteAccount: boolean;
   protected hasPermissionToUpdateAccount: boolean;
-  protected impersonationId: string | null;
   protected readonly internalRoutes = internalRoutes;
   protected totalBalanceInBaseCurrency = 0;
   protected totalValueInBaseCurrency = 0;
   protected user: User;
 
+  private hasImpersonationId: boolean;
   private isInitialFetch = true;
 
   private readonly deviceType = computed(
@@ -77,16 +79,12 @@ export class GfAccountsPageComponent implements OnInit {
       });
   }
 
-  protected get hasImpersonationId() {
-    return !!this.impersonationId;
-  }
-
   public ngOnInit() {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.impersonationId = impersonationId;
+        this.hasImpersonationId = !!impersonationId;
       });
 
     this.userService.stateChanged
@@ -95,14 +93,17 @@ export class GfAccountsPageComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateAccount = hasPermission(
-            this.user.permissions,
-            permissions.createAccount
-          );
-          this.hasPermissionToUpdateAccount = hasPermission(
-            this.user.permissions,
-            permissions.updateAccount
-          );
+          this.hasPermissionToCreateAccount =
+            hasPermission(this.user.permissions, permissions.createAccount) &&
+            hasScope(this.user.scopes, scopes.accountCreate);
+
+          this.hasPermissionToDeleteAccount =
+            hasPermission(this.user.permissions, permissions.deleteAccount) &&
+            hasScope(this.user.scopes, scopes.accountDelete);
+
+          this.hasPermissionToUpdateAccount =
+            hasPermission(this.user.permissions, permissions.updateAccount) &&
+            hasScope(this.user.scopes, scopes.accountUpdate);
 
           this.fetchAccounts();
         }
@@ -148,6 +149,7 @@ export class GfAccountsPageComponent implements OnInit {
           this.totalValueInBaseCurrency = totalValueInBaseCurrency;
 
           if (
+            !this.hasImpersonationId &&
             this.accounts?.length <= 0 &&
             this.hasPermissionToCreateAccount &&
             this.isInitialFetch
