@@ -345,10 +345,12 @@ export class GfActivitiesPageComponent implements OnInit {
 
     this.hasPermissionToDeleteActivity =
       hasPermission(this.user.permissions, permissions.deleteActivity) &&
-      hasScope(this.user.scopes, scopes.activityDelete);
+      hasScope(this.user.scopes, scopes.activityDelete) &&
+      !this.user.settings?.isRestrictedView;
 
     this.hasPermissionToUpdateActivity =
       hasPermission(this.user.permissions, permissions.updateActivity) &&
-      hasScope(this.user.scopes, scopes.activityUpdate);
+      hasScope(this.user.scopes, scopes.activityUpdate) &&
+      !this.user.settings?.isRestrictedView;
   }
 }
