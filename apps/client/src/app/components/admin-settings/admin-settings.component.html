@@ -147,21 +147,26 @@
               isGhostfolioDataProvider(element) &&
               isGhostfolioApiKeyValid === true
             ) {
-              <mat-progress-bar
-                mode="determinate"
-                [value]="
-                  100 -
-                  (ghostfolioApiStatus.dailyRequests /
-                    ghostfolioApiStatus.dailyRequestsMax) *
-                    100
-                "
-              />
-              <small class="text-muted">
-                {{ ghostfolioApiStatus.dailyRequests }}
-                <ng-container i18n>of</ng-container>
-                {{ ghostfolioApiStatus.dailyRequestsMax }}
-                <ng-container i18n>daily requests</ng-container>
-              </small>
+              <div
+                [matTooltip]="ghostfolioApiStatusTooltip"
+                [matTooltipDisabled]="!ghostfolioApiStatus.isWithinSetupPeriod"
+              >
+                <mat-progress-bar
+                  mode="determinate"
+                  [value]="
+                    100 -
+                    (ghostfolioApiStatus.dailyRequests /
+                      ghostfolioApiStatus.dailyRequestsMax) *
+                      100
+                  "
+                />
+                <small class="text-muted">
+                  {{ ghostfolioApiStatus.dailyRequests }}
+                  <ng-container i18n>of</ng-container>
+                  {{ ghostfolioApiStatus.dailyRequestsMax }}
+                  <ng-container i18n>daily requests</ng-container>
+                </small>
+              </div>
             }
           </td>
         </ng-container>

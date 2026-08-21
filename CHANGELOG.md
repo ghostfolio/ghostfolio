@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the error handling of the `AuthGuard`
 
+## 3.56.0 - 2026-08-20
+
+### Changed
+
+- Improved the sorting to be case-insensitive in the account selector component
+- Refactored the services to use the `@Service()` decorator of _Angular_
+- Removed the deprecated `permissions` attribute of the access in favor of the scopes
+
 ## 3.55.0 - 2026-08-19
 
 ### Added

@@ -49,14 +49,13 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map((accessItem) => {
-      const { alias, granteeUser, id, permissions, settings } = accessItem;
+      const { alias, granteeUser, id, settings } = accessItem;
       const scopes = getScopesOfAccess(accessItem);
 
       if (granteeUser) {
         return {
           alias,
           id,
-          permissions,
           scopes,
           grantee: granteeUser?.id,
           settings: settings as AccessSettings,
@@ -67,7 +66,6 @@ export class AccessController {
       return {
         alias,
         id,
-        permissions,
         scopes,
         grantee: 'Public',
         settings: settings as AccessSettings,
@@ -98,10 +96,9 @@ export class AccessController {
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
-        permissions: data.permissions,
         scopes: getScopesOfAccess({
           granteeUserId: data.granteeUserId,
-          permissions: data.permissions
+          scopes: data.scopes
         }),
         settings: this.accessService.buildSettings(data.filters),
         user: { connect: { id: this.request.user.id } }
@@ -171,10 +168,9 @@ export class AccessController {
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },
-          permissions: data.permissions,
           scopes: getScopesOfAccess({
             granteeUserId: data.granteeUserId,
-            permissions: data.permissions ?? originalAccess.permissions
+            scopes: data.scopes ?? originalAccess.scopes
           }),
           settings: this.accessService.buildSettings(data.filters)
         },

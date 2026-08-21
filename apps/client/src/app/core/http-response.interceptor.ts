@@ -14,7 +14,7 @@ import {
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarRef,
@@ -26,7 +26,7 @@ import ms from 'ms';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class HttpResponseInterceptor implements HttpInterceptor {
   private readonly info: InfoItem;
   private snackBarRef: MatSnackBarRef<TextOnlySnackBar> | undefined;

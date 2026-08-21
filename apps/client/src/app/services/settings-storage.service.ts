@@ -1,12 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 export const KEY_RANGE = 'range';
 export const KEY_STAY_SIGNED_IN = 'staySignedIn';
 export const KEY_TOKEN = 'auth-token';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class SettingsStorageService {
   public getSetting(aKey: string): string | null {
     return window.localStorage.getItem(aKey);
