@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the account selector options to include the platform and currency
 - Improved the error handling of the `AuthGuard`
 - Upgraded `yahoo-finance2` from version `4.0.0` to `4.0.2`
 
