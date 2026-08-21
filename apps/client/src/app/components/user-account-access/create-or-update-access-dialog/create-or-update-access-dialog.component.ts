@@ -5,6 +5,7 @@ import {
   SCOPES_OF_READ_ACCESS,
   SCOPES_OF_READ_RESTRICTED_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
+  Scope,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
@@ -47,11 +48,13 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
-import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
+import {
+  AccessLevel,
+  CreateOrUpdateAccessDialogParams
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +67,6 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatSlideToggleModule,
     ReactiveFormsModule
   ],
   selector: 'gf-create-or-update-access-dialog',
@@ -113,17 +115,13 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     const isPublic = access?.type === 'PUBLIC';
 
     this.accessForm = this.formBuilder.group({
+      accessLevel: this.getAccessLevel(access?.scopes),
       alias: [access?.alias ?? ''],
       filters: [null],
       granteeUserId: [
         access?.grantee ?? null,
         isPublic ? null : Validators.required
       ],
-      hasScopeToReadValues: hasScope(
-        access?.scopes,
-        scopes.portfolioReadValues
-      ),
-      hasScopesToWrite: hasScope(access?.scopes, scopes.activityCreate),
       type: [
         { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
         Validators.required
@@ -149,12 +147,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       .subscribe((accessType) => {
         const granteeUserIdControl = this.accessForm.get('granteeUserId');
 
-        const hasScopeToReadValuesControl = this.accessForm.get(
-          'hasScopeToReadValues'
-        );
-
-        const hasScopesToWriteControl = this.accessForm.get('hasScopesToWrite');
-
         if (accessType === 'PRIVATE') {
           granteeUserIdControl?.setValidators(Validators.required);
           this.accessForm.get('filters')?.setValue(null);
@@ -164,8 +156,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
           // A public access never exposes the monetary values and never
           // changes data
-          hasScopeToReadValuesControl?.setValue(false);
-          hasScopesToWriteControl?.setValue(false);
+          this.accessForm.get('accessLevel')?.setValue('RESTRICTED_VIEW');
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -194,19 +185,15 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     );
   }
 
-  /**
-   * The write access is granted as one unit, hence the dialog offers a single
-   * control for all write scopes
-   */
-  private buildScopes() {
-    return [
-      ...(this.accessForm.get('hasScopeToReadValues')?.value
-        ? SCOPES_OF_READ_ACCESS
-        : SCOPES_OF_READ_RESTRICTED_ACCESS),
-      ...(this.accessForm.get('hasScopesToWrite')?.value
-        ? SCOPES_OF_WRITE_ACCESS
-        : [])
-    ];
+  private buildScopes(): Scope[] {
+    switch (this.accessForm.get('accessLevel')?.value as AccessLevel) {
+      case 'CHANGE':
+        return [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
+      case 'VIEW':
+        return [...SCOPES_OF_READ_ACCESS];
+      default:
+        return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
+    }
   }
 
   private async createAccess() {
@@ -246,6 +233,20 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private getAccessLevel(scopesOfAccess: string[] | undefined): AccessLevel {
+    if (
+      SCOPES_OF_WRITE_ACCESS.some((scope) => {
+        return hasScope(scopesOfAccess, scope);
+      })
+    ) {
+      return 'CHANGE';
+    }
+
+    return hasScope(scopesOfAccess, scopes.portfolioReadValues)
+      ? 'VIEW'
+      : 'RESTRICTED_VIEW';
   }
 
   private loadHoldings() {

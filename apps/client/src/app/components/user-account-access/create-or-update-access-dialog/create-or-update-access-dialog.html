@@ -36,31 +36,15 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Permission</mat-label>
-        <mat-select formControlName="hasScopeToReadValues">
-          <mat-option i18n [value]="false">Restricted view</mat-option>
+        <mat-select formControlName="accessLevel">
+          <mat-option i18n value="RESTRICTED_VIEW">Restricted view</mat-option>
           @if (accessForm.get('type')?.value === 'PRIVATE') {
-            <mat-option i18n [value]="true">View</mat-option>
+            <mat-option i18n value="VIEW">View</mat-option>
+            <mat-option i18n value="CHANGE">View and change</mat-option>
           }
         </mat-select>
       </mat-form-field>
     </div>
-    @if (accessForm.get('type')?.value === 'PRIVATE') {
-      <div class="align-items-center d-flex mb-3">
-        <div class="w-50">
-          <div i18n>Changes</div>
-          <div class="hint-text text-muted" i18n>
-            Allow to add, to update and to delete data of your portfolio
-          </div>
-        </div>
-        <div class="pl-1 w-50">
-          <mat-slide-toggle
-            color="primary"
-            formControlName="hasScopesToWrite"
-            hideIcon="true"
-          />
-        </div>
-      </div>
-    }
     @if (accessForm.get('type')?.value === 'PRIVATE') {
       <div>
         <mat-form-field appearance="outline" class="w-100">
