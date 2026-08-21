@@ -136,6 +136,14 @@ describe('Scopes', () => {
         getScopesOfAccess({ scopes: [...SCOPES_OF_READ_ACCESS] })
       ).not.toContain(scopes.portfolioReadValues);
     });
+
+    // The dialog offers the write scopes for a private access only, hence this
+    // function is the sole barrier for a public access
+    it('Gives no write scope', () => {
+      expect(
+        getScopesOfAccess({ scopes: [...SCOPES_OF_WRITE_ACCESS] })
+      ).toEqual([]);
+    });
   });
 
   describe('Get scopes of own access', () => {

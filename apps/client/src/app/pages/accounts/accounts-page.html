@@ -6,9 +6,12 @@
         [accounts]="accounts"
         [activitiesCount]="activitiesCount"
         [baseCurrency]="user?.settings?.baseCurrency"
+        [hasPermissionToDeleteAccount]="hasPermissionToDeleteAccount"
+        [hasPermissionToUpdateAccount]="hasPermissionToUpdateAccount"
         [locale]="user?.settings?.locale"
         [showActions]="
-          hasPermissionToUpdateAccount && !user.settings.isRestrictedView
+          (hasPermissionToDeleteAccount || hasPermissionToUpdateAccount) &&
+          !user.settings.isRestrictedView
         "
         [totalBalanceInBaseCurrency]="totalBalanceInBaseCurrency"
         [totalValueInBaseCurrency]="totalValueInBaseCurrency"

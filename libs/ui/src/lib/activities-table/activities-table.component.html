@@ -19,7 +19,7 @@
     }
   </div>
 
-  @if (hasPermissionToCreateActivity) {
+  @if (hasPermissionToImportActivities) {
     <div class="d-flex">
       <button
         class="align-items-center d-flex"
@@ -397,7 +397,7 @@
     <ng-container matColumnDef="actions" stickyEnd>
       <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
         @if (
-          !hasPermissionToCreateActivity && hasPermissionToExportActivities
+          !hasPermissionToImportActivities && hasPermissionToExportActivities
         ) {
           <button
             class="mx-1 no-min-width px-2"
@@ -413,7 +413,7 @@
           class="no-max-width"
           xPosition="before"
         >
-          @if (hasPermissionToCreateActivity) {
+          @if (hasPermissionToImportActivities) {
             <button
               class="align-items-center d-flex"
               mat-menu-item
@@ -427,7 +427,7 @@
               </span>
             </button>
           }
-          @if (hasPermissionToCreateActivity) {
+          @if (hasPermissionToImportActivities) {
             <button
               mat-menu-item
               [disabled]="dataSource()?.data.length === 0"
@@ -493,15 +493,17 @@
               </span>
             </button>
           }
-          <a
-            mat-menu-item
-            [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="create-outline" />
-              <span><ng-container i18n>Edit</ng-container>...</span>
-            </span>
-          </a>
+          @if (hasPermissionToUpdateActivity) {
+            <a
+              mat-menu-item
+              [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="create-outline" />
+                <span><ng-container i18n>Edit</ng-container>...</span>
+              </span>
+            </a>
+          }
           <a
             mat-menu-item
             [routerLink]="activityDialogRouterLinks().get(element.id)?.clone"

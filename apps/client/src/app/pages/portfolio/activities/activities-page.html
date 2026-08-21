@@ -7,15 +7,24 @@
         [dataSource]="dataSource"
         [deviceType]="deviceType"
         [hasActivities]="user?.activitiesCount > 0"
-        [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
+        [hasPermissionToCreateActivity]="
+          hasPermissionToCreateActivity && !hasImpersonationId
+        "
         [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
         [hasPermissionToFilterByType]="user?.settings?.isExperimentalFeatures"
+        [hasPermissionToImportActivities]="
+          hasPermissionToCreateActivity && !hasImpersonationId
+        "
+        [hasPermissionToUpdateActivity]="hasPermissionToUpdateActivity"
         [locale]="user?.settings?.locale"
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [showActions]="
-          hasPermissionToDeleteActivity && !user.settings.isRestrictedView
+          (hasPermissionToCreateActivity ||
+            hasPermissionToDeleteActivity ||
+            hasPermissionToUpdateActivity) &&
+          !user.settings.isRestrictedView
         "
         [sortColumn]="sortColumn"
         [sortDirection]="sortDirection"

@@ -4,6 +4,7 @@ import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { Activity, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { Scope, hasScope, scopes } from '@ghostfolio/common/scopes';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -94,7 +95,7 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
           if (
             !activity ||
             !hasPermission(user?.permissions, permissions.updateActivity) ||
-            this.isReadOnlyMode(user)
+            this.isReadOnlyMode(user, scopes.activityUpdate)
           ) {
             this.navigateBack();
 
@@ -115,7 +116,7 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
         // Cloning creates a new activity as well
         if (
           !hasPermission(user?.permissions, permissions.createActivity) ||
-          this.isReadOnlyMode(user)
+          this.isReadOnlyMode(user, scopes.activityCreate)
         ) {
           this.navigateBack();
 
@@ -156,9 +157,10 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
     this.dialogRef?.close();
   }
 
-  private isReadOnlyMode(user: User) {
+  private isReadOnlyMode(user: User, requiredScope: Scope) {
     return (
-      !!this.impersonationStorageService.getId() ||
+      (!!this.impersonationStorageService.getId() &&
+        !hasScope(user?.scopes, requiredScope)) ||
       !!user?.settings?.isRestrictedView
     );
   }

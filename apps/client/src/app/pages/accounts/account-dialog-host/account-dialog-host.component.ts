@@ -9,6 +9,7 @@ import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
 import { AccountResponse, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { Scope, hasScope, scopes } from '@ghostfolio/common/scopes';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -111,7 +112,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
             if (
               !account ||
               !hasPermission(user?.permissions, permissions.updateAccount) ||
-              this.isReadOnlyMode(user)
+              this.isReadOnlyMode(user, scopes.accountUpdate)
             ) {
               this.navigateBack();
 
@@ -140,7 +141,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
 
           if (
             !hasPermission(user?.permissions, permissions.createAccount) ||
-            this.isReadOnlyMode(user)
+            this.isReadOnlyMode(user, scopes.accountCreate)
           ) {
             this.navigateBack();
 
@@ -181,9 +182,10 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
     this.dialogRef?.close();
   }
 
-  private isReadOnlyMode(user: User) {
+  private isReadOnlyMode(user: User, requiredScope: Scope) {
     return (
-      !!this.impersonationStorageService.getId() ||
+      (!!this.impersonationStorageService.getId() &&
+        !hasScope(user?.scopes, requiredScope)) ||
       !!user?.settings?.isRestrictedView
     );
   }

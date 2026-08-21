@@ -59,7 +59,9 @@ export class GfAccountsTableComponent {
   public readonly accounts = input.required<AccountWithValue[]>();
   public readonly activitiesCount = input<number>();
   public readonly baseCurrency = input<string>();
+  public readonly hasPermissionToDeleteAccount = input<boolean>();
   public readonly hasPermissionToOpenDetails = input(true);
+  public readonly hasPermissionToUpdateAccount = input<boolean>();
   public readonly locale = input(getLocale());
   public readonly showActions = input<boolean>();
   public readonly showActivitiesCount = input(true);

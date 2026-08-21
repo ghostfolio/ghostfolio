@@ -338,26 +338,30 @@
               </span>
             </a>
           }
-          <a
-            mat-menu-item
-            [routerLink]="accountDialogRouterLinks().get(element.id)?.update"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="create-outline" />
-              <span><ng-container i18n>Edit</ng-container>...</span>
-            </span>
-          </a>
-          <hr class="m-0" />
-          <button
-            mat-menu-item
-            [disabled]="element.activitiesCount > 0"
-            (click)="onDeleteAccount(element.id)"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="trash-outline" />
-              <span i18n>Delete</span>
-            </span>
-          </button>
+          @if (hasPermissionToUpdateAccount()) {
+            <a
+              mat-menu-item
+              [routerLink]="accountDialogRouterLinks().get(element.id)?.update"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="create-outline" />
+                <span><ng-container i18n>Edit</ng-container>...</span>
+              </span>
+            </a>
+          }
+          @if (hasPermissionToDeleteAccount()) {
+            <hr class="m-0" />
+            <button
+              mat-menu-item
+              [disabled]="element.activitiesCount > 0"
+              (click)="onDeleteAccount(element.id)"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="trash-outline" />
+                <span i18n>Delete</span>
+              </span>
+            </button>
+          }
         </mat-menu>
       </td>
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>

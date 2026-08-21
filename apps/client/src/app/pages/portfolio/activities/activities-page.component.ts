@@ -54,6 +54,7 @@ export class GfActivitiesPageComponent implements OnInit {
   protected hasImpersonationId: boolean;
   protected hasPermissionToCreateActivity: boolean;
   protected hasPermissionToDeleteActivity: boolean;
+  protected hasPermissionToUpdateActivity: boolean;
   protected readonly internalRoutes = internalRoutes;
   protected pageIndex = 0;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
@@ -302,6 +303,7 @@ export class GfActivitiesPageComponent implements OnInit {
         this.totalItems = count;
 
         if (
+          !this.hasImpersonationId &&
           this.hasPermissionToCreateActivity &&
           this.user?.activitiesCount === 0
         ) {
@@ -338,5 +340,9 @@ export class GfActivitiesPageComponent implements OnInit {
     this.hasPermissionToDeleteActivity =
       hasPermission(this.user.permissions, permissions.deleteActivity) &&
       hasScope(this.user.scopes, scopes.activityDelete);
+
+    this.hasPermissionToUpdateActivity =
+      hasPermission(this.user.permissions, permissions.updateActivity) &&
+      hasScope(this.user.scopes, scopes.activityUpdate);
   }
 }

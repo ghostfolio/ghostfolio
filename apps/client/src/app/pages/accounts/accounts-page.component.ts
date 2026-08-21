@@ -1,4 +1,3 @@
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { User } from '@ghostfolio/common/interfaces';
@@ -42,8 +41,8 @@ export class GfAccountsPageComponent implements OnInit {
   protected accounts: AccountWithValue[];
   protected activitiesCount = 0;
   protected hasPermissionToCreateAccount: boolean;
+  protected hasPermissionToDeleteAccount: boolean;
   protected hasPermissionToUpdateAccount: boolean;
-  protected impersonationId: string | null;
   protected readonly internalRoutes = internalRoutes;
   protected totalBalanceInBaseCurrency = 0;
   protected totalValueInBaseCurrency = 0;
@@ -60,9 +59,6 @@ export class GfAccountsPageComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
-  private readonly impersonationStorageService = inject(
-    ImpersonationStorageService
-  );
   private readonly notificationService = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -78,18 +74,7 @@ export class GfAccountsPageComponent implements OnInit {
       });
   }
 
-  protected get hasImpersonationId() {
-    return !!this.impersonationId;
-  }
-
   public ngOnInit() {
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((impersonationId) => {
-        this.impersonationId = impersonationId;
-      });
-
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
@@ -99,6 +84,10 @@ export class GfAccountsPageComponent implements OnInit {
           this.hasPermissionToCreateAccount =
             hasPermission(this.user.permissions, permissions.createAccount) &&
             hasScope(this.user.scopes, scopes.accountCreate);
+
+          this.hasPermissionToDeleteAccount =
+            hasPermission(this.user.permissions, permissions.deleteAccount) &&
+            hasScope(this.user.scopes, scopes.accountDelete);
 
           this.hasPermissionToUpdateAccount =
             hasPermission(this.user.permissions, permissions.updateAccount) &&
