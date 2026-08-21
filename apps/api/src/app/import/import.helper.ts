@@ -1,7 +1,7 @@
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 
-import { AssetProfileToCreate } from './interfaces/interfaces';
+import { AssetProfileToCreate } from './interfaces/asset-profile-to-create.interface';
 
 /**
  * Returns the asset profiles which at least one activity of the import uses.
@@ -13,7 +13,7 @@ export function getAssetProfilesToCreate({
   activities,
   assetProfiles
 }: {
-  activities: Partial<Activity>[];
+  activities: Pick<Activity, 'assetProfile' | 'error'>[];
   assetProfiles: AssetProfileToCreate[];
 }) {
   const assetProfileIdentifiersToImport = new Set(

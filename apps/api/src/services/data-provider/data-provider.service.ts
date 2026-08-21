@@ -292,6 +292,11 @@ export class DataProviderService implements OnModuleInit {
             currency,
             dataSource,
             symbol,
+            ...omit(assetProfileInImport ?? {}, [
+              'dataSource',
+              'marketData',
+              'symbol'
+            ]),
             name: assetProfileInImport?.name ?? symbol
           };
 
@@ -301,22 +306,15 @@ export class DataProviderService implements OnModuleInit {
         let assetProfile: Partial<SymbolProfile> = { currency };
 
         try {
-          assetProfile =
-            (
-              await this.getAssetProfiles([
-                {
-                  dataSource,
-                  symbol
-                }
-              ])
-            )?.[assetProfileIdentifier] ?? assetProfile;
+          assetProfile = (
+            await this.getAssetProfiles([
+              {
+                dataSource,
+                symbol
+              }
+            ])
+          )?.[assetProfileIdentifier];
         } catch {}
-
-        if (!assetProfile?.name && assetProfileInImport) {
-          // Omit the market data, since it must not become part of the
-          // asset profile of the response
-          Object.assign(assetProfile, omit(assetProfileInImport, 'marketData'));
-        }
 
         if (!assetProfile?.name) {
           throw new Error(

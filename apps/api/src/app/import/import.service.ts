@@ -49,7 +49,7 @@ import { randomUUID } from 'node:crypto';
 
 import { ImportDataDto } from './import-data.dto';
 import { getAssetProfilesToCreate } from './import.helper';
-import { AssetProfileToCreate } from './interfaces/interfaces';
+import { AssetProfileToCreate } from './interfaces/asset-profile-to-create.interface';
 
 @Injectable()
 export class ImportService {
@@ -966,7 +966,7 @@ export class ImportService {
     activitiesDto: Partial<CreateOrderDto>[];
     userCurrency: string;
     userId: string;
-  }): Promise<Partial<Activity>[]> {
+  }): Promise<(Partial<Activity> & Pick<Activity, 'assetProfile'>)[]> {
     const { activities: existingActivities } =
       await this.activitiesService.getActivities({
         userCurrency,
