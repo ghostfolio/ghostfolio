@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the write access to the grant dialog and to the access table
+- Added the permission to change data to the grant access dialog and to the access table to share the portfolio
 
 ### Changed
 
