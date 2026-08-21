@@ -10,7 +10,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Service()
 export class AuthGuard {
@@ -34,9 +34,11 @@ export class AuthGuard {
             if (utmSource === 'ios') {
               this.router.navigate(publicRoutes.demo.routerLink);
               resolve(false);
+              return EMPTY;
             } else if (utmSource === 'trusted-web-activity') {
               this.router.navigate(publicRoutes.register.routerLink);
               resolve(false);
+              return EMPTY;
             } else if (
               Object.values(publicRoutes)
                 .map(({ path }) => {
@@ -57,6 +59,9 @@ export class AuthGuard {
 
             resolve(true);
             return EMPTY;
+          }),
+          finalize(() => {
+            resolve(false);
           })
         )
         .subscribe((user) => {
@@ -77,13 +82,13 @@ export class AuthGuard {
             return;
           } else if (
             state.url.startsWith(`/${internalRoutes.home.path}`) &&
-            user.settings.viewMode === 'ZEN'
+            user?.settings?.viewMode === 'ZEN'
           ) {
             this.router.navigate(internalRoutes.zen.routerLink);
             resolve(false);
             return;
           } else if (state.url.startsWith(`/${publicRoutes.start.path}`)) {
-            if (user.settings.viewMode === 'ZEN') {
+            if (user?.settings?.viewMode === 'ZEN') {
               this.router.navigate(internalRoutes.zen.routerLink);
             } else {
               this.router.navigate(internalRoutes.home.routerLink);
@@ -93,7 +98,7 @@ export class AuthGuard {
             return;
           } else if (
             state.url.startsWith(`/${internalRoutes.zen.path}`) &&
-            user.settings.viewMode === 'DEFAULT'
+            user?.settings?.viewMode === 'DEFAULT'
           ) {
             this.router.navigate(internalRoutes.home.routerLink);
             resolve(false);
