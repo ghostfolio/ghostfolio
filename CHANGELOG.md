@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the benchmark label in the tooltip of the benchmark comparator on the analysis page
 - Fixed the _Storybook_ setup by loading the `@angular/localize` polyfill centrally
 - Fixed an issue in the activities import where an unused custom asset profile was created if the related activities were not imported
+- Fixed the missing close price in the historical market data of the _Yahoo Finance_ service by falling back to the market price of the quote
+- Fixed the historical market data gathering by no longer storing the last known market price for the most recent dates without data from the data provider
 
 ## 3.57.0 - 2026-08-21
 
