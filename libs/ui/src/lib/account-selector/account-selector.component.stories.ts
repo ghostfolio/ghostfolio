@@ -3,7 +3,6 @@ import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { CommonModule } from '@angular/common';
 import { ANIMATION_MODULE_TYPE, importProvidersFrom } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import '@angular/localize/init';
 import {
   applicationConfig,
   Meta,

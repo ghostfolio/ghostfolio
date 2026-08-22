@@ -1,3 +1,4 @@
+import '@angular/localize/init';
 import { withThemeByClassName } from '@storybook/addon-themes';
 
 const preview = {
