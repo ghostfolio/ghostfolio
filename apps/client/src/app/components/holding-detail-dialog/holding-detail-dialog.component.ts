@@ -34,6 +34,7 @@ import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -102,6 +103,7 @@ import {
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
+    GfPremiumIndicatorComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
     IonIcon,
@@ -161,6 +163,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected investmentInBaseCurrencyWithCurrencyEffect: number;
   protected investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
   protected isLoading = true;
+  protected isOwnAssetProfile: boolean;
   protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
   protected marketPrice: number;
@@ -367,13 +370,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           this.feeInBaseCurrency = feeInBaseCurrency;
 
-          this.hasPermissionToReadMarketDataOfOwnAssetProfile =
-            hasPermission(
-              this.user?.permissions,
-              permissions.readMarketDataOfOwnAssetProfile
-            ) &&
-            assetProfile?.dataSource === 'MANUAL' &&
-            assetProfile?.userId === this.user?.id;
+          this.hasPermissionToReadMarketDataOfOwnAssetProfile = hasPermission(
+            this.user?.permissions,
+            permissions.readMarketDataOfOwnAssetProfile
+          );
 
           this.historicalDataItems = historicalData.map(
             ({ averagePrice, date, marketPrice }) => {
@@ -399,6 +399,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           ) {
             this.investmentInBaseCurrencyWithCurrencyEffectPrecision = 0;
           }
+
+          this.isOwnAssetProfile =
+            assetProfile?.dataSource === 'MANUAL' &&
+            assetProfile?.userId === this.user?.id;
 
           this.marketPrice = marketPrice;
           this.marketPriceMax = marketPriceMax;
@@ -574,7 +578,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           );
 
-          if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
+          if (
+            this.hasPermissionToReadMarketDataOfOwnAssetProfile &&
+            this.isOwnAssetProfile
+          ) {
             this.fetchMarketData();
           }
 

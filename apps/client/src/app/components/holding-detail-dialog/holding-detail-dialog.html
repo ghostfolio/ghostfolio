@@ -424,14 +424,14 @@
           [showValueInBaseCurrency]="false"
         />
       </mat-tab>
-      @if (
-        hasPermissionToReadMarketDataOfOwnAssetProfile &&
-        user?.settings?.isExperimentalFeatures
-      ) {
-        <mat-tab>
+      @if (isOwnAssetProfile && user?.settings?.isExperimentalFeatures) {
+        <mat-tab [disabled]="!hasPermissionToReadMarketDataOfOwnAssetProfile">
           <ng-template mat-tab-label>
             <ion-icon name="server-outline" />
             <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" [enableLink]="false" />
+            }
           </ng-template>
           <gf-historical-market-data-editor
             [currency]="assetProfile?.currency"
