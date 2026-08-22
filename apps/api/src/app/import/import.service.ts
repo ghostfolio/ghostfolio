@@ -40,7 +40,7 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { Account, DataSource, Prisma } from '@prisma/client';
+import { Account, DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISIN } from 'class-validator';
 import { isSameSecond, parseISO } from 'date-fns';
@@ -772,6 +772,10 @@ export class ImportService {
     }
 
     const activities: Activity[] = [];
+    const pendingSymbolProfiles = new Map<
+      string,
+      Promise<AssetProfileIdentifier>
+    >();
 
     for (const activity of activitiesExtendedWithErrors) {
       const accountId = activity.accountId;
@@ -800,7 +804,6 @@ export class ImportService {
         countries,
         createdAt,
         cusip,
-        dataSource,
         figi,
         figiComposite,
         figiShareClass,
@@ -811,11 +814,12 @@ export class ImportService {
         name,
         scraperConfiguration,
         sectors,
-        symbol,
         symbolMapping,
         url,
         updatedAt
       } = assetProfile;
+      let dataSource = assetProfile.dataSource;
+      let symbol = assetProfile.symbol;
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -889,6 +893,22 @@ export class ImportService {
         if (error) {
           continue;
         }
+
+        const symbolProfile = await this.resolveSymbolProfile({
+          assetProfile,
+          assetProfileIdentifier: {
+            dataSource: activity.assetProfile.dataSource,
+            symbol: activity.assetProfile.symbol
+          },
+          pendingSymbolProfiles,
+          type,
+          userId: user.id
+        });
+
+        assetProfile.dataSource = symbolProfile.dataSource;
+        assetProfile.symbol = symbolProfile.symbol;
+        dataSource = symbolProfile.dataSource;
+        symbol = symbolProfile.symbol;
 
         order = await this.activitiesService.createActivity({
           comment,
@@ -976,6 +996,153 @@ export class ImportService {
     }
 
     return activities;
+  }
+
+  private async createOrGetSymbolProfile({
+    assetProfile,
+    assetProfileIdentifier: requestedAssetProfileIdentifier,
+    type,
+    userId
+  }: {
+    assetProfile: Partial<SymbolProfile>;
+    assetProfileIdentifier: AssetProfileIdentifier;
+    type: Activity['type'];
+    userId: string;
+  }): Promise<AssetProfileIdentifier> {
+    let dataSource = requestedAssetProfileIdentifier.dataSource;
+    let symbol = requestedAssetProfileIdentifier.symbol;
+
+    if (
+      (requestedAssetProfileIdentifier.dataSource === DataSource.MANUAL &&
+        type === 'BUY') ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
+    ) {
+      dataSource = DataSource.MANUAL;
+
+      if (!isValidCustomAssetProfileSymbol(symbol)) {
+        symbol = randomUUID();
+      }
+    }
+
+    const symbolProfileIdentifier = {
+      dataSource,
+      symbol
+    };
+    const [existingSymbolProfile] =
+      await this.symbolProfileService.getSymbolProfiles([
+        symbolProfileIdentifier
+      ]);
+
+    if (existingSymbolProfile) {
+      return {
+        dataSource: existingSymbolProfile.dataSource,
+        symbol: existingSymbolProfile.symbol
+      };
+    }
+
+    try {
+      const newSymbolProfile = await this.symbolProfileService.add({
+        ...symbolProfileIdentifier,
+        currency: assetProfile.currency,
+        name: assetProfile.name,
+        ...(dataSource === DataSource.MANUAL
+          ? { user: { connect: { id: userId } } }
+          : {})
+      });
+
+      return {
+        dataSource: newSymbolProfile.dataSource,
+        symbol: newSymbolProfile.symbol
+      };
+    } catch (error) {
+      if (!this.isSymbolProfileIdentifierConflict(error)) {
+        throw error;
+      }
+
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [symbolProfileIdentifier]
+      );
+
+      if (!symbolProfile) {
+        throw error;
+      }
+
+      return {
+        dataSource: symbolProfile.dataSource,
+        symbol: symbolProfile.symbol
+      };
+    }
+  }
+
+  private isSymbolProfileIdentifierConflict(error: unknown): boolean {
+    if (
+      !(error instanceof Prisma.PrismaClientKnownRequestError) ||
+      error.code !== 'P2002'
+    ) {
+      return false;
+    }
+
+    const target = error.meta?.target;
+
+    if (
+      typeof target === 'string' &&
+      target.replace(/"/g, '') === 'SymbolProfile_dataSource_symbol_key'
+    ) {
+      return true;
+    }
+
+    const adapterFields = (
+      error.meta?.driverAdapterError as {
+        cause?: {
+          constraint?: {
+            fields?: unknown;
+          };
+        };
+      }
+    )?.cause?.constraint?.fields;
+    const fields = Array.isArray(target)
+      ? target
+      : Array.isArray(adapterFields)
+        ? adapterFields
+        : [];
+    const normalizedFields = fields.map((field) => {
+      return String(field).replace(/"/g, '');
+    });
+
+    return (
+      normalizedFields.length === 2 &&
+      normalizedFields.includes('dataSource') &&
+      normalizedFields.includes('symbol')
+    );
+  }
+
+  private resolveSymbolProfile({
+    assetProfile,
+    assetProfileIdentifier,
+    pendingSymbolProfiles,
+    type,
+    userId
+  }: {
+    assetProfile: Partial<SymbolProfile>;
+    assetProfileIdentifier: AssetProfileIdentifier;
+    pendingSymbolProfiles: Map<string, Promise<AssetProfileIdentifier>>;
+    type: Activity['type'];
+    userId: string;
+  }): Promise<AssetProfileIdentifier> {
+    const identifier = getAssetProfileIdentifier(assetProfileIdentifier);
+    let pendingSymbolProfile = pendingSymbolProfiles.get(identifier);
+
+    if (!pendingSymbolProfile) {
+      pendingSymbolProfile = this.createOrGetSymbolProfile({
+        assetProfile,
+        assetProfileIdentifier,
+        type,
+        userId
+      });
+      pendingSymbolProfiles.set(identifier, pendingSymbolProfile);
+    }
+
+    return pendingSymbolProfile;
   }
 
   private async extendActivitiesWithErrors({
