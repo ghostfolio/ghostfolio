@@ -36,7 +36,7 @@ import { addIcons } from 'ionicons';
 import { addOutline, eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 import { GfCreateOrUpdateAccessDialogComponent } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
 import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dialog/interfaces/interfaces';
@@ -142,7 +142,12 @@ export class GfUserAccountAccessComponent implements OnInit {
   protected onDeleteAccess(aId: string) {
     this.dataService
       .deleteAccess(aId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        switchMap(() => {
+          return this.userService.get(true);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe({
         next: () => {
           this.update();

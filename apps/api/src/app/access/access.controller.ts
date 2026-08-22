@@ -117,7 +117,10 @@ export class AccessController {
   public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
     const originalAccess = await this.accessService.access({
       id,
-      userId: this.request.user.id
+      OR: [
+        { granteeUserId: this.request.user.id },
+        { userId: this.request.user.id }
+      ]
     });
 
     if (!originalAccess) {

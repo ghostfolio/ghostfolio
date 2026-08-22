@@ -61,7 +61,9 @@
           class="no-max-width"
           xPosition="before"
         >
-          @if (user()?.settings?.isExperimentalFeatures) {
+          @if (
+            !isReceivedAccess() && user()?.settings?.isExperimentalFeatures
+          ) {
             <button mat-menu-item (click)="onUpdateAccess(element.id)">
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="create-outline" />
@@ -78,7 +80,7 @@
             </button>
           }
           @if (
-            user()?.settings?.isExperimentalFeatures ||
+            (!isReceivedAccess() && user()?.settings?.isExperimentalFeatures) ||
             element.type === 'PUBLIC'
           ) {
             <hr class="my-0" />
@@ -86,7 +88,11 @@
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="remove-circle-outline" />
-              <span i18n>Revoke</span>
+              @if (isReceivedAccess()) {
+                <span i18n>Remove</span>
+              } @else {
+                <span i18n>Revoke</span>
+              }
             </span>
           </button>
         </mat-menu>
