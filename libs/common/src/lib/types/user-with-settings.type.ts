@@ -6,7 +6,7 @@ import { Account, Settings, User } from '@prisma/client';
 // TODO: Compare with User interface
 export type UserWithSettings = User & {
   accounts: Account[];
-  activityCount: number;
+  activitiesCount: number;
   dataProviderGhostfolioDailyRequests: number;
   permissions?: string[];
   settings: Settings & { settings: UserSettings };

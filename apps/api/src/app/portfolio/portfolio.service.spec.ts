@@ -247,7 +247,7 @@ describe('PortfolioService', () => {
 
       jest.spyOn(userService, 'user').mockResolvedValue({
         accounts: [],
-        activityCount: 0,
+        activitiesCount: 0,
         dataProviderGhostfolioDailyRequests: 0,
         id: userDummyData.id,
         settings: {

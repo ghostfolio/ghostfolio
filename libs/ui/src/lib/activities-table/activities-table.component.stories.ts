@@ -483,6 +483,7 @@ export const Actions: Story = {
 export const Toolbar: Story = {
   args: {
     dataSource,
+    activityTypes: ['BUY', 'DIVIDEND', 'SELL'],
     baseCurrency: 'USD',
     deviceType: 'desktop',
     hasActivities: true,

@@ -129,8 +129,7 @@ export class UserService {
     const [
       access,
       accounts,
-      activitiesCount,
-      firstActivity,
+      activitiesGroupedByType,
       impersonationUser,
       tagsForUser
     ] = await Promise.all([
@@ -150,13 +149,10 @@ export class UserService {
           userId: impersonationUserId || user.id
         }
       }),
-      this.prismaService.order.count({
-        where: { userId: impersonationUserId || user.id }
-      }),
-      this.prismaService.order.findFirst({
-        orderBy: {
-          date: 'asc'
-        },
+      this.prismaService.order.groupBy({
+        _min: { date: true },
+        by: ['type'],
+        orderBy: { _min: { date: 'asc' } },
         where: { userId: impersonationUserId || user.id }
       }),
       impersonationUserId
@@ -164,6 +160,19 @@ export class UserService {
         : Promise.resolve<UserWithSettings>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
+
+    const activitiesCount = impersonationUserId
+      ? (impersonationUser?.activitiesCount ?? 0)
+      : (user.activitiesCount ?? 0);
+
+    const activityTypes = activitiesGroupedByType.map(({ type }) => {
+      return type;
+    });
+
+    // The groupBy is ordered by the minimum date, thus the first group
+    // carries the date of the first activity
+    const dateOfFirstActivity =
+      activitiesGroupedByType[0]?._min.date ?? new Date();
 
     const resolvedUserSettings = resolveUserSettings({
       impersonationUserSettings: impersonationUser?.settings
@@ -209,6 +218,8 @@ export class UserService {
 
     return {
       activitiesCount,
+      activityTypes,
+      dateOfFirstActivity,
       id,
       permissions,
       referralPartners,
@@ -226,7 +237,6 @@ export class UserService {
       accounts: accounts.sort((a, b) => {
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
       }),
-      dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...resolvedUserSettings,
         baseCurrency: resolvedUserSettings.baseCurrency ?? DEFAULT_CURRENCY,
@@ -324,6 +334,7 @@ export class UserService {
     const user: UserWithSettings = {
       accessToken,
       accounts,
+      activitiesCount,
       authChallenge,
       createdAt,
       id,
@@ -332,7 +343,6 @@ export class UserService {
       settings: settings as UserWithSettings['settings'],
       thirdPartyId,
       updatedAt,
-      activityCount: analytics?.activityCount,
       dataProviderGhostfolioDailyRequests:
         analytics?.dataProviderGhostfolioDailyRequests ?? 0
     };

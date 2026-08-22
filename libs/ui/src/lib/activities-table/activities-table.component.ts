@@ -141,7 +141,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public activityTypesTranslationMap = new Map<ActivityType, string>();
   public hasDrafts = false;
   public hasErrors = false;
   public isDraftActivity = isDraftActivity;
@@ -149,6 +148,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public selectedRows = new SelectionModel<Activity>(true, []);
   public typesFilter = new FormControl<string[]>([]);
 
+  public readonly activityTypes = input<ActivityType[]>([]);
   public readonly dataSource = input.required<
     MatTableDataSource<Activity> | undefined
   >();
@@ -173,6 +173,16 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     }
 
     return routerLinks;
+  });
+
+  protected readonly activityTypeOptions = computed(() => {
+    return (this.activityTypes() ?? [])
+      .map((activityType) => {
+        return { key: activityType, value: translate(activityType) };
+      })
+      .sort((a, b) => {
+        return a.value.localeCompare(b.value);
+      });
   });
 
   protected readonly displayedColumns = computed(() => {
@@ -222,13 +232,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   private readonly notificationService = inject(NotificationService);
 
   public constructor(private destroyRef: DestroyRef) {
-    for (const type of Object.keys(ActivityType) as ActivityType[]) {
-      this.activityTypesTranslationMap.set(
-        ActivityType[type],
-        translate(ActivityType[type])
-      );
-    }
-
     addIcons({
       alertCircleOutline,
       calendarClearOutline,
@@ -384,13 +387,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.notificationService.alert({
       title: aComment
     });
-  }
-
-  public sortByValue(
-    a: { key: ActivityType; value: string },
-    b: { key: ActivityType; value: string }
-  ) {
-    return a.value.localeCompare(b.value);
   }
 
   public toggleAllRows() {

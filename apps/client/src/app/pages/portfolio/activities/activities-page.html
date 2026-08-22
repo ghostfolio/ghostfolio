@@ -3,6 +3,7 @@
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Activities</h1>
       <gf-activities-table
+        [activityTypes]="user?.activityTypes"
         [baseCurrency]="user?.settings?.baseCurrency"
         [dataSource]="dataSource"
         [deviceType]="deviceType"
