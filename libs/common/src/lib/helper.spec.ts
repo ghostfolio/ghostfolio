@@ -13,6 +13,7 @@ import {
   isCurrencySymbol,
   isSplitRatio,
   isValidCustomAssetProfileSymbol,
+  isValidGranteeOfAccess,
   resolveUserSettings
 } from '@ghostfolio/common/helper';
 import { UserSettings } from '@ghostfolio/common/interfaces';
@@ -380,6 +381,46 @@ describe('Helper', () => {
       expect(
         isValidCustomAssetProfileSymbol('7e91b7d4-1430-4212-8380-289a06c9bbc1')
       ).toEqual(true);
+    });
+  });
+
+  describe('Is valid grantee of access', () => {
+    const granteeUserId = 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d';
+
+    it('A private access with a grantee', () => {
+      expect(
+        isValidGranteeOfAccess({ granteeUserId, type: 'PRIVATE' })
+      ).toEqual(true);
+    });
+
+    it('A private access without a grantee', () => {
+      expect(isValidGranteeOfAccess({ type: 'PRIVATE' })).toEqual(false);
+    });
+
+    it('A private access with an empty grantee', () => {
+      expect(
+        isValidGranteeOfAccess({ granteeUserId: null, type: 'PRIVATE' })
+      ).toEqual(false);
+    });
+
+    it('A public access without a grantee', () => {
+      expect(isValidGranteeOfAccess({ type: 'PUBLIC' })).toEqual(true);
+    });
+
+    it('A public access with a grantee', () => {
+      expect(isValidGranteeOfAccess({ granteeUserId, type: 'PUBLIC' })).toEqual(
+        false
+      );
+    });
+
+    it('An access of the model context protocol without a grantee', () => {
+      expect(isValidGranteeOfAccess({ type: 'MCP' })).toEqual(true);
+    });
+
+    it('An access of the model context protocol with a grantee', () => {
+      expect(isValidGranteeOfAccess({ granteeUserId, type: 'MCP' })).toEqual(
+        false
+      );
     });
   });
 

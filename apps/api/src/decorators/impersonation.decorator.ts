@@ -1,3 +1,4 @@
+import { getRequest } from '@ghostfolio/api/helper/execution-context.helper';
 import type {
   ImpersonationContext,
   RequestWithUser
@@ -17,9 +18,7 @@ import {
  */
 export const Impersonation = createParamDecorator(
   (_data: unknown, context: ExecutionContext): ImpersonationContext => {
-    const { impersonation } = context
-      .switchToHttp()
-      .getRequest<RequestWithUser>();
+    const { impersonation } = getRequest<RequestWithUser>(context) ?? {};
 
     if (!impersonation) {
       throw new InternalServerErrorException(

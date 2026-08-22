@@ -1,3 +1,4 @@
+import { getRequest } from '@ghostfolio/api/helper/execution-context.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import {
   HEADER_KEY_IMPERSONATION,
@@ -26,7 +27,11 @@ export class ImpersonationGuard implements CanActivate {
   ) {}
 
   public async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest<RequestWithUser>();
+    const request = getRequest<RequestWithUser>(context);
+
+    if (!request) {
+      return true;
+    }
 
     const impersonationId = request.headers?.[
       HEADER_KEY_IMPERSONATION.toLowerCase()

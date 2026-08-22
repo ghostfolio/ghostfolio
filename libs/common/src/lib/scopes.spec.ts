@@ -1,4 +1,5 @@
 import {
+  Scope,
   SCOPES_OF_READ_ACCESS,
   SCOPES_OF_READ_RESTRICTED_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
@@ -60,7 +61,7 @@ describe('Scopes', () => {
     it('Gives the scopes of the access', () => {
       expect(
         getScopesOfAccess({
-          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+          type: 'PRIVATE',
           scopes: [scopes.portfolioRead, scopes.portfolioReadValues]
         })
       ).toEqual([scopes.portfolioRead, scopes.portfolioReadValues]);
@@ -69,23 +70,19 @@ describe('Scopes', () => {
     it('Without the scope to read the values', () => {
       expect(
         getScopesOfAccess({
-          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+          type: 'PRIVATE',
           scopes: [scopes.portfolioRead]
         })
       ).not.toContain(scopes.portfolioReadValues);
     });
 
     it('Without scopes', () => {
-      expect(
-        getScopesOfAccess({
-          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d'
-        })
-      ).toEqual([]);
+      expect(getScopesOfAccess({ type: 'PRIVATE' })).toEqual([]);
     });
 
     it('Gives the write scopes', () => {
       const scopesOfAccess = getScopesOfAccess({
-        granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+        type: 'PRIVATE',
         scopes: [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS]
       });
 
@@ -97,7 +94,7 @@ describe('Scopes', () => {
     it('Drops an unknown scope', () => {
       expect(
         getScopesOfAccess({
-          granteeUserId: 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d',
+          type: 'PRIVATE',
           scopes: [scopes.portfolioRead, 'portfolio:write']
         })
       ).toEqual([scopes.portfolioRead]);
@@ -107,13 +104,17 @@ describe('Scopes', () => {
   describe('Get scopes of public access', () => {
     it('Allows reading the portfolio', () => {
       expect(
-        getScopesOfAccess({ scopes: [...SCOPES_OF_READ_RESTRICTED_ACCESS] })
+        getScopesOfAccess({
+          scopes: [...SCOPES_OF_READ_RESTRICTED_ACCESS],
+          type: 'PUBLIC'
+        })
       ).toContain(scopes.portfolioRead);
     });
 
     it('Excludes the accounts and the watchlist', () => {
       const scopesOfAccess = getScopesOfAccess({
-        scopes: [...SCOPES_OF_READ_RESTRICTED_ACCESS]
+        scopes: [...SCOPES_OF_READ_RESTRICTED_ACCESS],
+        type: 'PUBLIC'
       });
 
       expect(scopesOfAccess).not.toContain(scopes.accountRead);
@@ -127,14 +128,18 @@ describe('Scopes', () => {
             scopes.portfolioRead,
             scopes.portfolioReadValues,
             scopes.watchlistRead
-          ]
+          ],
+          type: 'PUBLIC'
         })
       ).toEqual([scopes.portfolioRead]);
     });
 
     it('Cannot expose the monetary values', () => {
       expect(
-        getScopesOfAccess({ scopes: [...SCOPES_OF_READ_ACCESS] })
+        getScopesOfAccess({
+          scopes: [...SCOPES_OF_READ_ACCESS],
+          type: 'PUBLIC'
+        })
       ).not.toContain(scopes.portfolioReadValues);
     });
 
@@ -142,7 +147,51 @@ describe('Scopes', () => {
     // function is the sole barrier for a public access
     it('Gives no write scope', () => {
       expect(
-        getScopesOfAccess({ scopes: [...SCOPES_OF_WRITE_ACCESS] })
+        getScopesOfAccess({
+          scopes: [...SCOPES_OF_WRITE_ACCESS],
+          type: 'PUBLIC'
+        })
+      ).toEqual([]);
+    });
+  });
+
+  describe('Get scopes of access for the model context protocol', () => {
+    it('Allows reading the portfolio', () => {
+      expect(
+        getScopesOfAccess({
+          scopes: [...SCOPES_OF_READ_ACCESS],
+          type: 'MCP'
+        })
+      ).toContain(scopes.portfolioRead);
+    });
+
+    it('Allows reading the accounts and the watchlist', () => {
+      const scopesOfAccess = getScopesOfAccess({
+        scopes: [...SCOPES_OF_READ_ACCESS],
+        type: 'MCP'
+      });
+
+      expect(scopesOfAccess).toContain(scopes.accountRead);
+      expect(scopesOfAccess).toContain(scopes.watchlistRead);
+    });
+
+    it('Cannot expose the monetary values', () => {
+      expect(
+        getScopesOfAccess({
+          scopes: [...SCOPES_OF_READ_ACCESS],
+          type: 'MCP'
+        })
+      ).not.toContain(scopes.portfolioReadValues);
+    });
+
+    it('Gives no write scope', () => {
+      expect(
+        getScopesOfAccess({
+          scopes: [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS],
+          type: 'MCP'
+        }).filter((scope) => {
+          return SCOPES_OF_WRITE_ACCESS.includes(scope as Scope);
+        })
       ).toEqual([]);
     });
   });

@@ -50,6 +50,7 @@ import { AssetsModule } from './endpoints/assets/assets.module';
 import { BenchmarksModule } from './endpoints/benchmarks/benchmarks.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
+import { McpModule } from './endpoints/mcp/mcp.module';
 import { PlatformsModule } from './endpoints/platforms/platforms.module';
 import { PublicModule } from './endpoints/public/public.module';
 import { SitemapModule } from './endpoints/sitemap/sitemap.module';
@@ -128,6 +129,7 @@ import { UserModule } from './user/user.module';
     InfoModule,
     LogoModule,
     MarketDataModule,
+    McpModule,
     PlatformModule,
     PlatformsModule,
     PortfolioModule,

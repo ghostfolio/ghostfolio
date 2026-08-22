@@ -268,7 +268,7 @@ export class GfUserAccountAccessComponent implements OnInit {
       data: {
         access: {
           alias: access.alias,
-          grantee: access.grantee === 'Public' ? undefined : access.grantee,
+          grantee: access.grantee,
           id: access.id,
           scopes: access.scopes,
           settings: access.settings,

@@ -23,13 +23,25 @@
         />
       </mat-form-field>
     </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
+    <div class="mb-3">
+      <mat-form-field
+        appearance="outline"
+        class="w-100"
+        [class.without-hint]="!isPublicAccess"
+      >
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
           <mat-option i18n value="PRIVATE">Private</mat-option>
           <mat-option i18n value="PUBLIC">Public</mat-option>
+          @if (hasPermissionToEnableMcp) {
+            <mat-option value="MCP">Model Context Protocol (MCP)</mat-option>
+          }
         </mat-select>
+        @if (isPublicAccess) {
+          <mat-hint i18n
+            >Any person who has the link can view the data.</mat-hint
+          >
+        }
       </mat-form-field>
     </div>
 

@@ -95,6 +95,7 @@ Find answers to commonly asked questions about self-hosting Ghostfolio in our [F
 | `DATABASE_URL`              | `string`              |                       | The database connection URL. If using a connection pooler, use the pooled connection URL here. e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}`                                        |
 | `DIRECT_URL`                | `string` (optional)   |                       | The direct database connection URL used by the _Prisma CLI_ (e.g. for schema migrations) and seeding, bypassing any connection poolers (falls back to `DATABASE_URL`)                                                         |
 | `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                | Enables authentication via security token                                                                                                                                                                                     |
+| `ENABLE_FEATURE_MCP`        | `boolean` (optional)  | `false`               | Enables the server of the _Model Context Protocol_ (MCP) at `/mcp` (experimental)                                                                                                                                             |
 | `HOST`                      | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                                                                                                                         |
 | `JWT_SECRET_KEY`            | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                                                                                                              |
 | `LOG_LEVELS`                | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                                                                                                                      |
@@ -353,6 +354,27 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
   "error": "Not Found",
   "message": "Could not find the asset profile for MSFT (YAHOO)"
 }
+```
+
+## Model Context Protocol (experimental)
+
+The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio.
+
+### Prerequisites
+
+- Set `ENABLE_FEATURE_MCP` to `true`
+- Set `ROOT_URL` to the public URL of your instance if a client calls the endpoint from a browser page. The host name of `ROOT_URL` is the only accepted origin.
+- Grant an access of the type _MCP_ in _My Ghostfolio_ under _Access_ and copy its identifier
+
+An _MCP_ access has (restricted) read scopes. It can neither change data nor read the monetary values.
+
+### Connect a client
+
+Point the client to the endpoint below and set the identifier of the access as the _Bearer Token_.
+
+```
+POST http://localhost:3333/mcp
+"Authorization": "Bearer <INSERT_IDENTIFIER_OF_ACCESS>"
 ```
 
 ## Community Projects

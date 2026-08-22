@@ -54,7 +54,7 @@ import {
   PortfolioPosition,
   UserSettings
 } from './interfaces';
-import { BenchmarkTrend, ColorScheme } from './types';
+import { AccessType, BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
@@ -652,6 +652,21 @@ export function isUserSettingOfAuthenticatedUser(aKey: string) {
 
 export function isValidCustomAssetProfileSymbol(aSymbol: string) {
   return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
+}
+
+/**
+ * A private access is granted to a user, while a public access and an access
+ * of a client of the model context protocol are credentials on their own and
+ * have no grantee. A row which mixes both is neither, hence it is rejected.
+ */
+export function isValidGranteeOfAccess({
+  granteeUserId,
+  type
+}: {
+  granteeUserId?: string | null;
+  type: AccessType;
+}) {
+  return type === 'PRIVATE' ? !!granteeUserId : !granteeUserId;
 }
 
 export function isValidSearchQuery(aQuery: string) {

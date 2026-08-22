@@ -1,5 +1,6 @@
 import { ALLOW_DURING_IMPERSONATION_KEY } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { getRequest } from '@ghostfolio/api/helper/execution-context.helper';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { SCOPES_OF_WRITE_ACCESS, Scope } from '@ghostfolio/common/scopes';
 
@@ -29,11 +30,14 @@ export class ImpersonationWriteGuard implements CanActivate {
   public constructor(private readonly reflector: Reflector) {}
 
   public canActivate(context: ExecutionContext): boolean {
-    if (context.getType() !== 'http') {
+    const request = getRequest<{
+      headers?: Record<string, string>;
+      method?: string;
+    }>(context);
+
+    if (!request) {
       return true;
     }
-
-    const request = context.switchToHttp().getRequest();
 
     if (request.method === 'GET') {
       return true;

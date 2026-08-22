@@ -1,1 +1,3 @@
-export type AccessType = 'PRIVATE' | 'PUBLIC';
+import { AccessType as AccessTypePrisma } from '@prisma/client';
+
+export type AccessType = AccessTypePrisma;
