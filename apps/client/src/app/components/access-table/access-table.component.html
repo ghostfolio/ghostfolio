@@ -17,18 +17,7 @@
     <ng-container matColumnDef="type">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Permission</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        <div class="align-items-center d-flex">
-          @if (hasScopesToWrite(element)) {
-            <ion-icon class="mr-1" name="create-outline" />
-            <ng-container i18n>View and manage</ng-container>
-          } @else if (hasScopeToReadValues(element)) {
-            <ion-icon class="mr-1" name="lock-open-outline" />
-            <ng-container i18n>View</ng-container>
-          } @else {
-            <ion-icon class="mr-1" name="lock-closed-outline" />
-            <ng-container i18n>Restricted view</ng-container>
-          }
-        </div>
+        <gf-access-level-icon [accessLevel]="getAccessLevel(element.scopes)" />
       </td>
     </ng-container>
 
