@@ -284,19 +284,19 @@ export class DataProviderService implements OnModuleInit {
         // A custom asset profile of the import is created after the
         // validation, thus the data provider cannot resolve it yet
         if (
-          (dataSource === DataSource.MANUAL &&
-            (type === 'BUY' || Boolean(assetProfileInImport))) ||
+          (dataSource === DataSource.MANUAL && type === 'BUY') ||
+          Boolean(assetProfileInImport) ||
           NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
         ) {
           assetProfiles[assetProfileIdentifier] = {
-            currency,
-            dataSource,
-            symbol,
             ...omit(assetProfileInImport ?? {}, [
               'dataSource',
               'marketData',
               'symbol'
             ]),
+            currency,
+            dataSource,
+            symbol,
             name: assetProfileInImport?.name ?? symbol
           };
 

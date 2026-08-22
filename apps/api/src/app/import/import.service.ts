@@ -637,12 +637,33 @@ export class ImportService {
           });
 
           if (assetProfileToCreate) {
-            // Create the new asset profile and its market data later, once it
-            // is known which activities are imported
-            assetProfilesToCreate.push({
-              marketDataObjects,
-              assetProfile: assetProfileToCreate
-            });
+            const assetProfileToCreateIdentifier =
+              getAssetProfileIdentifier(assetProfileToCreate);
+
+            const duplicateAssetProfileToCreate = assetProfilesToCreate.find(
+              ({ assetProfile }) => {
+                return (
+                  getAssetProfileIdentifier(assetProfile) ===
+                  assetProfileToCreateIdentifier
+                );
+              }
+            );
+
+            if (duplicateAssetProfileToCreate) {
+              // The import contains the same asset profile more than once,
+              // which would fail with a unique constraint violation. Keep the
+              // first asset profile and merge the market data into it.
+              duplicateAssetProfileToCreate.marketDataObjects.push(
+                ...marketDataObjects
+              );
+            } else {
+              // Create the new asset profile and its market data later, once it
+              // is known which activities are imported
+              assetProfilesToCreate.push({
+                marketDataObjects,
+                assetProfile: assetProfileToCreate
+              });
+            }
           } else {
             // Insert or update market data
             await this.marketDataService.updateMany({
@@ -732,10 +753,10 @@ export class ImportService {
     }) ?? { id: TAG_ID_DRAFT, name: 'DRAFT' };
 
     // Create the new asset profiles of the activities to import only, so that
-    // no unused asset profile remains, for example if an activity is a
-    // duplicate. An asset profile which is created before the validation of
-    // the activities would stay behind, because the import is not rolled back
-    // on an error.
+    // no unused asset profile remains, for example if no activity refers to
+    // the asset profile. An asset profile which is created before the
+    // validation of the activities would stay behind, because the import is
+    // not rolled back on an error.
     if (!isDryRun) {
       for (const {
         assetProfile,
@@ -744,9 +765,9 @@ export class ImportService {
         activities: activitiesExtendedWithErrors,
         assetProfiles: assetProfilesToCreate
       })) {
-        await this.symbolProfileService.add(assetProfile);
-
         await this.marketDataService.updateMany({ data: marketDataObjects });
+
+        await this.symbolProfileService.add(assetProfile);
       }
     }
 
