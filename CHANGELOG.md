@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded the `Node.js` engine from version `>=22.18.0` to `>=22.22.3` (`package.json`)
+
 ### Fixed
 
 - Fixed an issue in the activities import where an unused custom asset profile was created if the related activities were not imported
