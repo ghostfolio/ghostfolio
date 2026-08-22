@@ -39,7 +39,7 @@ import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
-import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
+import { groupBy, isEmpty, isNumber, omit, uniqWith } from 'lodash';
 import ms from 'ms';
 
 import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
@@ -272,23 +272,31 @@ export class DataProviderService implements OnModuleInit {
       });
 
       if (!assetProfiles[assetProfileIdentifier]) {
+        const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+          (assetProfileWithMarketData) => {
+            return (
+              assetProfileWithMarketData.dataSource === dataSource &&
+              assetProfileWithMarketData.symbol === symbol
+            );
+          }
+        );
+
+        // A custom asset profile of the import is created after the
+        // validation, thus the data provider cannot resolve it yet
         if (
           (dataSource === DataSource.MANUAL && type === 'BUY') ||
+          assetProfileInImport?.dataSource === DataSource.MANUAL ||
           NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
         ) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (assetProfile) => {
-              return (
-                assetProfile.dataSource === dataSource &&
-                assetProfile.symbol === symbol
-              );
-            }
-          );
-
           assetProfiles[assetProfileIdentifier] = {
-            currency,
+            ...omit(assetProfileInImport ?? {}, [
+              'dataSource',
+              'marketData',
+              'symbol'
+            ]),
             dataSource,
             symbol,
+            currency: assetProfileInImport?.currency ?? currency,
             name: assetProfileInImport?.name ?? symbol
           };
 
@@ -307,20 +315,6 @@ export class DataProviderService implements OnModuleInit {
             ])
           )?.[assetProfileIdentifier];
         } catch {}
-
-        if (!assetProfile?.name) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (profile) => {
-              return (
-                profile.dataSource === dataSource && profile.symbol === symbol
-              );
-            }
-          );
-
-          if (assetProfileInImport) {
-            Object.assign(assetProfile, assetProfileInImport);
-          }
-        }
 
         if (!assetProfile?.name) {
           throw new Error(

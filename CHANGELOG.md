@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the _Storybook_ setup by loading the `@angular/localize` polyfill centrally
+- Fixed an issue in the activities import where an unused custom asset profile was created if the related activities were not imported
 
 ## 3.57.0 - 2026-08-21
 
