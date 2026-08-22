@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Disabled the telemetry in the _Storybook_ setup
+
 ### Fixed
 
 - Fixed the _Storybook_ setup by loading the `@angular/localize` polyfill centrally
