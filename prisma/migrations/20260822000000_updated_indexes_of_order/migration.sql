@@ -14,4 +14,4 @@ CREATE INDEX "Order_symbolProfileId_date_idx" ON "Order"("symbolProfileId", "dat
 CREATE INDEX "Order_userId_date_type_idx" ON "Order"("userId", "date", "type");
 
 -- CreateIndex
-CREATE INDEX "Order_userId_type_idx" ON "Order"("userId", "type");
+CREATE INDEX "Order_userId_type_date_idx" ON "Order"("userId", "type", "date");

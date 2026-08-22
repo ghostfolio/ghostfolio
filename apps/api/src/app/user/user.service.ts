@@ -61,7 +61,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
 import { Prisma, Role, User } from '@prisma/client';
-import { differenceInDays, min, subDays } from 'date-fns';
+import { differenceInDays, subDays } from 'date-fns';
 import { isNil, without } from 'lodash';
 import { createHmac } from 'node:crypto';
 
@@ -169,16 +169,10 @@ export class UserService {
       return type;
     });
 
-    const datesOfFirstActivityByType = activitiesGroupedByType.map(
-      ({ _min }) => {
-        return _min.date;
-      }
-    );
-
+    // The groupBy is ordered by the minimum date, thus the first group
+    // carries the date of the first activity
     const dateOfFirstActivity =
-      datesOfFirstActivityByType.length > 0
-        ? min(datesOfFirstActivityByType)
-        : new Date();
+      activitiesGroupedByType[0]?._min.date ?? new Date();
 
     const resolvedUserSettings = resolveUserSettings({
       impersonationUserSettings: impersonationUser?.settings

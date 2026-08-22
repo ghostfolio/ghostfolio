@@ -648,17 +648,18 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     this.dataService
       .postActivity(activity)
       .pipe(
+        takeUntilDestroyed(this.destroyRef),
         switchMap(() => {
           return this.userService.get(true);
-        }),
-        takeUntilDestroyed(this.destroyRef)
+        })
       )
-      .subscribe(() => {
-        this.router.navigate(
-          internalRoutes.portfolio.subRoutes.activities.routerLink
-        );
-
-        this.dialogRef.close();
+      .subscribe({
+        error: () => {
+          this.navigateToActivities();
+        },
+        next: () => {
+          this.navigateToActivities();
+        }
       });
   }
 
@@ -733,5 +734,13 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       { id: this.data.dataSource, type: 'DATA_SOURCE' },
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
+  }
+
+  private navigateToActivities() {
+    this.router.navigate(
+      internalRoutes.portfolio.subRoutes.activities.routerLink
+    );
+
+    this.dialogRef.close();
   }
 }
