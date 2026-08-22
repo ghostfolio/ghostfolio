@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the permission selector with icons in the create or update access dialog
 - Extracted the access level icon to a reusable component
+- Upgraded the `Node.js` engine from version `>=22.18.0` to `>=22.22.3` (`package.json`)
 
 ## 3.57.0 - 2026-08-21
 
