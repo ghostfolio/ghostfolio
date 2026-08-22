@@ -5,12 +5,14 @@ import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL
 } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
+import { format } from 'date-fns';
 import type { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
@@ -21,6 +23,7 @@ export class AiService {
       | 'ASSET_CLASS'
       | 'ASSET_SUB_CLASS'
       | 'CURRENCY'
+      | 'DATE_OF_FIRST_ACTIVITY'
       | 'NAME'
       | 'SYMBOL';
   } & ColumnDescriptor)[] = [
@@ -29,6 +32,7 @@ export class AiService {
     { key: 'CURRENCY', name: 'Currency' },
     { key: 'ASSET_CLASS', name: 'Asset Class' },
     { key: 'ASSET_SUB_CLASS', name: 'Asset Sub Class' },
+    { key: 'DATE_OF_FIRST_ACTIVITY', name: 'Date of First Activity' },
     {
       align: 'right',
       key: 'ALLOCATION_PERCENTAGE',
@@ -104,7 +108,8 @@ export class AiService {
             currency,
             name: label,
             symbol
-          }
+          },
+          dateOfFirstActivity
         }) => {
           return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.reduce(
             (row, { key, name }) => {
@@ -123,6 +128,12 @@ export class AiService {
 
                 case 'CURRENCY':
                   row[name] = currency;
+                  break;
+
+                case 'DATE_OF_FIRST_ACTIVITY':
+                  row[name] = dateOfFirstActivity
+                    ? format(dateOfFirstActivity, DATE_FORMAT)
+                    : '';
                   break;
 
                 case 'NAME':
