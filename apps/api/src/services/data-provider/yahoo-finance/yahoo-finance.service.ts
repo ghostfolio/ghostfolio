@@ -143,30 +143,39 @@ export class YahooFinanceService implements DataProviderInterface {
     [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
-      const historicalResult = this.convertToHistoricalResult(
-        await this.yahooFinance.chart(
-          this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
-            symbol
-          ),
-          {
-            interval: '1d',
-            period1: format(from, DATE_FORMAT),
-            period2: format(
-              isSameDay(from, to) ? addDays(to, 1) : to,
-              DATE_FORMAT
-            )
-          }
-        )
+      const chartResult = await this.yahooFinance.chart(
+        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+          symbol
+        ),
+        {
+          interval: '1d',
+          period1: format(from, DATE_FORMAT),
+          period2: format(
+            isSameDay(from, to) ? addDays(to, 1) : to,
+            DATE_FORMAT
+          )
+        }
       );
+
+      const historicalResult = this.convertToHistoricalResult(chartResult);
 
       const response: {
         [date: string]: DataProviderHistoricalResponse;
       } = {};
 
-      for (const historicalItem of historicalResult) {
-        response[format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice: historicalItem.close
-        };
+      for (const { close, date } of historicalResult) {
+        // The chart endpoint can omit the close price of a historical item, for
+        // example if the daily data of an exchange has not been consolidated yet.
+        // In this case, the market price of the corresponding quote is taken.
+        const marketPrice =
+          close ??
+          (isSameDay(date, chartResult.meta.regularMarketTime)
+            ? chartResult.meta.regularMarketPrice
+            : undefined);
+
+        if (marketPrice) {
+          response[format(date, DATE_FORMAT)] = { marketPrice };
+        }
       }
 
       return response;
