@@ -2,16 +2,15 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import {
-  SCOPES_OF_READ_ACCESS,
-  SCOPES_OF_READ_RESTRICTED_ACCESS,
-  SCOPES_OF_WRITE_ACCESS,
   Scope,
-  hasAnyScopeOfWriteAccess,
+  getAccessLevel,
+  getScopesOfAccessLevel,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
-import { AccountWithPlatform } from '@ghostfolio/common/types';
+import { AccessLevel, AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import { GfAccessLevelIconComponent } from '@ghostfolio/ui/access-level-icon';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import {
   GfPortfolioFilterFormComponent,
@@ -52,16 +51,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
-import {
-  AccessLevel,
-  CreateOrUpdateAccessDialogParams
-} from './interfaces/interfaces';
+import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
     FormsModule,
+    GfAccessLevelIconComponent,
     GfPortfolioFilterFormComponent,
     MatButtonModule,
     MatDialogModule,
@@ -120,7 +117,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     const isPublic = access?.type === 'PUBLIC';
 
     this.accessForm = this.formBuilder.group({
-      accessLevel: this.getAccessLevel(access?.scopes),
+      accessLevel: getAccessLevel(access?.scopes),
       alias: [access?.alias ?? ''],
       filters: [null],
       granteeUserId: [
@@ -172,6 +169,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     this.loadHoldings();
   }
 
+  protected get accessLevel(): AccessLevel {
+    return this.accessForm?.get('accessLevel')?.value as AccessLevel;
+  }
+
   protected onCancel() {
     this.dialogRef.close();
   }
@@ -191,28 +192,18 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private buildScopes(): Scope[] {
-    const accessLevel = this.accessForm.get('accessLevel')
-      ?.value as AccessLevel;
-
     const scopesOfAccess = this.data.access?.scopes ?? [];
 
     if (
       scopesOfAccess.length > 0 &&
-      accessLevel === this.getAccessLevel(scopesOfAccess)
+      this.accessLevel === getAccessLevel(scopesOfAccess)
     ) {
       return Object.values(scopes).filter((scope) => {
         return hasScope(scopesOfAccess, scope);
       });
     }
 
-    switch (accessLevel) {
-      case 'CREATE_READ_UPDATE_DELETE':
-        return [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
-      case 'READ':
-        return [...SCOPES_OF_READ_ACCESS];
-      default:
-        return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
-    }
+    return getScopesOfAccessLevel(this.accessLevel);
   }
 
   private async createAccess() {
@@ -252,16 +243,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  private getAccessLevel(scopesOfAccess: string[] | undefined): AccessLevel {
-    if (hasAnyScopeOfWriteAccess(scopesOfAccess)) {
-      return 'CREATE_READ_UPDATE_DELETE';
-    }
-
-    return hasScope(scopesOfAccess, scopes.portfolioReadValues)
-      ? 'READ'
-      : 'READ_RESTRICTED';
   }
 
   private loadHoldings() {

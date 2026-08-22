@@ -1,0 +1,16 @@
+<span class="align-items-center d-flex">
+  @switch (accessLevel()) {
+    @case ('CREATE_READ_UPDATE_DELETE') {
+      <ion-icon class="mr-1" name="create-outline" />
+      <ng-container i18n>View and manage</ng-container>
+    }
+    @case ('READ') {
+      <ion-icon class="mr-1" name="lock-open-outline" />
+      <ng-container i18n>View</ng-container>
+    }
+    @case ('READ_RESTRICTED') {
+      <ion-icon class="mr-1" name="lock-closed-outline" />
+      <ng-container i18n>Restricted view</ng-container>
+    }
+  }
+</span>
