@@ -23,6 +23,7 @@ import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 import { Module } from '@nestjs/common';
 
 import { PublicController } from './public.controller';
+import { PublicService } from './public.service';
 
 @Module({
   controllers: [PublicController],
@@ -49,6 +50,7 @@ import { PublicController } from './public.controller';
     CurrentRateService,
     PortfolioCalculatorFactory,
     PortfolioService,
+    PublicService,
     RulesService
   ]
 })
