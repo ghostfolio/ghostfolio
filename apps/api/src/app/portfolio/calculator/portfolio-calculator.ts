@@ -1205,25 +1205,51 @@ export abstract class PortfolioCalculator {
       }
 
       // Wait for computation
-      await this.portfolioSnapshotService.addJobToQueue({
-        data: {
-          calculationType: this.getPerformanceCalculationType(),
-          filters: this.filters,
-          userCurrency: this.currency,
-          userId: this.userId
-        },
-        name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
-        opts: {
-          ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
-          jobId,
-          priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH
+      try {
+        await this.portfolioSnapshotService.addJobToQueue({
+          data: {
+            calculationType: this.getPerformanceCalculationType(),
+            filters: this.filters,
+            userCurrency: this.currency,
+            userId: this.userId
+          },
+          name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
+          opts: {
+            ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+            jobId,
+            priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH
+          }
+        });
+
+        const job = await this.portfolioSnapshotService.getJob(jobId);
+
+        if (job) {
+          await job.finished();
         }
-      });
+      } catch (error) {
+        // Degrade gracefully instead of failing every endpoint that
+        // depends on this snapshot, e.g. when the computation job stalls
+        this.logger.error(
+          `Portfolio snapshot computation for user '${this.userId}' failed: ${error}`
+        );
 
-      const job = await this.portfolioSnapshotService.getJob(jobId);
+        this.snapshot = plainToClass(PortfolioSnapshot, {
+          activitiesCount: 0,
+          createdAt: new Date(),
+          currentValueInBaseCurrency: 0,
+          errors: [],
+          hasErrors: true,
+          historicalData: [],
+          positions: [],
+          totalCashInBaseCurrency: 0,
+          totalFeesWithCurrencyEffect: 0,
+          totalInterestWithCurrencyEffect: 0,
+          totalInvestment: 0,
+          totalInvestmentWithCurrencyEffect: 0,
+          totalLiabilitiesWithCurrencyEffect: 0
+        });
 
-      if (job) {
-        await job.finished();
+        return;
       }
 
       await this.initialize(attempt + 1);
