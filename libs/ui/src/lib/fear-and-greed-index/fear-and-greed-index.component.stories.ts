@@ -1,4 +1,3 @@
-import '@angular/localize/init';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';

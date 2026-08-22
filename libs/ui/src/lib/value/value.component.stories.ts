@@ -1,5 +1,4 @@
 import { ANIMATION_MODULE_TYPE } from '@angular/core';
-import '@angular/localize/init';
 import { applicationConfig, moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
