@@ -52,6 +52,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 })
 export class GfAccessTableComponent {
   public readonly accesses = input.required<Access[]>();
+  public readonly isReceivedAccess = input<boolean>(false);
   public readonly showActions = input<boolean>(false);
   public readonly user = input.required<User>();
 
@@ -119,7 +120,9 @@ export class GfAccessTableComponent {
         this.accessDeleted.emit(aId);
       },
       confirmType: ConfirmationDialogType.Warn,
-      title: $localize`Do you really want to revoke this granted access?`
+      title: this.isReceivedAccess()
+        ? $localize`Do you really want to remove this received access?`
+        : $localize`Do you really want to revoke this granted access?`
     });
   }
 
