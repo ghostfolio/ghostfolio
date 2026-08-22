@@ -237,7 +237,6 @@ export class UserService {
         return {
           alias: accessItem.alias,
           id: accessItem.id,
-          permissions: accessItem.permissions,
           scopes: getScopesOfAccess(accessItem)
         };
       }),

@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class PageTitleStrategy extends TitleStrategy {
   private static readonly DEFAULT_TITLE =
     'Ghostfolio – Open Source Wealth Management Software';
   private static readonly DEFAULT_TITLE_SHORT = 'Ghostfolio';
 
-  public constructor(private readonly title: Title) {
-    super();
-  }
+  private readonly title = inject(Title);
 
   public override updateTitle(routerState: RouterStateSnapshot) {
     const title = this.buildTitle(routerState);

@@ -16,17 +16,19 @@
     }
   </div>
 
-  @if (hasPermissionToCreateActivity) {
+  @if (hasPermissionToImportActivities || hasPermissionToDeleteActivity) {
     <div class="d-flex">
-      <button
-        class="align-items-center d-flex"
-        mat-stroked-button
-        (click)="onImport()"
-      >
-        <ion-icon class="mr-2" name="cloud-upload-outline" />
-        <span><ng-container i18n>Import Activities</ng-container>...</span>
-      </button>
-      @if (hasPermissionToExportActivities) {
+      @if (hasPermissionToImportActivities) {
+        <button
+          class="align-items-center d-flex"
+          mat-stroked-button
+          (click)="onImport()"
+        >
+          <ion-icon class="mr-2" name="cloud-upload-outline" />
+          <span><ng-container i18n>Import Activities</ng-container>...</span>
+        </button>
+      }
+      @if (hasPermissionToExportActivities || hasPermissionToDeleteActivity) {
         <button
           class="mx-1 no-min-width px-2"
           mat-stroked-button
@@ -41,16 +43,18 @@
         class="no-max-width"
         xPosition="before"
       >
-        <button
-          mat-menu-item
-          [disabled]="dataSource()?.data.length === 0"
-          (click)="onImportDividends()"
-        >
-          <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="color-wand-outline" />
-            <span><ng-container i18n>Import Dividends</ng-container>...</span>
-          </span>
-        </button>
+        @if (hasPermissionToImportActivities) {
+          <button
+            mat-menu-item
+            [disabled]="dataSource()?.data.length === 0"
+            (click)="onImportDividends()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="color-wand-outline" />
+              <span><ng-container i18n>Import Dividends</ng-container>...</span>
+            </span>
+          </button>
+        }
         @if (hasPermissionToExportActivities) {
           <button
             class="align-items-center d-flex"
@@ -84,25 +88,31 @@
             </span>
           </button>
         }
-        <hr class="m-0" />
-        <button
-          class="align-items-center d-flex"
-          mat-menu-item
-          [disabled]="!canDeleteActivities()"
-          (click)="onDeleteActivities()"
-        >
-          <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="trash-outline" />
-            @if (canDeleteActivities()) {
-              <span i18n
-                >Delete {{ totalItems > 1 ? totalItems : '' }}
-                {totalItems, plural, =1 {Activity} other {Activities}}</span
-              >
-            } @else {
-              <span i18n>Delete Activities</span>
-            }
-          </span>
-        </button>
+        @if (hasPermissionToDeleteActivity) {
+          @if (
+            hasPermissionToExportActivities || hasPermissionToImportActivities
+          ) {
+            <hr class="m-0" />
+          }
+          <button
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="!canDeleteActivities()"
+            (click)="onDeleteActivities()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="trash-outline" />
+              @if (canDeleteActivities()) {
+                <span i18n
+                  >Delete {{ totalItems > 1 ? totalItems : '' }}
+                  {totalItems, plural, =1 {Activity} other {Activities}}</span
+                >
+              } @else {
+                <span i18n>Delete Activities</span>
+              }
+            </span>
+          </button>
+        }
       </mat-menu>
     </div>
   }
@@ -394,7 +404,7 @@
     <ng-container matColumnDef="actions" stickyEnd>
       <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
         @if (
-          !hasPermissionToCreateActivity && hasPermissionToExportActivities
+          !hasPermissionToImportActivities && hasPermissionToExportActivities
         ) {
           <button
             class="mx-1 no-min-width px-2"
@@ -410,7 +420,7 @@
           class="no-max-width"
           xPosition="before"
         >
-          @if (hasPermissionToCreateActivity) {
+          @if (hasPermissionToImportActivities) {
             <button
               class="align-items-center d-flex"
               mat-menu-item
@@ -424,7 +434,7 @@
               </span>
             </button>
           }
-          @if (hasPermissionToCreateActivity) {
+          @if (hasPermissionToImportActivities) {
             <button
               mat-menu-item
               [disabled]="dataSource()?.data.length === 0"
@@ -490,35 +500,41 @@
               </span>
             </button>
           }
-          <a
-            mat-menu-item
-            [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="create-outline" />
-              <span><ng-container i18n>Edit</ng-container>...</span>
-            </span>
-          </a>
-          <a
-            mat-menu-item
-            [routerLink]="activityDialogRouterLinks().get(element.id)?.clone"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="copy-outline" />
-              <span><ng-container i18n>Clone</ng-container>...</span>
-            </span>
-          </a>
-          <button
-            mat-menu-item
-            [disabled]="!isDraftActivity(element)"
-            (click)="onExportDraft(element.id)"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="calendar-clear-outline" />
-              <span i18n>Export Draft as ICS</span>
-            </span>
-          </button>
-          <hr class="m-0" />
+          @if (hasPermissionToUpdateActivity) {
+            <a
+              mat-menu-item
+              [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="create-outline" />
+                <span><ng-container i18n>Edit</ng-container>...</span>
+              </span>
+            </a>
+          }
+          @if (hasPermissionToCreateActivity) {
+            <a
+              mat-menu-item
+              [routerLink]="activityDialogRouterLinks().get(element.id)?.clone"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="copy-outline" />
+                <span><ng-container i18n>Clone</ng-container>...</span>
+              </span>
+            </a>
+          }
+          @if (hasPermissionToExportActivities) {
+            <button
+              mat-menu-item
+              [disabled]="!isDraftActivity(element)"
+              (click)="onExportDraft(element.id)"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="calendar-clear-outline" />
+                <span i18n>Export Draft as ICS</span>
+              </span>
+            </button>
+            <hr class="m-0" />
+          }
           <button
             mat-menu-item
             [disabled]="!hasPermissionToDeleteActivity"

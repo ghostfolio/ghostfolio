@@ -21,6 +21,6 @@
     </div>
   </div>
 </div>
-@if (!hasImpersonationId && hasPermissionToCreateWatchlistItem) {
+@if (hasPermissionToCreateWatchlistItem) {
   <gf-fab [queryParams]="{ createWatchlistItemDialog: true }" />
 }

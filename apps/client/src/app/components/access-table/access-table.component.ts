@@ -1,7 +1,11 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
-import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import {
+  hasAnyScopeOfWriteAccess,
+  hasScope,
+  scopes
+} from '@ghostfolio/common/scopes';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
@@ -103,6 +107,10 @@ export class GfAccessTableComponent {
 
   protected hasScopeToReadValues({ scopes: scopesOfAccess }: Access) {
     return hasScope(scopesOfAccess, scopes.portfolioReadValues);
+  }
+
+  protected hasScopesToWrite({ scopes: scopesOfAccess }: Access) {
+    return hasAnyScopeOfWriteAccess(scopesOfAccess);
   }
 
   protected onCopyUrlToClipboard(aId: string) {

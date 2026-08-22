@@ -10,7 +10,7 @@ import { UserSettings } from './user-settings.interface';
 
 // TODO: Compare with UserWithSettings
 export interface User {
-  access: Pick<Access, 'alias' | 'id' | 'permissions' | 'scopes'>[];
+  access: Pick<Access, 'alias' | 'id' | 'scopes'>[];
   accounts: AccountWithPlatform[];
   activitiesCount: number;
   activityTypes: ActivityType[];

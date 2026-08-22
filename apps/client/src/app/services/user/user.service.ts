@@ -3,7 +3,7 @@ import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { HttpClient } from '@angular/common/http';
-import { computed, DestroyRef, inject, Injectable } from '@angular/core';
+import { computed, DestroyRef, inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
@@ -18,9 +18,7 @@ import { GfSubscriptionInterstitialDialogComponent } from '../../components/subs
 import { UserStoreActions } from './user-store.actions';
 import { UserStoreState } from './user-store.state';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class UserService extends ObservableStore<UserStoreState> {
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType

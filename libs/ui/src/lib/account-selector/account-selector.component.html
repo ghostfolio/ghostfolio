@@ -28,16 +28,25 @@
       <mat-option [value]="null" />
     }
 
-    @for (account of accounts(); track account.id) {
+    @for (account of sortedAccounts(); track account.id) {
       <mat-option [value]="account.id">
-        <div class="d-flex">
+        <div class="align-items-center d-flex">
           <gf-entity-logo
             class="mr-1"
             [hasPlaceholder]="true"
             [tooltip]="account.platform?.name ?? ''"
             [url]="account.platform?.url ?? ''"
           />
-          <span>{{ account.name }}</span>
+          <div class="line-height-1">
+            <span>{{ account.name }}</span>
+            <br />
+            <small class="text-muted">
+              @if (account.platform?.name) {
+                {{ account.platform?.name }} ·
+              }
+              {{ account.currency }}</small
+            >
+          </div>
         </div>
       </mat-option>
     }

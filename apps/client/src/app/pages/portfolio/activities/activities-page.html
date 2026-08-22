@@ -12,12 +12,15 @@
         [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
         [hasPermissionToFilterByType]="user?.settings?.isExperimentalFeatures"
+        [hasPermissionToImportActivities]="hasPermissionToImportActivities"
+        [hasPermissionToUpdateActivity]="hasPermissionToUpdateActivity"
         [locale]="user?.settings?.locale"
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [showActions]="
-          !hasImpersonationId &&
-          hasPermissionToDeleteActivity &&
+          (hasPermissionToCreateActivity ||
+            hasPermissionToDeleteActivity ||
+            hasPermissionToUpdateActivity) &&
           !user.settings.isRestrictedView
         "
         [sortColumn]="sortColumn"
@@ -37,11 +40,7 @@
     </div>
   </div>
 
-  @if (
-    !hasImpersonationId &&
-    hasPermissionToCreateActivity &&
-    !user.settings.isRestrictedView
-  ) {
+  @if (hasPermissionToCreateActivity) {
     <gf-fab
       [routerLink]="
         internalRoutes.portfolio.subRoutes.activities.subRoutes.create

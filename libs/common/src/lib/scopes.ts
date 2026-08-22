@@ -1,5 +1,3 @@
-import { AccessPermission } from '@prisma/client';
-
 /**
  * Scopes describe what a grantee may do on behalf of the granting user. They
  * are a separate axis from the permissions, which describe the capabilities of
@@ -54,32 +52,26 @@ const SCOPES_OF_PUBLIC_ACCESS: readonly Scope[] = [
   scopes.portfolioRead
 ];
 
-const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
+export const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
   SCOPES_OF_READ_ACCESS.filter((scope) => {
     return scope !== scopes.portfolioReadValues;
   });
 
 export function getScopesOfAccess({
   granteeUserId,
-  permissions,
   scopes: scopesOfAccess
 }: {
   granteeUserId?: string | null;
-  permissions?: AccessPermission[];
   scopes?: string[];
 }): string[] {
-  let scopesToEvaluate: readonly string[] = scopesOfAccess ?? [];
-
-  if (!scopesToEvaluate.length) {
-    // TODO: Remove the derivation from the permissions once they have been
-    // dropped from the access
-    scopesToEvaluate = permissions?.includes('READ')
-      ? SCOPES_OF_READ_ACCESS
-      : SCOPES_OF_READ_RESTRICTED_ACCESS;
-  }
+  const scopesToEvaluate = scopesOfAccess ?? [];
 
   if (granteeUserId) {
-    return [...scopesToEvaluate];
+    // An unknown scope is dropped, so that a scope which has been removed from
+    // the vocabulary cannot stay effective
+    return Object.values(scopes).filter((scope) => {
+      return scopesToEvaluate.includes(scope);
+    });
   }
 
   // An access which has not been granted to a user is public, hence it is
@@ -103,6 +95,12 @@ export function getScopesOfOwnAccess(): string[] {
  */
 export function getScopesOfUnrestrictedImpersonation(): string[] {
   return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
+}
+
+export function hasAnyScopeOfWriteAccess(aScopes: string[] = []) {
+  return SCOPES_OF_WRITE_ACCESS.some((scope) => {
+    return hasScope(aScopes, scope);
+  });
 }
 
 export function hasScope(aScopes: string[] = [], aScope: Scope) {

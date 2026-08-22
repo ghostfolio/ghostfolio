@@ -1,4 +1,3 @@
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AssetProfileIdentifier,
@@ -7,6 +6,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import {
   HoldingType,
   HoldingsViewMode,
@@ -51,7 +51,6 @@ export class GfHomeHoldingsComponent implements OnInit {
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
 
   protected deviceType: string;
-  protected hasImpersonationId: boolean;
   protected hasPermissionToAccessHoldingsChart: boolean;
   protected hasPermissionToCreateActivity: boolean;
   protected holdings: PortfolioPosition[] | undefined;
@@ -83,9 +82,6 @@ export class GfHomeHoldingsComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly impersonationStorageService = inject(
-    ImpersonationStorageService
-  );
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
@@ -95,15 +91,6 @@ export class GfHomeHoldingsComponent implements OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-
-        this.changeDetectorRef.markForCheck();
-      });
 
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -116,10 +103,9 @@ export class GfHomeHoldingsComponent implements OnInit {
             permissions.accessHoldingsChart
           );
 
-          this.hasPermissionToCreateActivity = hasPermission(
-            this.user.permissions,
-            permissions.createActivity
-          );
+          this.hasPermissionToCreateActivity =
+            hasPermission(this.user.permissions, permissions.createActivity) &&
+            hasScope(this.user.scopes, scopes.activityCreate);
 
           this.initialize();
         }

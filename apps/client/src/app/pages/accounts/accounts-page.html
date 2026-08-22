@@ -6,10 +6,11 @@
         [accounts]="accounts"
         [activitiesCount]="activitiesCount"
         [baseCurrency]="user?.settings?.baseCurrency"
+        [hasPermissionToDeleteAccount]="hasPermissionToDeleteAccount"
+        [hasPermissionToUpdateAccount]="hasPermissionToUpdateAccount"
         [locale]="user?.settings?.locale"
         [showActions]="
-          !hasImpersonationId &&
-          hasPermissionToUpdateAccount &&
+          (hasPermissionToDeleteAccount || hasPermissionToUpdateAccount) &&
           !user.settings.isRestrictedView
         "
         [totalBalanceInBaseCurrency]="totalBalanceInBaseCurrency"
@@ -20,11 +21,7 @@
     </div>
   </div>
 
-  @if (
-    !hasImpersonationId &&
-    hasPermissionToCreateAccount &&
-    !user.settings.isRestrictedView
-  ) {
+  @if (hasPermissionToCreateAccount && !user.settings.isRestrictedView) {
     <gf-fab
       [routerLink]="internalRoutes.accounts.subRoutes.create.routerLink"
     />

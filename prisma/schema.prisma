@@ -10,17 +10,15 @@ datasource db {
 
 model Access {
   alias         String?
-  createdAt     DateTime           @default(now())
-  granteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
+  createdAt     DateTime @default(now())
+  granteeUser   User?    @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
   granteeUserId String?
-  id            String             @id @default(uuid())
-  /// @deprecated Use the scopes instead
-  permissions   AccessPermission[] @default([READ_RESTRICTED])
-  scopes        String[]           @default([])
-  settings      Json               @default("{}")
-  updatedAt     DateTime           @updatedAt
+  id            String   @id @default(uuid())
+  scopes        String[] @default([])
+  settings      Json     @default("{}")
+  updatedAt     DateTime @updatedAt
   userId        String
-  user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
+  user          User     @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([alias])
   @@index([granteeUserId])
@@ -331,11 +329,6 @@ model User {
   @@index([provider])
   @@index([role])
   @@index([thirdPartyId])
-}
-
-enum AccessPermission {
-  READ
-  READ_RESTRICTED
 }
 
 enum AssetClass {

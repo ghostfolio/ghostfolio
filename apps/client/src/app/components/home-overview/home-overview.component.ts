@@ -15,6 +15,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -66,7 +67,10 @@ export class GfHomeOverviewComponent implements OnInit {
   );
 
   protected readonly hasPermissionToCreateActivity = computed(() => {
-    return hasPermission(this.user()?.permissions, permissions.createActivity);
+    return (
+      hasPermission(this.user()?.permissions, permissions.createActivity) &&
+      hasScope(this.user()?.scopes, scopes.activityCreate)
+    );
   });
 
   protected readonly showDetails = computed(() => {
