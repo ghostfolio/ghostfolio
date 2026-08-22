@@ -647,19 +647,11 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
     this.dataService
       .postActivity(activity)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        switchMap(() => {
-          return this.userService.get(true);
-        })
-      )
-      .subscribe({
-        error: () => {
-          this.navigateToActivities();
-        },
-        next: () => {
-          this.navigateToActivities();
-        }
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService.get(true).subscribe();
+
+        this.navigateToActivities();
       });
   }
 

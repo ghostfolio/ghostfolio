@@ -163,7 +163,7 @@ export class UserService {
 
     const activitiesCount = impersonationUserId
       ? (impersonationUser?.activitiesCount ?? 0)
-      : user.activitiesCount;
+      : (user.activitiesCount ?? 0);
 
     const activityTypes = activitiesGroupedByType.map(({ type }) => {
       return type;
