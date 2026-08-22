@@ -48,7 +48,6 @@ import { omit, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 import { ImportDataDto } from './import-data.dto';
-import { getAssetProfilesToCreate } from './import.helper';
 import { AssetProfileToCreate } from './interfaces/asset-profile-to-create.interface';
 
 @Injectable()
@@ -741,7 +740,7 @@ export class ImportService {
       for (const {
         assetProfile,
         marketDataObjects
-      } of getAssetProfilesToCreate({
+      } of this.getAssetProfilesToCreate({
         activities: activitiesExtendedWithErrors,
         assetProfiles: assetProfilesToCreate
       })) {
@@ -1085,6 +1084,30 @@ export class ImportService {
     }
 
     return matchingAccountsOfUser[0];
+  }
+
+  private getAssetProfilesToCreate({
+    activities,
+    assetProfiles
+  }: {
+    activities: Pick<Activity, 'assetProfile' | 'error'>[];
+    assetProfiles: AssetProfileToCreate[];
+  }) {
+    const assetProfileIdentifiersToImport = new Set(
+      activities
+        .filter(({ error }) => {
+          return !error;
+        })
+        .map(({ assetProfile }) => {
+          return getAssetProfileIdentifier(assetProfile);
+        })
+    );
+
+    return assetProfiles.filter(({ assetProfile }) => {
+      return assetProfileIdentifiersToImport.has(
+        getAssetProfileIdentifier(assetProfile)
+      );
+    });
   }
 
   private isUniqueAccount(accounts: AccountWithValue[]) {
