@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Disabled the telemetry in the _Storybook_ setup
+- Upgraded the `Node.js` engine from version `>=22.18.0` to `>=22.22.3` (`package.json`)
 
 ### Fixed
 
