@@ -19,6 +19,7 @@ import type { ColumnDescriptor } from 'tablemark';
 export class AiService {
   private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: ({
     key:
+      | 'ACTIVITIES_COUNT'
       | 'ALLOCATION_PERCENTAGE'
       | 'ASSET_CLASS'
       | 'ASSET_SUB_CLASS'
@@ -33,6 +34,7 @@ export class AiService {
     { key: 'ASSET_CLASS', name: 'Asset Class' },
     { key: 'ASSET_SUB_CLASS', name: 'Asset Sub Class' },
     { key: 'DATE_OF_FIRST_ACTIVITY', name: 'Date of First Activity' },
+    { align: 'right', key: 'ACTIVITIES_COUNT', name: 'Activities Count' },
     {
       align: 'right',
       key: 'ALLOCATION_PERCENTAGE',
@@ -101,6 +103,7 @@ export class AiService {
       })
       .map(
         ({
+          activitiesCount,
           allocationInPercentage,
           assetProfile: {
             assetClass,
@@ -114,6 +117,10 @@ export class AiService {
           return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.reduce(
             (row, { key, name }) => {
               switch (key) {
+                case 'ACTIVITIES_COUNT':
+                  row[name] = activitiesCount.toString();
+                  break;
+
                 case 'ALLOCATION_PERCENTAGE':
                   row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
                   break;
@@ -163,17 +170,21 @@ export class AiService {
     ) => Promise<typeof import('tablemark')>;
     const { tablemark } = await dynamicImport('tablemark');
 
-    const holdingsTableString = tablemark(holdingsTableRows, {
-      columns: holdingsTableColumns
-    });
+    const holdingsSection = [
+      '## Holdings',
+      '',
+      tablemark(holdingsTableRows, {
+        columns: holdingsTableColumns
+      })
+    ].join('\n');
 
     if (mode === 'portfolio') {
-      return holdingsTableString;
+      return holdingsSection;
     }
 
     return [
       `You are a neutral financial assistant. Please analyze the following investment portfolio (base currency being ${userCurrency}) in simple words.`,
-      holdingsTableString,
+      holdingsSection,
       'Structure your answer with these sections:',
       'Overview: Briefly summarize the portfolio’s composition and allocation rationale.',
       'Risk Assessment: Identify potential risks, including market volatility, concentration, and sectoral imbalances.',
