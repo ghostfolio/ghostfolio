@@ -3,7 +3,6 @@ import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CommonModule } from '@angular/common';
 import { ANIMATION_MODULE_TYPE } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import '@angular/localize/init';
 import { MatButtonModule } from '@angular/material/button';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
