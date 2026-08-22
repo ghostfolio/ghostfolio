@@ -1,6 +1,5 @@
 import { ANIMATION_MODULE_TYPE } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import '@angular/localize/init';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 

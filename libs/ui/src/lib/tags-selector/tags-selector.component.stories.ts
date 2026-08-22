@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { ANIMATION_MODULE_TYPE } from '@angular/core';
-import '@angular/localize/init';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
 import { GfTagsSelectorComponent } from './tags-selector.component';

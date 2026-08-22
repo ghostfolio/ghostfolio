@@ -1,3 +1,5 @@
+import { AccessLevel } from '@ghostfolio/common/types';
+
 /**
  * Scopes describe what a grantee may do on behalf of the granting user. They
  * are a separate axis from the permissions, which describe the capabilities of
@@ -57,6 +59,19 @@ export const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
     return scope !== scopes.portfolioReadValues;
   });
 
+/**
+ * Access level which the scopes of an access grant
+ */
+export function getAccessLevel(aScopes: string[] = []): AccessLevel {
+  if (hasAnyScopeOfWriteAccess(aScopes)) {
+    return 'CREATE_READ_UPDATE_DELETE';
+  }
+
+  return hasScope(aScopes, scopes.portfolioReadValues)
+    ? 'READ'
+    : 'READ_RESTRICTED';
+}
+
 export function getScopesOfAccess({
   granteeUserId,
   scopes: scopesOfAccess
@@ -79,6 +94,20 @@ export function getScopesOfAccess({
   return SCOPES_OF_PUBLIC_ACCESS.filter((scope) => {
     return scopesToEvaluate.includes(scope);
   });
+}
+
+/**
+ * Scopes which an access level grants
+ */
+export function getScopesOfAccessLevel(aAccessLevel: AccessLevel): Scope[] {
+  switch (aAccessLevel) {
+    case 'CREATE_READ_UPDATE_DELETE':
+      return [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
+    case 'READ':
+      return [...SCOPES_OF_READ_ACCESS];
+    default:
+      return [...SCOPES_OF_READ_RESTRICTED_ACCESS];
+  }
 }
 
 /**

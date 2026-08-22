@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import '@angular/localize/init';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';

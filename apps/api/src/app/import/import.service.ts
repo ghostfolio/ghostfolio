@@ -48,6 +48,7 @@ import { omit, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
 import { ImportDataDto } from './import-data.dto';
+import { AssetProfileToCreate } from './interfaces/asset-profile-to-create.interface';
 
 @Injectable()
 export class ImportService {
@@ -534,6 +535,8 @@ export class ImportService {
       }
     }
 
+    const assetProfilesToCreate: AssetProfileToCreate[] = [];
+
     if (assetProfilesWithMarketDataDto?.length) {
       const customAssetProfileNames = assetProfilesWithMarketDataDto
         .filter(({ dataSource, name }) => {
@@ -557,6 +560,7 @@ export class ImportService {
         ]);
 
       for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
+        let assetProfileToCreate: Prisma.SymbolProfileCreateInput;
         let symbol = assetProfileWithMarketData.symbol;
 
         // Check if there is any existing asset profile
@@ -605,13 +609,10 @@ export class ImportService {
             assetProfile.symbol = symbol;
 
             if (!isDryRun) {
-              // Create a new asset profile
-              const assetProfileObject: Prisma.SymbolProfileCreateInput = {
+              assetProfileToCreate = {
                 ...assetProfile,
                 user: { connect: { id: user.id } }
               };
-
-              await this.symbolProfileService.add(assetProfileObject);
             }
           }
 
@@ -625,7 +626,6 @@ export class ImportService {
         }
 
         if (!isDryRun) {
-          // Insert or update market data
           const marketDataObjects = (
             assetProfileWithMarketData.marketData ?? []
           ).map((marketData) => {
@@ -636,7 +636,40 @@ export class ImportService {
             } as Prisma.MarketDataUpdateInput;
           });
 
-          await this.marketDataService.updateMany({ data: marketDataObjects });
+          if (assetProfileToCreate) {
+            const assetProfileToCreateIdentifier =
+              getAssetProfileIdentifier(assetProfileToCreate);
+
+            const duplicateAssetProfileToCreate = assetProfilesToCreate.find(
+              ({ assetProfile }) => {
+                return (
+                  getAssetProfileIdentifier(assetProfile) ===
+                  assetProfileToCreateIdentifier
+                );
+              }
+            );
+
+            if (duplicateAssetProfileToCreate) {
+              // The import contains the same asset profile more than once,
+              // which would fail with a unique constraint violation. Keep the
+              // first asset profile and merge the market data into it.
+              duplicateAssetProfileToCreate.marketDataObjects.push(
+                ...marketDataObjects
+              );
+            } else {
+              // Create the new asset profile and its market data later, once it
+              // is known which activities are imported
+              assetProfilesToCreate.push({
+                marketDataObjects,
+                assetProfile: assetProfileToCreate
+              });
+            }
+          } else {
+            // Insert or update market data
+            await this.marketDataService.updateMany({
+              data: marketDataObjects
+            });
+          }
         }
       }
     }
@@ -718,6 +751,25 @@ export class ImportService {
     const draftTag = tags.find(({ id }) => {
       return id === TAG_ID_DRAFT;
     }) ?? { id: TAG_ID_DRAFT, name: 'DRAFT' };
+
+    // Create the new asset profiles of the activities to import only, so that
+    // no unused asset profile remains, for example if no activity refers to
+    // the asset profile. An asset profile which is created before the
+    // validation of the activities would stay behind, because the import is
+    // not rolled back on an error.
+    if (!isDryRun) {
+      for (const {
+        assetProfile,
+        marketDataObjects
+      } of this.getAssetProfilesToCreate({
+        activities: activitiesExtendedWithErrors,
+        assetProfiles: assetProfilesToCreate
+      })) {
+        await this.symbolProfileService.add(assetProfile);
+
+        await this.marketDataService.updateMany({ data: marketDataObjects });
+      }
+    }
 
     const activities: Activity[] = [];
 
@@ -934,7 +986,7 @@ export class ImportService {
     activitiesDto: Partial<CreateOrderDto>[];
     userCurrency: string;
     userId: string;
-  }): Promise<Partial<Activity>[]> {
+  }): Promise<(Partial<Activity> & Pick<Activity, 'assetProfile'>)[]> {
     const { activities: existingActivities } =
       await this.activitiesService.getActivities({
         userCurrency,
@@ -1053,6 +1105,30 @@ export class ImportService {
     }
 
     return matchingAccountsOfUser[0];
+  }
+
+  private getAssetProfilesToCreate({
+    activities,
+    assetProfiles
+  }: {
+    activities: Pick<Activity, 'assetProfile' | 'error'>[];
+    assetProfiles: AssetProfileToCreate[];
+  }) {
+    const assetProfileIdentifiersToImport = new Set(
+      activities
+        .filter(({ error }) => {
+          return !error;
+        })
+        .map(({ assetProfile }) => {
+          return getAssetProfileIdentifier(assetProfile);
+        })
+    );
+
+    return assetProfiles.filter(({ assetProfile }) => {
+      return assetProfileIdentifiersToImport.has(
+        getAssetProfileIdentifier(assetProfile)
+      );
+    });
   }
 
   private isUniqueAccount(accounts: AccountWithValue[]) {

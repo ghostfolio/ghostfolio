@@ -1,6 +1,5 @@
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 
-import '@angular/localize/init';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
 import { holdings } from '../mocks/holdings';
