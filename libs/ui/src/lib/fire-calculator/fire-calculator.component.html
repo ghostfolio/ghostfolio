@@ -28,6 +28,15 @@
           <div class="ml-2" matTextSuffix>%</div>
         </mat-form-field>
 
+        <div class="mb-3 px-2 use-annualized-performance-rate">
+          <mat-checkbox
+            color="primary"
+            formControlName="useAnnualizedPerformanceRate"
+            i18n
+            >Use annualized performance</mat-checkbox
+          >
+        </div>
+
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Retirement Date</mat-label>
           <div>{{ retirementDateLabel }}</div>

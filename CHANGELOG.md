@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.58.0 - 2026-08-22
 
+### Added
+
+- Added an option to use the annualized performance as the annual interest rate in the _FIRE_ calculator
+
 ### Changed
 
 - Improved the type filter of the activities table on the activities page to only list the activity types in use (experimental)
