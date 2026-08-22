@@ -149,7 +149,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
               y: benchmarkDataValues[date]
             };
           }),
-          label: this.benchmark?.name ?? $localize`Benchmark`
+          label: this.benchmark()?.name ?? $localize`Benchmark`
         }
       ]
     };
