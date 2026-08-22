@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the type filter of the activities table component to only list the activity types in use (experimental)
+- Improved the type filter of the activities table on the activities page to only list the activity types in use (experimental)
 - Improved the indexes of the order database table
 - Upgraded the `Node.js` engine from version `>=22.18.0` to `>=22.22.3` (`package.json`)
 
