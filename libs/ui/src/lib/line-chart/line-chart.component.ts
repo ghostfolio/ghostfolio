@@ -23,6 +23,7 @@ import {
 import {
   type AnimationsSpec,
   Chart,
+  Decimation,
   Filler,
   LinearScale,
   LineController,
@@ -54,6 +55,7 @@ export class GfLineChartComponent
   @Input() benchmarkLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
+  @Input() dataDecimation = false;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
   @Input() label: string;
@@ -78,6 +80,7 @@ export class GfLineChartComponent
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {
     Chart.register(
+      Decimation,
       Filler,
       LineController,
       LineElement,
@@ -183,6 +186,9 @@ export class GfLineChartComponent
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+        this.chart.options.plugins.decimation = this.dataDecimation
+          ? { algorithm: 'lttb', enabled: true }
+          : undefined;
         this.chart.options.animations = this.isAnimated
           ? animations
           : undefined;
@@ -202,6 +208,9 @@ export class GfLineChartComponent
             },
             interaction: { intersect: false, mode: 'index' },
             plugins: {
+              decimation: this.dataDecimation
+                ? { algorithm: 'lttb', enabled: true }
+                : undefined,
               legend: {
                 align: 'start',
                 display: this.showLegend,

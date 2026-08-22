@@ -1,3 +1,4 @@
+import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import {
   canOpenHoldingDetail,
   getLocale,
@@ -24,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
@@ -101,6 +103,28 @@ export class GfHoldingsTableComponent {
 
   protected canShowDetails(holding: PortfolioPosition): boolean {
     return this.hasPermissionToOpenDetails() && canOpenHoldingDetail(holding);
+  }
+
+  protected getQuantityPrecision(holding: PortfolioPosition): number {
+    if (Number.isInteger(holding.quantity)) {
+      return 0;
+    }
+
+    if (holding.assetProfile.assetSubClass === AssetSubClass.CRYPTOCURRENCY) {
+      if (holding.quantity < 10) {
+        return 8;
+      }
+
+      if (holding.quantity < 1000) {
+        return 6;
+      }
+
+      if (holding.quantity >= NUMERICAL_PRECISION_THRESHOLD_6_FIGURES) {
+        return 0;
+      }
+    }
+
+    return 2;
   }
 
   protected onOpenHoldingDialog({
