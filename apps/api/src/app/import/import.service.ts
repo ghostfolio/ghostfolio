@@ -765,9 +765,9 @@ export class ImportService {
         activities: activitiesExtendedWithErrors,
         assetProfiles: assetProfilesToCreate
       })) {
-        await this.marketDataService.updateMany({ data: marketDataObjects });
-
         await this.symbolProfileService.add(assetProfile);
+
+        await this.marketDataService.updateMany({ data: marketDataObjects });
       }
     }
 

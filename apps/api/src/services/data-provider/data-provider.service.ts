@@ -285,7 +285,7 @@ export class DataProviderService implements OnModuleInit {
         // validation, thus the data provider cannot resolve it yet
         if (
           (dataSource === DataSource.MANUAL && type === 'BUY') ||
-          Boolean(assetProfileInImport) ||
+          assetProfileInImport?.dataSource === DataSource.MANUAL ||
           NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
         ) {
           assetProfiles[assetProfileIdentifier] = {
@@ -294,9 +294,9 @@ export class DataProviderService implements OnModuleInit {
               'marketData',
               'symbol'
             ]),
-            currency,
             dataSource,
             symbol,
+            currency: assetProfileInImport?.currency ?? currency,
             name: assetProfileInImport?.name ?? symbol
           };
 
