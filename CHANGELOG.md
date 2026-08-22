@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a server of the Model Context Protocol (MCP) with a tool to get the holdings of the portfolio (experimental)
 - Added support to remove a received access on the access page
+- Added the `type` to the `Access` database schema
 - Extended the holdings table by the activities count in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
 - Extended the holdings table by the activities count in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
 - Extended the holdings table by the date of first activity in the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the create or update access dialog where a public access could not be updated (experimental)
 - Fixed the performance calculation for dates without historical market data by carrying forward the market price from dates with activities
 
 ## 3.58.0 - 2026-08-22
