@@ -125,6 +125,7 @@ export class DataGatheringProcessor {
 
       const data: Prisma.MarketDataUpdateInput[] = [];
       let lastMarketPrice: number;
+      let numberOfMarketDataItemsToKeep = 0;
 
       while (
         isBefore(
@@ -139,15 +140,13 @@ export class DataGatheringProcessor {
           )
         )
       ) {
-        if (
+        const marketPriceOfDataProvider =
           historicalData[assetProfileIdentifier]?.[
             format(currentDate, DATE_FORMAT)
-          ]?.marketPrice
-        ) {
-          lastMarketPrice =
-            historicalData[assetProfileIdentifier]?.[
-              format(currentDate, DATE_FORMAT)
-            ]?.marketPrice;
+          ]?.marketPrice;
+
+        if (marketPriceOfDataProvider) {
+          lastMarketPrice = marketPriceOfDataProvider;
         }
 
         if (lastMarketPrice) {
@@ -158,10 +157,20 @@ export class DataGatheringProcessor {
             marketPrice: lastMarketPrice,
             state: 'CLOSE'
           });
+
+          if (marketPriceOfDataProvider) {
+            numberOfMarketDataItemsToKeep = data.length;
+          }
         }
 
         currentDate = addDays(currentDate, 1);
       }
+
+      // A gap at the end means that the market data is not available yet, in
+      // contrast to a gap in between, which means that the market was closed.
+      // Therefore, the market prices which are carried forward after the last
+      // market price of the data provider are discarded.
+      data.splice(numberOfMarketDataItemsToKeep);
 
       if (force) {
         await this.marketDataService.replaceForSymbol({

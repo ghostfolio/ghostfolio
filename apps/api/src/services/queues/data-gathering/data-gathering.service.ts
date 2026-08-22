@@ -310,9 +310,9 @@ export class DataGatheringService {
       });
 
       const marketPrice =
-        historicalData[getAssetProfileIdentifier({ dataSource, symbol })][
+        historicalData[getAssetProfileIdentifier({ dataSource, symbol })]?.[
           format(date, DATE_FORMAT)
-        ].marketPrice;
+        ]?.marketPrice;
 
       if (marketPrice) {
         return await this.prismaService.marketData.upsert({
