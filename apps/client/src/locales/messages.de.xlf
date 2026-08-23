@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="8264632476919693099" datatype="html">
         <source>Any person who has the link can view the data.</source>
-        <target state="new">Any person who has the link can view the data.</target>
+        <target state="translated">Jede Person mit diesem Link kann die Daten einsehen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">42</context>
@@ -1263,7 +1263,7 @@
       </trans-unit>
       <trans-unit id="3676123092874008298" datatype="html">
         <source>Identifier has been copied to the clipboard</source>
-        <target state="new">Identifier has been copied to the clipboard</target>
+        <target state="translated">Identifizierungszeichen wurde in die Zwischenablage kopiert</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
           <context context-type="linenumber">122</context>
@@ -1367,7 +1367,7 @@
       </trans-unit>
       <trans-unit id="4814285799071780083" datatype="html">
         <source>Remove</source>
-        <target state="new">Remove</target>
+        <target state="translated">Entfernen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">114</context>
@@ -2191,7 +2191,7 @@
       </trans-unit>
       <trans-unit id="2689736805867458122" datatype="html">
         <source>Copy identifier to clipboard</source>
-        <target state="new">Copy identifier to clipboard</target>
+        <target state="translated">Identifizierungszeichen in die Zwischenablage kopieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">99</context>
@@ -4267,7 +4267,7 @@
       </trans-unit>
       <trans-unit id="6962264495000055621" datatype="html">
         <source>Do you really want to remove this received access?</source>
-        <target state="new">Do you really want to remove this received access?</target>
+        <target state="translated">Möchtest du diese erhaltene Zugangsberechtigung wirklich entfernen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
           <context context-type="linenumber">149</context>
@@ -8100,7 +8100,7 @@
       </trans-unit>
       <trans-unit id="1308755238280799396" datatype="html">
         <source>Oops! Could not remove the received access.</source>
-        <target state="new">Oops! Could not remove the received access.</target>
+        <target state="translated">Ups! Die erhaltene Zugangsberechtigung konnte nicht entfernt werden.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">183</context>
@@ -9321,7 +9321,7 @@
       </trans-unit>
       <trans-unit id="3394346142616268152" datatype="html">
         <source>Oops! Could not revoke the granted access.</source>
-        <target state="new">Oops! Could not revoke the granted access.</target>
+        <target state="translated">Ups! Die gewährte Zugangsberechtigung konnte nicht widerrufen werden.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">162</context>
