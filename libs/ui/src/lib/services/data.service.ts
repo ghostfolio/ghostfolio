@@ -70,7 +70,6 @@ import { inject, Service } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
 import {
-  Access as AccessModel,
   Account,
   AccountBalance,
   DataSource,
@@ -316,7 +315,7 @@ export class DataService {
   }
 
   public deleteAccess(aId: string) {
-    return this.http.delete<AccessModel>(`/api/v1/access/${aId}`);
+    return this.http.delete<void>(`/api/v1/access/${aId}`);
   }
 
   public deleteAccount(aId: string) {

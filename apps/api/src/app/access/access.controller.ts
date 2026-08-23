@@ -114,10 +114,13 @@ export class AccessController {
   @Delete(':id')
   @HasPermission(permissions.deleteAccess)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
+  public async deleteAccess(@Param('id') id: string): Promise<void> {
     const originalAccess = await this.accessService.access({
       id,
-      userId: this.request.user.id
+      OR: [
+        { granteeUserId: this.request.user.id },
+        { userId: this.request.user.id }
+      ]
     });
 
     if (!originalAccess) {
@@ -127,7 +130,7 @@ export class AccessController {
       );
     }
 
-    return this.accessService.deleteAccess({
+    await this.accessService.deleteAccess({
       id
     });
   }
