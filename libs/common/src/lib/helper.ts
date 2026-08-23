@@ -1,5 +1,6 @@
 import { NumberParser } from '@internationalized/number';
 import {
+  AccessType,
   Type as ActivityType,
   AssetProfileOverrides,
   AssetSubClass,
@@ -54,7 +55,7 @@ import {
   PortfolioPosition,
   UserSettings
 } from './interfaces';
-import { AccessType, BenchmarkTrend, ColorScheme } from './types';
+import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
