@@ -33,6 +33,12 @@ same capability tier: fast/economical, balanced/complex, then frontier/review.
 - Do not create a pull request for a question, investigation, review-only task,
   or an intentionally uncommitted work-in-progress.
 
+## Follow-through
+
+When the user asks why a requested action was not completed, treat the question
+as a request to complete that action. Do not ask for confirmation unless doing
+so requires new authority or would materially expand the stated scope.
+
 ## Pull request descriptions
 
 Write a detailed but straightforward PR body for an AI engineer who does not
