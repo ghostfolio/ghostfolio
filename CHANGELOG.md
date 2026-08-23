@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the holdings table by the date of first activity in the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
 - Added a server of the Model Context Protocol (MCP) with a tool to get the holdings of the portfolio (experimental)
 - Added the `type` to the `Access` database schema
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
