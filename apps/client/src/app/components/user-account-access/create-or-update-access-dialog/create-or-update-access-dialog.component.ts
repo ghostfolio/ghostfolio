@@ -79,10 +79,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public tags: Filter[] = [];
 
   protected accessForm: FormGroup;
-  protected hasPermissionToEnableMcp = false;
   protected readonly mode: 'create' | 'update';
 
   private hasExperimentalFeatures = false;
+  private hasPermissionToEnableMcp = false;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -105,6 +105,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   public get canApplyFilters() {
     return this.isPublicAccess && this.hasExperimentalFeatures;
+  }
+
+  public get canGrantMcpAccess() {
+    return this.hasExperimentalFeatures && this.hasPermissionToEnableMcp;
   }
 
   public get canGrantWriteAccess() {

@@ -33,7 +33,7 @@
         <mat-select formControlName="type">
           <mat-option i18n value="PRIVATE">Private</mat-option>
           <mat-option i18n value="PUBLIC">Public</mat-option>
-          @if (hasPermissionToEnableMcp) {
+          @if (canGrantMcpAccess) {
             <mat-option value="MCP">Model Context Protocol (MCP)</mat-option>
           }
         </mat-select>
