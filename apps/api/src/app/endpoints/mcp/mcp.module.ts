@@ -31,7 +31,10 @@ import { GhostfolioMcpController } from './mcp.controller';
           transports: [
             new StreamableHttpTransport({
               endpoint: MCP_ENDPOINT,
-              security: { allowedOrigins: [hostname] }
+              security: {
+                allowedHosts: [hostname],
+                allowedOrigins: [hostname]
+              }
             })
           ],
           version: environment.version,

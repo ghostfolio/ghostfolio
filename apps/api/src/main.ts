@@ -137,10 +137,8 @@ async function bootstrap() {
   const PORT = configService.get<number>('PORT') || DEFAULT_PORT;
 
   if (configurationService.get('ENABLE_FEATURE_MCP')) {
-    const rootUrl = configurationService.get('ROOT_URL');
-
-    if (rootUrl === environment.rootUrl) {
-      const { hostname } = new URL(rootUrl);
+    if (!process.env.ROOT_URL) {
+      const { hostname } = new URL(configurationService.get('ROOT_URL'));
 
       logger.warn(
         `The Model Context Protocol (MCP) is enabled, but ROOT_URL is not set. A client which calls the endpoint from a browser page is accepted only with the origin ${hostname}.`

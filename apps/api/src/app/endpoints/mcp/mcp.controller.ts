@@ -27,9 +27,10 @@ export class GhostfolioMcpController {
     name: 'get-portfolio'
   })
   public async getPortfolio(
-    @Impersonation() { userId, userSettings }: ImpersonationContext
+    @Impersonation() { filters, userId, userSettings }: ImpersonationContext
   ) {
     const prompt = await this.aiService.getPrompt({
+      filters,
       userId,
       languageCode: userSettings.language ?? DEFAULT_LANGUAGE_CODE,
       mode: 'portfolio',

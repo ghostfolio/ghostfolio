@@ -2,7 +2,7 @@ import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscripti
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
-import { UserSettings } from '@ghostfolio/common/interfaces';
+import { AccessSettings, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   getScopesOfAccess,
@@ -63,9 +63,11 @@ export class ImpersonationService {
       where: { id: impersonatedUserId }
     });
 
+    const { filters } = (access?.settings ?? {}) as AccessSettings;
     const settings = impersonatedUser?.settings?.settings as UserSettings;
 
     return {
+      filters,
       accessId: impersonationId,
       authenticatedUserSubscription: user?.subscription,
       isActive: true,
