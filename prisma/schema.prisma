@@ -11,9 +11,11 @@ datasource db {
 model Access {
   alias         String?
   createdAt     DateTime   @default(now())
+  expiresAt     DateTime
   granteeUser   User?      @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
   granteeUserId String?
   id            String     @id @default(uuid())
+  lastUsedAt    DateTime?
   scopes        String[]   @default([])
   settings      Json       @default("{}")
   type          AccessType @default(PRIVATE)

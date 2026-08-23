@@ -50,11 +50,14 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map((accessItem) => {
-      const { alias, granteeUser, id, settings, type } = accessItem;
+      const { alias, expiresAt, granteeUser, id, lastUsedAt, settings, type } =
+        accessItem;
 
       return {
         alias,
+        expiresAt,
         id,
+        lastUsedAt,
         type,
         grantee: granteeUser?.id,
         scopes: getScopesOfAccess(accessItem),
@@ -105,6 +108,7 @@ export class AccessController {
       return await this.accessService.createAccess({
         type,
         alias: data.alias || undefined,
+        expiresAt: new Date(data.expiresAt),
         granteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
@@ -192,6 +196,7 @@ export class AccessController {
       return await this.accessService.updateAccess({
         data: {
           alias: data.alias,
+          expiresAt: new Date(data.expiresAt),
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
             : { disconnect: true },

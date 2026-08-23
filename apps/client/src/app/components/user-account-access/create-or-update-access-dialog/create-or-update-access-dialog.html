@@ -47,6 +47,26 @@
 
     <div>
       <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Expiration Date</mat-label>
+        <input
+          formControlName="expiresAt"
+          matInput
+          [matDatepicker]="expiresAt"
+          [min]="today"
+        />
+        <mat-datepicker-toggle class="mr-2" matSuffix [for]="expiresAt">
+          <ion-icon
+            class="text-muted"
+            matDatepickerToggleIcon
+            name="calendar-clear-outline"
+          />
+        </mat-datepicker-toggle>
+        <mat-datepicker #expiresAt />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Permission</mat-label>
         <mat-select formControlName="accessLevel">
           <mat-select-trigger>

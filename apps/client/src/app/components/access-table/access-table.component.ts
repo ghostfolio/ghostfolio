@@ -1,5 +1,6 @@
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
+import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -9,6 +10,7 @@ import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -41,6 +43,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ClipboardModule,
+    CommonModule,
     GfAccessLevelIconComponent,
     IonIcon,
     MatButtonModule,
@@ -78,7 +81,14 @@ export class GfAccessTableComponent {
   protected readonly dataSource = new MatTableDataSource<Access>();
 
   protected readonly displayedColumns = computed(() => {
-    const columns = ['alias', 'grantee', 'type', 'details'];
+    const columns = [
+      'alias',
+      'grantee',
+      'type',
+      'details',
+      'lastUsedAt',
+      'expiresAt'
+    ];
 
     if (this.showActions()) {
       columns.push('actions');
@@ -87,6 +97,7 @@ export class GfAccessTableComponent {
     return columns;
   });
 
+  protected readonly defaultDateFormat = getDateFormatString(getLocale());
   protected readonly getAccessLevel = getAccessLevel;
 
   protected hasPermissionToEnableMcp = false;

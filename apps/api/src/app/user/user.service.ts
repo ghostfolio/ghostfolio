@@ -230,7 +230,9 @@ export class UserService {
       access: access.map((accessItem) => {
         return {
           alias: accessItem.alias,
+          expiresAt: accessItem.expiresAt,
           id: accessItem.id,
+          lastUsedAt: accessItem.lastUsedAt,
           scopes: getScopesOfAccess(accessItem)
         };
       }),

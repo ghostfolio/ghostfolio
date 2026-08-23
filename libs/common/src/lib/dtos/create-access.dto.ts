@@ -4,6 +4,7 @@ import { Scope, scopes } from '@ghostfolio/common/scopes';
 import { AccessType } from '@prisma/client';
 import {
   IsArray,
+  IsDateString,
   IsEnum,
   IsIn,
   IsOptional,
@@ -15,6 +16,9 @@ export class CreateAccessDto {
   @IsOptional()
   @IsString()
   alias?: string;
+
+  @IsDateString()
+  expiresAt: string;
 
   @IsArray()
   @IsOptional()

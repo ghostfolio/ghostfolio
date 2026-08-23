@@ -16,6 +16,7 @@ import type {
 
 import { Injectable } from '@nestjs/common';
 import { Access, AccessType } from '@prisma/client';
+import { isBefore, isToday } from 'date-fns';
 
 @Injectable()
 export class ImpersonationService {
@@ -112,9 +113,12 @@ export class ImpersonationService {
         }
       });
 
-      if (accessObject?.userId) {
+      if (accessObject?.userId && !isExpired(accessObject)) {
+        await this.recordUsage(accessObject);
+
         return { access: accessObject, userId: accessObject.userId };
       } else if (
+        !accessObject &&
         hasPermission(user.permissions, permissions.impersonateAllUsers)
       ) {
         // The identifier is a user id in this case, hence verify its existence
@@ -133,11 +137,37 @@ export class ImpersonationService {
         }
       });
 
-      if (accessObject?.userId) {
+      if (accessObject?.userId && !isExpired(accessObject)) {
+        await this.recordUsage(accessObject);
+
         return { access: accessObject, userId: accessObject.userId };
       }
     }
 
     return { userId: null };
   }
+
+  /**
+   * Records that the access has been used. The value is the first usage of the
+   * day, because a request which repeats must not write to the database again.
+   */
+  private async recordUsage({ id, lastUsedAt }: Access) {
+    if (lastUsedAt && isToday(lastUsedAt)) {
+      return;
+    }
+
+    try {
+      await this.prismaService.access.update({
+        data: { lastUsedAt: new Date() },
+        where: { id }
+      });
+    } catch {
+      // The date of the last usage is not essential for the request, hence a
+      // failure to store it must not fail the request
+    }
+  }
+}
+
+function isExpired({ expiresAt }: Access) {
+  return expiresAt ? isBefore(expiresAt, new Date()) : false;
 }
