@@ -391,30 +391,26 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         break;
       }
 
+      const unitPrice = marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
+
       if (ordersByDate[dateString]?.length > 0) {
         for (const order of ordersByDate[dateString]) {
-          order.unitPriceFromMarketData =
-            marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
+          order.unitPriceFromMarketData = unitPrice;
         }
-      } else {
-        const unitPrice =
-          marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
-
-        if (dateString >= dateStringOfFirstActivity) {
-          orders.push({
-            assetProfile,
-            unitPrice,
-            date: dateString,
-            fee: new Big(0),
-            feeInBaseCurrency: new Big(0),
-            quantity: new Big(0),
-            type: 'BUY',
-            unitPriceFromMarketData: unitPrice
-          });
-        }
-
-        lastUnitPrice = unitPrice;
+      } else if (dateString >= dateStringOfFirstActivity) {
+        orders.push({
+          assetProfile,
+          unitPrice,
+          date: dateString,
+          fee: new Big(0),
+          feeInBaseCurrency: new Big(0),
+          quantity: new Big(0),
+          type: 'BUY',
+          unitPriceFromMarketData: unitPrice
+        });
       }
+
+      lastUnitPrice = unitPrice;
     }
 
     // Sort orders so that the start and end placeholder order are at the correct

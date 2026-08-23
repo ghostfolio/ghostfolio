@@ -293,5 +293,48 @@ describe('PortfolioCalculator', () => {
       // Closing price on 2021-11-30: 136.6
       expect(snapshotOnBuyDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
     });
+
+    it.only('with BALN.SW buy (on a date without historical market data)', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          date: new Date('2021-11-30'),
+          feeInAssetProfileCurrency: 1.55,
+          feeInBaseCurrency: 1.55,
+          quantity: 2,
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 136.6
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const snapshotOnDateWithoutMarketData =
+        portfolioSnapshot.historicalData.find(({ date }) => {
+          return date === '2021-12-05';
+        });
+
+      // No historical market data on 2021-12-05: carry forward the closing
+      // price of 2021-11-30, which is the date of the activity
+      expect(snapshotOnDateWithoutMarketData?.value).toEqual(273.2); // 2 * 136.6
+      expect(
+        snapshotOnDateWithoutMarketData?.netPerformanceWithCurrencyEffect
+      ).toEqual(-1.55); // 2 * (136.6 - 136.6) - 1.55
+    });
   });
 });
