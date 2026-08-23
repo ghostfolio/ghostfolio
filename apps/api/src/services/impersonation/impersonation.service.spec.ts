@@ -50,8 +50,35 @@ describe('Impersonation service', () => {
 
     const prismaService = {
       access: {
-        findFirst: async () => {
-          return access ?? null;
+        findFirst: async ({
+          where
+        }: {
+          where?: {
+            granteeUserId?: string;
+            id?: string;
+            type?: { in?: string[] };
+          };
+        }) => {
+          if (!access) {
+            return null;
+          }
+
+          if (
+            where?.granteeUserId &&
+            where.granteeUserId !== access.granteeUserId
+          ) {
+            return null;
+          }
+
+          if (where?.id && where.id !== access.id) {
+            return null;
+          }
+
+          if (where?.type?.in && !where.type.in.includes(access.type)) {
+            return null;
+          }
+
+          return access;
         }
       },
       user: {
@@ -104,8 +131,8 @@ describe('Impersonation service', () => {
     const grantedAccess = {
       granteeUserId: authenticatedUserId,
       id: accessId,
-      permissions: ['READ'],
       scopes: [scopes.portfolioRead],
+      type: 'PRIVATE',
       userId: impersonatedUserId
     } as unknown as Access;
 
@@ -224,6 +251,111 @@ describe('Impersonation service', () => {
       expect(scopesOfImpersonation).toEqual(
         getScopesOfUnrestrictedImpersonation()
       );
+    });
+  });
+
+  // A client of the model context protocol has no authenticated user, hence
+  // the access itself is the credential
+  describe('With an access as the credential', () => {
+    const accessOfMcp = {
+      granteeUserId: null,
+      id: accessId,
+      scopes: [scopes.portfolioRead],
+      settings: {},
+      type: 'MCP',
+      userId: impersonatedUserId
+    } as unknown as Access;
+
+    const impersonatedUser = {
+      createdAt: new Date('2024-01-01'),
+      id: impersonatedUserId,
+      settings: { settings: { baseCurrency: 'USD' } },
+      subscriptions: []
+    };
+
+    it('Resolves the scopes of the access', async () => {
+      const {
+        isActive,
+        scopes: scopesOfAccess,
+        userId
+      } = await createService({
+        access: accessOfMcp,
+        impersonatedUser
+      }).service.resolve({ impersonationId: accessId, types: ['MCP'] });
+
+      expect(isActive).toEqual(true);
+      expect(scopesOfAccess).toEqual([scopes.portfolioRead]);
+      expect(userId).toEqual(impersonatedUserId);
+    });
+
+    // The absence of the types is what stops an access from becoming a
+    // credential, hence a caller which omits them gets nothing
+    it('Refuses the identifier without the types', async () => {
+      const { isActive, userId } = await createService({
+        access: accessOfMcp,
+        impersonatedUser
+      }).service.resolve({ impersonationId: accessId });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
+    });
+
+    it('Refuses the identifier with an empty list of types', async () => {
+      const { isActive, userId } = await createService({
+        access: accessOfMcp,
+        impersonatedUser
+      }).service.resolve({ impersonationId: accessId, types: [] });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
+    });
+
+    it('Refuses an access of the type PRIVATE', async () => {
+      const { isActive, userId } = await createService({
+        access: { ...accessOfMcp, type: 'PRIVATE' } as unknown as Access,
+        impersonatedUser
+      }).service.resolve({ impersonationId: accessId, types: ['MCP'] });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
+    });
+
+    it('Refuses an access of the type PUBLIC', async () => {
+      const { isActive, userId } = await createService({
+        access: { ...accessOfMcp, type: 'PUBLIC' } as unknown as Access,
+        impersonatedUser
+      }).service.resolve({ impersonationId: accessId, types: ['MCP'] });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
+    });
+
+    // The identifier is the one of the access and not the one of the user who
+    // granted it, hence an access can never be resolved by another identifier
+    it('Refuses the identifier of another access', async () => {
+      const { isActive, userId } = await createService({
+        access: accessOfMcp,
+        impersonatedUser
+      }).service.resolve({
+        impersonationId: 'b7c9a0d3-f2c1-4c8a-8f2d-1e6b5d3f2c19',
+        types: ['MCP']
+      });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
+    });
+
+    it('Refuses the identifier of the user who granted the access', async () => {
+      const { isActive, userId } = await createService({
+        access: accessOfMcp,
+        impersonatedUser
+      }).service.resolve({
+        impersonationId: impersonatedUserId,
+        types: ['MCP']
+      });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
     });
   });
 

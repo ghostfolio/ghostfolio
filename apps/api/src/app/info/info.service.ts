@@ -75,6 +75,10 @@ export class InfoService {
       globalPermissions.push(permissions.enableFearAndGreedIndex);
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_MCP')) {
+      globalPermissions.push(permissions.enableMcp);
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
       isReadOnlyMode = await this.propertyService.getByKey<boolean>(
         PROPERTY_IS_READ_ONLY_MODE

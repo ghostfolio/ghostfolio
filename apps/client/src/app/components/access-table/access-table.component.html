@@ -10,7 +10,13 @@
     <ng-container matColumnDef="grantee">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Grantee</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        {{ element.grantee }}
+        @if (element.grantee) {
+          {{ element.grantee }}
+        } @else if (element.type === 'PUBLIC') {
+          <span i18n>Public</span>
+        } @else if (element.type === 'MCP') {
+          <span>MCP</span>
+        }
       </td>
     </ng-container>
 
@@ -40,6 +46,13 @@
               >
             </div>
           }
+        } @else if (element.type === 'MCP' && hasPermissionToEnableMcp) {
+          <div>
+            <code>{{ baseUrl }}{{ mcpEndpoint }}</code>
+          </div>
+          <div>
+            <code>Authorization: Bearer {{ element.id }}</code>
+          </div>
         }
       </td>
     </ng-container>
@@ -79,9 +92,18 @@
               </span>
             </button>
           }
+          @if (element.type === 'MCP' && hasPermissionToEnableMcp) {
+            <button mat-menu-item (click)="onCopyIdToClipboard(element.id)">
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="copy-outline" />
+                <span i18n>Copy identifier to clipboard</span>
+              </span>
+            </button>
+          }
           @if (
             (!isReceivedAccess() && user()?.settings?.isExperimentalFeatures) ||
-            element.type === 'PUBLIC'
+            element.type === 'PUBLIC' ||
+            (element.type === 'MCP' && hasPermissionToEnableMcp)
           ) {
             <hr class="my-0" />
           }

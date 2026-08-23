@@ -1,9 +1,12 @@
+import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { Access, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { getAccessLevel } from '@ghostfolio/common/scopes';
 import { GfAccessLevelIconComponent } from '@ghostfolio/ui/access-level-icon';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { DataService } from '@ghostfolio/ui/services';
 
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import {
@@ -74,11 +77,16 @@ export class GfAccessTableComponent {
 
   protected readonly getAccessLevel = getAccessLevel;
 
+  protected hasPermissionToEnableMcp = false;
+
   protected readonly isLoading = computed(() => {
     return !this.accesses();
   });
 
+  protected readonly mcpEndpoint = MCP_ENDPOINT;
+
   private readonly clipboard = inject(Clipboard);
+  private readonly dataService = inject(DataService);
   private readonly notificationService = inject(NotificationService);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -91,6 +99,11 @@ export class GfAccessTableComponent {
       removeCircleOutline
     });
 
+    this.hasPermissionToEnableMcp = hasPermission(
+      this.dataService.fetchInfo().globalPermissions,
+      permissions.enableMcp
+    );
+
     effect(() => {
       this.dataSource.data = this.accesses() ?? [];
     });
@@ -100,6 +113,18 @@ export class GfAccessTableComponent {
     const languageCode = this.user().settings.language;
 
     return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
+  }
+
+  protected onCopyIdToClipboard(aId: string) {
+    this.clipboard.copy(aId);
+
+    this.snackBar.open(
+      '✅ ' + $localize`Identifier has been copied to the clipboard`,
+      undefined,
+      {
+        duration: ms('3 seconds')
+      }
+    );
   }
 
   protected onCopyUrlToClipboard(aId: string) {

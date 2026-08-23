@@ -36,8 +36,8 @@ export class PublicService {
     accessId: string
   ): Promise<PublicPortfolioResponse> {
     const access = await this.accessService.access({
-      granteeUserId: null,
-      id: accessId
+      id: accessId,
+      type: 'PUBLIC'
     });
 
     if (!access) {

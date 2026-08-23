@@ -48,6 +48,12 @@ export class AiService {
     private readonly propertyService: PropertyService
   ) {}
 
+  public static getHoldingsTableColumnNames() {
+    return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(({ name }) => {
+      return name;
+    });
+  }
+
   public async generateText({
     prompt,
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')

@@ -1,5 +1,7 @@
 import { AccessLevel } from '@ghostfolio/common/types';
 
+import { AccessType } from '@prisma/client';
+
 /**
  * Scopes describe what a grantee may do on behalf of the granting user. They
  * are a separate axis from the permissions, which describe the capabilities of
@@ -60,6 +62,17 @@ export const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
   });
 
 /**
+ * Ceiling of scopes per access type. The scopes stored on an access are
+ * intersected with it, hence a scope which the type does not permit stays
+ * ineffective even if it is stored.
+ */
+const SCOPES_OF_TYPE: Record<AccessType, readonly Scope[]> = {
+  MCP: SCOPES_OF_READ_RESTRICTED_ACCESS,
+  PRIVATE: Object.values(scopes),
+  PUBLIC: SCOPES_OF_PUBLIC_ACCESS
+};
+
+/**
  * Access level which the scopes of an access grant
  */
 export function getAccessLevel(aScopes: string[] = []): AccessLevel {
@@ -73,25 +86,16 @@ export function getAccessLevel(aScopes: string[] = []): AccessLevel {
 }
 
 export function getScopesOfAccess({
-  granteeUserId,
-  scopes: scopesOfAccess
+  scopes: scopesOfAccess,
+  type
 }: {
-  granteeUserId?: string | null;
   scopes?: string[];
+  type: AccessType;
 }): string[] {
   const scopesToEvaluate = scopesOfAccess ?? [];
 
-  if (granteeUserId) {
-    // An unknown scope is dropped, so that a scope which has been removed from
-    // the vocabulary cannot stay effective
-    return Object.values(scopes).filter((scope) => {
-      return scopesToEvaluate.includes(scope);
-    });
-  }
-
-  // An access which has not been granted to a user is public, hence it is
-  // narrowed to the scopes exposed by the public endpoints
-  return SCOPES_OF_PUBLIC_ACCESS.filter((scope) => {
+  // An unknown scope is dropped
+  return SCOPES_OF_TYPE[type].filter((scope) => {
     return scopesToEvaluate.includes(scope);
   });
 }

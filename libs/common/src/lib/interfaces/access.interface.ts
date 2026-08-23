@@ -1,4 +1,4 @@
-import { AccessType } from '@ghostfolio/common/types';
+import { AccessType } from '@prisma/client';
 
 import { AccessSettings } from './access-settings.interface';
 

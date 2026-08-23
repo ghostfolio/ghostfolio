@@ -1,4 +1,5 @@
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { getRequest } from '@ghostfolio/api/helper/execution-context.helper';
 import { hasScope, Scope } from '@ghostfolio/common/scopes';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -30,9 +31,7 @@ export class ScopeGuard implements CanActivate {
       return true;
     }
 
-    const { impersonation } = context
-      .switchToHttp()
-      .getRequest<RequestWithUser>();
+    const { impersonation } = getRequest<RequestWithUser>(context) ?? {};
 
     const hasRequiredScopes = requiredScopes.every((scope) => {
       return hasScope(impersonation?.scopes, scope);

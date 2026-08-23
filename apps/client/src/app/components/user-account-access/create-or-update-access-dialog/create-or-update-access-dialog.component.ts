@@ -1,6 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   Scope,
   getAccessLevel,
@@ -81,6 +82,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   protected readonly mode: 'create' | 'update';
 
   private hasExperimentalFeatures = false;
+  private hasPermissionToEnableMcp = false;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -102,10 +104,11 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   public get canApplyFilters() {
-    return (
-      this.accessForm?.get('type')?.value === 'PUBLIC' &&
-      this.hasExperimentalFeatures
-    );
+    return this.isPublicAccess && this.hasExperimentalFeatures;
+  }
+
+  public get canGrantMcpAccess() {
+    return this.hasExperimentalFeatures && this.hasPermissionToEnableMcp;
   }
 
   public get canGrantWriteAccess() {
@@ -114,15 +117,22 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   public ngOnInit() {
     const access = this.data?.access;
-    const isPublic = access?.type === 'PUBLIC';
+    const isPrivate = (access?.type ?? 'PRIVATE') === 'PRIVATE';
+
+    const { globalPermissions } = this.dataService.fetchInfo();
+
+    this.hasPermissionToEnableMcp = hasPermission(
+      globalPermissions,
+      permissions.enableMcp
+    );
 
     this.accessForm = this.formBuilder.group({
       accessLevel: getAccessLevel(access?.scopes),
       alias: [access?.alias ?? ''],
       filters: [null],
       granteeUserId: [
-        access?.grantee ?? null,
-        isPublic ? null : Validators.required
+        isPrivate ? (access?.grantee ?? null) : null,
+        isPrivate ? Validators.required : null
       ],
       type: [
         { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
@@ -151,14 +161,18 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
         if (accessType === 'PRIVATE') {
           granteeUserIdControl?.setValidators(Validators.required);
-          this.accessForm.get('filters')?.setValue(null);
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
 
-          // A public access never exposes the monetary values and never
-          // changes data
+          // An access which is not granted to a user never exposes the
+          // monetary values and never changes data
           this.accessForm.get('accessLevel')?.setValue('READ_RESTRICTED');
+        }
+
+        if (accessType !== 'PUBLIC') {
+          // Only a public access can be limited to a part of the portfolio
+          this.accessForm.get('filters')?.setValue(null);
         }
 
         granteeUserIdControl?.updateValueAndValidity();
@@ -171,6 +185,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   protected get accessLevel(): AccessLevel {
     return this.accessForm?.get('accessLevel')?.value as AccessLevel;
+  }
+
+  protected get isPublicAccess() {
+    return this.accessForm?.get('type')?.value === 'PUBLIC';
   }
 
   protected onCancel() {
@@ -213,7 +231,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       alias: this.accessForm.get('alias')?.value,
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      scopes: this.buildScopes()
+      scopes: this.buildScopes(),
+      type: this.accessForm.get('type')?.value
     };
 
     try {

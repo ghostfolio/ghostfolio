@@ -1,9 +1,12 @@
 import { languageRedirectMiddleware } from '@ghostfolio/api/middlewares/language-redirect.middleware';
+import { createMcpAuthorizationMiddleware } from '@ghostfolio/api/middlewares/mcp-authorization.middleware';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import {
   BULL_BOARD_ROUTE,
   DEFAULT_HOST,
   DEFAULT_PORT,
+  MCP_ENDPOINT,
   STORYBOOK_PATH,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
@@ -17,6 +20,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import { MCP_STRATEGY, McpStrategy } from '@rekog/mcp-nest';
 import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
@@ -131,6 +135,42 @@ async function bootstrap() {
 
   const HOST = configService.get<string>('HOST') || DEFAULT_HOST;
   const PORT = configService.get<number>('PORT') || DEFAULT_PORT;
+
+  if (configurationService.get('ENABLE_FEATURE_MCP')) {
+    if (!process.env.ROOT_URL) {
+      const { hostname } = new URL(configurationService.get('ROOT_URL'));
+
+      logger.warn(
+        `The Model Context Protocol (MCP) is enabled, but ROOT_URL is not set. A client which calls the endpoint from a browser page is accepted only with the origin ${hostname}.`
+      );
+    }
+
+    // The middleware has to be registered before the transport mounts its
+    // route, so that an unauthorized request gets the status 401 of the
+    // specification instead of an error of the protocol
+    app.use(
+      MCP_ENDPOINT,
+      createMcpAuthorizationMiddleware(app.get(ImpersonationService))
+    );
+
+    const mcpStrategy = app.get<McpStrategy>(MCP_STRATEGY);
+
+    // The transports of the model context protocol have to be mounted before
+    // the server accepts connections
+    mcpStrategy.setHttpAdapter(app.getHttpAdapter());
+
+    // The configuration of the application is inherited, so that the global
+    // filters and pipes also apply to a tool of the model context protocol.
+    // The ImpersonationWriteGuard does not protect such a tool, because it
+    // keys on the Impersonation-Id header, which a client of the protocol
+    // never sends. A tool which changes data has to be guarded on its own.
+    app.connectMicroservice(
+      { strategy: mcpStrategy },
+      { inheritAppConfig: true }
+    );
+
+    await app.startAllMicroservices();
+  }
 
   await app.listen(PORT, HOST, () => {
     logLogo();
