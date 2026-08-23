@@ -70,8 +70,8 @@ describe('Scopes', () => {
     it('Without the scope to read the values', () => {
       expect(
         getScopesOfAccess({
-          type: 'PRIVATE',
-          scopes: [scopes.portfolioRead]
+          scopes: [scopes.portfolioRead],
+          type: 'PRIVATE'
         })
       ).not.toContain(scopes.portfolioReadValues);
     });

@@ -94,8 +94,7 @@ export function getScopesOfAccess({
 }): string[] {
   const scopesToEvaluate = scopesOfAccess ?? [];
 
-  // An unknown scope is dropped, so that a scope which has been removed from
-  // the vocabulary cannot stay effective
+  // An unknown scope is dropped
   return SCOPES_OF_TYPE[type].filter((scope) => {
     return scopesToEvaluate.includes(scope);
   });

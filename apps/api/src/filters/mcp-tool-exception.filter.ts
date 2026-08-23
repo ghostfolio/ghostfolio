@@ -22,7 +22,6 @@ export class McpToolExceptionFilter implements RpcExceptionFilter {
   public catch(exception: unknown): Observable<never> {
     this.logger.error(exception);
 
-    // The payload is written for the caller already
     if (exception instanceof RpcException) {
       return throwError(() => {
         return exception.getError();
