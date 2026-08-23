@@ -1,4 +1,5 @@
 import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
@@ -63,6 +64,7 @@ import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dial
 export class GfUserAccountAccessComponent implements OnInit {
   protected accessesGet: Access[];
   protected accessesGive: Access[];
+  protected hasImpersonationId: boolean;
   protected hasPermissionToCreateAccess: boolean;
   protected hasPermissionToDeleteAccess: boolean;
   protected hasPermissionToUpdateOwnAccessToken: boolean;
@@ -84,6 +86,9 @@ export class GfUserAccountAccessComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly notificationService = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -96,6 +101,15 @@ export class GfUserAccountAccessComponent implements OnInit {
       globalPermissions,
       permissions.deleteAccess
     );
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -143,15 +157,38 @@ export class GfUserAccountAccessComponent implements OnInit {
     this.dataService
       .deleteAccess(aId)
       .pipe(
-        switchMap(() => {
-          return this.userService.get(true);
+        catchError(() => {
+          this.notificationService.alert({
+            title: $localize`Oops! Could not revoke the granted access.`
+          });
+
+          return EMPTY;
         }),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe({
-        next: () => {
-          this.update();
-        }
+      .subscribe(() => {
+        this.update();
+      });
+  }
+
+  protected onDeleteReceivedAccess(aId: string) {
+    this.dataService
+      .deleteAccess(aId)
+      .pipe(
+        switchMap(() => {
+          return this.userService.get(true);
+        }),
+        catchError(() => {
+          this.notificationService.alert({
+            title: $localize`Oops! Could not remove the received access.`
+          });
+
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.update();
       });
   }
 

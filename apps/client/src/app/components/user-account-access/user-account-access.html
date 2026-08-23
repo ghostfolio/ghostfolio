@@ -57,9 +57,9 @@
       class="mb-5"
       [accesses]="accessesGet"
       [isReceivedAccess]="true"
-      [showActions]="hasPermissionToDeleteAccess"
+      [showActions]="hasPermissionToDeleteAccess && !hasImpersonationId"
       [user]="user"
-      (accessDeleted)="onDeleteAccess($event)"
+      (accessDeleted)="onDeleteReceivedAccess($event)"
     />
   }
   <h1 class="align-items-center d-flex h3 justify-content-center mb-3">
