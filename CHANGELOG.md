@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the icons and labels in the access table to share the portfolio
 - Migrated the create and edit access dialogs to dedicated routes
 
 ## 3.60.0 - 2026-08-24
