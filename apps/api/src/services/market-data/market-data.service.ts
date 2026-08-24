@@ -189,13 +189,16 @@ export class MarketDataService {
           });
 
           await prisma.marketData.createMany({
-            data: data.map(({ date, marketPrice, state }) => ({
-              dataSource,
-              symbol,
-              date: date as Date,
-              marketPrice: marketPrice as number,
-              state: state as MarketDataState
-            })),
+            data: data.map(
+              ({ date, isCarriedForward, marketPrice, state }) => ({
+                dataSource,
+                symbol,
+                date: date as Date,
+                isCarriedForward: isCarriedForward as boolean,
+                marketPrice: marketPrice as number,
+                state: state as MarketDataState
+              })
+            ),
             skipDuplicates: true
           });
         }
@@ -233,11 +236,16 @@ export class MarketDataService {
       create: {
         dataSource: where.dataSource_date_symbol.dataSource,
         date: where.dataSource_date_symbol.date,
+        isCarriedForward: false,
         marketPrice: data.marketPrice,
         state: data.state,
         symbol: where.dataSource_date_symbol.symbol
       },
-      update: { marketPrice: data.marketPrice, state: data.state }
+      update: {
+        isCarriedForward: false,
+        marketPrice: data.marketPrice,
+        state: data.state
+      }
     });
   }
 
@@ -251,16 +259,18 @@ export class MarketDataService {
     data: Prisma.MarketDataUpdateInput[];
   }): Promise<MarketData[]> {
     const upsertPromises = data.map(
-      ({ dataSource, date, marketPrice, symbol, state }) => {
+      ({ dataSource, date, isCarriedForward, marketPrice, symbol, state }) => {
         return this.prismaService.marketData.upsert({
           create: {
             dataSource: dataSource as DataSource,
             date: date as Date,
+            isCarriedForward: isCarriedForward as boolean,
             marketPrice: marketPrice as number,
             state: state as MarketDataState,
             symbol: symbol as string
           },
           update: {
+            isCarriedForward: isCarriedForward as boolean,
             marketPrice: marketPrice as number,
             state: state as MarketDataState
           },

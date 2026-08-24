@@ -203,6 +203,7 @@ export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
 };
 
+export const GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS = ms('12 hours');
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
@@ -211,7 +212,9 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: true
+  removeOnComplete: {
+    age: GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS / 1000
+  }
 };
 
 export const GATHER_STATISTICS_PROCESS_JOB_OPTIONS: JobOptions = {
