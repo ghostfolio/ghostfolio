@@ -349,9 +349,9 @@ export class DataGatheringService {
       }
     } catch (error) {
       this.logger.error(error.message);
-    } finally {
-      return undefined;
     }
+
+    return undefined;
   }
 
   public async gatherSymbols({
