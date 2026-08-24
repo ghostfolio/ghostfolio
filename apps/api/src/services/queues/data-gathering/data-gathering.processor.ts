@@ -21,15 +21,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job } from 'bull';
-import {
-  addDays,
-  format,
-  getDate,
-  getMonth,
-  getYear,
-  isBefore,
-  parseISO
-} from 'date-fns';
+import { addDays, format, isBefore, parseISO } from 'date-fns';
 
 import { DataGatheringService } from './data-gathering.service';
 
@@ -126,19 +118,7 @@ export class DataGatheringProcessor {
       const data: Prisma.MarketDataUpdateInput[] = [];
       let lastMarketPrice: number;
 
-      while (
-        isBefore(
-          currentDate,
-          new Date(
-            Date.UTC(
-              getYear(new Date()),
-              getMonth(new Date()),
-              getDate(new Date()),
-              0
-            )
-          )
-        )
-      ) {
+      while (isBefore(currentDate, getStartOfUtcDate(new Date()))) {
         const marketPriceOfDataProvider =
           historicalData[assetProfileIdentifier]?.[
             format(currentDate, DATE_FORMAT)

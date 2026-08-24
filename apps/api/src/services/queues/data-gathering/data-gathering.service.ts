@@ -31,14 +31,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job, JobOptions, Queue } from 'bull';
-import {
-  format,
-  isBefore,
-  min,
-  subDays,
-  subMilliseconds,
-  subYears
-} from 'date-fns';
+import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
 import ms, { StringValue } from 'ms';
 
@@ -269,15 +262,21 @@ export class DataGatheringService {
       age: GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS / 1000
     };
 
+    const assetProfileIdentifiersWithRecentMarketData =
+      await this.getAssetProfileIdentifiersWithRecentMarketData();
+
     await this.gatherSymbols({
       removeOnComplete,
-      dataGatheringItems: await this.getCurrencies7D(),
+      dataGatheringItems: await this.getCurrencies7D({
+        assetProfileIdentifiersWithRecentMarketData
+      }),
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
 
     await this.gatherSymbols({
       removeOnComplete,
       dataGatheringItems: await this.getSymbols7D({
+        assetProfileIdentifiersWithRecentMarketData,
         withUserSubscription: true
       }),
       priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
@@ -286,6 +285,7 @@ export class DataGatheringService {
     await this.gatherSymbols({
       removeOnComplete,
       dataGatheringItems: await this.getSymbols7D({
+        assetProfileIdentifiersWithRecentMarketData,
         withUserSubscription: false
       }),
       priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
@@ -426,28 +426,24 @@ export class DataGatheringService {
   > {
     return (
       await this.prismaService.marketData.groupBy({
-        _max: { date: true },
         by: ['dataSource', 'symbol'],
         orderBy: [{ symbol: 'asc' }],
         where: {
-          date: { gt: subDays(resetHours(new Date()), 7) },
+          date: { gte: getStartOfUtcDate(subDays(new Date(), 1)) },
           isCarriedForward: false,
           state: 'CLOSE'
         }
       })
-    )
-      .filter(({ _max }) => {
-        return !isBefore(_max.date, getStartOfUtcDate(subDays(new Date(), 1)));
-      })
-      .map(({ dataSource, symbol }) => {
-        return { dataSource, symbol };
-      });
+    ).map(({ dataSource, symbol }) => {
+      return { dataSource, symbol };
+    });
   }
 
-  private async getCurrencies7D(): Promise<DataGatheringItem[]> {
-    const assetProfileIdentifiersWithRecentMarketData =
-      await this.getAssetProfileIdentifiersWithRecentMarketData();
-
+  private async getCurrencies7D({
+    assetProfileIdentifiersWithRecentMarketData
+  }: {
+    assetProfileIdentifiersWithRecentMarketData: AssetProfileIdentifier[];
+  }): Promise<DataGatheringItem[]> {
     return this.exchangeRateDataService
       .getCurrencyPairs()
       .filter(({ dataSource, symbol }) => {
@@ -499,8 +495,10 @@ export class DataGatheringService {
   }
 
   private async getSymbols7D({
+    assetProfileIdentifiersWithRecentMarketData,
     withUserSubscription = false
   }: {
+    assetProfileIdentifiersWithRecentMarketData: AssetProfileIdentifier[];
     withUserSubscription?: boolean;
   }): Promise<DataGatheringItem[]> {
     const symbolProfiles =
@@ -509,9 +507,6 @@ export class DataGatheringService {
           withUserSubscription
         }
       );
-
-    const assetProfileIdentifiersWithRecentMarketData =
-      await this.getAssetProfileIdentifiersWithRecentMarketData();
 
     return symbolProfiles
       .filter(({ dataSource, scraperConfiguration, symbol }) => {
