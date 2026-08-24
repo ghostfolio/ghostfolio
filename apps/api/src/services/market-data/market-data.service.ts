@@ -2,7 +2,6 @@ import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.i
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT } from '@ghostfolio/common/config';
-import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -219,32 +218,6 @@ export class MarketDataService {
       where: {
         dataSource: oldAssetProfileIdentifier.dataSource,
         symbol: oldAssetProfileIdentifier.symbol
-      }
-    });
-  }
-
-  public async updateMarketData(params: {
-    data: {
-      state: MarketDataState;
-    } & UpdateMarketDataDto;
-    where: Prisma.MarketDataWhereUniqueInput;
-  }): Promise<MarketData> {
-    const { data, where } = params;
-
-    return this.prismaService.marketData.upsert({
-      where,
-      create: {
-        dataSource: where.dataSource_date_symbol.dataSource,
-        date: where.dataSource_date_symbol.date,
-        isCarriedForward: false,
-        marketPrice: data.marketPrice,
-        state: data.state,
-        symbol: where.dataSource_date_symbol.symbol
-      },
-      update: {
-        isCarriedForward: false,
-        marketPrice: data.marketPrice,
-        state: data.state
       }
     });
   }
