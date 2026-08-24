@@ -101,7 +101,8 @@ export class DataGatheringProcessor {
       this.logger.log(
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(
           currentDate,
-          DATE_FORMAT
+          DATE_FORMAT,
+          { in: utc }
         )}${force ? ' (forced update)' : ''}`
       );
 
@@ -156,7 +157,8 @@ export class DataGatheringProcessor {
       this.logger.log(
         `Historical market data gathering has been completed for ${symbol} (${dataSource}) at ${format(
           currentDate,
-          DATE_FORMAT
+          DATE_FORMAT,
+          { in: utc }
         )}`
       );
     } catch (error) {
