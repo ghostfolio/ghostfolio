@@ -60,6 +60,54 @@ describe('DataGatheringService', () => {
       );
     });
 
+    it('includes the Friday close when it runs on Saturday', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-08-22T14:00:00.000Z'));
+
+      await dataGatheringService[
+        'getAssetProfileIdentifiersWithRecentMarketData'
+      ]();
+
+      expect(prismaService.marketData.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            date: { gte: new Date('2026-08-21T00:00:00.000Z') }
+          })
+        })
+      );
+    });
+
+    it('excludes the Friday close when it runs on Sunday', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-08-23T14:00:00.000Z'));
+
+      await dataGatheringService[
+        'getAssetProfileIdentifiersWithRecentMarketData'
+      ]();
+
+      expect(prismaService.marketData.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            date: { gte: new Date('2026-08-22T00:00:00.000Z') }
+          })
+        })
+      );
+    });
+
+    it('excludes the Friday close when it runs on Monday', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-08-24T14:00:00.000Z'));
+
+      await dataGatheringService[
+        'getAssetProfileIdentifiersWithRecentMarketData'
+      ]();
+
+      expect(prismaService.marketData.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            date: { gte: new Date('2026-08-23T00:00:00.000Z') }
+          })
+        })
+      );
+    });
+
     it('maps the query result to asset profile identifiers', async () => {
       prismaService.marketData.groupBy.mockResolvedValue([
         { dataSource: 'COINGECKO', symbol: 'bitcoin' },
