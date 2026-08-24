@@ -3,7 +3,6 @@
  * @jest-environment-options {"timeZone": "America/New_York"}
  */
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { parseDate } from '@ghostfolio/common/helper';
 
 import { Job } from 'bull';
 
@@ -46,25 +45,26 @@ describe('DataGatheringProcessor in a time zone behind UTC', () => {
     jest.useRealTimers();
   });
 
-  it('gathers up to the last complete UTC day', async () => {
+  it('gathers up to the last complete UTC day and does not shift the dates', async () => {
     await dataGatheringProcessor.gatherHistoricalMarketData({
       data: {
         dataSource: 'COINGECKO',
-        symbol: 'bitcoin',
-        date: parseDate('2026-08-21').toISOString()
+        // The queue enqueues dates at midnight (UTC), not at local midnight
+        date: new Date('2026-08-21T00:00:00.000Z').toISOString(),
+        symbol: 'bitcoin'
       }
     } as unknown as Job<DataGatheringItem>);
 
     const { data } = marketDataService.updateMany.mock.calls[0][0];
 
     expect(
-      data.map(({ date }) => {
-        return date;
+      data.map(({ date, marketPrice }) => {
+        return { date, marketPrice };
       })
     ).toEqual([
-      new Date('2026-08-21T00:00:00.000Z'),
-      new Date('2026-08-22T00:00:00.000Z'),
-      new Date('2026-08-23T00:00:00.000Z')
+      { date: new Date('2026-08-21T00:00:00.000Z'), marketPrice: 5 },
+      { date: new Date('2026-08-22T00:00:00.000Z'), marketPrice: 6 },
+      { date: new Date('2026-08-23T00:00:00.000Z'), marketPrice: 7 }
     ]);
   });
 });

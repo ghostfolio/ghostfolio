@@ -17,6 +17,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -121,7 +122,7 @@ export class DataGatheringProcessor {
       while (isBefore(currentDate, getStartOfUtcDate(new Date()))) {
         const marketPriceOfDataProvider =
           historicalData[assetProfileIdentifier]?.[
-            format(currentDate, DATE_FORMAT)
+            format(currentDate, DATE_FORMAT, { in: utc })
           ]?.marketPrice;
 
         if (marketPriceOfDataProvider) {

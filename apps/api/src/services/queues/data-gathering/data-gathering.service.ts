@@ -267,7 +267,7 @@ export class DataGatheringService {
 
     await this.gatherSymbols({
       removeOnComplete,
-      dataGatheringItems: await this.getCurrencies7D({
+      dataGatheringItems: this.getCurrencies7D({
         assetProfileIdentifiersWithRecentMarketData
       }),
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
@@ -427,7 +427,6 @@ export class DataGatheringService {
     return (
       await this.prismaService.marketData.groupBy({
         by: ['dataSource', 'symbol'],
-        orderBy: [{ symbol: 'asc' }],
         where: {
           date: { gte: getStartOfUtcDate(subDays(new Date(), 1)) },
           isCarriedForward: false,
@@ -439,11 +438,11 @@ export class DataGatheringService {
     });
   }
 
-  private async getCurrencies7D({
+  private getCurrencies7D({
     assetProfileIdentifiersWithRecentMarketData
   }: {
     assetProfileIdentifiersWithRecentMarketData: AssetProfileIdentifier[];
-  }): Promise<DataGatheringItem[]> {
+  }): DataGatheringItem[] {
     return this.exchangeRateDataService
       .getCurrencyPairs()
       .filter(({ dataSource, symbol }) => {

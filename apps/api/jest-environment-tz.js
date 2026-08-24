@@ -21,9 +21,15 @@ class TimeZoneEnvironment extends NodeEnvironment {
   }
 
   async teardown() {
-    await super.teardown();
-
-    process.env.TZ = this.previousTimeZone;
+    try {
+      await super.teardown();
+    } finally {
+      if (this.previousTimeZone === undefined) {
+        delete process.env.TZ;
+      } else {
+        process.env.TZ = this.previousTimeZone;
+      }
+    }
   }
 }
 
