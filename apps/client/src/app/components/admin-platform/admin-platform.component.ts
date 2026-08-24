@@ -61,7 +61,13 @@ export class GfAdminPlatformComponent implements OnInit {
   public readonly locale = input(getLocale());
 
   protected dataSource = new MatTableDataSource<Platform>();
-  protected readonly displayedColumns = ['name', 'url', 'accounts', 'actions'];
+  protected readonly displayedColumns = [
+    'icon',
+    'name',
+    'url',
+    'accounts',
+    'actions'
+  ];
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected platforms: Platform[];
 

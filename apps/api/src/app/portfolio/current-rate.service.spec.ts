@@ -20,6 +20,7 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
             createdAt: date,
             dataSource: DataSource.YAHOO,
             id: 'aefcbe3a-ee10-4c4f-9f2d-8ffad7b05584',
+            isCarriedForward: false,
             marketPrice: 1847.839966,
             state: 'CLOSE'
           });
@@ -39,6 +40,7 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
               dataSource: assetProfileIdentifiers[0].dataSource,
               date: dateQuery.gte,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
+              isCarriedForward: false,
               marketPrice: 1841.823902,
               state: 'CLOSE',
               symbol: assetProfileIdentifiers[0].symbol
@@ -48,6 +50,7 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
               dataSource: assetProfileIdentifiers[0].dataSource,
               date: dateQuery.lt,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
+              isCarriedForward: false,
               marketPrice: 1847.839966,
               state: 'CLOSE',
               symbol: assetProfileIdentifiers[0].symbol
