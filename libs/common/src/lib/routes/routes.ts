@@ -23,6 +23,20 @@ export const internalRoutes = {
       access: {
         path: 'access',
         routerLink: ['/account', 'access'],
+        subRoutes: {
+          create: {
+            path: 'create',
+            routerLink: ['/account', 'access', 'create'],
+            title: $localize`Grant access`
+          },
+          update: {
+            path: 'update',
+            routerLink: (aAccessId: string) => {
+              return ['/account', 'access', aAccessId, 'update'];
+            },
+            title: $localize`Edit access`
+          }
+        },
         title: $localize`Access`
       },
       membership: {
