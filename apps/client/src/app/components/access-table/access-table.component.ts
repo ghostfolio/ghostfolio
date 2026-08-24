@@ -2,7 +2,7 @@ import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { publicRoutes } from '@ghostfolio/common/routes/routes';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { getAccessLevel } from '@ghostfolio/common/scopes';
 import { GfAccessLevelIconComponent } from '@ghostfolio/ui/access-level-icon';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -60,7 +60,18 @@ export class GfAccessTableComponent {
   public readonly user = input.required<User>();
 
   public readonly accessDeleted = output<string>();
-  public readonly accessToUpdate = output<string>();
+
+  protected readonly accessDialogRouterLinks = computed(() => {
+    const { update } = internalRoutes.account.subRoutes.access.subRoutes;
+
+    const routerLinks = new Map<string, string[]>();
+
+    for (const { id } of this.accesses() ?? []) {
+      routerLinks.set(id, update.routerLink(id));
+    }
+
+    return routerLinks;
+  });
 
   protected readonly baseUrl = window.location.origin;
   protected readonly dataSource = new MatTableDataSource<Access>();
@@ -149,9 +160,5 @@ export class GfAccessTableComponent {
         ? $localize`Do you really want to remove this received access?`
         : $localize`Do you really want to revoke this granted access?`
     });
-  }
-
-  protected onUpdateAccess(aId: string) {
-    this.accessToUpdate.emit(aId);
   }
 }

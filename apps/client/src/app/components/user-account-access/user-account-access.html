@@ -73,9 +73,14 @@
     [showActions]="hasPermissionToDeleteAccess"
     [user]="user"
     (accessDeleted)="onDeleteAccess($event)"
-    (accessToUpdate)="onUpdateAccess($event)"
   />
   @if (hasPermissionToCreateAccess) {
-    <gf-fab [queryParams]="{ createDialog: true }" />
+    <gf-fab
+      [routerLink]="
+        internalRoutes.account.subRoutes.access.subRoutes.create.routerLink
+      "
+    />
   }
 </div>
+
+<router-outlet />
