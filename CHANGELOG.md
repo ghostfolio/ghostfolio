@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the country mapping of Macau in the _Financial Modeling Prep_ service
+- Fixed the date of the gathered historical market data for instances running in a time zone behind UTC
 - Fixed the repeated historical market data gathering for instances running in a time zone behind UTC
 
 ## 3.60.0 - 2026-08-24
