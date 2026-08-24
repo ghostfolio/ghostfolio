@@ -52,6 +52,30 @@ describe('MarketDataService', () => {
         })
       );
     });
+
+    it('resets isCarriedForward if it is omitted by the caller', async () => {
+      prismaService.$transaction.mockImplementation((promises) => {
+        return Promise.all(promises);
+      });
+
+      await marketDataService.updateMany({
+        data: [
+          {
+            dataSource: 'YAHOO',
+            date: parseDate('2026-08-22'),
+            marketPrice: 100,
+            state: 'CLOSE',
+            symbol: 'AAPL'
+          }
+        ]
+      });
+
+      expect(prismaService.marketData.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({ isCarriedForward: false })
+        })
+      );
+    });
   });
 
   describe('replaceForSymbol', () => {
@@ -89,28 +113,6 @@ describe('MarketDataService', () => {
         expect.objectContaining({ isCarriedForward: false }),
         expect.objectContaining({ isCarriedForward: true })
       ]);
-    });
-  });
-
-  describe('updateMarketData', () => {
-    it('resets isCarriedForward for a manually edited market price', async () => {
-      await marketDataService.updateMarketData({
-        data: { marketPrice: 100, state: 'CLOSE' },
-        where: {
-          dataSource_date_symbol: {
-            dataSource: 'YAHOO',
-            date: parseDate('2026-08-22'),
-            symbol: 'AAPL'
-          }
-        }
-      });
-
-      expect(prismaService.marketData.upsert).toHaveBeenCalledWith(
-        expect.objectContaining({
-          create: expect.objectContaining({ isCarriedForward: false }),
-          update: expect.objectContaining({ isCarriedForward: false })
-        })
-      );
     });
   });
 });

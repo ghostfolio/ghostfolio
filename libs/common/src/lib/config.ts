@@ -212,9 +212,7 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: {
-    age: GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS / 1000
-  }
+  removeOnComplete: true
 };
 
 export const GATHER_STATISTICS_PROCESS_JOB_OPTIONS: JobOptions = {

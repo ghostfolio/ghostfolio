@@ -153,7 +153,7 @@ export class DataGatheringProcessor {
             dataSource,
             symbol,
             date: getStartOfUtcDate(currentDate),
-            isCarriedForward: !marketPriceOfDataProvider,
+            isCarriedForward: lastMarketPrice !== marketPriceOfDataProvider,
             marketPrice: lastMarketPrice,
             state: 'CLOSE'
           });

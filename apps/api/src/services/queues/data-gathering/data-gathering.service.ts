@@ -265,12 +265,18 @@ export class DataGatheringService {
       'completed'
     );
 
+    const removeOnComplete = {
+      age: GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS / 1000
+    };
+
     await this.gatherSymbols({
+      removeOnComplete,
       dataGatheringItems: await this.getCurrencies7D(),
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
 
     await this.gatherSymbols({
+      removeOnComplete,
       dataGatheringItems: await this.getSymbols7D({
         withUserSubscription: true
       }),
@@ -278,6 +284,7 @@ export class DataGatheringService {
     });
 
     await this.gatherSymbols({
+      removeOnComplete,
       dataGatheringItems: await this.getSymbols7D({
         withUserSubscription: false
       }),
@@ -350,11 +357,13 @@ export class DataGatheringService {
   public async gatherSymbols({
     dataGatheringItems,
     force = false,
-    priority
+    priority,
+    removeOnComplete = GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS.removeOnComplete
   }: {
     dataGatheringItems: DataGatheringItem[];
     force?: boolean;
     priority: number;
+    removeOnComplete?: JobOptions['removeOnComplete'];
   }): Promise<Job[]> {
     return this.addJobsToQueue(
       dataGatheringItems.map(({ dataSource, date, symbol }) => {
@@ -369,6 +378,7 @@ export class DataGatheringService {
           opts: {
             ...GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
             priority,
+            removeOnComplete,
             jobId: `${getAssetProfileIdentifier({
               dataSource,
               symbol

@@ -1,6 +1,6 @@
 import {
-  GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 
@@ -155,12 +155,46 @@ describe('DataGatheringService', () => {
       );
     });
 
-    it('retains completed jobs for the duration of the cooldown', () => {
-      expect(
-        GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS.removeOnComplete
-      ).toEqual({
+    it('retains its completed jobs for the duration of the cooldown', async () => {
+      jest
+        .spyOn(dataGatheringService as any, 'getCurrencies7D')
+        .mockResolvedValue([
+          {
+            dataSource: 'YAHOO',
+            date: parseDate('2026-08-01'),
+            symbol: 'AAPL'
+          }
+        ]);
+      jest
+        .spyOn(dataGatheringService as any, 'getSymbols7D')
+        .mockResolvedValue([]);
+
+      await dataGatheringService.gatherRecentMarketData();
+
+      const [jobs] = dataGatheringQueue.addBulk.mock.calls[0];
+
+      expect(jobs[0].opts.removeOnComplete).toEqual({
         age: GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS / 1000
       });
+    });
+  });
+
+  describe('gatherSymbols', () => {
+    it('does not apply the cooldown to a manually triggered gathering', async () => {
+      await dataGatheringService.gatherSymbols({
+        dataGatheringItems: [
+          {
+            dataSource: 'YAHOO',
+            date: parseDate('2026-08-01'),
+            symbol: 'AAPL'
+          }
+        ],
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      });
+
+      const [jobs] = dataGatheringQueue.addBulk.mock.calls[0];
+
+      expect(jobs[0].opts.removeOnComplete).toBe(true);
     });
   });
 

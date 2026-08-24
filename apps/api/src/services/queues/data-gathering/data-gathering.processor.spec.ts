@@ -233,4 +233,34 @@ describe('DataGatheringProcessor', () => {
       })
     );
   });
+
+  it('labels a market price of 0 from the data provider as carried forward', async () => {
+    mockHistoricalData({
+      dataSource: 'YAHOO',
+      symbol: 'AAPL',
+      prices: {
+        '2026-08-17': 1,
+        '2026-08-18': 2,
+        '2026-08-19': 0,
+        '2026-08-20': 4,
+        '2026-08-21': 5,
+        '2026-08-22': 6,
+        '2026-08-23': 7
+      }
+    });
+
+    await dataGatheringProcessor.gatherHistoricalMarketData(
+      createJob({ dataSource: 'YAHOO', date: '2026-08-17', symbol: 'AAPL' })
+    );
+
+    const { data } = marketDataService.updateMany.mock.calls[0][0];
+
+    expect(data[2]).toEqual(
+      expect.objectContaining({
+        date: parseDate('2026-08-19'),
+        isCarriedForward: true,
+        marketPrice: 2
+      })
+    );
+  });
 });
