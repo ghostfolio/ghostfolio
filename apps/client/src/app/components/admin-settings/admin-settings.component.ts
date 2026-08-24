@@ -76,6 +76,7 @@ export class GfAdminSettingsComponent implements OnInit {
   public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
   public displayedColumns = [
+    'icon',
     'name',
     'status',
     'assetProfileCount',
