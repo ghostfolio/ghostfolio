@@ -437,7 +437,10 @@ export class DataGatheringService {
       })
     )
       .filter(({ _max }) => {
-        return !isBefore(_max.date, getStartOfUtcDate(subDays(new Date(), 1)));
+        return !isBefore(
+          _max.date,
+          subMilliseconds(getStartOfUtcDate(new Date()), ms('1 day'))
+        );
       })
       .map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
