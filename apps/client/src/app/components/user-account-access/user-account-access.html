@@ -73,7 +73,6 @@
     [showActions]="hasPermissionToDeleteAccess"
     [user]="user"
     (accessDeleted)="onDeleteAccess($event)"
-    (accessToUpdate)="onUpdateAccess($event)"
   />
   @if (hasPermissionToCreateAccess) {
     <gf-fab

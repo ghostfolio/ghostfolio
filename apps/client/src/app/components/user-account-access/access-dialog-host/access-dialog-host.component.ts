@@ -17,8 +17,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Observable, Subject, of } from 'rxjs';
+import { EMPTY, Observable, Subject, of } from 'rxjs';
 import {
+  catchError,
   distinctUntilChanged,
   map,
   switchMap,
@@ -79,39 +80,39 @@ export class GfAccessDialogHostComponent implements OnDestroy, OnInit {
                   return { access, user };
                 })
               );
+            }),
+            catchError(() => {
+              this.navigateBack();
+
+              return EMPTY;
             })
           );
         }),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe({
-        error: () => {
-          this.navigateBack();
-        },
-        next: ({ access, user }) => {
-          if (mode === 'update') {
-            if (
-              !access ||
-              !hasPermission(user?.permissions, permissions.updateAccess)
-            ) {
-              this.navigateBack();
-
-              return;
-            }
-
-            this.openCreateOrUpdateAccessDialog({ access });
-
-            return;
-          }
-
-          if (!hasPermission(user?.permissions, permissions.createAccess)) {
+      .subscribe(({ access, user }) => {
+        if (mode === 'update') {
+          if (
+            !access ||
+            !hasPermission(user?.permissions, permissions.updateAccess)
+          ) {
             this.navigateBack();
 
             return;
           }
 
-          this.openCreateOrUpdateAccessDialog({});
+          this.openCreateOrUpdateAccessDialog({ access });
+
+          return;
         }
+
+        if (!hasPermission(user?.permissions, permissions.createAccess)) {
+          this.navigateBack();
+
+          return;
+        }
+
+        this.openCreateOrUpdateAccessDialog({});
       });
   }
 

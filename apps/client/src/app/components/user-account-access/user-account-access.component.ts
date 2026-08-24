@@ -28,7 +28,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, eyeOffOutline, eyeOutline } from 'ionicons/icons';
@@ -60,8 +60,8 @@ export class GfUserAccountAccessComponent {
   protected hasPermissionToCreateAccess: boolean;
   protected hasPermissionToDeleteAccess: boolean;
   protected hasPermissionToUpdateOwnAccessToken: boolean;
-  protected isAccessTokenHidden = true;
   protected readonly internalRoutes = internalRoutes;
+  protected isAccessTokenHidden = true;
   protected readonly updateOwnAccessTokenForm = new FormGroup({
     accessToken: new FormControl<string>('', {
       nonNullable: true,
@@ -77,7 +77,6 @@ export class GfUserAccountAccessComponent {
     ImpersonationStorageService
   );
   private readonly notificationService = inject(NotificationService);
-  private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -161,9 +160,7 @@ export class GfUserAccountAccessComponent {
         }),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(() => {
-        this.update();
-      });
+      .subscribe();
   }
 
   protected onGenerateAccessToken() {
@@ -199,12 +196,6 @@ export class GfUserAccountAccessComponent {
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to generate a new security token?`
     });
-  }
-
-  protected onUpdateAccess(aId: string) {
-    void this.router.navigate(
-      internalRoutes.account.subRoutes.access.subRoutes.update.routerLink(aId)
-    );
   }
 
   private update() {
