@@ -531,14 +531,6 @@ export function getUtc(aDateString: string) {
   );
 }
 
-export function getYesterday() {
-  const year = getYear(new Date());
-  const month = getMonth(new Date());
-  const day = getDate(new Date());
-
-  return subDays(new Date(Date.UTC(year, month, day)), 1);
-}
-
 export function hasGhostfolioPrefix(aSymbol: string) {
   if (!aSymbol) {
     return false;

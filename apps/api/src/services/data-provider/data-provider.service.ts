@@ -393,10 +393,11 @@ export class DataProviderService implements OnModuleInit {
 
     const rangeQuery =
       from && to
-        ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT)}::timestamp AND date <= ${format(
-            to,
-            DATE_FORMAT
-          )}::timestamp`
+        ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT, {
+            in: utc
+          })}::timestamp AND date <= ${format(to, DATE_FORMAT, {
+            in: utc
+          })}::timestamp`
         : Prisma.empty;
 
     const dataSources = aItems.map(({ dataSource }) => {
@@ -430,7 +431,9 @@ export class DataProviderService implements OnModuleInit {
           r[assetProfileIdentifier] = {};
         }
 
-        r[assetProfileIdentifier][format(new Date(date), DATE_FORMAT)] = {
+        r[assetProfileIdentifier][
+          format(new Date(date), DATE_FORMAT, { in: utc })
+        ] = {
           marketPrice
         };
 

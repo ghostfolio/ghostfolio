@@ -19,6 +19,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, subDays } from 'date-fns';
 
@@ -123,8 +124,9 @@ export class SymbolService {
 
     return {
       marketPrice:
-        historicalData?.[assetProfileIdentifier]?.[format(date, DATE_FORMAT)]
-          ?.marketPrice
+        historicalData?.[assetProfileIdentifier]?.[
+          format(date, DATE_FORMAT, { in: utc })
+        ]?.marketPrice
     };
   }
 

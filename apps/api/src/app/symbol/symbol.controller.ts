@@ -8,6 +8,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import {
   Controller,
   Get,
@@ -103,7 +104,7 @@ export class SymbolController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<DataProviderHistoricalResponse> {
-    const date = parseISO(dateString);
+    const date = parseISO(dateString, { in: utc });
 
     if (!isDate(date)) {
       throw new HttpException(
