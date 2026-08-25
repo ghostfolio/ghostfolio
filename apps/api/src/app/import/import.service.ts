@@ -227,6 +227,18 @@ export class ImportService {
         throw new Error(
           `assetProfiles.${index}.symbol ("${symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
         );
+      } else if (
+        dataSource !== DataSource.MANUAL &&
+        isValidCustomAssetProfileSymbol(symbol)
+      ) {
+        const maskedDataSource = getMaskedGhostfolioDataSource({
+          dataSource,
+          ghostfolioDataSources
+        });
+
+        throw new Error(
+          `assetProfiles.${index}.symbol ("${symbol}") is not valid for the data source ("${maskedDataSource}")`
+        );
       }
     }
 

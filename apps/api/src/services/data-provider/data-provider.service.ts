@@ -260,7 +260,7 @@ export class DataProviderService implements OnModuleInit {
         isValidCustomAssetProfileSymbol(symbol)
       ) {
         throw new Error(
-          `${activityPath}.symbol ("${symbol}") is not valid for the specified data source ("${maskedDataSource}")`
+          `${activityPath}.symbol ("${symbol}") is not valid for the data source ("${maskedDataSource}")`
         );
       }
 
