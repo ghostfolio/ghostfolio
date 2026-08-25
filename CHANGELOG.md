@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the create and edit access dialogs to dedicated routes
 - Introduced a timeout for the asset profile and the historical market data gathering jobs
+- Reduced the number of attempts of the asset profile and the historical market data gathering jobs
 
 ### Fixed
 
