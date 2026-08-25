@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Harmonized the icons and labels in the access table to share the portfolio
 - Improved the data source column in the historical market data table of the admin control panel by showing the name of the data provider
 - Migrated the create and edit access dialogs to dedicated routes
+- Improved the validation of activities and asset profiles when combining a custom asset profile symbol with a data source other than `MANUAL`
 - Improved the response of the historical market data gathering endpoint for a specific date
 - Introduced a timeout for the asset profile and the historical market data gathering jobs
 - Reduced the number of attempts of the asset profile and the historical market data gathering jobs

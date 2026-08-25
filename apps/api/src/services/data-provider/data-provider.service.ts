@@ -23,6 +23,7 @@ import {
   getStartOfUtcDate,
   isCurrency,
   isDerivedCurrency,
+  isValidCustomAssetProfileSymbol,
   isValidSearchQuery
 } from '@ghostfolio/common/helper';
 import {
@@ -255,6 +256,15 @@ export class DataProviderService implements OnModuleInit {
       }
 
       if (
+        dataSource !== DataSource.MANUAL &&
+        isValidCustomAssetProfileSymbol(symbol)
+      ) {
+        throw new Error(
+          `${activityPath}.symbol ("${symbol}") is not valid for the data source ("${maskedDataSource}")`
+        );
+      }
+
+      if (
         this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
         subscription?.type === SubscriptionType.Basic
       ) {
@@ -319,7 +329,7 @@ export class DataProviderService implements OnModuleInit {
 
         if (!assetProfile?.name) {
           throw new Error(
-            `${activityPath}.symbol ("${symbol}") is not valid for the specified data source ("${maskedDataSource}")`
+            `${activityPath}.symbol ("${symbol}") cannot be resolved by the data source ("${maskedDataSource}")`
           );
         }
 
