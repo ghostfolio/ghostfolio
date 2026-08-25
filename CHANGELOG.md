@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated the create and edit access dialogs to dedicated routes
+- Introduced a timeout for the asset profile and the historical market data gathering jobs
+
+### Fixed
+
+- Fixed the asset profile and historical market data gathering of a symbol getting blocked permanently by a failed job by discarding the failed jobs
+- Fixed the asset profile data gathering of a symbol in the admin control panel by removing an existing job before enqueueing a new one
 
 ## 3.60.0 - 2026-08-24
 
