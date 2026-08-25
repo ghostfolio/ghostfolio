@@ -195,7 +195,7 @@ export const E_MAIL_LINE_BREAK = '%0D%0A';
 
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 12,
+  attempts: 6,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
@@ -209,7 +209,7 @@ export const GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS = ms('12 hours');
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 12,
+  attempts: 6,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
