@@ -158,6 +158,11 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
+    await this.dataGatheringService.removeAssetProfileJobFromQueue({
+      dataSource,
+      symbol
+    });
+
     await this.dataGatheringService.addJobToQueue({
       data: {
         dataSource,
