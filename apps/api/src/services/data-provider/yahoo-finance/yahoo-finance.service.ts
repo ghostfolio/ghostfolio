@@ -19,6 +19,7 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
@@ -103,7 +104,7 @@ export class YahooFinanceService implements DataProviderInterface {
       } = {};
 
       for (const historicalItem of historicalResult) {
-        response[format(historicalItem.date, DATE_FORMAT)] = {
+        response[format(historicalItem.date, DATE_FORMAT, { in: utc })] = {
           marketPrice: historicalItem.dividends
         };
       }
@@ -174,7 +175,7 @@ export class YahooFinanceService implements DataProviderInterface {
             : undefined);
 
         if (marketPrice) {
-          response[format(date, DATE_FORMAT)] = { marketPrice };
+          response[format(date, DATE_FORMAT, { in: utc })] = { marketPrice };
         }
       }
 

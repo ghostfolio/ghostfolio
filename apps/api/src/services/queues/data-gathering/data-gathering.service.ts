@@ -27,6 +27,7 @@ import {
   BenchmarkProperty
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
@@ -428,7 +429,9 @@ export class DataGatheringService {
       await this.prismaService.marketData.groupBy({
         by: ['dataSource', 'symbol'],
         where: {
-          date: { gte: getStartOfUtcDate(subDays(new Date(), 1)) },
+          date: {
+            gte: getStartOfUtcDate(subDays(new Date(), 1, { in: utc }))
+          },
           isCarriedForward: false,
           state: 'CLOSE'
         }

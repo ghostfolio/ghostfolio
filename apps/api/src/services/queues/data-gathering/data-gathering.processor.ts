@@ -141,7 +141,7 @@ export class DataGatheringProcessor {
           });
         }
 
-        currentDate = addDays(currentDate, 1);
+        currentDate = addDays(currentDate, 1, { in: utc });
       }
 
       if (force) {

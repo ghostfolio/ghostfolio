@@ -17,6 +17,7 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
@@ -66,7 +67,7 @@ export class RapidApiService implements DataProviderInterface {
 
         if (fgi) {
           return {
-            [format(getYesterday(), DATE_FORMAT)]: {
+            [format(getYesterday(), DATE_FORMAT, { in: utc })]: {
               marketPrice: fgi.previousClose.value
             }
           };
