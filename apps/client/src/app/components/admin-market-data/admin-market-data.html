@@ -106,8 +106,19 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Data Source</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
-              {{ element.dataSource }}
+            <td
+              *matCellDef="let element"
+              class="line-height-normal px-1 text-nowrap"
+              mat-cell
+            >
+              <div>
+                {{ element.dataProviderInfo?.name ?? element.dataSource }}
+              </div>
+              @if (element.dataProviderInfo?.name) {
+                <div>
+                  <small class="text-muted">{{ element.dataSource }}</small>
+                </div>
+              }
             </td>
           </ng-container>
 
