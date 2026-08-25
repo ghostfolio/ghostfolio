@@ -3,7 +3,9 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { getTagsWithDraftTag } from '@ghostfolio/api/helper/activity.helper';
+import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -56,6 +58,7 @@ export class ImportService {
     private readonly accountService: AccountService,
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
+    private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -204,6 +207,9 @@ export class ImportService {
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
     const assetProfileSymbolMapping: { [oldSymbol: string]: string } = {};
+    const ghostfolioDataSources = this.configurationService.get(
+      'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
+    );
     const platformIdMapping: { [oldPlatformId: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
@@ -224,18 +230,22 @@ export class ImportService {
       }
     }
 
-    // Validate the symbols before any data is persisted. Activities without a
-    // data source are excluded, since a symbol is generated in
-    // createActivity() if needed.
+    // Validate the symbols before any data is persisted. Activities without an
+    // explicit data source are excluded from the first check, since a symbol is
+    // generated in createActivity() if needed.
     for (const [index, activity] of activitiesDto.entries()) {
-      if (!activity.dataSource) {
-        if (NON_INVESTMENT_ACTIVITY_TYPES.includes(activity.type)) {
-          activity.dataSource = DataSource.MANUAL;
-        } else {
-          activity.dataSource =
-            this.dataProviderService.getDataSourceForImport();
-        }
-      } else if (
+      const hasDataSource = Boolean(activity.dataSource);
+
+      if (!hasDataSource) {
+        activity.dataSource = NON_INVESTMENT_ACTIVITY_TYPES.includes(
+          activity.type
+        )
+          ? DataSource.MANUAL
+          : this.dataProviderService.getDataSourceForImport();
+      }
+
+      if (
+        hasDataSource &&
         activity.dataSource === DataSource.MANUAL &&
         !isValidCustomAssetProfileSymbol(activity.symbol)
       ) {
@@ -246,8 +256,13 @@ export class ImportService {
         activity.dataSource !== DataSource.MANUAL &&
         isValidCustomAssetProfileSymbol(activity.symbol)
       ) {
+        const maskedDataSource = getMaskedGhostfolioDataSource({
+          ghostfolioDataSources,
+          dataSource: activity.dataSource
+        });
+
         throw new Error(
-          `activities.${index}.symbol ("${activity.symbol}") is not valid for the data source ("${activity.dataSource}")`
+          `activities.${index}.symbol ("${activity.symbol}") is not valid for the data source ("${maskedDataSource}")`
         );
       }
     }
