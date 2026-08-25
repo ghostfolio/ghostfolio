@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the missing benchmark in the performance chart for calendar year date ranges on the analysis page
 - Fixed the country mapping of Macau in the _Financial Modeling Prep_ service
 - Fixed the asset profile and historical market data gathering of a symbol getting blocked permanently by a failed job by discarding the failed jobs
 - Fixed the asset profile data gathering of a symbol in the admin control panel by removing an existing job before enqueueing a new one
