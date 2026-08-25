@@ -14,7 +14,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import {
   DATE_FORMAT,
   extractNumberFromString,
-  getYesterday
+  getStartOfUtcDateOfYesterday
 } from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
@@ -115,7 +115,7 @@ export class ManualService implements DataProviderInterface {
       });
 
       return {
-        [format(getYesterday(), DATE_FORMAT, { in: utc })]: {
+        [format(getStartOfUtcDateOfYesterday(), DATE_FORMAT, { in: utc })]: {
           marketPrice: value
         }
       };

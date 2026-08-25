@@ -118,9 +118,10 @@ export class DataGatheringProcessor {
       });
 
       const data: Prisma.MarketDataUpdateInput[] = [];
+      const startOfUtcDateOfToday = getStartOfUtcDate(new Date());
       let lastMarketPrice: number;
 
-      while (isBefore(currentDate, getStartOfUtcDate(new Date()))) {
+      while (isBefore(currentDate, startOfUtcDateOfToday)) {
         const marketPriceOfDataProvider =
           historicalData[assetProfileIdentifier]?.[
             format(currentDate, DATE_FORMAT, { in: utc })

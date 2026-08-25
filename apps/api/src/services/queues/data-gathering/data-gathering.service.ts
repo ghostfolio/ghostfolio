@@ -20,7 +20,7 @@ import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
   getStartOfUtcDate,
-  resetHours
+  getStartOfUtcDateOfYesterday
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -323,29 +323,37 @@ export class DataGatheringService {
     date,
     symbol
   }: { date: Date } & AssetProfileIdentifier) {
+    const startOfUtcDate = getStartOfUtcDate(date);
+
     try {
       const historicalData = await this.dataProviderService.getHistoricalRaw({
         assetProfileIdentifiers: [{ dataSource, symbol }],
-        from: date,
-        to: date
+        from: startOfUtcDate,
+        to: startOfUtcDate
       });
 
       const marketPrice =
         historicalData[getAssetProfileIdentifier({ dataSource, symbol })]?.[
-          format(date, DATE_FORMAT)
+          format(startOfUtcDate, DATE_FORMAT, { in: utc })
         ]?.marketPrice;
 
       if (marketPrice) {
         return await this.prismaService.marketData.upsert({
           create: {
             dataSource,
-            date,
             marketPrice,
             symbol,
+            date: startOfUtcDate,
             isCarriedForward: false
           },
           update: { marketPrice, isCarriedForward: false },
-          where: { dataSource_date_symbol: { dataSource, date, symbol } }
+          where: {
+            dataSource_date_symbol: {
+              dataSource,
+              symbol,
+              date: startOfUtcDate
+            }
+          }
         });
       }
     } catch (error) {
@@ -383,7 +391,7 @@ export class DataGatheringService {
             jobId: `${getAssetProfileIdentifier({
               dataSource,
               symbol
-            })}-${format(date, DATE_FORMAT)}`
+            })}-${format(date, DATE_FORMAT, { in: utc })}`
           }
         };
       })
@@ -430,7 +438,7 @@ export class DataGatheringService {
         by: ['dataSource', 'symbol'],
         where: {
           date: {
-            gte: getStartOfUtcDate(subDays(new Date(), 1, { in: utc }))
+            gte: getStartOfUtcDateOfYesterday()
           },
           isCarriedForward: false,
           state: 'CLOSE'
@@ -457,7 +465,7 @@ export class DataGatheringService {
         return {
           dataSource,
           symbol,
-          date: subDays(resetHours(new Date()), 7)
+          date: subDays(getStartOfUtcDate(new Date()), 7, { in: utc })
         };
       });
   }
@@ -525,7 +533,7 @@ export class DataGatheringService {
       .map((symbolProfile) => {
         return {
           ...symbolProfile,
-          date: subDays(resetHours(new Date()), 7)
+          date: subDays(getStartOfUtcDate(new Date()), 7, { in: utc })
         };
       });
   }

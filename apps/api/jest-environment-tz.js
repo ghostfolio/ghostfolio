@@ -7,12 +7,11 @@ class TimeZoneEnvironment extends NodeEnvironment {
   constructor(config, context) {
     super(config, context);
 
+    this.previousTimeZone = process.env.TZ;
     this.timeZone = config.projectConfig.testEnvironmentOptions?.timeZone;
   }
 
   async setup() {
-    this.previousTimeZone = process.env.TZ;
-
     if (this.timeZone) {
       process.env.TZ = this.timeZone;
     }

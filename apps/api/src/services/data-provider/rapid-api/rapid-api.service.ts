@@ -9,7 +9,10 @@ import {
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getStartOfUtcDateOfYesterday
+} from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   DataProviderInfo,
@@ -67,7 +70,9 @@ export class RapidApiService implements DataProviderInterface {
 
         if (fgi) {
           return {
-            [format(getYesterday(), DATE_FORMAT, { in: utc })]: {
+            [format(getStartOfUtcDateOfYesterday(), DATE_FORMAT, {
+              in: utc
+            })]: {
               marketPrice: fgi.previousClose.value
             }
           };

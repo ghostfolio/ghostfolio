@@ -37,6 +37,7 @@ import type {
   RequestWithUser
 } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import {
   Body,
   Controller,
@@ -204,7 +205,7 @@ export class AdminController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<MarketData> {
-    const date = parseISO(dateString);
+    const date = parseISO(dateString, { in: utc });
 
     if (!isDate(date)) {
       throw new HttpException(
