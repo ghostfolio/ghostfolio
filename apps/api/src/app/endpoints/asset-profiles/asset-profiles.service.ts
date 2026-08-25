@@ -20,6 +20,7 @@ import {
   AssetProfileIdentifier,
   AssetProfileItem,
   AssetProfilesResponse,
+  DataProviderInfo,
   EnhancedAssetProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
@@ -364,6 +365,23 @@ export class AssetProfilesService {
       );
     }
 
+    const dataProviderInfoMap = new Map<DataSource, DataProviderInfo>(
+      [
+        ...new Set(
+          symbolProfiles.map(({ dataSource }) => {
+            return dataSource;
+          })
+        )
+      ].map((dataSource) => {
+        return [
+          dataSource,
+          this.dataProviderService
+            .getDataProvider(dataSource)
+            .getDataProviderInfo()
+        ];
+      })
+    );
+
     let assetProfiles: AssetProfileItem[] = await Promise.all(
       symbolProfiles.map(async (assetProfile) => {
         const {
@@ -417,6 +435,7 @@ export class AssetProfilesService {
           sectorsCount,
           symbol,
           activitiesCount: _count.activities,
+          dataProviderInfo: dataProviderInfoMap.get(dataSource),
           date: activities?.[0]?.date,
           isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription,
           watchedByCount: _count.watchedBy
