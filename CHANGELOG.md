@@ -12,10 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Harmonized the icons and labels in the access table to share the portfolio
 - Migrated the create and edit access dialogs to dedicated routes
 - Improved the response of the historical market data gathering endpoint for a specific date
+- Improved the historical market data gathering by loading the asset profiles with recent market data in a single database query per run
 
 ### Fixed
 
 - Fixed the country mapping of Macau in the _Financial Modeling Prep_ service
+- Fixed the date of the gathered historical market data for instances running in a time zone other than UTC
+- Fixed the repeated historical market data gathering for instances running in a time zone other than UTC
 
 ## 3.60.0 - 2026-08-24
 

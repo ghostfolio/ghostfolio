@@ -42,8 +42,26 @@ describe('DataGatheringService', () => {
   });
 
   describe('getAssetProfileIdentifiersWithRecentMarketData', () => {
-    it('excludes carried forward market prices from the query', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2026-08-23').getTime());
+    it('queries real market prices since the start of yesterday (UTC)', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-08-24T14:00:00.000Z'));
+
+      await dataGatheringService[
+        'getAssetProfileIdentifiersWithRecentMarketData'
+      ]();
+
+      expect(prismaService.marketData.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            date: { gte: new Date('2026-08-23T00:00:00.000Z') },
+            isCarriedForward: false,
+            state: 'CLOSE'
+          }
+        })
+      );
+    });
+
+    it('includes the Friday close when it runs on Saturday', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-08-22T14:00:00.000Z'));
 
       await dataGatheringService[
         'getAssetProfileIdentifiersWithRecentMarketData'
@@ -52,53 +70,32 @@ describe('DataGatheringService', () => {
       expect(prismaService.marketData.groupBy).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
-            isCarriedForward: false,
-            state: 'CLOSE'
+            date: { gte: new Date('2026-08-21T00:00:00.000Z') }
           })
         })
       );
     });
 
-    it('keeps a cryptocurrency with a real market price of yesterday on Sunday', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2026-08-23').getTime());
+    it('excludes the Friday close when it runs on Sunday', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-08-23T14:00:00.000Z'));
 
-      prismaService.marketData.groupBy.mockResolvedValue([
-        {
-          _max: { date: parseDate('2026-08-22') },
-          dataSource: 'COINGECKO',
-          symbol: 'bitcoin'
-        },
-        {
-          _max: { date: parseDate('2026-08-21') },
-          dataSource: 'YAHOO',
-          symbol: 'AAPL'
-        }
-      ]);
+      await dataGatheringService[
+        'getAssetProfileIdentifiersWithRecentMarketData'
+      ]();
 
-      const assetProfileIdentifiers =
-        await dataGatheringService[
-          'getAssetProfileIdentifiersWithRecentMarketData'
-        ]();
-
-      expect(assetProfileIdentifiers).toEqual([
-        { dataSource: 'COINGECKO', symbol: 'bitcoin' }
-      ]);
+      expect(prismaService.marketData.groupBy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            date: { gte: new Date('2026-08-22T00:00:00.000Z') }
+          })
+        })
+      );
     });
 
-    it('drops a stock with a real market price of Friday on Monday', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2026-08-24').getTime());
-
+    it('maps the query result to asset profile identifiers', async () => {
       prismaService.marketData.groupBy.mockResolvedValue([
-        {
-          _max: { date: parseDate('2026-08-23') },
-          dataSource: 'COINGECKO',
-          symbol: 'bitcoin'
-        },
-        {
-          _max: { date: parseDate('2026-08-21') },
-          dataSource: 'YAHOO',
-          symbol: 'AAPL'
-        }
+        { dataSource: 'COINGECKO', symbol: 'bitcoin' },
+        { dataSource: 'YAHOO', symbol: 'AAPL' }
       ]);
 
       const assetProfileIdentifiers =
@@ -107,42 +104,52 @@ describe('DataGatheringService', () => {
         ]();
 
       expect(assetProfileIdentifiers).toEqual([
-        { dataSource: 'COINGECKO', symbol: 'bitcoin' }
-      ]);
-    });
-
-    it('drops a stock with a late Friday close on Saturday', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2026-08-22').getTime());
-
-      prismaService.marketData.groupBy.mockResolvedValue([
-        {
-          _max: { date: parseDate('2026-08-20') },
-          dataSource: 'YAHOO',
-          symbol: 'AAPL'
-        },
-        {
-          _max: { date: parseDate('2026-08-21') },
-          dataSource: 'YAHOO',
-          symbol: 'MSFT'
-        }
-      ]);
-
-      const assetProfileIdentifiers =
-        await dataGatheringService[
-          'getAssetProfileIdentifiersWithRecentMarketData'
-        ]();
-
-      expect(assetProfileIdentifiers).toEqual([
-        { dataSource: 'YAHOO', symbol: 'MSFT' }
+        { dataSource: 'COINGECKO', symbol: 'bitcoin' },
+        { dataSource: 'YAHOO', symbol: 'AAPL' }
       ]);
     });
   });
 
   describe('gatherRecentMarketData', () => {
+    it('queries the asset profiles with recent market data once and reuses them', async () => {
+      const assetProfileIdentifiersWithRecentMarketData = [
+        { dataSource: 'COINGECKO', symbol: 'bitcoin' }
+      ];
+
+      prismaService.marketData.groupBy.mockResolvedValue(
+        assetProfileIdentifiersWithRecentMarketData
+      );
+
+      const getCurrencies7D = jest
+        .spyOn(dataGatheringService as any, 'getCurrencies7D')
+        .mockReturnValue([]);
+      const getSymbols7D = jest
+        .spyOn(dataGatheringService as any, 'getSymbols7D')
+        .mockResolvedValue([]);
+
+      await dataGatheringService.gatherRecentMarketData();
+
+      expect(prismaService.marketData.groupBy).toHaveBeenCalledTimes(1);
+
+      expect(getCurrencies7D).toHaveBeenCalledWith({
+        assetProfileIdentifiersWithRecentMarketData
+      });
+
+      expect(getSymbols7D).toHaveBeenCalledWith({
+        assetProfileIdentifiersWithRecentMarketData,
+        withUserSubscription: true
+      });
+
+      expect(getSymbols7D).toHaveBeenCalledWith({
+        assetProfileIdentifiersWithRecentMarketData,
+        withUserSubscription: false
+      });
+    });
+
     it('expires completed jobs which are older than the cooldown', async () => {
       jest
         .spyOn(dataGatheringService as any, 'getCurrencies7D')
-        .mockResolvedValue([]);
+        .mockReturnValue([]);
       jest
         .spyOn(dataGatheringService as any, 'getSymbols7D')
         .mockResolvedValue([]);
@@ -158,7 +165,7 @@ describe('DataGatheringService', () => {
     it('retains its completed jobs for the duration of the cooldown', async () => {
       jest
         .spyOn(dataGatheringService as any, 'getCurrencies7D')
-        .mockResolvedValue([
+        .mockReturnValue([
           {
             dataSource: 'YAHOO',
             date: parseDate('2026-08-01'),

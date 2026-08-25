@@ -17,19 +17,12 @@ import {
 } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job } from 'bull';
-import {
-  addDays,
-  format,
-  getDate,
-  getMonth,
-  getYear,
-  isBefore,
-  parseISO
-} from 'date-fns';
+import { addDays, format, isBefore, parseISO } from 'date-fns';
 
 import { DataGatheringService } from './data-gathering.service';
 
@@ -108,7 +101,8 @@ export class DataGatheringProcessor {
       this.logger.log(
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(
           currentDate,
-          DATE_FORMAT
+          DATE_FORMAT,
+          { in: utc }
         )}${force ? ' (forced update)' : ''}`
       );
 
@@ -124,24 +118,13 @@ export class DataGatheringProcessor {
       });
 
       const data: Prisma.MarketDataUpdateInput[] = [];
+      const startOfUtcDateOfToday = getStartOfUtcDate(new Date());
       let lastMarketPrice: number;
 
-      while (
-        isBefore(
-          currentDate,
-          new Date(
-            Date.UTC(
-              getYear(new Date()),
-              getMonth(new Date()),
-              getDate(new Date()),
-              0
-            )
-          )
-        )
-      ) {
+      while (isBefore(currentDate, startOfUtcDateOfToday)) {
         const marketPriceOfDataProvider =
           historicalData[assetProfileIdentifier]?.[
-            format(currentDate, DATE_FORMAT)
+            format(currentDate, DATE_FORMAT, { in: utc })
           ]?.marketPrice;
 
         if (marketPriceOfDataProvider) {
@@ -159,7 +142,7 @@ export class DataGatheringProcessor {
           });
         }
 
-        currentDate = addDays(currentDate, 1);
+        currentDate = addDays(currentDate, 1, { in: utc });
       }
 
       if (force) {
@@ -175,7 +158,8 @@ export class DataGatheringProcessor {
       this.logger.log(
         `Historical market data gathering has been completed for ${symbol} (${dataSource}) at ${format(
           currentDate,
-          DATE_FORMAT
+          DATE_FORMAT,
+          { in: utc }
         )}`
       );
     } catch (error) {
