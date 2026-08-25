@@ -195,28 +195,32 @@ export const E_MAIL_LINE_BREAK = '%0D%0A';
 
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 12,
+  attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: true
+  removeOnComplete: true,
+  removeOnFail: true,
+  timeout: ms('5 minutes')
 };
 
 export const GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS = ms('12 hours');
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 12,
+  attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: true
+  removeOnComplete: true,
+  removeOnFail: true,
+  timeout: ms('5 minutes')
 };
 
 export const GATHER_STATISTICS_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 5,
+  attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'

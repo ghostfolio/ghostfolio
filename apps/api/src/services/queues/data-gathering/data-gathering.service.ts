@@ -430,6 +430,20 @@ export class DataGatheringService {
     });
   }
 
+  /**
+   * Removes the asset profile job of a symbol from the queue
+   */
+  public async removeAssetProfileJobFromQueue({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    const job = await this.dataGatheringQueue.getJob(
+      `${getAssetProfileIdentifier({ dataSource, symbol })}:${dataSource}`
+    );
+
+    return job?.remove();
+  }
+
   private async getAssetProfileIdentifiersWithRecentMarketData(): Promise<
     AssetProfileIdentifier[]
   > {
