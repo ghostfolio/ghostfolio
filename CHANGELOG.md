@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the create and edit access dialogs to dedicated routes
 
+### Fixed
+
+- Fixed the country mapping of Macau in the _Financial Modeling Prep_ service
+
 ## 3.60.0 - 2026-08-24
 
 ### Added

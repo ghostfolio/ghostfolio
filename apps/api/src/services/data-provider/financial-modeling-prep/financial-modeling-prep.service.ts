@@ -56,6 +56,7 @@ export class FinancialModelingPrepService
   private static countriesMapping = {
     'Czech Republic': 'CZ',
     'Korea (the Republic of)': 'KR',
+    Macau: 'MO',
     'Russian Federation': 'RU',
     'Taiwan (Province of China)': 'TW',
     Turkey: 'TR'
