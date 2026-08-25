@@ -219,5 +219,34 @@ describe('DataGatheringService', () => {
         })
       );
     });
+
+    it('returns the upserted market data', async () => {
+      dataProviderService.getHistoricalRaw.mockResolvedValue({
+        'YAHOO-AAPL': {
+          '2026-08-22': { marketPrice: 100 }
+        }
+      });
+      prismaService.marketData.upsert.mockResolvedValue({ marketPrice: 100 });
+
+      const marketData = await dataGatheringService.gatherSymbolForDate({
+        dataSource: 'YAHOO',
+        date: parseDate('2026-08-22'),
+        symbol: 'AAPL'
+      });
+
+      expect(marketData).toEqual({ marketPrice: 100 });
+    });
+
+    it('returns undefined if the data provider has no market price', async () => {
+      dataProviderService.getHistoricalRaw.mockResolvedValue({});
+
+      const marketData = await dataGatheringService.gatherSymbolForDate({
+        dataSource: 'YAHOO',
+        date: parseDate('2026-08-22'),
+        symbol: 'AAPL'
+      });
+
+      expect(marketData).toBeUndefined();
+    });
   });
 });
