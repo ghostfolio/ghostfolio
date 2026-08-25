@@ -221,13 +221,6 @@ export class ImportService {
         throw new Error(
           `assetProfiles.${index}.symbol ("${symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
         );
-      } else if (
-        dataSource !== DataSource.MANUAL &&
-        isValidCustomAssetProfileSymbol(symbol)
-      ) {
-        throw new Error(
-          `assetProfiles.${index}.symbol ("${symbol}") is not valid for the data source ("${dataSource}")`
-        );
       }
     }
 
@@ -248,6 +241,13 @@ export class ImportService {
       ) {
         throw new Error(
           `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+        );
+      } else if (
+        activity.dataSource !== DataSource.MANUAL &&
+        isValidCustomAssetProfileSymbol(activity.symbol)
+      ) {
+        throw new Error(
+          `activities.${index}.symbol ("${activity.symbol}") is not valid for the data source ("${activity.dataSource}")`
         );
       }
     }
