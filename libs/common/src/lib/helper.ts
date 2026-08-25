@@ -1,3 +1,4 @@
+import { utc } from '@date-fns/utc';
 import { NumberParser } from '@internationalized/number';
 import {
   AccessType,
@@ -463,6 +464,10 @@ export function getStartOfUtcDate(aDate: Date) {
   date.setUTCHours(0, 0, 0, 0);
 
   return date;
+}
+
+export function getStartOfUtcDateOfYesterday() {
+  return subDays(getStartOfUtcDate(new Date()), 1, { in: utc });
 }
 
 export function getStringOrNull(aString: string | null | undefined) {

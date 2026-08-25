@@ -35,6 +35,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
@@ -494,8 +495,11 @@ export class DataProviderService implements OnModuleInit {
             [date: string]: DataProviderHistoricalResponse;
           } = {};
 
-          for (const date of eachDayOfInterval({ end: to, start: from })) {
-            data[format(date, DATE_FORMAT)] = { marketPrice: 100 };
+          for (const date of eachDayOfInterval(
+            { end: to, start: from },
+            { in: utc }
+          )) {
+            data[format(date, DATE_FORMAT, { in: utc })] = { marketPrice: 100 };
           }
 
           promises.push(

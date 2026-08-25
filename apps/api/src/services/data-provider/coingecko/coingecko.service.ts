@@ -18,6 +18,7 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import {
   AssetClass,
@@ -147,7 +148,9 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
       } = {};
 
       for (const [timestamp, marketPrice] of prices) {
-        result[format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
+        result[
+          format(fromUnixTime(timestamp / 1000), DATE_FORMAT, { in: utc })
+        ] = {
           marketPrice
         };
       }
