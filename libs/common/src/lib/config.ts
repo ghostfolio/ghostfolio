@@ -220,7 +220,7 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
 };
 
 export const GATHER_STATISTICS_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 5, // Retries after 1, 2, 4 and 8 minutes (15 minutes in total)
+  attempts: 6, // Retries after 1, 2, 4, 8 and 16 minutes (31 minutes in total)
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
