@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the logging of the `web_fetch` tool in the `FetchService`
 
+### Fixed
+
+- Fixed the date of the exchange rates for instances running in a time zone other than UTC
+- Fixed the date in the sitemap for instances running in a time zone other than UTC
+
 ## 3.61.0 - 2026-08-25
 
 ### Changed
