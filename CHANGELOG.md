@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a timeout for the asset profile and the historical market data gathering jobs
 - Reduced the number of attempts of the asset profile and the historical market data gathering jobs
 - Improved the historical market data gathering by loading the asset profiles with recent market data in a single database query per run
+- Upgraded `bull-board` from version `8.6.0` to `9.0.1`
 
 ### Fixed
 
