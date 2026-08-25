@@ -9,12 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the icons and labels in the access table to share the portfolio
 - Migrated the create and edit access dialogs to dedicated routes
+- Improved the response of the historical market data gathering endpoint for a specific date
 - Introduced a timeout for the asset profile and the historical market data gathering jobs
 - Reduced the number of attempts of the asset profile and the historical market data gathering jobs
 
 ### Fixed
 
+- Fixed the country mapping of Macau in the _Financial Modeling Prep_ service
 - Fixed the asset profile and historical market data gathering of a symbol getting blocked permanently by a failed job by discarding the failed jobs
 - Fixed the asset profile data gathering of a symbol in the admin control panel by removing an existing job before enqueueing a new one
 

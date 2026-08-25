@@ -15,7 +15,7 @@
         } @else if (element.type === 'PUBLIC') {
           <span i18n>Public</span>
         } @else if (element.type === 'MCP') {
-          <span>MCP</span>
+          <span>Model Context Protocol (MCP)</span>
         }
       </td>
     </ng-container>
@@ -112,10 +112,11 @@
           }
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="remove-circle-outline" />
               @if (isReceivedAccess()) {
-                <span i18n>Remove</span>
+                <ion-icon class="mr-2" name="trash-outline" />
+                <span i18n>Delete</span>
               } @else {
+                <ion-icon class="mr-2" name="remove-circle-outline" />
                 <span i18n>Revoke</span>
               }
             </span>

@@ -218,11 +218,20 @@ export class AdminController {
       );
     }
 
-    return this.dataGatheringService.gatherSymbolForDate({
+    const marketData = await this.dataGatheringService.gatherSymbolForDate({
       dataSource,
       date,
       symbol
     });
+
+    if (!marketData) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return marketData;
   }
 
   @HasPermission(permissions.accessAdminControl)
