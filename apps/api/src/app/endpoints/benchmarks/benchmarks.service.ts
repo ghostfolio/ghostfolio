@@ -88,10 +88,11 @@ export class BenchmarksService {
       return { marketData };
     }
 
-    const baselineDate =
-      chart.length > 0
-        ? resetHours(parseDate(chart[0].date))
-        : resetHours(startDate);
+    if (chart.length === 0) {
+      return { marketData };
+    }
+
+    const baselineDate = resetHours(parseDate(chart[0].date));
 
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
