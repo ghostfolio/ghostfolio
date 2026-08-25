@@ -31,7 +31,8 @@ import {
   createOutline,
   ellipsisHorizontal,
   linkOutline,
-  removeCircleOutline
+  removeCircleOutline,
+  trashOutline
 } from 'ionicons/icons';
 import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -107,7 +108,8 @@ export class GfAccessTableComponent {
       createOutline,
       ellipsisHorizontal,
       linkOutline,
-      removeCircleOutline
+      removeCircleOutline,
+      trashOutline
     });
 
     this.hasPermissionToEnableMcp = hasPermission(
