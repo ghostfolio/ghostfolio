@@ -348,7 +348,7 @@ export class DataGatheringService {
         });
       }
     } catch (error) {
-      this.logger.error(error.message);
+      this.logger.error(error?.message);
     }
 
     return undefined;
