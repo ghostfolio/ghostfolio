@@ -23,6 +23,7 @@ import {
   getStartOfUtcDate,
   isCurrency,
   isDerivedCurrency,
+  isValidCustomAssetProfileSymbol,
   isValidSearchQuery
 } from '@ghostfolio/common/helper';
 import {
@@ -251,6 +252,15 @@ export class DataProviderService implements OnModuleInit {
       if (!dataSources.includes(dataSource)) {
         throw new Error(
           `${activityPath}.dataSource ("${dataSource}") is not valid`
+        );
+      }
+
+      if (
+        dataSource !== DataSource.MANUAL &&
+        isValidCustomAssetProfileSymbol(symbol)
+      ) {
+        throw new Error(
+          `${activityPath}.symbol ("${symbol}") is not valid for the specified data source ("${maskedDataSource}")`
         );
       }
 

@@ -212,12 +212,21 @@ export class ImportService {
     for (const [index, assetProfileWithMarketData] of (
       assetProfilesWithMarketDataDto ?? []
     ).entries()) {
+      const { dataSource, symbol } = assetProfileWithMarketData;
+
       if (
-        assetProfileWithMarketData.dataSource === DataSource.MANUAL &&
-        !isValidCustomAssetProfileSymbol(assetProfileWithMarketData.symbol)
+        dataSource === DataSource.MANUAL &&
+        !isValidCustomAssetProfileSymbol(symbol)
       ) {
         throw new Error(
-          `assetProfiles.${index}.symbol ("${assetProfileWithMarketData.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+          `assetProfiles.${index}.symbol ("${symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
+        );
+      } else if (
+        dataSource !== DataSource.MANUAL &&
+        isValidCustomAssetProfileSymbol(symbol)
+      ) {
+        throw new Error(
+          `assetProfiles.${index}.symbol ("${symbol}") is not valid for the data source ("${dataSource}")`
         );
       }
     }
