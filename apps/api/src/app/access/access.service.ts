@@ -62,7 +62,7 @@ export class AccessService {
   }
 
   public isExpired({ expiresAt }: Pick<Access, 'expiresAt'>) {
-    return expiresAt ? isBefore(expiresAt, new Date()) : false;
+    return isBefore(expiresAt, new Date());
   }
 
   public async updateAccess({

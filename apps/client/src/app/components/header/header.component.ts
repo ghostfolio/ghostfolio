@@ -97,7 +97,7 @@ export class GfHeaderComponent implements OnChanges {
 
   protected readonly accesses = computed(() => {
     return this.user()?.access?.filter(({ expiresAt }) => {
-      return !expiresAt || !isBefore(expiresAt, new Date());
+      return !isBefore(expiresAt, new Date());
     });
   });
 
