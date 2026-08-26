@@ -1109,7 +1109,7 @@ export abstract class PortfolioCalculator {
       const items = lastTransactionPoint?.items ?? [];
 
       const newItems = items.filter((item) => {
-        return item.dataSource !== dataSource || item.symbol !== symbol;
+        return getAssetProfileIdentifier(item) !== assetProfileIdentifier;
       });
 
       newItems.push(currentTransactionPointItem);

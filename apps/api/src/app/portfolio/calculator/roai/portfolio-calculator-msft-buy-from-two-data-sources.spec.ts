@@ -142,16 +142,17 @@ describe('PortfolioCalculator', () => {
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
       // The holdings must not be aggregated, because they belong to two
-      // different asset profiles
+      // different asset profiles. Each holding must be valuated with the
+      // market price of its own data source.
       expect(portfolioSnapshot.positions).toEqual([
         expect.objectContaining({
           activitiesCount: 1,
           dataSource: 'EOD_HISTORICAL_DATA',
           investment: new Big('679.02'),
-          marketPrice: 331.83,
+          marketPrice: 332.47,
           quantity: new Big('2'),
           symbol: 'MSFT',
-          valueInBaseCurrency: new Big('663.66')
+          valueInBaseCurrency: new Big('664.94')
         }),
         expect.objectContaining({
           activitiesCount: 1,
@@ -165,7 +166,7 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(portfolioSnapshot.currentValueInBaseCurrency).toEqual(
-        new Big('995.49')
+        new Big('996.77')
       );
 
       expect(portfolioSnapshot.totalInvestment).toEqual(new Big('1018.53'));
