@@ -126,6 +126,33 @@ export class SymbolProfileService {
     });
   }
 
+  /**
+   * Gets the symbol to use for an asset profile. An asset profile which is
+   * already in the database wins, also if its symbol has a different letter
+   * case. This prevents a second asset profile for the same instrument.
+   * Otherwise the symbol of the data provider is used, because it has the
+   * correct letter case. A custom asset profile (MANUAL) belongs to a user,
+   * thus its symbol stays unchanged.
+   */
+  public async getSymbolOfAssetProfile({
+    dataSource,
+    symbol,
+    symbolOfDataProvider
+  }: { symbolOfDataProvider?: string } & AssetProfileIdentifier) {
+    if (dataSource === DataSource.MANUAL) {
+      return symbol;
+    }
+
+    const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+      where: {
+        dataSource,
+        symbol: { equals: symbol, mode: 'insensitive' }
+      }
+    });
+
+    return symbolProfile?.symbol ?? symbolOfDataProvider ?? symbol;
+  }
+
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ): Promise<EnhancedAssetProfile[]> {

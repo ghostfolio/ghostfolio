@@ -8,6 +8,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
@@ -47,7 +48,8 @@ export class ActivitiesController {
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
-    private readonly dataGatheringService: DataGatheringService
+    private readonly dataGatheringService: DataGatheringService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Delete()
@@ -256,10 +258,14 @@ export class ActivitiesController {
     const customCurrency = data.customCurrency;
     const dataSource = data.dataSource;
 
-    const symbol =
-      assetProfiles[
-        getAssetProfileIdentifier({ dataSource, symbol: data.symbol })
-      ]?.symbol ?? data.symbol;
+    const symbol = await this.symbolProfileService.getSymbolOfAssetProfile({
+      dataSource,
+      symbol: data.symbol,
+      symbolOfDataProvider:
+        assetProfiles[
+          getAssetProfileIdentifier({ dataSource, symbol: data.symbol })
+        ]?.symbol
+    });
 
     if (customCurrency) {
       data.currency = customCurrency;
@@ -340,6 +346,11 @@ export class ActivitiesController {
     const customCurrency = data.customCurrency;
     const dataSource = data.dataSource;
 
+    const symbol = await this.symbolProfileService.getSymbolOfAssetProfile({
+      dataSource,
+      symbol: data.symbol
+    });
+
     delete data.accountId;
 
     if (customCurrency) {
@@ -366,7 +377,7 @@ export class ActivitiesController {
           connect: {
             dataSource_symbol: {
               dataSource,
-              symbol: data.symbol
+              symbol
             }
           },
           update: {
