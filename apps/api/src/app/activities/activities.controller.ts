@@ -227,7 +227,7 @@ export class ActivitiesController {
 
     let assetProfiles: {
       [assetProfileIdentifier: string]: Partial<SymbolProfile>;
-    };
+    } = {};
 
     try {
       assetProfiles = await this.dataProviderService.validateActivities({

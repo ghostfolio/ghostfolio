@@ -128,9 +128,7 @@ export class DataGatheringService {
           });
         } catch (error) {
           this.logger.error(
-            `Failed to enhance data for ${symbol} (${
-              assetProfile.dataSource
-            }) by ${dataEnhancer.getName()}`,
+            `Failed to enhance data for ${symbol} (${dataSource}) by ${dataEnhancer.getName()}`,
             error
           );
         }

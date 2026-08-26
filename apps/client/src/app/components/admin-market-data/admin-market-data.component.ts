@@ -496,14 +496,19 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
               this.adminService
                 .addAssetProfile({ dataSource, symbol })
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
+                .subscribe((assetProfile) => {
                   this.loadData();
+
+                  this.onOpenAssetProfileDialog({
+                    dataSource,
+                    symbol: assetProfile?.symbol ?? symbol
+                  });
                 });
             } else {
               this.loadData();
-            }
 
-            this.onOpenAssetProfileDialog({ dataSource, symbol });
+              this.onOpenAssetProfileDialog({ dataSource, symbol });
+            }
           });
       });
   }

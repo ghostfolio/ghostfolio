@@ -847,14 +847,17 @@ export class ImportService {
         name,
         scraperConfiguration,
         sectors,
-        symbol,
         symbolMapping,
         url,
         updatedAt
       } = assetProfile;
+
+      const symbol = activity.assetProfile.symbol;
+
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
+
       const validatedTags = tags.filter(({ id: tagId }) => {
         return tagIds.some((activityTagId) => {
           return activityTagId === tagId;

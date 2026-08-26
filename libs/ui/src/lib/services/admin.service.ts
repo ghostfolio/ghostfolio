@@ -25,7 +25,12 @@ import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { AssetProfileSplit, MarketData, Platform } from '@prisma/client';
+import {
+  AssetProfileSplit,
+  MarketData,
+  Platform,
+  SymbolProfile
+} from '@prisma/client';
 import { JobStatus } from 'bull';
 import { isNumber } from 'lodash';
 
@@ -35,7 +40,7 @@ export class AdminService {
   private readonly http = inject(HttpClient);
 
   public addAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.http.post<void>(
+    return this.http.post<SymbolProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${encodeURIComponent(symbol)}`,
       null
     );
