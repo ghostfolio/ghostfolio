@@ -136,6 +136,7 @@ describe('Impersonation service', () => {
 
   describe('With an impersonation', () => {
     const grantedAccess = {
+      expiresAt: addDays(new Date(), 1),
       granteeUserId: authenticatedUserId,
       id: accessId,
       scopes: [scopes.portfolioRead],
@@ -265,6 +266,7 @@ describe('Impersonation service', () => {
   // the access itself is the credential
   describe('With an access as the credential', () => {
     const accessOfMcp = {
+      expiresAt: addDays(new Date(), 1),
       granteeUserId: null,
       id: accessId,
       scopes: [scopes.portfolioRead],
@@ -337,6 +339,33 @@ describe('Impersonation service', () => {
       expect(userId).toBeUndefined();
     });
 
+    it('Refuses an access which has expired', async () => {
+      const { isActive, userId } = await createService({
+        access: {
+          ...accessOfMcp,
+          expiresAt: subDays(new Date(), 1)
+        } as unknown as Access,
+        impersonatedUser
+      }).service.resolve({ impersonationId: accessId, types: ['MCP'] });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
+    });
+
+    it('Does not record the usage of an access which has expired', async () => {
+      const { service, updateAccess } = createService({
+        access: {
+          ...accessOfMcp,
+          expiresAt: subDays(new Date(), 1)
+        } as unknown as Access,
+        impersonatedUser
+      });
+
+      await service.resolve({ impersonationId: accessId, types: ['MCP'] });
+
+      expect(updateAccess).not.toHaveBeenCalled();
+    });
+
     // The identifier is the one of the access and not the one of the user who
     // granted it, hence an access can never be resolved by another identifier
     it('Refuses the identifier of another access', async () => {
@@ -366,8 +395,6 @@ describe('Impersonation service', () => {
     });
   });
 
-  // The guard rejects the request in this case, hence the context must not
-  // present the data of the authenticated user as impersonated data
   describe('With an expiration date', () => {
     const expiringAccess = {
       granteeUserId: authenticatedUserId,
@@ -451,6 +478,7 @@ describe('Impersonation service', () => {
     };
 
     const usedAccess = {
+      expiresAt: addDays(new Date(), 1),
       granteeUserId: authenticatedUserId,
       id: accessId,
       scopes: [scopes.portfolioRead],
@@ -505,6 +533,8 @@ describe('Impersonation service', () => {
     });
   });
 
+  // The guard rejects the request in this case, hence the context must not
+  // present the data of the authenticated user as impersonated data
   describe('With an identifier which cannot be resolved', () => {
     it('Resolves the own access instead', async () => {
       const { service } = createService();

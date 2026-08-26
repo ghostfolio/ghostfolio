@@ -62,6 +62,9 @@
           />
         </mat-datepicker-toggle>
         <mat-datepicker #expiresAt />
+        @if (accessForm.get('expiresAt')?.invalid) {
+          <mat-error i18n>Please select a date in the future.</mat-error>
+        }
       </mat-form-field>
     </div>
 

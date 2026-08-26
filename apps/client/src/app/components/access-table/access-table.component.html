@@ -31,7 +31,7 @@
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Last Used</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
         @if (element.lastUsedAt) {
-          {{ element.lastUsedAt | date: defaultDateFormat }}
+          {{ element.lastUsedAt | date: defaultDateFormat() }}
         } @else {
           <span>–</span>
         }
@@ -41,7 +41,7 @@
     <ng-container matColumnDef="expiresAt">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Expiration</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        {{ element.expiresAt | date: defaultDateFormat }}
+        {{ element.expiresAt | date: defaultDateFormat() }}
       </td>
     </ng-container>
 

@@ -26,7 +26,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
   HostListener,
@@ -44,7 +43,6 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { isBefore } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import {
@@ -94,12 +92,6 @@ export class GfHeaderComponent implements OnChanges {
     viewChild.required<GfAssistantComponent>('assistant');
   protected readonly assistentMenuTriggerElement =
     viewChild.required<MatMenuTrigger>('assistantTrigger');
-
-  protected readonly accesses = computed(() => {
-    return this.user()?.access?.filter(({ expiresAt }) => {
-      return !isBefore(expiresAt, new Date());
-    });
-  });
 
   protected hasFilters: boolean;
   protected hasImpersonationId: boolean;

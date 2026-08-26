@@ -1,6 +1,6 @@
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -97,7 +97,10 @@ export class GfAccessTableComponent {
     return columns;
   });
 
-  protected readonly defaultDateFormat = getDateFormatString(getLocale());
+  protected readonly defaultDateFormat = computed(() => {
+    return getDateFormatString(this.user()?.settings?.locale);
+  });
+
   protected readonly getAccessLevel = getAccessLevel;
 
   protected hasPermissionToEnableMcp = false;

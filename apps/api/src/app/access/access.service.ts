@@ -4,7 +4,7 @@ import { AccessWithGranteeUser } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { Access, Prisma } from '@prisma/client';
-import { isBefore, isToday } from 'date-fns';
+import { isBefore, isToday, isValid } from 'date-fns';
 
 @Injectable()
 export class AccessService {
@@ -62,7 +62,7 @@ export class AccessService {
   }
 
   public isExpired({ expiresAt }: Pick<Access, 'expiresAt'>) {
-    return isBefore(expiresAt, new Date());
+    return isBefore(expiresAt, new Date()) || !isValid(expiresAt);
   }
 
   public async updateAccess({
