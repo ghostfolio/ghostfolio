@@ -9,7 +9,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { TAG_ID_EMERGENCY_FUND, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -214,15 +214,16 @@ describe('PortfolioService', () => {
   });
 
   describe('getDetails', () => {
-    it('should return cash holdings when the calculator emits cash positions with the exchange-rate data source', async () => {
-      const accountId = randomUUID();
-
+    const setUpCashOnlyPortfolio = ({
+      baseCurrency = 'CHF',
+      emergencyFund
+    }: { baseCurrency?: string; emergencyFund?: number } = {}) => {
       const cashAccount: AccountWithBalance = {
         balance: 2000,
         comment: null,
         createdAt: parseDate('2024-01-01'),
         currency: 'USD',
-        id: accountId,
+        id: randomUUID(),
         name: 'USD',
         platformId: null,
         updatedAt: parseDate('2024-01-01'),
@@ -253,7 +254,8 @@ describe('PortfolioService', () => {
         id: userDummyData.id,
         settings: {
           settings: {
-            baseCurrency: 'CHF'
+            baseCurrency,
+            emergencyFund
           }
         }
       } as unknown as Awaited<ReturnType<typeof userService.user>>);
@@ -320,6 +322,10 @@ describe('PortfolioService', () => {
           'getValueOfAccountsAndPlatforms'
         )
         .mockResolvedValue({ accounts: {}, platforms: {} });
+    };
+
+    it('should return cash holdings when the calculator emits cash positions with the exchange-rate data source', async () => {
+      setUpCashOnlyPortfolio();
 
       const { holdings } = await portfolioService.getDetails({
         filters: [],
@@ -334,6 +340,19 @@ describe('PortfolioService', () => {
           })
         })
       ]);
+    });
+
+    it('should replace the existing cash holding instead of adding a second one when filtering by the emergency fund tag', async () => {
+      setUpCashOnlyPortfolio({ baseCurrency: 'USD', emergencyFund: 1000 });
+
+      const { holdings } = await portfolioService.getDetails({
+        filters: [{ id: TAG_ID_EMERGENCY_FUND, type: 'TAG' }],
+        userId: userDummyData.id
+      });
+
+      expect(holdings).toHaveLength(1);
+      expect(holdings[0].assetProfile.symbol).toBe('USD');
+      expect(holdings[0].valueInBaseCurrency).toBe(1000);
     });
   });
 

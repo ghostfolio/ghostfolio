@@ -516,6 +516,8 @@ export class GfAllocationsPageComponent implements OnInit {
 
       if (symbolData) {
         // Aggregate holdings with the same symbol from different data sources
+        symbolData.dataSource = undefined;
+        symbolData.isClickable = false;
         symbolData.value += value;
       } else {
         this.symbols[symbol] = {

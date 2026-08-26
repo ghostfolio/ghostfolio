@@ -1765,7 +1765,7 @@ export class PortfolioService {
         assetClass: AssetClass.LIQUIDITY,
         assetSubClass: AssetSubClass.CASH,
         countries: [],
-        dataSource: undefined,
+        dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
         holdings: [],
         name: currency,
         sectors: [],

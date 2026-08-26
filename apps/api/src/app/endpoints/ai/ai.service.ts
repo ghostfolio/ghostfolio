@@ -118,7 +118,7 @@ export class AiService {
       values: Object.values(AssetSubClass)
     });
 
-    const holdingsTableRows = holdings
+    const holdingsTableRows = [...holdings]
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
       })
