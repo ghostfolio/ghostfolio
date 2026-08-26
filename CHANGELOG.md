@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the logging of the `web_fetch` tool in the `FetchService`
 
+### Changed
+
+- Improved the language localization of the asset classes in the holdings table of the _Copy AI prompt to clipboard for analysis_ action on the analysis page (experimental)
+- Improved the language localization of the asset classes in the holdings table of the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
+
 ## 3.61.0 - 2026-08-25
 
 ### Changed
