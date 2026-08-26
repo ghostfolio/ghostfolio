@@ -1,6 +1,5 @@
 -- AlterTable
-ALTER TABLE "Access" ADD COLUMN "expiresAt" TIMESTAMP(3),
-ADD COLUMN "lastUsedAt" TIMESTAMP(3);
+ALTER TABLE "Access" ADD COLUMN "expiresAt" TIMESTAMP(3);
 
 -- Give an access which was granted before a date in the far future, because it
 -- was granted with no expiration date
