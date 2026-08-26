@@ -138,7 +138,7 @@ export class AiService {
                     ? this.i18nService.getTranslation({
                         languageCode,
                         id: `assetClass.${assetClass}`
-                      })
+                      }) || assetClass
                     : '';
                   break;
 
@@ -147,7 +147,7 @@ export class AiService {
                     ? this.i18nService.getTranslation({
                         languageCode,
                         id: `assetSubClass.${assetSubClass}`
-                      })
+                      }) || assetSubClass
                     : '';
                   break;
 

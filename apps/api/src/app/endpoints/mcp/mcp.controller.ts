@@ -32,7 +32,7 @@ export class GhostfolioMcpController {
     const prompt = await this.aiService.getPrompt({
       filters,
       userId,
-      languageCode: userSettings.language ?? DEFAULT_LANGUAGE_CODE,
+      languageCode: DEFAULT_LANGUAGE_CODE,
       mode: 'portfolio',
       userCurrency: userSettings.baseCurrency
     });
