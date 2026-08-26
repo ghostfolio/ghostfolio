@@ -52,7 +52,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { addYears, endOfDay, isBefore, startOfDay } from 'date-fns';
+import { addYears, endOfDay, isBefore, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -84,6 +84,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public tags: Filter[] = [];
 
   protected accessForm: FormGroup;
+  protected minExpiresAt: Date;
   protected readonly mode: 'create' | 'update';
   protected readonly today = startOfDay(new Date());
 
@@ -153,9 +154,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
-    if (access?.expiresAt && isBefore(new Date(access.expiresAt), this.today)) {
-      this.accessForm.get('expiresAt')?.markAsTouched();
-    }
+    this.minExpiresAt =
+      access?.expiresAt && isBefore(new Date(access.expiresAt), this.today)
+        ? startOfDay(new Date(access.expiresAt))
+        : this.today;
 
     this.assetClasses = getAssetClassFilters();
 
@@ -223,9 +225,20 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private buildExpiresAt() {
-    const expiresAt = this.accessForm.get('expiresAt')?.value as Date;
+    const expiresAtControl = this.accessForm.get('expiresAt');
+    const expiresAtOfAccess = this.data.access?.expiresAt;
 
-    return endOfDay(expiresAt).toISOString();
+    if (
+      this.mode === 'update' &&
+      !expiresAtControl?.dirty &&
+      expiresAtOfAccess
+    ) {
+      return new Date(expiresAtOfAccess).toISOString();
+    }
+
+    const expiresAt = expiresAtControl?.value as Date;
+
+    return isValid(expiresAt) ? endOfDay(expiresAt).toISOString() : '';
   }
 
   private buildFilters(): Filter[] {

@@ -52,7 +52,7 @@
           formControlName="expiresAt"
           matInput
           [matDatepicker]="expiresAt"
-          [min]="today"
+          [min]="minExpiresAt"
         />
         <mat-datepicker-toggle class="mr-2" matSuffix [for]="expiresAt">
           <ion-icon
