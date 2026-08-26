@@ -1,3 +1,4 @@
+import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -20,6 +21,7 @@ import { Access, AccessType } from '@prisma/client';
 @Injectable()
 export class ImpersonationService {
   public constructor(
+    private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly subscriptionService: SubscriptionService
@@ -112,9 +114,12 @@ export class ImpersonationService {
         }
       });
 
-      if (accessObject?.userId) {
+      if (accessObject?.userId && !this.accessService.isExpired(accessObject)) {
+        await this.accessService.updateLastUsedAt(accessObject);
+
         return { access: accessObject, userId: accessObject.userId };
       } else if (
+        !accessObject &&
         hasPermission(user.permissions, permissions.impersonateAllUsers)
       ) {
         // The identifier is a user id in this case, hence verify its existence
@@ -133,7 +138,9 @@ export class ImpersonationService {
         }
       });
 
-      if (accessObject?.userId) {
+      if (accessObject?.userId && !this.accessService.isExpired(accessObject)) {
+        await this.accessService.updateLastUsedAt(accessObject);
+
         return { access: accessObject, userId: accessObject.userId };
       }
     }

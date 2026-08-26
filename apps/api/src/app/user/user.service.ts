@@ -138,7 +138,7 @@ export class UserService {
           user: true
         },
         orderBy: { alias: 'asc' },
-        where: { granteeUserId: id }
+        where: { expiresAt: { gt: new Date() }, granteeUserId: id }
       }),
       this.prismaService.account.findMany({
         include: { platform: true },
@@ -230,7 +230,9 @@ export class UserService {
       access: access.map((accessItem) => {
         return {
           alias: accessItem.alias,
+          expiresAt: accessItem.expiresAt,
           id: accessItem.id,
+          lastUsedAt: accessItem.lastUsedAt,
           scopes: getScopesOfAccess(accessItem)
         };
       }),

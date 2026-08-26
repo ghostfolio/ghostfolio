@@ -1,3 +1,4 @@
+import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -12,6 +13,7 @@ import {
 import type { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Access } from '@prisma/client';
+import { addDays, subDays } from 'date-fns';
 
 import { ImpersonationService } from './impersonation.service';
 
@@ -39,6 +41,8 @@ describe('Impersonation service', () => {
     const getSubscription = jest.fn().mockResolvedValue({
       type: SubscriptionType.Basic
     });
+
+    const updateAccess = jest.fn().mockResolvedValue(undefined);
 
     const configurationService = {
       get: (key: string) => {
@@ -79,7 +83,8 @@ describe('Impersonation service', () => {
           }
 
           return access;
-        }
+        },
+        update: updateAccess
       },
       user: {
         findUnique: async () => {
@@ -94,7 +99,9 @@ describe('Impersonation service', () => {
 
     return {
       getSubscription,
+      updateAccess,
       service: new ImpersonationService(
+        new AccessService(prismaService),
         configurationService,
         prismaService,
         subscriptionService
@@ -129,6 +136,7 @@ describe('Impersonation service', () => {
 
   describe('With an impersonation', () => {
     const grantedAccess = {
+      expiresAt: addDays(new Date(), 1),
       granteeUserId: authenticatedUserId,
       id: accessId,
       scopes: [scopes.portfolioRead],
@@ -258,6 +266,7 @@ describe('Impersonation service', () => {
   // the access itself is the credential
   describe('With an access as the credential', () => {
     const accessOfMcp = {
+      expiresAt: addDays(new Date(), 1),
       granteeUserId: null,
       id: accessId,
       scopes: [scopes.portfolioRead],
@@ -330,6 +339,33 @@ describe('Impersonation service', () => {
       expect(userId).toBeUndefined();
     });
 
+    it('Refuses an access which has expired', async () => {
+      const { isActive, userId } = await createService({
+        access: {
+          ...accessOfMcp,
+          expiresAt: subDays(new Date(), 1)
+        } as unknown as Access,
+        impersonatedUser
+      }).service.resolve({ impersonationId: accessId, types: ['MCP'] });
+
+      expect(isActive).toEqual(false);
+      expect(userId).toBeUndefined();
+    });
+
+    it('Does not record the usage of an access which has expired', async () => {
+      const { service, updateAccess } = createService({
+        access: {
+          ...accessOfMcp,
+          expiresAt: subDays(new Date(), 1)
+        } as unknown as Access,
+        impersonatedUser
+      });
+
+      await service.resolve({ impersonationId: accessId, types: ['MCP'] });
+
+      expect(updateAccess).not.toHaveBeenCalled();
+    });
+
     // The identifier is the one of the access and not the one of the user who
     // granted it, hence an access can never be resolved by another identifier
     it('Refuses the identifier of another access', async () => {
@@ -356,6 +392,144 @@ describe('Impersonation service', () => {
 
       expect(isActive).toEqual(false);
       expect(userId).toBeUndefined();
+    });
+  });
+
+  describe('With an expiration date', () => {
+    const expiringAccess = {
+      granteeUserId: authenticatedUserId,
+      id: accessId,
+      scopes: [scopes.portfolioRead],
+      type: 'PRIVATE',
+      userId: impersonatedUserId
+    } as unknown as Access;
+
+    const impersonatedUser = {
+      createdAt: new Date('2024-01-01'),
+      id: impersonatedUserId,
+      settings: { settings: { baseCurrency: 'USD' } },
+      subscriptions: []
+    };
+
+    it('Resolves an access which expires in the future', async () => {
+      const { service } = createService({
+        impersonatedUser,
+        access: {
+          ...expiringAccess,
+          expiresAt: addDays(new Date(), 1)
+        } as unknown as Access
+      });
+
+      const { isActive } = await service.resolve({
+        impersonationId: accessId,
+        user: authenticatedUser
+      });
+
+      expect(isActive).toEqual(true);
+    });
+
+    it('Refuses an access which has expired', async () => {
+      const { service } = createService({
+        impersonatedUser,
+        access: {
+          ...expiringAccess,
+          expiresAt: subDays(new Date(), 1)
+        } as unknown as Access
+      });
+
+      const { isActive, scopes: scopesOfContext } = await service.resolve({
+        impersonationId: accessId,
+        user: authenticatedUser
+      });
+
+      expect(isActive).toEqual(false);
+      expect(scopesOfContext).toEqual(getScopesOfOwnAccess());
+    });
+
+    // An expired access must not fall through to the permission to impersonate
+    // all users, which would give an administrator the access again
+    it('Refuses an access which has expired for an administrator', async () => {
+      const { service } = createService({
+        impersonatedUser,
+        access: {
+          ...expiringAccess,
+          expiresAt: subDays(new Date(), 1)
+        } as unknown as Access
+      });
+
+      const { isActive } = await service.resolve({
+        impersonationId: accessId,
+        user: {
+          ...authenticatedUser,
+          permissions: [permissions.impersonateAllUsers]
+        } as unknown as typeof authenticatedUser
+      });
+
+      expect(isActive).toEqual(false);
+    });
+  });
+
+  describe('With the date of the last usage', () => {
+    const impersonatedUser = {
+      createdAt: new Date('2024-01-01'),
+      id: impersonatedUserId,
+      settings: { settings: { baseCurrency: 'USD' } },
+      subscriptions: []
+    };
+
+    const usedAccess = {
+      expiresAt: addDays(new Date(), 1),
+      granteeUserId: authenticatedUserId,
+      id: accessId,
+      scopes: [scopes.portfolioRead],
+      type: 'PRIVATE',
+      userId: impersonatedUserId
+    } as unknown as Access;
+
+    it('Records the first usage', async () => {
+      const { service, updateAccess } = createService({
+        impersonatedUser,
+        access: usedAccess
+      });
+
+      await service.resolve({
+        impersonationId: accessId,
+        user: authenticatedUser
+      });
+
+      expect(updateAccess).toHaveBeenCalledTimes(1);
+    });
+
+    it('Records the usage of a previous day', async () => {
+      const { service, updateAccess } = createService({
+        impersonatedUser,
+        access: {
+          ...usedAccess,
+          lastUsedAt: subDays(new Date(), 1)
+        } as unknown as Access
+      });
+
+      await service.resolve({
+        impersonationId: accessId,
+        user: authenticatedUser
+      });
+
+      expect(updateAccess).toHaveBeenCalledTimes(1);
+    });
+
+    // A request which repeats must not write to the database every time
+    it('Does not record a usage of the same day again', async () => {
+      const { service, updateAccess } = createService({
+        impersonatedUser,
+        access: { ...usedAccess, lastUsedAt: new Date() } as unknown as Access
+      });
+
+      await service.resolve({
+        impersonationId: accessId,
+        user: authenticatedUser
+      });
+
+      expect(updateAccess).not.toHaveBeenCalled();
     });
   });
 

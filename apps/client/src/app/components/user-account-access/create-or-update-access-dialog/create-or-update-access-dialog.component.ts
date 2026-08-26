@@ -1,4 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -41,6 +42,8 @@ import {
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { DateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -49,6 +52,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { addYears, endOfDay, isBefore, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -62,6 +66,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     GfAccessLevelIconComponent,
     GfPortfolioFilterFormComponent,
     MatButtonModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -80,6 +85,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   protected accessForm: FormGroup;
   protected readonly mode: 'create' | 'update';
+  protected readonly today = startOfDay(new Date());
 
   private hasExperimentalFeatures = false;
   private hasPermissionToEnableMcp = false;
@@ -89,6 +95,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   private readonly data =
     inject<CreateOrUpdateAccessDialogParams>(MAT_DIALOG_DATA);
 
+  private readonly dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -129,6 +136,12 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     this.accessForm = this.formBuilder.group({
       accessLevel: getAccessLevel(access?.scopes),
       alias: [access?.alias ?? ''],
+      expiresAt: [
+        access?.expiresAt
+          ? new Date(access.expiresAt)
+          : addYears(this.today, 1),
+        Validators.required
+      ],
       filters: [null],
       granteeUserId: [
         isPrivate ? (access?.grantee ?? null) : null,
@@ -140,6 +153,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
+    if (access?.expiresAt && isBefore(new Date(access.expiresAt), this.today)) {
+      this.accessForm.get('expiresAt')?.markAsTouched();
+    }
+
     this.assetClasses = getAssetClassFilters();
 
     this.userService
@@ -149,6 +166,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         this.accounts = accounts;
         this.hasExperimentalFeatures = settings.isExperimentalFeatures ?? false;
         this.tags = getTagFilters(tags);
+
+        this.dateAdapter.setLocale(settings.locale ?? DEFAULT_LOCALE);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -203,6 +222,12 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  private buildExpiresAt() {
+    const expiresAt = this.accessForm.get('expiresAt')?.value as Date;
+
+    return endOfDay(expiresAt).toISOString();
+  }
+
   private buildFilters(): Filter[] {
     return getFiltersFromPortfolioFilterFormValue(
       this.accessForm.get('filters')?.value
@@ -229,6 +254,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
+      expiresAt: this.buildExpiresAt(),
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       scopes: this.buildScopes(),
@@ -288,6 +314,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
+      expiresAt: this.buildExpiresAt(),
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: accessId,

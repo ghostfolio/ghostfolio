@@ -199,15 +199,19 @@ export class GfUserAccountAccessComponent {
   }
 
   private update() {
-    this.accessesGet = this.user.access.map(({ alias, id, scopes }) => {
-      return {
-        id,
-        scopes,
-        alias: alias ?? '',
-        grantee: $localize`Me`,
-        type: 'PRIVATE'
-      };
-    });
+    this.accessesGet = this.user.access.map(
+      ({ alias, expiresAt, id, lastUsedAt, scopes }) => {
+        return {
+          expiresAt,
+          id,
+          lastUsedAt,
+          scopes,
+          alias: alias ?? '',
+          grantee: $localize`Me`,
+          type: 'PRIVATE'
+        };
+      }
+    );
 
     this.dataService
       .fetchAccesses()
