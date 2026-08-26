@@ -1,5 +1,6 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_API_KEY_OPENROUTER,
@@ -44,6 +45,7 @@ export class AiService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly i18nService: I18nService,
     private readonly portfolioService: PortfolioService,
     private readonly propertyService: PropertyService
   ) {}
@@ -132,11 +134,21 @@ export class AiService {
                   break;
 
                 case 'ASSET_CLASS':
-                  row[name] = assetClass ?? '';
+                  row[name] = assetClass
+                    ? this.i18nService.getTranslation({
+                        languageCode,
+                        id: `assetClass.${assetClass}`
+                      })
+                    : '';
                   break;
 
                 case 'ASSET_SUB_CLASS':
-                  row[name] = assetSubClass ?? '';
+                  row[name] = assetSubClass
+                    ? this.i18nService.getTranslation({
+                        languageCode,
+                        id: `assetSubClass.${assetSubClass}`
+                      })
+                    : '';
                   break;
 
                 case 'CURRENCY':
