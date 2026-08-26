@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the creation of asset profiles with a symbol in the wrong letter case by using the original symbol of the data provider
+- Fixed the creation of asset profiles with a symbol in the wrong letter case by using the symbol of the _Yahoo Finance_ service
 
 ## 3.61.0 - 2026-08-25
 
