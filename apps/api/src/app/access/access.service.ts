@@ -4,6 +4,7 @@ import { AccessWithGranteeUser } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { Access, Prisma } from '@prisma/client';
+import { isBefore, isToday } from 'date-fns';
 
 @Injectable()
 export class AccessService {
@@ -60,6 +61,10 @@ export class AccessService {
     });
   }
 
+  public isExpired({ expiresAt }: Pick<Access, 'expiresAt'>) {
+    return expiresAt ? isBefore(expiresAt, new Date()) : false;
+  }
+
   public async updateAccess({
     data,
     where
@@ -71,5 +76,29 @@ export class AccessService {
       data,
       where
     });
+  }
+
+  /**
+   * Stores the date of the last usage of the access. The value is the first
+   * usage of the day, because a request which repeats must not write to the
+   * database again.
+   */
+  public async updateLastUsedAt({
+    id,
+    lastUsedAt
+  }: Pick<Access, 'id' | 'lastUsedAt'>) {
+    if (lastUsedAt && isToday(lastUsedAt)) {
+      return;
+    }
+
+    try {
+      await this.prismaService.access.update({
+        data: { lastUsedAt: new Date() },
+        where: { id }
+      });
+    } catch {
+      // The date of the last usage is not essential for the request, hence a
+      // failure to store it must not fail the request
+    }
   }
 }

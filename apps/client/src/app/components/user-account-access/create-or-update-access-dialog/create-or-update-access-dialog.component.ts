@@ -1,6 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
-import { getToday } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
@@ -51,7 +50,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { addYears, endOfDay } from 'date-fns';
+import { addYears, endOfDay, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -84,7 +83,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   protected accessForm: FormGroup;
   protected readonly mode: 'create' | 'update';
-  protected readonly today = getToday();
+  protected readonly today = startOfDay(new Date());
 
   private hasExperimentalFeatures = false;
   private hasPermissionToEnableMcp = false;

@@ -85,9 +85,9 @@ export class GfAccessTableComponent {
       'alias',
       'grantee',
       'type',
-      'details',
       'lastUsedAt',
-      'expiresAt'
+      'expiresAt',
+      'details'
     ];
 
     if (this.showActions()) {

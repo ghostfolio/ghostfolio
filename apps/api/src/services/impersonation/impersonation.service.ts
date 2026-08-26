@@ -1,3 +1,4 @@
+import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -16,11 +17,11 @@ import type {
 
 import { Injectable } from '@nestjs/common';
 import { Access, AccessType } from '@prisma/client';
-import { isBefore, isToday } from 'date-fns';
 
 @Injectable()
 export class ImpersonationService {
   public constructor(
+    private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly subscriptionService: SubscriptionService
@@ -113,8 +114,8 @@ export class ImpersonationService {
         }
       });
 
-      if (accessObject?.userId && !isExpired(accessObject)) {
-        await this.recordUsage(accessObject);
+      if (accessObject?.userId && !this.accessService.isExpired(accessObject)) {
+        await this.accessService.updateLastUsedAt(accessObject);
 
         return { access: accessObject, userId: accessObject.userId };
       } else if (
@@ -137,8 +138,8 @@ export class ImpersonationService {
         }
       });
 
-      if (accessObject?.userId && !isExpired(accessObject)) {
-        await this.recordUsage(accessObject);
+      if (accessObject?.userId && !this.accessService.isExpired(accessObject)) {
+        await this.accessService.updateLastUsedAt(accessObject);
 
         return { access: accessObject, userId: accessObject.userId };
       }
@@ -146,28 +147,4 @@ export class ImpersonationService {
 
     return { userId: null };
   }
-
-  /**
-   * Records that the access has been used. The value is the first usage of the
-   * day, because a request which repeats must not write to the database again.
-   */
-  private async recordUsage({ id, lastUsedAt }: Access) {
-    if (lastUsedAt && isToday(lastUsedAt)) {
-      return;
-    }
-
-    try {
-      await this.prismaService.access.update({
-        data: { lastUsedAt: new Date() },
-        where: { id }
-      });
-    } catch {
-      // The date of the last usage is not essential for the request, hence a
-      // failure to store it must not fail the request
-    }
-  }
-}
-
-function isExpired({ expiresAt }: Access) {
-  return expiresAt ? isBefore(expiresAt, new Date()) : false;
 }

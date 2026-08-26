@@ -40,12 +40,14 @@ export class PublicService {
       type: 'PUBLIC'
     });
 
-    if (!access) {
+    if (!access || this.accessService.isExpired(access)) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
         StatusCodes.NOT_FOUND
       );
     }
+
+    await this.accessService.updateLastUsedAt(access);
 
     let hasDetails = true;
 
