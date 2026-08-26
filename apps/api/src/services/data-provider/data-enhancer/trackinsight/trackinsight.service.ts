@@ -64,10 +64,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       symbol
     });
 
-    if (!trackinsightSymbol) {
+    if (!trackinsightSymbol && symbol.includes('.')) {
       trackinsightSymbol = await this.searchTrackinsightSymbol({
         requestTimeout,
-        symbol: symbol.split('.')?.[0]
+        symbol: symbol.split('.')[0]
       });
     }
 
@@ -212,6 +212,12 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         ) {
           return jsonRes['results']['docs'][0]['ticker'];
         }
+
+        this.logger.debug(
+          `Could not match a Trackinsight symbol for "${symbol}": ${JSON.stringify(
+            jsonRes
+          )}`
+        );
 
         return undefined;
       })
