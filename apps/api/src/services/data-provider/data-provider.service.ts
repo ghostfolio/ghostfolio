@@ -130,8 +130,8 @@ export class DataProviderService implements OnModuleInit {
                 })
               ] = {
                 ...assetProfile,
-                symbol,
-                name: formatAssetProfileName(assetProfile)
+                name: formatAssetProfileName(assetProfile),
+                symbol: assetProfile.symbol ?? symbol
               };
             }
           })

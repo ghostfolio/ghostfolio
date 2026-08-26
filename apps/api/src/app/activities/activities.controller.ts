@@ -12,6 +12,7 @@ import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper'
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
   ActivityResponse
@@ -32,7 +33,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order } from '@prisma/client';
+import { Order, SymbolProfile } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -224,8 +225,12 @@ export class ActivitiesController {
         ? userSubscription
         : authenticatedUserSubscription;
 
+    let assetProfiles: {
+      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
+    };
+
     try {
-      await this.dataProviderService.validateActivities({
+      assetProfiles = await this.dataProviderService.validateActivities({
         subscription,
         activitiesDto: [
           {
@@ -251,6 +256,11 @@ export class ActivitiesController {
     const customCurrency = data.customCurrency;
     const dataSource = data.dataSource;
 
+    const symbol =
+      assetProfiles[
+        getAssetProfileIdentifier({ dataSource, symbol: data.symbol })
+      ]?.symbol ?? data.symbol;
+
     if (customCurrency) {
       data.currency = customCurrency;
 
@@ -268,12 +278,12 @@ export class ActivitiesController {
           create: {
             currency,
             dataSource,
-            symbol: data.symbol
+            symbol
           },
           where: {
             dataSource_symbol: {
               dataSource,
-              symbol: data.symbol
+              symbol
             }
           }
         }
@@ -291,8 +301,8 @@ export class ActivitiesController {
         dataGatheringItems: [
           {
             dataSource,
-            date: activity.date,
-            symbol: data.symbol
+            symbol,
+            date: activity.date
           }
         ],
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH

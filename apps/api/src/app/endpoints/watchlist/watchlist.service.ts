@@ -26,10 +26,12 @@ export class WatchlistService {
 
   public async createWatchlistItem({
     dataSource,
-    symbol,
+    symbol: aSymbol,
     userId
   }: { userId: string } & AssetProfileIdentifier): Promise<void> {
-    const symbolProfile = await this.prismaService.symbolProfile.findUnique({
+    let symbol = aSymbol;
+
+    let symbolProfile = await this.prismaService.symbolProfile.findUnique({
       where: {
         dataSource_symbol: { dataSource, symbol }
       }
@@ -49,9 +51,19 @@ export class WatchlistService {
         );
       }
 
-      await this.symbolProfileService.add(
-        assetProfile as Prisma.SymbolProfileCreateInput
-      );
+      symbol = assetProfile.symbol;
+
+      symbolProfile = await this.prismaService.symbolProfile.findUnique({
+        where: {
+          dataSource_symbol: { dataSource, symbol }
+        }
+      });
+
+      if (!symbolProfile) {
+        await this.symbolProfileService.add(
+          assetProfile as Prisma.SymbolProfileCreateInput
+        );
+      }
     }
 
     await this.dataGatheringService.gatherSymbol({

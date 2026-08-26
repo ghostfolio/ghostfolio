@@ -95,8 +95,13 @@ export class DataGatheringService {
       assetProfileIdentifiers
     );
 
-    for (const assetProfile of Object.values(assetProfiles)) {
-      const { symbol } = assetProfile;
+    for (const { dataSource, symbol } of assetProfileIdentifiers) {
+      const assetProfile =
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      if (!assetProfile) {
+        continue;
+      }
 
       const symbolProfile = symbolProfiles.find(
         ({ symbol: symbolProfileSymbol }) => {
@@ -137,7 +142,6 @@ export class DataGatheringService {
         countries,
         currency,
         cusip,
-        dataSource,
         figi,
         figiComposite,
         figiShareClass,
