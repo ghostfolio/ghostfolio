@@ -1,15 +1,13 @@
 import { Filter } from '@ghostfolio/common/interfaces';
 import { Scope, scopes } from '@ghostfolio/common/scopes';
-import { IsInTheFutureConstraint } from '@ghostfolio/common/validator-constraints/is-in-the-future';
 
 import {
   IsArray,
-  IsDateString,
   IsIn,
+  IsISO8601,
   IsOptional,
   IsString,
-  IsUUID,
-  Validate
+  IsUUID
 } from 'class-validator';
 
 export class UpdateAccessDto {
@@ -17,8 +15,7 @@ export class UpdateAccessDto {
   @IsString()
   alias?: string;
 
-  @IsDateString()
-  @Validate(IsInTheFutureConstraint)
+  @IsISO8601()
   expiresAt: string;
 
   @IsArray()

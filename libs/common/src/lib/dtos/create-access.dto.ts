@@ -5,9 +5,9 @@ import { IsInTheFutureConstraint } from '@ghostfolio/common/validator-constraint
 import { AccessType } from '@prisma/client';
 import {
   IsArray,
-  IsDateString,
   IsEnum,
   IsIn,
+  IsISO8601,
   IsOptional,
   IsString,
   IsUUID,
@@ -19,7 +19,7 @@ export class CreateAccessDto {
   @IsString()
   alias?: string;
 
-  @IsDateString()
+  @IsISO8601()
   @Validate(IsInTheFutureConstraint)
   expiresAt: string;
 

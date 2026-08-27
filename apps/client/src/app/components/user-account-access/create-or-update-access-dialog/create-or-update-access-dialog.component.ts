@@ -52,7 +52,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { addYears, endOfDay, isBefore, startOfDay } from 'date-fns';
+import { addYears, endOfDay, isBefore, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
 
@@ -84,6 +84,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public tags: Filter[] = [];
 
   protected accessForm: FormGroup;
+  protected minExpiresAt: Date;
   protected readonly mode: 'create' | 'update';
   protected readonly today = startOfDay(new Date());
 
@@ -153,9 +154,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
-    if (access?.expiresAt && isBefore(new Date(access.expiresAt), this.today)) {
-      this.accessForm.get('expiresAt')?.markAsTouched();
-    }
+    this.minExpiresAt =
+      access?.expiresAt && isBefore(new Date(access.expiresAt), this.today)
+        ? startOfDay(new Date(access.expiresAt))
+        : this.today;
 
     this.assetClasses = getAssetClassFilters();
 
@@ -222,42 +224,15 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
-  private buildExpiresAt() {
-    const expiresAt = this.accessForm.get('expiresAt')?.value as Date;
-
-    return endOfDay(expiresAt).toISOString();
-  }
-
-  private buildFilters(): Filter[] {
-    return getFiltersFromPortfolioFilterFormValue(
-      this.accessForm.get('filters')?.value
-    );
-  }
-
-  private buildScopes(): Scope[] {
-    const scopesOfAccess = this.data.access?.scopes ?? [];
-
-    if (
-      scopesOfAccess.length > 0 &&
-      this.accessLevel === getAccessLevel(scopesOfAccess)
-    ) {
-      return Object.values(scopes).filter((scope) => {
-        return hasScope(scopesOfAccess, scope);
-      });
-    }
-
-    return getScopesOfAccessLevel(this.accessLevel);
-  }
-
   private async createAccess() {
-    const filters = this.buildFilters();
+    const filters = this.getFilters();
 
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
-      expiresAt: this.buildExpiresAt(),
+      expiresAt: this.getExpiresAt(),
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      scopes: this.buildScopes(),
+      scopes: this.getScopes(),
       type: this.accessForm.get('type')?.value
     };
 
@@ -290,6 +265,44 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  private getExpiresAt() {
+    const expiresAtControl = this.accessForm.get('expiresAt');
+    const expiresAtOfAccess = this.data.access?.expiresAt;
+
+    if (
+      this.mode === 'update' &&
+      !expiresAtControl?.dirty &&
+      expiresAtOfAccess
+    ) {
+      return new Date(expiresAtOfAccess).toISOString();
+    }
+
+    const expiresAt = expiresAtControl?.value as Date;
+
+    return isValid(expiresAt) ? endOfDay(expiresAt).toISOString() : '';
+  }
+
+  private getFilters(): Filter[] {
+    return getFiltersFromPortfolioFilterFormValue(
+      this.accessForm.get('filters')?.value
+    );
+  }
+
+  private getScopes(): Scope[] {
+    const scopesOfAccess = this.data.access?.scopes ?? [];
+
+    if (
+      scopesOfAccess.length > 0 &&
+      this.accessLevel === getAccessLevel(scopesOfAccess)
+    ) {
+      return Object.values(scopes).filter((scope) => {
+        return hasScope(scopesOfAccess, scope);
+      });
+    }
+
+    return getScopesOfAccessLevel(this.accessLevel);
+  }
+
   private loadHoldings() {
     this.dataService
       .fetchPortfolioHoldings()
@@ -310,15 +323,15 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       return;
     }
 
-    const filters = this.buildFilters();
+    const filters = this.getFilters();
 
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
-      expiresAt: this.buildExpiresAt(),
+      expiresAt: this.getExpiresAt(),
       filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: accessId,
-      scopes: this.buildScopes()
+      scopes: this.getScopes()
     };
 
     try {

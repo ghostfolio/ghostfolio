@@ -12,11 +12,12 @@ import {
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
-  getYesterday,
+  getStartOfUtcDateOfYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
 import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   eachDayOfInterval,
@@ -164,11 +165,19 @@ export class ExchangeRateDataService {
   }
 
   public async loadCurrencies() {
+    const startOfUtcDateOfYesterday = getStartOfUtcDateOfYesterday();
+
+    const dateStringOfYesterday = format(
+      startOfUtcDateOfYesterday,
+      DATE_FORMAT,
+      { in: utc }
+    );
+
     const historicalData = await this.dataProviderService.getHistorical(
       this.currencyPairs,
       'day',
-      getYesterday(),
-      getYesterday()
+      startOfUtcDateOfYesterday,
+      startOfUtcDateOfYesterday
     );
 
     const quotes = await this.dataProviderService.getQuotes({
@@ -196,7 +205,7 @@ export class ExchangeRateDataService {
 
       if (isNumber(quote?.marketPrice)) {
         result[symbol] = {
-          [format(getYesterday(), DATE_FORMAT)]: {
+          [dateStringOfYesterday]: {
             marketPrice: quote.marketPrice
           }
         };
@@ -219,17 +228,19 @@ export class ExchangeRateDataService {
 
     for (const symbol of Object.keys(resultExtended)) {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
-      const date = format(getYesterday(), DATE_FORMAT);
 
-      this.exchangeRates[symbol] = resultExtended[symbol]?.[date]?.marketPrice;
+      this.exchangeRates[symbol] =
+        resultExtended[symbol]?.[dateStringOfYesterday]?.marketPrice;
 
       if (!this.exchangeRates[symbol]) {
         // Not found, calculate indirectly via base currency
         this.exchangeRates[symbol] =
-          resultExtended[`${currency1}${DEFAULT_CURRENCY}`]?.[date]
-            ?.marketPrice *
-          resultExtended[`${DEFAULT_CURRENCY}${currency2}`]?.[date]
-            ?.marketPrice;
+          resultExtended[`${currency1}${DEFAULT_CURRENCY}`]?.[
+            dateStringOfYesterday
+          ]?.marketPrice *
+          resultExtended[`${DEFAULT_CURRENCY}${currency2}`]?.[
+            dateStringOfYesterday
+          ]?.marketPrice;
 
         // Calculate the opposite direction
         this.exchangeRates[`${currency2}${currency1}`] =

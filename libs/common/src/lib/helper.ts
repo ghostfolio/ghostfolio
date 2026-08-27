@@ -511,14 +511,6 @@ export function getTextColor(aColorScheme: ColorScheme) {
   return `${r}, ${g}, ${b}`;
 }
 
-export function getToday() {
-  const year = getYear(new Date());
-  const month = getMonth(new Date());
-  const day = getDate(new Date());
-
-  return new Date(Date.UTC(year, month, day));
-}
-
 export function getUtc(aDateString: string) {
   const [yearString, monthString, dayString] = aDateString.split('-');
 
@@ -529,14 +521,6 @@ export function getUtc(aDateString: string) {
       parseInt(dayString, 10)
     )
   );
-}
-
-export function getYesterday() {
-  const year = getYear(new Date());
-  const month = getMonth(new Date());
-  const day = getDate(new Date());
-
-  return subDays(new Date(Date.UTC(year, month, day)), 1);
 }
 
 export function hasGhostfolioPrefix(aSymbol: string) {

@@ -8,6 +8,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import {
   Controller,
   Get,
@@ -22,9 +23,9 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
-import { parseISO } from 'date-fns';
+import { isValid, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { isDate, isEmpty } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { SymbolService } from './symbol.service';
 
@@ -103,9 +104,9 @@ export class SymbolController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<DataProviderHistoricalResponse> {
-    const date = parseISO(dateString);
+    const date = parseISO(dateString, { in: utc });
 
-    if (!isDate(date)) {
+    if (!isValid(date)) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST

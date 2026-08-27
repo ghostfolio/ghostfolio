@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization of the asset classes and asset sub classes in the holdings table of the _Copy portfolio data to clipboard for AI prompt_ action on the analysis page (experimental)
 - Improved the logging of the `web_fetch` tool in the `FetchService`
 
+### Fixed
+
+- Fixed the date of the exchange rates for instances running in a time zone other than UTC
+- Fixed the date of the chart in the holding detail dialog for instances running in a time zone other than UTC
+- Fixed the date of the historical market data gathering endpoint for a specific date for instances running in a time zone other than UTC
+- Fixed the validation of the date in the historical market data gathering endpoint for a specific date
+
 ## 3.61.0 - 2026-08-25
 
 ### Changed

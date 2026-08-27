@@ -138,7 +138,7 @@ export class UserService {
           user: true
         },
         orderBy: { alias: 'asc' },
-        where: { expiresAt: { gt: new Date() }, granteeUserId: id }
+        where: { granteeUserId: id }
       }),
       this.prismaService.account.findMany({
         include: { platform: true },
