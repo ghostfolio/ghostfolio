@@ -25,15 +25,21 @@ export class I18nService implements OnModuleInit {
     languageCode: string;
     placeholders?: Record<string, string | number>;
   }): string {
-    const $ = this.translations[languageCode];
+    const languageCodeToUse = this.translations[languageCode]
+      ? languageCode
+      : DEFAULT_LANGUAGE_CODE;
+
+    const $ = this.translations[languageCodeToUse];
 
     if (!$) {
       this.logger.warn(`Translation not found for locale '${languageCode}'`);
+
+      return '';
     }
 
     let translatedText = $(
       `trans-unit[id="${id}"] > ${
-        languageCode === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
+        languageCodeToUse === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
       }`
     ).text();
 
