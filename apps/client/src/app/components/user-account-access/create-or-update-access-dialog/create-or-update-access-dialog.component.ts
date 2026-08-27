@@ -212,6 +212,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     return this.accessForm?.get('type')?.value === 'PUBLIC';
   }
 
+  protected get showExpiresAtErrorMessage() {
+    return this.accessForm?.get('expiresAt')?.invalid === true;
+  }
+
   protected onCancel() {
     this.dialogRef.close();
   }
