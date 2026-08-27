@@ -12,6 +12,7 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
+import { AssetClass, AssetSubClass } from '@prisma/client';
 import { generateText } from 'ai';
 import { format } from 'date-fns';
 import type { ColumnDescriptor } from 'tablemark';
@@ -105,6 +106,18 @@ export class AiService {
         return { name, align: align ?? 'left' };
       });
 
+    const assetClassTranslations = this.getEnumTranslations({
+      languageCode,
+      id: 'assetClass',
+      values: Object.values(AssetClass)
+    });
+
+    const assetSubClassTranslations = this.getEnumTranslations({
+      languageCode,
+      id: 'assetSubClass',
+      values: Object.values(AssetSubClass)
+    });
+
     const holdingsTableRows = Object.values(holdings)
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
@@ -134,21 +147,11 @@ export class AiService {
                   break;
 
                 case 'ASSET_CLASS':
-                  row[name] = assetClass
-                    ? this.i18nService.getTranslation({
-                        languageCode,
-                        id: `assetClass.${assetClass}`
-                      }) || assetClass
-                    : '';
+                  row[name] = assetClassTranslations[assetClass] ?? '';
                   break;
 
                 case 'ASSET_SUB_CLASS':
-                  row[name] = assetSubClass
-                    ? this.i18nService.getTranslation({
-                        languageCode,
-                        id: `assetSubClass.${assetSubClass}`
-                      }) || assetSubClass
-                    : '';
+                  row[name] = assetSubClassTranslations[assetSubClass] ?? '';
                   break;
 
                 case 'CURRENCY':
@@ -213,5 +216,28 @@ export class AiService {
       'Conclusion: Provide a concise summary highlighting key insights.',
       `Provide your answer in the following language: ${languageCode}.`
     ].join('\n');
+  }
+
+  private getEnumTranslations<T extends string>({
+    id,
+    languageCode,
+    values
+  }: {
+    id: string;
+    languageCode: string;
+    values: T[];
+  }) {
+    return values.reduce(
+      (translations, value) => {
+        translations[value] =
+          this.i18nService.getTranslation({
+            languageCode,
+            id: `${id}.${value}`
+          }) || value;
+
+        return translations;
+      },
+      {} as Record<T, string>
+    );
   }
 }
