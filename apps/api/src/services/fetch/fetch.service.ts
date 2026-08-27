@@ -173,9 +173,7 @@ export class FetchService implements OnModuleInit {
           try {
             JSON.parse(body);
           } catch {
-            if (!rejectedBody) {
-              rejectedBody = body;
-            }
+            rejectedBody = body;
 
             continue;
           }
@@ -195,9 +193,9 @@ export class FetchService implements OnModuleInit {
       );
 
       this.logger.debug(
-        `Web fetch tool response for ${this.redactUrl(
-          url
-        )}: ${this.getBodyPreview(rejectedBody)}`
+        `Web fetch tool response for ${this.redactUrl(url)} (${
+          sources?.length ?? 0
+        } sources): ${this.getBodyPreview(rejectedBody || text)}`
       );
 
       return undefined;
