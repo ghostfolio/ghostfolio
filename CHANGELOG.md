@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an expiration date to the access to share the portfolio
 - Added the date of the last usage to the access to share the portfolio
+- Added support for a dedicated _OpenRouter_ engine for the `web_fetch` tool in the `FetchService`
+
+### Changed
+
+- Improved the logging of the `web_fetch` tool in the `FetchService`
 
 ## 3.61.0 - 2026-08-25
 
