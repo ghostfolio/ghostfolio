@@ -18,6 +18,7 @@ import type { MarketDataPreset } from './market-data-preset.type';
 import type { MarketState } from './market-state.type';
 import type { Market } from './market.type';
 import type { OrderWithAccount } from './order-with-account.type';
+import type { OverviewChartMode } from './overview-chart-mode.type';
 import type { ProductCategory } from './product-category.type';
 import type { ProductPlatform } from './product-platform.type';
 import type { PropertyKey } from './property-key.type';
@@ -49,6 +50,7 @@ export type {
   MarketDataPreset,
   MarketState,
   OrderWithAccount,
+  OverviewChartMode,
   ProductCategory,
   ProductPlatform,
   PropertyKey,
