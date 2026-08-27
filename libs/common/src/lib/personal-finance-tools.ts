@@ -44,6 +44,27 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.allvuesystems.com'
   },
   {
+    categories: [
+      'BUDGETING',
+      'CRYPTOCURRENCY',
+      'ETF_TRACKING',
+      'NET_WORTH_TRACKING',
+      'STOCK_TRACKING',
+      'TAX_REPORTING'
+    ],
+    founded: 2024,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'alpgain',
+    languages: ['Deutsch', 'English', 'Français', 'Italiano'],
+    name: 'Alpgain',
+    origin: 'CH',
+    platforms: ['ANDROID', 'IOS', 'WEB'],
+    pricingPerYear: 'CHF 99',
+    slogan: 'Manage your entire Swiss wealth in one place',
+    url: 'https://alpgain.ch'
+  },
+  {
     categories: ['STOCK_TRACKING'],
     founded: 2016,
     key: 'alphatrackr',
@@ -189,6 +210,19 @@ export const personalFinanceTools: Product[] = [
     name: 'Basil Finance',
     slogan: 'The ultimate solution for tracking and managing your investments',
     url: 'https://basil.fi'
+  },
+  {
+    categories: ['NET_WORTH_TRACKING'],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'beam',
+    languages: ['Deutsch', 'English', 'Français'],
+    name: 'Beam',
+    origin: 'CH',
+    platforms: ['ANDROID', 'IOS'],
+    pricingPerYear: '$49.99',
+    slogan: 'Stop guessing your net worth',
+    url: 'https://www.get-beam.app'
   },
   {
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
@@ -1021,6 +1055,21 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$249',
     slogan: 'The Time Machine for your Net Worth',
     url: 'https://www.kubera.com'
+  },
+  {
+    categories: [
+      'CRYPTOCURRENCY',
+      'ETF_TRACKING',
+      'INVESTMENT_RESEARCH',
+      'STOCK_TRACKING'
+    ],
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'kyro',
+    languages: ['English'],
+    name: 'Kyro',
+    platforms: ['WEB'],
+    url: 'https://my.kyro.app'
   },
   {
     categories: ['WEALTH_MANAGEMENT'],
