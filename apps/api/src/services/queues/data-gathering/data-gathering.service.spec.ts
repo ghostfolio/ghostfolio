@@ -155,6 +155,27 @@ describe('DataGatheringService', () => {
         })
       );
     });
+
+    it('Creates a new asset profile with the symbol of the data provider', async () => {
+      dataProviderService.getAssetProfiles.mockResolvedValue({
+        'YAHOO-aapl': {
+          currency: 'USD',
+          dataSource: DataSource.YAHOO,
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        }
+      });
+
+      await dataGatheringService.gatherAssetProfiles([
+        { dataSource: DataSource.YAHOO, symbol: 'aapl' }
+      ]);
+
+      expect(prismaService.symbolProfile.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({ symbol: 'AAPL' })
+        })
+      );
+    });
   });
 
   describe('gatherRecentMarketData', () => {

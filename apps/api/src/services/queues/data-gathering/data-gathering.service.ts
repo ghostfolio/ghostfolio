@@ -166,8 +166,8 @@ export class DataGatheringService {
             isin,
             name,
             sectors,
-            symbol,
-            url
+            url,
+            symbol: assetProfile.symbol
           },
           update: {
             assetClass,

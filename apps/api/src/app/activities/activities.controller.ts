@@ -229,7 +229,7 @@ export class ActivitiesController {
 
     let assetProfiles: {
       [assetProfileIdentifier: string]: Partial<SymbolProfile>;
-    } = {};
+    };
 
     try {
       assetProfiles = await this.dataProviderService.validateActivities({
@@ -382,8 +382,7 @@ export class ActivitiesController {
           },
           update: {
             assetClass: data.assetClass,
-            assetSubClass: data.assetSubClass,
-            name: data.symbol
+            assetSubClass: data.assetSubClass
           }
         },
         tags: data.tags?.map((id) => {

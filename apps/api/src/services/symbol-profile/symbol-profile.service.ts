@@ -143,14 +143,29 @@ export class SymbolProfileService {
       return symbol;
     }
 
-    const symbolProfile = await this.prismaService.symbolProfile.findFirst({
-      where: {
-        dataSource,
-        symbol: { equals: symbol, mode: 'insensitive' }
-      }
+    const symbolProfile = await this.prismaService.symbolProfile.findUnique({
+      where: { dataSource_symbol: { dataSource, symbol } }
     });
 
-    return symbolProfile?.symbol ?? symbolOfDataProvider ?? symbol;
+    if (symbolProfile) {
+      return symbolProfile.symbol;
+    }
+
+    const symbolProfileWithOtherLetterCase =
+      await this.prismaService.symbolProfile.findFirst({
+        orderBy: { symbol: 'asc' },
+        where: {
+          dataSource,
+          symbol: {
+            equals: this.escapeLikePattern(symbol),
+            mode: 'insensitive'
+          }
+        }
+      });
+
+    return (
+      symbolProfileWithOtherLetterCase?.symbol ?? symbolOfDataProvider ?? symbol
+    );
   }
 
   public async getSymbolProfiles(
@@ -313,6 +328,14 @@ export class SymbolProfileService {
 
       return item;
     });
+  }
+
+  /**
+   * Escapes the wildcard characters of a LIKE pattern, because Prisma
+   * translates a case-insensitive filter into an ILIKE expression.
+   */
+  private escapeLikePattern(value: string) {
+    return value.replace(/[\\%_]/g, '\\$&');
   }
 
   private getCountries(aCountries: Prisma.JsonArray = []): Country[] {

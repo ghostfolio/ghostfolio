@@ -22,6 +22,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -497,7 +498,21 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
                 .addAssetProfile({ dataSource, symbol })
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe({
-                  error: () => {
+                  error: (error: HttpErrorResponse) => {
+                    const { message } = (error.error ?? {}) as {
+                      message?: string;
+                    };
+
+                    this.snackBar.open(
+                      '😞 ' +
+                        (message ??
+                          $localize`An error occurred while creating the asset profile ${symbol} (${dataSource}).`),
+                      undefined,
+                      {
+                        duration: ms('3 seconds')
+                      }
+                    );
+
                     this.router.navigate(['.'], { relativeTo: this.route });
                   },
                   next: (assetProfile) => {
