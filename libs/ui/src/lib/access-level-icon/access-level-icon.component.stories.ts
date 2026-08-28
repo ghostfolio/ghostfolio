@@ -1,5 +1,3 @@
-import { CommonModule } from '@angular/common';
-import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
@@ -10,13 +8,18 @@ export default {
   component: GfAccessLevelIconComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, IonIcon]
+      imports: []
     })
   ],
   argTypes: {
     accessLevel: {
       control: 'select',
-      options: ['CREATE_READ_UPDATE_DELETE', 'READ', 'READ_RESTRICTED']
+      options: [
+        'CREATE_READ_RESTRICTED_UPDATE_DELETE',
+        'CREATE_READ_UPDATE_DELETE',
+        'READ',
+        'READ_RESTRICTED'
+      ]
     }
   }
 } as Meta<GfAccessLevelIconComponent>;
@@ -26,6 +29,12 @@ type Story = StoryObj<GfAccessLevelIconComponent>;
 export const RestrictedView: Story = {
   args: {
     accessLevel: 'READ_RESTRICTED'
+  }
+};
+
+export const RestrictedViewAndManage: Story = {
+  args: {
+    accessLevel: 'CREATE_READ_RESTRICTED_UPDATE_DELETE'
   }
 };
 

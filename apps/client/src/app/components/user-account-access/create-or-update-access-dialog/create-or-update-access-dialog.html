@@ -83,6 +83,19 @@
             <gf-access-level-icon accessLevel="READ_RESTRICTED" />
           </mat-option>
           @if (accessForm.get('type')?.value === 'PRIVATE') {
+            <!--
+              The permission to change the data without the monetary values is
+              not available yet, because it is intended for the model context
+              protocol, which exposes read tools only
+              <mat-option
+                value="CREATE_READ_RESTRICTED_UPDATE_DELETE"
+                [disabled]="!canGrantWriteAccess"
+              >
+                <gf-access-level-icon
+                  accessLevel="CREATE_READ_RESTRICTED_UPDATE_DELETE"
+                />
+              </mat-option>
+            -->
             <mat-option value="READ">
               <gf-access-level-icon accessLevel="READ" />
             </mat-option>

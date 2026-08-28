@@ -3,13 +3,16 @@ import {
   SCOPES_OF_READ_ACCESS,
   SCOPES_OF_READ_RESTRICTED_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
+  getAccessLevel,
   getScopesOfAccess,
+  getScopesOfAccessLevel,
   getScopesOfOwnAccess,
   getScopesOfUnrestrictedImpersonation,
   hasAnyScopeOfWriteAccess,
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
+import { AccessLevel } from '@ghostfolio/common/types';
 
 describe('Scopes', () => {
   describe('Scopes of read access', () => {
@@ -55,6 +58,67 @@ describe('Scopes', () => {
 
       expect(scopesOfReadAndWriteAccess).toEqual(Object.values(scopes).sort());
     });
+  });
+
+  describe('Get access level', () => {
+    it('Write scopes with the monetary values', () => {
+      expect(
+        getAccessLevel([...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS])
+      ).toEqual('CREATE_READ_UPDATE_DELETE');
+    });
+
+    it('Write scopes without the monetary values', () => {
+      expect(
+        getAccessLevel([
+          ...SCOPES_OF_READ_RESTRICTED_ACCESS,
+          ...SCOPES_OF_WRITE_ACCESS
+        ])
+      ).toEqual('CREATE_READ_RESTRICTED_UPDATE_DELETE');
+    });
+
+    it('Read scopes with the monetary values', () => {
+      expect(getAccessLevel([...SCOPES_OF_READ_ACCESS])).toEqual('READ');
+    });
+
+    it('Read scopes without the monetary values', () => {
+      expect(getAccessLevel([...SCOPES_OF_READ_RESTRICTED_ACCESS])).toEqual(
+        'READ_RESTRICTED'
+      );
+    });
+
+    it('Without scopes', () => {
+      expect(getAccessLevel(undefined)).toEqual('READ_RESTRICTED');
+    });
+  });
+
+  describe('Get scopes of access level', () => {
+    // A new access level has to be added here deliberately, because the type
+    // of the record is exhaustive
+    const accessLevels: Record<AccessLevel, true> = {
+      CREATE_READ_RESTRICTED_UPDATE_DELETE: true,
+      CREATE_READ_UPDATE_DELETE: true,
+      READ: true,
+      READ_RESTRICTED: true
+    };
+
+    it('Grants the write scopes without the monetary values', () => {
+      expect(
+        getScopesOfAccessLevel('CREATE_READ_RESTRICTED_UPDATE_DELETE')
+      ).toEqual([
+        ...SCOPES_OF_READ_RESTRICTED_ACCESS,
+        ...SCOPES_OF_WRITE_ACCESS
+      ]);
+    });
+
+    // The dialog compares the access level of the stored scopes with the
+    // selected access level, hence both functions have to be inverse
+    for (const accessLevel of Object.keys(accessLevels) as AccessLevel[]) {
+      it(`Is inverse to the access level of ${accessLevel}`, () => {
+        expect(getAccessLevel(getScopesOfAccessLevel(accessLevel))).toEqual(
+          accessLevel
+        );
+      });
+    }
   });
 
   describe('Get scopes of access', () => {
