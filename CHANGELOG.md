@@ -15,10 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the loading state of the symbol autocomplete component
 - Consolidated the duplicated translations of the asset classes and asset sub classes
+- Changed the holdings in the portfolio endpoints from a map keyed by the symbol to an array
 
 ### Fixed
 
 - Improved the handling of indices in the _Financial Modeling Prep_ service
+- Fixed the portfolio calculation for holdings with the same symbol from different data sources
 
 ## 3.62.0 - 2026-08-27
 

@@ -1,5 +1,6 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
 
+import { DataSource } from '@prisma/client';
 import {
   addDays,
   eachDayOfInterval,
@@ -12,7 +13,15 @@ import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
 
-function mockGetValue(symbol: string, date: Date) {
+function mockGetValue({
+  dataSource,
+  date,
+  symbol
+}: {
+  dataSource: DataSource;
+  date: Date;
+  symbol: string;
+}) {
   switch (symbol) {
     case '55196015-1365-4560-aa60-8751ae6d18f8':
       if (isSameDay(parseDate('2022-01-31'), date)) {
@@ -83,7 +92,12 @@ function mockGetValue(symbol: string, date: Date) {
       } else if (isSameDay(parseDate('2023-07-09'), date)) {
         return { marketPrice: 337.22 };
       } else if (isSameDay(parseDate('2023-07-10'), date)) {
-        return { marketPrice: 331.83 };
+        // Deviating market prices per data source to verify that the market
+        // price is resolved by the asset profile identifier
+        return {
+          marketPrice:
+            dataSource === DataSource.EOD_HISTORICAL_DATA ? 332.47 : 331.83
+        };
       }
 
       return { marketPrice: 0 };
@@ -117,8 +131,11 @@ export const CurrentRateServiceMock = {
           values.push({
             date,
             dataSource: dataGatheringItem.dataSource,
-            marketPrice: mockGetValue(dataGatheringItem.symbol, date)
-              .marketPrice,
+            marketPrice: mockGetValue({
+              date,
+              dataSource: dataGatheringItem.dataSource,
+              symbol: dataGatheringItem.symbol
+            }).marketPrice,
             symbol: dataGatheringItem.symbol
           });
         }
@@ -132,8 +149,11 @@ export const CurrentRateServiceMock = {
           values.push({
             date,
             dataSource: dataGatheringItem.dataSource,
-            marketPrice: mockGetValue(dataGatheringItem.symbol, date)
-              .marketPrice,
+            marketPrice: mockGetValue({
+              date,
+              dataSource: dataGatheringItem.dataSource,
+              symbol: dataGatheringItem.symbol
+            }).marketPrice,
             symbol: dataGatheringItem.symbol
           });
         }

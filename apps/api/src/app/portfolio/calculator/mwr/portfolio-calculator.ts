@@ -19,7 +19,7 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
+      [date: string]: { [assetProfileIdentifier: string]: Big };
     };
     start: Date;
     step?: number;

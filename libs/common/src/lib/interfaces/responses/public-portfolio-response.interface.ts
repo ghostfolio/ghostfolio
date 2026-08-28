@@ -10,18 +10,16 @@ import { Order } from '@prisma/client';
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;
   hasDetails: boolean;
-  holdings: {
-    [symbol: string]: Pick<
-      PortfolioPosition,
-      | 'allocationInPercentage'
-      | 'assetProfile'
-      | 'dateOfFirstActivity'
-      | 'markets'
-      | 'netPerformancePercentWithCurrencyEffect'
-      | 'valueInBaseCurrency'
-      | 'valueInPercentage'
-    >;
-  };
+  holdings: Pick<
+    PortfolioPosition,
+    | 'allocationInPercentage'
+    | 'assetProfile'
+    | 'dateOfFirstActivity'
+    | 'markets'
+    | 'netPerformancePercentWithCurrencyEffect'
+    | 'valueInBaseCurrency'
+    | 'valueInPercentage'
+  >[];
   latestActivities: (Pick<
     Order,
     'currency' | 'date' | 'fee' | 'quantity' | 'type' | 'unitPrice'

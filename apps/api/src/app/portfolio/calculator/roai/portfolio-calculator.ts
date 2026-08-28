@@ -3,7 +3,11 @@ import { PortfolioCalculatorPosition } from '@ghostfolio/api/app/portfolio/inter
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier,
+  parseDate
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   SymbolMetrics
@@ -140,7 +144,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
+      [date: string]: { [assetProfileIdentifier: string]: Big };
     };
     start: Date;
   } & AssetProfileIdentifier): SymbolMetrics {
@@ -192,10 +196,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
+    const assetProfileIdentifier = getAssetProfileIdentifier({
+      dataSource,
+      symbol
+    });
+
     // Copy the items as they are enriched below. A shallow copy is sufficient
     // because only top-level properties are written.
     let orders: PortfolioOrderItem[] = (
-      this.activitiesBySymbol[symbol] ?? []
+      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? []
     ).map((activity) => {
       return { ...activity };
     });
@@ -275,8 +284,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     const endDateString = format(end, DATE_FORMAT);
     const startDateString = format(start, DATE_FORMAT);
 
-    const unitPriceAtStartDate = marketSymbolMap[startDateString]?.[symbol];
-    let unitPriceAtEndDate = marketSymbolMap[endDateString]?.[symbol];
+    const unitPriceAtStartDate =
+      marketSymbolMap[startDateString]?.[assetProfileIdentifier];
+
+    let unitPriceAtEndDate =
+      marketSymbolMap[endDateString]?.[assetProfileIdentifier];
 
     const latestActivity = orders.at(-1);
 
@@ -391,7 +403,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         break;
       }
 
-      const unitPrice = marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
+      const unitPrice =
+        marketSymbolMap[dateString]?.[assetProfileIdentifier] ?? lastUnitPrice;
 
       if (ordersByDate[dateString]?.length > 0) {
         for (const order of ordersByDate[dateString]) {

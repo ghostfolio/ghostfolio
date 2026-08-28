@@ -17,7 +17,7 @@ export interface PortfolioDetails {
     };
   };
   createdAt: Date;
-  holdings: { [symbol: string]: PortfolioPosition };
+  holdings: PortfolioPosition[];
   markets?: {
     [key in Market]: {
       id: Market;
