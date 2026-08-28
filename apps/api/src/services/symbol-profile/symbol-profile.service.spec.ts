@@ -3,12 +3,18 @@ import { DataSource } from '@prisma/client';
 import { SymbolProfileService } from './symbol-profile.service';
 
 describe('SymbolProfileService', () => {
-  let prismaService: { symbolProfile: { findMany: jest.Mock } };
   let symbolProfileService: SymbolProfileService;
+
+  let prismaService: {
+    symbolProfile: { findMany: jest.Mock; findUnique: jest.Mock };
+  };
 
   beforeEach(() => {
     prismaService = {
-      symbolProfile: { findMany: jest.fn().mockResolvedValue([]) }
+      symbolProfile: {
+        findMany: jest.fn().mockResolvedValue([]),
+        findUnique: jest.fn().mockResolvedValue(null)
+      }
     };
 
     symbolProfileService = new SymbolProfileService(prismaService as any);
@@ -16,9 +22,9 @@ describe('SymbolProfileService', () => {
 
   describe('getSymbolOfAssetProfile', () => {
     it('Keeps the symbol of the existing asset profile', async () => {
-      prismaService.symbolProfile.findMany.mockResolvedValue([
-        { symbol: 'AAPL' }
-      ]);
+      prismaService.symbolProfile.findUnique.mockResolvedValue({
+        symbol: 'AAPL'
+      });
 
       const symbol = await symbolProfileService.getSymbolOfAssetProfile({
         dataSource: DataSource.YAHOO,
@@ -27,6 +33,7 @@ describe('SymbolProfileService', () => {
       });
 
       expect(symbol).toEqual('AAPL');
+      expect(prismaService.symbolProfile.findMany).not.toHaveBeenCalled();
     });
 
     it('Keeps the letter case of the existing asset profile', async () => {
@@ -100,6 +107,7 @@ describe('SymbolProfileService', () => {
 
       expect(symbol).toEqual('GF_apple');
       expect(prismaService.symbolProfile.findMany).not.toHaveBeenCalled();
+      expect(prismaService.symbolProfile.findUnique).not.toHaveBeenCalled();
     });
   });
 });

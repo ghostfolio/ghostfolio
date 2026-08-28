@@ -143,6 +143,16 @@ export class SymbolProfileService {
       return symbol;
     }
 
+    const symbolProfileWithSameSymbol =
+      await this.prismaService.symbolProfile.findUnique({
+        select: { symbol: true },
+        where: { dataSource_symbol: { dataSource, symbol } }
+      });
+
+    if (symbolProfileWithSameSymbol) {
+      return symbol;
+    }
+
     const symbolProfiles = (
       await this.prismaService.symbolProfile.findMany({
         orderBy: { symbol: 'asc' },
