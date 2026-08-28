@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the _Restricted view and manage_ permission to the access to share the portfolio (experimental)
+- Added a tool to get the activities of the portfolio to the server of the Model Context Protocol (MCP) (experimental)
 
 ### Changed
 
