@@ -465,8 +465,10 @@ export const personalFinanceTools: Product[] = [
   },
   {
     categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
     key: 'danelfin',
     name: 'Danelfin',
+    pricingPerYear: '$264',
     slogan: 'AI-Powered Stock Picking',
     url: 'https://danelfin.com'
   },
@@ -556,6 +558,7 @@ export const personalFinanceTools: Product[] = [
     hasFreePlan: true,
     key: 'dividend-watch',
     name: 'Dividend Watch',
+    pricingPerYear: '$72',
     slogan: 'The Essential Dividend and Portfolio Tracker',
     url: 'https://dividend.watch'
   },
@@ -563,6 +566,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['DIVIDEND_TRACKING'],
     key: 'dividend-wealth',
     name: 'Dividend Wealth',
+    pricingPerYear: '$99.99',
     slogan: 'Track Your Dividends Like a Pro',
     url: 'https://dividend-wealth.com'
   },
@@ -570,6 +574,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['DIVIDEND_TRACKING'],
     key: 'divtracker',
     name: 'DivTracker',
+    pricingPerYear: '$29.99',
     slogan: 'Your Ultimate Dividend Tracker',
     url: 'https://divtracker.app'
   },
@@ -649,6 +654,7 @@ export const personalFinanceTools: Product[] = [
     key: 'epsmomentum',
     name: 'EPS Momentum',
     origin: 'US',
+    pricingPerYear: '$83.88',
     slogan: 'Stock Selection Analytics for Investors',
     url: 'https://epsmomentum.com'
   },
@@ -745,6 +751,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'fast-graphs',
     name: 'FAST Graphs',
+    pricingPerYear: '$191.40',
     slogan: 'Invest Intelligently with the Most Powerful Stock Analysis Tool',
     url: 'https://www.fastgraphs.com'
   },
@@ -880,6 +887,7 @@ export const personalFinanceTools: Product[] = [
     hasFreePlan: true,
     key: 'finviz',
     name: 'Finviz',
+    pricingPerYear: '$299.50',
     slogan:
       'Stock screener for investors and traders, financial visualizations',
     url: 'https://finviz.com'
@@ -1320,6 +1328,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'marketxls',
     name: 'MarketXLS',
+    pricingPerYear: '$850',
     slogan: 'Real-Time Stock Data & Analysis in Excel',
     url: 'https://marketxls.com'
   },
@@ -2035,6 +2044,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['DIVIDEND_TRACKING', 'INVESTMENT_RESEARCH'],
     key: 'simply-safe-dividends',
     name: 'Simply Safe Dividends',
+    pricingPerYear: '$468',
     slogan: 'Proven dividend research and tracking tools',
     url: 'https://www.simplysafedividends.com'
   },
@@ -2115,6 +2125,7 @@ export const personalFinanceTools: Product[] = [
     hasFreePlan: true,
     key: 'stock-analysis',
     name: 'Stock Analysis',
+    pricingPerYear: '$79',
     slogan: 'Free Online Stock Information for Investors',
     url: 'https://stockanalysis.com'
   },
@@ -2133,6 +2144,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'stockcharts',
     name: 'StockCharts',
+    pricingPerYear: '$239.40',
     slogan: 'Advanced Charting, Screening & Financial Analysis Tools',
     url: 'https://stockcharts.com'
   },
@@ -2159,6 +2171,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'stockopedia',
     name: 'Stockopedia',
+    pricingPerYear: '€550',
     slogan: 'Data-Driven Stock Research for Active Investors',
     url: 'https://www.stockopedia.com'
   },
@@ -2179,6 +2192,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     key: 'stock-unlock',
     name: 'Stock Unlock',
+    pricingPerYear: '$90',
     slogan: 'Unique Stock Insights & Portfolio Tracking',
     url: 'https://stockunlock.com'
   },
@@ -2199,6 +2213,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'streamxls',
     name: 'StreamXLS',
+    pricingPerYear: '$590',
     slogan: 'Excel bridge to IBKR TWS',
     url: 'https://streamxls.com'
   },
@@ -2232,6 +2247,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     key: 'tickertape',
     name: 'Tickertape',
+    pricingPerYear: '₹2999',
     slogan: 'Financial freedom begins here',
     url: 'https://www.tickertape.in'
   },
@@ -2334,6 +2350,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['TAX_REPORTING'],
     key: 'tradelog',
     name: 'TradeLog',
+    pricingPerYear: '$219',
     regions: ['US'],
     slogan: 'Take Control Of Trader Taxes',
     url: 'https://tradelog.com'
@@ -2353,6 +2370,7 @@ export const personalFinanceTools: Product[] = [
   {
     key: 'tradezella',
     name: 'TradeZella',
+    pricingPerYear: '$315',
     slogan: 'Meet Your AI Trading Partner',
     url: 'https://www.tradezella.com'
   },
@@ -2402,6 +2420,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'trendlyne',
     name: 'Trendlyne',
+    pricingPerYear: '₹2190',
     slogan: 'The Stock Market Platform to Stay Ahead',
     url: 'https://trendlyne.com'
   },
@@ -2442,6 +2461,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'uncle-stock',
     name: 'Uncle Stock',
+    pricingPerYear: '$130',
     slogan: 'Fundamental Stock Screener',
     url: 'https://www.unclestock.com'
   },
@@ -2612,6 +2632,7 @@ export const personalFinanceTools: Product[] = [
     categories: ['INVESTMENT_RESEARCH'],
     key: 'wisesheets',
     name: 'Wisesheets',
+    pricingPerYear: '$60',
     slogan: 'The Ultimate Spreadsheet Add-On for Stock Investors',
     url: 'https://www.wisesheets.io'
   },
