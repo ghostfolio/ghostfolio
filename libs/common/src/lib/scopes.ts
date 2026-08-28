@@ -62,12 +62,17 @@ export const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
   });
 
 /**
- * Ceiling of scopes per access type. The scopes stored on an access are
+ * Maximum scopes per access type. The scopes stored on an access are
  * intersected with it, hence a scope which the type does not permit stays
  * ineffective even if it is stored.
  */
 const SCOPES_OF_TYPE: Record<AccessType, readonly Scope[]> = {
-  MCP: SCOPES_OF_READ_RESTRICTED_ACCESS,
+  MCP: [
+    ...SCOPES_OF_READ_RESTRICTED_ACCESS
+    // Write scope is not permitted yet, because the controller exposes read
+    // tools only
+    // ...SCOPES_OF_WRITE_ACCESS
+  ],
   PRIVATE: Object.values(scopes),
   PUBLIC: SCOPES_OF_PUBLIC_ACCESS
 };
@@ -76,13 +81,15 @@ const SCOPES_OF_TYPE: Record<AccessType, readonly Scope[]> = {
  * Access level which the scopes of an access grant
  */
 export function getAccessLevel(aScopes: string[] = []): AccessLevel {
+  const hasScopeToReadValues = hasScope(aScopes, scopes.portfolioReadValues);
+
   if (hasAnyScopeOfWriteAccess(aScopes)) {
-    return 'CREATE_READ_UPDATE_DELETE';
+    return hasScopeToReadValues
+      ? 'CREATE_READ_UPDATE_DELETE'
+      : 'CREATE_READ_RESTRICTED_UPDATE_DELETE';
   }
 
-  return hasScope(aScopes, scopes.portfolioReadValues)
-    ? 'READ'
-    : 'READ_RESTRICTED';
+  return hasScopeToReadValues ? 'READ' : 'READ_RESTRICTED';
 }
 
 export function getScopesOfAccess({
@@ -105,6 +112,8 @@ export function getScopesOfAccess({
  */
 export function getScopesOfAccessLevel(aAccessLevel: AccessLevel): Scope[] {
   switch (aAccessLevel) {
+    case 'CREATE_READ_RESTRICTED_UPDATE_DELETE':
+      return [...SCOPES_OF_READ_RESTRICTED_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
     case 'CREATE_READ_UPDATE_DELETE':
       return [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS];
     case 'READ':

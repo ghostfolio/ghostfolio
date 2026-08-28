@@ -16,7 +16,12 @@ export default {
   argTypes: {
     accessLevel: {
       control: 'select',
-      options: ['CREATE_READ_UPDATE_DELETE', 'READ', 'READ_RESTRICTED']
+      options: [
+        'CREATE_READ_RESTRICTED_UPDATE_DELETE',
+        'CREATE_READ_UPDATE_DELETE',
+        'READ',
+        'READ_RESTRICTED'
+      ]
     }
   }
 } as Meta<GfAccessLevelIconComponent>;
@@ -26,6 +31,12 @@ type Story = StoryObj<GfAccessLevelIconComponent>;
 export const RestrictedView: Story = {
   args: {
     accessLevel: 'READ_RESTRICTED'
+  }
+};
+
+export const RestrictedViewAndManage: Story = {
+  args: {
+    accessLevel: 'CREATE_READ_RESTRICTED_UPDATE_DELETE'
   }
 };
 
