@@ -1,6 +1,9 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
+import {
+  applyAssetProfileOverrides,
+  isSameSymbol
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   EnhancedAssetProfile,
@@ -140,13 +143,17 @@ export class SymbolProfileService {
       return symbol;
     }
 
-    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: { symbol: 'asc' },
-      select: { symbol: true },
-      where: {
-        dataSource,
-        symbol: { equals: symbol, mode: 'insensitive' }
-      }
+    const symbolProfiles = (
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: { symbol: 'asc' },
+        select: { symbol: true },
+        where: {
+          dataSource,
+          symbol: { equals: symbol, mode: 'insensitive' }
+        }
+      })
+    ).filter(({ symbol: symbolOfSymbolProfile }) => {
+      return isSameSymbol({ symbol1: symbol, symbol2: symbolOfSymbolProfile });
     });
 
     const symbolProfile =

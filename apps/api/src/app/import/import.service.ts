@@ -748,7 +748,16 @@ export class ImportService {
       const assetProfile =
         assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
 
-      if (assetProfile) {
+      const assetProfileInImport = assetProfilesWithMarketDataDto?.some(
+        (assetProfileWithMarketData) => {
+          return (
+            assetProfileWithMarketData.dataSource === dataSource &&
+            assetProfileWithMarketData.symbol === symbol
+          );
+        }
+      );
+
+      if (assetProfile && !assetProfileInImport) {
         assetProfile.symbol =
           await this.symbolProfileService.getSymbolOfAssetProfile({
             dataSource,

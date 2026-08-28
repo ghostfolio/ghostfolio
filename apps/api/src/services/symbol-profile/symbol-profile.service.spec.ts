@@ -58,6 +58,20 @@ describe('SymbolProfileService', () => {
       expect(symbol).toEqual('aapl');
     });
 
+    it('Ignores an asset profile which a wildcard of the query matched', async () => {
+      prismaService.symbolProfile.findMany.mockResolvedValue([
+        { symbol: 'AAPL' }
+      ]);
+
+      const symbol = await symbolProfileService.getSymbolOfAssetProfile({
+        dataSource: DataSource.YAHOO,
+        symbol: 'aa_l',
+        symbolOfDataProvider: 'AA_L'
+      });
+
+      expect(symbol).toEqual('AA_L');
+    });
+
     it('Uses the symbol of the data provider if no asset profile exists', async () => {
       const symbol = await symbolProfileService.getSymbolOfAssetProfile({
         dataSource: DataSource.YAHOO,
