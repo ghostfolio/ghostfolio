@@ -22,18 +22,23 @@ import { z } from 'zod';
 const GET_ACTIVITIES_PARAMETERS = z.object({
   activityTypes: z
     .array(z.enum(ActivityType))
+    .min(1)
     .optional()
     .describe('The types of the activities to get'),
   assetClasses: z
     .array(z.enum(AssetClass))
+    .min(1)
     .optional()
     .describe('The asset classes of the activities to get'),
-  dataSource: z
-    .enum(DataSource)
+  holding: z
+    .object({
+      dataSource: z
+        .enum(DataSource)
+        .describe('The data source of the asset profile'),
+      symbol: z.string().describe('The symbol of the asset profile')
+    })
     .optional()
-    .describe(
-      'The data source of the asset profile, which only takes effect together with the symbol'
-    ),
+    .describe('The asset profile of the activities to get'),
   range: z
     .string()
     .regex(DATE_RANGE_PATTERN)
@@ -49,12 +54,6 @@ const GET_ACTIVITIES_PARAMETERS = z.object({
     .min(0)
     .optional()
     .describe('The number of activities to skip'),
-  symbol: z
-    .string()
-    .optional()
-    .describe(
-      'The symbol of the asset profile, which only takes effect together with the data source'
-    ),
   take: z
     .number()
     .int()
@@ -79,9 +78,11 @@ export class GhostfolioMcpController {
       readOnlyHint: true,
       title: 'Get activities'
     },
-    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${AiService.getActivitiesTableColumnNames().join(
+    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${AiService.getActivitiesTableColumnNames(
+      { withValues: false }
+    ).join(
       ', '
-    )}. The columns with a monetary value are omitted if the access does not grant to read them. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
+    )}. More columns with a monetary value are added if the access grants to read them. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
     name: 'get-activities',
     parameters: GET_ACTIVITIES_PARAMETERS
   })
@@ -97,10 +98,9 @@ export class GhostfolioMcpController {
     {
       activityTypes,
       assetClasses,
-      dataSource,
+      holding,
       range,
       skip,
-      symbol,
       take
     }: z.infer<typeof GET_ACTIVITIES_PARAMETERS>
   ) {
@@ -115,31 +115,63 @@ export class GhostfolioMcpController {
 
     const filtersOfAccess = filters ?? [];
 
-    const typesOfFiltersOfAccess = new Set(
-      filtersOfAccess.map(({ type }) => {
+    const filtersOfTool = this.apiService.buildFiltersFromQueryParams({
+      filterByAssetClasses: assetClasses?.join(','),
+      filterByDataSource: holding?.dataSource,
+      filterBySymbol: holding?.symbol
+    });
+
+    // A tool must never widen the access, hence a filter of the tool which
+    // the access does not permit gives no activity
+    const filtersOfToolOutsideAccess = filtersOfTool.filter(({ id, type }) => {
+      const filtersOfAccessOfType = filtersOfAccess.filter((filter) => {
+        return filter.type === type;
+      });
+
+      return (
+        filtersOfAccessOfType.length > 0 &&
+        !filtersOfAccessOfType.some((filter) => {
+          return filter.id === id;
+        })
+      );
+    });
+
+    if (filtersOfToolOutsideAccess.length > 0) {
+      const valuesOutsideAccess = filtersOfToolOutsideAccess
+        .map(({ id }) => {
+          return id;
+        })
+        .join(', ');
+
+      return {
+        content: [
+          {
+            text: `No activities found. The access does not permit these values of the parameters: ${valuesOutsideAccess}.`,
+            type: 'text' as const
+          }
+        ]
+      };
+    }
+
+    const typesOfFiltersOfTool = new Set(
+      filtersOfTool.map(({ type }) => {
         return type;
       })
     );
 
-    // A filter of the tool is dropped if the access already restricts its
-    // type, because the filters of a type are combined with a logical or and
-    // a tool must never widen the access
-    const filtersOfTool = this.apiService
-      .buildFiltersFromQueryParams({
-        filterByAssetClasses: assetClasses?.join(','),
-        filterByDataSource: dataSource,
-        filterBySymbol: symbol
-      })
-      .filter(({ type }) => {
-        return !typesOfFiltersOfAccess.has(type);
-      });
+    // The filters of a type are combined with a logical or, hence a filter of
+    // the tool replaces the filters of the access of the same type instead of
+    // joining them
+    const filtersOfAccessOutsideTool = filtersOfAccess.filter(({ type }) => {
+      return !typesOfFiltersOfTool.has(type);
+    });
 
     const table = await this.aiService.getActivitiesTable({
       endDate,
       skip,
       startDate,
       userId,
-      filters: [...filtersOfAccess, ...filtersOfTool],
+      filters: [...filtersOfAccessOutsideTool, ...filtersOfTool],
       take: take ?? MCP_MAX_ACTIVITIES,
       types: activityTypes,
       userCurrency: userSettings.baseCurrency,

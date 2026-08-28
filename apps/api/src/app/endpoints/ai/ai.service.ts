@@ -98,16 +98,34 @@ export class AiService {
     private readonly propertyService: PropertyService
   ) {}
 
-  public static getActivitiesTableColumnNames() {
-    return AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.map(({ name }) => {
-      return name;
-    });
+  public static getActivitiesTableColumnNames({
+    withValues
+  }: {
+    withValues: boolean;
+  }) {
+    return AiService.getActivitiesTableColumnDefinitions({ withValues }).map(
+      ({ name }) => {
+        return name;
+      }
+    );
   }
 
   public static getHoldingsTableColumnNames() {
     return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(({ name }) => {
       return name;
     });
+  }
+
+  private static getActivitiesTableColumnDefinitions({
+    withValues
+  }: {
+    withValues: boolean;
+  }) {
+    return AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.filter(
+      ({ requiresScopeToReadValues }) => {
+        return withValues || !requiresScopeToReadValues;
+      }
+    );
   }
 
   public async generateText({
@@ -173,11 +191,7 @@ export class AiService {
     });
 
     const activitiesTableColumnDefinitions =
-      AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.filter(
-        ({ requiresScopeToReadValues }) => {
-          return withValues || !requiresScopeToReadValues;
-        }
-      );
+      AiService.getActivitiesTableColumnDefinitions({ withValues });
 
     const activitiesTableRows = activities.map(
       ({

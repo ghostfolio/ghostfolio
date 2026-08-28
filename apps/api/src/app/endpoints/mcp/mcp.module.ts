@@ -26,7 +26,7 @@ import { GhostfolioMcpController } from './mcp.controller';
 
         return new McpStrategy({
           instructions:
-            'Ghostfolio is a wealth management application. The tools read the portfolio of the user who granted the access. They give no monetary value.',
+            'Ghostfolio is a wealth management application. The tools read the portfolio of the user who granted the access. They give no quantity and no monetary value (except the unit price of an activity).',
           name: 'ghostfolio',
           title: 'Ghostfolio',
           transports: [
