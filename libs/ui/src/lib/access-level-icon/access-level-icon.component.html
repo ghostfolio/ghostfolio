@@ -1,19 +1,19 @@
 <span class="align-items-center d-flex">
   @switch (accessLevel()) {
     @case ('CREATE_READ_RESTRICTED_UPDATE_DELETE') {
-      <ion-icon class="mr-1" name="lock-closed-outline" />
+      <span aria-hidden="true" class="mr-1">🔏</span>
       <ng-container i18n>Restricted view and manage</ng-container>
     }
     @case ('CREATE_READ_UPDATE_DELETE') {
-      <ion-icon class="mr-1" name="create-outline" />
+      <span aria-hidden="true" class="mr-1">🖋️</span>
       <ng-container i18n>View and manage</ng-container>
     }
     @case ('READ') {
-      <ion-icon class="mr-1" name="lock-open-outline" />
+      <span aria-hidden="true" class="mr-1">🔓</span>
       <ng-container i18n>View</ng-container>
     }
     @case ('READ_RESTRICTED') {
-      <ion-icon class="mr-1" name="lock-closed-outline" />
+      <span aria-hidden="true" class="mr-1">🔒</span>
       <ng-container i18n>Restricted view</ng-container>
     }
   }

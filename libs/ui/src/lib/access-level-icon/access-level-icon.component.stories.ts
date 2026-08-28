@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { IonIcon } from '@ionic/angular/standalone';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
@@ -10,7 +9,7 @@ export default {
   component: GfAccessLevelIconComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, IonIcon]
+      imports: [CommonModule]
     })
   ],
   argTypes: {
