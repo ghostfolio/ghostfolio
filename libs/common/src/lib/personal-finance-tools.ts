@@ -15,6 +15,13 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.mechcad.net'
   },
   {
+    categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
+    key: 'addepar',
+    name: 'Addepar',
+    slogan: 'Transform your business with Addepar',
+    url: 'https://addepar.com'
+  },
+  {
     categories: ['WEALTH_MANAGEMENT'],
     key: 'akkuro',
     name: 'Akkuro',
@@ -362,6 +369,20 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Next Generation Assets Tracking'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'cbonds',
+    name: 'Cbonds',
+    slogan: 'Financial Market Data Hub',
+    url: 'https://cbonds.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'chaikin-analytics',
+    name: 'Chaikin Analytics',
+    slogan: 'Investing tools and research from Marc Chaikin & Team',
+    url: 'https://chaikinanalytics.com'
+  },
+  {
     founded: 2024,
     hasFreePlan: true,
     isOpenSource: true,
@@ -443,6 +464,15 @@ export const personalFinanceTools: Product[] = [
     url: 'https://countabout.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'danelfin',
+    name: 'Danelfin',
+    pricingPerYear: '$264',
+    slogan: 'AI-Powered Stock Picking',
+    url: 'https://danelfin.com'
+  },
+  {
     categories: ['FAMILY_OFFICE'],
     founded: 2023,
     hasFreePlan: false,
@@ -460,6 +490,14 @@ export const personalFinanceTools: Product[] = [
     name: 'De.Fi',
     slogan: 'DeFi Portfolio Tracker',
     url: 'https://de.fi'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'WEALTH_MANAGEMENT'],
+    key: 'deepvest',
+    name: 'DeepVest',
+    slogan:
+      'The AI-Powered Research Platform for Financial Advisors and Investment Managers',
+    url: 'https://www.deepvest.ai'
   },
   {
     categories: ['CRYPTOCURRENCY'],
@@ -514,6 +552,31 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$49.90',
     slogan: 'Dividend Portfolio Tracker',
     url: 'https://www.digrin.com'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING'],
+    hasFreePlan: true,
+    key: 'dividend-watch',
+    name: 'Dividend Watch',
+    pricingPerYear: '$72',
+    slogan: 'The Essential Dividend and Portfolio Tracker',
+    url: 'https://dividend.watch'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING'],
+    key: 'dividend-wealth',
+    name: 'Dividend Wealth',
+    pricingPerYear: '$99.99',
+    slogan: 'Track Your Dividends Like a Pro',
+    url: 'https://dividend-wealth.com'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING'],
+    key: 'divtracker',
+    name: 'DivTracker',
+    pricingPerYear: '$29.99',
+    slogan: 'Your Ultimate Dividend Tracker',
+    url: 'https://divtracker.app'
   },
   {
     categories: ['DIVIDEND_TRACKING'],
@@ -580,6 +643,45 @@ export const personalFinanceTools: Product[] = [
   },
   {
     categories: ['WEALTH_MANAGEMENT'],
+    key: 'envestnet',
+    name: 'Envestnet',
+    slogan: 'Everybody Deserves Financial Wellness',
+    url: 'https://www.envestnet.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'epsmomentum',
+    name: 'EPS Momentum',
+    origin: 'US',
+    pricingPerYear: '$83.88',
+    slogan: 'Stock Selection Analytics for Investors',
+    url: 'https://epsmomentum.com'
+  },
+  {
+    categories: ['ETF_TRACKING', 'INVESTMENT_RESEARCH'],
+    key: 'etf-action',
+    name: 'ETF Action',
+    slogan: 'Markets through the lens of ETFs',
+    url: 'https://www.etfaction.com'
+  },
+  {
+    categories: ['ETF_TRACKING', 'INVESTMENT_RESEARCH'],
+    key: 'etf-insider',
+    name: 'ETF Insider',
+    slogan: 'Precision asset allocation',
+    url: 'https://etfinsider.co'
+  },
+  {
+    categories: ['ETF_TRACKING', 'INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'etf-research-center',
+    name: 'ETF Research Center',
+    slogan: 'A Smarter Approach to Exchange Traded Funds',
+    url: 'https://www.etfrc.com'
+  },
+  {
+    categories: ['WEALTH_MANAGEMENT'],
     founded: 2010,
     hasFreePlan: false,
     key: 'etops',
@@ -637,6 +739,21 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '€89.99',
     slogan: 'Die besten ETFs finden, vergleichen und beobachten',
     url: 'https://extraetf.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'factorstoday',
+    name: 'FactorsToday',
+    slogan: 'Modern Quantitative Analysis',
+    url: 'https://www.factorstoday.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'fast-graphs',
+    name: 'FAST Graphs',
+    pricingPerYear: '$191.40',
+    slogan: 'Invest Intelligently with the Most Powerful Stock Analysis Tool',
+    url: 'https://www.fastgraphs.com'
   },
   {
     categories: ['INVESTMENT_RESEARCH'],
@@ -748,6 +865,13 @@ export const personalFinanceTools: Product[] = [
     url: 'https://fintable.io'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'fintel',
+    name: 'Fintel',
+    slogan: 'Essential Tools for Investors and Traders',
+    url: 'https://fintel.io'
+  },
+  {
     categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
     founded: 2021,
     hasSelfHostingAbility: false,
@@ -757,6 +881,16 @@ export const personalFinanceTools: Product[] = [
     platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Grow your wealth in a stress-free way',
     url: 'https://www.getfinvest.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'finviz',
+    name: 'Finviz',
+    pricingPerYear: '$299.50',
+    slogan:
+      'Stock screener for investors and traders, financial visualizations',
+    url: 'https://finviz.com'
   },
   {
     categories: ['BUDGETING', 'FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
@@ -782,6 +916,13 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$40',
     slogan: 'A simple solution to track your wealth online',
     url: 'https://firekit.space'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'fiscal.ai',
+    name: 'Fiscal.ai',
+    slogan: 'The Modern Financial Data Platform',
+    url: 'https://fiscal.ai'
   },
   {
     categories: ['BUDGETING'],
@@ -890,6 +1031,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'gurufocus',
+    name: 'GuruFocus',
+    slogan: 'Stock Market Research, Data and Tools',
+    url: 'https://www.gurufocus.com'
+  },
+  {
     categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
     founded: 2024,
     hasFreePlan: true,
@@ -902,6 +1050,13 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '€59.99',
     slogan: 'Prenez enfin le contrôle de votre argent',
     url: 'https://get-gustav.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'hedgefollow',
+    name: 'HedgeFollow',
+    slogan: 'Follow Hedge Funds & Insiders using 13F filings',
+    url: 'https://hedgefollow.com'
   },
   {
     categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
@@ -958,6 +1113,13 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$120'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'insidearbitrage',
+    name: 'InsideArbitrage',
+    url: 'https://www.insidearbitrage.com'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     isArchived: true,
@@ -967,6 +1129,13 @@ export const personalFinanceTools: Product[] = [
     origin: 'US',
     pricingPerYear: '$60',
     slogan: 'Managing money, made simple'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'invesst',
+    name: 'Invesst',
+    slogan: 'Power Your Portfolio with AI',
+    url: 'https://invesst.ai'
   },
   {
     categories: ['STOCK_TRACKING'],
@@ -1121,6 +1290,20 @@ export const personalFinanceTools: Product[] = [
   },
   {
     categories: ['INVESTMENT_RESEARCH'],
+    key: 'marketinout',
+    name: 'MarketInOut',
+    slogan: 'Stock Screener with Backtesting & Advanced Filters',
+    url: 'https://www.marketinout.com'
+  },
+  {
+    categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
+    key: 'marketlog',
+    name: 'Marketlog',
+    slogan: 'Stock Portfolio and Investments Tracker',
+    url: 'https://www.marketlog.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1133,6 +1316,21 @@ export const personalFinanceTools: Product[] = [
     regions: ['Global'],
     slogan: 'Financial Intelligence Platform',
     url: 'https://markets.sh'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'marketscreener',
+    name: 'MarketScreener',
+    slogan: 'Financial News & Stock Market Quotes',
+    url: 'https://www.marketscreener.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'marketxls',
+    name: 'MarketXLS',
+    pricingPerYear: '$850',
+    slogan: 'Real-Time Stock Data & Analysis in Excel',
+    url: 'https://marketxls.com'
   },
   {
     categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
@@ -1193,6 +1391,13 @@ export const personalFinanceTools: Product[] = [
     name: 'Microsoft Money',
     note: 'Microsoft Money was discontinued in 2010',
     origin: 'US'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'moatmap',
+    name: 'MoatMap',
+    slogan: 'AI Stock Screening & Equity Research',
+    url: 'https://moatmap.ai'
   },
   {
     categories: ['BUDGETING'],
@@ -1405,6 +1610,25 @@ export const personalFinanceTools: Product[] = [
     url: 'https://nexafin.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'okama',
+    name: 'okama',
+    slogan: 'Efficient Frontier for the investment portfolios',
+    url: 'https://okama.io'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING'],
+    hasFreePlan: true,
+    key: 'onlydividends',
+    languages: ['English', 'Español', 'Français'],
+    name: 'OnlyDividends',
+    origin: 'FR',
+    platforms: ['ANDROID', 'IOS'],
+    pricingPerYear: '€49.99',
+    slogan: 'Dividend Day Should Feel Like Payday',
+    url: 'https://onlydividends.app'
+  },
+  {
     categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasSelfHostingAbility: false,
@@ -1601,6 +1825,13 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.portfoliovisualizer.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'portfolio123',
+    name: 'Portfolio123',
+    slogan: 'Power Your Portfolio with Backtested Stock Strategies',
+    url: 'https://www.portfolio123.com'
+  },
+  {
     categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1611,6 +1842,13 @@ export const personalFinanceTools: Product[] = [
     platforms: ['WEB'],
     slogan: 'One look. Clear picture of your portfolio.',
     url: 'https://www.portfolioglance.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'portfolioslab',
+    name: 'PortfoliosLab',
+    slogan: 'Financial tools for smart investors',
+    url: 'https://portfolioslab.com'
   },
   {
     categories: ['STOCK_TRACKING'],
@@ -1684,6 +1922,13 @@ export const personalFinanceTools: Product[] = [
     url: 'https://rallies.ai'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'reflexivity',
+    name: 'Reflexivity',
+    slogan: 'Faster Insights. Better Analysis. Greater Confidence.',
+    url: 'https://reflexivity.com'
+  },
+  {
     categories: ['DIVIDEND_TRACKING', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2014,
     hasFreePlan: true,
@@ -1742,6 +1987,14 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.segmio.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    key: 'sharescope',
+    name: 'ShareScope',
+    origin: 'GB',
+    slogan: 'Award-winning investment, trading and portfolio management tools',
+    url: 'https://www.sharescope.co.uk'
+  },
+  {
     categories: ['STOCK_TRACKING', 'TAX_REPORTING'],
     founded: 2007,
     hasFreePlan: true,
@@ -1786,6 +2039,14 @@ export const personalFinanceTools: Product[] = [
     origin: 'US',
     platforms: ['ANDROID', 'IOS', 'WEB'],
     url: 'https://www.quicken.com/products/simplifi'
+  },
+  {
+    categories: ['DIVIDEND_TRACKING', 'INVESTMENT_RESEARCH'],
+    key: 'simply-safe-dividends',
+    name: 'Simply Safe Dividends',
+    pricingPerYear: '$468',
+    slogan: 'Proven dividend research and tracking tools',
+    url: 'https://www.simplysafedividends.com'
   },
   {
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
@@ -1846,6 +2107,29 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Manage your money anytime, anywhere.'
   },
   {
+    categories: ['WEALTH_MANAGEMENT'],
+    key: 'ssc-black-diamond',
+    name: 'SS&C Black Diamond Wealth Solutions',
+    slogan: 'The Cornerstone of a Successful Business',
+    url: 'https://www.sscblackdiamond.com'
+  },
+  {
+    categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
+    key: 'statfolio',
+    name: 'Statfolio',
+    slogan: 'Take control of your investments',
+    url: 'https://statfolio.net'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'stock-analysis',
+    name: 'Stock Analysis',
+    pricingPerYear: '$79',
+    slogan: 'Free Online Stock Information for Investors',
+    url: 'https://stockanalysis.com'
+  },
+  {
     categories: ['STOCK_TRACKING'],
     founded: 2019,
     hasSelfHostingAbility: false,
@@ -1855,6 +2139,14 @@ export const personalFinanceTools: Product[] = [
     platforms: ['ANDROID', 'IOS', 'WEB'],
     slogan: 'Track all your Investments',
     url: 'https://stockevents.app'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'stockcharts',
+    name: 'StockCharts',
+    pricingPerYear: '$239.40',
+    slogan: 'Advanced Charting, Screening & Financial Analysis Tools',
+    url: 'https://stockcharts.com'
   },
   {
     categories: ['STOCK_TRACKING'],
@@ -1876,6 +2168,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'stockopedia',
+    name: 'Stockopedia',
+    pricingPerYear: '€550',
+    slogan: 'Data-Driven Stock Research for Active Investors',
+    url: 'https://www.stockopedia.com'
+  },
+  {
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
     founded: 2011,
     hasFreePlan: true,
@@ -1887,6 +2187,14 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$79.99',
     slogan: 'Investment Research and Portfolio Management',
     url: 'https://www.stockrover.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    key: 'stock-unlock',
+    name: 'Stock Unlock',
+    pricingPerYear: '$90',
+    slogan: 'Unique Stock Insights & Portfolio Tracking',
+    url: 'https://stockunlock.com'
   },
   {
     categories: ['STOCK_TRACKING'],
@@ -1902,6 +2210,14 @@ export const personalFinanceTools: Product[] = [
     url: 'https://stonksfolio.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'streamxls',
+    name: 'StreamXLS',
+    pricingPerYear: '$590',
+    slogan: 'Excel bridge to IBKR TWS',
+    url: 'https://streamxls.com'
+  },
+  {
     categories: ['NET_WORTH_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1912,6 +2228,36 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$20',
     slogan: 'AI-Powered Portfolio & Net Worth Tracker',
     url: 'https://www.sumio.app'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'tc2000',
+    name: 'TC2000',
+    slogan: 'Helping traders think for themselves for over 30 years',
+    url: 'https://www.tc2000.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'tickeron',
+    name: 'Tickeron',
+    slogan: 'AI Trading Agents, Tools and News',
+    url: 'https://tickeron.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    key: 'tickertape',
+    name: 'Tickertape',
+    pricingPerYear: '₹2999',
+    slogan: 'Financial freedom begins here',
+    url: 'https://www.tickertape.in'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+    hasFreePlan: true,
+    key: 'tikr',
+    name: 'TIKR',
+    slogan: 'Invest like Wall Street with TIKR Terminal',
+    url: 'https://www.tikr.com'
   },
   {
     categories: ['BUDGETING'],
@@ -1940,6 +2286,13 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.tinywallet.de'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'tipranks',
+    name: 'TipRanks',
+    slogan: 'Make Smarter, Data-Driven Investment Decisions',
+    url: 'https://www.tipranks.com'
+  },
+  {
     categories: ['BUDGETING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -1951,6 +2304,14 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$24.99',
     slogan: 'Make your money go further with daily budgets',
     url: 'https://www.todays-budget.com'
+  },
+  {
+    categories: ['ETF_TRACKING'],
+    founded: 2016,
+    key: 'trackinsight',
+    name: 'Trackinsight',
+    slogan: 'Empowering ETF Investors',
+    url: 'https://www.trackinsight.com'
   },
   {
     categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
@@ -1979,6 +2340,22 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.trackyourdividends.com'
   },
   {
+    key: 'tradebb',
+    name: 'TradeBB',
+    slogan:
+      'Trading journal for tracking, reviewing, and improving your trades',
+    url: 'https://www.tradebb.ai'
+  },
+  {
+    categories: ['TAX_REPORTING'],
+    key: 'tradelog',
+    name: 'TradeLog',
+    pricingPerYear: '$219',
+    regions: ['US'],
+    slogan: 'Take Control Of Trader Taxes',
+    url: 'https://tradelog.com'
+  },
+  {
     founded: 2011,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -1989,6 +2366,21 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$360',
     slogan: 'The Trading Journal to Improve Your Trading Performance',
     url: 'https://www.tradervue.com'
+  },
+  {
+    key: 'tradezella',
+    name: 'TradeZella',
+    pricingPerYear: '$315',
+    slogan: 'Meet Your AI Trading Partner',
+    url: 'https://www.tradezella.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'tradingview',
+    name: 'TradingView',
+    slogan: 'Track All Markets',
+    url: 'https://www.tradingview.com'
   },
   {
     categories: ['CRYPTOCURRENCY', 'ETF_TRACKING', 'STOCK_TRACKING'],
@@ -2025,6 +2417,14 @@ export const personalFinanceTools: Product[] = [
     url: 'https://trefolio.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'trendlyne',
+    name: 'Trendlyne',
+    pricingPerYear: '₹2190',
+    slogan: 'The Stock Market Platform to Stay Ahead',
+    url: 'https://trendlyne.com'
+  },
+  {
     categories: ['NET_WORTH_TRACKING'],
     founded: 2020,
     hasSelfHostingAbility: false,
@@ -2051,6 +2451,21 @@ export const personalFinanceTools: Product[] = [
     url: 'https://www.turbobulls.com'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'tweenvest',
+    name: 'Tweenvest',
+    slogan: 'Analyzing stocks has never been easier',
+    url: 'https://www.tweenvest.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'uncle-stock',
+    name: 'Uncle Stock',
+    pricingPerYear: '$130',
+    slogan: 'Fundamental Stock Screener',
+    url: 'https://www.unclestock.com'
+  },
+  {
     categories: ['STOCK_TRACKING'],
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -2063,6 +2478,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Your Portfolio. Revealed.',
     url: 'https://www.utluna.com',
     useAnonymously: true
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'validea',
+    name: 'Validea',
+    slogan:
+      'Factor-Based Portfolios and Investment Research Utilizing Proven Long-Term Strategies',
+    url: 'https://www.validea.com'
   },
   {
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
@@ -2206,6 +2629,21 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Manage your investments in one place'
   },
   {
+    categories: ['INVESTMENT_RESEARCH'],
+    key: 'wisesheets',
+    name: 'Wisesheets',
+    pricingPerYear: '$60',
+    slogan: 'The Ultimate Spreadsheet Add-On for Stock Investors',
+    url: 'https://www.wisesheets.io'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH', 'WEALTH_MANAGEMENT'],
+    key: 'ycharts',
+    name: 'YCharts',
+    slogan: 'Financial Research and Proposal Platform',
+    url: 'https://ycharts.com'
+  },
+  {
     categories: ['STOCK_TRACKING'],
     founded: 2021,
     hasFreePlan: true,
@@ -2231,6 +2669,21 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$109',
     slogan: 'Change Your Relationship With Money',
     url: 'https://www.ynab.com'
+  },
+  {
+    categories: ['INVESTMENT_RESEARCH'],
+    hasFreePlan: true,
+    key: 'zacks',
+    name: 'Zacks',
+    slogan: 'Stock Research, Analysis, & Recommendations',
+    url: 'https://www.zacks.com'
+  },
+  {
+    categories: ['CRYPTOCURRENCY', 'STOCK_TRACKING'],
+    key: 'zenvesto',
+    name: 'Zenvesto',
+    slogan: 'Smart Investment Portfolio Tracker',
+    url: 'https://zenvesto.com'
   },
   {
     categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
