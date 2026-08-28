@@ -607,9 +607,8 @@ export function isRootCurrency(aCurrency: string) {
 }
 
 /**
- * Checks whether two symbols are the same, ignoring the letter case. Data
- * providers can report a symbol in a different letter case than requested, for
- * example "AAPL" for "aapl".
+ * Checks whether two symbols are the same, ignoring the letter case. A data
+ * provider can report "AAPL" for a requested symbol "aapl".
  */
 export function isSameSymbol({
   symbol1,

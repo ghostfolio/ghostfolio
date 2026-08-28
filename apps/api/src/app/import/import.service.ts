@@ -26,6 +26,7 @@ import {
 } from '@ghostfolio/common/dtos';
 import {
   getAssetProfileIdentifier,
+  isSameSymbol,
   isValidCustomAssetProfileSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -736,6 +737,27 @@ export class ImportService {
       subscription: user.subscription
     });
 
+    const assetProfileIdentifiers = uniqBy(
+      activitiesDto.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      }),
+      getAssetProfileIdentifier
+    );
+
+    for (const { dataSource, symbol } of assetProfileIdentifiers) {
+      const assetProfile =
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      if (assetProfile) {
+        assetProfile.symbol =
+          await this.symbolProfileService.getSymbolOfAssetProfile({
+            dataSource,
+            symbol,
+            symbolOfDataProvider: assetProfile.symbol
+          });
+      }
+    }
+
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
       userCurrency,
@@ -847,12 +869,11 @@ export class ImportService {
         name,
         scraperConfiguration,
         sectors,
+        symbol,
         symbolMapping,
         url,
         updatedAt
       } = assetProfile;
-
-      const symbol = activity.assetProfile.symbol;
 
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
@@ -1059,7 +1080,10 @@ export class ImportService {
             isSameSecond(activity.date, date) &&
             activity.fee === fee &&
             activity.quantity === quantity &&
-            activity.assetProfile.symbol === symbol &&
+            isSameSymbol({
+              symbol1: activity.assetProfile.symbol,
+              symbol2: symbol
+            }) &&
             activity.type === type &&
             activity.unitPrice === unitPrice
           );

@@ -51,7 +51,11 @@ export class WatchlistService {
         );
       }
 
-      symbol = assetProfile.symbol;
+      symbol = await this.symbolProfileService.getSymbolOfAssetProfile({
+        dataSource,
+        symbol,
+        symbolOfDataProvider: assetProfile.symbol
+      });
 
       symbolProfile = await this.prismaService.symbolProfile.findUnique({
         where: {
@@ -60,9 +64,10 @@ export class WatchlistService {
       });
 
       if (!symbolProfile) {
-        await this.symbolProfileService.add(
-          assetProfile as Prisma.SymbolProfileCreateInput
-        );
+        await this.symbolProfileService.add({
+          ...assetProfile,
+          symbol
+        } as Prisma.SymbolProfileCreateInput);
       }
     }
 

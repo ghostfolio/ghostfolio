@@ -127,12 +127,9 @@ export class SymbolProfileService {
   }
 
   /**
-   * Gets the symbol to use for an asset profile. An asset profile which is
-   * already in the database wins, also if its symbol has a different letter
-   * case. This prevents a second asset profile for the same instrument.
-   * Otherwise the symbol of the data provider is used, because it has the
-   * correct letter case. A custom asset profile (MANUAL) belongs to a user,
-   * thus its symbol stays unchanged.
+   * Gets the symbol to use for an asset profile. An existing asset profile
+   * wins, also if its symbol has a different letter case. Otherwise the symbol
+   * of the data provider is used, as it has the letter case of the instrument.
    */
   public async getSymbolOfAssetProfile({
     dataSource,
@@ -143,29 +140,21 @@ export class SymbolProfileService {
       return symbol;
     }
 
-    const symbolProfile = await this.prismaService.symbolProfile.findUnique({
-      where: { dataSource_symbol: { dataSource, symbol } }
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: { symbol: 'asc' },
+      select: { symbol: true },
+      where: {
+        dataSource,
+        symbol: { equals: symbol, mode: 'insensitive' }
+      }
     });
 
-    if (symbolProfile) {
-      return symbolProfile.symbol;
-    }
+    const symbolProfile =
+      symbolProfiles.find(({ symbol: symbolOfSymbolProfile }) => {
+        return symbolOfSymbolProfile === symbol;
+      }) ?? symbolProfiles[0];
 
-    const symbolProfileWithOtherLetterCase =
-      await this.prismaService.symbolProfile.findFirst({
-        orderBy: { symbol: 'asc' },
-        where: {
-          dataSource,
-          symbol: {
-            equals: this.escapeLikePattern(symbol),
-            mode: 'insensitive'
-          }
-        }
-      });
-
-    return (
-      symbolProfileWithOtherLetterCase?.symbol ?? symbolOfDataProvider ?? symbol
-    );
+    return symbolProfile?.symbol ?? symbolOfDataProvider ?? symbol;
   }
 
   public async getSymbolProfiles(
@@ -328,14 +317,6 @@ export class SymbolProfileService {
 
       return item;
     });
-  }
-
-  /**
-   * Escapes the wildcard characters of a LIKE pattern, because Prisma
-   * translates a case-insensitive filter into an ILIKE expression.
-   */
-  private escapeLikePattern(value: string) {
-    return value.replace(/[\\%_]/g, '\\$&');
   }
 
   private getCountries(aCountries: Prisma.JsonArray = []): Country[] {

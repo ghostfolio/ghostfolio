@@ -69,8 +69,8 @@ import {
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, distinctUntilChanged } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
 import { GfAssetProfileDialogComponent } from './asset-profile-dialog/asset-profile-dialog.component';
@@ -496,16 +496,11 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
             if (addAssetProfile && dataSource && symbol) {
               this.adminService
                 .addAssetProfile({ dataSource, symbol })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe({
-                  error: (error: HttpErrorResponse) => {
-                    const { message } = (error.error ?? {}) as {
-                      message?: string;
-                    };
-
+                .pipe(
+                  catchError(({ error }: HttpErrorResponse) => {
                     this.snackBar.open(
                       '😞 ' +
-                        (message ??
+                        (error?.message ??
                           $localize`An error occurred while creating the asset profile ${symbol} (${dataSource}).`),
                       undefined,
                       {
@@ -514,15 +509,18 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
                     );
 
                     this.router.navigate(['.'], { relativeTo: this.route });
-                  },
-                  next: (assetProfile) => {
-                    this.loadData();
 
-                    this.onOpenAssetProfileDialog({
-                      dataSource,
-                      symbol: assetProfile?.symbol ?? symbol
-                    });
-                  }
+                    return EMPTY;
+                  }),
+                  takeUntilDestroyed(this.destroyRef)
+                )
+                .subscribe((assetProfile) => {
+                  this.loadData();
+
+                  this.onOpenAssetProfileDialog({
+                    dataSource,
+                    symbol: assetProfile?.symbol ?? symbol
+                  });
                 });
             } else {
               this.loadData();
