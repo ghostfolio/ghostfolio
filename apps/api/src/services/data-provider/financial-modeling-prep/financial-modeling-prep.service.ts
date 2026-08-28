@@ -142,9 +142,18 @@ export class FinancialModelingPrepService
           .then((res) => res.json());
 
         if (!assetProfile) {
-          throw new AssetProfileDelistedError(
-            `No data found, ${symbol} (${this.getName()}) may be delisted`
-          );
+          const indexProfile = await this.getIndexProfile({
+            requestTimeout,
+            symbol
+          });
+
+          if (!indexProfile) {
+            throw new AssetProfileDelistedError(
+              `No data found, ${symbol} (${this.getName()}) may be delisted`
+            );
+          }
+
+          return { ...response, ...indexProfile };
         }
 
         const { assetClass, assetSubClass } =
@@ -615,10 +624,9 @@ export class FinancialModelingPrepService
 
         items = result
           .filter(({ exchange, symbol }) => {
-            if (
-              exchange === 'FOREX' ||
-              (includeIndices === false && symbol.startsWith('^'))
-            ) {
+            const isIndex = exchange === 'INDEX' || symbol.startsWith('^');
+
+            if (exchange === 'FOREX' || (includeIndices === false && isIndex)) {
               return false;
             }
 
@@ -661,6 +669,45 @@ export class FinancialModelingPrepService
     }
 
     return name;
+  }
+
+  /**
+   * Financial Modeling Prep has no profile for an index, thus the currency and
+   * the name are taken from the search endpoint.
+   */
+  private async getIndexProfile({
+    requestTimeout,
+    symbol
+  }: {
+    requestTimeout: number;
+    symbol: string;
+  }): Promise<Pick<SymbolProfile, 'currency' | 'name'>> {
+    const queryParams = new URLSearchParams({
+      apikey: this.apiKey,
+      query: symbol
+    });
+
+    const results = await this.fetchService
+      .fetch(
+        `${this.getUrl({ version: 'stable' })}/search-symbol?${queryParams.toString()}`,
+        {
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      )
+      .then((res) => res.json());
+
+    const index = results?.find(({ exchange, symbol: symbolOfResult }) => {
+      return exchange === 'INDEX' && symbolOfResult === symbol;
+    });
+
+    if (!index) {
+      return undefined;
+    }
+
+    return {
+      currency: index.currency,
+      name: this.formatName({ name: index.name })
+    };
   }
 
   private getUrl({ version }: { version: number | 'stable' }) {
