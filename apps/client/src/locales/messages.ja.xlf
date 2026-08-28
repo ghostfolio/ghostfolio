@@ -6554,7 +6554,7 @@
       </trans-unit>
       <trans-unit id="1600023202562292052" datatype="html">
         <source>Close Holding</source>
-        <target state="new">Close Holding</target>
+        <target state="translated">保有資産を決済</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">467</context>
@@ -7011,7 +7011,7 @@
       </trans-unit>
       <trans-unit id="829826868886560502" datatype="html">
         <source>Benchmarks</source>
-        <target state="new">Benchmarks</target>
+        <target state="translated">ベンチマーク</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
           <context context-type="linenumber">128</context>
@@ -7019,7 +7019,7 @@
       </trans-unit>
       <trans-unit id="7798195225890418363" datatype="html">
         <source>Chart</source>
-        <target state="new">Chart</target>
+        <target state="translated">チャート</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.component.ts</context>
           <context context-type="linenumber">67</context>
@@ -7027,7 +7027,7 @@
       </trans-unit>
       <trans-unit id="1358239534403218079" datatype="html">
         <source>Table</source>
-        <target state="new">Table</target>
+        <target state="translated">テーブル</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.component.ts</context>
           <context context-type="linenumber">62</context>
