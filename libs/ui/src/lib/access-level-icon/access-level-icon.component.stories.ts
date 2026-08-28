@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { moduleMetadata } from '@storybook/angular';
 import type { Meta, StoryObj } from '@storybook/angular';
 
@@ -9,7 +8,7 @@ export default {
   component: GfAccessLevelIconComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule]
+      imports: []
     })
   ],
   argTypes: {

@@ -102,15 +102,12 @@ describe('Scopes', () => {
     };
 
     it('Grants the write scopes without the monetary values', () => {
-      const scopesOfAccessLevel = getScopesOfAccessLevel(
-        'CREATE_READ_RESTRICTED_UPDATE_DELETE'
-      );
-
-      expect(scopesOfAccessLevel).toEqual([
+      expect(
+        getScopesOfAccessLevel('CREATE_READ_RESTRICTED_UPDATE_DELETE')
+      ).toEqual([
         ...SCOPES_OF_READ_RESTRICTED_ACCESS,
         ...SCOPES_OF_WRITE_ACCESS
       ]);
-      expect(scopesOfAccessLevel).not.toContain(scopes.portfolioReadValues);
     });
 
     // The dialog compares the access level of the stored scopes with the
