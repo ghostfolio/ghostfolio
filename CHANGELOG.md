@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Restricted view and manage_ permission to the access to share the portfolio (experimental)
+
 ### Changed
 
 - Consolidated the duplicated translations of the asset classes and asset sub classes
