@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Consolidated the duplicated translations of the asset classes and asset sub classes
 
+### Fixed
+
+- Improved the handling of indices in the _Financial Modeling Prep_ service
+
 ## 3.62.0 - 2026-08-27
 
 ### Added
