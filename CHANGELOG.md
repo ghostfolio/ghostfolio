@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the loading state of the symbol autocomplete component
 - Consolidated the duplicated translations of the asset classes and asset sub classes
 
 ## 3.62.0 - 2026-08-27
