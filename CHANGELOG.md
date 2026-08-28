@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed the creation of asset profiles with a symbol in the wrong letter case
+
 ## 3.62.0 - 2026-08-27
 
 ### Added
@@ -26,10 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the date of the chart in the holding detail dialog for instances running in a time zone other than UTC
 - Fixed the date of the historical market data gathering endpoint for a specific date for instances running in a time zone other than UTC
 - Fixed the validation of the date in the historical market data gathering endpoint for a specific date
-
-### Fixed
-
-- Fixed the creation of asset profiles with a symbol in the wrong letter case
 
 ## 3.61.0 - 2026-08-25
 
