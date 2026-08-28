@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Consolidated the duplicated translations of the asset classes and asset sub classes
+
 ### Fixed
 
 - Fixed the creation of asset profiles with a symbol in the wrong letter case

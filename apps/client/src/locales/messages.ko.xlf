@@ -1492,7 +1492,7 @@
         <target state="new">Please select a date in the future.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7719274775614264692" datatype="html">
@@ -2780,7 +2780,7 @@
         <target state="translated">사용자 ID</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
@@ -3619,72 +3619,72 @@
         <source>Alternative Investment</source>
         <target state="new">Alternative Investment</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetClass.COMMODITY" datatype="html">
         <source>Commodity</source>
         <target state="new">Commodity</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetClass.EQUITY" datatype="html">
         <source>Equity</source>
         <target state="new">Equity</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetClass.FIXED_INCOME" datatype="html">
         <source>Fixed Income</source>
         <target state="new">Fixed Income</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetClass.LIQUIDITY" datatype="html">
         <source>Liquidity</source>
         <target state="new">Liquidity</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetClass.REAL_ESTATE" datatype="html">
         <source>Real Estate</source>
         <target state="new">Real Estate</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.BOND" datatype="html">
         <source>Bond</source>
         <target state="new">Bond</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.CASH" datatype="html">
         <source>Cash</source>
         <target state="new">Cash</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.COLLECTIBLE" datatype="html">
         <source>Collectible</source>
         <target state="new">Collectible</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.COMMODITY" datatype="html">
@@ -3692,63 +3692,63 @@
         <target state="new">Commodity</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.CRYPTOCURRENCY" datatype="html">
         <source>Cryptocurrency</source>
         <target state="new">Cryptocurrency</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.ETF" datatype="html">
         <source>ETF</source>
         <target state="new">ETF</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.LOAN" datatype="html">
         <source>Loan</source>
         <target state="new">Loan</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.MUTUALFUND" datatype="html">
         <source>Mutual Fund</source>
         <target state="new">Mutual Fund</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.PRECIOUS_METAL" datatype="html">
         <source>Precious Metal</source>
         <target state="new">Precious Metal</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.PRIVATE_EQUITY" datatype="html">
         <source>Private Equity</source>
         <target state="new">Private Equity</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assetSubClass.STOCK" datatype="html">
         <source>Stock</source>
         <target state="new">Stock</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="metaDescription" datatype="html">
@@ -3756,7 +3756,7 @@
         <target state="translated">Ghostfolio는 여러 플랫폼에 분산된 현금, 주식, ETF, 암호화폐를 포함한 순자산을 추적할 수 있는 개인 재무 대시보드입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="metaKeywords" datatype="html">
@@ -3764,7 +3764,7 @@
         <target state="translated">앱, 자산, 암호화폐, 대시보드, ETF, 금융, 관리, 성과, 포트폴리오, 소프트웨어, 주식, 트레이딩, 자산관리, 웹3</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slogan" datatype="html">
@@ -3772,7 +3772,7 @@
         <target state="translated">오픈 소스 자산관리 소프트웨어</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">270</context>
+          <context context-type="linenumber">255</context>
         </context-group>
       </trans-unit>
       <trans-unit id="387656060598558647" datatype="html">
@@ -5265,7 +5265,7 @@
         <target state="new">Expiration Date</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7314014538091101522" datatype="html">
@@ -5705,7 +5705,7 @@
         <target state="translated">포트폴리오 필터</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9038580727258335020" datatype="html">
@@ -5762,14 +5762,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">286</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5515771028435710194" datatype="html">
-        <source>Loan</source>
-        <target state="translated">대출</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5527159140597148286" datatype="html">
@@ -6279,18 +6271,6 @@
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">261</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8431989971855844965" datatype="html">
-        <source>Commodity</source>
-        <target state="translated">상품</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="1983771552391474467" datatype="html">
         <source>Equity</source>
@@ -6299,26 +6279,10 @@
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6124744839836623630" datatype="html">
-        <source>Fixed Income</source>
-        <target state="translated">채권</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="8432027249343784512" datatype="html">
         <source>Real Estate</source>
         <target state="translated">부동산</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">101</context>
@@ -6330,62 +6294,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">74</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8977365084844053365" datatype="html">
-        <source>Bond</source>
-        <target state="translated">노예</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2893204435511484886" datatype="html">
-        <source>Cryptocurrency</source>
-        <target state="translated">암호화폐</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9071695492820527473" datatype="html">
-        <source>ETF</source>
-        <target state="translated">ETF</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5734784563242233466" datatype="html">
-        <source>Mutual Fund</source>
-        <target state="translated">뮤추얼 펀드</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1270654249046226808" datatype="html">
-        <source>Precious Metal</source>
-        <target state="translated">귀금속</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1346519036036997811" datatype="html">
-        <source>Private Equity</source>
-        <target state="translated">사모펀드</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4613338085351943838" datatype="html">
-        <source>Stock</source>
-        <target state="translated">재고</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1413778527796351850" datatype="html">
@@ -6585,7 +6493,7 @@
         <target state="translated">이런! 액세스 권한을 부여할 수 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.component.ts</context>
-          <context context-type="linenumber">277</context>
+          <context context-type="linenumber">256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8728130687307671543" datatype="html">
@@ -6605,7 +6513,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3686284950598311784" datatype="html">
@@ -6910,7 +6818,7 @@
         <target state="translated">내 계정</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7860418101283165917" datatype="html">
@@ -6971,14 +6879,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">96</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="67933701892581429" datatype="html">
-        <source>Liquidity</source>
-        <target state="translated">유동성</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8903954975609359428" datatype="html">
@@ -7398,7 +7298,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -7478,7 +7378,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
@@ -7514,7 +7414,7 @@
         <target state="translated">이런! 액세스를 업데이트할 수 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.component.ts</context>
-          <context context-type="linenumber">337</context>
+          <context context-type="linenumber">354</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5322473252816589112" datatype="html">
@@ -8076,7 +7976,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -8610,7 +8510,7 @@
         <target state="new">Coverage</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">147</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.over" datatype="html">
@@ -8618,7 +8518,7 @@
         <target state="new">The assets tagged as emergency fund exceed the emergency fund of ${emergencyFund} ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">149</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.under" datatype="html">
@@ -8626,7 +8526,7 @@
         <target state="new">The emergency fund of ${emergencyFund} ${baseCurrency} is not covered</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">153</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.unset" datatype="html">
@@ -8634,7 +8534,7 @@
         <target state="new">No emergency fund amount has been set to determine the coverage</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">172</context>
+          <context context-type="linenumber">157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.true" datatype="html">
@@ -8642,7 +8542,7 @@
         <target state="new">The emergency fund of ${emergencyFund} ${baseCurrency} is covered</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
@@ -8650,7 +8550,7 @@
         <target state="new">설정</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">163</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.false" datatype="html">
@@ -8658,7 +8558,7 @@
         <target state="translated">비상금이 설정되지 않았습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">165</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.true" datatype="html">
@@ -8666,7 +8566,7 @@
         <target state="translated">비상금이 설정되어 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume" datatype="html">
@@ -8674,7 +8574,7 @@
         <target state="translated">수수료 비율</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.false" datatype="html">
@@ -8682,7 +8582,7 @@
         <target state="new">수수료가 총 투자 금액의 ${thresholdMax}%를 초과합니다 (${feeRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">172</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.true" datatype="html">
@@ -8690,7 +8590,7 @@
         <target state="new">수수료가 총 투자 금액의 ${thresholdMax}%를 초과하지 않습니다 (${feeRatio}%)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1140327701924892323" datatype="html">
@@ -8730,7 +8630,7 @@
         <target state="translated">단일 계좌</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
@@ -8738,7 +8638,7 @@
         <target state="new">귀하의 순자산은 단일 계좌로 관리됩니다</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
@@ -8746,7 +8646,7 @@
         <target state="new">귀하의 순자산은 ${accountsLength}개의 계좌에서 관리됩니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
@@ -8864,7 +8764,7 @@
         <target state="translated">투자</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false" datatype="html">
@@ -8872,7 +8772,7 @@
         <target state="new">현재 투자 자산의 ${thresholdMax}% 이상이 ${maxAccountName} 계좌 (${maxInvestmentRatio}%)에 집중되어 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.true" datatype="html">
@@ -8880,7 +8780,7 @@
         <target state="new">현재 투자 자산의 주요 부분이 ${maxAccountName} 계좌 (${maxInvestmentRatio}%)에 있으며, 설정된 기준(${thresholdMax}%)을 초과하지 않습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity" datatype="html">
@@ -8888,7 +8788,7 @@
         <target state="translated">주식</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
@@ -8896,7 +8796,7 @@
         <target state="new">현재 투자 자산 중 주식 비중(${equityValueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
@@ -8904,7 +8804,7 @@
         <target state="new">현재 투자 자산 중 주식 비중(${equityValueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
@@ -8912,7 +8812,7 @@
         <target state="new">현재 투자 자산 중 주식 비중(${equityValueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome" datatype="html">
@@ -8920,7 +8820,7 @@
         <target state="translated">채권</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
@@ -8928,7 +8828,7 @@
         <target state="new">현재 투자 자산 중 채권 비중(${fixedIncomeValueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
@@ -8936,7 +8836,7 @@
         <target state="new">현재 투자 자산 중 채권 비중(${fixedIncomeValueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
@@ -8944,7 +8844,7 @@
         <target state="new">현재 투자 자산 중 채권 비중(${fixedIncomeValueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment" datatype="html">
@@ -8952,7 +8852,7 @@
         <target state="translated">투자: 기본 통화</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
@@ -8960,7 +8860,7 @@
         <target state="new">현재 투자 자산의 상당 부분이 기준 통화가 아닙니다 (${baseCurrency} 비중: ${baseCurrencyValueRatio}%).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
@@ -8968,7 +8868,7 @@
         <target state="new">현재 투자 자산의 주요 부분이 기준 통화로 되어 있습니다 (${baseCurrency} 비중: ${baseCurrencyValueRatio}%).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment" datatype="html">
@@ -8976,7 +8876,7 @@
         <target state="translated">투자</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
@@ -8984,7 +8884,7 @@
         <target state="new">현재 투자 자산의 ${thresholdMax}% 이상이 ${currency} 통화 (${maxValueRatio}%)에 집중되어 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
@@ -8992,7 +8892,7 @@
         <target state="new">현재 투자 자산의 상당 부분이 ${currency} 통화 (${maxValueRatio}%)로 되어 있으며, 설정된 기준(${thresholdMax}%)을 초과하지 않습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="routes.start" datatype="html">
@@ -9064,22 +8964,6 @@
           <context context-type="linenumber">495</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2978009302056542263" datatype="html">
-        <source>Alternative Investment</source>
-        <target state="translated">대체투자</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5795124554973640871" datatype="html">
-        <source>Collectible</source>
-        <target state="translated">소장용</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="5053948923184155554" datatype="html">
         <source>Average Unit Price</source>
         <target state="translated">평균단가</target>
@@ -9105,7 +8989,7 @@
         <target state="translated">계좌 집중 위험</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRisk.category" datatype="html">
@@ -9113,7 +8997,7 @@
         <target state="translated">자산군 집중 위험</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.currencyClusterRisk.category" datatype="html">
@@ -9121,7 +9005,7 @@
         <target state="translated">통화 집중 위험</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">100</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRisk.category" datatype="html">
@@ -9129,7 +9013,7 @@
         <target state="translated">경제 시장 집중 위험</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFund.category" datatype="html">
@@ -9137,7 +9021,7 @@
         <target state="translated">비상금</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">161</context>
+          <context context-type="linenumber">146</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.fees.category" datatype="html">
@@ -9145,7 +9029,7 @@
         <target state="translated">수수료</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidity.category" datatype="html">
@@ -9153,7 +9037,7 @@
         <target state="translated">유동성</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">72</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower" datatype="html">
@@ -9161,7 +9045,7 @@
         <target state="translated">매수 가능 금액</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.min" datatype="html">
@@ -9169,7 +9053,7 @@
         <target state="new">매수 가능 금액이 ${thresholdMin} ${baseCurrency} 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.zero" datatype="html">
@@ -9177,7 +9061,7 @@
         <target state="new">매수 가능 금액이 0 ${baseCurrency}입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.true" datatype="html">
@@ -9185,7 +9069,7 @@
         <target state="new">매수 가능 금액이 ${thresholdMin} ${baseCurrency}을(를) 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRisk.category" datatype="html">
@@ -9193,7 +9077,7 @@
         <target state="translated">지역 시장 집중 위험</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets" datatype="html">
@@ -9201,7 +9085,7 @@
         <target state="translated">선진시장</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">126</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
@@ -9209,7 +9093,7 @@
         <target state="new">현재 투자 자산 중 선진국 시장 비중(${developedMarketsValueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">114</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
@@ -9217,7 +9101,7 @@
         <target state="new">현재 투자 자산 중 선진국 시장 비중(${developedMarketsValueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
@@ -9225,7 +9109,7 @@
         <target state="new">현재 투자 자산 중 선진국 시장 비중(${developedMarketsValueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets" datatype="html">
@@ -9233,7 +9117,7 @@
         <target state="translated">신흥시장</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
@@ -9241,7 +9125,7 @@
         <target state="new">현재 투자 자산 중 신흥국 시장 비중(${emergingMarketsValueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">132</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
@@ -9249,7 +9133,7 @@
         <target state="new">현재 투자 자산 중 신흥국 시장 비중(${emergingMarketsValueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
@@ -9257,7 +9141,7 @@
         <target state="new">현재 투자 자산 중 신흥국 시장 비중(${emergingMarketsValueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false.invalid" datatype="html">
@@ -9265,7 +9149,7 @@
         <target state="translated">설정된 계좌가 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false.invalid" datatype="html">
@@ -9273,7 +9157,7 @@
         <target state="new">귀하의 순자산은 0개의 계좌에서 관리됩니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific" datatype="html">
@@ -9281,7 +9165,7 @@
         <target state="translated">아시아·태평양</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">183</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.max" datatype="html">
@@ -9289,7 +9173,7 @@
         <target state="new">현재 투자 자산 중 아시아 태평양 시장 비중(${valueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.min" datatype="html">
@@ -9297,7 +9181,7 @@
         <target state="new">현재 투자 자산 중 아시아 태평양 시장 비중(${valueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.true" datatype="html">
@@ -9305,7 +9189,7 @@
         <target state="new">현재 투자 자산 중 아시아 태평양 시장 비중(${valueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">193</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets" datatype="html">
@@ -9313,7 +9197,7 @@
         <target state="translated">신흥시장</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.max" datatype="html">
@@ -9321,7 +9205,7 @@
         <target state="new">현재 투자 자산 중 신흥국 시장 비중(${valueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.min" datatype="html">
@@ -9329,7 +9213,7 @@
         <target state="new">현재 투자 자산 중 신흥국 시장 비중(${valueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.true" datatype="html">
@@ -9337,7 +9221,7 @@
         <target state="new">현재 투자 자산 중 신흥국 시장 비중(${valueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope" datatype="html">
@@ -9345,7 +9229,7 @@
         <target state="translated">유럽</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">213</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.max" datatype="html">
@@ -9353,7 +9237,7 @@
         <target state="new">현재 투자 자산 중 유럽 시장 비중(${valueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.min" datatype="html">
@@ -9361,7 +9245,7 @@
         <target state="new">현재 투자 자산 중 유럽 시장 비중(${valueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.true" datatype="html">
@@ -9369,7 +9253,7 @@
         <target state="new">현재 투자 자산 중 유럽 시장 비중(${valueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">238</context>
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan" datatype="html">
@@ -9377,7 +9261,7 @@
         <target state="translated">일본</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.max" datatype="html">
@@ -9385,7 +9269,7 @@
         <target state="new">현재 투자 자산 중 일본 시장 비중(${valueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">244</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.min" datatype="html">
@@ -9393,7 +9277,7 @@
         <target state="new">현재 투자 자산 중 일본 시장 비중(${valueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">248</context>
+          <context context-type="linenumber">233</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.true" datatype="html">
@@ -9401,7 +9285,7 @@
         <target state="new">현재 투자 자산 중 일본 시장 비중(${valueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica" datatype="html">
@@ -9409,7 +9293,7 @@
         <target state="translated">북미</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">241</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.max" datatype="html">
@@ -9417,7 +9301,7 @@
         <target state="new">현재 투자 자산 중 북미 시장 비중(${valueRatio}%)이 ${thresholdMax}%를 초과합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">258</context>
+          <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.min" datatype="html">
@@ -9425,7 +9309,7 @@
         <target state="new">현재 투자 자산 중 북미 시장 비중(${valueRatio}%)이 ${thresholdMin}% 미만입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">262</context>
+          <context context-type="linenumber">247</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.true" datatype="html">
@@ -9433,7 +9317,7 @@
         <target state="new">현재 투자 자산 중 북미 시장 비중(${valueRatio}%)이 ${thresholdMin}% ~ ${thresholdMax}% 범위 내에 있습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">266</context>
+          <context context-type="linenumber">251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1184917049575486230" datatype="html">
