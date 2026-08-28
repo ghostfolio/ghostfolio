@@ -1,3 +1,4 @@
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
@@ -12,13 +13,58 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  Type as ActivityType
+} from '@prisma/client';
 import { generateText } from 'ai';
 import { format } from 'date-fns';
 import type { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
 export class AiService {
+  private static readonly ACTIVITIES_TABLE_COLUMN_DEFINITIONS: ({
+    key:
+      | 'ACCOUNT'
+      | 'CURRENCY'
+      | 'DATE'
+      | 'FEE'
+      | 'NAME'
+      | 'QUANTITY'
+      | 'SYMBOL'
+      | 'TYPE'
+      | 'UNIT_PRICE'
+      | 'VALUE';
+    requiresScopeToReadValues?: boolean;
+  } & ColumnDescriptor)[] = [
+    { key: 'DATE', name: 'Date' },
+    { key: 'TYPE', name: 'Type' },
+    { key: 'NAME', name: 'Name' },
+    { key: 'SYMBOL', name: 'Symbol' },
+    { key: 'CURRENCY', name: 'Currency' },
+    {
+      align: 'right',
+      key: 'QUANTITY',
+      name: 'Quantity',
+      requiresScopeToReadValues: true
+    },
+    { align: 'right', key: 'UNIT_PRICE', name: 'Unit Price' },
+    {
+      align: 'right',
+      key: 'FEE',
+      name: 'Fee',
+      requiresScopeToReadValues: true
+    },
+    {
+      align: 'right',
+      key: 'VALUE',
+      name: 'Value',
+      requiresScopeToReadValues: true
+    },
+    { key: 'ACCOUNT', name: 'Account' }
+  ];
+
   private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: ({
     key:
       | 'ACTIVITIES_COUNT'
@@ -45,16 +91,41 @@ export class AiService {
   ];
 
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly configurationService: ConfigurationService,
     private readonly i18nService: I18nService,
     private readonly portfolioService: PortfolioService,
     private readonly propertyService: PropertyService
   ) {}
 
+  public static getActivitiesTableColumnNames({
+    withValues
+  }: {
+    withValues: boolean;
+  }) {
+    return AiService.getActivitiesTableColumnDefinitions({ withValues }).map(
+      ({ name }) => {
+        return name;
+      }
+    );
+  }
+
   public static getHoldingsTableColumnNames() {
     return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(({ name }) => {
       return name;
     });
+  }
+
+  private static getActivitiesTableColumnDefinitions({
+    withValues
+  }: {
+    withValues: boolean;
+  }) {
+    return AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.filter(
+      ({ requiresScopeToReadValues }) => {
+        return withValues || !requiresScopeToReadValues;
+      }
+    );
   }
 
   public async generateText({
@@ -83,6 +154,135 @@ export class AiService {
     });
   }
 
+  public async getActivitiesTable({
+    endDate,
+    filters,
+    skip = 0,
+    startDate,
+    take,
+    types,
+    userCurrency,
+    userId,
+    withValues
+  }: {
+    endDate?: Date;
+    filters?: Filter[];
+    skip?: number;
+    startDate?: Date;
+    take: number;
+    types?: ActivityType[];
+    userCurrency: string;
+    userId: string;
+    withValues: boolean;
+  }) {
+    const { activities, count } = await this.activitiesService.getActivities({
+      endDate,
+      filters,
+      skip,
+      startDate,
+      take,
+      types,
+      userCurrency,
+      userId,
+      includeDrafts: true,
+      sortColumn: 'date',
+      sortDirection: 'desc',
+      withExcludedAccountsAndActivities: true
+    });
+
+    const activitiesTableColumnDefinitions =
+      AiService.getActivitiesTableColumnDefinitions({ withValues });
+
+    const activitiesTableRows = activities.map(
+      ({
+        account,
+        assetProfile,
+        currency,
+        date,
+        fee,
+        quantity,
+        type,
+        unitPrice,
+        value
+      }) => {
+        return activitiesTableColumnDefinitions.reduce(
+          (row, { key, name }) => {
+            switch (key) {
+              case 'ACCOUNT':
+                row[name] = account?.name ?? '';
+                break;
+
+              case 'CURRENCY':
+                row[name] = currency ?? assetProfile.currency;
+                break;
+
+              case 'DATE':
+                row[name] = format(date, DATE_FORMAT);
+                break;
+
+              case 'FEE':
+                row[name] = fee.toString();
+                break;
+
+              case 'NAME':
+                row[name] = assetProfile.name ?? '';
+                break;
+
+              case 'QUANTITY':
+                row[name] = quantity.toString();
+                break;
+
+              case 'SYMBOL':
+                row[name] = assetProfile.symbol;
+                break;
+
+              case 'TYPE':
+                row[name] = type;
+                break;
+
+              case 'UNIT_PRICE':
+                row[name] = unitPrice.toString();
+                break;
+
+              case 'VALUE':
+                row[name] = value.toString();
+                break;
+
+              default:
+                row[name] = '';
+                break;
+            }
+
+            return row;
+          },
+          {} as Record<string, string>
+        );
+      }
+    );
+
+    const activitiesSection = [
+      '## Activities',
+      '',
+      this.getActivitiesSummary({
+        count,
+        skip,
+        numberOfActivities: activities.length
+      })
+    ];
+
+    if (activitiesTableRows.length > 0) {
+      activitiesSection.push(
+        '',
+        await this.getMarkdownTable({
+          columnDefinitions: activitiesTableColumnDefinitions,
+          rows: activitiesTableRows
+        })
+      );
+    }
+
+    return activitiesSection.join('\n');
+  }
+
   public async getPrompt({
     filters,
     languageCode,
@@ -100,11 +300,6 @@ export class AiService {
       filters,
       userId
     });
-
-    const holdingsTableColumns: ColumnDescriptor[] =
-      AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(({ align, name }) => {
-        return { name, align: align ?? 'left' };
-      });
 
     const assetClassTranslations = this.getEnumTranslations({
       languageCode,
@@ -184,18 +379,12 @@ export class AiService {
         }
       );
 
-    // Dynamic import to load ESM module from CommonJS context
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
-    const dynamicImport = new Function('s', 'return import(s)') as (
-      s: string
-    ) => Promise<typeof import('tablemark')>;
-    const { tablemark } = await dynamicImport('tablemark');
-
     const holdingsSection = [
       '## Holdings',
       '',
-      tablemark(holdingsTableRows, {
-        columns: holdingsTableColumns
+      await this.getMarkdownTable({
+        columnDefinitions: AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS,
+        rows: holdingsTableRows
       })
     ].join('\n');
 
@@ -216,6 +405,40 @@ export class AiService {
       'Conclusion: Provide a concise summary highlighting key insights.',
       `Provide your answer in the following language: ${languageCode}.`
     ].join('\n');
+  }
+
+  private getActivitiesSummary({
+    count,
+    numberOfActivities,
+    skip
+  }: {
+    count: number;
+    numberOfActivities: number;
+    skip: number;
+  }) {
+    if (count === 0) {
+      return 'No activities found.';
+    }
+
+    if (numberOfActivities === 0) {
+      return `No activities beyond the ${count} which match the parameters, hence lower the skip parameter.`;
+    }
+
+    if (numberOfActivities === count) {
+      return `Showing all ${count} activities, the most recent first.`;
+    }
+
+    const lastActivity = skip + numberOfActivities;
+
+    const summary = `Showing the activities ${
+      skip + 1
+    } to ${lastActivity} of ${count}, the most recent first.`;
+
+    if (lastActivity === count) {
+      return summary;
+    }
+
+    return `${summary} Get the further activities by raising the skip parameter or narrow the result with the other parameters.`;
   }
 
   private getEnumTranslations<T extends string>({
@@ -239,5 +462,26 @@ export class AiService {
       },
       {} as Record<T, string>
     );
+  }
+
+  private async getMarkdownTable({
+    columnDefinitions,
+    rows
+  }: {
+    columnDefinitions: readonly ColumnDescriptor[];
+    rows: Record<string, string>[];
+  }) {
+    // Dynamic import to load ESM module from CommonJS context
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    const dynamicImport = new Function('s', 'return import(s)') as (
+      s: string
+    ) => Promise<typeof import('tablemark')>;
+    const { tablemark } = await dynamicImport('tablemark');
+
+    return tablemark(rows, {
+      columns: columnDefinitions.map(({ align, name }) => {
+        return { name, align: align ?? 'left' };
+      })
+    });
   }
 }
