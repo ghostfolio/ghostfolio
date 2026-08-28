@@ -591,28 +591,17 @@ export class FinancialModelingPrepService
           };
         });
       } else {
-        const queryParams = new URLSearchParams({
-          query,
-          apikey: this.apiKey
-        });
-
         const [nameResults, symbolResults] = await Promise.all([
-          this.fetchService
-            .fetch(
-              `${this.getUrl({ version: 'stable' })}/search-name?${queryParams.toString()}`,
-              {
-                signal: AbortSignal.timeout(requestTimeout)
-              }
-            )
-            .then((res) => res.json()),
-          this.fetchService
-            .fetch(
-              `${this.getUrl({ version: 'stable' })}/search-symbol?${queryParams.toString()}`,
-              {
-                signal: AbortSignal.timeout(requestTimeout)
-              }
-            )
-            .then((res) => res.json())
+          this.getSearchResults({
+            query,
+            requestTimeout,
+            endpoint: 'search-name'
+          }),
+          this.getSearchResults({
+            query,
+            requestTimeout,
+            endpoint: 'search-symbol'
+          })
         ]);
 
         const result = uniqBy(
@@ -682,19 +671,11 @@ export class FinancialModelingPrepService
     requestTimeout: number;
     symbol: string;
   }): Promise<Pick<SymbolProfile, 'currency' | 'name'>> {
-    const queryParams = new URLSearchParams({
-      apikey: this.apiKey,
+    const results = await this.getSearchResults({
+      requestTimeout,
+      endpoint: 'search-symbol',
       query: symbol
     });
-
-    const results = await this.fetchService
-      .fetch(
-        `${this.getUrl({ version: 'stable' })}/search-symbol?${queryParams.toString()}`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      )
-      .then((res) => res.json());
 
     const index = results?.find(({ exchange, symbol: symbolOfResult }) => {
       return exchange === 'INDEX' && symbolOfResult === symbol;
@@ -708,6 +689,30 @@ export class FinancialModelingPrepService
       currency: index.currency,
       name: this.formatName({ name: index.name })
     };
+  }
+
+  private async getSearchResults({
+    endpoint,
+    query,
+    requestTimeout
+  }: {
+    endpoint: 'search-name' | 'search-symbol';
+    query: string;
+    requestTimeout: number;
+  }) {
+    const queryParams = new URLSearchParams({
+      query,
+      apikey: this.apiKey
+    });
+
+    return this.fetchService
+      .fetch(
+        `${this.getUrl({ version: 'stable' })}/${endpoint}?${queryParams.toString()}`,
+        {
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      )
+      .then((res) => res.json());
   }
 
   private getUrl({ version }: { version: number | 'stable' }) {
