@@ -4,7 +4,10 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
-import { isValidGranteeOfAccess } from '@ghostfolio/common/helper';
+import {
+  canApplyFiltersToAccess,
+  isValidGranteeOfAccess
+} from '@ghostfolio/common/helper';
 import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { getScopesOfAccess } from '@ghostfolio/common/scopes';
@@ -53,6 +56,8 @@ export class AccessController {
       const { alias, expiresAt, granteeUser, id, lastUsedAt, settings, type } =
         accessItem;
 
+      const { filters } = (settings ?? {}) as AccessSettings;
+
       return {
         alias,
         expiresAt,
@@ -61,7 +66,7 @@ export class AccessController {
         type,
         grantee: granteeUser?.id,
         scopes: getScopesOfAccess(accessItem),
-        settings: settings as AccessSettings
+        settings: canApplyFiltersToAccess({ type }) ? { filters } : {}
       };
     });
   }
@@ -98,6 +103,13 @@ export class AccessController {
     }
 
     if (!isValidGranteeOfAccess({ granteeUserId: data.granteeUserId, type })) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (data.filters?.length && !canApplyFiltersToAccess({ type })) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
@@ -185,6 +197,16 @@ export class AccessController {
         granteeUserId: data.granteeUserId,
         type: originalAccess.type
       })
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (
+      data.filters?.length &&
+      !canApplyFiltersToAccess({ type: originalAccess.type })
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),

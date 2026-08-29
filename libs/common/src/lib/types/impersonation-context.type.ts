@@ -1,4 +1,4 @@
-import { Filter, UserSettings } from '@ghostfolio/common/interfaces';
+import { UserSettings } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 /**
@@ -10,7 +10,6 @@ import { UserWithSettings } from '@ghostfolio/common/types';
 export interface ImpersonationContext {
   accessId?: string;
   authenticatedUserSubscription?: UserWithSettings['subscription'];
-  filters?: Filter[];
   isActive: boolean;
   scopes: string[];
   userId: string;

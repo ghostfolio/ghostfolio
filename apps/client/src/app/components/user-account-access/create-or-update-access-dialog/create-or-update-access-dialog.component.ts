@@ -1,6 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
+import { canApplyFiltersToAccess } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
@@ -52,6 +53,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { AccessType } from '@prisma/client';
 import { addYears, endOfDay, isBefore, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, catchError } from 'rxjs';
@@ -112,7 +114,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   public get canApplyFilters() {
-    return this.isPublicAccess && this.hasExperimentalFeatures;
+    return (
+      canApplyFiltersToAccess({ type: this.accessType }) &&
+      this.hasExperimentalFeatures
+    );
   }
 
   public get canGrantMcpAccess() {
@@ -177,7 +182,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     this.accessForm
       .get('type')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((accessType) => {
+      .subscribe((accessType: AccessType) => {
         const granteeUserIdControl = this.accessForm.get('granteeUserId');
 
         if (accessType === 'PRIVATE') {
@@ -191,8 +196,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
           this.accessForm.get('accessLevel')?.setValue('READ_RESTRICTED');
         }
 
-        if (accessType !== 'PUBLIC') {
-          // Only a public access can be limited to a part of the portfolio
+        if (!canApplyFiltersToAccess({ type: accessType })) {
           this.accessForm.get('filters')?.setValue(null);
         }
 
@@ -208,8 +212,12 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     return this.accessForm?.get('accessLevel')?.value as AccessLevel;
   }
 
+  protected get accessType(): AccessType {
+    return this.accessForm?.get('type')?.value as AccessType;
+  }
+
   protected get isPublicAccess() {
-    return this.accessForm?.get('type')?.value === 'PUBLIC';
+    return this.accessType === 'PUBLIC';
   }
 
   protected get showExpiresAtErrorMessage() {

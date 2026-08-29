@@ -3,6 +3,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
+  canApplyFiltersToAccess,
   extractNumberFromString,
   getCountryCodeFromCurrency,
   getNumberFormatGroup,
@@ -19,6 +20,20 @@ import {
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 describe('Helper', () => {
+  describe('Can apply filters to access', () => {
+    it('An access of the model context protocol', () => {
+      expect(canApplyFiltersToAccess({ type: 'MCP' })).toEqual(false);
+    });
+
+    it('A private access', () => {
+      expect(canApplyFiltersToAccess({ type: 'PRIVATE' })).toEqual(false);
+    });
+
+    it('A public access', () => {
+      expect(canApplyFiltersToAccess({ type: 'PUBLIC' })).toEqual(true);
+    });
+  });
+
   describe('Extract number from string', () => {
     it('Get decimal number', () => {
       expect(extractNumberFromString({ value: '999.99' })).toEqual(999.99);

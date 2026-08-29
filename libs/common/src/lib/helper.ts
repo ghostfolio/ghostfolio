@@ -174,6 +174,10 @@ export function calculateMovingAverage({
     .toNumber();
 }
 
+export function canApplyFiltersToAccess({ type }: { type: AccessType }) {
+  return type === 'PUBLIC';
+}
+
 export function canDeleteAssetProfile({
   activitiesCount,
   isBenchmark,
