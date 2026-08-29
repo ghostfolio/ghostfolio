@@ -1,7 +1,7 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
-import { User } from '@ghostfolio/common/interfaces';
+import { AccountsResponse, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
@@ -24,7 +24,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY } from 'rxjs';
+import { filter, of, switchMap, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { TransferBalanceDialogParams } from './transfer-balance/interfaces/interfaces';
@@ -39,7 +39,7 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   templateUrl: './accounts-page.html'
 })
 export class GfAccountsPageComponent implements OnInit {
-  protected accounts: AccountWithValue[];
+  protected accounts: AccountWithValue[] | undefined;
   protected activitiesCount = 0;
   protected hasPermissionToCreateAccount: boolean;
   protected hasPermissionToDeleteAccount: boolean;
@@ -50,7 +50,6 @@ export class GfAccountsPageComponent implements OnInit {
   protected user: User;
 
   private hasImpersonationId: boolean;
-  private isInitialFetch = true;
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
@@ -88,9 +87,11 @@ export class GfAccountsPageComponent implements OnInit {
       });
 
     this.userService.stateChanged
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((state) => {
-        if (state?.user) {
+      .pipe(
+        filter((state) => {
+          return !!state?.user;
+        }),
+        tap((state) => {
           this.user = state.user;
 
           this.hasPermissionToCreateAccount =
@@ -105,10 +106,15 @@ export class GfAccountsPageComponent implements OnInit {
             hasPermission(this.user.permissions, permissions.updateAccount) &&
             hasScope(this.user.scopes, scopes.accountUpdate);
 
-          this.fetchAccounts();
-        }
+          this.reset();
 
-        this.changeDetectorRef.markForCheck();
+          this.changeDetectorRef.markForCheck();
+        }),
+        switchMap(() => this.fetchAccounts()),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((response) => {
+        this.updateAccounts(response);
       });
   }
 
@@ -133,37 +139,9 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   private fetchAccounts() {
-    this.dataService
-      .fetchAccounts()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(
-        ({
-          accounts,
-          activitiesCount,
-          totalBalanceInBaseCurrency,
-          totalValueInBaseCurrency
-        }) => {
-          this.accounts = accounts;
-          this.activitiesCount = activitiesCount;
-          this.totalBalanceInBaseCurrency = totalBalanceInBaseCurrency;
-          this.totalValueInBaseCurrency = totalValueInBaseCurrency;
-
-          if (
-            !this.hasImpersonationId &&
-            this.accounts?.length <= 0 &&
-            this.hasPermissionToCreateAccount &&
-            this.isInitialFetch
-          ) {
-            void this.router.navigate(
-              internalRoutes.accounts.subRoutes.create.routerLink
-            );
-          }
-
-          this.isInitialFetch = false;
-
-          this.changeDetectorRef.markForCheck();
-        }
-      );
+    return this.dataService.fetchAccounts({
+      filters: this.userService.getFilters()
+    });
   }
 
   private openTransferBalanceDialog() {
@@ -172,7 +150,7 @@ export class GfAccountsPageComponent implements OnInit {
       TransferBalanceDialogParams
     >(GfTransferBalanceDialogComponent, {
       data: {
-        accounts: this.accounts
+        accounts: this.user?.accounts
       },
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
@@ -199,12 +177,13 @@ export class GfAccountsPageComponent implements OnInit {
                   title: $localize`Oops, cash balance transfer has failed.`
                 });
 
-                return EMPTY;
+                return of(undefined);
               }),
+              switchMap(() => this.fetchAccounts()),
               takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(() => {
-              this.fetchAccounts();
+            .subscribe((response) => {
+              this.updateAccounts(response);
             });
 
           this.changeDetectorRef.markForCheck();
@@ -215,9 +194,33 @@ export class GfAccountsPageComponent implements OnInit {
   }
 
   private reset() {
-    this.accounts = [];
+    this.accounts = undefined;
     this.activitiesCount = 0;
     this.totalBalanceInBaseCurrency = 0;
     this.totalValueInBaseCurrency = 0;
+  }
+
+  private updateAccounts({
+    accounts,
+    activitiesCount,
+    totalBalanceInBaseCurrency,
+    totalValueInBaseCurrency
+  }: AccountsResponse) {
+    this.accounts = accounts;
+    this.activitiesCount = activitiesCount;
+    this.totalBalanceInBaseCurrency = totalBalanceInBaseCurrency;
+    this.totalValueInBaseCurrency = totalValueInBaseCurrency;
+
+    if (
+      !this.hasImpersonationId &&
+      this.hasPermissionToCreateAccount &&
+      this.user?.accounts?.length === 0
+    ) {
+      void this.router.navigate(
+        internalRoutes.accounts.subRoutes.create.routerLink
+      );
+    }
+
+    this.changeDetectorRef.markForCheck();
   }
 }
