@@ -110,7 +110,6 @@ export class PublicService {
             valueInBaseCurrency
           }) => {
             return {
-              assetProfile,
               currency,
               date,
               fee,
@@ -118,7 +117,13 @@ export class PublicService {
               type,
               unitPrice,
               value,
-              valueInBaseCurrency
+              valueInBaseCurrency,
+              assetProfile: {
+                currency: assetProfile.currency,
+                dataSource: assetProfile.dataSource,
+                name: assetProfile.name,
+                symbol: assetProfile.symbol
+              }
             };
           }
         );
