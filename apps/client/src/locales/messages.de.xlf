@@ -2199,7 +2199,7 @@
       </trans-unit>
       <trans-unit id="4882027922359285902" datatype="html">
         <source>Restricted view and manage</source>
-        <target state="new">Restricted view and manage</target>
+        <target state="translated">Eingeschränkte Ansicht und Verwaltung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/access-level-icon/access-level-icon.component.html</context>
           <context context-type="linenumber">5</context>
