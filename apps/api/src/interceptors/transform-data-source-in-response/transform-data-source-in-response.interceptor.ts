@@ -89,6 +89,7 @@ export class TransformDataSourceInResponseInterceptor<
               'holdings[*].assetProfile.dataSource',
               'holdings[*].dataSource',
               'items[*].dataSource',
+              'latestActivities[*].assetProfile.dataSource',
               'settings["filters.dataSource"]',
               'watchlist[*].dataSource'
             ]
