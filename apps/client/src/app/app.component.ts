@@ -148,7 +148,8 @@ export class GfAppComponent implements OnInit {
 
         if (
           (this.currentRoute === internalRoutes.accounts.path &&
-            !this.currentSubRoute) ||
+            this.currentSubRoute !==
+              internalRoutes.accounts.subRoutes.create.path) ||
           (this.currentRoute === internalRoutes.home.path &&
             this.currentSubRoute ===
               internalRoutes.home.subRoutes?.holdings.path) ||
