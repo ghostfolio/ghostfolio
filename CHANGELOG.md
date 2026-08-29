@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the accounts endpoint by the filters `accounts`, `assetClasses` and `tags`
+- Extended the `GET api/v1/account` endpoint by the filters `accounts`, `assetClasses` and `tags`
 
 ## 3.63.0 - 2026-08-28
 
