@@ -50,7 +50,6 @@ export class GfAccountsPageComponent implements OnInit {
   protected user: User;
 
   private hasImpersonationId: boolean;
-  private isInitialFetch = true;
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
@@ -134,7 +133,7 @@ export class GfAccountsPageComponent implements OnInit {
 
   private fetchAccounts() {
     this.dataService
-      .fetchAccounts()
+      .fetchAccounts({ filters: this.userService.getFilters() })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(
         ({
@@ -150,16 +149,13 @@ export class GfAccountsPageComponent implements OnInit {
 
           if (
             !this.hasImpersonationId &&
-            this.accounts?.length <= 0 &&
             this.hasPermissionToCreateAccount &&
-            this.isInitialFetch
+            this.user?.accounts?.length === 0
           ) {
             void this.router.navigate(
               internalRoutes.accounts.subRoutes.create.routerLink
             );
           }
-
-          this.isInitialFetch = false;
 
           this.changeDetectorRef.markForCheck();
         }
