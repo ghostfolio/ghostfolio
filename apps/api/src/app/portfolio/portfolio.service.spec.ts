@@ -118,10 +118,12 @@ describe('PortfolioService', () => {
   describe('getAccounts', () => {
     const tagId = 'd6bf8b4a-8ef9-4b3f-9e2c-0a1b2c3d4e5f';
 
+    const whereTagsOfActivity = { some: { OR: [{ id: tagId }] } };
+
     const whereActivityOfTag = {
       OR: [
-        { tags: { some: { OR: [{ id: tagId }] } } },
-        { account: { tags: { some: { OR: [{ tagId }] } } } }
+        { account: { tags: { some: { OR: [{ tagId }] } } } },
+        { tags: whereTagsOfActivity }
       ]
     };
 
@@ -184,8 +186,8 @@ describe('PortfolioService', () => {
       expect(where.AND).toEqual([
         {
           OR: [
-            { tags: { some: { OR: [{ tagId }] } } },
-            { activities: { some: whereActivityOfTag } }
+            { activities: { some: { tags: whereTagsOfActivity } } },
+            { tags: { some: { OR: [{ tagId }] } } }
           ]
         }
       ]);
@@ -234,8 +236,8 @@ describe('PortfolioService', () => {
         { activities: { some: whereActivityOfAssetClass } },
         {
           OR: [
-            { tags: { some: { OR: [{ tagId }] } } },
-            { activities: { some: whereActivityOfTag } }
+            { activities: { some: { tags: whereTagsOfActivity } } },
+            { tags: { some: { OR: [{ tagId }] } } }
           ]
         }
       ]);

@@ -143,7 +143,7 @@ export class PortfolioService {
     const where: Prisma.AccountWhereInput = { userId };
 
     const {
-      ACCOUNT: [filterByAccount] = [],
+      ACCOUNT: filtersByAccount = [],
       ASSET_CLASS: filtersByAssetClass = [],
       DATA_SOURCE: [filterByDataSource] = [],
       SYMBOL: [filterBySymbol] = [],
@@ -152,24 +152,28 @@ export class PortfolioService {
       return type;
     });
 
-    if (filterByAccount) {
-      where.id = filterByAccount.id;
+    if (filtersByAccount.length > 0) {
+      where.id = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
     }
 
     const whereAccountConditions: Prisma.AccountWhereInput[] = [];
     const whereActivityConditions: Prisma.OrderWhereInput[] = [];
 
     if (filtersByAssetClass.length > 0) {
+      const whereAssetClassConditions = filtersByAssetClass.map(({ id }) => {
+        return { assetClass: AssetClass[id] };
+      });
+
       const whereActivityOfAssetClass: Prisma.OrderWhereInput = {
         SymbolProfile: {
           OR: [
             {
               AND: [
-                {
-                  OR: filtersByAssetClass.map(({ id }) => {
-                    return { assetClass: AssetClass[id] };
-                  })
-                },
+                { OR: whereAssetClassConditions },
                 {
                   OR: [
                     { assetProfileOverrides: { is: null } },
@@ -179,11 +183,7 @@ export class PortfolioService {
               ]
             },
             {
-              assetProfileOverrides: {
-                OR: filtersByAssetClass.map(({ id }) => {
-                  return { assetClass: AssetClass[id] };
-                })
-              }
+              assetProfileOverrides: { OR: whereAssetClassConditions }
             }
           ]
         }
@@ -222,25 +222,25 @@ export class PortfolioService {
         }
       };
 
+      const whereTagsOfActivity: Prisma.TagListRelationFilter = {
+        some: {
+          OR: filtersByTag.map(({ id }) => {
+            return { id };
+          })
+        }
+      };
+
       const whereActivityOfTag: Prisma.OrderWhereInput = {
         OR: [
-          {
-            tags: {
-              some: {
-                OR: filtersByTag.map(({ id }) => {
-                  return { id };
-                })
-              }
-            }
-          },
-          { account: { tags: whereTagsOfAccount } }
+          { account: { tags: whereTagsOfAccount } },
+          { tags: whereTagsOfActivity }
         ]
       };
 
       whereAccountConditions.push({
         OR: [
-          { tags: whereTagsOfAccount },
-          { activities: { some: whereActivityOfTag } }
+          { activities: { some: { tags: whereTagsOfActivity } } },
+          { tags: whereTagsOfAccount }
         ]
       });
 
