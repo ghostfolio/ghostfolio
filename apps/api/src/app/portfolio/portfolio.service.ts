@@ -144,8 +144,10 @@ export class PortfolioService {
 
     const {
       ACCOUNT: [filterByAccount] = [],
+      ASSET_CLASS: filtersByAssetClass = [],
       DATA_SOURCE: [filterByDataSource] = [],
-      SYMBOL: [filterBySymbol] = []
+      SYMBOL: [filterBySymbol] = [],
+      TAG: filtersByTag = []
     } = groupBy(filters, ({ type }) => {
       return type;
     });
@@ -154,18 +156,105 @@ export class PortfolioService {
       where.id = filterByAccount.id;
     }
 
-    if (filterByDataSource && filterBySymbol) {
-      where.activities = {
-        some: {
-          SymbolProfile: {
-            AND: [
-              { dataSource: filterByDataSource.id as DataSource },
-              { symbol: filterBySymbol.id }
-            ]
-          }
+    const whereAccountConditions: Prisma.AccountWhereInput[] = [];
+    const whereActivityConditions: Prisma.OrderWhereInput[] = [];
+
+    if (filtersByAssetClass.length > 0) {
+      const whereActivityOfAssetClass: Prisma.OrderWhereInput = {
+        SymbolProfile: {
+          OR: [
+            {
+              AND: [
+                {
+                  OR: filtersByAssetClass.map(({ id }) => {
+                    return { assetClass: AssetClass[id] };
+                  })
+                },
+                {
+                  OR: [
+                    { assetProfileOverrides: { is: null } },
+                    { assetProfileOverrides: { assetClass: null } }
+                  ]
+                }
+              ]
+            },
+            {
+              assetProfileOverrides: {
+                OR: filtersByAssetClass.map(({ id }) => {
+                  return { assetClass: AssetClass[id] };
+                })
+              }
+            }
+          ]
         }
       };
+
+      whereAccountConditions.push({
+        activities: { some: whereActivityOfAssetClass }
+      });
+
+      whereActivityConditions.push(whereActivityOfAssetClass);
     }
+
+    if (filterByDataSource && filterBySymbol) {
+      const whereActivityOfHolding: Prisma.OrderWhereInput = {
+        SymbolProfile: {
+          AND: [
+            { dataSource: filterByDataSource.id as DataSource },
+            { symbol: filterBySymbol.id }
+          ]
+        }
+      };
+
+      whereAccountConditions.push({
+        activities: { some: whereActivityOfHolding }
+      });
+
+      whereActivityConditions.push(whereActivityOfHolding);
+    }
+
+    if (filtersByTag.length > 0) {
+      const whereTagsOfAccount: Prisma.TagsOnAccountsListRelationFilter = {
+        some: {
+          OR: filtersByTag.map(({ id }) => {
+            return { tagId: id };
+          })
+        }
+      };
+
+      const whereActivityOfTag: Prisma.OrderWhereInput = {
+        OR: [
+          {
+            tags: {
+              some: {
+                OR: filtersByTag.map(({ id }) => {
+                  return { id };
+                })
+              }
+            }
+          },
+          { account: { tags: whereTagsOfAccount } }
+        ]
+      };
+
+      whereAccountConditions.push({
+        OR: [
+          { tags: whereTagsOfAccount },
+          { activities: { some: whereActivityOfTag } }
+        ]
+      });
+
+      whereActivityConditions.push(whereActivityOfTag);
+    }
+
+    if (whereAccountConditions.length > 0) {
+      where.AND = whereAccountConditions;
+    }
+
+    const whereActivity: Prisma.OrderWhereInput =
+      whereActivityConditions.length > 0
+        ? { AND: whereActivityConditions }
+        : undefined;
 
     const filtersWithoutSearchQueryFilter = filters?.filter(({ type }) => {
       return type !== 'SEARCH_QUERY';
@@ -186,7 +275,8 @@ export class PortfolioService {
                   id: TAG_ID_DRAFT
                 }
               }
-            }
+            },
+            where: whereActivity
           },
           platform: true,
           tags: true

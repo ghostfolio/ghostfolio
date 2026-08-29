@@ -36,6 +36,7 @@ import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
+import { GetAllAccountsDto } from './get-all-accounts.dto';
 
 @Controller('account')
 export class AccountController {
@@ -85,14 +86,23 @@ export class AccountController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getAllAccounts(
     @Impersonation() { userId }: ImpersonationContext,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('symbol') filterBySymbol?: string
+    @Query()
+    {
+      accounts,
+      assetClasses,
+      dataSource,
+      query,
+      symbol,
+      tags
+    }: GetAllAccountsDto
   ): Promise<AccountsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByDataSource,
-      filterBySearchQuery,
-      filterBySymbol
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySearchQuery: query,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     return this.portfolioService.getAccountsWithAggregations({
