@@ -24,6 +24,40 @@ import type { ColumnDescriptor } from 'tablemark';
 
 @Injectable()
 export class AiService {
+  private static readonly ACCOUNTS_TABLE_COLUMN_DEFINITIONS: ({
+    key:
+      | 'ACTIVITIES_COUNT'
+      | 'ALLOCATION_PERCENTAGE'
+      | 'BALANCE'
+      | 'CURRENCY'
+      | 'NAME'
+      | 'PLATFORM'
+      | 'VALUE';
+    requiresScopeToReadValues?: boolean;
+  } & ColumnDescriptor)[] = [
+    { key: 'NAME', name: 'Name' },
+    { key: 'CURRENCY', name: 'Currency' },
+    { key: 'PLATFORM', name: 'Platform' },
+    { align: 'right', key: 'ACTIVITIES_COUNT', name: 'Activities Count' },
+    {
+      align: 'right',
+      key: 'BALANCE',
+      name: 'Cash Balance',
+      requiresScopeToReadValues: true
+    },
+    {
+      align: 'right',
+      key: 'VALUE',
+      name: 'Value',
+      requiresScopeToReadValues: true
+    },
+    {
+      align: 'right',
+      key: 'ALLOCATION_PERCENTAGE',
+      name: 'Allocation in Percentage'
+    }
+  ];
+
   private static readonly ACTIVITIES_TABLE_COLUMN_DEFINITIONS: ({
     key:
       | 'ACCOUNT'
@@ -98,16 +132,30 @@ export class AiService {
     private readonly propertyService: PropertyService
   ) {}
 
+  public static getAccountsTableColumnNames({
+    withValues
+  }: {
+    withValues: boolean;
+  }) {
+    return AiService.getTableColumnDefinitions({
+      withValues,
+      columnDefinitions: AiService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS
+    }).map(({ name }) => {
+      return name;
+    });
+  }
+
   public static getActivitiesTableColumnNames({
     withValues
   }: {
     withValues: boolean;
   }) {
-    return AiService.getActivitiesTableColumnDefinitions({ withValues }).map(
-      ({ name }) => {
-        return name;
-      }
-    );
+    return AiService.getTableColumnDefinitions({
+      withValues,
+      columnDefinitions: AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS
+    }).map(({ name }) => {
+      return name;
+    });
   }
 
   public static getHoldingsTableColumnNames() {
@@ -116,16 +164,18 @@ export class AiService {
     });
   }
 
-  private static getActivitiesTableColumnDefinitions({
+  private static getTableColumnDefinitions<
+    T extends { requiresScopeToReadValues?: boolean }
+  >({
+    columnDefinitions,
     withValues
   }: {
+    columnDefinitions: readonly T[];
     withValues: boolean;
   }) {
-    return AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.filter(
-      ({ requiresScopeToReadValues }) => {
-        return withValues || !requiresScopeToReadValues;
-      }
-    );
+    return columnDefinitions.filter(({ requiresScopeToReadValues }) => {
+      return withValues || !requiresScopeToReadValues;
+    });
   }
 
   public async generateText({
@@ -152,6 +202,96 @@ export class AiService {
       model: openRouterService.chat(openRouterModel),
       timeout: requestTimeout
     });
+  }
+
+  public async getAccountsTable({
+    filters,
+    userId,
+    withValues
+  }: {
+    filters?: Filter[];
+    userId: string;
+    withValues: boolean;
+  }) {
+    const { accounts } =
+      await this.portfolioService.getAccountsWithAggregations({
+        filters,
+        userId,
+        withExcludedAccounts: true
+      });
+
+    const accountsTableColumnDefinitions = AiService.getTableColumnDefinitions({
+      withValues,
+      columnDefinitions: AiService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS
+    });
+
+    const accountsTableRows = accounts.map(
+      ({
+        activitiesCount,
+        allocationInPercentage,
+        balance,
+        currency,
+        name: label,
+        platform,
+        value
+      }) => {
+        return accountsTableColumnDefinitions.reduce(
+          (row, { key, name }) => {
+            switch (key) {
+              case 'ACTIVITIES_COUNT':
+                row[name] = activitiesCount.toString();
+                break;
+
+              case 'ALLOCATION_PERCENTAGE':
+                row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
+                break;
+
+              case 'BALANCE':
+                row[name] = balance.toString();
+                break;
+
+              case 'CURRENCY':
+                row[name] = currency ?? '';
+                break;
+
+              case 'NAME':
+                row[name] = label ?? '';
+                break;
+
+              case 'PLATFORM':
+                row[name] = platform?.name ?? '';
+                break;
+
+              case 'VALUE':
+                row[name] = value.toString();
+                break;
+
+              default:
+                row[name] = '';
+                break;
+            }
+
+            return row;
+          },
+          {} as Record<string, string>
+        );
+      }
+    );
+
+    const accountsSection = ['## Accounts', ''];
+
+    if (accountsTableRows.length > 0) {
+      accountsSection.push(
+        await this.getMarkdownTable({
+          columnDefinitions: accountsTableColumnDefinitions,
+          rows: accountsTableRows
+        })
+      );
+    } else {
+      accountsSection.push('No accounts found.');
+    }
+
+    return accountsSection.join('\n');
   }
 
   public async getActivitiesTable({
@@ -191,7 +331,10 @@ export class AiService {
     });
 
     const activitiesTableColumnDefinitions =
-      AiService.getActivitiesTableColumnDefinitions({ withValues });
+      AiService.getTableColumnDefinitions({
+        withValues,
+        columnDefinitions: AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS
+      });
 
     const activitiesTableRows = activities.map(
       ({

@@ -19,6 +19,23 @@ import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
 import { z } from 'zod';
 
+const GET_ACCOUNTS_PARAMETERS = z.object({
+  assetClasses: z
+    .array(z.enum(AssetClass))
+    .min(1)
+    .optional()
+    .describe('The asset classes of the accounts to get'),
+  holding: z
+    .object({
+      dataSource: z
+        .enum(DataSource)
+        .describe('The data source of the asset profile'),
+      symbol: z.string().describe('The symbol of the asset profile')
+    })
+    .optional()
+    .describe('The asset profile of the accounts to get')
+});
+
 const GET_ACTIVITIES_PARAMETERS = z.object({
   activityTypes: z
     .array(z.enum(ActivityType))
@@ -70,6 +87,42 @@ export class GhostfolioMcpController {
     private readonly aiService: AiService,
     private readonly apiService: ApiService
   ) {}
+
+  @RequiresScopeOfAccess(scopes.accountRead)
+  @Tool({
+    annotations: {
+      openWorldHint: false,
+      readOnlyHint: true,
+      title: 'Get accounts'
+    },
+    description: `Gives the accounts of the portfolio with these columns: ${AiService.getAccountsTableColumnNames(
+      { withValues: false }
+    ).join(
+      ', '
+    )}. More columns with a monetary value are added if the access grants to read them.`,
+    name: 'get-accounts',
+    parameters: GET_ACCOUNTS_PARAMETERS
+  })
+  public async getAccounts(
+    @Impersonation()
+    { scopes: scopesOfAccess, userId }: ImpersonationContext,
+    @Payload()
+    { assetClasses, holding }: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
+  ) {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAssetClasses: assetClasses?.join(','),
+      filterByDataSource: holding?.dataSource,
+      filterBySymbol: holding?.symbol
+    });
+
+    const table = await this.aiService.getAccountsTable({
+      filters,
+      userId,
+      withValues: hasScope(scopesOfAccess, scopes.portfolioReadValues)
+    });
+
+    return { content: [{ text: table, type: 'text' as const }] };
+  }
 
   @RequiresScopeOfAccess(scopes.activityRead)
   @Tool({
