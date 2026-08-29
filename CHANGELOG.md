@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Restricted the support for filtering to the public access for portfolio sharing (experimental)
+- Restricted the support for filtering to the public access to share the portfolio (experimental)
 
 ### Fixed
 
