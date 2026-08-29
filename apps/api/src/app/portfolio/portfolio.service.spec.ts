@@ -13,11 +13,12 @@ import { TAG_ID_EMERGENCY_FUND, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  Filter,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
 import { AccountWithBalance } from '@ghostfolio/common/types';
 
-import { DataSource } from '@prisma/client';
+import { AssetClass, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { randomUUID } from 'node:crypto';
 
@@ -112,6 +113,139 @@ describe('PortfolioService', () => {
       symbolProfileService,
       userService
     );
+  });
+
+  describe('getAccounts', () => {
+    const tagId = 'd6bf8b4a-8ef9-4b3f-9e2c-0a1b2c3d4e5f';
+
+    const whereTagsOfActivity = { some: { OR: [{ id: tagId }] } };
+
+    const whereActivityOfTag = {
+      OR: [
+        { account: { tags: { some: { OR: [{ tagId }] } } } },
+        { tags: whereTagsOfActivity }
+      ]
+    };
+
+    const whereActivityOfAssetClass = {
+      SymbolProfile: {
+        OR: [
+          {
+            AND: [
+              { OR: [{ assetClass: AssetClass.EQUITY }] },
+              {
+                OR: [
+                  { assetProfileOverrides: { assetClass: null } },
+                  { assetProfileOverrides: { is: null } }
+                ]
+              }
+            ]
+          },
+          {
+            assetProfileOverrides: { OR: [{ assetClass: AssetClass.EQUITY }] }
+          }
+        ]
+      }
+    };
+
+    const getAccountsQuery = async (filters?: Filter[]) => {
+      const accountsSpy = jest
+        .spyOn(accountService, 'accounts')
+        .mockResolvedValue([]);
+
+      jest.spyOn(portfolioService, 'getDetails').mockResolvedValue({
+        accounts: {}
+      } as unknown as Awaited<ReturnType<typeof portfolioService.getDetails>>);
+
+      jest.spyOn(userService, 'user').mockResolvedValue(null);
+
+      await portfolioService.getAccounts({ filters, userId: userDummyData.id });
+
+      const { include, where } = accountsSpy.mock.calls[0][0];
+
+      return {
+        where,
+        whereOfActivities: (
+          include.activities as { where?: Prisma.OrderWhereInput }
+        ).where
+      };
+    };
+
+    it('should not restrict the accounts and their activities without a filter', async () => {
+      const { where, whereOfActivities } = await getAccountsQuery();
+
+      expect(where).toEqual({ userId: userDummyData.id });
+      expect(whereOfActivities).toBeUndefined();
+    });
+
+    it('should match an account with the tag filter by its own tags or by the tags of its activities', async () => {
+      const { where, whereOfActivities } = await getAccountsQuery([
+        { id: tagId, type: 'TAG' }
+      ]);
+
+      expect(where.AND).toEqual([
+        {
+          OR: [
+            { activities: { some: { tags: whereTagsOfActivity } } },
+            { tags: { some: { OR: [{ tagId }] } } }
+          ]
+        }
+      ]);
+
+      expect(whereOfActivities).toEqual({ AND: [whereActivityOfTag] });
+    });
+
+    it('should restrict the accounts and their activities to the asset class filter', async () => {
+      const { where, whereOfActivities } = await getAccountsQuery([
+        { id: AssetClass.EQUITY, type: 'ASSET_CLASS' }
+      ]);
+
+      expect(where.AND).toEqual([
+        { activities: { some: whereActivityOfAssetClass } }
+      ]);
+
+      expect(whereOfActivities).toEqual({ AND: [whereActivityOfAssetClass] });
+    });
+
+    it('should restrict the accounts and their activities to the holding filter', async () => {
+      const whereActivityOfHolding = {
+        SymbolProfile: {
+          AND: [{ dataSource: DataSource.YAHOO }, { symbol: 'AAPL' }]
+        }
+      };
+
+      const { where, whereOfActivities } = await getAccountsQuery([
+        { id: DataSource.YAHOO, type: 'DATA_SOURCE' },
+        { id: 'AAPL', type: 'SYMBOL' }
+      ]);
+
+      expect(where.AND).toEqual([
+        { activities: { some: whereActivityOfHolding } }
+      ]);
+
+      expect(whereOfActivities).toEqual({ AND: [whereActivityOfHolding] });
+    });
+
+    it('should combine the filters of different types with a logical and', async () => {
+      const { where, whereOfActivities } = await getAccountsQuery([
+        { id: AssetClass.EQUITY, type: 'ASSET_CLASS' },
+        { id: tagId, type: 'TAG' }
+      ]);
+
+      expect(where.AND).toEqual([
+        { activities: { some: whereActivityOfAssetClass } },
+        {
+          OR: [
+            { activities: { some: { tags: whereTagsOfActivity } } },
+            { tags: { some: { OR: [{ tagId }] } } }
+          ]
+        }
+      ]);
+
+      expect(whereOfActivities).toEqual({
+        AND: [whereActivityOfAssetClass, whereActivityOfTag]
+      });
+    });
   });
 
   describe('getAggregatedMarkets', () => {

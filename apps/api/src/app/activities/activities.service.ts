@@ -1031,8 +1031,8 @@ export class ActivitiesService {
               },
               {
                 OR: [
-                  { assetProfileOverrides: { is: null } },
-                  { assetProfileOverrides: { assetClass: null } }
+                  { assetProfileOverrides: { assetClass: null } },
+                  { assetProfileOverrides: { is: null } }
                 ]
               }
             ]
