@@ -692,7 +692,7 @@
         <target state="new">View and manage</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/access-level-icon/access-level-icon.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4207916966377787111" datatype="html">
@@ -2780,7 +2780,7 @@
         <target state="translated">ユーザーID</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
@@ -5713,7 +5713,7 @@
         <target state="translated">ポートフォリオフィルター</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">128</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9038580727258335020" datatype="html">
@@ -6264,6 +6264,14 @@
           <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4882027922359285902" datatype="html">
+        <source>Restricted view and manage</source>
+        <target state="new">Restricted view and manage</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/access-level-icon/access-level-icon.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="787798817533231355" datatype="html">
         <source>Cash</source>
         <target state="translated">現金</target>
@@ -6501,7 +6509,7 @@
         <target state="translated">制限された表示</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/access-level-icon/access-level-icon.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="837553826328586238" datatype="html">
@@ -6673,7 +6681,7 @@
         <target state="translated">閲覧</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/access-level-icon/access-level-icon.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2522011507610634749" datatype="html">
@@ -7298,7 +7306,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">130</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -7378,7 +7386,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">145</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
@@ -7976,7 +7984,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">158</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -8405,7 +8413,7 @@
         <target state="new">someone</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1071146706139680655" datatype="html">
