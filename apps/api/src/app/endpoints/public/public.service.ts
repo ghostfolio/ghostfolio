@@ -81,25 +81,34 @@ export class PublicService {
       })
     ]);
 
-    const { activities } = await this.activitiesService.getActivities({
-      filters,
-      sortColumn: 'date',
-      sortDirection: 'desc',
-      take: 10,
-      types: [ActivityType.BUY, ActivityType.SELL],
-      userCurrency: user?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
-      userId: user.id,
-      withExcludedAccountsAndActivities: false
-    });
-
     // Experimental
-    const latestActivities = this.configurationService.get(
-      'ENABLE_FEATURE_SUBSCRIPTION'
-    )
-      ? []
-      : activities.map(
-          ({
-            assetProfile,
+    let latestActivities: PublicPortfolioResponse['latestActivities'] = [];
+
+    if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      const { activities } = await this.activitiesService.getActivities({
+        filters,
+        sortColumn: 'date',
+        sortDirection: 'desc',
+        take: 10,
+        types: [ActivityType.BUY, ActivityType.SELL],
+        userCurrency: user?.settings?.settings.baseCurrency ?? DEFAULT_CURRENCY,
+        userId: user.id,
+        withExcludedAccountsAndActivities: false
+      });
+
+      latestActivities = activities.map(
+        ({
+          assetProfile,
+          currency,
+          date,
+          fee,
+          quantity,
+          type,
+          unitPrice,
+          value,
+          valueInBaseCurrency
+        }) => {
+          return {
             currency,
             date,
             fee,
@@ -107,21 +116,17 @@ export class PublicService {
             type,
             unitPrice,
             value,
-            valueInBaseCurrency
-          }) => {
-            return {
-              assetProfile,
-              currency,
-              date,
-              fee,
-              quantity,
-              type,
-              unitPrice,
-              value,
-              valueInBaseCurrency
-            };
-          }
-        );
+            valueInBaseCurrency,
+            assetProfile: {
+              currency: assetProfile.currency,
+              dataSource: assetProfile.dataSource,
+              name: assetProfile.name,
+              symbol: assetProfile.symbol
+            }
+          };
+        }
+      );
+    }
 
     Object.values(markets ?? {}).forEach((market) => {
       delete market.valueInBaseCurrency;
