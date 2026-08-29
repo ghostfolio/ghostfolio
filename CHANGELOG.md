@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the `GET api/v1/account` endpoint by the filters `accounts`, `assetClasses` and `tags`
 
+### Fixed
+
+- Fixed the redaction of `fee`, `quantity`, `value` and `valueInBaseCurrency` in the latest activities of the public page (experimental)
+
 ## 3.63.0 - 2026-08-28
 
 ### Added
