@@ -3,7 +3,7 @@ import { AccessSettings, Filter } from '@ghostfolio/common/interfaces';
 import { AccessWithGranteeUser } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { Access, AccessType, Prisma } from '@prisma/client';
+import { Access, Prisma } from '@prisma/client';
 import { isBefore, isToday, isValid } from 'date-fns';
 
 @Injectable()
@@ -41,15 +41,8 @@ export class AccessService {
     });
   }
 
-  public buildSettings({
-    filters,
-    type
-  }: {
-    filters?: Filter[];
-    type: AccessType;
-  }) {
-    const settings: AccessSettings =
-      type === 'PUBLIC' && filters?.length ? { filters } : {};
+  public buildSettings(filters?: Filter[]) {
+    const settings: AccessSettings = filters?.length ? { filters } : {};
 
     return settings as Prisma.InputJsonValue;
   }
