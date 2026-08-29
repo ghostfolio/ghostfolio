@@ -116,7 +116,10 @@ export class AccessController {
           type,
           scopes: data.scopes
         }),
-        settings: this.accessService.buildSettings(data.filters),
+        settings: this.accessService.buildSettings({
+          type,
+          filters: data.filters
+        }),
         user: { connect: { id: this.request.user.id } }
       });
     } catch {
@@ -204,7 +207,10 @@ export class AccessController {
             scopes: data.scopes ?? originalAccess.scopes,
             type: originalAccess.type
           }),
-          settings: this.accessService.buildSettings(data.filters)
+          settings: this.accessService.buildSettings({
+            filters: data.filters,
+            type: originalAccess.type
+          })
         },
         where: { id }
       });

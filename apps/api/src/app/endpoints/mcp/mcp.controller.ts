@@ -88,12 +88,7 @@ export class GhostfolioMcpController {
   })
   public async getActivities(
     @Impersonation()
-    {
-      filters,
-      scopes: scopesOfAccess,
-      userId,
-      userSettings
-    }: ImpersonationContext,
+    { scopes: scopesOfAccess, userId, userSettings }: ImpersonationContext,
     @Payload()
     {
       activityTypes,
@@ -113,65 +108,18 @@ export class GhostfolioMcpController {
       }));
     }
 
-    const filtersOfAccess = filters ?? [];
-
-    const filtersOfTool = this.apiService.buildFiltersFromQueryParams({
+    const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetClasses: assetClasses?.join(','),
       filterByDataSource: holding?.dataSource,
       filterBySymbol: holding?.symbol
     });
 
-    // A tool must never widen the access, hence a filter of the tool which
-    // the access does not permit gives no activity
-    const filtersOfToolOutsideAccess = filtersOfTool.filter(({ id, type }) => {
-      const filtersOfAccessOfType = filtersOfAccess.filter((filter) => {
-        return filter.type === type;
-      });
-
-      return (
-        filtersOfAccessOfType.length > 0 &&
-        !filtersOfAccessOfType.some((filter) => {
-          return filter.id === id;
-        })
-      );
-    });
-
-    if (filtersOfToolOutsideAccess.length > 0) {
-      const valuesOutsideAccess = filtersOfToolOutsideAccess
-        .map(({ id }) => {
-          return id;
-        })
-        .join(', ');
-
-      return {
-        content: [
-          {
-            text: `No activities found. The access does not permit these values of the parameters: ${valuesOutsideAccess}.`,
-            type: 'text' as const
-          }
-        ]
-      };
-    }
-
-    const typesOfFiltersOfTool = new Set(
-      filtersOfTool.map(({ type }) => {
-        return type;
-      })
-    );
-
-    // The filters of a type are combined with a logical or, hence a filter of
-    // the tool replaces the filters of the access of the same type instead of
-    // joining them
-    const filtersOfAccessOutsideTool = filtersOfAccess.filter(({ type }) => {
-      return !typesOfFiltersOfTool.has(type);
-    });
-
     const table = await this.aiService.getActivitiesTable({
       endDate,
+      filters,
       skip,
       startDate,
       userId,
-      filters: [...filtersOfAccessOutsideTool, ...filtersOfTool],
       take: take ?? MCP_MAX_ACTIVITIES,
       types: activityTypes,
       userCurrency: userSettings.baseCurrency,
@@ -194,10 +142,9 @@ export class GhostfolioMcpController {
     name: 'get-portfolio'
   })
   public async getPortfolio(
-    @Impersonation() { filters, userId, userSettings }: ImpersonationContext
+    @Impersonation() { userId, userSettings }: ImpersonationContext
   ) {
     const prompt = await this.aiService.getPrompt({
-      filters,
       userId,
       languageCode: DEFAULT_LANGUAGE_CODE,
       mode: 'portfolio',
