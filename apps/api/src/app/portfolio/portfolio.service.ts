@@ -176,8 +176,8 @@ export class PortfolioService {
                 { OR: whereAssetClassConditions },
                 {
                   OR: [
-                    { assetProfileOverrides: { is: null } },
-                    { assetProfileOverrides: { assetClass: null } }
+                    { assetProfileOverrides: { assetClass: null } },
+                    { assetProfileOverrides: { is: null } }
                   ]
                 }
               ]

@@ -135,8 +135,8 @@ describe('PortfolioService', () => {
               { OR: [{ assetClass: AssetClass.EQUITY }] },
               {
                 OR: [
-                  { assetProfileOverrides: { is: null } },
-                  { assetProfileOverrides: { assetClass: null } }
+                  { assetProfileOverrides: { assetClass: null } },
+                  { assetProfileOverrides: { is: null } }
                 ]
               }
             ]
