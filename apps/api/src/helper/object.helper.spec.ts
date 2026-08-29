@@ -3049,7 +3049,14 @@ describe('redactAttributes', () => {
             name: 'Interactive Brokers Account'
           },
           assetProfile: {
+            comment: 'Reviewed by the administrator',
             name: 'Apple Inc',
+            scraperConfiguration: {
+              headers: { Authorization: 'Bearer TOKEN' },
+              mode: 'lazy',
+              selector: '.price',
+              url: 'https://example.org/get_price'
+            },
             symbol: 'AAPL',
             symbolMapping: { YAHOO: 'AAPL' },
             watchedByCount: 7
@@ -3076,7 +3083,9 @@ describe('redactAttributes', () => {
         name: 'Interactive Brokers Account'
       },
       assetProfile: {
+        comment: null,
         name: 'Apple Inc',
+        scraperConfiguration: null,
         symbol: 'AAPL',
         symbolMapping: null,
         watchedByCount: null
@@ -3121,6 +3130,111 @@ describe('redactAttributes', () => {
       quantity: null,
       type: 'BUY',
       unitPrice: 220.79
+    });
+  });
+
+  it('should redact the activities of a response', () => {
+    expect(
+      redactPaths({
+        object: {
+          activities: [
+            {
+              assetProfile: {
+                comment: 'Reviewed by the administrator',
+                name: 'Apple Inc',
+                scraperConfiguration: {
+                  headers: { Authorization: 'Bearer TOKEN' },
+                  mode: 'lazy',
+                  selector: '.price',
+                  url: 'https://example.org/get_price'
+                },
+                symbol: 'AAPL',
+                symbolMapping: { YAHOO: 'AAPL' },
+                watchedByCount: 7
+              },
+              comment: 'Bought on a dip',
+              currency: 'USD',
+              fee: 19.9,
+              quantity: 50,
+              type: 'BUY',
+              unitPrice: 220.79,
+              value: 11039.5,
+              valueInBaseCurrency: 10123.4
+            }
+          ],
+          count: 1
+        },
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toStrictEqual({
+      activities: [
+        {
+          assetProfile: {
+            comment: null,
+            name: 'Apple Inc',
+            scraperConfiguration: null,
+            symbol: 'AAPL',
+            symbolMapping: null,
+            watchedByCount: null
+          },
+          comment: null,
+          currency: 'USD',
+          fee: null,
+          quantity: null,
+          type: 'BUY',
+          unitPrice: 220.79,
+          value: null,
+          valueInBaseCurrency: null
+        }
+      ],
+      count: 1
+    });
+  });
+
+  it('should redact the latest activities of a public portfolio', () => {
+    expect(
+      redactPaths({
+        object: {
+          latestActivities: [
+            {
+              assetProfile: {
+                currency: 'USD',
+                dataSource: 'YAHOO',
+                name: 'Apple Inc',
+                symbol: 'AAPL'
+              },
+              currency: 'USD',
+              date: '2021-11-30T23:00:00.000Z',
+              fee: 19.9,
+              quantity: 50,
+              type: 'BUY',
+              unitPrice: 220.79,
+              value: 11039.5,
+              valueInBaseCurrency: 10123.4
+            }
+          ]
+        },
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toStrictEqual({
+      latestActivities: [
+        {
+          assetProfile: {
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Apple Inc',
+            symbol: 'AAPL'
+          },
+          currency: 'USD',
+          date: '2021-11-30T23:00:00.000Z',
+          fee: null,
+          quantity: null,
+          type: 'BUY',
+          unitPrice: 220.79,
+          value: null,
+          valueInBaseCurrency: null
+        }
+      ]
     });
   });
 });
