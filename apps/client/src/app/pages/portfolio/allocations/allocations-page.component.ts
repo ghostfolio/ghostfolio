@@ -12,7 +12,6 @@ import {
   getCountryName
 } from '@ghostfolio/common/helper';
 import {
-  AssetProfileIdentifier,
   HoldingWithParents,
   PortfolioDetails,
   PortfolioPosition,
@@ -22,7 +21,10 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import {
+  GfPortfolioProportionChartComponent,
+  PortfolioProportionChartClickEvent
+} from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTopHoldingsComponent } from '@ghostfolio/ui/top-holdings';
@@ -206,7 +208,9 @@ export class GfAllocationsPageComponent implements OnInit {
     this.initialize();
   }
 
-  protected onAccountChartClicked({ accountId }: { accountId: string }) {
+  protected onAccountChartClicked(event: PortfolioProportionChartClickEvent) {
+    const accountId = 'accountId' in event ? event.accountId : undefined;
+
     if (accountId && accountId !== UNKNOWN_KEY) {
       void this.router.navigate([], {
         queryParams: { accountId, accountDetailDialog: true }
@@ -214,10 +218,9 @@ export class GfAllocationsPageComponent implements OnInit {
     }
   }
 
-  protected onSymbolChartClicked({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
+  protected onSymbolChartClicked(event: PortfolioProportionChartClickEvent) {
+    const { dataSource, symbol } = 'symbol' in event ? event : {};
+
     if (dataSource && symbol) {
       void this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }

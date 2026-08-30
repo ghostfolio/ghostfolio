@@ -49,10 +49,11 @@ export class GfMarketsComponent implements OnInit {
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
 
-  protected readonly fearAndGreedIndexModeOptions: ToggleOption[] = [
-    { label: $localize`Stocks`, value: 'STOCKS' },
-    { label: $localize`Cryptocurrencies`, value: 'CRYPTOCURRENCIES' }
-  ];
+  protected readonly fearAndGreedIndexModeOptions: ToggleOption<FearAndGreedIndexMode>[] =
+    [
+      { label: $localize`Stocks`, value: 'STOCKS' },
+      { label: $localize`Cryptocurrencies`, value: 'CRYPTOCURRENCIES' }
+    ];
 
   protected readonly fearLabel = $localize`Fear`;
   protected readonly greedLabel = $localize`Greed`;

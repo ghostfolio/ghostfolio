@@ -94,7 +94,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingInvestmentTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
   protected readonly mode = signal<GroupBy>('month');
-  protected readonly modeOptions: ToggleOption[] = [
+  protected readonly modeOptions: ToggleOption<GroupBy>[] = [
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Yearly`, value: 'year' }
   ];
