@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Restricted the support for filtering to the public access to share the portfolio (experimental)
 - Improved the language localization for German (`de`)
+- Upgraded `uuid` from version `14.0.1` to `14.0.2`
 
 ### Fixed
 
