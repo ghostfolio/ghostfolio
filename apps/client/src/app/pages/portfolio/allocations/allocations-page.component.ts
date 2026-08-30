@@ -236,6 +236,22 @@ export class GfAllocationsPageComponent implements OnInit {
     );
   }
 
+  private convertValuesToPercentages({
+    total,
+    values
+  }: {
+    total: number;
+    values: { [key: string]: { value: number } };
+  }) {
+    if (!total) {
+      return;
+    }
+
+    for (const item of Object.values(values)) {
+      item.value = item.value / total;
+    }
+  }
+
   private extractCurrency({
     assetClass,
     assetSubClass,
@@ -269,6 +285,20 @@ export class GfAllocationsPageComponent implements OnInit {
     }
 
     return UNKNOWN_KEY;
+  }
+
+  private extractValue({
+    valueInBaseCurrency,
+    valueInPercentage
+  }: {
+    valueInBaseCurrency?: PortfolioPosition['valueInBaseCurrency'];
+    valueInPercentage?: PortfolioPosition['valueInPercentage'];
+  }) {
+    return (
+      (isNumber(valueInBaseCurrency)
+        ? valueInBaseCurrency
+        : valueInPercentage) ?? 0
+    );
   }
 
   private fetchPortfolioDetails() {
@@ -374,6 +404,8 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
+    let totalValueExcludingCashPositions = 0;
+
     for (const position of this.portfolioDetails.holdings) {
       const assetProfileIdentifier = getAssetProfileIdentifier(
         position.assetProfile
@@ -402,13 +434,12 @@ export class GfAllocationsPageComponent implements OnInit {
         // Prepare analysis data by continents, countries, holdings and sectors
         // except for cash
 
+        totalValueExcludingCashPositions += this.extractValue(position);
+
         if (position.assetProfile.countries.length > 0) {
           for (const country of position.assetProfile.countries) {
             const { code, continent, weight } = country;
-            const value =
-              (isNumber(position.valueInBaseCurrency)
-                ? position.valueInBaseCurrency
-                : position.valueInPercentage) ?? 0;
+            const value = this.extractValue(position);
 
             const continentData = this.continents[continent];
 
@@ -433,10 +464,7 @@ export class GfAllocationsPageComponent implements OnInit {
             }
           }
         } else {
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
+          const value = this.extractValue(position);
 
           const continentData = this.continents[UNKNOWN_KEY];
 
@@ -478,10 +506,7 @@ export class GfAllocationsPageComponent implements OnInit {
         if (position.assetProfile.sectors.length > 0) {
           for (const sector of position.assetProfile.sectors) {
             const { name, weight } = sector;
-            const value =
-              (isNumber(position.valueInBaseCurrency)
-                ? position.valueInBaseCurrency
-                : position.valueInPercentage) ?? 0;
+            const value = this.extractValue(position);
 
             const sectorData = this.sectors[name];
 
@@ -495,10 +520,7 @@ export class GfAllocationsPageComponent implements OnInit {
             }
           }
         } else {
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
+          const value = this.extractValue(position);
 
           const sectorData = this.sectors[UNKNOWN_KEY];
 
@@ -514,10 +536,7 @@ export class GfAllocationsPageComponent implements OnInit {
 
       const symbol = position.assetProfile.symbol;
 
-      const value =
-        (isNumber(position.valueInBaseCurrency)
-          ? position.valueInBaseCurrency
-          : position.valueInPercentage) ?? 0;
+      const value = this.extractValue(position);
 
       const symbolData = this.symbols[symbol];
 
@@ -534,6 +553,19 @@ export class GfAllocationsPageComponent implements OnInit {
           isClickable: canOpenHoldingDetail(position),
           name: position.assetProfile.name ?? ''
         };
+      }
+    }
+
+    if (this.showValuesInPercentage()) {
+      // The values are percentages of the whole portfolio, but the analysis
+      // data does not contain the cash positions. Convert the values to
+      // percentages of the included holdings, because the proportion charts
+      // present a total below 100% as unknown data.
+      for (const values of [this.continents, this.countries, this.sectors]) {
+        this.convertValuesToPercentages({
+          values,
+          total: totalValueExcludingCashPositions
+        });
       }
     }
 

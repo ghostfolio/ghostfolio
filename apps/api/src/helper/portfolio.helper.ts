@@ -16,7 +16,7 @@ export function convertValuesToPercentages({
   holdings: PortfolioDetails['holdings'];
   platforms: PortfolioDetails['platforms'];
 }) {
-  const totalInvestment = Object.values(holdings)
+  const totalInvestment = holdings
     .map(({ investment }) => {
       return investment;
     })
@@ -24,7 +24,7 @@ export function convertValuesToPercentages({
       return a + b;
     }, 0);
 
-  const totalValue = Object.values(holdings)
+  const totalValue = holdings
     .map(({ valueInBaseCurrency }) => {
       return valueInBaseCurrency;
     })
@@ -32,12 +32,12 @@ export function convertValuesToPercentages({
       return a + b;
     }, 0);
 
-  for (const portfolioPosition of Object.values(holdings)) {
-    portfolioPosition.investment = totalInvestment
-      ? portfolioPosition.investment / totalInvestment
+  for (const holding of holdings) {
+    holding.investment = totalInvestment
+      ? holding.investment / totalInvestment
       : 0;
-    portfolioPosition.valueInPercentage = totalValue
-      ? portfolioPosition.valueInBaseCurrency / totalValue
+    holding.valueInPercentage = totalValue
+      ? holding.valueInBaseCurrency / totalValue
       : 0;
   }
 
