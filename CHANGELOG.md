@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a tool to create an activity of the portfolio to the server of the Model Context Protocol (MCP) (experimental)
+
 ### Changed
 
+- Enabled the _Restricted view and manage_ permission for the access to share the portfolio (experimental)
 - Upgraded `uuid` from version `14.0.1` to `14.0.2`
 
 ## 3.64.0 - 2026-08-30
