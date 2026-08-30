@@ -23,6 +23,7 @@
     "strictInputAccessModifiers": true,
     "strictInputTypes": false,
     "strictLiteralTypes": true,
+    "strictNullInputTypes": true,
     "strictOutputEventTypes": true,
     "strictSafeNavigationTypes": false,
     // TODO: Enable stricter rules for this project
