@@ -99,8 +99,8 @@ export class GhostfolioMcpController {
       take
     }: z.infer<typeof GET_ACTIVITIES_PARAMETERS>
   ) {
-    let endDate: Date;
-    let startDate: Date;
+    let endDate: Date | undefined;
+    let startDate: Date | undefined;
 
     if (range) {
       ({ endDate, startDate } = getIntervalFromDateRange({

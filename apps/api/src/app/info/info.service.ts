@@ -47,8 +47,8 @@ export class InfoService {
 
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
-    let isReadOnlyMode: boolean;
-    let latestFearAndGreedStocksMarketDataPromise: Promise<MarketData>;
+    let isReadOnlyMode: boolean | undefined;
+    let latestFearAndGreedStocksMarketDataPromise: Promise<MarketData> | undefined;
 
     const globalPermissions: string[] = [];
 
