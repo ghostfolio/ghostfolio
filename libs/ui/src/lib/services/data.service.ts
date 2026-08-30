@@ -788,12 +788,6 @@ export class DataService {
               holding.assetProfile.assetSubClassLabel = translate(
                 holding.assetProfile.assetSubClass
               );
-
-              holding.valueInBaseCurrency = isNumber(
-                holding.valueInBaseCurrency
-              )
-                ? holding.valueInBaseCurrency
-                : holding.valueInPercentage;
             }
           }
 

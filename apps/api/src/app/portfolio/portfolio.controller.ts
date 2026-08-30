@@ -6,6 +6,7 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
+import { convertValuesToPercentages } from '@ghostfolio/api/helper/portfolio.helper';
 import { PerformanceLoggingInterceptor } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -15,6 +16,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { isCashPosition } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
   PortfolioDividendsResponse,
@@ -44,7 +46,7 @@ import {
   Version
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -128,38 +130,7 @@ export class PortfolioController {
       !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
       isRestrictedView(this.request.user)
     ) {
-      const totalInvestment = holdings
-        .map(({ investment }) => {
-          return investment;
-        })
-        .reduce((a, b) => a + b, 0);
-
-      const totalValue = holdings
-        .filter(({ assetProfile }) => {
-          return (
-            assetProfile.assetClass !== AssetClass.LIQUIDITY &&
-            assetProfile.assetSubClass !== AssetSubClass.CASH
-          );
-        })
-        .map(({ valueInBaseCurrency }) => {
-          return valueInBaseCurrency;
-        })
-        .reduce((a, b) => {
-          return a + b;
-        }, 0);
-
-      for (const holding of holdings) {
-        holding.investment = holding.investment / totalInvestment;
-        holding.valueInPercentage = holding.valueInBaseCurrency / totalValue;
-      }
-
-      for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
-        accounts[name].valueInPercentage = valueInBaseCurrency / totalValue;
-      }
-
-      for (const [name, { valueInBaseCurrency }] of Object.entries(platforms)) {
-        platforms[name].valueInPercentage = valueInBaseCurrency / totalValue;
-      }
+      convertValuesToPercentages({ accounts, holdings, platforms });
     }
 
     if (
@@ -208,23 +179,19 @@ export class PortfolioController {
         assetProfile: {
           ...portfolioPosition.assetProfile,
           assetClass:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetClass
               : undefined,
           assetClassLabel:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetClass === AssetClass.LIQUIDITY
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetClassLabel
               : undefined,
           assetSubClass:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetSubClass
               : undefined,
           assetSubClassLabel:
-            hasDetails ||
-            portfolioPosition.assetProfile.assetSubClass === AssetSubClass.CASH
+            hasDetails || isCashPosition(portfolioPosition.assetProfile)
               ? portfolioPosition.assetProfile.assetSubClassLabel
               : undefined,
           ...(hasDetails

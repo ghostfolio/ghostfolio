@@ -8,8 +8,10 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   canOpenHoldingDetail,
+  convertValuesToPercentagesOfTotal,
   getAssetProfileIdentifier,
-  getCountryName
+  getCountryName,
+  isCashPosition
 } from '@ghostfolio/common/helper';
 import {
   HoldingWithParents,
@@ -270,6 +272,20 @@ export class GfAllocationsPageComponent implements OnInit {
     return UNKNOWN_KEY;
   }
 
+  private extractValue({
+    valueInBaseCurrency,
+    valueInPercentage
+  }: {
+    valueInBaseCurrency?: PortfolioPosition['valueInBaseCurrency'];
+    valueInPercentage?: PortfolioPosition['valueInPercentage'];
+  }) {
+    return (
+      (isNumber(valueInBaseCurrency)
+        ? valueInBaseCurrency
+        : valueInPercentage) ?? 0
+    );
+  }
+
   private fetchPortfolioDetails() {
     return this.dataService.fetchPortfolioDetails({
       filters: this.userService.getFilters(),
@@ -373,6 +389,8 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
+    let totalValueExcludingCashPositions = 0;
+
     for (const position of this.portfolioDetails.holdings) {
       const assetProfileIdentifier = getAssetProfileIdentifier(
         position.assetProfile
@@ -397,110 +415,103 @@ export class GfAllocationsPageComponent implements OnInit {
           : (position.valueInBaseCurrency ?? 0)
       };
 
-      // Prepare analysis data by continents, countries, holdings and sectors
+      if (!isCashPosition(position.assetProfile)) {
+        // Prepare analysis data by continents, countries, holdings and sectors
+        // except for cash
 
-      if (position.assetProfile.countries.length > 0) {
-        for (const country of position.assetProfile.countries) {
-          const { code, continent, weight } = country;
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
+        totalValueExcludingCashPositions += this.extractValue(position);
 
-          const continentData = this.continents[continent];
+        if (position.assetProfile.countries.length > 0) {
+          for (const country of position.assetProfile.countries) {
+            const { code, continent, weight } = country;
+            const value = this.extractValue(position);
+
+            const continentData = this.continents[continent];
+
+            if (continentData) {
+              continentData.value += weight * value;
+            } else {
+              this.continents[continent] = {
+                name: translate(continent),
+                value: weight * value
+              };
+            }
+
+            const countryData = this.countries[code];
+
+            if (countryData) {
+              countryData.value += weight * value;
+            } else {
+              this.countries[code] = {
+                name: getCountryName({ code }),
+                value: weight * value
+              };
+            }
+          }
+        } else {
+          const value = this.extractValue(position);
+
+          const continentData = this.continents[UNKNOWN_KEY];
 
           if (continentData) {
-            continentData.value += weight * value;
-          } else {
-            this.continents[continent] = {
-              name: translate(continent),
-              value: weight * value
-            };
+            continentData.value += value;
           }
 
-          const countryData = this.countries[code];
+          const countryData = this.countries[UNKNOWN_KEY];
 
           if (countryData) {
-            countryData.value += weight * value;
-          } else {
-            this.countries[code] = {
-              name: getCountryName({ code }),
-              value: weight * value
-            };
+            countryData.value += value;
           }
         }
-      } else {
-        const value =
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0;
 
-        const continentData = this.continents[UNKNOWN_KEY];
+        if (position.assetProfile.holdings.length > 0) {
+          for (const {
+            allocationInPercentage,
+            name,
+            valueInBaseCurrency
+          } of position.assetProfile.holdings) {
+            const normalizedAssetName = this.normalizeAssetName(name);
+            const value = isNumber(valueInBaseCurrency)
+              ? valueInBaseCurrency
+              : allocationInPercentage * (position.valueInPercentage ?? 0);
 
-        if (continentData) {
-          continentData.value += value;
-        }
+            const holdingData = this.topHoldingsMap[normalizedAssetName];
 
-        const countryData = this.countries[UNKNOWN_KEY];
-
-        if (countryData) {
-          countryData.value += value;
-        }
-      }
-
-      if (position.assetProfile.holdings.length > 0) {
-        for (const {
-          allocationInPercentage,
-          name,
-          valueInBaseCurrency
-        } of position.assetProfile.holdings) {
-          const normalizedAssetName = this.normalizeAssetName(name);
-          const value = isNumber(valueInBaseCurrency)
-            ? valueInBaseCurrency
-            : allocationInPercentage * (position.valueInPercentage ?? 0);
-
-          const holdingData = this.topHoldingsMap[normalizedAssetName];
-
-          if (holdingData) {
-            holdingData.value += value;
-          } else {
-            this.topHoldingsMap[normalizedAssetName] = {
-              name,
-              value
-            };
+            if (holdingData) {
+              holdingData.value += value;
+            } else {
+              this.topHoldingsMap[normalizedAssetName] = {
+                name,
+                value
+              };
+            }
           }
         }
-      }
 
-      if (position.assetProfile.sectors.length > 0) {
-        for (const sector of position.assetProfile.sectors) {
-          const { name, weight } = sector;
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
+        if (position.assetProfile.sectors.length > 0) {
+          for (const sector of position.assetProfile.sectors) {
+            const { name, weight } = sector;
+            const value = this.extractValue(position);
 
-          const sectorData = this.sectors[name];
+            const sectorData = this.sectors[name];
+
+            if (sectorData) {
+              sectorData.value += weight * value;
+            } else {
+              this.sectors[name] = {
+                name: translate(name),
+                value: weight * value
+              };
+            }
+          }
+        } else {
+          const value = this.extractValue(position);
+
+          const sectorData = this.sectors[UNKNOWN_KEY];
 
           if (sectorData) {
-            sectorData.value += weight * value;
-          } else {
-            this.sectors[name] = {
-              name: translate(name),
-              value: weight * value
-            };
+            sectorData.value += value;
           }
-        }
-      } else {
-        const value =
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0;
-
-        const sectorData = this.sectors[UNKNOWN_KEY];
-
-        if (sectorData) {
-          sectorData.value += value;
         }
       }
 
@@ -510,10 +521,7 @@ export class GfAllocationsPageComponent implements OnInit {
 
       const symbol = position.assetProfile.symbol;
 
-      const value =
-        (isNumber(position.valueInBaseCurrency)
-          ? position.valueInBaseCurrency
-          : position.valueInPercentage) ?? 0;
+      const value = this.extractValue(position);
 
       const symbolData = this.symbols[symbol];
 
@@ -530,6 +538,17 @@ export class GfAllocationsPageComponent implements OnInit {
           isClickable: canOpenHoldingDetail(position),
           name: position.assetProfile.name ?? ''
         };
+      }
+    }
+
+    if (this.showValuesInPercentage()) {
+      // The values are percentages of the whole portfolio, but the analysis
+      // data does not contain the cash positions
+      for (const values of [this.continents, this.countries, this.sectors]) {
+        convertValuesToPercentagesOfTotal({
+          values,
+          total: totalValueExcludingCashPositions
+        });
       }
     }
 
