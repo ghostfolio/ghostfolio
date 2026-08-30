@@ -1,3 +1,4 @@
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScopeOfAccess } from '@ghostfolio/api/decorators/requires-scope-of-access.decorator';
@@ -12,12 +13,33 @@ import {
 } from '@ghostfolio/common/config';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
+import { isValidCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { UseFilters } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
 import { z } from 'zod';
+
+const CREATE_ACTIVITY_PARAMETERS = z.object({
+  activityType: z.enum(ActivityType).describe('The type of the activity'),
+  currency: z
+    .string()
+    .refine(isValidCurrencyCode)
+    .describe('The currency of the unit price and of the fee'),
+  date: z.iso.date().describe('The date of the activity'),
+  fee: z.number().min(0).optional().describe('The fee of the activity'),
+  holding: z
+    .object({
+      dataSource: z
+        .enum(DataSource)
+        .describe('The data source of the asset profile'),
+      symbol: z.string().describe('The symbol of the asset profile')
+    })
+    .describe('The asset profile of the activity'),
+  quantity: z.number().min(0).describe('The quantity of the activity'),
+  unitPrice: z.number().min(0).describe('The unit price of the activity')
+});
 
 const GET_ACCOUNTS_PARAMETERS = z.object({
   assetClasses: z
@@ -84,9 +106,61 @@ const GET_ACTIVITIES_PARAMETERS = z.object({
 @UseFilters(McpToolExceptionFilter)
 export class GhostfolioMcpController {
   public constructor(
+    private readonly activitiesService: ActivitiesService,
     private readonly aiService: AiService,
     private readonly apiService: ApiService
   ) {}
+
+  @RequiresScopeOfAccess(scopes.activityCreate)
+  @Tool({
+    annotations: {
+      destructiveHint: false,
+      idempotentHint: false,
+      openWorldHint: false,
+      readOnlyHint: false,
+      title: 'Create activity'
+    },
+    description:
+      'Creates an activity of the portfolio, for example a buy or a sell, and gives its identifier. A repeated call creates a further activity, hence get the activities first to avoid a duplicate.',
+    name: 'create-activity',
+    parameters: CREATE_ACTIVITY_PARAMETERS
+  })
+  public async createActivity(
+    @Impersonation() impersonation: ImpersonationContext,
+    @Payload()
+    {
+      activityType,
+      currency,
+      date,
+      fee,
+      holding,
+      quantity,
+      unitPrice
+    }: z.infer<typeof CREATE_ACTIVITY_PARAMETERS>
+  ) {
+    const { id } = await this.activitiesService.createActivityFromDto({
+      impersonation,
+      activityDto: {
+        currency,
+        date,
+        quantity,
+        unitPrice,
+        dataSource: holding.dataSource,
+        fee: fee ?? 0,
+        symbol: holding.symbol,
+        type: activityType
+      }
+    });
+
+    return {
+      content: [
+        {
+          text: `The activity has been created with the identifier ${id}.`,
+          type: 'text' as const
+        }
+      ]
+    };
+  }
 
   @RequiresScopeOfAccess(scopes.accountRead)
   @Tool({

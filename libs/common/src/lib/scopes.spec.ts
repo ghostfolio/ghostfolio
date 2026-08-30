@@ -248,7 +248,9 @@ describe('Scopes', () => {
       ).not.toContain(scopes.portfolioReadValues);
     });
 
-    it('Gives no write scope', () => {
+    // A write scope is permitted as soon as a tool uses it, hence this list
+    // grows with the tools of the controller
+    it('Gives the write scopes of the tools', () => {
       expect(
         getScopesOfAccess({
           scopes: [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS],
@@ -256,7 +258,7 @@ describe('Scopes', () => {
         }).filter((scope) => {
           return SCOPES_OF_WRITE_ACCESS.includes(scope as Scope);
         })
-      ).toEqual([]);
+      ).toEqual([scopes.activityCreate]);
     });
   });
 

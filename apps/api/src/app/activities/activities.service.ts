@@ -32,6 +32,8 @@ import {
   TAG_ID_DRAFT,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
+import { CreateOrderDto } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   canDeleteAssetProfile,
   getAssetProfileIdentifier,
@@ -45,9 +47,12 @@ import {
   EnhancedAssetProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
-import { OrderWithAccount } from '@ghostfolio/common/types';
+import type {
+  ImpersonationContext,
+  OrderWithAccount
+} from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
@@ -59,7 +64,8 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday } from 'date-fns';
+import { endOfToday, parseISO } from 'date-fns';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
@@ -332,6 +338,96 @@ export class ActivitiesService {
         userId: activity.userId
       })
     );
+
+    return activity;
+  }
+
+  public async createActivityFromDto({
+    activityDto,
+    impersonation: { authenticatedUserSubscription, userId, userSubscription }
+  }: {
+    activityDto: CreateOrderDto;
+    impersonation: ImpersonationContext;
+  }): Promise<Order> {
+    const subscription =
+      userSubscription?.type === SubscriptionType.Basic
+        ? userSubscription
+        : authenticatedUserSubscription;
+
+    try {
+      await this.dataProviderService.validateActivities({
+        subscription,
+        activitiesDto: [
+          {
+            currency: activityDto.currency,
+            dataSource: activityDto.dataSource,
+            symbol: activityDto.symbol,
+            type: activityDto.type
+          }
+        ],
+        maxActivitiesToImport: 1
+      });
+    } catch (error) {
+      throw new HttpException(
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [error.message]
+        },
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const currency = activityDto.currency;
+    const customCurrency = activityDto.customCurrency;
+    const dataSource = activityDto.dataSource;
+
+    if (customCurrency) {
+      activityDto.currency = customCurrency;
+
+      delete activityDto.customCurrency;
+    }
+
+    delete activityDto.dataSource;
+
+    const activity = await this.createActivity({
+      ...activityDto,
+      userId,
+      date: parseISO(activityDto.date),
+      SymbolProfile: {
+        connectOrCreate: {
+          create: {
+            currency,
+            dataSource,
+            symbol: activityDto.symbol
+          },
+          where: {
+            dataSource_symbol: {
+              dataSource,
+              symbol: activityDto.symbol
+            }
+          }
+        }
+      },
+      tags: activityDto.tags?.map((id) => {
+        return { id };
+      }),
+      user: { connect: { id: userId } }
+    });
+
+    if (dataSource && !isActivityInFuture({ date: activity.date })) {
+      // Gather symbol data in the background, if data source is set
+      // (not MANUAL) and the date is not in the future
+      this.dataGatheringService.gatherSymbols({
+        dataGatheringItems: [
+          {
+            dataSource,
+            date: activity.date,
+            symbol: activityDto.symbol
+          }
+        ],
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      });
+    }
 
     return activity;
   }

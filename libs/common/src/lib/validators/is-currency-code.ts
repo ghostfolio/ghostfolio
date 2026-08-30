@@ -1,12 +1,12 @@
 import { isDerivedCurrency } from '@ghostfolio/common/helper';
 
 import {
+  isISO4217CurrencyCode,
   registerDecorator,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface
 } from 'class-validator';
-import { isISO4217CurrencyCode } from 'class-validator';
 
 export function IsCurrencyCode(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
@@ -20,6 +20,17 @@ export function IsCurrencyCode(validationOptions?: ValidationOptions) {
   };
 }
 
+/**
+ * Tells whether the value is acceptable as a currency, which is a derived
+ * currency or a standard ISO 4217 code in upper case
+ */
+export function isValidCurrencyCode(aCurrency: string) {
+  return (
+    isDerivedCurrency(aCurrency) ||
+    (aCurrency === aCurrency?.toUpperCase() && isISO4217CurrencyCode(aCurrency))
+  );
+}
+
 @ValidatorConstraint({ async: false })
 export class IsExtendedCurrencyConstraint implements ValidatorConstraintInterface {
   public defaultMessage() {
@@ -27,14 +38,6 @@ export class IsExtendedCurrencyConstraint implements ValidatorConstraintInterfac
   }
 
   public validate(currency: string) {
-    // Return true if currency is a derived currency or a standard ISO 4217 code
-    return (
-      isDerivedCurrency(currency) ||
-      (this.isUpperCase(currency) && isISO4217CurrencyCode(currency))
-    );
-  }
-
-  private isUpperCase(aString: string) {
-    return aString === aString?.toUpperCase();
+    return isValidCurrencyCode(currency);
   }
 }

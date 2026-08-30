@@ -1,3 +1,4 @@
+import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { AiModule } from '@ghostfolio/api/app/endpoints/ai/ai.module';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -16,7 +17,7 @@ import { GhostfolioMcpController } from './mcp.controller';
 
 @Module({
   controllers: [GhostfolioMcpController],
-  imports: [AiModule, ApiModule, ConfigurationModule],
+  imports: [ActivitiesModule, AiModule, ApiModule, ConfigurationModule],
   providers: [
     {
       inject: [ConfigurationService],
@@ -26,7 +27,7 @@ import { GhostfolioMcpController } from './mcp.controller';
 
         return new McpStrategy({
           instructions:
-            'Ghostfolio is a wealth management application. The tools read the portfolio of the user who granted the access. They give no quantity and no monetary value (except the unit price of an activity).',
+            'Ghostfolio is a wealth management application. The tools read and change the portfolio of the user who granted the access. They give no quantity and no monetary value (except the unit price of an activity).',
           name: 'ghostfolio',
           title: 'Ghostfolio',
           transports: [
