@@ -2,11 +2,6 @@ import { PortfolioDetails } from '@ghostfolio/common/interfaces';
 
 import { Type as ActivityType } from '@prisma/client';
 
-/**
- * Replaces the absolute values of the accounts, holdings and platforms with
- * their share of the portfolio. Every share is relative to the same total,
- * which includes the cash positions, so that the shares add up to 100%.
- */
 export function convertValuesToPercentages({
   accounts,
   holdings,
