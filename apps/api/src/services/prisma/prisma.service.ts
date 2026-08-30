@@ -21,7 +21,7 @@ export class PrismaService
       connectionString: configService.get<string>('DATABASE_URL')
     });
 
-    let customLogLevels: LogLevel[];
+    let customLogLevels: LogLevel[] | undefined;
 
     try {
       customLogLevels = JSON.parse(
