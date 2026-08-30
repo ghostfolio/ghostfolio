@@ -66,8 +66,8 @@ export class ActivitiesController {
       tags
     }: ActivitiesFilterDto
   ): Promise<number> {
-    let endDate: Date;
-    let startDate: Date;
+    let endDate: Date | undefined;
+    let startDate: Date | undefined;
 
     if (range) {
       ({ endDate, startDate } = getIntervalFromDateRange({
@@ -139,8 +139,8 @@ export class ActivitiesController {
       take
     }: GetActivitiesDto
   ): Promise<ActivitiesResponse> {
-    let endDate: Date;
-    let startDate: Date;
+    let endDate: Date | undefined;
+    let startDate: Date | undefined;
 
     if (range) {
       ({ endDate, startDate } = getIntervalFromDateRange({

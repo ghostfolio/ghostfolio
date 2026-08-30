@@ -1166,7 +1166,7 @@ export abstract class PortfolioCalculator {
   private async initialize(attempt = 1) {
     const startTimeTotal = performance.now();
 
-    let cachedPortfolioSnapshot: PortfolioSnapshot;
+    let cachedPortfolioSnapshot: PortfolioSnapshot | undefined;
     let isCachedPortfolioSnapshotExpired = false;
     const portfolioSnapshotKey = this.redisCacheService.getPortfolioSnapshotKey(
       {

@@ -156,7 +156,7 @@ export class FetchService implements OnModuleInit {
         text
       ];
 
-      let rejectedBody: string;
+      let rejectedBody: string | undefined;
 
       for (const candidate of candidates) {
         if (typeof candidate !== 'string') {
