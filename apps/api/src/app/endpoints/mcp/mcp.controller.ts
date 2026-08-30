@@ -10,7 +10,7 @@ import {
   DEFAULT_LANGUAGE_CODE,
   MCP_MAX_ACTIVITIES
 } from '@ghostfolio/common/config';
-import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import { UseFilters } from '@nestjs/common';
@@ -95,17 +95,14 @@ export class GhostfolioMcpController {
       readOnlyHint: true,
       title: 'Get accounts'
     },
-    description: `Gives the accounts of the portfolio with these columns: ${AiService.getAccountsTableColumnNames(
-      { withValues: false }
-    ).join(
+    description: `Gives the accounts of the portfolio with these columns: ${AiService.getAccountsTableColumnNames().join(
       ', '
-    )}. More columns with a monetary value are added if the access grants to read them.`,
+    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it.`,
     name: 'get-accounts',
     parameters: GET_ACCOUNTS_PARAMETERS
   })
   public async getAccounts(
-    @Impersonation()
-    { scopes: scopesOfAccess, userId }: ImpersonationContext,
+    @Impersonation() { userId }: ImpersonationContext,
     @Payload()
     { assetClasses, holding }: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
   ) {
@@ -115,11 +112,7 @@ export class GhostfolioMcpController {
       filterBySymbol: holding?.symbol
     });
 
-    const table = await this.aiService.getAccountsTable({
-      filters,
-      userId,
-      withValues: hasScope(scopesOfAccess, scopes.portfolioReadValues)
-    });
+    const table = await this.aiService.getAccountsTable({ filters, userId });
 
     return { content: [{ text: table, type: 'text' as const }] };
   }
@@ -131,17 +124,15 @@ export class GhostfolioMcpController {
       readOnlyHint: true,
       title: 'Get activities'
     },
-    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${AiService.getActivitiesTableColumnNames(
-      { withValues: false }
-    ).join(
+    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${AiService.getActivitiesTableColumnNames().join(
       ', '
-    )}. More columns with a monetary value are added if the access grants to read them. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
+    )}. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
     name: 'get-activities',
     parameters: GET_ACTIVITIES_PARAMETERS
   })
   public async getActivities(
     @Impersonation()
-    { scopes: scopesOfAccess, userId, userSettings }: ImpersonationContext,
+    { userId, userSettings }: ImpersonationContext,
     @Payload()
     {
       activityTypes,
@@ -175,8 +166,7 @@ export class GhostfolioMcpController {
       userId,
       take: take ?? MCP_MAX_ACTIVITIES,
       types: activityTypes,
-      userCurrency: userSettings.baseCurrency,
-      withValues: hasScope(scopesOfAccess, scopes.portfolioReadValues)
+      userCurrency: userSettings.baseCurrency
     });
 
     return { content: [{ text: table, type: 'text' as const }] };

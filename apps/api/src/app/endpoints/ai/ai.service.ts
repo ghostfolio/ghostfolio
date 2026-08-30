@@ -7,7 +7,7 @@ import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, isAccountExcluded } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 
@@ -28,12 +28,10 @@ export class AiService {
     key:
       | 'ACTIVITIES_COUNT'
       | 'ALLOCATION_PERCENTAGE'
-      | 'BALANCE'
       | 'CURRENCY'
+      | 'EXCLUDED_FROM_ANALYSIS'
       | 'NAME'
-      | 'PLATFORM'
-      | 'VALUE';
-    requiresScopeToReadValues?: boolean;
+      | 'PLATFORM';
   } & ColumnDescriptor)[] = [
     { key: 'NAME', name: 'Name' },
     { key: 'CURRENCY', name: 'Currency' },
@@ -41,21 +39,10 @@ export class AiService {
     { align: 'right', key: 'ACTIVITIES_COUNT', name: 'Activities Count' },
     {
       align: 'right',
-      key: 'BALANCE',
-      name: 'Cash Balance',
-      requiresScopeToReadValues: true
-    },
-    {
-      align: 'right',
-      key: 'VALUE',
-      name: 'Value',
-      requiresScopeToReadValues: true
-    },
-    {
-      align: 'right',
       key: 'ALLOCATION_PERCENTAGE',
       name: 'Allocation in Percentage'
-    }
+    },
+    { key: 'EXCLUDED_FROM_ANALYSIS', name: 'Excluded from Analysis' }
   ];
 
   private static readonly ACTIVITIES_TABLE_COLUMN_DEFINITIONS: ({
@@ -63,39 +50,17 @@ export class AiService {
       | 'ACCOUNT'
       | 'CURRENCY'
       | 'DATE'
-      | 'FEE'
       | 'NAME'
-      | 'QUANTITY'
       | 'SYMBOL'
       | 'TYPE'
-      | 'UNIT_PRICE'
-      | 'VALUE';
-    requiresScopeToReadValues?: boolean;
+      | 'UNIT_PRICE';
   } & ColumnDescriptor)[] = [
     { key: 'DATE', name: 'Date' },
     { key: 'TYPE', name: 'Type' },
     { key: 'NAME', name: 'Name' },
     { key: 'SYMBOL', name: 'Symbol' },
     { key: 'CURRENCY', name: 'Currency' },
-    {
-      align: 'right',
-      key: 'QUANTITY',
-      name: 'Quantity',
-      requiresScopeToReadValues: true
-    },
     { align: 'right', key: 'UNIT_PRICE', name: 'Unit Price' },
-    {
-      align: 'right',
-      key: 'FEE',
-      name: 'Fee',
-      requiresScopeToReadValues: true
-    },
-    {
-      align: 'right',
-      key: 'VALUE',
-      name: 'Value',
-      requiresScopeToReadValues: true
-    },
     { key: 'ACCOUNT', name: 'Account' }
   ];
 
@@ -132,28 +97,14 @@ export class AiService {
     private readonly propertyService: PropertyService
   ) {}
 
-  public static getAccountsTableColumnNames({
-    withValues
-  }: {
-    withValues: boolean;
-  }) {
-    return AiService.getTableColumnDefinitions({
-      withValues,
-      columnDefinitions: AiService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS
-    }).map(({ name }) => {
+  public static getAccountsTableColumnNames() {
+    return AiService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS.map(({ name }) => {
       return name;
     });
   }
 
-  public static getActivitiesTableColumnNames({
-    withValues
-  }: {
-    withValues: boolean;
-  }) {
-    return AiService.getTableColumnDefinitions({
-      withValues,
-      columnDefinitions: AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS
-    }).map(({ name }) => {
+  public static getActivitiesTableColumnNames() {
+    return AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.map(({ name }) => {
       return name;
     });
   }
@@ -161,20 +112,6 @@ export class AiService {
   public static getHoldingsTableColumnNames() {
     return AiService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(({ name }) => {
       return name;
-    });
-  }
-
-  private static getTableColumnDefinitions<
-    T extends { requiresScopeToReadValues?: boolean }
-  >({
-    columnDefinitions,
-    withValues
-  }: {
-    columnDefinitions: readonly T[];
-    withValues: boolean;
-  }) {
-    return columnDefinitions.filter(({ requiresScopeToReadValues }) => {
-      return withValues || !requiresScopeToReadValues;
     });
   }
 
@@ -206,12 +143,10 @@ export class AiService {
 
   public async getAccountsTable({
     filters,
-    userId,
-    withValues
+    userId
   }: {
     filters?: Filter[];
     userId: string;
-    withValues: boolean;
   }) {
     const { accounts } =
       await this.portfolioService.getAccountsWithAggregations({
@@ -220,22 +155,16 @@ export class AiService {
         withExcludedAccounts: true
       });
 
-    const accountsTableColumnDefinitions = AiService.getTableColumnDefinitions({
-      withValues,
-      columnDefinitions: AiService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS
-    });
-
     const accountsTableRows = accounts.map(
       ({
         activitiesCount,
         allocationInPercentage,
-        balance,
         currency,
         name: label,
         platform,
-        value
+        tags
       }) => {
-        return accountsTableColumnDefinitions.reduce(
+        return AiService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS.reduce(
           (row, { key, name }) => {
             switch (key) {
               case 'ACTIVITIES_COUNT':
@@ -246,12 +175,12 @@ export class AiService {
                 row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
                 break;
 
-              case 'BALANCE':
-                row[name] = balance.toString();
-                break;
-
               case 'CURRENCY':
                 row[name] = currency ?? '';
+                break;
+
+              case 'EXCLUDED_FROM_ANALYSIS':
+                row[name] = isAccountExcluded({ tags }).toString();
                 break;
 
               case 'NAME':
@@ -260,10 +189,6 @@ export class AiService {
 
               case 'PLATFORM':
                 row[name] = platform?.name ?? '';
-                break;
-
-              case 'VALUE':
-                row[name] = value.toString();
                 break;
 
               default:
@@ -283,7 +208,7 @@ export class AiService {
     if (accountsTableRows.length > 0) {
       accountsSection.push(
         await this.getMarkdownTable({
-          columnDefinitions: accountsTableColumnDefinitions,
+          columnDefinitions: AiService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS,
           rows: accountsTableRows
         })
       );
@@ -302,8 +227,7 @@ export class AiService {
     take,
     types,
     userCurrency,
-    userId,
-    withValues
+    userId
   }: {
     endDate?: Date;
     filters?: Filter[];
@@ -313,7 +237,6 @@ export class AiService {
     types?: ActivityType[];
     userCurrency: string;
     userId: string;
-    withValues: boolean;
   }) {
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
@@ -330,25 +253,9 @@ export class AiService {
       withExcludedAccountsAndActivities: true
     });
 
-    const activitiesTableColumnDefinitions =
-      AiService.getTableColumnDefinitions({
-        withValues,
-        columnDefinitions: AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS
-      });
-
     const activitiesTableRows = activities.map(
-      ({
-        account,
-        assetProfile,
-        currency,
-        date,
-        fee,
-        quantity,
-        type,
-        unitPrice,
-        value
-      }) => {
-        return activitiesTableColumnDefinitions.reduce(
+      ({ account, assetProfile, currency, date, type, unitPrice }) => {
+        return AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.reduce(
           (row, { key, name }) => {
             switch (key) {
               case 'ACCOUNT':
@@ -363,16 +270,8 @@ export class AiService {
                 row[name] = format(date, DATE_FORMAT);
                 break;
 
-              case 'FEE':
-                row[name] = fee.toString();
-                break;
-
               case 'NAME':
                 row[name] = assetProfile.name ?? '';
-                break;
-
-              case 'QUANTITY':
-                row[name] = quantity.toString();
                 break;
 
               case 'SYMBOL':
@@ -385,10 +284,6 @@ export class AiService {
 
               case 'UNIT_PRICE':
                 row[name] = unitPrice.toString();
-                break;
-
-              case 'VALUE':
-                row[name] = value.toString();
                 break;
 
               default:
@@ -417,7 +312,7 @@ export class AiService {
       activitiesSection.push(
         '',
         await this.getMarkdownTable({
-          columnDefinitions: activitiesTableColumnDefinitions,
+          columnDefinitions: AiService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS,
           rows: activitiesTableRows
         })
       );
