@@ -16,8 +16,15 @@
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
     // TODO: Remove these subsets once strictTemplates is enabled
+    "strictAttributeTypes": true,
+    "strictContextGenerics": true,
+    "strictDomEventTypes": true,
+    "strictDomLocalRefTypes": true,
     "strictInputAccessModifiers": true,
+    "strictInputTypes": false,
     "strictLiteralTypes": true,
+    "strictOutputEventTypes": true,
+    "strictSafeNavigationTypes": false,
     // TODO: Enable stricter rules for this project
     "strictTemplates": false
   },
