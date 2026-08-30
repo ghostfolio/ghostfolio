@@ -159,7 +159,8 @@ export class ManualService implements DataProviderInterface {
         where: {
           symbol: {
             in: symbols
-          }
+          },
+          dataSource: this.getName()
         }
       });
 
