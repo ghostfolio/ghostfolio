@@ -23,9 +23,11 @@
           <mat-progress-bar
             mode="determinate"
             [title]="`${(
-              portfolioDetails?.summary?.filteredValueInPercentage * 100
+              (portfolioDetails?.summary?.filteredValueInPercentage ?? 0) * 100
             ).toFixed(2)}%`"
-            [value]="portfolioDetails?.summary?.filteredValueInPercentage * 100"
+            [value]="
+              (portfolioDetails?.summary?.filteredValueInPercentage ?? 0) * 100
+            "
           />
         </mat-card-content>
       </mat-card>
@@ -236,7 +238,7 @@
                 >Other Markets</gf-value
               >
             </div>
-            @if (markets?.[UNKNOWN_KEY]?.valueInPercentage > 0) {
+            @if ((markets?.[UNKNOWN_KEY]?.valueInPercentage ?? 0) > 0) {
               <div class="col-xs-12 col-md my-2">
                 <gf-value
                   i18n

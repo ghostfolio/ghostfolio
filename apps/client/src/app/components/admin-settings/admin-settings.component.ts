@@ -3,6 +3,7 @@ import { GfAdminTagComponent } from '@ghostfolio/client/components/admin-tag/adm
 import { GfDataProviderStatusComponent } from '@ghostfolio/client/components/data-provider-status/data-provider-status.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  DEFAULT_LOCALE,
   E_MAIL_LINE_BREAK,
   PROPERTY_API_KEY_GHOSTFOLIO
 } from '@ghostfolio/common/config';
@@ -97,6 +98,8 @@ export class GfAdminSettingsComponent implements OnInit {
   ].join(E_MAIL_LINE_BREAK)}`;
   public pricingUrl: string;
   public user: User;
+
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
 
   public constructor(
     private adminService: AdminService,

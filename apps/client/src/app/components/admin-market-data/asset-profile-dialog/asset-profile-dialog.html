@@ -71,10 +71,10 @@
         type="button"
         [disabled]="
           !canDeleteAssetProfile({
-            activitiesCount: assetProfile?.activitiesCount,
+            activitiesCount: assetProfile?.activitiesCount ?? 0,
             isBenchmark: isBenchmark,
             symbol: data.symbol,
-            watchedByCount: assetProfile?.watchedByCount
+            watchedByCount: assetProfile?.watchedByCount ?? 0
           })
         "
         (click)="
@@ -272,8 +272,8 @@
               >
             </div>
             @if (
-              assetProfile?.countries?.length > 0 ||
-              assetProfile?.sectors?.length > 0
+              (assetProfile?.countries?.length ?? 0) > 0 ||
+              (assetProfile?.sectors?.length ?? 0) > 0
             ) {
               @if (
                 assetProfile?.countries?.length === 1 &&

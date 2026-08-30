@@ -4,7 +4,11 @@ import {
   getValueAxisOptions,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import {
+  DEFAULT_COLOR_SCHEME,
+  primaryColorRgb,
+  secondaryColorRgb
+} from '@ghostfolio/common/config';
 import { getBackgroundColor, getLocale } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -52,7 +56,7 @@ export class GfLineChartComponent
 {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
-  @Input() colorScheme: ColorScheme;
+  @Input() colorScheme: ColorScheme = DEFAULT_COLOR_SCHEME;
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
