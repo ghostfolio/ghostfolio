@@ -20,6 +20,11 @@ import { McpController, Tool } from '@rekog/mcp-nest';
 import { z } from 'zod';
 
 const GET_ACCOUNTS_PARAMETERS = z.object({
+  accountIds: z
+    .array(z.string())
+    .min(1)
+    .optional()
+    .describe('The identifiers of the accounts to get'),
   assetClasses: z
     .array(z.enum(AssetClass))
     .min(1)
@@ -104,9 +109,14 @@ export class GhostfolioMcpController {
   public async getAccounts(
     @Impersonation() { userId }: ImpersonationContext,
     @Payload()
-    { assetClasses, holding }: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
+    {
+      accountIds,
+      assetClasses,
+      holding
+    }: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
   ) {
     const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts: accountIds?.join(','),
       filterByAssetClasses: assetClasses?.join(','),
       filterByDataSource: holding?.dataSource,
       filterBySymbol: holding?.symbol
