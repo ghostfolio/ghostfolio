@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "3.63.0",
+  "version": "3.64.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -150,7 +150,7 @@
     "uuid": "14.0.2",
     "yahoo-finance2": "4.0.2",
     "zod": "4.4.3",
-    "zone.js": "0.16.1"
+    "zone.js": "0.16.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "22.1.4",
