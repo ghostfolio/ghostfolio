@@ -383,8 +383,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     // Fall back to the unit price of the most recent BUY / SELL activity for
     // the chart dates before the first known market price of the symbol
-    let lastActivityUnitPrice: Big;
-    let lastMarketPrice: Big;
+    let lastActivityUnitPrice: Big | undefined;
+    let lastMarketPrice: Big | undefined;
 
     const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
 
@@ -416,7 +416,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
 
-      const unitPrice = marketPrice ?? lastMarketPrice ?? lastActivityUnitPrice;
+      const unitPrice =
+        marketPrice ??
+        lastMarketPrice ??
+        lastActivityUnitPrice ??
+        unitPriceAtEndDate;
 
       if (ordersOfDate?.length > 0) {
         for (const order of ordersOfDate) {
