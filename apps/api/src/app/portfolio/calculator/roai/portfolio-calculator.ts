@@ -381,9 +381,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       unitPrice: unitPriceAtEndDate
     });
 
-    // Fall back to the unit price at the end date for the chart dates before
-    // the first known market price of the symbol
-    let lastUnitPrice = unitPriceAtEndDate;
+    // Fall back to the unit price of the most recent BUY / SELL activity for
+    // the chart dates before the first known market price of the symbol
+    let lastActivityUnitPrice: Big;
+    let lastMarketPrice: Big;
 
     const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
 
@@ -403,11 +404,22 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         break;
       }
 
-      const unitPrice =
-        marketSymbolMap[dateString]?.[assetProfileIdentifier] ?? lastUnitPrice;
+      const ordersOfDate = ordersByDate[dateString];
 
-      if (ordersByDate[dateString]?.length > 0) {
-        for (const order of ordersByDate[dateString]) {
+      if (!lastMarketPrice && ordersOfDate?.length > 0) {
+        for (const { itemType, type, unitPrice } of ordersOfDate) {
+          if (!itemType && ['BUY', 'SELL'].includes(type)) {
+            lastActivityUnitPrice = unitPrice;
+          }
+        }
+      }
+
+      const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
+
+      const unitPrice = marketPrice ?? lastMarketPrice ?? lastActivityUnitPrice;
+
+      if (ordersOfDate?.length > 0) {
+        for (const order of ordersOfDate) {
           order.unitPriceFromMarketData = unitPrice;
         }
       } else if (dateString >= dateStringOfFirstActivity) {
@@ -423,7 +435,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         });
       }
 
-      lastUnitPrice = unitPrice;
+      if (marketPrice) {
+        lastMarketPrice = marketPrice;
+      }
     }
 
     // Sort orders so that the start and end placeholder order are at the correct
