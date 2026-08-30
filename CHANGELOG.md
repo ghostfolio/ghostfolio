@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `undici` from version `8.5.0` to `8.10.0`
 - Upgraded `uuid` from version `14.0.1` to `14.0.2`
 
 ## 3.64.0 - 2026-08-30
