@@ -8,7 +8,7 @@
         [baseCurrency]="user?.settings?.baseCurrency"
         [hasPermissionToDeleteAccount]="hasPermissionToDeleteAccount"
         [hasPermissionToUpdateAccount]="hasPermissionToUpdateAccount"
-        [locale]="user?.settings?.locale ?? ''"
+        [locale]="user?.settings?.locale ?? DEFAULT_LOCALE"
         [showActions]="
           (hasPermissionToDeleteAccount || hasPermissionToUpdateAccount) &&
           !user.settings.isRestrictedView

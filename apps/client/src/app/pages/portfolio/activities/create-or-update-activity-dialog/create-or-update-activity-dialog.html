@@ -309,7 +309,7 @@
     <gf-value
       class="flex-grow-1"
       [isCurrency]="true"
-      [locale]="data.user?.settings?.locale ?? ''"
+      [locale]="data.user?.settings?.locale ?? DEFAULT_LOCALE"
       [unit]="
         activityForm.get('currencyOfUnitPrice')?.value ??
         data.user?.settings?.baseCurrency
