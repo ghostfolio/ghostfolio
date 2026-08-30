@@ -56,20 +56,21 @@ export class GfHomeHoldingsComponent implements OnInit {
   protected holdings: PortfolioPosition[] | undefined;
   protected holdingsViewMode: HoldingsViewMode =
     GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE;
-  protected readonly holdingsViewModeOptions: ToggleOption[] = [
-    {
-      iconName: 'reorder-four-outline',
-      title: $localize`Table`,
-      value: 'TABLE'
-    },
-    {
-      iconName: 'grid-outline',
-      title: $localize`Chart`,
-      value: 'CHART'
-    }
-  ];
+  protected readonly holdingsViewModeOptions: ToggleOption<HoldingsViewMode>[] =
+    [
+      {
+        iconName: 'reorder-four-outline',
+        title: $localize`Table`,
+        value: 'TABLE'
+      },
+      {
+        iconName: 'grid-outline',
+        title: $localize`Chart`,
+        value: 'CHART'
+      }
+    ];
   protected holdingType: HoldingType = 'ACTIVE';
-  protected readonly holdingTypeOptions: ToggleOption[] = [
+  protected readonly holdingTypeOptions: ToggleOption<HoldingType>[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
