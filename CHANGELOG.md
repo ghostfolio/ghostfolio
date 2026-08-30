@@ -394,6 +394,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the platform logo to the platform selector in the create or update account dialog
 - Added the platform logo to the account selector in the create or update activity dialog
 - Extended the value component by an `isLoading` attribute to distinguish the loading state from redacted values
+- Added the option to enable data decimation in the line chart component
 
 ### Changed
 
