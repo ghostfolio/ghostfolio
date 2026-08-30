@@ -187,7 +187,7 @@ export class AiService {
                 break;
 
               case 'ID':
-                row[name] = id ?? '';
+                row[name] = id;
                 break;
 
               case 'NAME':

@@ -8,6 +8,7 @@ import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper'
 import {
   DATE_RANGES,
   DEFAULT_LANGUAGE_CODE,
+  MCP_MAX_ACCOUNTS,
   MCP_MAX_ACTIVITIES
 } from '@ghostfolio/common/config';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -21,10 +22,13 @@ import { z } from 'zod';
 
 const GET_ACCOUNTS_PARAMETERS = z.object({
   accountIds: z
-    .array(z.string())
+    .array(z.string().min(1))
     .min(1)
+    .max(MCP_MAX_ACCOUNTS)
     .optional()
-    .describe('The identifiers of the accounts to get'),
+    .describe(
+      `The identifiers of the accounts to get, at most ${MCP_MAX_ACCOUNTS}`
+    ),
   assetClasses: z
     .array(z.enum(AssetClass))
     .min(1)
