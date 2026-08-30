@@ -5,7 +5,12 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/common/dtos';
-import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
+import {
+  getCurrencyFromSymbol,
+  isCurrency,
+  parseDate,
+  resetHours
+} from '@ghostfolio/common/helper';
 import { MarketDataOfMarketsResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
@@ -25,7 +30,6 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, Prisma } from '@prisma/client';
-import { parseISO } from 'date-fns';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 @AllowDuringImpersonation()
@@ -101,7 +105,7 @@ export class MarketDataController {
         dataSource,
         marketPrice,
         symbol,
-        date: parseISO(date),
+        date: resetHours(parseDate(date)),
         state: 'CLOSE'
       })
     );
