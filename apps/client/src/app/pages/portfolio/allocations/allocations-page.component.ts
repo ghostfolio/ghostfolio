@@ -8,6 +8,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   canOpenHoldingDetail,
+  convertValuesToPercentagesOfTotal,
   getAssetProfileIdentifier,
   getCountryName,
   isCashPosition
@@ -234,22 +235,6 @@ export class GfAllocationsPageComponent implements OnInit {
       !hasScope(this.user?.scopes, scopes.portfolioReadValues) ||
       this.user?.settings?.isRestrictedView
     );
-  }
-
-  private convertValuesToPercentages({
-    total,
-    values
-  }: {
-    total: number;
-    values: { [key: string]: { value: number } };
-  }) {
-    if (!total) {
-      return;
-    }
-
-    for (const item of Object.values(values)) {
-      item.value = item.value / total;
-    }
   }
 
   private extractCurrency({
@@ -558,11 +543,9 @@ export class GfAllocationsPageComponent implements OnInit {
 
     if (this.showValuesInPercentage()) {
       // The values are percentages of the whole portfolio, but the analysis
-      // data does not contain the cash positions. Convert the values to
-      // percentages of the included holdings, because the proportion charts
-      // present a total below 100% as unknown data.
+      // data does not contain the cash positions
       for (const values of [this.continents, this.countries, this.sectors]) {
-        this.convertValuesToPercentages({
+        convertValuesToPercentagesOfTotal({
           values,
           total: totalValueExcludingCashPositions
         });

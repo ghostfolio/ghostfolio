@@ -232,6 +232,22 @@ export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }
 
+export function convertValuesToPercentagesOfTotal({
+  total,
+  values
+}: {
+  total: number;
+  values: { [key: string]: { value: number } };
+}) {
+  if (!total) {
+    return;
+  }
+
+  for (const item of Object.values(values)) {
+    item.value = item.value / total;
+  }
+}
+
 export function downloadAsFile({
   content,
   contentType = 'text/plain',
