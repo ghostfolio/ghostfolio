@@ -395,7 +395,7 @@ export class ImportService {
 
           if (!isDryRun) {
             const existingTag = await this.tagService.getTag({ id: tag.id });
-            let oldTagId: string;
+            let oldTagId: string | undefined;
 
             if (existingTag) {
               oldTagId = tag.id;
@@ -509,7 +509,7 @@ export class ImportService {
           'tags'
         ]);
 
-        let oldAccountId: string;
+        let oldAccountId: string | undefined;
         const platformId =
           platformIdMapping[account.platformId] ?? account.platformId;
 
@@ -596,7 +596,7 @@ export class ImportService {
         ]);
 
       for (const assetProfileWithMarketData of assetProfilesWithMarketDataDto) {
-        let assetProfileToCreate: Prisma.SymbolProfileCreateInput;
+        let assetProfileToCreate: Prisma.SymbolProfileCreateInput | undefined;
         let symbol = assetProfileWithMarketData.symbol;
 
         // Check if there is any existing asset profile

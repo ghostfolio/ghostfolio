@@ -659,7 +659,7 @@ export class AdminService {
   }
 
   private async countUsersWithAnalytics() {
-    let where: Prisma.UserWhereInput;
+    let where: Prisma.UserWhereInput | undefined;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       where = {

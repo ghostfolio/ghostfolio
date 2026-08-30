@@ -569,7 +569,10 @@ export class PortfolioService {
       });
     }
 
-    let streaks: PortfolioInvestmentsResponse['streaks'];
+    let streaks: PortfolioInvestmentsResponse['streaks'] = {
+      currentStreak: 0,
+      longestStreak: 0
+    };
 
     if (savingsRate) {
       streaks = this.getStreaks({
@@ -853,7 +856,7 @@ export class PortfolioService {
       ({ markets, marketsAdvanced } = this.getAggregatedMarkets(holdings));
     }
 
-    let summary: PortfolioSummary;
+    let summary: PortfolioSummary | undefined;
 
     if (withSummary) {
       summary = await this.getSummary({

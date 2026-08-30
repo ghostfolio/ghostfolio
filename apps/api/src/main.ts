@@ -46,7 +46,7 @@ async function bootstrap() {
 
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
-  let customLogLevels: LogLevel[];
+  let customLogLevels: LogLevel[] | undefined;
 
   try {
     customLogLevels = JSON.parse(
