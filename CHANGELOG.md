@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the tool to get the accounts of the portfolio in the server of the Model Context Protocol (MCP) to support the filtering by account (experimental)
+- Upgraded `undici` from version `8.5.0` to `8.10.0`
 - Upgraded `uuid` from version `14.0.1` to `14.0.2`
 
 ## 3.64.0 - 2026-08-30
