@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the support for the filters of the assistant to the accounts page
+- Added a tool to get the accounts of the portfolio to the server of the Model Context Protocol (MCP) (experimental)
 - Extended the `GET api/v1/account` endpoint by the filters `accounts`, `assetClasses` and `tags`
 
 ### Changed

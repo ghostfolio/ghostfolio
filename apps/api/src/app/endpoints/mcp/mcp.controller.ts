@@ -10,7 +10,7 @@ import {
   DEFAULT_LANGUAGE_CODE,
   MCP_MAX_ACTIVITIES
 } from '@ghostfolio/common/config';
-import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import { UseFilters } from '@nestjs/common';
@@ -18,6 +18,23 @@ import { Payload } from '@nestjs/microservices';
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
 import { z } from 'zod';
+
+const GET_ACCOUNTS_PARAMETERS = z.object({
+  assetClasses: z
+    .array(z.enum(AssetClass))
+    .min(1)
+    .optional()
+    .describe('The asset classes of the accounts to get'),
+  holding: z
+    .object({
+      dataSource: z
+        .enum(DataSource)
+        .describe('The data source of the asset profile'),
+      symbol: z.string().describe('The symbol of the asset profile')
+    })
+    .optional()
+    .describe('The asset profile of the accounts to get')
+});
 
 const GET_ACTIVITIES_PARAMETERS = z.object({
   activityTypes: z
@@ -71,6 +88,35 @@ export class GhostfolioMcpController {
     private readonly apiService: ApiService
   ) {}
 
+  @RequiresScopeOfAccess(scopes.accountRead)
+  @Tool({
+    annotations: {
+      openWorldHint: false,
+      readOnlyHint: true,
+      title: 'Get accounts'
+    },
+    description: `Gives the accounts of the portfolio with these columns: ${AiService.getAccountsTableColumnNames().join(
+      ', '
+    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it.`,
+    name: 'get-accounts',
+    parameters: GET_ACCOUNTS_PARAMETERS
+  })
+  public async getAccounts(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload()
+    { assetClasses, holding }: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
+  ) {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAssetClasses: assetClasses?.join(','),
+      filterByDataSource: holding?.dataSource,
+      filterBySymbol: holding?.symbol
+    });
+
+    const table = await this.aiService.getAccountsTable({ filters, userId });
+
+    return { content: [{ text: table, type: 'text' as const }] };
+  }
+
   @RequiresScopeOfAccess(scopes.activityRead)
   @Tool({
     annotations: {
@@ -78,17 +124,15 @@ export class GhostfolioMcpController {
       readOnlyHint: true,
       title: 'Get activities'
     },
-    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${AiService.getActivitiesTableColumnNames(
-      { withValues: false }
-    ).join(
+    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${AiService.getActivitiesTableColumnNames().join(
       ', '
-    )}. More columns with a monetary value are added if the access grants to read them. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
+    )}. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
     name: 'get-activities',
     parameters: GET_ACTIVITIES_PARAMETERS
   })
   public async getActivities(
     @Impersonation()
-    { scopes: scopesOfAccess, userId, userSettings }: ImpersonationContext,
+    { userId, userSettings }: ImpersonationContext,
     @Payload()
     {
       activityTypes,
@@ -122,8 +166,7 @@ export class GhostfolioMcpController {
       userId,
       take: take ?? MCP_MAX_ACTIVITIES,
       types: activityTypes,
-      userCurrency: userSettings.baseCurrency,
-      withValues: hasScope(scopesOfAccess, scopes.portfolioReadValues)
+      userCurrency: userSettings.baseCurrency
     });
 
     return { content: [{ text: table, type: 'text' as const }] };
