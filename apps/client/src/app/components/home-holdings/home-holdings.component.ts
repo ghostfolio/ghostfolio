@@ -1,4 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
   PortfolioPosition,
@@ -50,26 +51,29 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 export class GfHomeHoldingsComponent implements OnInit {
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
 
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
+
   protected deviceType: string;
   protected hasPermissionToAccessHoldingsChart: boolean;
   protected hasPermissionToCreateActivity: boolean;
   protected holdings: PortfolioPosition[] | undefined;
   protected holdingsViewMode: HoldingsViewMode =
     GfHomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE;
-  protected readonly holdingsViewModeOptions: ToggleOption[] = [
-    {
-      iconName: 'reorder-four-outline',
-      title: $localize`Table`,
-      value: 'TABLE'
-    },
-    {
-      iconName: 'grid-outline',
-      title: $localize`Chart`,
-      value: 'CHART'
-    }
-  ];
+  protected readonly holdingsViewModeOptions: ToggleOption<HoldingsViewMode>[] =
+    [
+      {
+        iconName: 'reorder-four-outline',
+        title: $localize`Table`,
+        value: 'TABLE'
+      },
+      {
+        iconName: 'grid-outline',
+        title: $localize`Chart`,
+        value: 'CHART'
+      }
+    ];
   protected holdingType: HoldingType = 'ACTIVE';
-  protected readonly holdingTypeOptions: ToggleOption[] = [
+  protected readonly holdingTypeOptions: ToggleOption<HoldingType>[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
   ];

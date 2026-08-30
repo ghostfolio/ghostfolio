@@ -37,11 +37,11 @@
       }
       <div [class.d-none]="holdingsViewMode !== 'TABLE'">
         <gf-holdings-table
-          [holdings]="holdings"
-          [locale]="user?.settings?.locale"
+          [holdings]="holdings ?? []"
+          [locale]="user?.settings?.locale ?? DEFAULT_LOCALE"
           (holdingClicked)="onHoldingClicked($event)"
         />
-        @if (hasPermissionToCreateActivity && holdings?.length > 0) {
+        @if (hasPermissionToCreateActivity && (holdings?.length ?? 0) > 0) {
           <div class="text-center">
             <a
               class="mt-3"

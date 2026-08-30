@@ -82,7 +82,7 @@ export class GfSymbolAutocompleteComponent
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
 
-  @Input() private includeIndices = false;
+  @Input() public includeIndices = false;
 
   public readonly control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];

@@ -30,9 +30,11 @@ export class AiService {
       | 'ALLOCATION_PERCENTAGE'
       | 'CURRENCY'
       | 'EXCLUDED_FROM_ANALYSIS'
+      | 'ID'
       | 'NAME'
       | 'PLATFORM';
   } & ColumnDescriptor)[] = [
+    { key: 'ID', name: 'Id' },
     { key: 'NAME', name: 'Name' },
     { key: 'CURRENCY', name: 'Currency' },
     { key: 'PLATFORM', name: 'Platform' },
@@ -160,6 +162,7 @@ export class AiService {
         activitiesCount,
         allocationInPercentage,
         currency,
+        id,
         name: label,
         platform,
         tags
@@ -181,6 +184,10 @@ export class AiService {
 
               case 'EXCLUDED_FROM_ANALYSIS':
                 row[name] = isAccountExcluded({ tags }).toString();
+                break;
+
+              case 'ID':
+                row[name] = id;
                 break;
 
               case 'NAME':

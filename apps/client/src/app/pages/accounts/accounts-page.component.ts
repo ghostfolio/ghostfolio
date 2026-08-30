@@ -1,5 +1,6 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { AccountsResponse, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -39,6 +40,8 @@ import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-ba
   templateUrl: './accounts-page.html'
 })
 export class GfAccountsPageComponent implements OnInit {
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
+
   protected accounts: AccountWithValue[] | undefined;
   protected activitiesCount = 0;
   protected hasPermissionToCreateAccount: boolean;

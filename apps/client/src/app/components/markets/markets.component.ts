@@ -1,4 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
   Benchmark,
@@ -43,16 +44,19 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './markets.html'
 })
 export class GfMarketsComponent implements OnInit {
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
+
   protected readonly benchmarks = signal<Benchmark[] | undefined>(undefined);
 
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
 
-  protected readonly fearAndGreedIndexModeOptions: ToggleOption[] = [
-    { label: $localize`Stocks`, value: 'STOCKS' },
-    { label: $localize`Cryptocurrencies`, value: 'CRYPTOCURRENCIES' }
-  ];
+  protected readonly fearAndGreedIndexModeOptions: ToggleOption<FearAndGreedIndexMode>[] =
+    [
+      { label: $localize`Stocks`, value: 'STOCKS' },
+      { label: $localize`Cryptocurrencies`, value: 'CRYPTOCURRENCIES' }
+    ];
 
   protected readonly fearLabel = $localize`Fear`;
   protected readonly greedLabel = $localize`Greed`;

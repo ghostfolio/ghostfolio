@@ -277,6 +277,7 @@ export const HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED =
 export const MAX_TOP_HOLDINGS = 50;
 
 export const MCP_ENDPOINT = '/mcp';
+export const MCP_MAX_ACCOUNTS = 50;
 export const MCP_MAX_ACTIVITIES = 100;
 export const MCP_REALM = 'Ghostfolio';
 
