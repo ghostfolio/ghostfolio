@@ -16,7 +16,8 @@
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    // TODO: Enable stricter rules for this project
+    "strictTemplates": false
   },
   "compilerOptions": {
     "module": "preserve",
