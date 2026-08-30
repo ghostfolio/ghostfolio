@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Restricted the support for filtering to the public access to share the portfolio (experimental)
 - Improved the language localization for German (`de`)
+- Upgraded `twitter-api-v2` from version `1.29.0` to `1.29.1`
 
 ### Fixed
 
