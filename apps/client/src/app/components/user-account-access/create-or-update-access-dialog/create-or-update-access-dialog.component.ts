@@ -7,6 +7,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   Scope,
   getAccessLevel,
+  getScopesOfAccess,
   getScopesOfAccessLevel,
   hasScope,
   scopes
@@ -190,11 +191,19 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-
-          // An access which is not granted to a user never exposes the
-          // monetary values and never changes data
-          this.accessForm.get('accessLevel')?.setValue('READ_RESTRICTED');
         }
+
+        // Narrow the permission to the scopes which the type permits, because
+        // an access which is not granted to a user never exposes the monetary
+        // values and a public access never changes data
+        this.accessForm.get('accessLevel')?.setValue(
+          getAccessLevel(
+            getScopesOfAccess({
+              scopes: getScopesOfAccessLevel(this.accessLevel),
+              type: accessType
+            })
+          )
+        );
 
         if (!canApplyFiltersToAccess({ type: accessType })) {
           this.accessForm.get('filters')?.setValue(null);

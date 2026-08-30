@@ -1,9 +1,12 @@
 import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
+import { ImportService } from '@ghostfolio/api/app/import/import.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScopeOfAccess } from '@ghostfolio/api/decorators/requires-scope-of-access.decorator';
 import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATE_RANGES,
@@ -11,13 +14,19 @@ import {
   MCP_MAX_ACCOUNTS,
   MCP_MAX_ACTIVITIES
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
+import { isCurrency } from '@ghostfolio/common/helper';
+import { Activity } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
-import { UseFilters } from '@nestjs/common';
-import { Payload } from '@nestjs/microservices';
+import { HttpException, UseFilters } from '@nestjs/common';
+import { Payload, RpcException } from '@nestjs/microservices';
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
+import { isValid, parseISO } from 'date-fns';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
 const GET_ACCOUNTS_PARAMETERS = z.object({
@@ -89,12 +98,58 @@ const GET_ACTIVITIES_PARAMETERS = z.object({
     .describe(`The number of activities to get, at most ${MCP_MAX_ACTIVITIES}`)
 });
 
+const IMPORT_ACTIVITIES_PARAMETERS = z.object({
+  activities: z
+    .array(
+      z.object({
+        accountId: z
+          .string()
+          .optional()
+          .describe('The identifier of the account of the activity'),
+        comment: z.string().optional().describe('The comment of the activity'),
+        currency: z
+          .string()
+          .refine(isCurrency)
+          .describe(
+            'The currency of the fee and of the unit price, as an ISO 4217 code'
+          ),
+        dataSource: z
+          .enum(DataSource)
+          .optional()
+          .describe('The data source of the asset profile'),
+        date: z
+          .string()
+          .refine((date) => {
+            return isValid(parseISO(date));
+          })
+          .describe(
+            'The date of the activity, as an ISO 8601 date or date and time'
+          ),
+        fee: z.number().min(0).describe('The fee of the activity'),
+        quantity: z.number().min(0).describe('The quantity of the activity'),
+        symbol: z.string().describe('The symbol of the asset profile'),
+        tags: z
+          .array(z.string())
+          .optional()
+          .describe('The identifiers of the tags of the activity'),
+        type: z.enum(ActivityType).describe('The type of the activity'),
+        unitPrice: z.number().min(0).describe('The unit price of the activity')
+      })
+    )
+    .min(1)
+    .max(MCP_MAX_ACTIVITIES)
+    .describe(`The activities to import, at most ${MCP_MAX_ACTIVITIES}`)
+});
+
 @McpController()
 @UseFilters(McpToolExceptionFilter)
 export class GhostfolioMcpController {
   public constructor(
     private readonly aiService: AiService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly configurationService: ConfigurationService,
+    private readonly importService: ImportService,
+    private readonly userService: UserService
   ) {}
 
   @RequiresScopeOfAccess(scopes.accountRead)
@@ -209,5 +264,73 @@ export class GhostfolioMcpController {
     });
 
     return { content: [{ text: prompt, type: 'text' as const }] };
+  }
+
+  @RequiresScopeOfAccess(scopes.activityCreate)
+  @Tool({
+    annotations: {
+      destructiveHint: false,
+      openWorldHint: false,
+      readOnlyHint: false,
+      title: 'Import activities'
+    },
+    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the activities which are skipped, because an equal activity exists already. At most ${MCP_MAX_ACTIVITIES} activities are imported per call.`,
+    name: 'import-activities',
+    parameters: IMPORT_ACTIVITIES_PARAMETERS
+  })
+  public async importActivities(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload() { activities }: z.infer<typeof IMPORT_ACTIVITIES_PARAMETERS>
+  ) {
+    const user = await this.userService.user({ id: userId });
+
+    if (!hasPermission(user?.permissions, permissions.createActivity)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    let maxActivitiesToImport = this.configurationService.get(
+      'MAX_ACTIVITIES_TO_IMPORT'
+    );
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      user.subscription?.type === SubscriptionType.Premium
+    ) {
+      maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
+    }
+
+    let importedActivities: Activity[];
+
+    try {
+      importedActivities = await this.importService.import({
+        maxActivitiesToImport,
+        user,
+        accountsWithBalancesDto: [],
+        activitiesDto: activities,
+        assetProfilesWithMarketDataDto: [],
+        platformsDto: [],
+        tagsDto: []
+      });
+    } catch (error) {
+      // The message of the import names the activity which is not valid and
+      // is written for the caller, hence it is passed on
+      throw new RpcException(
+        error instanceof Error
+          ? error.message
+          : getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+      );
+    }
+
+    const text = [
+      `Imported activities: ${importedActivities.length}`,
+      `Skipped duplicate activities: ${
+        activities.length - importedActivities.length
+      }`
+    ].join('\n');
+
+    return { content: [{ text, type: 'text' as const }] };
   }
 }
