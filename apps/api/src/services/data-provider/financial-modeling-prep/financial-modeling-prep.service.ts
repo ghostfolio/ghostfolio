@@ -726,11 +726,11 @@ export class FinancialModelingPrepService
   }
 
   private parseAssetClass(profile: any): {
-    assetClass: AssetClass;
-    assetSubClass: AssetSubClass;
+    assetClass: AssetClass | undefined;
+    assetSubClass: AssetSubClass | undefined;
   } {
-    let assetClass: AssetClass;
-    let assetSubClass: AssetSubClass;
+    let assetClass: AssetClass | undefined;
+    let assetSubClass: AssetSubClass | undefined;
 
     if (profile) {
       if (profile.isEtf) {

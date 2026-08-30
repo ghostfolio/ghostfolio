@@ -45,8 +45,8 @@ export class ExportController {
       tags
     }: GetExportDto
   ): Promise<ExportResponse> {
-    let endDate: Date;
-    let startDate: Date;
+    let endDate: Date | undefined;
+    let startDate: Date | undefined;
 
     if (range) {
       ({ endDate, startDate } = getIntervalFromDateRange({

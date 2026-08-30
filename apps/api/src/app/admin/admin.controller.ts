@@ -186,7 +186,7 @@ export class AdminController {
     @Param('symbol') symbol: string,
     @Query('range') dateRange: DateRange
   ): Promise<void> {
-    let date: Date;
+    let date: Date | undefined;
 
     if (dateRange) {
       const { startDate } = getIntervalFromDateRange({ dateRange });
