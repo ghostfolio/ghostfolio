@@ -29,13 +29,16 @@ interface AiServiceWithMarkdownTable {
 }
 
 function createAccount({
+  id = 'account-a-id',
   isExcluded = false,
   name = 'Account A'
 }: {
+  id?: string;
   isExcluded?: boolean;
   name?: string;
 } = {}) {
   return {
+    id,
     name,
     activitiesCount: 3,
     allocationInPercentage: 0.25,
@@ -86,6 +89,7 @@ describe('AiService', () => {
   describe('getAccountsTableColumnNames', () => {
     it('gives no column with a monetary value', () => {
       expect(AiService.getAccountsTableColumnNames()).toEqual([
+        'Id',
         'Name',
         'Currency',
         'Platform',
@@ -121,10 +125,20 @@ describe('AiService', () => {
       expect(result).not.toContain('2000');
     });
 
+    // The accountIds parameter of the tool takes the identifiers, hence the
+    // table has to give them
+    it('gives the identifier of an account', async () => {
+      const aiService = createAiService([createAccount()]);
+
+      const result = await aiService.getAccountsTable({ userId: 'user-id' });
+
+      expect(result).toContain('account-a-id');
+    });
+
     it('marks an account which is excluded from the analysis', async () => {
       const aiService = createAiService([
         createAccount({ isExcluded: true }),
-        createAccount({ name: 'Account B' })
+        createAccount({ id: 'account-b-id', name: 'Account B' })
       ]);
 
       const result = await aiService.getAccountsTable({ userId: 'user-id' });
@@ -132,7 +146,7 @@ describe('AiService', () => {
       const [rowOfAccountA, rowOfAccountB] = result
         .split('\n')
         .filter((line) => {
-          return line.startsWith('Account ');
+          return line.startsWith('account-');
         });
 
       expect(rowOfAccountA).toContain('true');
