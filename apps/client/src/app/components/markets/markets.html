@@ -52,7 +52,7 @@
       <gf-benchmark
         [benchmarks]="benchmarks()"
         [deviceType]="deviceType()"
-        [locale]="user?.settings?.locale || undefined"
+        [locale]="user?.settings?.locale ?? ''"
         [showSymbol]="false"
         [user]="user"
       />

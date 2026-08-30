@@ -37,8 +37,8 @@
       }
       <div [class.d-none]="holdingsViewMode !== 'TABLE'">
         <gf-holdings-table
-          [holdings]="holdings"
-          [locale]="user?.settings?.locale"
+          [holdings]="holdings ?? []"
+          [locale]="user?.settings?.locale ?? ''"
           (holdingClicked)="onHoldingClicked($event)"
         />
         @if (hasPermissionToCreateActivity && (holdings?.length ?? 0) > 0) {

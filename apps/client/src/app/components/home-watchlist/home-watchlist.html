@@ -13,7 +13,7 @@
         [benchmarks]="watchlist"
         [deviceType]="deviceType()"
         [hasPermissionToDeleteItem]="hasPermissionToDeleteWatchlistItem"
-        [locale]="user?.settings?.locale || undefined"
+        [locale]="user?.settings?.locale ?? ''"
         [showIcon]="true"
         [user]="user"
         (itemDeleted)="onWatchlistItemDeleted($event)"

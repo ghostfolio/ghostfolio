@@ -230,13 +230,13 @@
   <div class="mb-5 row">
     <div class="col">
       <h2 class="text-center" i18n>Platforms</h2>
-      <gf-admin-platform [locale]="user?.settings?.locale" />
+      <gf-admin-platform [locale]="user?.settings?.locale ?? ''" />
     </div>
   </div>
   <div class="row">
     <div class="col">
       <h2 class="text-center" i18n>Tags</h2>
-      <gf-admin-tag [locale]="user?.settings?.locale" />
+      <gf-admin-tag [locale]="user?.settings?.locale ?? ''" />
     </div>
   </div>
 </div>

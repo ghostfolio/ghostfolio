@@ -3,12 +3,12 @@
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Accounts</h1>
       <gf-accounts-table
-        [accounts]="accounts"
+        [accounts]="accounts ?? []"
         [activitiesCount]="activitiesCount"
         [baseCurrency]="user?.settings?.baseCurrency"
         [hasPermissionToDeleteAccount]="hasPermissionToDeleteAccount"
         [hasPermissionToUpdateAccount]="hasPermissionToUpdateAccount"
-        [locale]="user?.settings?.locale"
+        [locale]="user?.settings?.locale ?? ''"
         [showActions]="
           (hasPermissionToDeleteAccount || hasPermissionToUpdateAccount) &&
           !user.settings.isRestrictedView
