@@ -193,7 +193,8 @@ export class ActivitiesService {
       userId: data.userId
     });
 
-    let account: Prisma.AccountCreateNestedOneWithoutActivitiesInput | undefined;
+    let account:
+      Prisma.AccountCreateNestedOneWithoutActivitiesInput | undefined;
 
     if (data.accountId) {
       account = {
