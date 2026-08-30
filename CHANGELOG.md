@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `uuid` from version `14.0.1` to `14.0.2`
 
+### Fixed
+
+- Fixed the portfolio calculation for holdings with activities before the first known historical market price by falling back to the unit price of the activity
+
 ## 3.64.0 - 2026-08-30
 
 ### Added
