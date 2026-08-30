@@ -15,7 +15,9 @@
   ],
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
+    // TODO: Remove these subsets once strictTemplates is enabled
     "strictInputAccessModifiers": true,
+    "strictLiteralTypes": true,
     // TODO: Enable stricter rules for this project
     "strictTemplates": false
   },
