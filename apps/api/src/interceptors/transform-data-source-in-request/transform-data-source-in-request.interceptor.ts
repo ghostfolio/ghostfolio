@@ -1,4 +1,7 @@
-import { decodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
+import {
+  decodeDataSource,
+  getUnmaskedGhostfolioDataSource
+} from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
 import {
@@ -27,23 +30,19 @@ export class TransformDataSourceInRequestInterceptor<
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       if (request.body?.activities) {
-        const dataSourceGhostfolioDataProvider = this.configurationService.get(
+        const ghostfolioDataSources = this.configurationService.get(
           'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
-        )?.[0];
+        );
 
         request.body.activities = request.body.activities.map((activity) => {
           if (DataSource[activity.dataSource]) {
-            if (
-              activity.dataSource === 'GHOSTFOLIO' &&
-              dataSourceGhostfolioDataProvider
-            ) {
-              return {
-                ...activity,
-                dataSource: dataSourceGhostfolioDataProvider
-              };
-            } else {
-              return activity;
-            }
+            return {
+              ...activity,
+              dataSource: getUnmaskedGhostfolioDataSource({
+                ghostfolioDataSources,
+                dataSource: activity.dataSource
+              })
+            };
           } else {
             return {
               ...activity,

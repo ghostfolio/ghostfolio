@@ -15,7 +15,9 @@ import {
   getDate,
   getMonth,
   getYear,
+  isAfter,
   isMatch,
+  isValid,
   parse,
   parseISO,
   subDays
@@ -668,8 +670,25 @@ export function isUserSettingOfAuthenticatedUser(aKey: string) {
   );
 }
 
+export function isValidCurrencyCode(aCurrency: string) {
+  if (!aCurrency) {
+    return false;
+  }
+
+  return (
+    isDerivedCurrency(aCurrency) ||
+    (aCurrency === aCurrency.toUpperCase() && isISO4217CurrencyCode(aCurrency))
+  );
+}
+
 export function isValidCustomAssetProfileSymbol(aSymbol: string) {
   return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
+}
+
+export function isValidDateAfter1970(aDate: string) {
+  const date = parseISO(aDate);
+
+  return isValid(date) && isAfter(date, new Date(0));
 }
 
 /**

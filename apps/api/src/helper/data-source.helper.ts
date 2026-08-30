@@ -65,3 +65,15 @@ export function getMaskedGhostfolioDataSource({
     ? DataSource.GHOSTFOLIO
     : dataSource;
 }
+
+export function getUnmaskedGhostfolioDataSource({
+  dataSource,
+  ghostfolioDataSources
+}: {
+  dataSource?: DataSource;
+  ghostfolioDataSources: string[];
+}) {
+  return dataSource === DataSource.GHOSTFOLIO && ghostfolioDataSources?.[0]
+    ? (ghostfolioDataSources[0] as DataSource)
+    : dataSource;
+}

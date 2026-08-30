@@ -1,10 +1,12 @@
 import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
+import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScopeOfAccess } from '@ghostfolio/api/decorators/requires-scope-of-access.decorator';
 import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
+import { getUnmaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
@@ -14,8 +16,10 @@ import {
   MCP_MAX_ACCOUNTS,
   MCP_MAX_ACTIVITIES
 } from '@ghostfolio/common/config';
-import { SubscriptionType } from '@ghostfolio/common/enums';
-import { isCurrency } from '@ghostfolio/common/helper';
+import {
+  isValidCurrencyCode,
+  isValidDateAfter1970
+} from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -25,7 +29,6 @@ import { HttpException, UseFilters } from '@nestjs/common';
 import { Payload, RpcException } from '@nestjs/microservices';
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
-import { isValid, parseISO } from 'date-fns';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
@@ -98,20 +101,21 @@ const GET_ACTIVITIES_PARAMETERS = z.object({
     .describe(`The number of activities to get, at most ${MCP_MAX_ACTIVITIES}`)
 });
 
-const IMPORT_ACTIVITIES_PARAMETERS = z.object({
+export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
   activities: z
     .array(
       z.object({
         accountId: z
           .string()
+          .min(1)
           .optional()
           .describe('The identifier of the account of the activity'),
         comment: z.string().optional().describe('The comment of the activity'),
         currency: z
           .string()
-          .refine(isCurrency)
+          .refine(isValidCurrencyCode)
           .describe(
-            'The currency of the fee and of the unit price, as an ISO 4217 code'
+            'The currency of the fee and of the unit price, as an ISO 4217 code in upper case'
           ),
         dataSource: z
           .enum(DataSource)
@@ -119,19 +123,13 @@ const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           .describe('The data source of the asset profile'),
         date: z
           .string()
-          .refine((date) => {
-            return isValid(parseISO(date));
-          })
+          .refine(isValidDateAfter1970)
           .describe(
             'The date of the activity, as an ISO 8601 date or date and time'
           ),
         fee: z.number().min(0).describe('The fee of the activity'),
         quantity: z.number().min(0).describe('The quantity of the activity'),
-        symbol: z.string().describe('The symbol of the asset profile'),
-        tags: z
-          .array(z.string())
-          .optional()
-          .describe('The identifiers of the tags of the activity'),
+        symbol: z.string().min(1).describe('The symbol of the asset profile'),
         type: z.enum(ActivityType).describe('The type of the activity'),
         unitPrice: z.number().min(0).describe('The unit price of the activity')
       })
@@ -266,6 +264,12 @@ export class GhostfolioMcpController {
     return { content: [{ text: prompt, type: 'text' as const }] };
   }
 
+  /**
+   * The transport gives the tool to every client, because it filters the list
+   * of the tools by the scopes of request.user, which a request of an access
+   * never has. The guard refuses the call itself, hence the description names
+   * the permission which the access needs.
+   */
   @RequiresScopeOfAccess(scopes.activityCreate)
   @Tool({
     annotations: {
@@ -274,7 +278,7 @@ export class GhostfolioMcpController {
       readOnlyHint: false,
       title: 'Import activities'
     },
-    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the activities which are skipped, because an equal activity exists already. At most ${MCP_MAX_ACTIVITIES} activities are imported per call.`,
+    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. The access needs the permission "Restricted view and manage". At most ${MCP_MAX_ACTIVITIES} activities are imported per call. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
     name: 'import-activities',
     parameters: IMPORT_ACTIVITIES_PARAMETERS
   })
@@ -291,34 +295,37 @@ export class GhostfolioMcpController {
       );
     }
 
-    let maxActivitiesToImport = this.configurationService.get(
-      'MAX_ACTIVITIES_TO_IMPORT'
+    const ghostfolioDataSources = this.configurationService.get(
+      'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
     );
 
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      user.subscription?.type === SubscriptionType.Premium
-    ) {
-      maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
-    }
+    const activitiesDto = activities.map((activity) => {
+      return {
+        ...activity,
+        dataSource: getUnmaskedGhostfolioDataSource({
+          ghostfolioDataSources,
+          dataSource: activity.dataSource
+        })
+      };
+    });
 
     let importedActivities: Activity[];
 
     try {
       importedActivities = await this.importService.import({
-        maxActivitiesToImport,
+        activitiesDto,
         user,
         accountsWithBalancesDto: [],
-        activitiesDto: activities,
         assetProfilesWithMarketDataDto: [],
         platformsDto: [],
         tagsDto: []
       });
     } catch (error) {
-      // The message of the import names the activity which is not valid and
-      // is written for the caller, hence it is passed on
+      // The message of a validation names the activity which is not valid and
+      // is written for the caller, hence it is passed on. Every other error
+      // can carry internals of the application.
       throw new RpcException(
-        error instanceof Error
+        error instanceof ImportValidationError
           ? error.message
           : getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
       );
