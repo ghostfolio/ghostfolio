@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the server of the Model Context Protocol (MCP) by renaming the tool `get-portfolio` to `get-holdings`, by supporting the filtering in it and by supporting the filtering by account in the tool to get the activities (experimental)
+- Improved the list of the tools in the server of the Model Context Protocol (MCP) to give the tools of the scopes of the access only (experimental)
+- Improved the error handling of the tools in the server of the Model Context Protocol (MCP) (experimental)
+- Improved the validation of the account in the activities import to run before the asset profiles are resolved
+
 ## 3.65.0 - 2026-08-31
 
 ### Added
