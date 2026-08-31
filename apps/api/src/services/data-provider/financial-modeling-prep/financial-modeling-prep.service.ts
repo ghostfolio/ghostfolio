@@ -59,7 +59,8 @@ export class FinancialModelingPrepService
     Macau: 'MO',
     'Russian Federation': 'RU',
     'Taiwan (Province of China)': 'TW',
-    Turkey: 'TR'
+    Turkey: 'TR',
+    'Virgin Islands (British)': 'VG'
   };
 
   private readonly logger = new Logger(FinancialModelingPrepService.name);
