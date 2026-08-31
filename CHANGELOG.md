@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the cash positions being included in the by continent, by country and by sector charts on the allocations page and the public page
 - Fixed the allocations in percentage exceeding 100% in the restricted view
+- Fixed the portfolio calculation for holdings with activities before the first known historical market price by falling back to the unit price of the activity
 
 ## 3.64.0 - 2026-08-30
 
