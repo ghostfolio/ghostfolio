@@ -399,13 +399,11 @@ export class PortfolioController {
       filterByTags: tags
     });
 
-    const holdings = await this.portfolioService.getHoldings({
+    return this.portfolioService.getHoldings({
       filters,
       userId,
       dateRange: range
     });
-
-    return { holdings };
   }
 
   @Get('investments')
