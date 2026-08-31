@@ -12,7 +12,7 @@ export class IsAfter1970Constraint implements ValidatorConstraintInterface {
     return `date must be after ${format(new Date(0), 'yyyy')}`;
   }
 
-  public validate(aDate: string) {
+  public validate(aDate: Date | string) {
     return isValidDateAfter1970(aDate);
   }
 }

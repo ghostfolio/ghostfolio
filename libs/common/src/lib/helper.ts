@@ -685,8 +685,8 @@ export function isValidCustomAssetProfileSymbol(aSymbol: string) {
   return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
 }
 
-export function isValidDateAfter1970(aDate: string) {
-  const date = parseISO(aDate, { in: utc });
+export function isValidDateAfter1970(aDate: Date | string) {
+  const date = isString(aDate) ? parseISO(aDate, { in: utc }) : aDate;
 
   return isValid(date) && isAfter(date, new Date(0));
 }

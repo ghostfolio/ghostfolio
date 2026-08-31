@@ -436,6 +436,16 @@ describe('Helper', () => {
       expect(isValidDateAfter1970('0000-01-01')).toEqual(false);
     });
 
+    it('Date object', () => {
+      expect(
+        isValidDateAfter1970(new Date('2024-01-01T12:00:00.000Z'))
+      ).toEqual(true);
+    });
+
+    it('Date object of 1970', () => {
+      expect(isValidDateAfter1970(new Date(0))).toEqual(false);
+    });
+
     it('Date of 1970', () => {
       expect(isValidDateAfter1970('1970-01-01T00:00:00.000Z')).toEqual(false);
     });
