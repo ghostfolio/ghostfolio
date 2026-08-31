@@ -12,6 +12,8 @@ export interface ImpersonationContext {
   authenticatedUserSubscription?: UserWithSettings['subscription'];
   isActive: boolean;
   scopes: string[];
+  /** Only set if a guard needs the permissions of the impersonated user */
+  user?: UserWithSettings;
   userId: string;
   userSettings: UserSettings;
   userSubscription?: UserWithSettings['subscription'];

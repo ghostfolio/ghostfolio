@@ -1,7 +1,6 @@
 import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
-import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScopeOfAccess } from '@ghostfolio/api/decorators/requires-scope-of-access.decorator';
 import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
@@ -20,63 +19,60 @@ import {
   isValidCurrencyCode,
   isValidDateAfter1970
 } from '@ghostfolio/common/helper';
-import { Activity } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
-import { HttpException, Logger, UseFilters } from '@nestjs/common';
-import { Payload, RpcException } from '@nestjs/microservices';
+import { UseFilters } from '@nestjs/common';
+import { Payload } from '@nestjs/microservices';
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
 
+const ACCOUNT_IDS_PARAMETER = z
+  .array(z.string().min(1))
+  .min(1)
+  .max(MCP_MAX_ACCOUNTS)
+  .optional();
+
+const ASSET_CLASSES_PARAMETER = z.array(z.enum(AssetClass)).min(1).optional();
+
+const HOLDING_PARAMETER = z
+  .object({
+    dataSource: z
+      .enum(DataSource)
+      .describe('The data source of the asset profile'),
+    symbol: z.string().describe('The symbol of the asset profile')
+  })
+  .optional();
+
 const GET_ACCOUNTS_PARAMETERS = z.object({
-  accountIds: z
-    .array(z.string().min(1))
-    .min(1)
-    .max(MCP_MAX_ACCOUNTS)
-    .optional()
-    .describe(
-      `The identifiers of the accounts to get, at most ${MCP_MAX_ACCOUNTS}`
-    ),
-  assetClasses: z
-    .array(z.enum(AssetClass))
-    .min(1)
-    .optional()
-    .describe('The asset classes of the accounts to get'),
-  holding: z
-    .object({
-      dataSource: z
-        .enum(DataSource)
-        .describe('The data source of the asset profile'),
-      symbol: z.string().describe('The symbol of the asset profile')
-    })
-    .optional()
-    .describe('The asset profile of the accounts to get')
+  accountIds: ACCOUNT_IDS_PARAMETER.describe(
+    `The identifiers of the accounts to get, at most ${MCP_MAX_ACCOUNTS}`
+  ),
+  assetClasses: ASSET_CLASSES_PARAMETER.describe(
+    'The asset classes of the accounts to get'
+  ),
+  holding: HOLDING_PARAMETER.describe(
+    'The asset profile of the accounts to get'
+  )
 });
 
 const GET_ACTIVITIES_PARAMETERS = z.object({
+  accountIds: ACCOUNT_IDS_PARAMETER.describe(
+    `The identifiers of the accounts of the activities to get, at most ${MCP_MAX_ACCOUNTS}`
+  ),
   activityTypes: z
     .array(z.enum(ActivityType))
     .min(1)
     .optional()
     .describe('The types of the activities to get'),
-  assetClasses: z
-    .array(z.enum(AssetClass))
-    .min(1)
-    .optional()
-    .describe('The asset classes of the activities to get'),
-  holding: z
-    .object({
-      dataSource: z
-        .enum(DataSource)
-        .describe('The data source of the asset profile'),
-      symbol: z.string().describe('The symbol of the asset profile')
-    })
-    .optional()
-    .describe('The asset profile of the activities to get'),
+  assetClasses: ASSET_CLASSES_PARAMETER.describe(
+    'The asset classes of the activities to get'
+  ),
+  holding: HOLDING_PARAMETER.describe(
+    'The asset profile of the activities to get'
+  ),
   range: z
     .string()
     .regex(DATE_RANGE_PATTERN)
@@ -99,6 +95,18 @@ const GET_ACTIVITIES_PARAMETERS = z.object({
     .max(MCP_MAX_ACTIVITIES)
     .optional()
     .describe(`The number of activities to get, at most ${MCP_MAX_ACTIVITIES}`)
+});
+
+const GET_HOLDINGS_PARAMETERS = z.object({
+  accountIds: ACCOUNT_IDS_PARAMETER.describe(
+    `The identifiers of the accounts of the holdings to get, at most ${MCP_MAX_ACCOUNTS}`
+  ),
+  assetClasses: ASSET_CLASSES_PARAMETER.describe(
+    'The asset classes of the holdings to get'
+  ),
+  holding: HOLDING_PARAMETER.describe(
+    'The asset profile of the holdings to get'
+  )
 });
 
 export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
@@ -139,17 +147,22 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
     .describe(`The activities to import, at most ${MCP_MAX_ACTIVITIES}`)
 });
 
+/**
+ * Gives the result of a tool, which is a text in every case, because the tools
+ * present tables of the markdown format
+ */
+function getTextContent(text: string) {
+  return { content: [{ text, type: 'text' as const }] };
+}
+
 @McpController()
 @UseFilters(McpToolExceptionFilter)
 export class GhostfolioMcpController {
-  private readonly logger = new Logger(GhostfolioMcpController.name);
-
   public constructor(
     private readonly aiService: AiService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
-    private readonly importService: ImportService,
-    private readonly userService: UserService
+    private readonly importService: ImportService
   ) {}
 
   @RequiresScopeOfAccess(scopes.accountRead)
@@ -174,16 +187,16 @@ export class GhostfolioMcpController {
       holding
     }: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
   ) {
-    const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts: accountIds?.join(','),
-      filterByAssetClasses: assetClasses?.join(','),
-      filterByDataSource: holding?.dataSource,
-      filterBySymbol: holding?.symbol
+    const filters = this.apiService.buildFilters({
+      accountIds,
+      assetClasses,
+      dataSource: holding?.dataSource,
+      symbol: holding?.symbol
     });
 
     const table = await this.aiService.getAccountsTable({ filters, userId });
 
-    return { content: [{ text: table, type: 'text' as const }] };
+    return getTextContent(table);
   }
 
   @RequiresScopeOfAccess(scopes.activityRead)
@@ -204,6 +217,7 @@ export class GhostfolioMcpController {
     { userId, userSettings }: ImpersonationContext,
     @Payload()
     {
+      accountIds,
       activityTypes,
       assetClasses,
       holding,
@@ -221,10 +235,11 @@ export class GhostfolioMcpController {
       }));
     }
 
-    const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAssetClasses: assetClasses?.join(','),
-      filterByDataSource: holding?.dataSource,
-      filterBySymbol: holding?.symbol
+    const filters = this.apiService.buildFilters({
+      accountIds,
+      assetClasses,
+      dataSource: holding?.dataSource,
+      symbol: holding?.symbol
     });
 
     const table = await this.aiService.getActivitiesTable({
@@ -238,7 +253,7 @@ export class GhostfolioMcpController {
       userCurrency: userSettings.baseCurrency
     });
 
-    return { content: [{ text: table, type: 'text' as const }] };
+    return getTextContent(table);
   }
 
   @RequiresScopeOfAccess(scopes.portfolioRead)
@@ -246,32 +261,40 @@ export class GhostfolioMcpController {
     annotations: {
       openWorldHint: false,
       readOnlyHint: true,
-      title: 'Get portfolio'
+      title: 'Get holdings'
     },
-    description: `Gives the holdings of the portfolio with these columns: ${AiService.getHoldingsTableColumnNames().join(
+    description: `Gives the holdings of the portfolio, the largest first, with these columns: ${AiService.getHoldingsTableColumnNames().join(
       ', '
-    )}.`,
-    name: 'get-portfolio'
+    )}. The allocation in percentage is relative to the holdings of the result, hence the parameters change it.`,
+    name: 'get-holdings',
+    parameters: GET_HOLDINGS_PARAMETERS
   })
-  public async getPortfolio(
-    @Impersonation() { userId, userSettings }: ImpersonationContext
+  public async getHoldings(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload()
+    {
+      accountIds,
+      assetClasses,
+      holding
+    }: z.infer<typeof GET_HOLDINGS_PARAMETERS>
   ) {
-    const prompt = await this.aiService.getPrompt({
-      userId,
-      languageCode: DEFAULT_LANGUAGE_CODE,
-      mode: 'portfolio',
-      userCurrency: userSettings.baseCurrency
+    const filters = this.apiService.buildFilters({
+      accountIds,
+      assetClasses,
+      dataSource: holding?.dataSource,
+      symbol: holding?.symbol
     });
 
-    return { content: [{ text: prompt, type: 'text' as const }] };
+    const table = await this.aiService.getHoldingsTable({
+      filters,
+      userId,
+      languageCode: DEFAULT_LANGUAGE_CODE
+    });
+
+    return getTextContent(table);
   }
 
-  /**
-   * The transport gives the tool to every client, because it filters the list
-   * of the tools by the scopes of request.user, which a request of an access
-   * never has. The guard refuses the call itself, hence the description names
-   * the permission which the access needs.
-   */
+  @HasPermission(permissions.createActivity)
   @RequiresScopeOfAccess(scopes.activityCreate)
   @Tool({
     annotations: {
@@ -285,18 +308,9 @@ export class GhostfolioMcpController {
     parameters: IMPORT_ACTIVITIES_PARAMETERS
   })
   public async importActivities(
-    @Impersonation() { userId }: ImpersonationContext,
+    @Impersonation() { user }: ImpersonationContext,
     @Payload() { activities }: z.infer<typeof IMPORT_ACTIVITIES_PARAMETERS>
   ) {
-    const user = await this.userService.user({ id: userId });
-
-    if (!hasPermission(user?.permissions, permissions.createActivity)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const ghostfolioDataSources = this.configurationService.get(
       'ENABLE_FEATURE_SUBSCRIPTION'
     )
@@ -313,40 +327,24 @@ export class GhostfolioMcpController {
       };
     });
 
-    let importedActivities: Activity[];
+    // The McpToolExceptionFilter decides which message reaches the caller,
+    // hence an error is not handled here
+    const importedActivities = await this.importService.import({
+      activitiesDto,
+      user,
+      accountsWithBalancesDto: [],
+      assetProfilesWithMarketDataDto: [],
+      platformsDto: [],
+      tagsDto: []
+    });
 
-    try {
-      importedActivities = await this.importService.import({
-        activitiesDto,
-        user,
-        accountsWithBalancesDto: [],
-        assetProfilesWithMarketDataDto: [],
-        platformsDto: [],
-        tagsDto: []
-      });
-    } catch (error) {
-      // The message of a validation names the activity which is not valid and
-      // is written for the caller, hence it is passed on
-      if (error instanceof ImportValidationError) {
-        throw new RpcException(error.message);
-      }
-
-      // Every other message can carry internals of the application, hence it
-      // is written to the log and the reason phrase is passed on instead
-      this.logger.error(error);
-
-      throw new RpcException(
-        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
-      );
-    }
-
-    const text = [
-      `Imported activities: ${importedActivities.length}`,
-      `Skipped duplicate activities: ${
-        activities.length - importedActivities.length
-      }`
-    ].join('\n');
-
-    return { content: [{ text, type: 'text' as const }] };
+    return getTextContent(
+      [
+        `Imported activities: ${importedActivities.length}`,
+        `Skipped duplicate activities: ${
+          activities.length - importedActivities.length
+        }`
+      ].join('\n')
+    );
   }
 }

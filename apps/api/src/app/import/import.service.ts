@@ -741,19 +741,6 @@ export class ImportService {
       }
     }
 
-    const assetProfiles = await this.dataProviderService.validateActivities({
-      activitiesDto,
-      assetProfilesWithMarketDataDto,
-      maxActivitiesToImport,
-      subscription: user.subscription
-    });
-
-    const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
-      activitiesDto,
-      userCurrency,
-      userId: user.id
-    });
-
     const accounts = (await this.accountService.getAccounts(user.id)).map(
       ({ id, name }) => {
         return { id, name };
@@ -777,8 +764,9 @@ export class ImportService {
         });
     }
 
-    // Validate the accounts before any activity is created, since an account
-    // which does not belong to the user is dropped without a notice otherwise
+    // Validate the accounts before the asset profiles are resolved, since an
+    // account which does not belong to the user is dropped without a notice
+    // otherwise and the resolution spends requests of the data provider
     for (const [index, { accountId }] of activitiesDto.entries()) {
       if (
         accountId &&
@@ -791,6 +779,19 @@ export class ImportService {
         );
       }
     }
+
+    const assetProfiles = await this.dataProviderService.validateActivities({
+      activitiesDto,
+      assetProfilesWithMarketDataDto,
+      maxActivitiesToImport,
+      subscription: user.subscription
+    });
+
+    const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
+      activitiesDto,
+      userCurrency,
+      userId: user.id
+    });
 
     const tags = (await this.tagService.getTagsForUser(user.id)).map(
       ({ id, name }) => {

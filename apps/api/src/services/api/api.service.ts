@@ -4,34 +4,25 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ApiService {
-  public buildFiltersFromQueryParams({
-    filterByAccounts,
-    filterByAssetClasses,
-    filterByAssetSubClasses,
-    filterByDataSource,
-    filterByHoldingType,
-    filterBySearchQuery,
-    filterBySymbol,
-    filterByTags
+  public buildFilters({
+    accountIds = [],
+    assetClasses = [],
+    assetSubClasses = [],
+    dataSource,
+    holdingType,
+    searchQuery,
+    symbol,
+    tagIds = []
   }: {
-    filterByAccounts?: string;
-    filterByAssetClasses?: string;
-    filterByAssetSubClasses?: string;
-    filterByDataSource?: string;
-    filterByHoldingType?: string;
-    filterBySearchQuery?: string;
-    filterBySymbol?: string;
-    filterByTags?: string;
+    accountIds?: string[];
+    assetClasses?: string[];
+    assetSubClasses?: string[];
+    dataSource?: string;
+    holdingType?: string;
+    searchQuery?: string;
+    symbol?: string;
+    tagIds?: string[];
   }): Filter[] {
-    const accountIds = filterByAccounts?.split(',') ?? [];
-    const assetClasses = filterByAssetClasses?.split(',') ?? [];
-    const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
-    const dataSource = filterByDataSource;
-    const holdingType = filterByHoldingType;
-    const searchQuery = filterBySearchQuery?.toLowerCase();
-    const symbol = filterBySymbol;
-    const tagIds = filterByTags?.split(',') ?? [];
-
     const filters = [
       ...accountIds.map((accountId) => {
         return {
@@ -45,9 +36,9 @@ export class ApiService {
           type: 'ASSET_CLASS'
         } as Filter;
       }),
-      ...assetSubClasses.map((assetClass) => {
+      ...assetSubClasses.map((assetSubClass) => {
         return {
-          id: assetClass,
+          id: assetSubClass,
           type: 'ASSET_SUB_CLASS'
         } as Filter;
       }),
@@ -75,7 +66,7 @@ export class ApiService {
 
     if (searchQuery) {
       filters.push({
-        id: searchQuery,
+        id: searchQuery.toLowerCase(),
         type: 'SEARCH_QUERY'
       });
     }
@@ -88,6 +79,41 @@ export class ApiService {
     }
 
     return filters;
+  }
+
+  /**
+   * Builds the filters of the query parameters of a route, which carry the
+   * identifiers as a list separated by commas
+   */
+  public buildFiltersFromQueryParams({
+    filterByAccounts,
+    filterByAssetClasses,
+    filterByAssetSubClasses,
+    filterByDataSource,
+    filterByHoldingType,
+    filterBySearchQuery,
+    filterBySymbol,
+    filterByTags
+  }: {
+    filterByAccounts?: string;
+    filterByAssetClasses?: string;
+    filterByAssetSubClasses?: string;
+    filterByDataSource?: string;
+    filterByHoldingType?: string;
+    filterBySearchQuery?: string;
+    filterBySymbol?: string;
+    filterByTags?: string;
+  }): Filter[] {
+    return this.buildFilters({
+      accountIds: filterByAccounts?.split(','),
+      assetClasses: filterByAssetClasses?.split(','),
+      assetSubClasses: filterByAssetSubClasses?.split(','),
+      dataSource: filterByDataSource,
+      holdingType: filterByHoldingType,
+      searchQuery: filterBySearchQuery,
+      symbol: filterBySymbol,
+      tagIds: filterByTags?.split(',')
+    });
   }
 
   public buildFiltersFromUserSettings({

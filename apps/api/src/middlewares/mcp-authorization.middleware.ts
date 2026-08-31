@@ -21,7 +21,10 @@ export function createMcpAuthorizationMiddleware(
   impersonationService: ImpersonationService
 ) {
   return async (
-    request: Request & { impersonationOfBearerToken?: ImpersonationContext },
+    request: Request & {
+      impersonationOfBearerToken?: ImpersonationContext;
+      user?: { scopes: string[] };
+    },
     response: Response,
     next: NextFunction
   ) => {
@@ -55,6 +58,11 @@ export function createMcpAuthorizationMiddleware(
     // The guard of the route reads the resolved context from the same request,
     // hence the access is looked up once
     request.impersonationOfBearerToken = impersonation;
+
+    // The transport lists the tools which the scopes of request.user permit,
+    // hence the client sees the tools of its access only. A tool declares its
+    // scopes with the RequiresScopeOfAccess decorator.
+    request.user = { scopes: impersonation.scopes };
 
     return next();
   };

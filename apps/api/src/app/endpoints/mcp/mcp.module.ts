@@ -18,6 +18,8 @@ import { GhostfolioMcpController } from './mcp.controller';
 
 @Module({
   controllers: [GhostfolioMcpController],
+  // UserModule provides the UserService of the AccessPermissionGuard, which
+  // the RequiresScopeOfAccess decorator of a tool applies
   imports: [AiModule, ApiModule, ConfigurationModule, ImportModule, UserModule],
   providers: [
     {

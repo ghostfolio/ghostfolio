@@ -1,6 +1,5 @@
-import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
@@ -12,10 +11,7 @@ import type {
   UserWithSettings
 } from '@ghostfolio/common/types';
 
-import { HttpException, Logger } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 import { DataSource, Type as ActivityType } from '@prisma/client';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import {
   GhostfolioMcpController,
@@ -48,19 +44,16 @@ function createActivity(overrides: Record<string, unknown> = {}) {
 }
 
 describe('GhostfolioMcpController', () => {
-  const impersonation = { userId: 'user-id' } as ImpersonationContext;
+  // The AccessPermissionGuard puts the user into the impersonation context
+  const impersonation = {
+    user: { id: 'user-id' } as UserWithSettings,
+    userId: 'user-id'
+  } as ImpersonationContext;
 
   let configuration: Record<string, unknown>;
   let configurationService: ConfigurationService;
   let controller: GhostfolioMcpController;
   let importService: ImportService;
-  let userService: UserService;
-
-  function setupUser(userPermissions: string[]) {
-    jest.spyOn(userService, 'user').mockResolvedValue({
-      permissions: userPermissions
-    } as UserWithSettings);
-  }
 
   beforeEach(() => {
     configuration = {
@@ -78,14 +71,11 @@ describe('GhostfolioMcpController', () => {
       import: jest.fn().mockResolvedValue([])
     } as unknown as ImportService;
 
-    userService = { user: jest.fn() } as unknown as UserService;
-
     controller = new GhostfolioMcpController(
       undefined,
       undefined,
       configurationService,
-      importService,
-      userService
+      importService
     );
   });
 
@@ -103,21 +93,26 @@ describe('GhostfolioMcpController', () => {
       ).toEqual([scopes.activityCreate]);
     });
 
-    it('Refuses a user without the permission to create an activity', async () => {
-      setupUser([]);
+    it('Requires the permission to create an activity', () => {
+      expect(
+        Reflect.getMetadata(
+          HAS_PERMISSION_KEY,
+          GhostfolioMcpController.prototype.importActivities
+        )
+      ).toEqual(permissions.createActivity);
+    });
 
-      await expect(
-        controller.importActivities(impersonation, {
-          activities: [createActivity()]
-        })
-      ).rejects.toThrow(HttpException);
+    it('Imports the activities for the user of the access', async () => {
+      await controller.importActivities(impersonation, {
+        activities: [createActivity()]
+      });
 
-      expect(importService.import).not.toHaveBeenCalled();
+      expect(importService.import).toHaveBeenCalledWith(
+        expect.objectContaining({ user: impersonation.user })
+      );
     });
 
     it('Gives the number of the imported and of the skipped activities', async () => {
-      setupUser([permissions.createActivity]);
-
       jest
         .spyOn(importService, 'import')
         .mockResolvedValue([{ id: 'activity-id' } as Activity]);
@@ -137,8 +132,6 @@ describe('GhostfolioMcpController', () => {
     });
 
     it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
-      setupUser([permissions.createActivity]);
-
       configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
       configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
 
@@ -156,8 +149,6 @@ describe('GhostfolioMcpController', () => {
     });
 
     it('Keeps the data source if the subscription is not enabled', async () => {
-      setupUser([permissions.createActivity]);
-
       configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
       configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
 
@@ -174,34 +165,11 @@ describe('GhostfolioMcpController', () => {
       );
     });
 
-    it('Passes on the message of a validation only', async () => {
-      setupUser([permissions.createActivity]);
-
-      jest
-        .spyOn(importService, 'import')
-        .mockRejectedValue(
-          new ImportValidationError('activities.0.symbol ("X") is not valid')
-        );
-
-      await expect(
-        controller.importActivities(impersonation, {
-          activities: [createActivity()]
-        })
-      ).rejects.toThrow(
-        new RpcException('activities.0.symbol ("X") is not valid')
-      );
-    });
-
-    it('Hides the message of an unexpected error and writes it to the log', async () => {
-      setupUser([permissions.createActivity]);
-
+    // The McpToolExceptionFilter turns an error into the answer of the caller
+    it('Passes on an error of the import', async () => {
       const error = new Error(
         'Unique constraint failed on the fields: (dataSource)'
       );
-
-      const logError = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation();
 
       jest.spyOn(importService, 'import').mockRejectedValue(error);
 
@@ -209,33 +177,31 @@ describe('GhostfolioMcpController', () => {
         controller.importActivities(impersonation, {
           activities: [createActivity()]
         })
-      ).rejects.toThrow(
-        new RpcException(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
-      );
+      ).rejects.toThrow(error);
+    });
+  });
 
-      expect(logError).toHaveBeenCalledWith(error);
+  describe('Scopes of the read tools', () => {
+    it.each([
+      ['getAccounts', scopes.accountRead],
+      ['getActivities', scopes.activityRead],
+      ['getHoldings', scopes.portfolioRead]
+    ])('%s requires the scope %s', (methodName, scope) => {
+      expect(
+        Reflect.getMetadata(
+          REQUIRES_SCOPE_KEY,
+          GhostfolioMcpController.prototype[methodName]
+        )
+      ).toEqual([scope]);
     });
 
-    it('Does not write the message of a validation to the log', async () => {
-      setupUser([permissions.createActivity]);
-
-      const logError = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation();
-
-      jest
-        .spyOn(importService, 'import')
-        .mockRejectedValue(
-          new ImportValidationError('activities.0.accountId ("X") is not valid')
-        );
-
-      await expect(
-        controller.importActivities(impersonation, {
-          activities: [createActivity({ accountId: 'X' })]
-        })
-      ).rejects.toThrow(RpcException);
-
-      expect(logError).not.toHaveBeenCalled();
+    it('Requires no permission, because a read tool reads granted data only', () => {
+      expect(
+        Reflect.getMetadata(
+          HAS_PERMISSION_KEY,
+          GhostfolioMcpController.prototype.getHoldings
+        )
+      ).toBeUndefined();
     });
   });
 

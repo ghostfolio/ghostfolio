@@ -22,9 +22,12 @@ jest.mock('ai', () => {
  * can read the columns and the rows which the service gives to it.
  */
 interface AiServiceWithMarkdownTable {
-  getMarkdownTable(parameters: {
-    columnDefinitions: readonly { name: string }[];
-    rows: Record<string, string>[];
+  getMarkdownTable<T>(parameters: {
+    columnDefinitions: readonly {
+      getValue: (item: T) => string;
+      name: string;
+    }[];
+    items: T[];
   }): Promise<string>;
 }
 
@@ -62,17 +65,17 @@ function createAiService(accounts: AccountWithValue[]) {
       aiService as unknown as AiServiceWithMarkdownTable,
       'getMarkdownTable'
     )
-    .mockImplementation(async ({ columnDefinitions, rows }) => {
-      const columnNames = columnDefinitions.map(({ name }) => {
-        return name;
-      });
-
+    .mockImplementation(async ({ columnDefinitions, items }) => {
       return [
-        columnNames.join(' | '),
-        ...rows.map((row) => {
-          return columnNames
-            .map((columnName) => {
-              return row[columnName];
+        columnDefinitions
+          .map(({ name }) => {
+            return name;
+          })
+          .join(' | '),
+        ...items.map((item) => {
+          return columnDefinitions
+            .map(({ getValue }) => {
+              return getValue(item);
             })
             .join(' | ');
         })
@@ -110,6 +113,21 @@ describe('AiService', () => {
         'Currency',
         'Unit Price',
         'Account'
+      ]);
+    });
+  });
+
+  describe('getHoldingsTableColumnNames', () => {
+    it('gives no column with a monetary value', () => {
+      expect(AiService.getHoldingsTableColumnNames()).toEqual([
+        'Name',
+        'Symbol',
+        'Currency',
+        'Asset Class',
+        'Asset Sub Class',
+        'Date of First Activity',
+        'Activities Count',
+        'Allocation in Percentage'
       ]);
     });
   });
