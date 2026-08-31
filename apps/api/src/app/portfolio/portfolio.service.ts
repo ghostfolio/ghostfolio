@@ -76,6 +76,7 @@ import {
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
+import { utc } from '@date-fns/utc';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
@@ -995,7 +996,7 @@ export class PortfolioService {
     const historicalData = await this.dataProviderService.getHistorical(
       [{ dataSource, symbol }],
       'day',
-      parseISO(dateOfFirstActivity),
+      parseISO(dateOfFirstActivity, { in: utc }),
       new Date()
     );
 
