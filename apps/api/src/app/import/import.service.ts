@@ -43,7 +43,7 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { Account, DataSource, Prisma, SymbolProfile } from '@prisma/client';
+import { Account, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISIN } from 'class-validator';
 import { isSameSecond, parseISO } from 'date-fns';
@@ -741,22 +741,12 @@ export class ImportService {
       }
     }
 
-    let assetProfiles: {
-      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
-    };
-
-    try {
-      assetProfiles = await this.dataProviderService.validateActivities({
-        activitiesDto,
-        assetProfilesWithMarketDataDto,
-        maxActivitiesToImport,
-        subscription: user.subscription
-      });
-    } catch (error) {
-      // The messages of the validation name the activity which is not valid
-      // and are written for the caller
-      throw new ImportValidationError(error.message);
-    }
+    const assetProfiles = await this.dataProviderService.validateActivities({
+      activitiesDto,
+      assetProfilesWithMarketDataDto,
+      maxActivitiesToImport,
+      subscription: user.subscription
+    });
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
@@ -785,6 +775,21 @@ export class ImportService {
         .forEach(({ id, name }) => {
           accounts.push({ id, name });
         });
+    }
+
+    // Validate the accounts before any activity is created, since an account
+    // which does not belong to the user is dropped without a notice otherwise
+    for (const [index, { accountId }] of activitiesDto.entries()) {
+      if (
+        accountId &&
+        !accounts.some(({ id }) => {
+          return id === accountId;
+        })
+      ) {
+        throw new ImportValidationError(
+          `activities.${index}.accountId ("${accountId}") is not valid`
+        );
+      }
     }
 
     const tags = (await this.tagService.getTagsForUser(user.id)).map(

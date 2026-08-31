@@ -12,7 +12,7 @@ import type {
   UserWithSettings
 } from '@ghostfolio/common/types';
 
-import { HttpException } from '@nestjs/common';
+import { HttpException, Logger } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { DataSource, Type as ActivityType } from '@prisma/client';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
@@ -50,6 +50,7 @@ function createActivity(overrides: Record<string, unknown> = {}) {
 describe('GhostfolioMcpController', () => {
   const impersonation = { userId: 'user-id' } as ImpersonationContext;
 
+  let configuration: Record<string, unknown>;
   let configurationService: ConfigurationService;
   let controller: GhostfolioMcpController;
   let importService: ImportService;
@@ -62,8 +63,15 @@ describe('GhostfolioMcpController', () => {
   }
 
   beforeEach(() => {
+    configuration = {
+      DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: [],
+      ENABLE_FEATURE_SUBSCRIPTION: false
+    };
+
     configurationService = {
-      get: jest.fn().mockReturnValue([])
+      get: jest.fn().mockImplementation((key: string) => {
+        return configuration[key];
+      })
     } as unknown as ConfigurationService;
 
     importService = {
@@ -79,6 +87,10 @@ describe('GhostfolioMcpController', () => {
       importService,
       userService
     );
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   describe('Import activities', () => {
@@ -127,9 +139,8 @@ describe('GhostfolioMcpController', () => {
     it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
       setupUser([permissions.createActivity]);
 
-      jest
-        .spyOn(configurationService, 'get')
-        .mockReturnValue([DataSource.YAHOO]);
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
 
       await controller.importActivities(impersonation, {
         activities: [createActivity({ dataSource: DataSource.GHOSTFOLIO })]
@@ -139,6 +150,25 @@ describe('GhostfolioMcpController', () => {
         expect.objectContaining({
           activitiesDto: [
             expect.objectContaining({ dataSource: DataSource.YAHOO })
+          ]
+        })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      setupUser([permissions.createActivity]);
+
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await controller.importActivities(impersonation, {
+        activities: [createActivity({ dataSource: DataSource.GHOSTFOLIO })]
+      });
+
+      expect(importService.import).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activitiesDto: [
+            expect.objectContaining({ dataSource: DataSource.GHOSTFOLIO })
           ]
         })
       );
@@ -162,14 +192,18 @@ describe('GhostfolioMcpController', () => {
       );
     });
 
-    it('Hides the message of an unexpected error', async () => {
+    it('Hides the message of an unexpected error and writes it to the log', async () => {
       setupUser([permissions.createActivity]);
 
-      jest
-        .spyOn(importService, 'import')
-        .mockRejectedValue(
-          new Error('Unique constraint failed on the fields: (dataSource)')
-        );
+      const error = new Error(
+        'Unique constraint failed on the fields: (dataSource)'
+      );
+
+      const logError = jest
+        .spyOn(Logger.prototype, 'error')
+        .mockImplementation();
+
+      jest.spyOn(importService, 'import').mockRejectedValue(error);
 
       await expect(
         controller.importActivities(impersonation, {
@@ -178,6 +212,30 @@ describe('GhostfolioMcpController', () => {
       ).rejects.toThrow(
         new RpcException(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
       );
+
+      expect(logError).toHaveBeenCalledWith(error);
+    });
+
+    it('Does not write the message of a validation to the log', async () => {
+      setupUser([permissions.createActivity]);
+
+      const logError = jest
+        .spyOn(Logger.prototype, 'error')
+        .mockImplementation();
+
+      jest
+        .spyOn(importService, 'import')
+        .mockRejectedValue(
+          new ImportValidationError('activities.0.accountId ("X") is not valid')
+        );
+
+      await expect(
+        controller.importActivities(impersonation, {
+          activities: [createActivity({ accountId: 'X' })]
+        })
+      ).rejects.toThrow(RpcException);
+
+      expect(logError).not.toHaveBeenCalled();
     });
   });
 

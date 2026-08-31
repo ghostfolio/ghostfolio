@@ -440,6 +440,16 @@ describe('Helper', () => {
       expect(isValidDateAfter1970('1970-01-01T00:00:00.000Z')).toEqual(false);
     });
 
+    // A date without a time is read in UTC, hence the result is the same in
+    // every time zone of the server
+    it('Date of 1970 without a time', () => {
+      expect(isValidDateAfter1970('1970-01-01')).toEqual(false);
+    });
+
+    it('Date after 1970 without a time', () => {
+      expect(isValidDateAfter1970('1970-01-02')).toEqual(true);
+    });
+
     it('Date with an expanded year', () => {
       expect(isValidDateAfter1970('+010000-01-01')).toEqual(true);
     });

@@ -25,7 +25,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
-import { HttpException, UseFilters } from '@nestjs/common';
+import { HttpException, Logger, UseFilters } from '@nestjs/common';
 import { Payload, RpcException } from '@nestjs/microservices';
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
@@ -142,6 +142,8 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
 @McpController()
 @UseFilters(McpToolExceptionFilter)
 export class GhostfolioMcpController {
+  private readonly logger = new Logger(GhostfolioMcpController.name);
+
   public constructor(
     private readonly aiService: AiService,
     private readonly apiService: ApiService,
@@ -278,7 +280,7 @@ export class GhostfolioMcpController {
       readOnlyHint: false,
       title: 'Import activities'
     },
-    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. The access needs the permission "Restricted view and manage". At most ${MCP_MAX_ACTIVITIES} activities are imported per call. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
+    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. The access needs the permission "Restricted view and manage". At most ${MCP_MAX_ACTIVITIES} activities are imported per call, while the instance can have a lower limit, which an error names. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
     name: 'import-activities',
     parameters: IMPORT_ACTIVITIES_PARAMETERS
   })
@@ -296,8 +298,10 @@ export class GhostfolioMcpController {
     }
 
     const ghostfolioDataSources = this.configurationService.get(
-      'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
-    );
+      'ENABLE_FEATURE_SUBSCRIPTION'
+    )
+      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
+      : [];
 
     const activitiesDto = activities.map((activity) => {
       return {
@@ -322,12 +326,17 @@ export class GhostfolioMcpController {
       });
     } catch (error) {
       // The message of a validation names the activity which is not valid and
-      // is written for the caller, hence it is passed on. Every other error
-      // can carry internals of the application.
+      // is written for the caller, hence it is passed on
+      if (error instanceof ImportValidationError) {
+        throw new RpcException(error.message);
+      }
+
+      // Every other message can carry internals of the application, hence it
+      // is written to the log and the reason phrase is passed on instead
+      this.logger.error(error);
+
       throw new RpcException(
-        error instanceof ImportValidationError
-          ? error.message
-          : getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR)
       );
     }
 

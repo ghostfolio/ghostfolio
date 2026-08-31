@@ -686,7 +686,7 @@ export function isValidCustomAssetProfileSymbol(aSymbol: string) {
 }
 
 export function isValidDateAfter1970(aDate: string) {
-  const date = parseISO(aDate);
+  const date = parseISO(aDate, { in: utc });
 
   return isValid(date) && isAfter(date, new Date(0));
 }
