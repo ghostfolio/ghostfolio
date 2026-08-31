@@ -75,13 +75,13 @@
           matInput
           readonly
           type="text"
-          [(value)]="accessToken"
+          [value]="accessToken"
         ></textarea>
         <div class="float-right mt-1">
           <button
             color="secondary"
             mat-flat-button
-            [cdkCopyToClipboard]="accessToken"
+            [cdkCopyToClipboard]="accessToken ?? ''"
             (click)="enableCreateAccountButton()"
           >
             <ion-icon class="mr-1" name="copy-outline" />

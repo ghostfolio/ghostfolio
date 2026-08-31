@@ -17,7 +17,6 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
     | 'dateOfFirstActivity'
     | 'markets'
     | 'netPerformancePercentWithCurrencyEffect'
-    | 'valueInBaseCurrency'
     | 'valueInPercentage'
   >[];
   latestActivities: (Pick<

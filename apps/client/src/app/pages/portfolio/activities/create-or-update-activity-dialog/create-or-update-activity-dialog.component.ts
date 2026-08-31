@@ -79,6 +79,8 @@ import { ActivityType } from './types/activity-type.type';
   templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class GfCreateOrUpdateActivityDialogComponent {
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
+
   protected activityForm: FormGroup;
 
   protected readonly assetClassOptions: AssetClassSelectorOption[] =

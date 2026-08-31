@@ -1,7 +1,7 @@
 <gf-dialog-header
   position="center"
   [deviceType]="data.deviceType"
-  [title]="assetProfile?.name ?? assetProfile?.symbol"
+  [title]="assetProfile.name ?? assetProfile.symbol ?? ''"
   (closeButtonClicked)="onClose()"
 />
 

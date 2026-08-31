@@ -183,7 +183,7 @@
       <ng-container i18n>Holdings</ng-container>
       @if (
         !hasImpersonationId &&
-        summary?.totalValueInBaseCurrency > 0 &&
+        (summary?.totalValueInBaseCurrency ?? 0) > 0 &&
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
@@ -261,7 +261,7 @@
       <ng-container i18n>Cash</ng-container>
       @if (
         !hasImpersonationId &&
-        summary?.totalValueInBaseCurrency > 0 &&
+        (summary?.totalValueInBaseCurrency ?? 0) > 0 &&
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
@@ -324,7 +324,7 @@
       <ng-container i18n>Excluded from Analysis</ng-container>
       @if (
         !hasImpersonationId &&
-        summary?.totalValueInBaseCurrency > 0 &&
+        (summary?.totalValueInBaseCurrency ?? 0) > 0 &&
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
@@ -412,7 +412,7 @@
       <ng-container i18n>Emergency Fund</ng-container>
       @if (
         !hasImpersonationId &&
-        summary?.totalValueInBaseCurrency > 0 &&
+        (summary?.totalValueInBaseCurrency ?? 0) > 0 &&
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
