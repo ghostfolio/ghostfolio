@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a tool to import activities into the portfolio to the server of the Model Context Protocol (MCP) (experimental)
+
 ### Changed
 
+- Extended the access to share the portfolio to support the _Restricted view and manage_ permission (experimental)
 - Extended the tool to get the accounts of the portfolio in the server of the Model Context Protocol (MCP) to support the filtering by account (experimental)
 - Upgraded `replace-in-file` from version `8.4.0` to `9.0.0`
 - Upgraded `stripe` from version `22.3.2` to `22.5.0`

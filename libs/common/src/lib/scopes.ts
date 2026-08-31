@@ -67,12 +67,7 @@ export const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
  * ineffective even if it is stored.
  */
 const SCOPES_OF_TYPE: Record<AccessType, readonly Scope[]> = {
-  MCP: [
-    ...SCOPES_OF_READ_RESTRICTED_ACCESS
-    // Write scope is not permitted yet, because the controller exposes read
-    // tools only
-    // ...SCOPES_OF_WRITE_ACCESS
-  ],
+  MCP: [...SCOPES_OF_READ_RESTRICTED_ACCESS, scopes.activityCreate],
   PRIVATE: Object.values(scopes),
   PUBLIC: SCOPES_OF_PUBLIC_ACCESS
 };

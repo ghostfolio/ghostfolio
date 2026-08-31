@@ -24,6 +24,7 @@ import {
   CreateAssetProfileDto,
   CreateOrderDto
 } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   getAssetProfileIdentifier,
   isValidCustomAssetProfileSymbol,
@@ -49,6 +50,7 @@ import { isSameSecond, parseISO } from 'date-fns';
 import { omit, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
+import { ImportValidationError } from './errors/import-validation.error';
 import { ImportDataDto } from './import-data.dto';
 import { AssetProfileToCreate } from './interfaces/asset-profile-to-create.interface';
 
@@ -186,12 +188,22 @@ export class ImportService {
     }
   }
 
+  public getMaxActivitiesToImport({ user }: { user: UserWithSettings }) {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      user.subscription?.type === SubscriptionType.Premium
+    ) {
+      return Number.MAX_SAFE_INTEGER;
+    }
+
+    return this.configurationService.get('MAX_ACTIVITIES_TO_IMPORT');
+  }
+
   public async import({
     accountsWithBalancesDto,
     activitiesDto,
     assetProfilesWithMarketDataDto,
     isDryRun = false,
-    maxActivitiesToImport,
     platformsDto,
     tagsDto,
     user
@@ -200,7 +212,6 @@ export class ImportService {
     activitiesDto: ImportDataDto['activities'];
     assetProfilesWithMarketDataDto: ImportDataDto['assetProfiles'];
     isDryRun?: boolean;
-    maxActivitiesToImport: number;
     platformsDto: ImportDataDto['platforms'];
     tagsDto: ImportDataDto['tags'];
     user: UserWithSettings;
@@ -210,6 +221,7 @@ export class ImportService {
     const ghostfolioDataSources = this.configurationService.get(
       'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
     );
+    const maxActivitiesToImport = this.getMaxActivitiesToImport({ user });
     const platformIdMapping: { [oldPlatformId: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.settings.settings.baseCurrency;
@@ -224,7 +236,7 @@ export class ImportService {
         dataSource === DataSource.MANUAL &&
         !isValidCustomAssetProfileSymbol(symbol)
       ) {
-        throw new Error(
+        throw new ImportValidationError(
           `assetProfiles.${index}.symbol ("${symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
         );
       } else if (
@@ -236,7 +248,7 @@ export class ImportService {
           ghostfolioDataSources
         });
 
-        throw new Error(
+        throw new ImportValidationError(
           `assetProfiles.${index}.symbol ("${symbol}") is not valid for the data source ("${maskedDataSource}")`
         );
       }
@@ -261,7 +273,7 @@ export class ImportService {
         activity.dataSource === DataSource.MANUAL &&
         !isValidCustomAssetProfileSymbol(activity.symbol)
       ) {
-        throw new Error(
+        throw new ImportValidationError(
           `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
         );
       } else if (
@@ -273,7 +285,7 @@ export class ImportService {
           dataSource: activity.dataSource
         });
 
-        throw new Error(
+        throw new ImportValidationError(
           `activities.${index}.symbol ("${activity.symbol}") is not valid for the data source ("${maskedDataSource}")`
         );
       }
@@ -358,7 +370,7 @@ export class ImportService {
           }
         } else {
           if (!canCreatePlatform) {
-            throw new Error(
+            throw new ImportValidationError(
               `Insufficient permissions to create platform ("${platform.name}")`
             );
           }
@@ -388,7 +400,7 @@ export class ImportService {
 
         if (!existingTagOfUser) {
           if (!canCreateOwnTag) {
-            throw new Error(
+            throw new ImportValidationError(
               `Insufficient permissions to create custom tag ("${tag.name}")`
             );
           }
@@ -763,6 +775,21 @@ export class ImportService {
         .forEach(({ id, name }) => {
           accounts.push({ id, name });
         });
+    }
+
+    // Validate the accounts before any activity is created, since an account
+    // which does not belong to the user is dropped without a notice otherwise
+    for (const [index, { accountId }] of activitiesDto.entries()) {
+      if (
+        accountId &&
+        !accounts.some(({ id }) => {
+          return id === accountId;
+        })
+      ) {
+        throw new ImportValidationError(
+          `activities.${index}.accountId ("${accountId}") is not valid`
+        );
+      }
     }
 
     const tags = (await this.tagService.getTagsForUser(user.id)).map(

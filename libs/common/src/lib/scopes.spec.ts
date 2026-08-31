@@ -207,8 +207,8 @@ describe('Scopes', () => {
       ).not.toContain(scopes.portfolioReadValues);
     });
 
-    // The dialog offers the write scopes for a private access only, hence this
-    // function is the sole barrier for a public access
+    // The dialog offers no permission which changes data for a public access,
+    // hence this function is the sole barrier for it
     it('Gives no write scope', () => {
       expect(
         getScopesOfAccess({
@@ -248,7 +248,9 @@ describe('Scopes', () => {
       ).not.toContain(scopes.portfolioReadValues);
     });
 
-    it('Gives no write scope', () => {
+    // The controller exposes the tool to import activities as the only tool
+    // which writes, hence a further write scope stays ineffective
+    it('Gives the write scope to create an activity only', () => {
       expect(
         getScopesOfAccess({
           scopes: [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS],
@@ -256,7 +258,23 @@ describe('Scopes', () => {
         }).filter((scope) => {
           return SCOPES_OF_WRITE_ACCESS.includes(scope as Scope);
         })
-      ).toEqual([]);
+      ).toEqual([scopes.activityCreate]);
+    });
+
+    // The dialog narrows the access level to the scopes which the type
+    // permits, hence the restricted access level with the write scopes has to
+    // survive the intersection
+    it('Keeps the access level to change the data without the monetary values', () => {
+      expect(
+        getAccessLevel(
+          getScopesOfAccess({
+            scopes: getScopesOfAccessLevel(
+              'CREATE_READ_RESTRICTED_UPDATE_DELETE'
+            ),
+            type: 'MCP'
+          })
+        )
+      ).toEqual('CREATE_READ_RESTRICTED_UPDATE_DELETE');
     });
   });
 

@@ -2,8 +2,6 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { SubscriptionType } from '@ghostfolio/common/enums';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -34,7 +32,6 @@ export class ImportController {
   private readonly logger = new Logger(ImportController.name);
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -59,21 +56,9 @@ export class ImportController {
       );
     }
 
-    let maxActivitiesToImport = this.configurationService.get(
-      'MAX_ACTIVITIES_TO_IMPORT'
-    );
-
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription?.type === SubscriptionType.Premium
-    ) {
-      maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
-    }
-
     try {
       const activities = await this.importService.import({
         isDryRun,
-        maxActivitiesToImport,
         accountsWithBalancesDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
         assetProfilesWithMarketDataDto: importData.assetProfiles ?? [],
@@ -104,16 +89,9 @@ export class ImportController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<ImportResponse> {
-    let maxActivitiesToImport = this.configurationService.get(
-      'MAX_ACTIVITIES_TO_IMPORT'
-    );
-
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription?.type === SubscriptionType.Premium
-    ) {
-      maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
-    }
+    const maxActivitiesToImport = this.importService.getMaxActivitiesToImport({
+      user: this.request.user
+    });
 
     const activities = await this.importService.getDividends({
       dataSource,
