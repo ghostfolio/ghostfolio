@@ -80,7 +80,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with MANUAL buy before the first known market price', async () => {
+    it('with MANUAL buy before the first known market price', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-01-31').getTime());
 
       const activities: Activity[] = [

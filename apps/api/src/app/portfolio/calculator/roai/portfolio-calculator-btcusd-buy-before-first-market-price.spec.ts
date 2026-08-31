@@ -80,7 +80,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with BTCUSD buy before the first known market price', async () => {
+    it('with BTCUSD buy before the first known market price', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-01-14').getTime());
 
       const activities: Activity[] = [
