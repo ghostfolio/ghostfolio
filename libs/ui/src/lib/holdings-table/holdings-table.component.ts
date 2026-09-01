@@ -50,7 +50,7 @@ export class GfHoldingsTableComponent {
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
-  public readonly holdings = input.required<PortfolioPosition[]>();
+  public readonly holdings = input.required<PortfolioPosition[] | undefined>();
   public readonly locale = input(getLocale());
   public readonly pageSize = model(Number.MAX_SAFE_INTEGER);
 
@@ -89,7 +89,7 @@ export class GfHoldingsTableComponent {
 
     // Reactive data update
     effect(() => {
-      this.dataSource.data = this.holdings();
+      this.dataSource.data = this.holdings() ?? [];
     });
 
     // Reactive view connection

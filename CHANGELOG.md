@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the loading state of the accounts table on the accounts page
+- Fixed the loading state of the holdings table on the portfolio holdings page
 
 ## 3.65.0 - 2026-08-31
 
