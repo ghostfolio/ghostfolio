@@ -196,14 +196,21 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         // Narrow the permission to the scopes which the type permits, because
         // an access which is not granted to a user never exposes the monetary
         // values and a public access never changes data
-        this.accessForm.get('accessLevel')?.setValue(
-          getAccessLevel(
-            getScopesOfAccess({
-              scopes: getScopesOfAccessLevel(this.accessLevel),
-              type: accessType
-            })
-          )
+        const accessLevelOfType = getAccessLevel(
+          getScopesOfAccess({
+            scopes: getScopesOfAccessLevel(this.accessLevel),
+            type: accessType
+          })
         );
+
+        this.accessForm
+          .get('accessLevel')
+          ?.setValue(
+            accessType === 'PRIVATE' &&
+              accessLevelOfType === 'CREATE_READ_RESTRICTED_UPDATE_DELETE'
+              ? 'CREATE_READ_UPDATE_DELETE'
+              : accessLevelOfType
+          );
 
         if (!canApplyFiltersToAccess({ type: accessType })) {
           this.accessForm.get('filters')?.setValue(null);
