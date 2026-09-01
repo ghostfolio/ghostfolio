@@ -14,6 +14,7 @@ import { AccountResponse, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { Scope, hasScope, scopes } from '@ghostfolio/common/scopes';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -119,7 +120,10 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
           }
 
           if (mode === 'transferCashBalance') {
+            const accounts = user?.accounts ?? [];
+
             if (
+              accounts.length < 2 ||
               !hasPermission(user?.permissions, permissions.updateAccount) ||
               this.isWriteRestricted(user, scopes.accountUpdate)
             ) {
@@ -128,7 +132,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
               return;
             }
 
-            this.openTransferBalanceDialog({ user });
+            this.openTransferBalanceDialog({ accounts });
 
             return;
           }
@@ -324,14 +328,18 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
       });
   }
 
-  private openTransferBalanceDialog({ user }: { user: User }) {
+  private openTransferBalanceDialog({
+    accounts
+  }: {
+    accounts: AccountWithPlatform[];
+  }) {
     const dialogRef = this.dialog.open<
       GfTransferBalanceDialogComponent,
       TransferBalanceDialogParams,
       TransferBalanceDto | null
     >(GfTransferBalanceDialogComponent, {
       data: {
-        accounts: user?.accounts
+        accounts
       },
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
@@ -348,10 +356,8 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
           return;
         }
 
-        const { accountIdFrom, accountIdTo, balance } = result;
-
         this.dataService
-          .transferAccountBalance({ accountIdFrom, accountIdTo, balance })
+          .transferAccountBalance(result)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             error: () => {
