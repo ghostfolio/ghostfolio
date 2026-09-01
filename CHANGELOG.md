@@ -9,8 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved nested ternary by using early return (Sonarqube S3358)
-
 ## 3.65.0 - 2026-08-31
 
 ### Added
