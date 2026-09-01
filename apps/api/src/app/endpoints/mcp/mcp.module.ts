@@ -21,6 +21,7 @@ import { McpService } from './mcp.service';
   controllers: [GhostfolioMcpController],
   imports: [AiModule, ApiModule, ConfigurationModule, ImportModule, UserModule],
   providers: [
+    McpService,
     {
       inject: [ConfigurationService],
       provide: MCP_STRATEGY,
@@ -45,8 +46,7 @@ import { McpService } from './mcp.service';
           websiteUrl: 'https://ghostfol.io'
         });
       }
-    },
-    McpService
+    }
   ]
 })
 export class McpModule {}

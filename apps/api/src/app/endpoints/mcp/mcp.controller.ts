@@ -202,7 +202,7 @@ export class GhostfolioMcpController {
       };
     });
 
-    // The filter passes on the message of an ImportValidationError, which is
+    // The filter passes on the message of a CallerFacingError, which is
     // written for the caller, and hides the message of every other error
     const importedActivities = await this.importService.import({
       activitiesDto,

@@ -2,7 +2,6 @@ import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
 
 import { ForbiddenException, Logger } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { firstValueFrom } from 'rxjs';
 
@@ -18,6 +17,8 @@ describe('McpToolExceptionFilter', () => {
     } catch (error) {
       return error;
     }
+
+    throw new Error('The filter gave no error');
   }
 
   beforeEach(() => {
@@ -43,16 +44,6 @@ describe('McpToolExceptionFilter', () => {
     expect(logError).not.toHaveBeenCalled();
   });
 
-  it('Passes on the error of an RpcException', async () => {
-    const exception = new RpcException('The access cannot be resolved');
-
-    expect(await getErrorOfException(exception)).toBe(
-      'The access cannot be resolved'
-    );
-
-    expect(logError).not.toHaveBeenCalled();
-  });
-
   it('Hides the message of an unexpected error and writes it to the log', async () => {
     const exception = new Error(
       'Unique constraint failed on the fields: (dataSource)'
@@ -66,11 +57,15 @@ describe('McpToolExceptionFilter', () => {
     expect(logError).toHaveBeenCalledWith(exception);
   });
 
-  it('Gives the reason phrase of the status of an HttpException', async () => {
+  // An access without the scope of a tool causes a refused call at each
+  // attempt, which would fill the log
+  it('Gives the reason phrase of the status of an HttpException and writes no log', async () => {
     expect(await getErrorOfException(new ForbiddenException())).toEqual({
       message: getReasonPhrase(StatusCodes.FORBIDDEN),
       status: 'error'
     });
+
+    expect(logError).not.toHaveBeenCalled();
   });
 
   it('Gives the reason phrase of a service which is not available if a snapshot cannot be computed', async () => {
@@ -82,5 +77,7 @@ describe('McpToolExceptionFilter', () => {
       message: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE),
       status: 'error'
     });
+
+    expect(logError).toHaveBeenCalledWith(exception);
   });
 });

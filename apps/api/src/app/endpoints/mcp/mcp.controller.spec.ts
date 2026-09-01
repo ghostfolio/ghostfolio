@@ -2,6 +2,8 @@ import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
+import { AccessGuard } from '@ghostfolio/api/guards/access.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
 import { Activity } from '@ghostfolio/common/interfaces';
@@ -13,6 +15,10 @@ import type {
 } from '@ghostfolio/common/types';
 
 import { HttpException } from '@nestjs/common';
+import {
+  EXCEPTION_FILTERS_METADATA,
+  GUARDS_METADATA
+} from '@nestjs/common/constants';
 import { DataSource, Type as ActivityType } from '@prisma/client';
 import { MCP_TOOL_METADATA_KEY, ToolMetadata } from '@rekog/mcp-nest';
 
@@ -132,6 +138,34 @@ describe('GhostfolioMcpController', () => {
       );
 
       expect(toolMethodNamesWithoutScope).toEqual([]);
+    });
+
+    // The decorator RequiresScope sets the same metadata as the decorator
+    // RequiresScopeOfAccess, but applies AuthGuard('jwt'), which a request of
+    // an access cannot pass, hence the guards tell the two decorators apart
+    it('Applies the guard of the access to each tool', () => {
+      const toolMethodNames = getToolMethodNames();
+
+      expect(toolMethodNames.length).toBeGreaterThan(0);
+
+      const toolMethodNamesWithoutGuardOfAccess = toolMethodNames.filter(
+        (methodName) => {
+          return !getMetadataOfMethod<unknown[]>(
+            GUARDS_METADATA,
+            methodName
+          )?.includes(AccessGuard);
+        }
+      );
+
+      expect(toolMethodNamesWithoutGuardOfAccess).toEqual([]);
+    });
+
+    // The tools have no try and catch, hence the filter is the only guarantee
+    // that an unexpected exception does not expose internals
+    it('Applies the filter of the exceptions of the tools', () => {
+      expect(
+        Reflect.getMetadata(EXCEPTION_FILTERS_METADATA, GhostfolioMcpController)
+      ).toEqual([McpToolExceptionFilter]);
     });
   });
 
