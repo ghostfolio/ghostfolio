@@ -6,6 +6,7 @@ import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   Scope,
+  canGrantRestrictedWriteAccess,
   getAccessLevel,
   getScopesOfAccess,
   getScopesOfAccessLevel,
@@ -125,6 +126,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     return this.hasExperimentalFeatures && this.hasPermissionToEnableMcp;
   }
 
+  public get canGrantRestrictedWriteAccess() {
+    return canGrantRestrictedWriteAccess({ type: this.accessType });
+  }
+
   public get canGrantWriteAccess() {
     return this.hasExperimentalFeatures;
   }
@@ -195,24 +200,15 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
         // Narrow the permission to the scopes which the type permits, because
         // an access which is not granted to a user never exposes the monetary
-        // values and a public access never changes data. The type PRIVATE has
-        // no restricted write level, hence the permission to change the data
-        // exposes the monetary values
-        const accessLevelOfType = getAccessLevel(
-          getScopesOfAccess({
-            scopes: getScopesOfAccessLevel(this.accessLevel),
-            type: accessType
-          })
+        // values and a public access never changes data
+        this.accessForm.get('accessLevel')?.setValue(
+          getAccessLevel(
+            getScopesOfAccess({
+              scopes: getScopesOfAccessLevel(this.accessLevel),
+              type: accessType
+            })
+          )
         );
-
-        this.accessForm
-          .get('accessLevel')
-          ?.setValue(
-            accessType === 'PRIVATE' &&
-              this.accessLevel === 'CREATE_READ_RESTRICTED_UPDATE_DELETE'
-              ? 'CREATE_READ_UPDATE_DELETE'
-              : accessLevelOfType
-          );
 
         if (!canApplyFiltersToAccess({ type: accessType })) {
           this.accessForm.get('filters')?.setValue(null);

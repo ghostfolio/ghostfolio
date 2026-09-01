@@ -82,7 +82,7 @@
           <mat-option value="READ_RESTRICTED">
             <gf-access-level-icon accessLevel="READ_RESTRICTED" />
           </mat-option>
-          @if (accessForm.get('type')?.value === 'MCP') {
+          @if (canGrantRestrictedWriteAccess) {
             <mat-option
               value="CREATE_READ_RESTRICTED_UPDATE_DELETE"
               [disabled]="!canGrantWriteAccess"
