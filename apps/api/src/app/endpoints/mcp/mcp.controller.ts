@@ -31,6 +31,7 @@ import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { McpController, Tool } from '@rekog/mcp-nest';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { z } from 'zod';
+import 'zod/compile';
 
 const GET_ACCOUNTS_PARAMETERS = z.object({
   accountIds: z
