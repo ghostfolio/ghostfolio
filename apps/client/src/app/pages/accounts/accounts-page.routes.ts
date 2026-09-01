@@ -6,7 +6,8 @@ import { Routes } from '@angular/router';
 import { GfAccountDialogHostComponent } from './account-dialog-host/account-dialog-host.component';
 import { GfAccountsPageComponent } from './accounts-page.component';
 
-const { create, detail, update } = internalRoutes.accounts.subRoutes;
+const { create, detail, transferCashBalance, update } =
+  internalRoutes.accounts.subRoutes;
 
 export const routes: Routes = [
   {
@@ -17,6 +18,12 @@ export const routes: Routes = [
         data: { mode: 'create' },
         path: create.path,
         title: create.title
+      },
+      {
+        component: GfAccountDialogHostComponent,
+        data: { mode: 'transferCashBalance' },
+        path: transferCashBalance.path,
+        title: transferCashBalance.title
       },
       {
         children: [

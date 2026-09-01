@@ -105,7 +105,7 @@ export class GfTransferBalanceDialogComponent {
       balance: Number(this.transferBalanceForm.controls.balance.value)
     };
 
-    this.dialogRef.close({ account });
+    this.dialogRef.close(account);
   }
 
   private getAccountById(aId: string | null) {

@@ -5,11 +5,16 @@ import {
 } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
+import {
+  CreateAccountDto,
+  TransferBalanceDto,
+  UpdateAccountDto
+} from '@ghostfolio/common/dtos';
 import { AccountResponse, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { Scope, hasScope, scopes } from '@ghostfolio/common/scopes';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -36,6 +41,8 @@ import {
 
 import { GfCreateOrUpdateAccountDialogComponent } from '../create-or-update-account-dialog/create-or-update-account-dialog.component';
 import { CreateOrUpdateAccountDialogParams } from '../create-or-update-account-dialog/interfaces/interfaces';
+import { TransferBalanceDialogParams } from '../transfer-balance/interfaces/interfaces';
+import { GfTransferBalanceDialogComponent } from '../transfer-balance/transfer-balance-dialog.component';
 import { AccountDialogMode } from './types/account-dialog-mode.type';
 
 @Component({
@@ -45,7 +52,9 @@ import { AccountDialogMode } from './types/account-dialog-mode.type';
 })
 export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
   private dialogRef: MatDialogRef<
-    GfAccountDetailDialogComponent | GfCreateOrUpdateAccountDialogComponent
+    | GfAccountDetailDialogComponent
+    | GfCreateOrUpdateAccountDialogComponent
+    | GfTransferBalanceDialogComponent
   >;
 
   private readonly deviceType = computed(() => {
@@ -61,6 +70,7 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService
   );
+  private readonly notificationService = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
@@ -104,6 +114,21 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
         next: ({ account, accountId, user }) => {
           if (mode === 'detail') {
             this.openAccountDetailDialog({ accountId, user });
+
+            return;
+          }
+
+          if (mode === 'transferCashBalance') {
+            if (
+              !hasPermission(user?.permissions, permissions.updateAccount) ||
+              this.isWriteRestricted(user, scopes.accountUpdate)
+            ) {
+              this.navigateBack();
+
+              return;
+            }
+
+            this.openTransferBalanceDialog({ user });
 
             return;
           }
@@ -296,6 +321,55 @@ export class GfAccountDialogHostComponent implements OnDestroy, OnInit {
             this.navigateBack();
           }
         });
+      });
+  }
+
+  private openTransferBalanceDialog({ user }: { user: User }) {
+    const dialogRef = this.dialog.open<
+      GfTransferBalanceDialogComponent,
+      TransferBalanceDialogParams,
+      TransferBalanceDto | null
+    >(GfTransferBalanceDialogComponent, {
+      data: {
+        accounts: user?.accounts
+      },
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
+    });
+
+    this.dialogRef = dialogRef;
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.dialogClosed), takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (!result) {
+          this.navigateBack();
+
+          return;
+        }
+
+        const { accountIdFrom, accountIdTo, balance } = result;
+
+        this.dataService
+          .transferAccountBalance({ accountIdFrom, accountIdTo, balance })
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            error: () => {
+              this.notificationService.alert({
+                title: $localize`Oops, cash balance transfer has failed.`
+              });
+
+              this.navigateBack();
+            },
+            next: () => {
+              // Deliberately not bound to the destroy reference: navigating
+              // back destroys this component and the refreshed user is what
+              // makes the accounts page reload its data
+              this.userService.get(true).subscribe();
+
+              this.navigateBack();
+            }
+          });
       });
   }
 }

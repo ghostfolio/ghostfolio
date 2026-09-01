@@ -93,6 +93,11 @@ export const internalRoutes = {
         },
         title: $localize`Account`
       },
+      transferCashBalance: {
+        path: 'transfer-cash-balance',
+        routerLink: ['/accounts', 'transfer-cash-balance'],
+        title: $localize`Transfer Cash Balance`
+      },
       update: {
         path: 'update',
         routerLink: (aAccountId: string) => {
