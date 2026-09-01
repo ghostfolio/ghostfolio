@@ -11,18 +11,6 @@ import { MCP_TOOL_METADATA_KEY, ToolMetadata } from '@rekog/mcp-nest';
 
 import { GhostfolioMcpController } from './mcp.controller';
 
-// The controller reads the columns of the tables from the AiService, which
-// imports two packages which ship as an ECMAScript module only, which Jest
-// cannot transform. The mocks only make the imports resolvable, because no
-// test calls them.
-jest.mock('@openrouter/ai-sdk-provider', () => {
-  return { createOpenRouter: jest.fn() };
-});
-
-jest.mock('ai', () => {
-  return { generateText: jest.fn() };
-});
-
 /**
  * Gives the metadata which a decorator sets on the method of a tool. The
  * prototype is read by the name of the method, hence the type of the metadata

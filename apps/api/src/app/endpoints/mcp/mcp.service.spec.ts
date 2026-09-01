@@ -13,17 +13,6 @@ import { z } from 'zod';
 import { IMPORT_ACTIVITIES_PARAMETERS } from './mcp.schemas';
 import { McpService } from './mcp.service';
 
-// The service reads the tables from the AiService, which imports two packages
-// which ship as an ECMAScript module only, which Jest cannot transform. The
-// mocks only make the imports resolvable, because no test calls them.
-jest.mock('@openrouter/ai-sdk-provider', () => {
-  return { createOpenRouter: jest.fn() };
-});
-
-jest.mock('ai', () => {
-  return { generateText: jest.fn() };
-});
-
 type ActivityToImport = z.infer<
   typeof IMPORT_ACTIVITIES_PARAMETERS
 >['activities'][number];
@@ -78,9 +67,9 @@ describe('McpService', () => {
 
     mcpService = new McpService(
       undefined,
-      undefined,
       configurationService,
       importService,
+      undefined,
       userService
     );
   });

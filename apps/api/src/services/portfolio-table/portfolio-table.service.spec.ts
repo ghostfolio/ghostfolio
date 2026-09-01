@@ -2,18 +2,7 @@ import type { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.s
 import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 import { AccountWithValue } from '@ghostfolio/common/types';
 
-import { AiService } from './ai.service';
-
-// The service imports two packages which ship as an ECMAScript module only,
-// which Jest cannot transform. The mocks only make the imports resolvable,
-// because no test calls them.
-jest.mock('@openrouter/ai-sdk-provider', () => {
-  return { createOpenRouter: jest.fn() };
-});
-
-jest.mock('ai', () => {
-  return { generateText: jest.fn() };
-});
+import { PortfolioTableService } from './portfolio-table.service';
 
 /**
  * The markdown table is rendered by a package which ships as an ECMAScript
@@ -21,7 +10,7 @@ jest.mock('ai', () => {
  * cannot run. The tests replace the method by a simple renderer, so that they
  * can read the columns and the rows which the service gives to it.
  */
-interface AiServiceWithMarkdownTable {
+interface PortfolioTableServiceWithMarkdownTable {
   getMarkdownTable(parameters: {
     columnDefinitions: readonly { name: string }[];
     rows: Record<string, string>[];
@@ -50,16 +39,20 @@ function createAccount({
   } as unknown as AccountWithValue;
 }
 
-function createAiService(accounts: AccountWithValue[]) {
+function createPortfolioTableService(accounts: AccountWithValue[]) {
   const portfolioService = {
     getAccountsWithAggregations: jest.fn().mockResolvedValue({ accounts })
   } as unknown as PortfolioService;
 
-  const aiService = new AiService(null, null, null, portfolioService, null);
+  const portfolioTableService = new PortfolioTableService(
+    null,
+    null,
+    portfolioService
+  );
 
   jest
     .spyOn(
-      aiService as unknown as AiServiceWithMarkdownTable,
+      portfolioTableService as unknown as PortfolioTableServiceWithMarkdownTable,
       'getMarkdownTable'
     )
     .mockImplementation(async ({ columnDefinitions, rows }) => {
@@ -79,16 +72,16 @@ function createAiService(accounts: AccountWithValue[]) {
       ].join('\n');
     });
 
-  return aiService;
+  return portfolioTableService;
 }
 
-describe('AiService', () => {
+describe('PortfolioTableService', () => {
   // The tools of the model context protocol are the only callers, and an
   // access of that type never grants the scope to read the monetary values,
   // hence no table has a column with such a value
   describe('getAccountsTableColumnNames', () => {
     it('gives no column with a monetary value', () => {
-      expect(AiService.getAccountsTableColumnNames()).toEqual([
+      expect(PortfolioTableService.getAccountsTableColumnNames()).toEqual([
         'Id',
         'Name',
         'Currency',
@@ -102,7 +95,7 @@ describe('AiService', () => {
 
   describe('getActivitiesTableColumnNames', () => {
     it('gives no column with a monetary value', () => {
-      expect(AiService.getActivitiesTableColumnNames()).toEqual([
+      expect(PortfolioTableService.getActivitiesTableColumnNames()).toEqual([
         'Date',
         'Type',
         'Name',
@@ -116,9 +109,13 @@ describe('AiService', () => {
 
   describe('getAccountsTable', () => {
     it('gives no cash balance and no value of an account', async () => {
-      const aiService = createAiService([createAccount()]);
+      const portfolioTableService = createPortfolioTableService([
+        createAccount()
+      ]);
 
-      const result = await aiService.getAccountsTable({ userId: 'user-id' });
+      const result = await portfolioTableService.getAccountsTable({
+        userId: 'user-id'
+      });
 
       expect(result).not.toContain('Cash Balance');
       expect(result).not.toContain('1000');
@@ -128,20 +125,26 @@ describe('AiService', () => {
     // The accountIds parameter of the tool takes the identifiers, hence the
     // table has to give them
     it('gives the identifier of an account', async () => {
-      const aiService = createAiService([createAccount()]);
+      const portfolioTableService = createPortfolioTableService([
+        createAccount()
+      ]);
 
-      const result = await aiService.getAccountsTable({ userId: 'user-id' });
+      const result = await portfolioTableService.getAccountsTable({
+        userId: 'user-id'
+      });
 
       expect(result).toContain('account-a-id');
     });
 
     it('marks an account which is excluded from the analysis', async () => {
-      const aiService = createAiService([
+      const portfolioTableService = createPortfolioTableService([
         createAccount({ isExcluded: true }),
         createAccount({ id: 'account-b-id', name: 'Account B' })
       ]);
 
-      const result = await aiService.getAccountsTable({ userId: 'user-id' });
+      const result = await portfolioTableService.getAccountsTable({
+        userId: 'user-id'
+      });
 
       const [rowOfAccountA, rowOfAccountB] = result
         .split('\n')
@@ -154,9 +157,11 @@ describe('AiService', () => {
     });
 
     it('tells that no accounts are found if the result is empty', async () => {
-      const aiService = createAiService([]);
+      const portfolioTableService = createPortfolioTableService([]);
 
-      const result = await aiService.getAccountsTable({ userId: 'user-id' });
+      const result = await portfolioTableService.getAccountsTable({
+        userId: 'user-id'
+      });
 
       expect(result).toContain('No accounts found.');
     });

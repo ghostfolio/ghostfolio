@@ -1,9 +1,9 @@
-import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getUnmaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -21,10 +21,10 @@ import {
 @Injectable()
 export class McpService {
   public constructor(
-    private readonly aiService: AiService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
+    private readonly portfolioTableService: PortfolioTableService,
     private readonly userService: UserService
   ) {}
 
@@ -41,7 +41,10 @@ export class McpService {
       filterBySymbol: holding?.symbol
     });
 
-    const table = await this.aiService.getAccountsTable({ filters, userId });
+    const table = await this.portfolioTableService.getAccountsTable({
+      filters,
+      userId
+    });
 
     return this.getTextResult(table);
   }
@@ -74,7 +77,7 @@ export class McpService {
       filterBySymbol: holding?.symbol
     });
 
-    const table = await this.aiService.getActivitiesTable({
+    const table = await this.portfolioTableService.getActivitiesTable({
       endDate,
       filters,
       skip,
@@ -88,21 +91,13 @@ export class McpService {
     return this.getTextResult(table);
   }
 
-  public async getPortfolio({
-    userCurrency,
-    userId
-  }: {
-    userCurrency: string;
-    userId: string;
-  }) {
-    const prompt = await this.aiService.getPrompt({
-      userCurrency,
+  public async getPortfolio({ userId }: { userId: string }) {
+    const table = await this.portfolioTableService.getHoldingsTable({
       userId,
-      languageCode: DEFAULT_LANGUAGE_CODE,
-      mode: 'portfolio'
+      languageCode: DEFAULT_LANGUAGE_CODE
     });
 
-    return this.getTextResult(prompt);
+    return this.getTextResult(table);
   }
 
   public async importActivities({

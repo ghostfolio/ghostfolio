@@ -1,7 +1,7 @@
-import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScopeOfAccess } from '@ghostfolio/api/decorators/requires-scope-of-access.decorator';
 import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
+import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
@@ -30,7 +30,7 @@ export class GhostfolioMcpController {
       readOnlyHint: true,
       title: 'Get accounts'
     },
-    description: `Gives the accounts of the portfolio with these columns: ${AiService.getAccountsTableColumnNames().join(
+    description: `Gives the accounts of the portfolio with these columns: ${PortfolioTableService.getAccountsTableColumnNames().join(
       ', '
     )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it.`,
     name: 'get-accounts',
@@ -50,7 +50,7 @@ export class GhostfolioMcpController {
       readOnlyHint: true,
       title: 'Get activities'
     },
-    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${AiService.getActivitiesTableColumnNames().join(
+    description: `Gives the activities of the portfolio, the most recent first, with these columns: ${PortfolioTableService.getActivitiesTableColumnNames().join(
       ', '
     )}. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
     name: 'get-activities',
@@ -74,18 +74,13 @@ export class GhostfolioMcpController {
       readOnlyHint: true,
       title: 'Get portfolio'
     },
-    description: `Gives the holdings of the portfolio with these columns: ${AiService.getHoldingsTableColumnNames().join(
+    description: `Gives the holdings of the portfolio with these columns: ${PortfolioTableService.getHoldingsTableColumnNames().join(
       ', '
     )}.`,
     name: 'get-portfolio'
   })
-  public async getPortfolio(
-    @Impersonation() { userId, userSettings }: ImpersonationContext
-  ) {
-    return this.mcpService.getPortfolio({
-      userId,
-      userCurrency: userSettings.baseCurrency
-    });
+  public async getPortfolio(@Impersonation() { userId }: ImpersonationContext) {
+    return this.mcpService.getPortfolio({ userId });
   }
 
   /**
