@@ -1,4 +1,3 @@
-import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
@@ -81,14 +80,15 @@ export class GfAccessTableComponent {
   protected readonly dataSource = new MatTableDataSource<Access>();
 
   protected readonly displayedColumns = computed(() => {
-    const columns = [
-      'alias',
-      'grantee',
-      'type',
-      'lastUsedAt',
-      'expiresAt',
-      'details'
-    ];
+    const columns = ['alias', 'grantee', 'type', 'lastUsedAt', 'expiresAt'];
+
+    if (
+      this.accesses()?.some(({ type }) => {
+        return type === 'PUBLIC';
+      })
+    ) {
+      columns.push('details');
+    }
 
     if (this.showActions()) {
       columns.push('actions');
@@ -108,8 +108,6 @@ export class GfAccessTableComponent {
   protected readonly isLoading = computed(() => {
     return !this.accesses();
   });
-
-  protected readonly mcpEndpoint = MCP_ENDPOINT;
 
   private readonly clipboard = inject(Clipboard);
   private readonly dataService = inject(DataService);

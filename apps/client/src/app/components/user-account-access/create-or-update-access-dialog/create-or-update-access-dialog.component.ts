@@ -1,5 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
+import { DEFAULT_LOCALE, MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { canApplyFiltersToAccess } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
@@ -88,6 +88,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   public tags: Filter[] = [];
 
   protected accessForm: FormGroup;
+  protected readonly baseUrl = window.location.origin;
+  protected readonly mcpEndpoint = MCP_ENDPOINT;
   protected minExpiresAt: Date;
   protected readonly mode: 'create' | 'update';
   protected readonly today = startOfDay(new Date());
@@ -222,6 +224,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     this.loadHoldings();
   }
 
+  protected get accessId() {
+    return this.data.access?.id;
+  }
+
   protected get accessLevel(): AccessLevel {
     return this.accessForm?.get('accessLevel')?.value as AccessLevel;
   }
@@ -236,6 +242,22 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   protected get showExpiresAtErrorMessage() {
     return this.accessForm?.get('expiresAt')?.invalid === true;
+  }
+
+  protected get showMcpDetails() {
+    return (
+      this.accessType === 'MCP' &&
+      this.hasPermissionToEnableMcp &&
+      this.mode === 'update'
+    );
+  }
+
+  protected get showPublicDetails() {
+    return (
+      this.hasExperimentalFeatures &&
+      this.isPublicAccess &&
+      this.mode === 'update'
+    );
   }
 
   protected onCancel() {

@@ -55,22 +55,6 @@
               getPublicUrl(element.id)
             }}</a>
           </div>
-          @if (user()?.settings?.isExperimentalFeatures) {
-            <div>
-              <code
-                >GET {{ baseUrl }}/api/v1/public/{{
-                  element.id
-                }}/portfolio</code
-              >
-            </div>
-          }
-        } @else if (element.type === 'MCP' && hasPermissionToEnableMcp) {
-          <div>
-            <code>{{ baseUrl }}{{ mcpEndpoint }}</code>
-          </div>
-          <div>
-            <code>Authorization: Bearer {{ element.id }}</code>
-          </div>
         }
       </td>
     </ng-container>

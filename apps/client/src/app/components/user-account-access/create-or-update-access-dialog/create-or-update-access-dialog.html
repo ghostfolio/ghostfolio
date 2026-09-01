@@ -133,6 +133,21 @@
         [tags]="tags"
       />
     }
+    @if (showMcpDetails || showPublicDetails) {
+      <h2 class="h6" i18n>Details</h2>
+      @if (showMcpDetails) {
+        <div>
+          <code>{{ baseUrl }}{{ mcpEndpoint }}</code>
+        </div>
+        <div>
+          <code>Authorization: Bearer {{ accessId }}</code>
+        </div>
+      } @else if (showPublicDetails) {
+        <div>
+          <code>GET {{ baseUrl }}/api/v1/public/{{ accessId }}/portfolio</code>
+        </div>
+      }
+    }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button mat-button type="button" (click)="onCancel()">
