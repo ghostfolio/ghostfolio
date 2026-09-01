@@ -6,6 +6,7 @@ import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   Scope,
+  canGrantRestrictedWriteAccess,
   getAccessLevel,
   getScopesOfAccess,
   getScopesOfAccessLevel,
@@ -123,6 +124,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   public get canGrantMcpAccess() {
     return this.hasExperimentalFeatures && this.hasPermissionToEnableMcp;
+  }
+
+  public get canGrantRestrictedWriteAccess() {
+    return canGrantRestrictedWriteAccess({ type: this.accessType });
   }
 
   public get canGrantWriteAccess() {
