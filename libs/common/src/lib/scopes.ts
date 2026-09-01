@@ -96,9 +96,18 @@ export function getScopesOfAccess({
 }): string[] {
   const scopesToEvaluate = scopesOfAccess ?? [];
 
+  // The type PRIVATE has no restricted write level, hence a write scope stays
+  // ineffective without the scope to read the monetary values
+  const permitsWriteAccess =
+    type !== 'PRIVATE' ||
+    hasScope(scopesToEvaluate, scopes.portfolioReadValues);
+
   // An unknown scope is dropped
   return SCOPES_OF_TYPE[type].filter((scope) => {
-    return scopesToEvaluate.includes(scope);
+    return (
+      scopesToEvaluate.includes(scope) &&
+      (permitsWriteAccess || !SCOPES_OF_WRITE_ACCESS.includes(scope))
+    );
   });
 }
 
