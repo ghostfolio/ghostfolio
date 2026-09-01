@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `prisma` from version `7.9.1` to `7.10.0`
+
 ### Fixed
 
 - Fixed the loading state of the accounts table on the accounts page
