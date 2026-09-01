@@ -6,16 +6,42 @@ import { PortfolioTableService } from './portfolio-table.service';
 
 /**
  * The markdown table is rendered by a package which ships as an ECMAScript
- * module only, hence the service loads it with a dynamic import which Jest
- * cannot run. The tests replace the method by a simple renderer, so that they
- * can read the columns and the rows which the service gives to it.
+ * module only, which Jest cannot run. The mock renders the columns and the
+ * rows in a simple form, so that the tests can read them.
  */
-interface PortfolioTableServiceWithMarkdownTable {
-  getMarkdownTable(parameters: {
-    columnDefinitions: readonly { name: string }[];
-    rows: Record<string, string>[];
-  }): Promise<string>;
-}
+jest.mock('@ghostfolio/api/helper/markdown-table.helper', () => {
+  return {
+    getMarkdownTable: jest.fn(
+      ({
+        columnDefinitions,
+        rows
+      }: {
+        columnDefinitions: {
+          getValue: (row: unknown) => string;
+          name: string;
+        }[];
+        rows: unknown[];
+      }) => {
+        return Promise.resolve(
+          [
+            columnDefinitions
+              .map(({ name }) => {
+                return name;
+              })
+              .join(' | '),
+            ...rows.map((row) => {
+              return columnDefinitions
+                .map(({ getValue }) => {
+                  return getValue(row);
+                })
+                .join(' | ');
+            })
+          ].join('\n')
+        );
+      }
+    )
+  };
+});
 
 function createAccount({
   id = 'account-a-id',
@@ -44,35 +70,7 @@ function createPortfolioTableService(accounts: AccountWithValue[]) {
     getAccountsWithAggregations: jest.fn().mockResolvedValue({ accounts })
   } as unknown as PortfolioService;
 
-  const portfolioTableService = new PortfolioTableService(
-    null,
-    null,
-    portfolioService
-  );
-
-  jest
-    .spyOn(
-      portfolioTableService as unknown as PortfolioTableServiceWithMarkdownTable,
-      'getMarkdownTable'
-    )
-    .mockImplementation(async ({ columnDefinitions, rows }) => {
-      const columnNames = columnDefinitions.map(({ name }) => {
-        return name;
-      });
-
-      return [
-        columnNames.join(' | '),
-        ...rows.map((row) => {
-          return columnNames
-            .map((columnName) => {
-              return row[columnName];
-            })
-            .join(' | ');
-        })
-      ].join('\n');
-    });
-
-  return portfolioTableService;
+  return new PortfolioTableService(null, null, portfolioService);
 }
 
 describe('PortfolioTableService', () => {
@@ -103,6 +101,21 @@ describe('PortfolioTableService', () => {
         'Currency',
         'Unit Price',
         'Account'
+      ]);
+    });
+  });
+
+  describe('getHoldingsTableColumnNames', () => {
+    it('gives no column with a monetary value', () => {
+      expect(PortfolioTableService.getHoldingsTableColumnNames()).toEqual([
+        'Name',
+        'Symbol',
+        'Currency',
+        'Asset Class',
+        'Asset Sub Class',
+        'Date of First Activity',
+        'Activities Count',
+        'Allocation in Percentage'
       ]);
     });
   });

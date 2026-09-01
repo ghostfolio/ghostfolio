@@ -1,8 +1,17 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import {
+  getMarkdownTable,
+  TableColumnDefinition
+} from '@ghostfolio/api/helper/markdown-table.helper';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { DATE_FORMAT, isAccountExcluded } from '@ghostfolio/common/helper';
-import { Filter } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  Filter,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
+import { AccountWithValue } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import {
@@ -11,7 +20,19 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { format } from 'date-fns';
-import type { ColumnDescriptor } from 'tablemark';
+
+/**
+ * A holding with the asset class and the asset sub class in the language of
+ * the caller, because the column of a table cannot translate a value itself
+ */
+type HoldingWithTranslations = PortfolioPosition & {
+  assetClassLabel: string;
+  assetSubClassLabel: string;
+};
+
+function getAllocationInPercentage(allocationInPercentage: number) {
+  return `${(allocationInPercentage * 100).toFixed(3)}%`;
+}
 
 /**
  * Renders the accounts, the activities and the holdings of a portfolio as a
@@ -20,72 +41,156 @@ import type { ColumnDescriptor } from 'tablemark';
  */
 @Injectable()
 export class PortfolioTableService {
-  private static readonly ACCOUNTS_TABLE_COLUMN_DEFINITIONS: ({
-    key:
-      | 'ACTIVITIES_COUNT'
-      | 'ALLOCATION_PERCENTAGE'
-      | 'CURRENCY'
-      | 'EXCLUDED_FROM_ANALYSIS'
-      | 'ID'
-      | 'NAME'
-      | 'PLATFORM';
-  } & ColumnDescriptor)[] = [
-    { key: 'ID', name: 'Id' },
-    { key: 'NAME', name: 'Name' },
-    { key: 'CURRENCY', name: 'Currency' },
-    { key: 'PLATFORM', name: 'Platform' },
-    { align: 'right', key: 'ACTIVITIES_COUNT', name: 'Activities Count' },
-    {
-      align: 'right',
-      key: 'ALLOCATION_PERCENTAGE',
-      name: 'Allocation in Percentage'
-    },
-    { key: 'EXCLUDED_FROM_ANALYSIS', name: 'Excluded from Analysis' }
-  ];
+  private static readonly ACCOUNTS_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<AccountWithValue>[] =
+    [
+      {
+        getValue: ({ id }) => {
+          return id;
+        },
+        name: 'Id'
+      },
+      {
+        getValue: ({ name }) => {
+          return name ?? '';
+        },
+        name: 'Name'
+      },
+      {
+        getValue: ({ currency }) => {
+          return currency ?? '';
+        },
+        name: 'Currency'
+      },
+      {
+        getValue: ({ platform }) => {
+          return platform?.name ?? '';
+        },
+        name: 'Platform'
+      },
+      {
+        align: 'right',
+        getValue: ({ activitiesCount }) => {
+          return activitiesCount.toString();
+        },
+        name: 'Activities Count'
+      },
+      {
+        align: 'right',
+        getValue: ({ allocationInPercentage }) => {
+          return getAllocationInPercentage(allocationInPercentage);
+        },
+        name: 'Allocation in Percentage'
+      },
+      {
+        getValue: ({ tags }) => {
+          return isAccountExcluded({ tags }).toString();
+        },
+        name: 'Excluded from Analysis'
+      }
+    ];
 
-  private static readonly ACTIVITIES_TABLE_COLUMN_DEFINITIONS: ({
-    key:
-      | 'ACCOUNT'
-      | 'CURRENCY'
-      | 'DATE'
-      | 'NAME'
-      | 'SYMBOL'
-      | 'TYPE'
-      | 'UNIT_PRICE';
-  } & ColumnDescriptor)[] = [
-    { key: 'DATE', name: 'Date' },
-    { key: 'TYPE', name: 'Type' },
-    { key: 'NAME', name: 'Name' },
-    { key: 'SYMBOL', name: 'Symbol' },
-    { key: 'CURRENCY', name: 'Currency' },
-    { align: 'right', key: 'UNIT_PRICE', name: 'Unit Price' },
-    { key: 'ACCOUNT', name: 'Account' }
-  ];
+  private static readonly ACTIVITIES_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<Activity>[] =
+    [
+      {
+        getValue: ({ date }) => {
+          return format(date, DATE_FORMAT);
+        },
+        name: 'Date'
+      },
+      {
+        getValue: ({ type }) => {
+          return type;
+        },
+        name: 'Type'
+      },
+      {
+        getValue: ({ assetProfile }) => {
+          return assetProfile.name ?? '';
+        },
+        name: 'Name'
+      },
+      {
+        getValue: ({ assetProfile }) => {
+          return assetProfile.symbol;
+        },
+        name: 'Symbol'
+      },
+      {
+        getValue: ({ assetProfile, currency }) => {
+          return currency ?? assetProfile.currency;
+        },
+        name: 'Currency'
+      },
+      {
+        align: 'right',
+        getValue: ({ unitPrice }) => {
+          return unitPrice.toString();
+        },
+        name: 'Unit Price'
+      },
+      {
+        getValue: ({ account }) => {
+          return account?.name ?? '';
+        },
+        name: 'Account'
+      }
+    ];
 
-  private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: ({
-    key:
-      | 'ACTIVITIES_COUNT'
-      | 'ALLOCATION_PERCENTAGE'
-      | 'ASSET_CLASS'
-      | 'ASSET_SUB_CLASS'
-      | 'CURRENCY'
-      | 'DATE_OF_FIRST_ACTIVITY'
-      | 'NAME'
-      | 'SYMBOL';
-  } & ColumnDescriptor)[] = [
-    { key: 'NAME', name: 'Name' },
-    { key: 'SYMBOL', name: 'Symbol' },
-    { key: 'CURRENCY', name: 'Currency' },
-    { key: 'ASSET_CLASS', name: 'Asset Class' },
-    { key: 'ASSET_SUB_CLASS', name: 'Asset Sub Class' },
-    { key: 'DATE_OF_FIRST_ACTIVITY', name: 'Date of First Activity' },
-    { align: 'right', key: 'ACTIVITIES_COUNT', name: 'Activities Count' },
-    {
-      align: 'right',
-      key: 'ALLOCATION_PERCENTAGE',
-      name: 'Allocation in Percentage'
-    }
-  ];
+  private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<HoldingWithTranslations>[] =
+    [
+      {
+        getValue: ({ assetProfile }) => {
+          return assetProfile.name;
+        },
+        name: 'Name'
+      },
+      {
+        getValue: ({ assetProfile }) => {
+          return assetProfile.symbol;
+        },
+        name: 'Symbol'
+      },
+      {
+        getValue: ({ assetProfile }) => {
+          return assetProfile.currency;
+        },
+        name: 'Currency'
+      },
+      {
+        getValue: ({ assetClassLabel }) => {
+          return assetClassLabel;
+        },
+        name: 'Asset Class'
+      },
+      {
+        getValue: ({ assetSubClassLabel }) => {
+          return assetSubClassLabel;
+        },
+        name: 'Asset Sub Class'
+      },
+      {
+        getValue: ({ dateOfFirstActivity }) => {
+          return dateOfFirstActivity
+            ? format(dateOfFirstActivity, DATE_FORMAT)
+            : '';
+        },
+        name: 'Date of First Activity'
+      },
+      {
+        align: 'right',
+        getValue: ({ activitiesCount }) => {
+          return activitiesCount.toString();
+        },
+        name: 'Activities Count'
+      },
+      {
+        align: 'right',
+        getValue: ({ allocationInPercentage }) => {
+          return getAllocationInPercentage(allocationInPercentage);
+        },
+        name: 'Allocation in Percentage'
+      }
+    ];
 
   public constructor(
     private readonly activitiesService: ActivitiesService,
@@ -131,67 +236,14 @@ export class PortfolioTableService {
         withExcludedAccounts: true
       });
 
-    const accountsTableRows = accounts.map(
-      ({
-        activitiesCount,
-        allocationInPercentage,
-        currency,
-        id,
-        name: label,
-        platform,
-        tags
-      }) => {
-        return PortfolioTableService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS.reduce(
-          (row, { key, name }) => {
-            switch (key) {
-              case 'ACTIVITIES_COUNT':
-                row[name] = activitiesCount.toString();
-                break;
-
-              case 'ALLOCATION_PERCENTAGE':
-                row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
-                break;
-
-              case 'CURRENCY':
-                row[name] = currency ?? '';
-                break;
-
-              case 'EXCLUDED_FROM_ANALYSIS':
-                row[name] = isAccountExcluded({ tags }).toString();
-                break;
-
-              case 'ID':
-                row[name] = id;
-                break;
-
-              case 'NAME':
-                row[name] = label ?? '';
-                break;
-
-              case 'PLATFORM':
-                row[name] = platform?.name ?? '';
-                break;
-
-              default:
-                row[name] = '';
-                break;
-            }
-
-            return row;
-          },
-          {} as Record<string, string>
-        );
-      }
-    );
-
     const accountsSection = ['## Accounts', ''];
 
-    if (accountsTableRows.length > 0) {
+    if (accounts.length > 0) {
       accountsSection.push(
-        await this.getMarkdownTable({
+        await getMarkdownTable({
           columnDefinitions:
             PortfolioTableService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS,
-          rows: accountsTableRows
+          rows: accounts
         })
       );
     } else {
@@ -235,51 +287,6 @@ export class PortfolioTableService {
       withExcludedAccountsAndActivities: true
     });
 
-    const activitiesTableRows = activities.map(
-      ({ account, assetProfile, currency, date, type, unitPrice }) => {
-        return PortfolioTableService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.reduce(
-          (row, { key, name }) => {
-            switch (key) {
-              case 'ACCOUNT':
-                row[name] = account?.name ?? '';
-                break;
-
-              case 'CURRENCY':
-                row[name] = currency ?? assetProfile.currency;
-                break;
-
-              case 'DATE':
-                row[name] = format(date, DATE_FORMAT);
-                break;
-
-              case 'NAME':
-                row[name] = assetProfile.name ?? '';
-                break;
-
-              case 'SYMBOL':
-                row[name] = assetProfile.symbol;
-                break;
-
-              case 'TYPE':
-                row[name] = type;
-                break;
-
-              case 'UNIT_PRICE':
-                row[name] = unitPrice.toString();
-                break;
-
-              default:
-                row[name] = '';
-                break;
-            }
-
-            return row;
-          },
-          {} as Record<string, string>
-        );
-      }
-    );
-
     const activitiesSection = [
       '## Activities',
       '',
@@ -290,13 +297,13 @@ export class PortfolioTableService {
       })
     ];
 
-    if (activitiesTableRows.length > 0) {
+    if (activities.length > 0) {
       activitiesSection.push(
         '',
-        await this.getMarkdownTable({
+        await getMarkdownTable({
           columnDefinitions:
             PortfolioTableService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS,
-          rows: activitiesTableRows
+          rows: activities
         })
       );
     }
@@ -330,79 +337,27 @@ export class PortfolioTableService {
       values: Object.values(AssetSubClass)
     });
 
-    const holdingsTableRows = [...holdings]
+    const holdingsWithTranslations = [...holdings]
       .sort((a, b) => {
         return b.allocationInPercentage - a.allocationInPercentage;
       })
-      .map(
-        ({
-          activitiesCount,
-          allocationInPercentage,
-          assetProfile: {
-            assetClass,
-            assetSubClass,
-            currency,
-            name: label,
-            symbol
-          },
-          dateOfFirstActivity
-        }) => {
-          return PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.reduce(
-            (row, { key, name }) => {
-              switch (key) {
-                case 'ACTIVITIES_COUNT':
-                  row[name] = activitiesCount.toString();
-                  break;
-
-                case 'ALLOCATION_PERCENTAGE':
-                  row[name] = `${(allocationInPercentage * 100).toFixed(3)}%`;
-                  break;
-
-                case 'ASSET_CLASS':
-                  row[name] = assetClassTranslations[assetClass] ?? '';
-                  break;
-
-                case 'ASSET_SUB_CLASS':
-                  row[name] = assetSubClassTranslations[assetSubClass] ?? '';
-                  break;
-
-                case 'CURRENCY':
-                  row[name] = currency;
-                  break;
-
-                case 'DATE_OF_FIRST_ACTIVITY':
-                  row[name] = dateOfFirstActivity
-                    ? format(dateOfFirstActivity, DATE_FORMAT)
-                    : '';
-                  break;
-
-                case 'NAME':
-                  row[name] = label;
-                  break;
-
-                case 'SYMBOL':
-                  row[name] = symbol;
-                  break;
-
-                default:
-                  row[name] = '';
-                  break;
-              }
-
-              return row;
-            },
-            {} as Record<string, string>
-          );
-        }
-      );
+      .map((holding) => {
+        return {
+          ...holding,
+          assetClassLabel:
+            assetClassTranslations[holding.assetProfile.assetClass] ?? '',
+          assetSubClassLabel:
+            assetSubClassTranslations[holding.assetProfile.assetSubClass] ?? ''
+        };
+      });
 
     return [
       '## Holdings',
       '',
-      await this.getMarkdownTable({
+      await getMarkdownTable({
         columnDefinitions:
           PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS,
-        rows: holdingsTableRows
+        rows: holdingsWithTranslations
       })
     ].join('\n');
   }
@@ -462,26 +417,5 @@ export class PortfolioTableService {
       },
       {} as Record<T, string>
     );
-  }
-
-  private async getMarkdownTable({
-    columnDefinitions,
-    rows
-  }: {
-    columnDefinitions: readonly ColumnDescriptor[];
-    rows: Record<string, string>[];
-  }) {
-    // Dynamic import to load ESM module from CommonJS context
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
-    const dynamicImport = new Function('s', 'return import(s)') as (
-      s: string
-    ) => Promise<typeof import('tablemark')>;
-    const { tablemark } = await dynamicImport('tablemark');
-
-    return tablemark(rows, {
-      columns: columnDefinitions.map(({ align, name }) => {
-        return { name, align: align ?? 'left' };
-      })
-    });
   }
 }
