@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the server of the Model Context Protocol (MCP) (experimental)
 
+### Fixed
+
+- Fixed the loading state of the accounts table on the accounts page
+
 ## 3.65.0 - 2026-08-31
 
 ### Added
