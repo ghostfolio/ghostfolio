@@ -245,11 +245,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   protected get showMcpDetails() {
-    return (
-      this.accessType === 'MCP' &&
-      this.hasPermissionToEnableMcp &&
-      this.mode === 'update'
-    );
+    return this.canGrantMcpAccess && this.mode === 'update';
   }
 
   protected get showPublicDetails() {
@@ -365,7 +361,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   private async updateAccess() {
-    const accessId = this.data.access?.id;
+    const accessId = this.accessId;
 
     if (!accessId) {
       return;

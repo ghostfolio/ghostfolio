@@ -80,15 +80,14 @@ export class GfAccessTableComponent {
   protected readonly dataSource = new MatTableDataSource<Access>();
 
   protected readonly displayedColumns = computed(() => {
-    const columns = ['alias', 'grantee', 'type', 'lastUsedAt', 'expiresAt'];
-
-    if (
-      this.accesses()?.some(({ type }) => {
-        return type === 'PUBLIC';
-      })
-    ) {
-      columns.push('details');
-    }
+    const columns = [
+      'alias',
+      'grantee',
+      'type',
+      'lastUsedAt',
+      'expiresAt',
+      'details'
+    ];
 
     if (this.showActions()) {
       columns.push('actions');

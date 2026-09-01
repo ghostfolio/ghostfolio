@@ -137,14 +137,16 @@
       <h2 class="h6" i18n>Details</h2>
       @if (showMcpDetails) {
         <div>
-          <code>{{ baseUrl }}{{ mcpEndpoint }}</code>
+          <code class="text-break">{{ baseUrl }}{{ mcpEndpoint }}</code>
         </div>
         <div>
-          <code>Authorization: Bearer {{ accessId }}</code>
+          <code class="text-break">Authorization: Bearer {{ accessId }}</code>
         </div>
       } @else if (showPublicDetails) {
         <div>
-          <code>GET {{ baseUrl }}/api/v1/public/{{ accessId }}/portfolio</code>
+          <code class="text-break"
+            >GET {{ baseUrl }}/api/v1/public/{{ accessId }}/portfolio</code
+          >
         </div>
       }
     }
