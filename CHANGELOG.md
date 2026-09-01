@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `nestjs` from version `11.1.28` to `11.2.1`
+
 ### Fixed
 
 - Fixed the loading state of the accounts table on the accounts page
@@ -22,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the access to share the portfolio to support the _Restricted view and manage_ permission (experimental)
 - Extended the tool to get the accounts of the portfolio in the server of the Model Context Protocol (MCP) to support the filtering by account (experimental)
-- Upgraded `nestjs` from version `11.1.28` to `11.2.1`
 - Upgraded `replace-in-file` from version `8.4.0` to `9.0.0`
 - Upgraded `stripe` from version `22.3.2` to `22.5.0`
 - Upgraded `undici` from version `8.5.0` to `8.10.0`
