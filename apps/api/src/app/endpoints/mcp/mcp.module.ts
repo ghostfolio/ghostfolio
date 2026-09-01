@@ -15,6 +15,7 @@ import {
 } from '@rekog/mcp-nest';
 
 import { GhostfolioMcpController } from './mcp.controller';
+import { McpService } from './mcp.service';
 
 @Module({
   controllers: [GhostfolioMcpController],
@@ -44,7 +45,8 @@ import { GhostfolioMcpController } from './mcp.controller';
           websiteUrl: 'https://ghostfol.io'
         });
       }
-    }
+    },
+    McpService
   ]
 })
 export class McpModule {}

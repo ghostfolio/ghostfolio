@@ -1,4 +1,5 @@
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 
 import {
   Catch,
@@ -20,13 +21,21 @@ export class McpToolExceptionFilter implements RpcExceptionFilter {
   private readonly logger = new Logger(McpToolExceptionFilter.name);
 
   public catch(exception: unknown): Observable<never> {
-    this.logger.error(exception);
-
+    // The message of these exceptions is written for the caller, hence it is
+    // passed on and is not written to the log
     if (exception instanceof RpcException) {
       return throwError(() => {
         return exception.getError();
       });
     }
+
+    if (exception instanceof CallerFacingError) {
+      return throwError(() => {
+        return { message: exception.message, status: 'error' };
+      });
+    }
+
+    this.logger.error(exception);
 
     return throwError(() => {
       return { message: this.getMessage(exception), status: 'error' };
