@@ -397,11 +397,13 @@ export class GfPortfolioProportionChartComponent
                         context.dataIndex
                       ] as string;
 
-                      return value > 0
-                        ? isUUID(symbol)
-                          ? (this.data[symbol]?.name ?? symbol)
-                          : symbol
-                        : '';
+                      if (value <= 0) {
+                        return '';
+                      }
+
+                      return isUUID(symbol)
+                        ? (this.data[symbol]?.name ?? symbol)
+                        : symbol;
                     },
                     offset: 8
                   }

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Restricted the _Restricted view and manage_ permission of the access to share the portfolio to the Model Context Protocol (MCP) (experimental)
 
+### Fixed
+
+- Fixed the loading state of the accounts table on the accounts page
+
 ## 3.65.0 - 2026-08-31
 
 ### Added
