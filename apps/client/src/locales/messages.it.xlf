@@ -40,7 +40,7 @@
       </trans-unit>
       <trans-unit id="9153520284278555926" datatype="html">
         <source>please</source>
-        <target-state state="translated">per favore</target-state>
+        <target state="translated">per favore</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">333</context>
@@ -92,7 +92,7 @@
       </trans-unit>
       <trans-unit id="1351814922314683865" datatype="html">
         <source>with</source>
-        <target-state state="translated">con</target-state>
+        <target state="translated">con</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">87</context>
@@ -676,7 +676,7 @@
       </trans-unit>
       <trans-unit id="2032871492995551772" datatype="html">
         <source>Coupons</source>
-        <target state="translated">Buoni sconti</target>
+        <target state="translated">Buoni sconto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">154</context>
