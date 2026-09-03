@@ -2,7 +2,7 @@ import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ColorScheme, DateRange } from './types';
+import { ColorScheme, DateRange, OverviewChartMode } from './types';
 
 export const ghostfolioPrefix = 'GF';
 
@@ -100,6 +100,7 @@ export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_LOCALE = 'en-US';
 export const DEFAULT_OPENROUTER_ENGINE_WEB_FETCH = 'openrouter';
+export const DEFAULT_OVERVIEW_CHART_MODE: OverviewChartMode = 'PERFORMANCE';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PORT = 3333;
 export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;

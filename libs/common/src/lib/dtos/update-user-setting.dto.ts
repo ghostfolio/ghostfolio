@@ -3,6 +3,7 @@ import type {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
+  OverviewChartMode,
   ViewMode
 } from '@ghostfolio/common/types';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
@@ -95,6 +96,10 @@ export class UpdateUserSettingDto {
   @IsString()
   @IsOptional()
   locale?: string;
+
+  @IsIn(['NET_WORTH', 'PERFORMANCE'] as OverviewChartMode[])
+  @IsOptional()
+  overviewChartMode?: OverviewChartMode;
 
   /**
    * The target financial amount the user aims to reach before retiring.
