@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Restricted the _Restricted view and manage_ permission of the access to share the portfolio to the Model Context Protocol (MCP) (experimental)
 - Migrated the transfer cash balance dialog to a dedicated route
+- Improved the language localization for Italian (`it`)
 - Upgraded `prisma` from version `7.9.1` to `7.10.0`
 
 ### Fixed
