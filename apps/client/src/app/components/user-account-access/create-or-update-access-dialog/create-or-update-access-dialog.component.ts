@@ -237,10 +237,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     return this.accessForm?.get('type')?.value as AccessType;
   }
 
-  protected get isMcpAccess() {
-    return this.accessType === 'MCP';
-  }
-
   protected get isPublicAccess() {
     return this.accessType === 'PUBLIC';
   }
@@ -250,7 +246,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       headers: {
         Authorization: `Bearer ${this.accessId}`
       },
-      type: 'https',
+      type: 'http',
       url: `${this.baseUrl}${MCP_ENDPOINT}`
     };
   }
@@ -281,6 +277,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     } else {
       await this.updateAccess();
     }
+  }
+
+  private get isMcpAccess() {
+    return this.accessType === 'MCP';
   }
 
   private async createAccess() {
