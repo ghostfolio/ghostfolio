@@ -136,12 +136,7 @@
     @if (showMcpDetails || showPublicDetails) {
       <h2 class="h6" i18n>Details</h2>
       @if (showMcpDetails) {
-        <div>
-          <code class="text-break">{{ baseUrl }}{{ mcpEndpoint }}</code>
-        </div>
-        <div>
-          <code class="text-break">Authorization: Bearer {{ accessId }}</code>
-        </div>
+        <pre class="m-0"><code>{{ mcpConfiguration | json }}</code></pre>
       } @else if (showPublicDetails) {
         <div>
           <code class="text-break"

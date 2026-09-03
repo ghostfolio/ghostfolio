@@ -83,14 +83,6 @@
               </span>
             </button>
           }
-          @if (element.type === 'MCP' && hasPermissionToEnableMcp) {
-            <button mat-menu-item (click)="onCopyTokenToClipboard(element.id)">
-              <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="copy-outline" />
-                <span i18n>Copy token to clipboard</span>
-              </span>
-            </button>
-          }
           @if (
             (!isReceivedAccess() && user()?.settings?.isExperimentalFeatures) ||
             element.type === 'PUBLIC' ||

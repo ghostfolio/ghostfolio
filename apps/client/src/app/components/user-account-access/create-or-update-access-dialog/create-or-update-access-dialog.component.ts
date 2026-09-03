@@ -27,6 +27,7 @@ import {
 } from '@ghostfolio/ui/portfolio-filter-form';
 import { DataService } from '@ghostfolio/ui/services';
 
+import { JsonPipe } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -69,6 +70,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     FormsModule,
     GfAccessLevelIconComponent,
     GfPortfolioFilterFormComponent,
+    JsonPipe,
     MatButtonModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -89,7 +91,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   protected accessForm: FormGroup;
   protected readonly baseUrl = window.location.origin;
-  protected readonly mcpEndpoint = MCP_ENDPOINT;
   protected minExpiresAt: Date;
   protected readonly mode: 'create' | 'update';
   protected readonly today = startOfDay(new Date());
@@ -242,6 +243,16 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   protected get isPublicAccess() {
     return this.accessType === 'PUBLIC';
+  }
+
+  protected get mcpConfiguration() {
+    return {
+      headers: {
+        Authorization: `Bearer ${this.accessId}`
+      },
+      type: 'https',
+      url: `${this.baseUrl}${MCP_ENDPOINT}`
+    };
   }
 
   protected get showExpiresAtErrorMessage() {

@@ -130,18 +130,6 @@ export class GfAccessTableComponent {
     return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
   }
 
-  protected onCopyTokenToClipboard(aId: string) {
-    this.clipboard.copy(aId);
-
-    this.snackBar.open(
-      '✅ ' + $localize`Token has been copied to the clipboard`,
-      undefined,
-      {
-        duration: ms('3 seconds')
-      }
-    );
-  }
-
   protected onCopyUrlToClipboard(aId: string) {
     this.clipboard.copy(this.getPublicUrl(aId));
 
