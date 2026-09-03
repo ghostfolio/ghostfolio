@@ -1,4 +1,3 @@
-import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
@@ -32,7 +31,6 @@ import {
   copyOutline,
   createOutline,
   ellipsisHorizontal,
-  linkOutline,
   removeCircleOutline,
   trashOutline
 } from 'ionicons/icons';
@@ -81,14 +79,7 @@ export class GfAccessTableComponent {
   protected readonly dataSource = new MatTableDataSource<Access>();
 
   protected readonly displayedColumns = computed(() => {
-    const columns = [
-      'alias',
-      'grantee',
-      'type',
-      'lastUsedAt',
-      'expiresAt',
-      'details'
-    ];
+    const columns = ['alias', 'grantee', 'type', 'lastUsedAt', 'expiresAt'];
 
     if (this.showActions()) {
       columns.push('actions');
@@ -109,8 +100,6 @@ export class GfAccessTableComponent {
     return !this.accesses();
   });
 
-  protected readonly mcpEndpoint = MCP_ENDPOINT;
-
   private readonly clipboard = inject(Clipboard);
   private readonly dataService = inject(DataService);
   private readonly notificationService = inject(NotificationService);
@@ -121,7 +110,6 @@ export class GfAccessTableComponent {
       copyOutline,
       createOutline,
       ellipsisHorizontal,
-      linkOutline,
       removeCircleOutline,
       trashOutline
     });
@@ -140,18 +128,6 @@ export class GfAccessTableComponent {
     const languageCode = this.user().settings.language;
 
     return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
-  }
-
-  protected onCopyIdToClipboard(aId: string) {
-    this.clipboard.copy(aId);
-
-    this.snackBar.open(
-      '✅ ' + $localize`Identifier has been copied to the clipboard`,
-      undefined,
-      {
-        duration: ms('3 seconds')
-      }
-    );
   }
 
   protected onCopyUrlToClipboard(aId: string) {
