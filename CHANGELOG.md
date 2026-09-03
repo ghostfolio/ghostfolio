@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the loading state of the accounts table on the accounts page
 - Fixed the loading state of the holdings table on the portfolio holdings page
+- Fixed the daily request limit blocking users for longer than one day by counting the rejected requests
 
 ## 3.65.0 - 2026-08-31
 
