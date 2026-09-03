@@ -27,6 +27,7 @@ import {
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   getAssetProfileIdentifier,
+  isSameSymbol,
   isValidCustomAssetProfileSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -748,6 +749,36 @@ export class ImportService {
       subscription: user.subscription
     });
 
+    const assetProfileIdentifiers = uniqBy(
+      activitiesDto.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      }),
+      getAssetProfileIdentifier
+    );
+
+    for (const { dataSource, symbol } of assetProfileIdentifiers) {
+      const assetProfile =
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      const assetProfileInImport = assetProfilesWithMarketDataDto?.some(
+        (assetProfileWithMarketData) => {
+          return (
+            assetProfileWithMarketData.dataSource === dataSource &&
+            assetProfileWithMarketData.symbol === symbol
+          );
+        }
+      );
+
+      if (assetProfile && !assetProfileInImport) {
+        assetProfile.symbol =
+          await this.symbolProfileService.getSymbolOfAssetProfile({
+            dataSource,
+            symbol,
+            symbolOfDataProvider: assetProfile.symbol
+          });
+      }
+    }
+
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
       userCurrency,
@@ -879,9 +910,11 @@ export class ImportService {
         url,
         updatedAt
       } = assetProfile;
+
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
+
       const validatedTags = tags.filter(({ id: tagId }) => {
         return tagIds.some((activityTagId) => {
           return activityTagId === tagId;
@@ -1083,7 +1116,10 @@ export class ImportService {
             isSameSecond(activity.date, date) &&
             activity.fee === fee &&
             activity.quantity === quantity &&
-            activity.assetProfile.symbol === symbol &&
+            isSameSymbol({
+              symbol1: activity.assetProfile.symbol,
+              symbol2: symbol
+            }) &&
             activity.type === type &&
             activity.unitPrice === unitPrice
           );

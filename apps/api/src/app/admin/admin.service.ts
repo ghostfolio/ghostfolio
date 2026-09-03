@@ -102,9 +102,17 @@ export class AdminService {
         );
       }
 
-      return this.symbolProfileService.add(
-        assetProfile as Prisma.SymbolProfileCreateInput
-      );
+      const symbolOfAssetProfile =
+        await this.symbolProfileService.getSymbolOfAssetProfile({
+          dataSource,
+          symbol,
+          symbolOfDataProvider: assetProfile.symbol
+        });
+
+      return this.symbolProfileService.add({
+        ...assetProfile,
+        symbol: symbolOfAssetProfile
+      } as Prisma.SymbolProfileCreateInput);
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&

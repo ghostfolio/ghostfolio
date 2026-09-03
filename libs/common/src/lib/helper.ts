@@ -637,6 +637,22 @@ export function isRootCurrency(aCurrency: string) {
 }
 
 /**
+ * Checks whether two symbols are the same, ignoring the letter case. A data
+ * provider can report "AAPL" for a requested symbol "aapl".
+ */
+export function isSameSymbol({
+  symbol1,
+  symbol2
+}: {
+  symbol1: string;
+  symbol2: string;
+}) {
+  return (
+    !!symbol1 && !!symbol2 && symbol1.toLowerCase() === symbol2.toLowerCase()
+  );
+}
+
+/**
  * Validates the ratio of a stock split, expressed as the number of shares held
  * after the split (numerator) per number of shares held before (denominator),
  * for example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split. An

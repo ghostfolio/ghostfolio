@@ -897,7 +897,6 @@ export class ActivitiesService {
         data.type === 'BUY')
     ) {
       delete data.SymbolProfile.connect;
-      delete data.SymbolProfile.update.name;
     } else {
       delete data.SymbolProfile.update;
 

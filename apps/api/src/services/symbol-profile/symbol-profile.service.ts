@@ -1,6 +1,9 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
+import {
+  applyAssetProfileOverrides,
+  isSameSymbol
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   EnhancedAssetProfile,
@@ -124,6 +127,51 @@ export class SymbolProfileService {
         name: { in: names }
       }
     });
+  }
+
+  /**
+   * Gets the symbol to use for an asset profile. An existing asset profile
+   * wins, also if its symbol has a different letter case. Otherwise the symbol
+   * of the data provider is used, as it has the letter case of the instrument.
+   */
+  public async getSymbolOfAssetProfile({
+    dataSource,
+    symbol,
+    symbolOfDataProvider
+  }: { symbolOfDataProvider?: string } & AssetProfileIdentifier) {
+    if (dataSource === DataSource.MANUAL) {
+      return symbol;
+    }
+
+    const symbolProfileWithSameSymbol =
+      await this.prismaService.symbolProfile.findUnique({
+        select: { symbol: true },
+        where: { dataSource_symbol: { dataSource, symbol } }
+      });
+
+    if (symbolProfileWithSameSymbol) {
+      return symbol;
+    }
+
+    const symbolProfiles = (
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: { symbol: 'asc' },
+        select: { symbol: true },
+        where: {
+          dataSource,
+          symbol: { equals: symbol, mode: 'insensitive' }
+        }
+      })
+    ).filter(({ symbol: symbolOfSymbolProfile }) => {
+      return isSameSymbol({ symbol1: symbol, symbol2: symbolOfSymbolProfile });
+    });
+
+    const symbolProfile =
+      symbolProfiles.find(({ symbol: symbolOfSymbolProfile }) => {
+        return symbolOfSymbolProfile === symbol;
+      }) ?? symbolProfiles[0];
+
+    return symbolProfile?.symbol ?? symbolOfDataProvider ?? symbol;
   }
 
   public async getSymbolProfiles(

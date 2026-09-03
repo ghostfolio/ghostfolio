@@ -8,10 +8,12 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
   ActivityResponse
@@ -32,7 +34,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order } from '@prisma/client';
+import { Order, SymbolProfile } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -46,7 +48,8 @@ export class ActivitiesController {
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
-    private readonly dataGatheringService: DataGatheringService
+    private readonly dataGatheringService: DataGatheringService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Delete()
@@ -224,8 +227,12 @@ export class ActivitiesController {
         ? userSubscription
         : authenticatedUserSubscription;
 
+    let assetProfiles: {
+      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
+    };
+
     try {
-      await this.dataProviderService.validateActivities({
+      assetProfiles = await this.dataProviderService.validateActivities({
         subscription,
         activitiesDto: [
           {
@@ -251,6 +258,15 @@ export class ActivitiesController {
     const customCurrency = data.customCurrency;
     const dataSource = data.dataSource;
 
+    const symbol = await this.symbolProfileService.getSymbolOfAssetProfile({
+      dataSource,
+      symbol: data.symbol,
+      symbolOfDataProvider:
+        assetProfiles[
+          getAssetProfileIdentifier({ dataSource, symbol: data.symbol })
+        ]?.symbol
+    });
+
     if (customCurrency) {
       data.currency = customCurrency;
 
@@ -268,12 +284,12 @@ export class ActivitiesController {
           create: {
             currency,
             dataSource,
-            symbol: data.symbol
+            symbol
           },
           where: {
             dataSource_symbol: {
               dataSource,
-              symbol: data.symbol
+              symbol
             }
           }
         }
@@ -291,8 +307,8 @@ export class ActivitiesController {
         dataGatheringItems: [
           {
             dataSource,
-            date: activity.date,
-            symbol: data.symbol
+            symbol,
+            date: activity.date
           }
         ],
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
@@ -330,6 +346,11 @@ export class ActivitiesController {
     const customCurrency = data.customCurrency;
     const dataSource = data.dataSource;
 
+    const symbol = await this.symbolProfileService.getSymbolOfAssetProfile({
+      dataSource,
+      symbol: data.symbol
+    });
+
     delete data.accountId;
 
     if (customCurrency) {
@@ -356,13 +377,12 @@ export class ActivitiesController {
           connect: {
             dataSource_symbol: {
               dataSource,
-              symbol: data.symbol
+              symbol
             }
           },
           update: {
             assetClass: data.assetClass,
-            assetSubClass: data.assetSubClass,
-            name: data.symbol
+            assetSubClass: data.assetSubClass
           }
         },
         tags: data.tags?.map((id) => {

@@ -12,6 +12,7 @@ import {
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol,
+  isSameSymbol,
   isSplitRatio,
   isValidCurrencyCode,
   isValidCustomAssetProfileSymbol,
@@ -325,6 +326,38 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is same symbol', () => {
+    it('Same symbol', () => {
+      expect(isSameSymbol({ symbol1: 'AAPL', symbol2: 'AAPL' })).toEqual(true);
+    });
+
+    it('Same symbol in a different letter case', () => {
+      expect(isSameSymbol({ symbol1: 'aapl', symbol2: 'AAPL' })).toEqual(true);
+      expect(isSameSymbol({ symbol1: 'AaPl', symbol2: 'AAPL' })).toEqual(true);
+      expect(
+        isSameSymbol({ symbol1: 'usd-coin', symbol2: 'USD-Coin' })
+      ).toEqual(true);
+    });
+
+    it('Different symbol', () => {
+      expect(isSameSymbol({ symbol1: 'FB', symbol2: 'META' })).toEqual(false);
+      expect(
+        isSameSymbol({ symbol1: 'US0378331005', symbol2: 'AAPL' })
+      ).toEqual(false);
+      expect(isSameSymbol({ symbol1: 'BRK.B', symbol2: 'BRK-B' })).toEqual(
+        false
+      );
+    });
+
+    it('Missing symbol', () => {
+      expect(isSameSymbol({ symbol1: undefined, symbol2: 'AAPL' })).toEqual(
+        false
+      );
+      expect(isSameSymbol({ symbol1: 'AAPL', symbol2: null })).toEqual(false);
+      expect(isSameSymbol({ symbol1: '', symbol2: '' })).toEqual(false);
     });
   });
 

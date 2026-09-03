@@ -24,6 +24,7 @@ import {
   getStartOfUtcDate,
   isCurrency,
   isDerivedCurrency,
+  isSameSymbol,
   isValidCustomAssetProfileSymbol,
   isValidSearchQuery
 } from '@ghostfolio/common/helper';
@@ -131,8 +132,13 @@ export class DataProviderService implements OnModuleInit {
                 })
               ] = {
                 ...assetProfile,
-                symbol,
-                name: formatAssetProfileName(assetProfile)
+                name: formatAssetProfileName(assetProfile),
+                symbol: isSameSymbol({
+                  symbol1: symbol,
+                  symbol2: assetProfile.symbol
+                })
+                  ? assetProfile.symbol
+                  : symbol
               };
             }
           })

@@ -4,36 +4,55 @@ import {
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 
+import { DataSource } from '@prisma/client';
+
 import { DataGatheringService } from './data-gathering.service';
 
 describe('DataGatheringService', () => {
   let dataGatheringQueue: { addBulk: jest.Mock; clean: jest.Mock };
   let dataGatheringService: DataGatheringService;
-  let dataProviderService: { getHistoricalRaw: jest.Mock };
-  let prismaService: { marketData: { groupBy: jest.Mock; upsert: jest.Mock } };
+
+  let dataProviderService: {
+    getAssetProfiles: jest.Mock;
+    getHistoricalRaw: jest.Mock;
+  };
+
+  let prismaService: {
+    marketData: { groupBy: jest.Mock; upsert: jest.Mock };
+    symbolProfile: { upsert: jest.Mock };
+  };
+
+  let symbolProfileService: { getSymbolProfiles: jest.Mock };
 
   beforeEach(() => {
     dataGatheringQueue = {
       addBulk: jest.fn().mockResolvedValue([]),
       clean: jest.fn().mockResolvedValue([])
     };
-    dataProviderService = { getHistoricalRaw: jest.fn() };
+    dataProviderService = {
+      getAssetProfiles: jest.fn().mockResolvedValue({}),
+      getHistoricalRaw: jest.fn()
+    };
     prismaService = {
       marketData: {
         groupBy: jest.fn().mockResolvedValue([]),
         upsert: jest.fn().mockResolvedValue({})
-      }
+      },
+      symbolProfile: { upsert: jest.fn().mockResolvedValue({}) }
+    };
+    symbolProfileService = {
+      getSymbolProfiles: jest.fn().mockResolvedValue([])
     };
 
     dataGatheringService = new DataGatheringService(
-      null,
+      [],
       dataGatheringQueue as any,
       dataProviderService as any,
       null,
       null,
       prismaService as any,
       null,
-      null
+      symbolProfileService as any
     );
   });
 
@@ -107,6 +126,55 @@ describe('DataGatheringService', () => {
         { dataSource: 'COINGECKO', symbol: 'bitcoin' },
         { dataSource: 'YAHOO', symbol: 'AAPL' }
       ]);
+    });
+  });
+
+  describe('gatherAssetProfiles', () => {
+    it('Keeps the requested symbol, so that no duplicate asset profile is created', async () => {
+      dataProviderService.getAssetProfiles.mockResolvedValue({
+        'YAHOO-aapl': {
+          currency: 'USD',
+          dataSource: DataSource.YAHOO,
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        }
+      });
+
+      await dataGatheringService.gatherAssetProfiles([
+        { dataSource: DataSource.YAHOO, symbol: 'aapl' }
+      ]);
+
+      expect(prismaService.symbolProfile.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            dataSource_symbol: {
+              dataSource: DataSource.YAHOO,
+              symbol: 'aapl'
+            }
+          }
+        })
+      );
+    });
+
+    it('Creates a new asset profile with the symbol of the data provider', async () => {
+      dataProviderService.getAssetProfiles.mockResolvedValue({
+        'YAHOO-aapl': {
+          currency: 'USD',
+          dataSource: DataSource.YAHOO,
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        }
+      });
+
+      await dataGatheringService.gatherAssetProfiles([
+        { dataSource: DataSource.YAHOO, symbol: 'aapl' }
+      ]);
+
+      expect(prismaService.symbolProfile.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          create: expect.objectContaining({ symbol: 'AAPL' })
+        })
+      );
     });
   });
 
