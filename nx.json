@@ -101,7 +101,12 @@
       "cache": true
     },
     "@nx/jest:jest": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js",
+        { "env": "TEST_TZ" }
+      ],
       "cache": true,
       "options": {
         "passWithNoTests": true
