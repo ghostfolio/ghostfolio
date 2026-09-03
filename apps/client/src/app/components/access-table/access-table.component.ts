@@ -31,7 +31,6 @@ import {
   copyOutline,
   createOutline,
   ellipsisHorizontal,
-  linkOutline,
   removeCircleOutline,
   trashOutline
 } from 'ionicons/icons';
@@ -80,14 +79,7 @@ export class GfAccessTableComponent {
   protected readonly dataSource = new MatTableDataSource<Access>();
 
   protected readonly displayedColumns = computed(() => {
-    const columns = [
-      'alias',
-      'grantee',
-      'type',
-      'lastUsedAt',
-      'expiresAt',
-      'details'
-    ];
+    const columns = ['alias', 'grantee', 'type', 'lastUsedAt', 'expiresAt'];
 
     if (this.showActions()) {
       columns.push('actions');
@@ -118,7 +110,6 @@ export class GfAccessTableComponent {
       copyOutline,
       createOutline,
       ellipsisHorizontal,
-      linkOutline,
       removeCircleOutline,
       trashOutline
     });
