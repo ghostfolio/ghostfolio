@@ -236,6 +236,10 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     return this.accessForm?.get('type')?.value as AccessType;
   }
 
+  protected get isMcpAccess() {
+    return this.accessType === 'MCP';
+  }
+
   protected get isPublicAccess() {
     return this.accessType === 'PUBLIC';
   }
@@ -245,7 +249,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   }
 
   protected get showMcpDetails() {
-    return this.canGrantMcpAccess && this.mode === 'update';
+    return this.canGrantMcpAccess && this.isMcpAccess && this.mode === 'update';
   }
 
   protected get showPublicDetails() {

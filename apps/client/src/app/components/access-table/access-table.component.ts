@@ -139,11 +139,11 @@ export class GfAccessTableComponent {
     return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
   }
 
-  protected onCopyIdToClipboard(aId: string) {
+  protected onCopyTokenToClipboard(aId: string) {
     this.clipboard.copy(aId);
 
     this.snackBar.open(
-      '✅ ' + $localize`Identifier has been copied to the clipboard`,
+      '✅ ' + $localize`Token has been copied to the clipboard`,
       undefined,
       {
         duration: ms('3 seconds')
