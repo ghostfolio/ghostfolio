@@ -28,6 +28,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { GfValueComponent } from '../value/value.component';
+import { getHoldingQuantityPrecision } from './quantity-precision';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,6 +102,10 @@ export class GfHoldingsTableComponent {
 
   protected canShowDetails(holding: PortfolioPosition): boolean {
     return this.hasPermissionToOpenDetails() && canOpenHoldingDetail(holding);
+  }
+
+  protected getQuantityPrecision(holding: PortfolioPosition): number {
+    return getHoldingQuantityPrecision(holding);
   }
 
   protected onOpenHoldingDialog({
