@@ -17,7 +17,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission } from '@ghostfolio/common/permissions';
 import { permissions } from '@ghostfolio/common/permissions';
-import { MarketDataPreset, RequestWithUser } from '@ghostfolio/common/types';
+import { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -27,7 +27,6 @@ import {
   HttpException,
   Inject,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -36,11 +35,12 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { AssetProfileSplit, DataSource, Prisma } from '@prisma/client';
+import { AssetProfileSplit, DataSource } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AssetProfilesService } from './asset-profiles.service';
+import { GetAssetProfilesDto } from './get-asset-profiles.dto';
 
 @AllowDuringImpersonation()
 @Controller('asset-profiles')
@@ -56,14 +56,17 @@ export class AssetProfilesController {
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAssetProfiles(
-    @Query('assetSubClasses') filterByAssetSubClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('presetId') presetId?: MarketDataPreset,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
-    @Query('sortColumn') sortColumn?: string,
-    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
-    @Query('take', new ParseIntPipe({ optional: true })) take?: number
+    @Query()
+    {
+      assetSubClasses: filterByAssetSubClasses,
+      dataSource: filterByDataSource,
+      presetId,
+      query: filterBySearchQuery,
+      skip,
+      sortColumn,
+      sortDirection,
+      take
+    }: GetAssetProfilesDto
   ): Promise<AssetProfilesResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetSubClasses,
