@@ -3617,7 +3617,7 @@
       </trans-unit>
       <trans-unit id="assetClass.ALTERNATIVE_INVESTMENT" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">대체 투자</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">52</context>
@@ -3625,7 +3625,7 @@
       </trans-unit>
       <trans-unit id="assetClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">원자재</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">53</context>
@@ -3633,7 +3633,7 @@
       </trans-unit>
       <trans-unit id="assetClass.EQUITY" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">주식</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
@@ -3641,7 +3641,7 @@
       </trans-unit>
       <trans-unit id="assetClass.FIXED_INCOME" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">채권</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">55</context>
@@ -3649,7 +3649,7 @@
       </trans-unit>
       <trans-unit id="assetClass.LIQUIDITY" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">유동성</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">56</context>
@@ -3657,7 +3657,7 @@
       </trans-unit>
       <trans-unit id="assetClass.REAL_ESTATE" datatype="html">
         <source>Real Estate</source>
-        <target state="new">Real Estate</target>
+        <target state="translated">부동산</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">57</context>
@@ -3665,7 +3665,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.BOND" datatype="html">
         <source>Bond</source>
-        <target state="new">Bond</target>
+        <target state="translated">채권</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">60</context>
@@ -3673,7 +3673,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CASH" datatype="html">
         <source>Cash</source>
-        <target state="new">Cash</target>
+        <target state="translated">현금</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">61</context>
@@ -3681,7 +3681,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COLLECTIBLE" datatype="html">
         <source>Collectible</source>
-        <target state="new">Collectible</target>
+        <target state="translated">수집품</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">62</context>
@@ -3689,7 +3689,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">원자재</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">5</context>
@@ -3697,7 +3697,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CRYPTOCURRENCY" datatype="html">
         <source>Cryptocurrency</source>
-        <target state="new">Cryptocurrency</target>
+        <target state="translated">암호화폐</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">63</context>
@@ -3705,7 +3705,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.ETF" datatype="html">
         <source>ETF</source>
-        <target state="new">ETF</target>
+        <target state="translated">ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">64</context>
@@ -3713,7 +3713,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.LOAN" datatype="html">
         <source>Loan</source>
-        <target state="new">Loan</target>
+        <target state="translated">대출</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">65</context>
@@ -3721,7 +3721,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.MUTUALFUND" datatype="html">
         <source>Mutual Fund</source>
-        <target state="new">Mutual Fund</target>
+        <target state="translated">뮤추얼 펀드</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">66</context>
@@ -3729,7 +3729,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRECIOUS_METAL" datatype="html">
         <source>Precious Metal</source>
-        <target state="new">Precious Metal</target>
+        <target state="translated">귀금속</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">67</context>
@@ -3737,7 +3737,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRIVATE_EQUITY" datatype="html">
         <source>Private Equity</source>
-        <target state="new">Private Equity</target>
+        <target state="translated">사모펀드</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">68</context>
@@ -3745,7 +3745,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.STOCK" datatype="html">
         <source>Stock</source>
-        <target state="new">Stock</target>
+        <target state="translated">주식</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">69</context>
