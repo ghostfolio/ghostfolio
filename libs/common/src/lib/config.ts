@@ -344,6 +344,7 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const SEARCH_QUERY_MAXIMUM_LENGTH = 255;
 export const SEARCH_QUERY_MINIMUM_LENGTH = 2;
 
 export const SECTORS = [
@@ -379,6 +380,8 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'uk',
   'zh'
 ] as const;
+
+export const SYMBOL_MAXIMUM_LENGTH = 255;
 
 export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
 export const TAG_ID_DRAFT = '0c077abd-eca2-4cbb-818c-6cefbf2d169a';

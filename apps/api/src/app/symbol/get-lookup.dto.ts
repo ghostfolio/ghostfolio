@@ -1,3 +1,5 @@
+import { SEARCH_QUERY_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
+
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsBoolean, IsString, MaxLength } from 'class-validator';
 
@@ -9,6 +11,6 @@ export class GetLookupDto {
   includeIndices? = false;
 
   @IsString()
-  @MaxLength(255)
+  @MaxLength(SEARCH_QUERY_MAXIMUM_LENGTH)
   query? = '';
 }

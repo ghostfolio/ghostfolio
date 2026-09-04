@@ -114,7 +114,11 @@
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
-        <input formControlName="name" matInput />
+        <input
+          formControlName="name"
+          matInput
+          [maxlength]="SYMBOL_MAXIMUM_LENGTH"
+        />
       </mat-form-field>
     </div>
     <div class="d-none">

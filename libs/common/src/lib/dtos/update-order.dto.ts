@@ -1,4 +1,7 @@
-import { COMMENT_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
+import {
+  COMMENT_MAXIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
+} from '@ghostfolio/common/config';
 import { IsAfter1970Constraint } from '@ghostfolio/common/validator-constraints/is-after-1970';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
@@ -65,7 +68,7 @@ export class UpdateOrderDto {
   quantity: number;
 
   @IsString()
-  @MaxLength(255)
+  @MaxLength(SYMBOL_MAXIMUM_LENGTH)
   symbol: string;
 
   @ArrayUnique()

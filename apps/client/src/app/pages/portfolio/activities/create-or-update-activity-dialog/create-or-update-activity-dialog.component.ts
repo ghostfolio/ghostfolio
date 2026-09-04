@@ -3,7 +3,8 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   ASSET_CLASS_MAPPING,
   COMMENT_MAXIMUM_LENGTH,
-  DEFAULT_LOCALE
+  DEFAULT_LOCALE,
+  SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import {
@@ -85,6 +86,7 @@ import { ActivityType } from './types/activity-type.type';
 export class GfCreateOrUpdateActivityDialogComponent {
   protected readonly COMMENT_MAXIMUM_LENGTH = COMMENT_MAXIMUM_LENGTH;
   protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
+  protected readonly SYMBOL_MAXIMUM_LENGTH = SYMBOL_MAXIMUM_LENGTH;
 
   protected activityForm: FormGroup;
 

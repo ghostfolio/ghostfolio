@@ -1,3 +1,5 @@
+import { SYMBOL_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
+
 import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class FilterDto {
@@ -15,7 +17,7 @@ export class FilterDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(255)
+  @MaxLength(SYMBOL_MAXIMUM_LENGTH)
   symbol?: string;
 
   @IsOptional()
