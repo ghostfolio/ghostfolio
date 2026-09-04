@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the fallback of the market price in the portfolio calculation to use the latest historical market price before the unit price of the latest buy or sell activity
 - Fixed the missing country mapping of _Congo (Dem. Rep. of the)_ and _Congo (Rep. of)_ in the _Financial Modeling Prep_ service
 
 ## 3.66.0 - 2026-09-03
