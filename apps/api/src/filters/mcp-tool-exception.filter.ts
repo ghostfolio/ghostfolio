@@ -1,4 +1,5 @@
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 
 import {
   Catch,
@@ -6,7 +7,6 @@ import {
   Logger,
   RpcExceptionFilter
 } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { Observable, throwError } from 'rxjs';
 
@@ -20,24 +20,32 @@ export class McpToolExceptionFilter implements RpcExceptionFilter {
   private readonly logger = new Logger(McpToolExceptionFilter.name);
 
   public catch(exception: unknown): Observable<never> {
-    this.logger.error(exception);
-
-    if (exception instanceof RpcException) {
+    // The message of this exception is written for the caller, hence it is
+    // passed on and is not written to the log
+    if (exception instanceof CallerFacingError) {
       return throwError(() => {
-        return exception.getError();
+        return { message: exception.message, status: 'error' };
       });
     }
 
-    return throwError(() => {
-      return { message: this.getMessage(exception), status: 'error' };
-    });
-  }
+    const statusCode = this.getStatus(exception);
 
-  private getMessage(exception: unknown) {
+    // An exception which the caller causes, for example a refused call, is
+    // expected, hence only an exception of the application is written to the
+    // log
+    if (statusCode >= StatusCodes.INTERNAL_SERVER_ERROR) {
+      this.logger.error(exception);
+    }
+
     // The message of an exception can carry internals, for example the
     // property names of a data transfer object of a failed validation, hence
     // the reason phrase of the status is passed on instead
-    return this.getReasonPhraseOfStatus(this.getStatus(exception));
+    return throwError(() => {
+      return {
+        message: this.getReasonPhraseOfStatus(statusCode),
+        status: 'error'
+      };
+    });
   }
 
   private getReasonPhraseOfStatus(statusCode: number) {

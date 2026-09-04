@@ -2,25 +2,29 @@ import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
+import { AccessGuard } from '@ghostfolio/api/guards/access.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
 import { Activity } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import { scopes } from '@ghostfolio/common/scopes';
+import { Scope, scopes } from '@ghostfolio/common/scopes';
 import type {
   ImpersonationContext,
   UserWithSettings
 } from '@ghostfolio/common/types';
 
-import { HttpException, Logger } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
-import { DataSource, Type as ActivityType } from '@prisma/client';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-
+import { HttpException } from '@nestjs/common';
 import {
-  GhostfolioMcpController,
-  IMPORT_ACTIVITIES_PARAMETERS
-} from './mcp.controller';
+  EXCEPTION_FILTERS_METADATA,
+  GUARDS_METADATA
+} from '@nestjs/common/constants';
+import { DataSource, Type as ActivityType } from '@prisma/client';
+import { MCP_TOOL_METADATA_KEY, ToolMetadata } from '@rekog/mcp-nest';
+
+import { GhostfolioMcpController } from './mcp.controller';
+import { IMPORT_ACTIVITIES_PARAMETERS } from './mcp.schemas';
+import { McpService } from './mcp.service';
 
 // The controller reads the columns of the tables from the AiService, which
 // imports two packages which ship as an ECMAScript module only, which Jest
@@ -33,6 +37,30 @@ jest.mock('@openrouter/ai-sdk-provider', () => {
 jest.mock('ai', () => {
   return { generateText: jest.fn() };
 });
+
+/**
+ * Gives the metadata which a decorator sets on the method of a tool. The
+ * prototype is read by the name of the method, hence the type of the metadata
+ * is given by the caller.
+ */
+function getMetadataOfMethod<T>(metadataKey: string, methodName: string) {
+  const methodsByName = GhostfolioMcpController.prototype as unknown as Record<
+    string,
+    object
+  >;
+
+  return Reflect.getMetadata(metadataKey, methodsByName[methodName]) as T;
+}
+
+function getToolMethodNames() {
+  return Object.getOwnPropertyNames(GhostfolioMcpController.prototype).filter(
+    (methodName) => {
+      return Boolean(
+        getMetadataOfMethod<ToolMetadata>(MCP_TOOL_METADATA_KEY, methodName)
+      );
+    }
+  );
+}
 
 function createActivity(overrides: Record<string, unknown> = {}) {
   return {
@@ -85,6 +113,7 @@ describe('GhostfolioMcpController', () => {
       undefined,
       configurationService,
       importService,
+      new McpService(),
       userService
     );
   });
@@ -93,13 +122,57 @@ describe('GhostfolioMcpController', () => {
     jest.restoreAllMocks();
   });
 
+  describe('Tools', () => {
+    // A tool without the decorator of the scope would be open to every access,
+    // hence a new tool has to declare its scope
+    it('Requires a scope of access for each tool', () => {
+      const toolMethodNames = getToolMethodNames();
+
+      expect(toolMethodNames.length).toBeGreaterThan(0);
+
+      const toolMethodNamesWithoutScope = toolMethodNames.filter(
+        (methodName) => {
+          return !getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, methodName)
+            ?.length;
+        }
+      );
+
+      expect(toolMethodNamesWithoutScope).toEqual([]);
+    });
+
+    // The decorator RequiresScope sets the same metadata as the decorator
+    // RequiresScopeOfAccess, but applies AuthGuard('jwt'), which a request of
+    // an access cannot pass, hence the guards tell the two decorators apart
+    it('Applies the guard of the access to each tool', () => {
+      const toolMethodNames = getToolMethodNames();
+
+      expect(toolMethodNames.length).toBeGreaterThan(0);
+
+      const toolMethodNamesWithoutGuardOfAccess = toolMethodNames.filter(
+        (methodName) => {
+          return !getMetadataOfMethod<unknown[]>(
+            GUARDS_METADATA,
+            methodName
+          )?.includes(AccessGuard);
+        }
+      );
+
+      expect(toolMethodNamesWithoutGuardOfAccess).toEqual([]);
+    });
+
+    // The tools have no try and catch, hence the filter is the only guarantee
+    // that an unexpected exception does not expose internals
+    it('Applies the filter of the exceptions of the tools', () => {
+      expect(
+        Reflect.getMetadata(EXCEPTION_FILTERS_METADATA, GhostfolioMcpController)
+      ).toEqual([McpToolExceptionFilter]);
+    });
+  });
+
   describe('Import activities', () => {
     it('Requires the scope to create an activity', () => {
       expect(
-        Reflect.getMetadata(
-          REQUIRES_SCOPE_KEY,
-          GhostfolioMcpController.prototype.importActivities
-        )
+        getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, 'importActivities')
       ).toEqual([scopes.activityCreate]);
     });
 
@@ -174,34 +247,13 @@ describe('GhostfolioMcpController', () => {
       );
     });
 
-    it('Passes on the message of a validation only', async () => {
+    // The McpToolExceptionFilter maps the error, hence the tool passes it on
+    it('Passes on an error of the import', async () => {
       setupUser([permissions.createActivity]);
 
-      jest
-        .spyOn(importService, 'import')
-        .mockRejectedValue(
-          new ImportValidationError('activities.0.symbol ("X") is not valid')
-        );
-
-      await expect(
-        controller.importActivities(impersonation, {
-          activities: [createActivity()]
-        })
-      ).rejects.toThrow(
-        new RpcException('activities.0.symbol ("X") is not valid')
+      const error = new ImportValidationError(
+        'activities.0.symbol ("X") is not valid'
       );
-    });
-
-    it('Hides the message of an unexpected error and writes it to the log', async () => {
-      setupUser([permissions.createActivity]);
-
-      const error = new Error(
-        'Unique constraint failed on the fields: (dataSource)'
-      );
-
-      const logError = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation();
 
       jest.spyOn(importService, 'import').mockRejectedValue(error);
 
@@ -209,33 +261,7 @@ describe('GhostfolioMcpController', () => {
         controller.importActivities(impersonation, {
           activities: [createActivity()]
         })
-      ).rejects.toThrow(
-        new RpcException(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
-      );
-
-      expect(logError).toHaveBeenCalledWith(error);
-    });
-
-    it('Does not write the message of a validation to the log', async () => {
-      setupUser([permissions.createActivity]);
-
-      const logError = jest
-        .spyOn(Logger.prototype, 'error')
-        .mockImplementation();
-
-      jest
-        .spyOn(importService, 'import')
-        .mockRejectedValue(
-          new ImportValidationError('activities.0.accountId ("X") is not valid')
-        );
-
-      await expect(
-        controller.importActivities(impersonation, {
-          activities: [createActivity({ accountId: 'X' })]
-        })
-      ).rejects.toThrow(RpcException);
-
-      expect(logError).not.toHaveBeenCalled();
+      ).rejects.toBe(error);
     });
   });
 

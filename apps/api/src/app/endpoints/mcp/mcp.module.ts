@@ -15,11 +15,13 @@ import {
 } from '@rekog/mcp-nest';
 
 import { GhostfolioMcpController } from './mcp.controller';
+import { McpService } from './mcp.service';
 
 @Module({
   controllers: [GhostfolioMcpController],
   imports: [AiModule, ApiModule, ConfigurationModule, ImportModule, UserModule],
   providers: [
+    McpService,
     {
       inject: [ConfigurationService],
       provide: MCP_STRATEGY,
