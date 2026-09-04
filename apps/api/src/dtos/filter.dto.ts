@@ -1,19 +1,28 @@
 import { SYMBOL_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { AssetClass, DataSource } from '@prisma/client';
+import { Transform, TransformFnParams } from 'class-transformer';
+import { IsEnum, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import { isString } from 'lodash';
 
 export class FilterDto {
   @IsOptional()
-  @IsString()
-  accounts?: string;
+  @IsUUID(undefined, { each: true })
+  @Transform(({ value }: TransformFnParams) => {
+    return isString(value) ? value.split(',') : value;
+  })
+  accounts?: string[];
 
+  @IsEnum(AssetClass, { each: true })
   @IsOptional()
-  @IsString()
-  assetClasses?: string;
+  @Transform(({ value }: TransformFnParams) => {
+    return isString(value) ? value.split(',') : value;
+  })
+  assetClasses?: AssetClass[];
 
+  @IsEnum(DataSource)
   @IsOptional()
-  @IsString()
-  dataSource?: string;
+  dataSource?: DataSource;
 
   @IsOptional()
   @IsString()
@@ -21,6 +30,9 @@ export class FilterDto {
   symbol?: string;
 
   @IsOptional()
-  @IsString()
-  tags?: string;
+  @IsUUID(undefined, { each: true })
+  @Transform(({ value }: TransformFnParams) => {
+    return isString(value) ? value.split(',') : value;
+  })
+  tags?: string[];
 }

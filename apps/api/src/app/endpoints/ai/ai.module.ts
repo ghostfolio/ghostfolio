@@ -7,6 +7,7 @@ import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.servic
 import { RulesService } from '@ghostfolio/api/app/portfolio/rules.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
+import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -46,6 +47,7 @@ import { AiService } from './ai.service';
     RedisCacheModule,
     SymbolProfileModule,
     TagModule,
+    TransformDataSourceInRequestModule,
     UserModule
   ],
   providers: [
