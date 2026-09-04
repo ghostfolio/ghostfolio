@@ -1,4 +1,7 @@
-import { COMMENT_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
+import {
+  COMMENT_MAXIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
+} from '@ghostfolio/common/config';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import {
@@ -86,6 +89,7 @@ export class UpdateAssetProfileDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(SYMBOL_MAXIMUM_LENGTH)
   symbol?: string;
 
   @IsObject()

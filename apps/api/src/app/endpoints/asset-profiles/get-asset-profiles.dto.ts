@@ -43,8 +43,11 @@ export class GetAssetProfilesDto {
   skip?: number;
 
   @IsIn([
-    ...Object.values(Prisma.SymbolProfileScalarFieldEnum),
-    'activitiesCount'
+    'activitiesCount',
+    'assetClass',
+    'assetSubClass',
+    'dataSource',
+    'symbol'
   ])
   @IsOptional()
   sortColumn?: string;

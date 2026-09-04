@@ -1,4 +1,7 @@
-import { COMMENT_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
+import {
+  COMMENT_MAXIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
+} from '@ghostfolio/common/config';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
@@ -85,6 +88,7 @@ export class CreateAssetProfileDto {
   sectors?: Prisma.InputJsonArray;
 
   @IsString()
+  @MaxLength(SYMBOL_MAXIMUM_LENGTH)
   symbol: string;
 
   @IsOptional()
