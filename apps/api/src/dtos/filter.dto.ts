@@ -2,7 +2,13 @@ import { SYMBOL_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 
 import { AssetClass, DataSource } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsEnum, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength
+} from 'class-validator';
 import { isString } from 'lodash';
 
 export class FilterDto {
