@@ -1,12 +1,15 @@
 import { AssetClass, DataSource } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 import { isString } from 'lodash';
 
 export class FilterDto {
   @IsOptional()
-  @IsString()
-  accounts?: string;
+  @IsUUID(undefined, { each: true })
+  @Transform(({ value }: TransformFnParams) => {
+    return isString(value) ? value.split(',') : value;
+  })
+  accounts?: string[];
 
   @IsEnum(AssetClass, { each: true })
   @IsOptional()
@@ -24,6 +27,9 @@ export class FilterDto {
   symbol?: string;
 
   @IsOptional()
-  @IsString()
-  tags?: string;
+  @IsUUID(undefined, { each: true })
+  @Transform(({ value }: TransformFnParams) => {
+    return isString(value) ? value.split(',') : value;
+  })
+  tags?: string[];
 }
