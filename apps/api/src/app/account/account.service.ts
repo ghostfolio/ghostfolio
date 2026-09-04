@@ -8,7 +8,10 @@ import {
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getStartOfUtcDateOfTomorrow
+} from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { AccountWithBalance } from '@ghostfolio/common/types';
 
@@ -24,7 +27,7 @@ import {
   Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday, format } from 'date-fns';
+import { format } from 'date-fns';
 import { groupBy, isNil } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
@@ -134,7 +137,7 @@ export class AccountService {
       where
     });
 
-    const endOfTodayDate = endOfToday();
+    const startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow();
 
     return accounts.map((account) => {
       const result = {
@@ -143,7 +146,10 @@ export class AccountService {
           // The balances are ordered by date descending, hence the first account
           // balance which is not in the future reflects the current balance
           account.balances.find(({ date }) => {
-            return !isAccountBalanceInFuture({ date, endOfTodayDate });
+            return !isAccountBalanceInFuture({
+              date,
+              startOfUtcDateOfTomorrow
+            });
           })?.value ?? 0,
         tags: isTagsIncluded
           ? (account.tags as unknown as { tag: Tag }[]).map(({ tag }) => {
