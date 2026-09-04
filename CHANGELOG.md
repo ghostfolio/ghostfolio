@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced a DTO for the query parameters of the asset profiles endpoint
+- Introduced a DTO for the query parameters of the symbol lookup endpoints
+
 ### Changed
 
 - Improved the server of the Model Context Protocol (MCP) (experimental)
-- Hardened the validation of the query parameters (`accounts`, `assetClasses`, `dataSource` and `tags`) in the endpoints with filters
+- Introduced a maximum length for the comment in the API endpoints
+- Introduced a maximum length for the search query and the symbol in the API endpoints
+- Hardened the validation of the query parameters (`accounts`, `assetClasses`, `dataSource` and `tags`) in the API endpoints with filters
 
 ### Fixed
 

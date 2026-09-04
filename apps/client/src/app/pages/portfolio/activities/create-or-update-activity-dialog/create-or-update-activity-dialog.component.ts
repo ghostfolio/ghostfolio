@@ -1,6 +1,10 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { ASSET_CLASS_MAPPING, DEFAULT_LOCALE } from '@ghostfolio/common/config';
+import {
+  ASSET_CLASS_MAPPING,
+  COMMENT_MAXIMUM_LENGTH,
+  DEFAULT_LOCALE
+} from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import {
   getDateFormatString,
@@ -79,6 +83,7 @@ import { ActivityType } from './types/activity-type.type';
   templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class GfCreateOrUpdateActivityDialogComponent {
+  protected readonly COMMENT_MAXIMUM_LENGTH = COMMENT_MAXIMUM_LENGTH;
   protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
 
   protected activityForm: FormGroup;
