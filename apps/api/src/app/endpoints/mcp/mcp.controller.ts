@@ -175,8 +175,8 @@ export class GhostfolioMcpController {
     }: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
   ) {
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts: accountIds?.join(','),
-      filterByAssetClasses: assetClasses?.join(','),
+      filterByAccounts: accountIds,
+      filterByAssetClasses: assetClasses,
       filterByDataSource: holding?.dataSource,
       filterBySymbol: holding?.symbol
     });
@@ -222,7 +222,7 @@ export class GhostfolioMcpController {
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAssetClasses: assetClasses?.join(','),
+      filterByAssetClasses: assetClasses,
       filterByDataSource: holding?.dataSource,
       filterBySymbol: holding?.symbol
     });
