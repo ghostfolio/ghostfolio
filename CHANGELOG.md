@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Introduced a DTO for the query parameters of the asset profiles endpoint
 - Introduced a DTO for the query parameters of the symbol lookup endpoints
 
 ### Changed
