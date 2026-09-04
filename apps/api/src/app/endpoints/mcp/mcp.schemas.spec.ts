@@ -1,21 +1,7 @@
 import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
 
-import { Type as ActivityType } from '@prisma/client';
-
 import { IMPORT_ACTIVITIES_PARAMETERS } from './mcp.schemas';
-
-function createActivity(overrides: Record<string, unknown> = {}) {
-  return {
-    currency: 'USD',
-    date: '2024-01-01',
-    fee: 0,
-    quantity: 1,
-    symbol: 'AAPL',
-    type: ActivityType.BUY,
-    unitPrice: 100,
-    ...overrides
-  };
-}
+import { createActivity } from './mcp.test-utils';
 
 describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
   function parse(activities: unknown[]) {
@@ -45,7 +31,7 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
   it('Removes a tag, because the tool takes no tag', () => {
     expect(
       IMPORT_ACTIVITIES_PARAMETERS.parse({
-        activities: [createActivity({ tags: ['tag-id'] })]
+        activities: [{ ...createActivity(), tags: ['tag-id'] }]
       }).activities[0]
     ).not.toHaveProperty('tags');
   });

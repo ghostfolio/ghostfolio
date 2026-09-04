@@ -1,16 +1,10 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import {
-  getMarkdownTable,
-  TableColumnDefinition
-} from '@ghostfolio/api/helper/markdown-table.helper';
+import { TableColumnDefinition } from '@ghostfolio/api/helper/interfaces/table-column-definition.interface';
+import { getMarkdownTable } from '@ghostfolio/api/helper/markdown-table.helper';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { DATE_FORMAT, isAccountExcluded } from '@ghostfolio/common/helper';
-import {
-  Activity,
-  Filter,
-  PortfolioPosition
-} from '@ghostfolio/common/interfaces';
+import { Activity, Filter } from '@ghostfolio/common/interfaces';
 import { AccountWithValue } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -21,14 +15,7 @@ import {
 } from '@prisma/client';
 import { format } from 'date-fns';
 
-/**
- * A holding with the asset class and the asset sub class in the language of
- * the caller, because the column of a table cannot translate a value itself
- */
-type HoldingWithTranslations = PortfolioPosition & {
-  assetClassLabel: string;
-  assetSubClassLabel: string;
-};
+import { HoldingsTableColumnDefinition } from './types/holdings-table-column-definition.type';
 
 function getAllocationInPercentage(allocationInPercentage: number) {
   return `${(allocationInPercentage * 100).toFixed(3)}%`;
@@ -136,7 +123,7 @@ export class PortfolioTableService {
       }
     ];
 
-  private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<HoldingWithTranslations>[] =
+  private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: HoldingsTableColumnDefinition[] =
     [
       {
         getValue: ({ assetProfile }) => {
@@ -157,14 +144,14 @@ export class PortfolioTableService {
         name: 'Currency'
       },
       {
-        getValue: ({ assetClassLabel }) => {
-          return assetClassLabel;
+        getValue: ({ assetProfile }, { assetClassTranslations }) => {
+          return assetClassTranslations[assetProfile.assetClass] ?? '';
         },
         name: 'Asset Class'
       },
       {
-        getValue: ({ assetSubClassLabel }) => {
-          return assetSubClassLabel;
+        getValue: ({ assetProfile }, { assetSubClassTranslations }) => {
+          return assetSubClassTranslations[assetProfile.assetSubClass] ?? '';
         },
         name: 'Asset Sub Class'
       },
@@ -337,19 +324,9 @@ export class PortfolioTableService {
       values: Object.values(AssetSubClass)
     });
 
-    const holdingsWithTranslations = [...holdings]
-      .sort((a, b) => {
-        return b.allocationInPercentage - a.allocationInPercentage;
-      })
-      .map((holding) => {
-        return {
-          ...holding,
-          assetClassLabel:
-            assetClassTranslations[holding.assetProfile.assetClass] ?? '',
-          assetSubClassLabel:
-            assetSubClassTranslations[holding.assetProfile.assetSubClass] ?? ''
-        };
-      });
+    const sortedHoldings = [...holdings].sort((a, b) => {
+      return b.allocationInPercentage - a.allocationInPercentage;
+    });
 
     return [
       '## Holdings',
@@ -357,7 +334,8 @@ export class PortfolioTableService {
       await getMarkdownTable({
         columnDefinitions:
           PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS,
-        rows: holdingsWithTranslations
+        context: { assetClassTranslations, assetSubClassTranslations },
+        rows: sortedHoldings
       })
     ].join('\n');
   }
