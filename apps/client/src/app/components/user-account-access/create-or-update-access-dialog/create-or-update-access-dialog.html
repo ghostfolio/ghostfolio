@@ -82,7 +82,7 @@
           <mat-option value="READ_RESTRICTED">
             <gf-access-level-icon accessLevel="READ_RESTRICTED" />
           </mat-option>
-          @if (!isPublicAccess) {
+          @if (canGrantRestrictedWriteAccess) {
             <mat-option
               value="CREATE_READ_RESTRICTED_UPDATE_DELETE"
               [disabled]="!canGrantWriteAccess"
@@ -132,6 +132,18 @@
         [holdings]="holdings"
         [tags]="tags"
       />
+    }
+    @if (showMcpDetails || showPublicDetails) {
+      <h2 class="h6" i18n>Details</h2>
+      @if (showMcpDetails) {
+        <pre class="m-0"><code>{{ mcpConfiguration | json }}</code></pre>
+      } @else if (showPublicDetails) {
+        <div>
+          <code class="text-break"
+            >GET {{ baseUrl }}/api/v1/public/{{ accessId }}/portfolio</code
+          >
+        </div>
+      }
     }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
