@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Hardened the validation of the query parameters (`assetClasses` and `dataSource`) in the endpoints with filters
+- Hardened the validation of the query parameters (`accounts`, `assetClasses`, `dataSource` and `tags`) in the endpoints with filters
 
 ## 3.66.0 - 2026-09-03
 
