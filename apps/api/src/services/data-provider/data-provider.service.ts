@@ -725,6 +725,12 @@ export class DataProviderService implements OnModuleInit {
 
         promises.push(
           promise.then(async (result) => {
+            // Collect the quotes of this chunk to store only the fetched
+            // market data, not the entire response
+            const dataProviderResponses: (DataProviderResponse & {
+              symbol: string;
+            })[] = [];
+
             for (const [symbol, dataProviderResponse] of Object.entries(
               result
             )) {
@@ -738,6 +744,8 @@ export class DataProviderService implements OnModuleInit {
               ) {
                 continue;
               }
+
+              dataProviderResponses.push({ ...dataProviderResponse, symbol });
 
               response[
                 getAssetProfileIdentifier({
@@ -772,6 +780,11 @@ export class DataProviderService implements OnModuleInit {
                     marketState: 'open'
                   };
 
+                  dataProviderResponses.push({
+                    ...derivedDataProviderResponse,
+                    symbol: `${DEFAULT_CURRENCY}${currency}`
+                  });
+
                   response[
                     getAssetProfileIdentifier({
                       dataSource: DataSource[dataSource],
@@ -805,7 +818,7 @@ export class DataProviderService implements OnModuleInit {
 
             try {
               await this.marketDataService.updateMany({
-                data: Object.values(response)
+                data: dataProviderResponses
                   .filter(({ marketPrice, marketState }) => {
                     return (
                       isNumber(marketPrice) &&
