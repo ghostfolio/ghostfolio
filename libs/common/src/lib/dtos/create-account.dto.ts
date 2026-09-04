@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   ValidateIf
 } from 'class-validator';
 import { isString } from 'lodash';
@@ -22,6 +23,7 @@ export class CreateAccountDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(2000)
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )

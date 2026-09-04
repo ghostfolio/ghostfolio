@@ -1,7 +1,7 @@
 import { DateRangeFilterDto } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import { HoldingType } from '@ghostfolio/common/types';
 
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class GetHoldingsDto extends DateRangeFilterDto {
   @IsIn(['ACTIVE', 'CLOSED'] as HoldingType[])
@@ -10,5 +10,6 @@ export class GetHoldingsDto extends DateRangeFilterDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   query?: string;
 }

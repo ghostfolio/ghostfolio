@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class FilterDto {
   @IsOptional()
@@ -15,6 +15,7 @@ export class FilterDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(255)
   symbol?: string;
 
   @IsOptional()

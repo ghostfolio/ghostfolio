@@ -16,6 +16,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  MaxLength,
   ValidateNested
 } from 'class-validator';
 
@@ -35,6 +36,7 @@ export class UpdateAssetProfileDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(2000)
   comment?: string | null;
 
   @IsArray()

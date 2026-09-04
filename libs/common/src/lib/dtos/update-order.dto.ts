@@ -11,6 +11,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   Min,
   Validate
 } from 'class-validator';
@@ -31,6 +32,7 @@ export class UpdateOrderDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(2000)
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )
@@ -62,6 +64,7 @@ export class UpdateOrderDto {
   quantity: number;
 
   @IsString()
+  @MaxLength(255)
   symbol: string;
 
   @ArrayUnique()
