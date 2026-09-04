@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a maximum length for the comment in the API endpoints
 - Introduced a maximum length for the search query and the symbol in the API endpoints
 
+### Fixed
+
+- Fixed the missing country mapping of _Congo (Dem. Rep. of the)_ and _Congo (Rep. of)_ in the _Financial Modeling Prep_ service
+
 ## 3.66.0 - 2026-09-03
 
 ### Changed
