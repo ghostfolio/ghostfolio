@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
 
+### Fixed
+
+- Fixed the fallback of the market price in the portfolio calculation to use the unit price of the latest buy or sell activity
+
 ## 3.79.0 - 2026-10-04
 
 ### Added
