@@ -1,3 +1,4 @@
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -151,5 +152,52 @@ describe('CurrentRateService', () => {
         }
       ]
     });
+  });
+
+  it('uses the latest market price when the current quote is unavailable', async () => {
+    const historicalDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const activitiesService = {
+      getLatestActivity: jest.fn().mockResolvedValue({ unitPrice: 100 })
+    };
+    const dataProviderService = {
+      getQuotes: jest.fn().mockResolvedValue({})
+    };
+    const marketDataService = {
+      getRange: jest.fn().mockResolvedValue([
+        {
+          createdAt: historicalDate,
+          dataSource: DataSource.YAHOO,
+          date: historicalDate,
+          id: '40520fdf-4e31-47ab-8bd0-ca61c70d4684',
+          isCarriedForward: false,
+          marketPrice: 200,
+          state: 'CLOSE',
+          symbol: 'AMZN'
+        }
+      ]),
+      getRangeCount: jest.fn().mockResolvedValue(1)
+    };
+    const service = new CurrentRateService(
+      activitiesService as unknown as ActivitiesService,
+      dataProviderService as unknown as DataProviderService,
+      marketDataService as unknown as MarketDataService,
+      null
+    );
+
+    const response = await service.getValues({
+      dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
+      dateQuery: {
+        gte: historicalDate,
+        lt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+      }
+    });
+    const latestValue = response.values
+      .filter(({ dataSource, symbol }) => {
+        return dataSource === DataSource.YAHOO && symbol === 'AMZN';
+      })
+      .sort((a, b) => b.date.getTime() - a.date.getTime())[0];
+
+    expect(latestValue.marketPrice).toBe(200);
+    expect(activitiesService.getLatestActivity).not.toHaveBeenCalled();
   });
 });
