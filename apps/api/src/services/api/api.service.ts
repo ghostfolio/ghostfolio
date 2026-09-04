@@ -15,7 +15,7 @@ export class ApiService {
     filterByTags
   }: {
     filterByAccounts?: string;
-    filterByAssetClasses?: string;
+    filterByAssetClasses?: string[];
     filterByAssetSubClasses?: string;
     filterByDataSource?: string;
     filterByHoldingType?: string;
@@ -24,7 +24,7 @@ export class ApiService {
     filterByTags?: string;
   }): Filter[] {
     const accountIds = filterByAccounts?.split(',') ?? [];
-    const assetClasses = filterByAssetClasses?.split(',') ?? [];
+    const assetClasses = filterByAssetClasses ?? [];
     const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
     const dataSource = filterByDataSource;
     const holdingType = filterByHoldingType;
@@ -97,7 +97,7 @@ export class ApiService {
   }): Filter[] {
     return this.buildFiltersFromQueryParams({
       filterByAccounts: userSettings?.['filters.accounts']?.[0],
-      filterByAssetClasses: userSettings?.['filters.assetClasses']?.[0],
+      filterByAssetClasses: userSettings?.['filters.assetClasses'],
       filterByDataSource: userSettings?.['filters.dataSource'],
       filterBySymbol: userSettings?.['filters.symbol'],
       filterByTags: userSettings?.['filters.tags']?.[0]
