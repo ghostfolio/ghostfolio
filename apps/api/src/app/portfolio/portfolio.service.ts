@@ -888,20 +888,47 @@ export class PortfolioService {
   public async getHolding({
     dataSource,
     symbol,
-    userId
+    userId,
+    withExcludedActivities = false
   }: {
     userId: string;
+    withExcludedActivities?: boolean;
   } & AssetProfileIdentifier): Promise<PortfolioHoldingResponse> {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { activities } =
+    const holdingFilters: Filter[] = [
+      { id: dataSource, type: 'DATA_SOURCE' },
+      { id: symbol, type: 'SYMBOL' }
+    ];
+
+    let { activities } =
       await this.activitiesService.getActivitiesForPortfolioCalculator({
         userCurrency,
         userId
       });
 
-    if (activities.length === 0) {
+    let hasActivitiesOfHolding = activities.some(({ assetProfile }) => {
+      return (
+        assetProfile.dataSource === dataSource && assetProfile.symbol === symbol
+      );
+    });
+
+    const isExcludedHolding = withExcludedActivities && !hasActivitiesOfHolding;
+
+    if (isExcludedHolding) {
+      ({ activities } =
+        await this.activitiesService.getActivitiesForPortfolioCalculator({
+          userCurrency,
+          userId,
+          filters: holdingFilters,
+          withExcludedAccountsAndActivities: true
+        }));
+
+      hasActivitiesOfHolding = activities.length > 0;
+    }
+
+    if (!hasActivitiesOfHolding) {
       return undefined;
     }
 
@@ -927,7 +954,9 @@ export class PortfolioService {
       activities,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      filters: isExcludedHolding ? holdingFilters : undefined,
+      usePortfolioSnapshotCache: !isExcludedHolding
     });
 
     const transactionPoints = portfolioCalculator.getTransactionPoints();
@@ -2033,12 +2062,7 @@ export class PortfolioService {
     const nonExcludedActivities: Activity[] = [];
 
     for (const activity of activities) {
-      if (
-        (activity.account && isAccountExcluded(activity.account)) ||
-        activity.tags?.some(({ id }) => {
-          return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
-        })
-      ) {
+      if (this.isExcludedFromAnalysis(activity)) {
         excludedActivities.push(activity);
       } else {
         nonExcludedActivities.push(activity);
@@ -2202,6 +2226,15 @@ export class PortfolioService {
         totalInvestmentWithCurrencyEffect.toNumber(),
       totalValueInBaseCurrency: netWorth
     };
+  }
+
+  private isExcludedFromAnalysis(activity: Activity) {
+    return (
+      isAccountExcluded(activity.account) ||
+      activity.tags?.some(({ id }) => {
+        return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+      }) === true
+    );
   }
 
   private getSumOfActivityType({
