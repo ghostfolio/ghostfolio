@@ -7,10 +7,7 @@
   ) {
     <a target="_blank" [href]="dataProviderInfo.url">{{
       dataProviderInfo.name
-    }}</a>
-    @if (!last) {
-      ,
-    }
+    }}</a
+    >{{ last ? '.' : ', ' }}
   }
-  <ng-container>.</ng-container>
 </small>
