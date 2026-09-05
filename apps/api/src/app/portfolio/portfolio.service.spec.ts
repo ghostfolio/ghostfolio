@@ -1,3 +1,4 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
@@ -25,6 +26,7 @@ import { randomUUID } from 'node:crypto';
 import { PortfolioService } from './portfolio.service';
 
 describe('PortfolioService', () => {
+  let accountBalanceService: AccountBalanceService;
   let accountService: AccountService;
   let activitiesService: ActivitiesService;
   let configurationService: ConfigurationService;
@@ -51,6 +53,12 @@ describe('PortfolioService', () => {
       null,
       null,
       null,
+      null
+    );
+
+    accountBalanceService = new AccountBalanceService(
+      null,
+      exchangeRateDataService,
       null
     );
 
@@ -100,7 +108,7 @@ describe('PortfolioService', () => {
     );
 
     portfolioService = new PortfolioService(
-      null,
+      accountBalanceService,
       accountService,
       activitiesService,
       null,
@@ -487,6 +495,127 @@ describe('PortfolioService', () => {
       expect(holdings).toHaveLength(1);
       expect(holdings[0].assetProfile.symbol).toBe('USD');
       expect(holdings[0].valueInBaseCurrency).toBe(1000);
+    });
+  });
+
+  describe('getPerformance', () => {
+    const getPerformance = jest.fn();
+    const portfolioCalculator = {
+      getPerformance,
+      getSnapshot: jest.fn()
+    } as unknown as PortfolioCalculator;
+
+    beforeEach(() => {
+      jest
+        .spyOn(accountBalanceService, 'getAccountBalanceItems')
+        .mockResolvedValue([]);
+      getPerformance.mockReset();
+
+      jest.spyOn(userService, 'user').mockResolvedValue({
+        id: userDummyData.id,
+        settings: {
+          settings: {
+            baseCurrency: 'USD'
+          }
+        }
+      } as unknown as Awaited<ReturnType<typeof userService.user>>);
+
+      jest
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+        .mockResolvedValue({ activities: [{}], count: 1 } as never);
+      jest
+        .spyOn(portfolioCalculatorFactory, 'createCalculator')
+        .mockReturnValue(portfolioCalculator);
+      portfolioCalculator.getSnapshot = jest.fn().mockResolvedValue({
+        errors: [],
+        hasErrors: false,
+        historicalData: [{ date: '2024-01-01' }]
+      });
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('returns one chart entry per interval year, including years without chart data, when grouping by year', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2025-06-15'));
+
+      let performanceCallCount = 0;
+
+      getPerformance.mockImplementation(
+        ({ end }: { end: Date; start: Date }) => {
+          performanceCallCount++;
+
+          if (performanceCallCount === 1) {
+            return Promise.resolve({
+              chart: [
+                {
+                  date: '2025-06-15',
+                  netPerformance: 10000,
+                  netPerformanceInPercentage: 1,
+                  netPerformanceInPercentageWithCurrencyEffect: 1.1,
+                  netPerformanceWithCurrencyEffect: 11000,
+                  netWorth: 30000,
+                  totalInvestment: 20000,
+                  totalInvestmentValueWithCurrencyEffect: 21000,
+                  valueWithCurrencyEffect: 31000
+                }
+              ]
+            });
+          }
+
+          const year = end.getFullYear();
+
+          if (year === 2022) {
+            return Promise.resolve({ chart: [] });
+          }
+
+          return Promise.resolve({
+            chart: [
+              { date: `${year}-01-01`, netPerformance: year - 1 },
+              {
+                date: `${year}-12-31`,
+                netPerformance: year,
+                netWorth: year * 10
+              }
+            ]
+          });
+        }
+      );
+
+      const result = await portfolioService.getPerformance({
+        dateRange: '5y',
+        groupBy: 'year',
+        userId: userDummyData.id
+      });
+
+      expect(result.chart).toEqual(
+        [2020, 2021, 2022, 2023, 2024, 2025].map((year) =>
+          year === 2022
+            ? { date: `${year}-01-01` }
+            : {
+                date: `${year}-01-01`,
+                netPerformance: year,
+                netWorth: year * 10
+              }
+        )
+      );
+      expect(result.performance).toEqual({
+        currentNetWorth: 30000,
+        currentValueInBaseCurrency: 31000,
+        netPerformance: 10000,
+        netPerformancePercentage: 1,
+        netPerformancePercentageWithCurrencyEffect: 1.1,
+        netPerformanceWithCurrencyEffect: 11000,
+        totalInvestment: 20000,
+        totalInvestmentValueWithCurrencyEffect: 21000
+      });
+      expect(getPerformance).toHaveBeenCalledTimes(7);
+      expect(
+        getPerformance.mock.calls.slice(1).map(([{ end }]) => {
+          return end.getFullYear();
+        })
+      ).toEqual([2020, 2021, 2022, 2023, 2024, 2025]);
     });
   });
 
