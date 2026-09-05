@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the missing icon of the expiration date picker in the create or update access dialog
 - Fixed the data provider information in the holding detail dialog
 - Fixed the storage of the market data in the data provider service to only include the newly fetched quotes
 - Fixed the immediate expiration of a portfolio snapshot with errors
