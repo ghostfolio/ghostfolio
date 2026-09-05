@@ -23,12 +23,12 @@
           <ng-container matColumnDef="status">
             <th
               *matHeaderCellDef
-              class="d-none d-lg-table-cell px-1"
+              class="d-none d-lg-table-cell gf-fit-content px-1"
               mat-header-cell
             ></th>
             <td
               *matCellDef="let element"
-              class="d-none d-lg-table-cell px-1"
+              class="d-none d-lg-table-cell gf-fit-content px-1"
               mat-cell
             >
               @if (!element.isActive) {
@@ -49,8 +49,12 @@
           </ng-container>
 
           <ng-container matColumnDef="select">
-            <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
+            <th
+              *matHeaderCellDef
+              class="gf-fit-content px-1"
+              mat-header-cell
+            ></th>
+            <td *matCellDef="let element" class="gf-fit-content px-1" mat-cell>
               @if (
                 canDeleteAssetProfile({
                   activitiesCount: element.activitiesCount,
@@ -81,7 +85,7 @@
           <ng-container matColumnDef="nameWithSymbol">
             <th
               *matHeaderCellDef
-              class="px-1"
+              class="gf-table-column-fill px-1"
               mat-header-cell
               mat-sort-header="symbol"
             >
@@ -89,7 +93,7 @@
             </th>
             <td
               *matCellDef="let element"
-              class="line-height-normal px-1"
+              class="gf-table-column-fill line-height-normal px-1"
               mat-cell
             >
               <div class="text-truncate">{{ element.name }}</div>
@@ -243,7 +247,11 @@
           </ng-container>
 
           <ng-container matColumnDef="actions" stickyEnd>
-            <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+            <th
+              *matHeaderCellDef
+              class="gf-fit-content px-1 text-right"
+              mat-header-cell
+            >
               <button
                 class="mx-1 no-min-width px-2"
                 mat-button

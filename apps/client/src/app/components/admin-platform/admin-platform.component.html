@@ -19,8 +19,12 @@
     [dataSource]="dataSource"
   >
     <ng-container matColumnDef="icon" sticky>
-      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <th *matHeaderCellDef class="gf-fit-content px-1" mat-header-cell></th>
+      <td
+        *matCellDef="let element"
+        class="gf-fit-content px-1 text-center"
+        mat-cell
+      >
         <gf-entity-logo
           [hasPlaceholder]="true"
           [tooltip]="element.name"
@@ -30,10 +34,19 @@
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
+      <th
+        *matHeaderCellDef
+        class="gf-table-column-fill px-1"
+        mat-header-cell
+        mat-sort-header="name"
+      >
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="gf-table-column-fill px-1 text-nowrap"
+        mat-cell
+      >
         {{ element.name }}
       </td>
     </ng-container>
@@ -66,8 +79,16 @@
     </ng-container>
 
     <ng-container matColumnDef="actions" stickyEnd>
-      <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <th
+        *matHeaderCellDef
+        class="gf-fit-content px-1 text-center"
+        mat-header-cell
+      ></th>
+      <td
+        *matCellDef="let element"
+        class="gf-fit-content px-1 text-center"
+        mat-cell
+      >
         <button
           class="mx-1 no-min-width px-2"
           mat-button
