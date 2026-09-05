@@ -725,9 +725,7 @@ export class DataProviderService implements OnModuleInit {
 
         promises.push(
           promise.then(async (result) => {
-            // Collect the quotes of this chunk to store only the fetched
-            // market data, not the entire response
-            const dataProviderResponses: (DataProviderResponse & {
+            const fetchedQuotes: (DataProviderResponse & {
               symbol: string;
             })[] = [];
 
@@ -745,14 +743,16 @@ export class DataProviderService implements OnModuleInit {
                 continue;
               }
 
-              dataProviderResponses.push({ ...dataProviderResponse, symbol });
+              const quote = { ...dataProviderResponse, symbol };
+
+              fetchedQuotes.push(quote);
 
               response[
                 getAssetProfileIdentifier({
                   symbol,
                   dataSource: DataSource[dataSource]
                 })
-              ] = { ...dataProviderResponse, symbol };
+              ] = quote;
 
               this.redisCacheService.set(
                 this.redisCacheService.getQuoteKey({
@@ -780,20 +780,19 @@ export class DataProviderService implements OnModuleInit {
                     marketState: 'open'
                   };
 
-                  dataProviderResponses.push({
+                  const derivedQuote = {
                     ...derivedDataProviderResponse,
                     symbol: `${DEFAULT_CURRENCY}${currency}`
-                  });
+                  };
+
+                  fetchedQuotes.push(derivedQuote);
 
                   response[
                     getAssetProfileIdentifier({
                       dataSource: DataSource[dataSource],
                       symbol: `${DEFAULT_CURRENCY}${currency}`
                     })
-                  ] = {
-                    ...derivedDataProviderResponse,
-                    symbol: `${DEFAULT_CURRENCY}${currency}`
-                  };
+                  ] = derivedQuote;
 
                   this.redisCacheService.set(
                     this.redisCacheService.getQuoteKey({
@@ -818,7 +817,7 @@ export class DataProviderService implements OnModuleInit {
 
             try {
               await this.marketDataService.updateMany({
-                data: dataProviderResponses
+                data: fetchedQuotes
                   .filter(({ marketPrice, marketState }) => {
                     return (
                       isNumber(marketPrice) &&
