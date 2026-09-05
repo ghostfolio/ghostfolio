@@ -55,14 +55,13 @@ export class GfAssistantListItemComponent
       this.queryParams = {};
       this.routerLink = this.item.routerLink;
     } else if (this.item?.mode === SearchMode.ASSET_PROFILE) {
-      this.queryParams = {
-        assetProfileDialog: true,
-        dataSource: this.item.dataSource,
-        symbol: this.item.symbol
-      };
+      this.queryParams = {};
 
       this.routerLink =
-        internalRoutes.adminControl.subRoutes.marketData.routerLink ?? [];
+        internalRoutes.adminControl.subRoutes.marketData.subRoutes.update.routerLink(
+          this.item.dataSource,
+          this.item.symbol
+        );
     } else if (this.item?.mode === SearchMode.HOLDING) {
       this.queryParams = {
         dataSource: this.item.dataSource,
