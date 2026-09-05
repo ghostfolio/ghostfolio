@@ -725,6 +725,10 @@ export class DataProviderService implements OnModuleInit {
 
         promises.push(
           promise.then(async (result) => {
+            const fetchedQuotes: (DataProviderResponse & {
+              symbol: string;
+            })[] = [];
+
             for (const [symbol, dataProviderResponse] of Object.entries(
               result
             )) {
@@ -739,12 +743,16 @@ export class DataProviderService implements OnModuleInit {
                 continue;
               }
 
+              const quote = { ...dataProviderResponse, symbol };
+
+              fetchedQuotes.push(quote);
+
               response[
                 getAssetProfileIdentifier({
                   symbol,
                   dataSource: DataSource[dataSource]
                 })
-              ] = { ...dataProviderResponse, symbol };
+              ] = quote;
 
               this.redisCacheService.set(
                 this.redisCacheService.getQuoteKey({
@@ -772,15 +780,19 @@ export class DataProviderService implements OnModuleInit {
                     marketState: 'open'
                   };
 
+                  const derivedQuote = {
+                    ...derivedDataProviderResponse,
+                    symbol: `${DEFAULT_CURRENCY}${currency}`
+                  };
+
+                  fetchedQuotes.push(derivedQuote);
+
                   response[
                     getAssetProfileIdentifier({
                       dataSource: DataSource[dataSource],
                       symbol: `${DEFAULT_CURRENCY}${currency}`
                     })
-                  ] = {
-                    ...derivedDataProviderResponse,
-                    symbol: `${DEFAULT_CURRENCY}${currency}`
-                  };
+                  ] = derivedQuote;
 
                   this.redisCacheService.set(
                     this.redisCacheService.getQuoteKey({
@@ -805,7 +817,7 @@ export class DataProviderService implements OnModuleInit {
 
             try {
               await this.marketDataService.updateMany({
-                data: Object.values(response)
+                data: fetchedQuotes
                   .filter(({ marketPrice, marketState }) => {
                     return (
                       isNumber(marketPrice) &&
