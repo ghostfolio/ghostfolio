@@ -1094,7 +1094,9 @@ export class PortfolioService {
         userId: assetProfile.userId
       },
       averagePrice: averagePrice.toNumber(),
-      dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
+      dataProviderInfo: this.dataProviderService
+        .getDataProvider(dataSource)
+        .getDataProviderInfo(),
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       dividendYieldPercent: dividendYieldPercent.toNumber(),
       dividendYieldPercentWithCurrencyEffect:
