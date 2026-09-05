@@ -92,11 +92,15 @@ import {
 import { Big } from 'big.js';
 import {
   differenceInDays,
+  eachYearOfInterval,
+  endOfYear,
   format,
   isAfter,
   isBefore,
   isSameMonth,
   isSameYear,
+  max,
+  min,
   parseISO,
   set
 } from 'date-fns';
@@ -1135,10 +1139,12 @@ export class PortfolioService {
   public async getPerformance({
     dateRange = DEFAULT_DATE_RANGE,
     filters,
+    groupBy,
     userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
+    groupBy?: 'year';
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
@@ -1190,10 +1196,39 @@ export class PortfolioService {
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
-    const { chart } = await portfolioCalculator.getPerformance({
+    const { chart: fullChart } = await portfolioCalculator.getPerformance({
       end: endDate,
       start: startDate
     });
+
+    let chart = fullChart;
+
+    if (groupBy === 'year') {
+      chart = [];
+
+      for (const year of eachYearOfInterval({
+        end: endDate,
+        start: startDate
+      })) {
+        const intervalEnd = min([endDate, endOfYear(year)]);
+        const intervalStart = max([startDate, year]);
+
+        if (!isBefore(intervalStart, intervalEnd)) {
+          continue;
+        }
+
+        const { chart: chartForYear } =
+          await portfolioCalculator.getPerformance({
+            end: intervalEnd,
+            start: intervalStart
+          });
+
+        chart.push({
+          ...(chartForYear.at(-1) ?? {}),
+          date: format(year, DATE_FORMAT)
+        });
+      }
+    }
 
     const {
       netPerformance,
@@ -1204,7 +1239,7 @@ export class PortfolioService {
       totalInvestment,
       totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
-    } = chart?.at(-1) ?? {
+    } = fullChart?.at(-1) ?? {
       netPerformance: 0,
       netPerformanceInPercentage: 0,
       netPerformanceInPercentageWithCurrencyEffect: 0,

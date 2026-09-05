@@ -494,6 +494,7 @@ export class PortfolioController {
       accounts,
       assetClasses,
       dataSource,
+      groupBy,
       range,
       symbol,
       tags,
@@ -510,6 +511,7 @@ export class PortfolioController {
 
     const performanceInformation = await this.portfolioService.getPerformance({
       filters,
+      groupBy,
       userId,
       withExcludedAccounts,
       dateRange: range
