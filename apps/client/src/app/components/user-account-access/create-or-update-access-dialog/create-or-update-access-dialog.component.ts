@@ -56,9 +56,12 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { IonIcon } from '@ionic/angular/standalone';
 import { AccessType } from '@prisma/client';
-import { addYears, endOfDay, isBefore, isValid, startOfDay } from 'date-fns';
+import { addDays, addYears, endOfDay, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline } from 'ionicons/icons';
 import { EMPTY, catchError } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
@@ -70,6 +73,7 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
     FormsModule,
     GfAccessLevelIconComponent,
     GfPortfolioFilterFormComponent,
+    IonIcon,
     JsonPipe,
     MatButtonModule,
     MatDatepickerModule,
@@ -116,6 +120,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   public constructor() {
     this.mode = this.data.access ? 'update' : 'create';
+
+    addIcons({ calendarClearOutline });
   }
 
   public get canApplyFilters() {
@@ -168,12 +174,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
-    this.minExpiresAt =
-      access?.expiresAt && isBefore(new Date(access.expiresAt), this.today)
-        ? startOfDay(new Date(access.expiresAt))
-        : this.today;
-
     this.assetClasses = getAssetClassFilters();
+
+    this.minExpiresAt = addDays(this.today, 1);
 
     this.userService
       .get()
