@@ -1,4 +1,5 @@
 import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
+import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -46,7 +47,7 @@ export class SubscriptionController {
 
   @Post('redeem-coupon')
   @HttpCode(StatusCodes.OK)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), CustomThrottlerGuard, HasPermissionGuard)
   public async redeemCoupon(@Body() { couponCode }: { couponCode: string }) {
     if (!this.request.user) {
       throw new HttpException(
@@ -119,7 +120,7 @@ export class SubscriptionController {
   }
 
   @Post('stripe/checkout-session')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), CustomThrottlerGuard, HasPermissionGuard)
   public async createStripeCheckoutSession(
     @Body() { couponId, priceId }: { couponId?: string; priceId: string }
   ): Promise<CreateStripeCheckoutSessionResponse> {
