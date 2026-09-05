@@ -112,7 +112,7 @@ describe('PortfolioCalculator', () => {
         usePortfolioSnapshotCache: false
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('500000'),

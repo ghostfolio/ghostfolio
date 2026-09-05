@@ -888,9 +888,11 @@ export class PortfolioService {
   public async getHolding({
     dataSource,
     symbol,
-    userId
+    userId,
+    withExcludedActivities = false
   }: {
     userId: string;
+    withExcludedActivities?: boolean;
   } & AssetProfileIdentifier): Promise<PortfolioHoldingResponse> {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -900,32 +902,33 @@ export class PortfolioService {
       { id: symbol, type: 'SYMBOL' }
     ];
 
-    const { activities: allActivitiesOfHolding } =
+    let { activities } =
       await this.activitiesService.getActivitiesForPortfolioCalculator({
         userCurrency,
-        userId,
-        filters: holdingFilters,
-        withExcludedAccountsAndActivities: true
+        userId
       });
 
-    if (allActivitiesOfHolding.length === 0) {
-      return undefined;
-    }
-
-    const hasExcludedActivities = allActivitiesOfHolding.some((activity) => {
-      return this.isExcludedFromAnalysis(activity);
+    let hasActivitiesOfHolding = activities.some(({ assetProfile }) => {
+      return (
+        assetProfile.dataSource === dataSource && assetProfile.symbol === symbol
+      );
     });
 
-    const activities = hasExcludedActivities
-      ? allActivitiesOfHolding
-      : (
-          await this.activitiesService.getActivitiesForPortfolioCalculator({
-            userCurrency,
-            userId
-          })
-        ).activities;
+    const isExcludedHolding = withExcludedActivities && !hasActivitiesOfHolding;
 
-    if (activities.length === 0) {
+    if (isExcludedHolding) {
+      ({ activities } =
+        await this.activitiesService.getActivitiesForPortfolioCalculator({
+          userCurrency,
+          userId,
+          filters: holdingFilters,
+          withExcludedAccountsAndActivities: true
+        }));
+
+      hasActivitiesOfHolding = activities.length > 0;
+    }
+
+    if (!hasActivitiesOfHolding) {
       return undefined;
     }
 
@@ -952,8 +955,8 @@ export class PortfolioService {
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency,
-      filters: hasExcludedActivities ? holdingFilters : undefined,
-      usePortfolioSnapshotCache: !hasExcludedActivities
+      filters: isExcludedHolding ? holdingFilters : undefined,
+      usePortfolioSnapshotCache: !isExcludedHolding
     });
 
     const transactionPoints = portfolioCalculator.getTransactionPoints();
