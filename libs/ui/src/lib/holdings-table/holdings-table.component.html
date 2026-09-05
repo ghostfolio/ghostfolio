@@ -3,13 +3,17 @@
     class="gf-table w-100"
     mat-table
     matSort
-    matSortActive="allocationInPercentage"
-    matSortDirection="desc"
     [dataSource]="dataSource"
+    [matSortActive]="sortActive()"
+    [matSortDirection]="sortDirection()"
   >
     <ng-container matColumnDef="icon" sticky>
-      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <th *matHeaderCellDef class="gf-fit-content px-1" mat-header-cell></th>
+      <td
+        *matCellDef="let element"
+        class="gf-fit-content px-1 text-center"
+        mat-cell
+      >
         <gf-entity-logo
           [dataSource]="element.assetProfile.dataSource"
           [symbol]="element.assetProfile.symbol"
@@ -21,13 +25,17 @@
     <ng-container matColumnDef="nameWithSymbol">
       <th
         *matHeaderCellDef
-        class="px-1"
+        class="gf-table-column-fill px-1"
         mat-header-cell
         mat-sort-header="assetProfile.name"
       >
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="line-height-normal px-1" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="gf-table-column-fill line-height-normal px-1"
+        mat-cell
+      >
         <div class="text-truncate">
           {{ element.assetProfile.name }}
           @if (element.assetProfile.name === element.assetProfile.symbol) {
@@ -161,14 +169,14 @@
     <ng-container matColumnDef="performanceInPercentage" stickyEnd>
       <th
         *matHeaderCellDef
-        class="justify-content-end px-1"
+        class="gf-fit-content justify-content-end px-1"
         mat-header-cell
         mat-sort-header="netPerformancePercentWithCurrencyEffect"
       >
         <span class="d-none d-sm-block" i18n>Performance</span>
         <span class="d-block d-sm-none" i18n-title title="Performance">±</span>
       </th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td *matCellDef="let element" class="gf-fit-content px-1" mat-cell>
         <div class="d-flex justify-content-end">
           <gf-value
             [colorizeSign]="true"
@@ -181,7 +189,11 @@
       </td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
+    <tr
+      *matHeaderRowDef="displayedColumns()"
+      mat-header-row
+      [class.d-none]="isSimplified()"
+    ></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"
       mat-row

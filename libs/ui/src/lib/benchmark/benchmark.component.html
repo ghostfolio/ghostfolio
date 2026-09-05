@@ -8,8 +8,12 @@
     [dataSource]="dataSource"
   >
     <ng-container matColumnDef="icon" sticky>
-      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <th *matHeaderCellDef class="gf-fit-content px-1" mat-header-cell></th>
+      <td
+        *matCellDef="let element"
+        class="gf-fit-content px-1 text-center"
+        mat-cell
+      >
         <gf-entity-logo
           [dataSource]="element.dataSource"
           [symbol]="element.symbol"
@@ -19,12 +23,17 @@
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+      <th
+        *matHeaderCellDef
+        class="gf-table-column-fill px-1"
+        mat-header-cell
+        mat-sort-header
+      >
         <ng-container i18n>Name</ng-container>
       </th>
       <td
         *matCellDef="let element"
-        class="line-height-normal px-1 text-nowrap"
+        class="gf-table-column-fill line-height-normal px-1 text-nowrap"
         mat-cell
       >
         <div class="text-truncate">
