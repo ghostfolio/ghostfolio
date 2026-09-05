@@ -18,7 +18,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { Type as ActivityType } from '@prisma/client';
 import { compareDesc, isBefore, isSameDay } from 'date-fns';
-import { isEmpty, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
@@ -38,6 +38,7 @@ export class CurrentRateService {
   @LogPerformance
   // TODO: Pass user instead of using this.request.user
   public async getValues({
+    assetProfileIdentifiersWithQuotes,
     dataGatheringItems,
     dateQuery
   }: GetValuesParams): Promise<GetValuesObject> {
@@ -54,11 +55,11 @@ export class CurrentRateService {
 
     if (includesToday) {
       const quotes = await this.dataProviderService.getQuotes({
-        items: dataGatheringItems,
+        items: assetProfileIdentifiersWithQuotes,
         user: this.request?.user
       });
 
-      for (const { dataSource, symbol } of dataGatheringItems) {
+      for (const { dataSource, symbol } of assetProfileIdentifiersWithQuotes) {
         const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
 
         if (quote?.dataProviderInfo) {
@@ -124,8 +125,27 @@ export class CurrentRateService {
       })
     };
 
-    if (!isEmpty(quoteErrors)) {
-      for (const { dataSource, symbol } of quoteErrors) {
+    if (includesToday) {
+      // A holding without a quote request also needs a market price of today,
+      // but it is not in error
+      const assetProfileIdentifiersWithoutQuotes = [
+        ...quoteErrors,
+        ...dataGatheringItems.filter(({ dataSource, symbol }) => {
+          return !assetProfileIdentifiersWithQuotes.some(
+            (assetProfileIdentifier) => {
+              return (
+                assetProfileIdentifier.dataSource === dataSource &&
+                assetProfileIdentifier.symbol === symbol
+              );
+            }
+          );
+        })
+      ];
+
+      for (const {
+        dataSource,
+        symbol
+      } of assetProfileIdentifiersWithoutQuotes) {
         try {
           const valueOfToday = response.values.find((currentValue) => {
             return (

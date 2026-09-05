@@ -145,6 +145,9 @@ describe('CurrentRateService', () => {
   it('getValues', async () => {
     expect(
       await currentRateService.getValues({
+        assetProfileIdentifiersWithQuotes: [
+          { dataSource: DataSource.YAHOO, symbol: 'AMZN' }
+        ],
         dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
         dateQuery: {
           lt: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
@@ -198,6 +201,9 @@ describe('CurrentRateService', () => {
     );
 
     const { errors, values } = await currentRateService.getValues({
+      assetProfileIdentifiersWithQuotes: [
+        { dataSource: DataSource.YAHOO, symbol: 'AMZN' }
+      ],
       dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
       dateQuery: { gte: yesterday, lt: endOfDay(new Date()) }
     });
@@ -226,6 +232,9 @@ describe('CurrentRateService', () => {
       .mockResolvedValue({ unitPrice: 1847.839966 } as Order);
 
     const { values } = await currentRateService.getValues({
+      assetProfileIdentifiersWithQuotes: [
+        { dataSource: DataSource.YAHOO, symbol: 'AMZN' }
+      ],
       dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
       dateQuery: {
         gte: subDays(today, 1, { in: utc }),
@@ -247,5 +256,46 @@ describe('CurrentRateService', () => {
         symbol: 'AMZN'
       }
     ]);
+  });
+
+  it('getValues without a quote request carries the latest market price forward', async () => {
+    const today = resetHours(new Date());
+    const yesterday = subDays(today, 1, { in: utc });
+
+    const getQuotesSpy = jest.spyOn(dataProviderService, 'getQuotes');
+
+    jest.spyOn(marketDataService, 'getRangeCount').mockResolvedValue(1);
+
+    jest.spyOn(marketDataService, 'getRange').mockResolvedValue([
+      {
+        createdAt: yesterday,
+        dataSource: DataSource.YAHOO,
+        date: yesterday,
+        id: 'd51d4e0b-9d1f-4d2e-8a0c-9a0f5c6b1d22',
+        isCarriedForward: false,
+        marketPrice: 1841.823902,
+        state: 'CLOSE',
+        symbol: 'AMZN'
+      }
+    ]);
+
+    const { errors, values } = await currentRateService.getValues({
+      assetProfileIdentifiersWithQuotes: [],
+      dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
+      dateQuery: { gte: yesterday, lt: endOfDay(new Date()) }
+    });
+
+    expect(getQuotesSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ items: [] })
+    );
+
+    expect(errors).toEqual([]);
+
+    expect(values).toContainEqual({
+      dataSource: DataSource.YAHOO,
+      date: today,
+      marketPrice: 1841.823902,
+      symbol: 'AMZN'
+    });
   });
 });
