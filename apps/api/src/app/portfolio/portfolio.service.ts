@@ -545,7 +545,8 @@ export class PortfolioService {
       filters,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
     });
 
     const { historicalData } = await portfolioCalculator.getSnapshot();
@@ -626,7 +627,8 @@ export class PortfolioService {
       filters,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
     });
 
     const { createdAt, currentValueInBaseCurrency, hasErrors, positions } =
@@ -927,7 +929,8 @@ export class PortfolioService {
       activities,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
     });
 
     const transactionPoints = portfolioCalculator.getTransactionPoints();
@@ -1182,7 +1185,8 @@ export class PortfolioService {
       filters,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
     });
 
     const { errors, hasErrors, historicalData } =

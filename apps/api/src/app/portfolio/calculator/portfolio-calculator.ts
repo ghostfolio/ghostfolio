@@ -20,6 +20,7 @@ import {
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
@@ -89,6 +90,7 @@ export abstract class PortfolioCalculator {
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
   private startDate: Date;
+  private subscriptionType?: SubscriptionType;
   private transactionPoints: TransactionPoint[];
   private userId: string;
 
@@ -102,6 +104,7 @@ export abstract class PortfolioCalculator {
     filters,
     portfolioSnapshotService,
     redisCacheService,
+    subscriptionType,
     userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
@@ -113,6 +116,7 @@ export abstract class PortfolioCalculator {
     filters: Filter[];
     portfolioSnapshotService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
+    subscriptionType?: SubscriptionType;
     userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
@@ -175,6 +179,7 @@ export abstract class PortfolioCalculator {
 
     this.portfolioSnapshotService = portfolioSnapshotService;
     this.redisCacheService = redisCacheService;
+    this.subscriptionType = subscriptionType;
     this.userId = userId;
 
     const { endDate, startDate } = getIntervalFromDateRange({
@@ -278,7 +283,8 @@ export abstract class PortfolioCalculator {
       dateQuery: {
         gte: this.startDate,
         lt: this.endDate
-      }
+      },
+      subscriptionType: this.subscriptionType
     });
 
     this.dataProviderInfos = dataProviderInfos;

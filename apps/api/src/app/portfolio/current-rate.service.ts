@@ -11,10 +11,8 @@ import {
   DataProviderInfo,
   ResponseError
 } from '@ghostfolio/common/interfaces';
-import type { RequestWithUser } from '@ghostfolio/common/types';
 
-import { Inject, Injectable } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { Injectable } from '@nestjs/common';
 import { isBefore, isToday } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash';
 
@@ -29,15 +27,14 @@ export class CurrentRateService {
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly marketDataService: MarketDataService
   ) {}
 
   @LogPerformance
-  // TODO: Pass user instead of using this.request.user
   public async getValues({
     dataGatheringItems,
-    dateQuery
+    dateQuery,
+    subscriptionType
   }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
 
@@ -52,8 +49,8 @@ export class CurrentRateService {
 
     if (includesToday) {
       const quotes = await this.dataProviderService.getQuotes({
-        items: dataGatheringItems,
-        user: this.request?.user
+        subscriptionType,
+        items: dataGatheringItems
       });
 
       for (const { dataSource, symbol } of dataGatheringItems) {
