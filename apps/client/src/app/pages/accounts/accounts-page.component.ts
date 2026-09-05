@@ -1,7 +1,6 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
-import { TransferBalanceDto } from '@ghostfolio/common/dtos';
 import { AccountsResponse, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
@@ -9,27 +8,19 @@ import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
-import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
   DestroyRef,
   inject,
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { DeviceDetectorService } from 'ngx-device-detector';
-import { filter, of, switchMap, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-import { TransferBalanceDialogParams } from './transfer-balance/interfaces/interfaces';
-import { GfTransferBalanceDialogComponent } from './transfer-balance/transfer-balance-dialog.component';
+import { Router, RouterModule } from '@angular/router';
+import { filter, switchMap, tap } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,32 +45,14 @@ export class GfAccountsPageComponent implements OnInit {
 
   private hasImpersonationId: boolean;
 
-  private readonly deviceType = computed(
-    () => this.deviceDetectorService.deviceInfo().deviceType
-  );
-
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly dialog = inject(MatDialog);
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService
   );
-  private readonly notificationService = inject(NotificationService);
-  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
-
-  public constructor() {
-    this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        if (params['transferBalanceDialog']) {
-          this.openTransferBalanceDialog();
-        }
-      });
-  }
 
   public ngOnInit() {
     this.impersonationStorageService
@@ -135,65 +108,10 @@ export class GfAccountsPageComponent implements OnInit {
       });
   }
 
-  protected onTransferBalance() {
-    this.router.navigate([], {
-      queryParams: { transferBalanceDialog: true }
-    });
-  }
-
   private fetchAccounts() {
     return this.dataService.fetchAccounts({
       filters: this.userService.getFilters()
     });
-  }
-
-  private openTransferBalanceDialog() {
-    const dialogRef = this.dialog.open<
-      GfTransferBalanceDialogComponent,
-      TransferBalanceDialogParams
-    >(GfTransferBalanceDialogComponent, {
-      data: {
-        accounts: this.user?.accounts
-      },
-      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((data: any) => {
-        if (data) {
-          this.reset();
-
-          const { accountIdFrom, accountIdTo, balance }: TransferBalanceDto =
-            data?.account;
-
-          this.dataService
-            .transferAccountBalance({
-              accountIdFrom,
-              accountIdTo,
-              balance
-            })
-            .pipe(
-              catchError(() => {
-                this.notificationService.alert({
-                  title: $localize`Oops, cash balance transfer has failed.`
-                });
-
-                return of(undefined);
-              }),
-              switchMap(() => this.fetchAccounts()),
-              takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((response) => {
-              this.updateAccounts(response);
-            });
-
-          this.changeDetectorRef.markForCheck();
-        }
-
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
   }
 
   private reset() {

@@ -91,6 +91,7 @@
           cdkTextareaAutosize
           formControlName="comment"
           matInput
+          [maxlength]="COMMENT_MAXIMUM_LENGTH"
           (keyup.enter)="$event.stopPropagation()"
         ></textarea>
       </mat-form-field>

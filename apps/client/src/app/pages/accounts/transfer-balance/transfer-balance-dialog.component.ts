@@ -99,13 +99,13 @@ export class GfTransferBalanceDialogComponent {
   }
 
   protected onSubmit() {
-    const account: TransferBalanceDto = {
+    const transferBalance: TransferBalanceDto = {
       accountIdFrom: this.transferBalanceForm.controls.fromAccount.value ?? '',
       accountIdTo: this.transferBalanceForm.controls.toAccount.value ?? '',
       balance: Number(this.transferBalanceForm.controls.balance.value)
     };
 
-    this.dialogRef.close({ account });
+    this.dialogRef.close(transferBalance);
   }
 
   private getAccountById(aId: string | null) {

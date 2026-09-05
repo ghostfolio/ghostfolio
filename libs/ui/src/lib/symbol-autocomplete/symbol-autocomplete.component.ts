@@ -1,3 +1,4 @@
+import { SEARCH_QUERY_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 import { LookupItem } from '@ghostfolio/common/interfaces';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -86,6 +87,7 @@ export class GfSymbolAutocompleteComponent
 
   public readonly control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
+  public readonly SEARCH_QUERY_MAXIMUM_LENGTH = SEARCH_QUERY_MAXIMUM_LENGTH;
 
   protected readonly symbolAutocomplete =
     viewChild.required<MatAutocomplete>('symbolAutocomplete');

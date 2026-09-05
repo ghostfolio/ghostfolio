@@ -2,6 +2,7 @@ import { AdminMarketDataService } from '@ghostfolio/client/components/admin-mark
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   ASSET_CLASS_MAPPING,
+  COMMENT_MAXIMUM_LENGTH,
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
 import { UpdateAssetProfileDto } from '@ghostfolio/common/dtos';
@@ -229,6 +230,7 @@ export class GfAssetProfileDialogComponent implements OnInit {
 
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
   protected canEditAssetProfile = true;
+  protected readonly COMMENT_MAXIMUM_LENGTH = COMMENT_MAXIMUM_LENGTH;
 
   protected countries: {
     [code: string]: { name: string; value: number };

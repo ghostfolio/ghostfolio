@@ -54,6 +54,8 @@ export class FinancialModelingPrepService
   implements DataProviderInterface, OnModuleInit
 {
   private static countriesMapping = {
+    'Congo (Dem. Rep. of the)': 'CD',
+    'Congo (Rep. of)': 'CG',
     'Czech Republic': 'CZ',
     'Korea (the Republic of)': 'KR',
     Macau: 'MO',

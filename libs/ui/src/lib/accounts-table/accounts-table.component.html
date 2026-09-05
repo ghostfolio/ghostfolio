@@ -4,7 +4,7 @@
       class="align-items-center d-flex"
       mat-stroked-button
       [disabled]="dataSource?.data.length < 2"
-      (click)="onTransferBalance()"
+      [routerLink]="transferCashBalanceRouterLink"
     >
       <ion-icon class="mr-2" name="arrow-redo-outline" />
       <span><ng-container i18n>Transfer Cash Balance</ng-container>...</span>
