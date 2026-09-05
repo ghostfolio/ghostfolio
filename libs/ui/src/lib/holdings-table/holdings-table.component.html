@@ -3,9 +3,9 @@
     class="gf-table w-100"
     mat-table
     matSort
-    matSortActive="allocationInPercentage"
-    matSortDirection="desc"
     [dataSource]="dataSource"
+    [matSortActive]="sortActive()"
+    [matSortDirection]="sortDirection()"
   >
     <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
@@ -181,7 +181,11 @@
       </td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
+    <tr
+      *matHeaderRowDef="displayedColumns()"
+      mat-header-row
+      [class.d-none]="isSimplified()"
+    ></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"
       mat-row
