@@ -34,7 +34,8 @@ export class PortfolioCalculatorFactory {
     calculationType,
     currency,
     filters = [],
-    userId
+    userId,
+    usePortfolioSnapshotCache = true
   }: {
     accountBalanceItems?: HistoricalDataItem[];
     activities: Activity[];
@@ -42,6 +43,7 @@ export class PortfolioCalculatorFactory {
     currency: string;
     filters?: Filter[];
     userId: string;
+    usePortfolioSnapshotCache?: boolean;
   }): PortfolioCalculator {
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
@@ -51,6 +53,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           userId,
+          usePortfolioSnapshotCache,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
@@ -65,6 +68,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           userId,
+          usePortfolioSnapshotCache,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
@@ -79,6 +83,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           userId,
+          usePortfolioSnapshotCache,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
@@ -93,6 +98,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           userId,
+          usePortfolioSnapshotCache,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
