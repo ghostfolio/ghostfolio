@@ -3,6 +3,7 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   Activity,
   Filter,
@@ -34,6 +35,7 @@ export class PortfolioCalculatorFactory {
     calculationType,
     currency,
     filters = [],
+    subscriptionType,
     userId
   }: {
     accountBalanceItems?: HistoricalDataItem[];
@@ -41,6 +43,7 @@ export class PortfolioCalculatorFactory {
     calculationType: PerformanceCalculationType;
     currency: string;
     filters?: Filter[];
+    subscriptionType?: SubscriptionType;
     userId: string;
   }): PortfolioCalculator {
     switch (calculationType) {
@@ -50,6 +53,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
+          subscriptionType,
           userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
@@ -64,6 +68,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
+          subscriptionType,
           userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
@@ -78,6 +83,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
+          subscriptionType,
           userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
@@ -92,6 +98,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
+          subscriptionType,
           userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
