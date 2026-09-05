@@ -94,6 +94,8 @@ export class TransformDataSourceInResponseInterceptor<
               'watchlist[*].dataSource'
             ]
           });
+
+          data.dataProviderInfo = undefined;
         }
 
         return data;

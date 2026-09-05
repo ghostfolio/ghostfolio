@@ -1,5 +1,5 @@
 <small class="text-muted">
-  <ng-container i18n>Market data provided by</ng-container>&nbsp;
+  <ng-container i18n>Market data provided by</ng-container>{{ ' ' }}
   @for (
     dataProviderInfo of dataProviderInfos;
     track dataProviderInfo;
@@ -9,8 +9,8 @@
       dataProviderInfo.name
     }}</a>
     @if (!last) {
-      ,&nbsp;
+      ,
     }
   }
-  .
+  <ng-container>.</ng-container>
 </small>
