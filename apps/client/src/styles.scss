@@ -349,6 +349,11 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
+.gf-fit-content {
+  white-space: nowrap;
+  width: 1%;
+}
+
 .gf-pointer-events-none {
   pointer-events: none;
 }
@@ -359,6 +364,10 @@ ngx-skeleton-loader {
 
 .gf-table {
   @include table.gf-table;
+}
+
+.gf-table-column-fill {
+  width: 100%;
 }
 
 .gf-text-wrap-balance {
