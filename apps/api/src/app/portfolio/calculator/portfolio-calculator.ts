@@ -268,6 +268,7 @@ export abstract class PortfolioCalculator {
       };
     }
 
+    const assetProfileIdentifiersWithQuotes: AssetProfileIdentifier[] = [];
     const cashAssetProfileIdentifiers = new Set<string>();
     const currencies: { [assetProfileIdentifier: string]: string } = {};
     const dataGatheringItems: DataGatheringItem[] = [];
@@ -279,6 +280,7 @@ export abstract class PortfolioCalculator {
       assetSubClass,
       currency,
       dataSource,
+      quantity,
       symbol
     } of holdingBalancesByDate.at(-1).holdings) {
       // Gather data for all assets except CASH
@@ -287,6 +289,14 @@ export abstract class PortfolioCalculator {
           dataSource,
           symbol
         });
+
+        if (!quantity.eq(0)) {
+          // Get a quote for active holdings only
+          assetProfileIdentifiersWithQuotes.push({
+            dataSource,
+            symbol
+          });
+        }
       }
 
       currencies[getAssetProfileIdentifier({ dataSource, symbol })] = currency;
@@ -305,6 +315,7 @@ export abstract class PortfolioCalculator {
       errors: currentRateErrors,
       values: marketSymbols
     } = await this.currentRateService.getValues({
+      assetProfileIdentifiersWithQuotes,
       dataGatheringItems,
       dateQuery: {
         gte: this.startDate,

@@ -144,6 +144,9 @@ describe('CurrentRateService', () => {
   it('getValues', async () => {
     expect(
       await currentRateService.getValues({
+        assetProfileIdentifiersWithQuotes: [
+          { dataSource: DataSource.YAHOO, symbol: 'AMZN' }
+        ],
         dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
         dateQuery: {
           lt: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
@@ -210,7 +213,8 @@ describe('CurrentRateService', () => {
 
       const { errors, values } = await currentRateService.getValues({
         dataGatheringItems,
-        dateQuery
+        dateQuery,
+        assetProfileIdentifiersWithQuotes: dataGatheringItems
       });
 
       expect(getLatestActivity).not.toHaveBeenCalled();
@@ -234,7 +238,8 @@ describe('CurrentRateService', () => {
 
       const { errors, values } = await currentRateService.getValues({
         dataGatheringItems,
-        dateQuery
+        dateQuery,
+        assetProfileIdentifiersWithQuotes: dataGatheringItems
       });
 
       expect(getLatestActivity).toHaveBeenCalledWith({
@@ -248,6 +253,50 @@ describe('CurrentRateService', () => {
           dataSource: DataSource.YAHOO,
           date: today,
           marketPrice: 1000,
+          symbol: 'AMZN'
+        }
+      ]);
+    });
+
+    it('should carry the latest market price forward without a quote request', async () => {
+      const getQuotes = jest.spyOn(dataProviderService, 'getQuotes');
+
+      jest.spyOn(marketDataService, 'getRangeCount').mockResolvedValue(1);
+
+      jest.spyOn(marketDataService, 'getRange').mockResolvedValue([
+        {
+          createdAt: yesterday,
+          dataSource: DataSource.YAHOO,
+          date: yesterday,
+          id: 'd51d4e0b-9d1f-4d2e-8a0c-9a0f5c6b1d22',
+          isCarriedForward: false,
+          marketPrice: 1841.823902,
+          state: 'CLOSE',
+          symbol: 'AMZN'
+        }
+      ]);
+
+      const { errors, values } = await currentRateService.getValues({
+        dataGatheringItems,
+        dateQuery,
+        assetProfileIdentifiersWithQuotes: []
+      });
+
+      expect(getQuotes).toHaveBeenCalledWith(
+        expect.objectContaining({ items: [] })
+      );
+      expect(errors).toEqual([]);
+      expect(values).toEqual([
+        {
+          dataSource: DataSource.YAHOO,
+          date: yesterday,
+          marketPrice: 1841.823902,
+          symbol: 'AMZN'
+        },
+        {
+          dataSource: DataSource.YAHOO,
+          date: today,
+          marketPrice: 1841.823902,
           symbol: 'AMZN'
         }
       ]);
