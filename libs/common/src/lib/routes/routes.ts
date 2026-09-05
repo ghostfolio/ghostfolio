@@ -62,6 +62,20 @@ export const internalRoutes = {
       marketData: {
         path: 'market-data',
         routerLink: ['/admin', 'market-data'],
+        subRoutes: {
+          create: {
+            path: 'create',
+            routerLink: ['/admin', 'market-data', 'create'],
+            title: $localize`Add Asset Profile`
+          },
+          update: {
+            path: 'update',
+            routerLink: (aDataSource: string, aSymbol: string) => {
+              return ['/admin', 'market-data', aDataSource, aSymbol, 'update'];
+            },
+            title: $localize`Asset Profile`
+          }
+        },
         title: $localize`Market Data`
       },
       settings: {
