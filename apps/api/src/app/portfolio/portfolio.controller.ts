@@ -357,7 +357,8 @@ export class PortfolioController {
     const holding = await this.portfolioService.getHolding({
       dataSource,
       symbol,
-      userId
+      userId,
+      withExcludedActivities: true
     });
 
     if (!holding) {
@@ -631,7 +632,8 @@ export class PortfolioController {
     const holding = await this.portfolioService.getHolding({
       dataSource,
       symbol,
-      userId
+      userId,
+      withExcludedActivities: true
     });
 
     if (!holding) {
