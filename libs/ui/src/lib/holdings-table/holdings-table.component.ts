@@ -51,8 +51,8 @@ export class GfHoldingsTableComponent {
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
   public readonly holdings = input.required<PortfolioPosition[] | undefined>();
-  public readonly isSimplified = input(false);
   public readonly locale = input(getLocale());
+  public readonly mode = input<'default' | 'simple'>('default');
   public readonly pageSize = model(Number.MAX_SAFE_INTEGER);
 
   public readonly holdingClicked = output<AssetProfileIdentifier>();
@@ -63,7 +63,7 @@ export class GfHoldingsTableComponent {
   protected readonly dataSource = new MatTableDataSource<PortfolioPosition>([]);
 
   protected readonly displayedColumns = computed(() => {
-    if (this.isSimplified()) {
+    if (this.mode() === 'simple') {
       return ['icon', 'nameWithSymbol', 'performanceInPercentage'];
     }
 
@@ -92,11 +92,13 @@ export class GfHoldingsTableComponent {
   });
 
   protected readonly sortActive = computed(() => {
-    return this.isSimplified() ? 'assetProfile.name' : 'allocationInPercentage';
+    return this.mode() === 'default'
+      ? 'allocationInPercentage'
+      : 'assetProfile.name';
   });
 
   protected readonly sortDirection = computed<SortDirection>(() => {
-    return this.isSimplified() ? 'asc' : 'desc';
+    return this.mode() === 'default' ? 'desc' : 'asc';
   });
 
   public constructor() {

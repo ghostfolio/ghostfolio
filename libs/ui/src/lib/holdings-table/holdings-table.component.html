@@ -34,7 +34,7 @@
             <span>({{ element.assetProfile.assetSubClassLabel }})</span>
           }
         </div>
-        @if (!isSimplified()) {
+        @if (mode() === 'default') {
           <div>
             <small class="text-muted">{{ element.assetProfile.symbol }}</small>
           </div>
@@ -186,7 +186,7 @@
     <tr
       *matHeaderRowDef="displayedColumns()"
       mat-header-row
-      [class.d-none]="isSimplified()"
+      [class.d-none]="mode() === 'simple'"
     ></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"

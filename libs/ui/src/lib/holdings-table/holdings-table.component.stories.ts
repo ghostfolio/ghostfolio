@@ -68,6 +68,6 @@ export const Default: Story = {
 export const Simplified: Story = {
   args: {
     ...Default.args,
-    isSimplified: true
+    mode: 'simple'
   }
 };
