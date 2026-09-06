@@ -30,6 +30,11 @@
     }
   }
 
+  .holdings-table-container {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+
   .introduction {
     max-width: 50rem;
   }
