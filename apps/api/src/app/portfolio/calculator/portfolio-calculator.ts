@@ -90,6 +90,7 @@ export abstract class PortfolioCalculator {
   private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
+  private usePortfolioSnapshotCache: boolean;
   private userId: string;
 
   public constructor({
@@ -102,6 +103,7 @@ export abstract class PortfolioCalculator {
     filters,
     portfolioSnapshotService,
     redisCacheService,
+    usePortfolioSnapshotCache = true,
     userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
@@ -113,6 +115,7 @@ export abstract class PortfolioCalculator {
     filters: Filter[];
     portfolioSnapshotService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
+    usePortfolioSnapshotCache?: boolean;
     userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
@@ -175,6 +178,7 @@ export abstract class PortfolioCalculator {
 
     this.portfolioSnapshotService = portfolioSnapshotService;
     this.redisCacheService = redisCacheService;
+    this.usePortfolioSnapshotCache = usePortfolioSnapshotCache;
     this.userId = userId;
 
     const { endDate, startDate } = getIntervalFromDateRange({
@@ -187,7 +191,11 @@ export abstract class PortfolioCalculator {
 
     this.computeTransactionPoints();
 
-    this.snapshotPromise = this.initialize();
+    this.snapshotPromise = this.usePortfolioSnapshotCache
+      ? this.initialize()
+      : this.computeSnapshot().then((snapshot) => {
+          this.snapshot = snapshot;
+        });
 
     // Mark the rejection as handled to prevent an unhandled promise rejection
     // in case the snapshot promise is never awaited. Consumers awaiting it

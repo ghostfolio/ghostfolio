@@ -70,6 +70,8 @@ export class TransformDataSourceInResponseInterceptor<
             }
           }
 
+          data.dataProviderInfo = undefined;
+
           if (Object.keys(valueMap).length === 0) {
             return data;
           }
@@ -94,8 +96,6 @@ export class TransformDataSourceInResponseInterceptor<
               'watchlist[*].dataSource'
             ]
           });
-
-          data.dataProviderInfo = undefined;
         }
 
         return data;
