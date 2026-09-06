@@ -108,8 +108,8 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'USD',
-        userId: userDummyData.id,
-        usePortfolioSnapshotCache: false
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.getSnapshot();

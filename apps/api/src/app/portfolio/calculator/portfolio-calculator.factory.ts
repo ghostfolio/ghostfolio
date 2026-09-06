@@ -34,16 +34,16 @@ export class PortfolioCalculatorFactory {
     calculationType,
     currency,
     filters = [],
-    userId,
-    usePortfolioSnapshotCache = true
+    usePortfolioSnapshotCache = true,
+    userId
   }: {
     accountBalanceItems?: HistoricalDataItem[];
     activities: Activity[];
     calculationType: PerformanceCalculationType;
     currency: string;
     filters?: Filter[];
-    userId: string;
     usePortfolioSnapshotCache?: boolean;
+    userId: string;
   }): PortfolioCalculator {
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
@@ -52,8 +52,8 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
-          userId,
           usePortfolioSnapshotCache,
+          userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
@@ -67,8 +67,8 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
-          userId,
           usePortfolioSnapshotCache,
+          userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
@@ -82,8 +82,8 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
-          userId,
           usePortfolioSnapshotCache,
+          userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
@@ -97,8 +97,8 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           filters,
-          userId,
           usePortfolioSnapshotCache,
+          userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,

@@ -90,8 +90,8 @@ export abstract class PortfolioCalculator {
   private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
-  private userId: string;
   private usePortfolioSnapshotCache: boolean;
+  private userId: string;
 
   public constructor({
     accountBalanceItems,
@@ -103,8 +103,8 @@ export abstract class PortfolioCalculator {
     filters,
     portfolioSnapshotService,
     redisCacheService,
-    userId,
-    usePortfolioSnapshotCache = true
+    usePortfolioSnapshotCache = true,
+    userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
     activities: Activity[];
@@ -115,8 +115,8 @@ export abstract class PortfolioCalculator {
     filters: Filter[];
     portfolioSnapshotService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
-    userId: string;
     usePortfolioSnapshotCache?: boolean;
+    userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
     this.configurationService = configurationService;
