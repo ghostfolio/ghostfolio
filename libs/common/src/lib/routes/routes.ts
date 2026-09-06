@@ -156,6 +156,13 @@ export const internalRoutes = {
       watchlist: {
         path: 'watchlist',
         routerLink: ['/home', 'watchlist'],
+        subRoutes: {
+          create: {
+            path: 'create',
+            routerLink: ['/home', 'watchlist', 'create'],
+            title: $localize`Add to Watchlist`
+          }
+        },
         title: $localize`Watchlist`
       }
     },
