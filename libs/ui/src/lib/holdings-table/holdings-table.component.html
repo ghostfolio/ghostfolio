@@ -34,9 +34,11 @@
             <span>({{ element.assetProfile.assetSubClassLabel }})</span>
           }
         </div>
-        <div>
-          <small class="text-muted">{{ element.assetProfile.symbol }}</small>
-        </div>
+        @if (!isSimplified()) {
+          <div>
+            <small class="text-muted">{{ element.assetProfile.symbol }}</small>
+          </div>
+        }
       </td>
     </ng-container>
 
