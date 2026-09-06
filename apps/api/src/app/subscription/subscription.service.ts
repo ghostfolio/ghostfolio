@@ -17,7 +17,7 @@ import {
   UserWithSettings
 } from '@ghostfolio/common/types';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Prisma, Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
 import ms, { StringValue } from 'ms';
@@ -64,6 +64,14 @@ export class SubscriptionService {
       }
     );
 
+    if (!subscriptionOffer) {
+      throw new BadRequestException('Invalid priceId');
+    }
+
+    if (couponId && couponId !== subscriptionOffer.couponId) {
+      throw new BadRequestException('Invalid couponId');
+    }
+
     const stripeCheckoutSessionCreateParams: Stripe.Checkout.SessionCreateParams =
       {
         cancel_url: `${this.configurationService.get('ROOT_URL')}/${
@@ -77,9 +85,7 @@ export class SubscriptionService {
           }
         ],
         locale: this.getStripeLocale(user.settings?.settings?.language),
-        metadata: subscriptionOffer
-          ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
-          : {},
+        metadata: { subscriptionOffer: JSON.stringify(subscriptionOffer) },
         mode: 'payment',
         payment_method_types: ['card'],
         success_url: `${this.configurationService.get(

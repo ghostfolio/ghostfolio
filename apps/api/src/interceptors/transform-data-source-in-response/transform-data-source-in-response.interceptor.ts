@@ -70,6 +70,8 @@ export class TransformDataSourceInResponseInterceptor<
             }
           }
 
+          data.dataProviderInfo = undefined;
+
           if (Object.keys(valueMap).length === 0) {
             return data;
           }

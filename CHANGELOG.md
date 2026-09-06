@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the asset profile dialogs of the market data management in the admin control panel to dedicated routes
 
-## 3.67.0 - 2026-09-05
+## 3.67.1 - 2026-09-05
 
 ### Added
 

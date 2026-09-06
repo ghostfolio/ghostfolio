@@ -1,5 +1,5 @@
 <small class="text-muted">
-  <ng-container i18n>Market data provided by</ng-container>&nbsp;
+  <ng-container i18n>Market data provided by</ng-container>{{ ' ' }}
   @for (
     dataProviderInfo of dataProviderInfos;
     track dataProviderInfo;
@@ -7,10 +7,7 @@
   ) {
     <a target="_blank" [href]="dataProviderInfo.url">{{
       dataProviderInfo.name
-    }}</a>
-    @if (!last) {
-      ,&nbsp;
-    }
+    }}</a
+    >{{ last ? '.' : ', ' }}
   }
-  .
 </small>
