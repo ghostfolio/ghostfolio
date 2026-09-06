@@ -61,8 +61,8 @@
       </div>
     </div>
   } @else {
-    <div class="row w-100">
-      <div class="col p-0">
+    <div class="align-items-center row w-100">
+      <div class="col-12 p-0" [class.col-lg-9]="showExperimentalHoldings()">
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
@@ -80,21 +80,31 @@
             [showYAxis]="false"
           />
         </div>
+        <div class="overview-container row mt-1">
+          <div class="col">
+            <gf-portfolio-performance
+              class="pb-4"
+              [errors]="errors()"
+              [isLoading]="isLoadingPerformance()"
+              [locale]="user()?.settings?.locale"
+              [performance]="performance()"
+              [precision]="precision()"
+              [showDetails]="showDetails()"
+              [unit]="unit()"
+            />
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="overview-container row mt-1">
-      <div class="col">
-        <gf-portfolio-performance
-          class="pb-4"
-          [errors]="errors()"
-          [isLoading]="isLoadingPerformance()"
-          [locale]="user()?.settings?.locale"
-          [performance]="performance()"
-          [precision]="precision()"
-          [showDetails]="showDetails()"
-          [unit]="unit()"
-        />
-      </div>
+      @if (showExperimentalHoldings()) {
+        <div class="col-lg-3 d-none d-lg-block">
+          <gf-holdings-table
+            mode="simple"
+            [hasPermissionToOpenDetails]="false"
+            [holdings]="holdings()"
+            [locale]="user()?.settings?.locale ?? DEFAULT_LOCALE"
+          />
+        </div>
+      }
     </div>
   }
 </div>

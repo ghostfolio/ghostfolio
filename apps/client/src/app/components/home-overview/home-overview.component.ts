@@ -5,17 +5,20 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
+  DEFAULT_LOCALE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
 import {
   AssetProfileIdentifier,
   LineChartItem,
   PortfolioPerformance,
+  PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -36,6 +39,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    GfHoldingsTableComponent,
     GfLineChartComponent,
     GfPortfolioPerformanceComponent,
     MatButtonModule,
@@ -46,9 +50,13 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnInit {
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
   protected readonly hasImpersonationId = signal(false);
   protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
+  protected readonly holdings = signal<PortfolioPosition[] | undefined>(
+    undefined
+  );
   protected readonly isLoadingPerformance = signal(true);
   protected readonly performance = signal<PortfolioPerformance | null>(null);
   protected readonly performanceLabel = $localize`Performance`;
@@ -79,6 +87,10 @@ export class GfHomeOverviewComponent implements OnInit {
     return user
       ? !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN'
       : false;
+  });
+
+  protected readonly showExperimentalHoldings = computed(() => {
+    return this.user()?.settings?.isExperimentalFeatures === true;
   });
 
   protected readonly unit = computed(() => {
@@ -125,6 +137,19 @@ export class GfHomeOverviewComponent implements OnInit {
   private update() {
     this.historicalDataItems.set(null);
     this.isLoadingPerformance.set(true);
+
+    if (this.showExperimentalHoldings()) {
+      this.holdings.set(undefined);
+
+      this.dataService
+        .fetchPortfolioHoldings({
+          range: this.user()?.settings?.dateRange
+        })
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(({ holdings }) => {
+          this.holdings.set(holdings);
+        });
+    }
 
     this.dataService
       .fetchPortfolioPerformance({
