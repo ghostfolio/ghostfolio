@@ -5,17 +5,11 @@
     multiTemplateDataRows
     [dataSource]="dataSource"
   >
-    <colgroup>
-      <col class="w-100" />
-      <col />
-      <col />
-    </colgroup>
-
     <ng-container matColumnDef="name">
-      <th *matHeaderCellDef class="px-2" mat-header-cell>
+      <th *matHeaderCellDef class="gf-table-column-fill px-2" mat-header-cell>
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-2" mat-cell>
+      <td *matCellDef="let element" class="gf-table-column-fill px-2" mat-cell>
         <div class="text-truncate">{{ prettifyAssetName(element?.name) }}</div>
       </td>
     </ng-container>
@@ -65,16 +59,10 @@
               mat-table
               [dataSource]="element.parents"
             >
-              <colgroup>
-                <col class="w-100" />
-                <col />
-                <col />
-              </colgroup>
-
               <ng-container matColumnDef="name">
                 <td
                   *matCellDef="let parentHolding"
-                  class="line-height-normal px-2"
+                  class="gf-table-column-fill line-height-normal px-2"
                   mat-cell
                 >
                   <div class="text-truncate">{{ parentHolding?.name }}</div>

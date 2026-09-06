@@ -167,8 +167,12 @@
     </ng-container>
 
     <ng-container matColumnDef="icon" sticky>
-      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <th *matHeaderCellDef class="gf-fit-content px-1" mat-header-cell></th>
+      <td
+        *matCellDef="let element"
+        class="gf-fit-content px-1 text-center"
+        mat-cell
+      >
         <gf-entity-logo
           [dataSource]="element.assetProfile?.dataSource"
           [symbol]="element.assetProfile?.symbol"
@@ -178,10 +182,14 @@
     </ng-container>
 
     <ng-container matColumnDef="nameWithSymbol">
-      <th *matHeaderCellDef class="px-1" mat-header-cell>
+      <th *matHeaderCellDef class="gf-table-column-fill px-1" mat-header-cell>
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="line-height-normal px-1" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="gf-table-column-fill line-height-normal px-1"
+        mat-cell
+      >
         <div class="align-items-center d-flex text-nowrap">
           <span class="text-truncate">{{ element.assetProfile?.name }}</span>
           @if (isDraftActivity(element)) {
@@ -402,7 +410,11 @@
     </ng-container>
 
     <ng-container matColumnDef="actions" stickyEnd>
-      <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
+      <th
+        *matHeaderCellDef
+        class="gf-fit-content px-1 text-center"
+        mat-header-cell
+      >
         @if (
           !hasPermissionToImportActivities && hasPermissionToExportActivities
         ) {

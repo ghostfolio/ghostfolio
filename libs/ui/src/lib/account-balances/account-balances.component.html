@@ -61,8 +61,16 @@
     </ng-container>
 
     <ng-container matColumnDef="actions" stickyEnd>
-      <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <th
+        *matHeaderCellDef
+        class="gf-fit-content px-1 text-center"
+        mat-header-cell
+      ></th>
+      <td
+        *matCellDef="let element"
+        class="gf-fit-content px-1 text-center"
+        mat-cell
+      >
         @if (showActions()) {
           <button
             class="mx-1 no-min-width px-2"
