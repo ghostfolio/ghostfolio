@@ -65,7 +65,7 @@ export const Default: Story = {
   }
 };
 
-export const Simplified: Story = {
+export const Simple: Story = {
   args: {
     ...Default.args,
     mode: 'simple'
