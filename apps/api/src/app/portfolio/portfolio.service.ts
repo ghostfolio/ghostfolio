@@ -2228,15 +2228,6 @@ export class PortfolioService {
     };
   }
 
-  private isExcludedFromAnalysis(activity: Activity) {
-    return (
-      isAccountExcluded(activity.account) ||
-      activity.tags?.some(({ id }) => {
-        return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
-      }) === true
-    );
-  }
-
   private getSumOfActivityType({
     activities,
     activityType,
@@ -2450,5 +2441,14 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
+  }
+
+  private isExcludedFromAnalysis(activity: Activity) {
+    return (
+      isAccountExcluded(activity.account) ||
+      activity.tags?.some(({ id }) => {
+        return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+      }) === true
+    );
   }
 }
