@@ -99,9 +99,9 @@
         <div class="col-lg-3 d-none d-lg-block holdings-table-container p-0">
           <gf-holdings-table
             mode="simple"
-            [hasPermissionToOpenDetails]="false"
             [holdings]="holdings()"
             [locale]="user()?.settings?.locale ?? DEFAULT_LOCALE"
+            (holdingClicked)="onHoldingClicked($event)"
           />
         </div>
       }

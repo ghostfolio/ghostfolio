@@ -33,7 +33,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
@@ -106,6 +106,7 @@ export class GfHomeOverviewComponent implements OnInit {
     ImpersonationStorageService
   );
   private readonly layoutService = inject(LayoutService);
+  private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -132,6 +133,14 @@ export class GfHomeOverviewComponent implements OnInit {
       .subscribe(() => {
         this.update();
       });
+  }
+
+  protected onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
+      });
+    }
   }
 
   private update() {
