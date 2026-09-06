@@ -90,9 +90,9 @@ export class GfAssetProfileDialogHostComponent implements OnDestroy, OnInit {
               this.openCreateAssetProfileDialog({ user });
             } else if (dataSource && symbol) {
               this.openAssetProfileDialog({
-                dataSource: dataSource as DataSource,
                 symbol,
-                user
+                user,
+                dataSource: dataSource as DataSource
               });
             } else {
               this.navigateBack();

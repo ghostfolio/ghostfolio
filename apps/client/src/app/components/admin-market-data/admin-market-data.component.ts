@@ -143,8 +143,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected dataSource = new MatTableDataSource<AssetProfileItem>();
   protected readonly displayedColumns: string[] = [];
   protected readonly filters$ = new Subject<Filter[]>();
-  protected readonly internalRoutes = internalRoutes;
   protected isLoading = true;
+  protected readonly internalRoutes = internalRoutes;
   protected readonly isUUID = isUUID;
   protected pageSize = DEFAULT_PAGE_SIZE;
   protected placeholder = '';
