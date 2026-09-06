@@ -178,8 +178,8 @@ export abstract class PortfolioCalculator {
 
     this.portfolioSnapshotService = portfolioSnapshotService;
     this.redisCacheService = redisCacheService;
-    this.userId = userId;
     this.usePortfolioSnapshotCache = usePortfolioSnapshotCache;
+    this.userId = userId;
 
     const { endDate, startDate } = getIntervalFromDateRange({
       dateRange: 'max',
