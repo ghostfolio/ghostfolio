@@ -108,10 +108,11 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'USD',
+        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('500000'),
@@ -169,6 +170,9 @@ describe('PortfolioCalculator', () => {
           totalInvestmentValueWithCurrencyEffect: 500000
         })
       );
+
+      expect(PortfolioSnapshotServiceMock.jobsStore.size).toBe(0);
+      expect(RedisCacheServiceMock.cache.size).toBe(0);
     });
   });
 });
