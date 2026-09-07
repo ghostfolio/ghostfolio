@@ -377,7 +377,10 @@ export class GfAnalysisPageComponent implements OnInit {
 
     this.dataService
       .fetchPortfolioHoldings({
-        filters: this.userService.getFilters(),
+        filters: [
+          ...this.userService.getFilters(),
+          { id: 'ACTIVE', type: 'HOLDING_TYPE' }
+        ],
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntilDestroyed(this.destroyRef))

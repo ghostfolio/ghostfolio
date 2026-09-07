@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.69.0 - 2026-09-07
 
 ### Fixed
 
@@ -13,7 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the loading state of the activity count in the portfolio summary
+- Migrated the create dialog of the watchlist to a dedicated route
+- Changed the holdings endpoint to return active and closed holdings by default and reuse a single snapshot for both types
+- Upgraded `countries-and-timezones` from version `3.9.0` to `3.10.0`
+- Upgraded `bull-board` from version `9.0.1` to `9.5.0`
 - Upgraded `zod` from version `4.4.3` to `4.5.4`
+
+### Fixed
+
+- Resolved an issue when opening an asset profile from the watchlist
 
 ## 3.68.0 - 2026-09-06
 

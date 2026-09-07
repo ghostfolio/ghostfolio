@@ -153,7 +153,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
     this.defaultDateFormat = getDateFormatString(this.locale);
 
     this.dataService
-      .fetchPortfolioHoldings()
+      .fetchPortfolioHoldings({
+        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.defaultLookupItems = holdings
