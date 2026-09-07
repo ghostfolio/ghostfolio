@@ -355,8 +355,13 @@ describe('PortfolioService', () => {
   describe('getDetails', () => {
     const setUpCashOnlyPortfolio = ({
       baseCurrency = 'CHF',
-      emergencyFund
-    }: { baseCurrency?: string; emergencyFund?: number } = {}) => {
+      emergencyFund,
+      quantity = 2000
+    }: {
+      baseCurrency?: string;
+      emergencyFund?: number;
+      quantity?: number;
+    } = {}) => {
       const cashAccount: AccountWithBalance = {
         balance: 2000,
         comment: null,
@@ -421,7 +426,7 @@ describe('PortfolioService', () => {
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffectMap: {},
         netPerformanceWithCurrencyEffectMap: {},
-        quantity: new Big(2000),
+        quantity: new Big(quantity),
         symbol: 'USD',
         tags: [],
         timeWeightedInvestment: new Big(0),
@@ -493,6 +498,131 @@ describe('PortfolioService', () => {
       expect(holdings[0].assetProfile.symbol).toBe('USD');
       expect(holdings[0].valueInBaseCurrency).toBe(1000);
     });
+
+    it('should include closed holdings when all holdings are requested', async () => {
+      setUpCashOnlyPortfolio({ quantity: 0 });
+
+      const { holdings } = await portfolioService.getDetails({
+        filters: [],
+        includeAllHoldings: true,
+        userId: userDummyData.id
+      });
+
+      expect(holdings).toHaveLength(1);
+      expect(holdings[0].quantity).toBe(0);
+    });
+
+    it.each([
+      { holdingType: 'ACTIVE', quantity: 2000 },
+      { holdingType: 'CLOSED', quantity: 0 }
+    ])(
+      'should return $holdingType holdings when the holding type is specified',
+      async ({ holdingType, quantity }) => {
+        setUpCashOnlyPortfolio({ quantity });
+
+        const { holdings } = await portfolioService.getDetails({
+          filters: [{ id: holdingType, type: 'HOLDING_TYPE' }],
+          userId: userDummyData.id
+        });
+
+        expect(holdings).toHaveLength(1);
+        expect(holdings[0].quantity).toBe(quantity);
+      }
+    );
+
+    it('should remove the holding type only from the snapshot filters', async () => {
+      setUpCashOnlyPortfolio({ quantity: 0 });
+
+      await portfolioService.getDetails({
+        filters: [
+          { id: AssetClass.EQUITY, type: 'ASSET_CLASS' },
+          { id: 'CLOSED', type: 'HOLDING_TYPE' }
+        ],
+        userId: userDummyData.id
+      });
+
+      expect(portfolioCalculatorFactory.createCalculator).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filters: [{ id: AssetClass.EQUITY, type: 'ASSET_CLASS' }]
+        })
+      );
+      expect(
+        activitiesService.getActivitiesForPortfolioCalculator
+      ).toHaveBeenCalledWith({
+        filters: [{ id: AssetClass.EQUITY, type: 'ASSET_CLASS' }],
+        userCurrency: 'CHF',
+        userId: userDummyData.id
+      });
+    });
+  });
+
+  describe('getHoldings', () => {
+    const activeHolding = {
+      assetProfile: {
+        isin: 'US0378331005',
+        name: 'Apple',
+        symbol: 'AAPL'
+      },
+      quantity: 1
+    };
+
+    const closedHolding = {
+      assetProfile: {
+        isin: 'US5949181045',
+        name: 'Microsoft',
+        symbol: 'MSFT'
+      },
+      quantity: 0
+    };
+
+    beforeEach(() => {
+      jest.spyOn(portfolioService, 'getDetails').mockResolvedValue({
+        holdings: [activeHolding, closedHolding]
+      } as unknown as Awaited<ReturnType<typeof portfolioService.getDetails>>);
+    });
+
+    it('should request all holdings when the holding type is not specified', async () => {
+      const holdings = await portfolioService.getHoldings({
+        dateRange: 'max',
+        userId: userDummyData.id
+      });
+
+      expect(holdings).toEqual([activeHolding, closedHolding]);
+      expect(portfolioService.getDetails).toHaveBeenCalledWith({
+        dateRange: 'max',
+        filters: undefined,
+        includeAllHoldings: true,
+        userId: userDummyData.id
+      });
+    });
+
+    it('should find a closed holding when the holding type is not specified', async () => {
+      const holdings = await portfolioService.getHoldings({
+        dateRange: 'max',
+        filters: [{ id: 'Microsoft', type: 'SEARCH_QUERY' }],
+        userId: userDummyData.id
+      });
+
+      expect(holdings).toEqual([closedHolding]);
+    });
+
+    it.each(['ACTIVE', 'CLOSED'])(
+      'should not request all holdings when the holding type is %s',
+      async (holdingType) => {
+        await portfolioService.getHoldings({
+          dateRange: 'max',
+          filters: [{ id: holdingType, type: 'HOLDING_TYPE' }],
+          userId: userDummyData.id
+        });
+
+        expect(portfolioService.getDetails).toHaveBeenCalledWith({
+          dateRange: 'max',
+          filters: [{ id: holdingType, type: 'HOLDING_TYPE' }],
+          includeAllHoldings: false,
+          userId: userDummyData.id
+        });
+      }
+    );
   });
 
   describe('getHolding', () => {

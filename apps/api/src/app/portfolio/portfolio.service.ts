@@ -477,12 +477,12 @@ export class PortfolioService {
     filters?: Filter[];
     userId: string;
   }) {
-    const { SEARCH_QUERY: [filterBySearchQuery] = [] } = groupBy(
-      filters,
-      ({ type }) => {
-        return type;
-      }
-    );
+    const {
+      HOLDING_TYPE: [filterByHoldingType] = [],
+      SEARCH_QUERY: [filterBySearchQuery] = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
 
     const filtersWithoutSearchQueryFilter = filters?.filter(({ type }) => {
       return type !== 'SEARCH_QUERY';
@@ -491,7 +491,8 @@ export class PortfolioService {
     let { holdings } = await this.getDetails({
       dateRange,
       userId,
-      filters: filtersWithoutSearchQueryFilter
+      filters: filtersWithoutSearchQueryFilter,
+      includeAllHoldings: !filterByHoldingType
     });
 
     if (filterBySearchQuery) {
@@ -592,6 +593,7 @@ export class PortfolioService {
   public async getDetails({
     dateRange = DEFAULT_DATE_RANGE,
     filters,
+    includeAllHoldings = false,
     user: userFromCaller,
     userId,
     withExcludedAccounts = false,
@@ -600,6 +602,7 @@ export class PortfolioService {
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
+    includeAllHoldings?: boolean;
     user?: UserWithSettings;
     userId: string;
     withExcludedAccounts?: boolean;
@@ -614,19 +617,23 @@ export class PortfolioService {
       (user.settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
+    const portfolioSnapshotFilters = filters?.filter(({ type }) => {
+      return type !== 'HOLDING_TYPE';
+    });
+
     const { activities } =
       await this.activitiesService.getActivitiesForPortfolioCalculator({
-        filters,
         userCurrency,
-        userId
+        userId,
+        filters: portfolioSnapshotFilters
       });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      filters,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      filters: portfolioSnapshotFilters
     });
 
     const { createdAt, currentValueInBaseCurrency, hasErrors, positions } =
@@ -706,13 +713,13 @@ export class PortfolioService {
       tags,
       valueInBaseCurrency
     } of positions) {
-      if (isFilteredByClosedHoldings === true) {
-        if (!quantity.eq(0)) {
+      if (!includeAllHoldings) {
+        if (isFilteredByClosedHoldings && !quantity.eq(0)) {
           // Ignore positions with a quantity
           continue;
         }
-      } else {
-        if (quantity.eq(0)) {
+
+        if (!isFilteredByClosedHoldings && quantity.eq(0)) {
           // Ignore positions without any quantity
           continue;
         }
