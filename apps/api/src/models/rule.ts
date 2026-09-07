@@ -8,7 +8,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Big } from 'big.js';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';

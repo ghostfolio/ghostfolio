@@ -37,7 +37,7 @@ import {
   uk,
   zhCN
 } from 'date-fns/locale';
-import { get, isNil, isString } from 'lodash';
+import { get, isNil, isString } from 'lodash-es';
 
 import {
   DEFAULT_CURRENCY,

@@ -104,7 +104,7 @@ import {
   serverOutline,
   trashOutline
 } from 'ionicons/icons';
-import { isBoolean } from 'lodash';
+import { isBoolean } from 'lodash-es';
 import ms from 'ms';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';

@@ -31,7 +31,7 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { addDays, format, isSameDay, isToday } from 'date-fns';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 
 @Injectable()
 export class EodHistoricalDataService
