@@ -44,7 +44,7 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'benchmark-detail-dialog.html'
 })
 export class GfBenchmarkDetailDialogComponent implements OnInit {
-  public assetProfile: AdminMarketDataDetails['assetProfile'];
+  public assetProfile?: AdminMarketDataDetails['assetProfile'];
   public historicalDataItems: LineChartItem[];
   public isLoading = true;
   public value: number;
