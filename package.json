@@ -149,7 +149,7 @@
     "undici": "8.10.0",
     "uuid": "14.0.2",
     "yahoo-finance2": "4.0.2",
-    "zod": "4.4.3",
+    "zod": "4.5.4",
     "zone.js": "0.16.2"
   },
   "devDependencies": {
