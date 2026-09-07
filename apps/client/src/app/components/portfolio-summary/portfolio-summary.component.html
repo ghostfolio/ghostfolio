@@ -9,25 +9,36 @@
       />
     </div>
   </div>
-  <div
-    class="flex-nowrap px-3 py-1 row"
-    [hidden]="summary?.activityCount === null"
-  >
-    <div class="d-flex flex-grow-1 indent-1 text-truncate">
-      {{ summary?.activityCount }}
-      <ng-container i18n>{summary?.activityCount, plural,
-        =1 {activity}
-        other {activities}
-      }</ng-container>
-      <span
-        class="align-items-center d-none d-sm-flex ml-1"
-        matTooltipPosition="above"
-        [matTooltip]="buyAndSellActivitiesTooltip"
-      >
-        <ion-icon name="information-circle-outline" />
-      </span>
+  @if (isLoading) {
+    <div class="flex-nowrap px-3 py-1 row">
+      <div class="d-flex flex-grow-1 indent-1 text-truncate">
+        <ngx-skeleton-loader
+          animation="pulse"
+          [theme]="{ height: '1rem', width: '6rem' }"
+        />
+      </div>
     </div>
-  </div>
+  } @else {
+    <div
+      class="flex-nowrap px-3 py-1 row"
+      [hidden]="summary?.activityCount === null"
+    >
+      <div class="d-flex flex-grow-1 indent-1 text-truncate">
+        {{ summary?.activityCount }}
+        <ng-container i18n>{summary?.activityCount, plural,
+          =1 {activity}
+          other {activities}
+        }</ng-container>
+        <span
+          class="align-items-center d-none d-sm-flex ml-1"
+          matTooltipPosition="above"
+          [matTooltip]="buyAndSellActivitiesTooltip"
+        >
+          <ion-icon name="information-circle-outline" />
+        </span>
+      </div>
+    </div>
+  }
   <div class="row">
     <div class="col"><hr /></div>
   </div>
@@ -127,11 +138,16 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 indent-1 text-truncate">
       <ng-container i18n>Net Performance</ng-container>
-      <abbr
-        class="d-none d-sm-inline-block initialism ml-2 text-muted"
-        title="Return on Average Investment"
-        >(ROAI)</abbr
-      >
+      @if (
+        user?.settings?.performanceCalculationType ===
+        PerformanceCalculationType.ROAI
+      ) {
+        <abbr
+          class="d-none d-sm-inline-block initialism ml-2 text-muted"
+          title="Return on Average Investment"
+          >(ROAI)</abbr
+        >
+      }
     </div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value
