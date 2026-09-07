@@ -479,7 +479,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.setIsOpen(true);
 
     this.dataService
-      .fetchPortfolioHoldings()
+      .fetchPortfolioHoldings({
+        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.holdings = getHoldingsForFilter(holdings);
