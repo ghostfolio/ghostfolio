@@ -1,6 +1,7 @@
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
 import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -23,10 +24,16 @@ import {
   informationCircleOutline
 } from 'ionicons/icons';
 import { isNumber } from 'lodash';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GfValueComponent, IonIcon, MatTooltipModule],
+  imports: [
+    GfValueComponent,
+    IonIcon,
+    MatTooltipModule,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-portfolio-summary',
   styleUrls: ['./portfolio-summary.component.scss'],
   templateUrl: './portfolio-summary.component.html'
@@ -47,6 +54,8 @@ export class GfPortfolioSummaryComponent implements OnChanges {
   protected readonly buyAndSellActivitiesTooltip = translate(
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
   );
+
+  protected readonly PerformanceCalculationType = PerformanceCalculationType;
 
   protected isCashExpanded = false;
   protected isHoldingsExpanded = false;

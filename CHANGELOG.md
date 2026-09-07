@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the loading state of the activity count in the portfolio summary
 - Upgraded `zod` from version `4.4.3` to `4.5.4`
 
 ## 3.68.0 - 2026-09-06
