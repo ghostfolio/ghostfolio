@@ -249,6 +249,12 @@ $gf-typography: (
     )
   );
 
+  @include mat.autocomplete-overrides(
+    (
+      background-color: var(--dark-background)
+    )
+  );
+
   @include mat.button-overrides(
     (
       outlined-label-text-color: var(--light-primary-text),
@@ -268,6 +274,30 @@ $gf-typography: (
       outlined-container-color: var(--dark-background),
       outlined-outline-color: rgba(var(--light-dividers)),
       title-text-line-height: 1.2
+    )
+  );
+
+  @include mat.datepicker-overrides(
+    (
+      calendar-container-background-color: var(--dark-background)
+    )
+  );
+
+  @include mat.dialog-overrides(
+    (
+      container-color: var(--dark-background)
+    )
+  );
+
+  @include mat.menu-overrides(
+    (
+      container-color: var(--dark-background)
+    )
+  );
+
+  @include mat.select-overrides(
+    (
+      panel-background-color: var(--dark-background)
     )
   );
 
