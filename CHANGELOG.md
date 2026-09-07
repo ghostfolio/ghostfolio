@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the loading state of the activity count in the portfolio summary
 - Changed the holdings endpoint to return active and closed holdings by default and reuse a single snapshot for both types
 - Upgraded `zod` from version `4.4.3` to `4.5.4`
 
