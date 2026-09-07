@@ -10,6 +10,7 @@ import { UseFilters } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import { McpController, Tool } from '@rekog/mcp-nest';
 import { z } from 'zod';
+import 'zod/compile';
 
 import {
   GET_ACCOUNTS_PARAMETERS,
