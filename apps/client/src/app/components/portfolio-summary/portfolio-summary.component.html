@@ -14,15 +14,12 @@
       <div class="d-flex flex-grow-1 indent-1 text-truncate">
         <ngx-skeleton-loader
           animation="pulse"
-          [theme]="{ height: '1rem', width: '6rem' }"
+          [theme]="{ height: '1.5rem', width: '7.5rem' }"
         />
       </div>
     </div>
   } @else {
-    <div
-      class="flex-nowrap px-3 py-1 row"
-      [hidden]="summary?.activityCount === null"
-    >
+    <div class="flex-nowrap px-3 py-1 row">
       <div class="d-flex flex-grow-1 indent-1 text-truncate">
         {{ summary?.activityCount }}
         <ng-container i18n>{summary?.activityCount, plural,
