@@ -367,7 +367,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private loadHoldings() {
     this.dataService
-      .fetchPortfolioHoldings()
+      .fetchPortfolioHoldings({
+        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.holdings = getHoldingsForFilter(holdings);

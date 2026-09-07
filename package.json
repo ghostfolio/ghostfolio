@@ -65,9 +65,9 @@
     "@angular/platform-browser-dynamic": "22.1.2",
     "@angular/router": "22.1.2",
     "@angular/service-worker": "22.1.2",
-    "@bull-board/api": "9.0.1",
-    "@bull-board/express": "9.0.1",
-    "@bull-board/nestjs": "9.0.1",
+    "@bull-board/api": "9.5.0",
+    "@bull-board/express": "9.5.0",
+    "@bull-board/nestjs": "9.5.0",
     "@codewithdan/observable-store": "2.2.15",
     "@date-fns/utc": "2.1.1",
     "@internationalized/number": "3.6.7",
@@ -149,7 +149,7 @@
     "undici": "8.10.0",
     "uuid": "14.0.2",
     "yahoo-finance2": "4.0.2",
-    "zod": "4.4.3",
+    "zod": "4.5.4",
     "zone.js": "0.16.2"
   },
   "devDependencies": {
