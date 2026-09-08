@@ -55,6 +55,12 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
 });
 
 describe('SEARCH_ASSET_PROFILES_PARAMETERS', () => {
+  it('Refuses a query that contains only spaces', () => {
+    expect(
+      SEARCH_ASSET_PROFILES_PARAMETERS.safeParse({ query: '  ' }).success
+    ).toBe(false);
+  });
+
   it(`Refuses a query shorter than ${SEARCH_QUERY_MINIMUM_LENGTH} characters`, () => {
     expect(
       SEARCH_ASSET_PROFILES_PARAMETERS.safeParse({ query: 'A' }).success
@@ -75,5 +81,11 @@ describe('SEARCH_ASSET_PROFILES_PARAMETERS', () => {
         SEARCH_ASSET_PROFILES_PARAMETERS.safeParse({ query }).success
       ).toBe(true);
     }
+  });
+
+  it('Removes spaces at the start and the end of a query', () => {
+    expect(
+      SEARCH_ASSET_PROFILES_PARAMETERS.parse({ query: ' Apple ' }).query
+    ).toBe('Apple');
   });
 });

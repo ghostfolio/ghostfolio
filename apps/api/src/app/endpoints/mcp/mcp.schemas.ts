@@ -81,6 +81,7 @@ export const GET_ACTIVITIES_PARAMETERS = z.object({
 export const SEARCH_ASSET_PROFILES_PARAMETERS = z.object({
   query: z
     .string()
+    .trim()
     .min(SEARCH_QUERY_MINIMUM_LENGTH)
     .max(SEARCH_QUERY_MAXIMUM_LENGTH)
     .describe('The name, symbol or ISIN of the asset profile to find')
