@@ -15,7 +15,8 @@ import 'zod/compile';
 import {
   GET_ACCOUNTS_PARAMETERS,
   GET_ACTIVITIES_PARAMETERS,
-  IMPORT_ACTIVITIES_PARAMETERS
+  IMPORT_ACTIVITIES_PARAMETERS,
+  SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
 import { McpService } from './mcp.service';
 
@@ -98,7 +99,7 @@ export class GhostfolioMcpController {
       readOnlyHint: false,
       title: 'Import activities'
     },
-    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. The access needs the permission "Restricted view and manage". At most ${MCP_MAX_ACTIVITIES} activities are imported per call, while the instance can have a lower limit, which an error names. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
+    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. Use search-asset-profiles first unless the exact symbol and data source are already known. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. The access needs the permission "Restricted view and manage". At most ${MCP_MAX_ACTIVITIES} activities are imported per call, while the instance can have a lower limit, which an error names. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
     name: 'import-activities',
     parameters: IMPORT_ACTIVITIES_PARAMETERS
   })
@@ -107,5 +108,24 @@ export class GhostfolioMcpController {
     @Payload() parameters: z.infer<typeof IMPORT_ACTIVITIES_PARAMETERS>
   ) {
     return this.mcpService.importActivities({ ...parameters, userId });
+  }
+
+  @RequiresScopeOfAccess(scopes.activityCreate)
+  @Tool({
+    annotations: {
+      openWorldHint: true,
+      readOnlyHint: true,
+      title: 'Search asset profiles'
+    },
+    description:
+      'Searches for asset profiles available to the user and gives import-ready candidates. Use this before importing an activity unless the exact symbol and data source are already known. Select the candidate that matches the intended asset and pass its symbol, dataSource and currency unchanged to import-activities.',
+    name: 'search-asset-profiles',
+    parameters: SEARCH_ASSET_PROFILES_PARAMETERS
+  })
+  public async searchAssetProfiles(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload() parameters: z.infer<typeof SEARCH_ASSET_PROFILES_PARAMETERS>
+  ) {
+    return this.mcpService.searchAssetProfiles({ ...parameters, userId });
   }
 }

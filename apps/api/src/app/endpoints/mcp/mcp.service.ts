@@ -1,6 +1,10 @@
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
+import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { getUnmaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
+import {
+  getMaskedGhostfolioDataSource,
+  getUnmaskedGhostfolioDataSource
+} from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
@@ -15,7 +19,8 @@ import { z } from 'zod';
 import {
   GET_ACCOUNTS_PARAMETERS,
   GET_ACTIVITIES_PARAMETERS,
-  IMPORT_ACTIVITIES_PARAMETERS
+  IMPORT_ACTIVITIES_PARAMETERS,
+  SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
 
 @Injectable()
@@ -25,6 +30,7 @@ export class McpService {
     private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
     private readonly portfolioTableService: PortfolioTableService,
+    private readonly symbolService: SymbolService,
     private readonly userService: UserService
   ) {}
 
@@ -144,6 +150,56 @@ export class McpService {
     ].join('\n');
 
     return this.getTextResult(text);
+  }
+
+  public async searchAssetProfiles({
+    query,
+    userId
+  }: z.infer<typeof SEARCH_ASSET_PROFILES_PARAMETERS> & { userId: string }) {
+    const user = await this.getUserWithPermission({
+      userId,
+      permission: permissions.createActivity
+    });
+
+    const { items } = await this.symbolService.lookup({ query, user });
+
+    const ghostfolioDataSources = this.configurationService.get(
+      'ENABLE_FEATURE_SUBSCRIPTION'
+    )
+      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
+      : [];
+
+    const assetProfiles = items.flatMap(
+      ({
+        assetClass,
+        assetSubClass,
+        currency,
+        dataProviderInfo,
+        dataSource,
+        name,
+        symbol
+      }) => {
+        if (!dataSource || dataProviderInfo.isPremium) {
+          return [];
+        }
+
+        return [
+          {
+            assetClass,
+            assetSubClass,
+            currency,
+            name,
+            symbol,
+            dataSource: getMaskedGhostfolioDataSource({
+              dataSource,
+              ghostfolioDataSources
+            })
+          }
+        ];
+      }
+    );
+
+    return this.getTextResult(JSON.stringify({ assetProfiles }, null, 2));
   }
 
   private getTextResult(text: string) {
