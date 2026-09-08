@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the style of the activity type filter on the activities page (experimental)
+- Improved the style of the selector in the benchmark comparator
+
 ## 3.69.0 - 2026-09-07
 
 ### Changed
