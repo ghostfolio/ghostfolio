@@ -560,12 +560,10 @@ export class GfCreateOrUpdateActivityDialogComponent {
     const accountBalanceControl = this.activityForm.get('updateAccountBalance');
     const accountId = this.activityForm.get('accountId')?.value;
     const dataSource = this.activityForm.get('dataSource')?.value;
-    const date = this.activityForm.get('date')?.value;
     const type = this.activityForm.get('type')?.value;
 
     const isEligible =
       !!accountId &&
-      isToday(date) &&
       !['LIABILITY', 'VALUABLE'].includes(type) &&
       !(dataSource === 'MANUAL' && type === 'BUY');
 
