@@ -149,6 +149,14 @@ $gf-typography: (
   regular-weight: 400
 );
 
+$_dense-form-field-theme: mat.define-theme(
+  (
+    density: (
+      scale: -4
+    )
+  )
+);
+
 .theme-light {
   color-scheme: light;
 
@@ -411,6 +419,10 @@ $gf-typography: (
       inactive-ripple-color: var(--gf-theme-primary-500)
     )
   );
+
+  .gf-form-field-dense {
+    @include mat.form-field-density($_dense-form-field-theme);
+  }
 
   .mat-accent {
     @include mat.button-overrides(
