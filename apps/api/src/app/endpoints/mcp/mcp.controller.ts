@@ -118,7 +118,7 @@ export class GhostfolioMcpController {
       title: 'Search asset profiles'
     },
     description:
-      'Searches for asset profiles available to the user and gives import-ready candidates. Use this before importing an activity unless the exact symbol and data source are already known. Select the candidate that matches the intended asset and pass its symbol, dataSource and currency unchanged to import-activities.',
+      'Searches for financial assets, such as stocks, ETFs, cryptocurrencies, mutual funds and commodities, which are available to the user. Each result is an asset profile that can be used to import an activity. Use this before importing an activity unless the exact symbol and data source are already known. Select the candidate that matches the intended asset and pass its symbol, dataSource and currency unchanged to import-activities.',
     name: 'search-asset-profiles',
     parameters: SEARCH_ASSET_PROFILES_PARAMETERS
   })

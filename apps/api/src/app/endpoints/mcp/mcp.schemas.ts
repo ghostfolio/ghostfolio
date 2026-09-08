@@ -78,15 +78,6 @@ export const GET_ACTIVITIES_PARAMETERS = z.object({
     .describe(`The number of activities to get, at most ${MCP_MAX_ACTIVITIES}`)
 });
 
-export const SEARCH_ASSET_PROFILES_PARAMETERS = z.object({
-  query: z
-    .string()
-    .trim()
-    .min(SEARCH_QUERY_MINIMUM_LENGTH)
-    .max(SEARCH_QUERY_MAXIMUM_LENGTH)
-    .describe('The name, symbol or ISIN of the asset profile to find')
-});
-
 export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
   activities: z
     .array(
@@ -123,4 +114,15 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
     .min(1)
     .max(MCP_MAX_ACTIVITIES)
     .describe(`The activities to import, at most ${MCP_MAX_ACTIVITIES}`)
+});
+
+export const SEARCH_ASSET_PROFILES_PARAMETERS = z.object({
+  query: z
+    .string()
+    .trim()
+    .min(SEARCH_QUERY_MINIMUM_LENGTH)
+    .max(SEARCH_QUERY_MAXIMUM_LENGTH)
+    .describe(
+      'The name, ticker symbol or ISIN of the financial asset, for example Apple, AAPL, Bitcoin or US0378331005'
+    )
 });
