@@ -1,5 +1,5 @@
 <div
-  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative px-lg-3"
+  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative px-xl-3"
 >
   @if (
     !hasImpersonationId() &&
@@ -62,7 +62,7 @@
     </div>
   } @else {
     <div class="align-items-stretch flex-nowrap row w-100">
-      <div class="col-12 col-lg p-0">
+      <div class="col-12 col-xl p-0">
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
@@ -96,7 +96,7 @@
         </div>
       </div>
       @if (showExperimentalHoldings()) {
-        <div class="col-lg-4 d-lg-block d-none ml-5 p-0 position-relative">
+        <div class="col-xl-4 d-none d-xl-block ml-5 p-0 position-relative">
           <mat-card
             appearance="outlined"
             class="h-100 holdings position-absolute w-100"
