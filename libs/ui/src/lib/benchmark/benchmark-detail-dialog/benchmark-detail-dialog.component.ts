@@ -64,26 +64,34 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
         symbol: this.data.symbol
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ assetProfile, marketData }) => {
-        this.assetProfile = assetProfile;
+      .subscribe({
+  next: ({ assetProfile, marketData }) => {
+    this.assetProfile = assetProfile;
 
-        this.historicalDataItems = marketData.map(
-          ({ date, marketPrice }, index) => {
-            if (marketData.length - 1 === index) {
-              this.value = marketPrice;
-            }
+    this.historicalDataItems = marketData.map(
+      ({ date, marketPrice }, index) => {
+        if (marketData.length - 1 === index) {
+          this.value = marketPrice;
+        }
 
-            return {
-              date: format(date, DATE_FORMAT),
-              value: marketPrice
-            };
-          }
-        );
+        return {
+          date: format(date, DATE_FORMAT),
+          value: marketPrice
+        };
+      }
+    );
 
-        this.isLoading = false;
+    this.isLoading = false;
 
-        this.changeDetectorRef.markForCheck();
-      });
+    this.changeDetectorRef.markForCheck();
+  },
+  error: () => {
+    this.historicalDataItems = [];
+    this.isLoading = false;
+
+    this.changeDetectorRef.markForCheck();
+  }
+});
   }
 
   public onClose() {
