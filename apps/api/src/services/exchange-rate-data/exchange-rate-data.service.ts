@@ -234,17 +234,27 @@ export class ExchangeRateDataService {
 
       if (!this.exchangeRates[symbol]) {
         // Not found, calculate indirectly via base currency
-        this.exchangeRates[symbol] =
+        const price1 =
           resultExtended[`${currency1}${DEFAULT_CURRENCY}`]?.[
             dateStringOfYesterday
-          ]?.marketPrice *
+          ]?.marketPrice;
+        const price2 =
           resultExtended[`${DEFAULT_CURRENCY}${currency2}`]?.[
             dateStringOfYesterday
           ]?.marketPrice;
 
-        // Calculate the opposite direction
-        this.exchangeRates[`${currency2}${currency1}`] =
-          1 / this.exchangeRates[symbol];
+        if (isNumber(price1) && isNumber(price2)) {
+          this.exchangeRates[symbol] = price1 * price2;
+
+          if (
+            isNumber(this.exchangeRates[symbol]) &&
+            Number.isFinite(this.exchangeRates[symbol]) &&
+            this.exchangeRates[symbol] !== 0
+          ) {
+            this.exchangeRates[`${currency2}${currency1}`] =
+              1 / this.exchangeRates[symbol];
+          }
+        }
       }
     }
   }
@@ -271,11 +281,13 @@ export class ExchangeRateDataService {
           this.exchangeRates[`${aFromCurrency}${DEFAULT_CURRENCY}`];
         const factor2 = this.exchangeRates[`${DEFAULT_CURRENCY}${aToCurrency}`];
 
-        factor = factor1 * factor2;
+        if (isNumber(factor1) && isNumber(factor2)) {
+          factor = factor1 * factor2;
+        }
       }
     }
 
-    if (isNumber(factor) && !isNaN(factor)) {
+    if (isNumber(factor) && Number.isFinite(factor) && !isNaN(factor)) {
       return factor * aValue;
     }
 
@@ -357,13 +369,21 @@ export class ExchangeRateDataService {
         } catch {}
 
         // Calculate the opposite direction
-        factor =
-          (1 / marketPriceBaseCurrencyFromCurrency) *
-          marketPriceBaseCurrencyToCurrency;
+        if (
+          isNumber(marketPriceBaseCurrencyFromCurrency) &&
+          isNumber(marketPriceBaseCurrencyToCurrency) &&
+          Number.isFinite(marketPriceBaseCurrencyFromCurrency) &&
+          Number.isFinite(marketPriceBaseCurrencyToCurrency) &&
+          marketPriceBaseCurrencyFromCurrency !== 0
+        ) {
+          factor =
+            (1 / marketPriceBaseCurrencyFromCurrency) *
+            marketPriceBaseCurrencyToCurrency;
+        }
       }
     }
 
-    if (isNumber(factor) && !isNaN(factor)) {
+    if (isNumber(factor) && Number.isFinite(factor) && !isNaN(factor)) {
       return factor * aValue;
     }
 
@@ -374,7 +394,7 @@ export class ExchangeRateDataService {
       )}`
     );
 
-    return undefined;
+    return aValue;
   }
 
   private async getExchangeRates({
