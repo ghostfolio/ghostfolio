@@ -35,22 +35,31 @@
   @if (showDetails()) {
     <div class="row">
       <div class="d-flex col justify-content-end">
-        <gf-value
-          [colorizeSign]="true"
-          [isCurrency]="true"
-          [isLoading]="isLoading()"
-          [locale]="locale()"
-          [value]="performance()?.netPerformanceWithCurrencyEffect"
-        />
+        @if (isLoading() || change() !== undefined) {
+          <gf-value
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [isLoading]="isLoading()"
+            [locale]="locale()"
+            [value]="change()"
+          />
+        }
       </div>
       <div class="col">
-        <gf-value
-          [colorizeSign]="true"
-          [isLoading]="isLoading()"
-          [isPercent]="true"
-          [locale]="locale()"
-          [value]="performance()?.netPerformancePercentageWithCurrencyEffect"
-        />
+        <!--
+          A relative change is not defined for a date range starting at a net
+          worth of 0, in which case the value is omitted rather than rendered
+          as a loading state
+        -->
+        @if (isLoading() || changeInPercentage() !== undefined) {
+          <gf-value
+            [colorizeSign]="true"
+            [isLoading]="isLoading()"
+            [isPercent]="true"
+            [locale]="locale()"
+            [value]="changeInPercentage()"
+          />
+        }
       </div>
     </div>
   }

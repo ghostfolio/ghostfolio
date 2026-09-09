@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a toggle to switch between the performance chart and the net worth chart on the home page
+
 ### Changed
 
 - Improved the style of the activity type filter on the activities page (experimental)

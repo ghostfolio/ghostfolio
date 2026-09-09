@@ -13,6 +13,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -37,6 +38,8 @@ export class GfPortfolioPerformanceComponent {
   public readonly errors = input<ResponseError['errors']>();
   public readonly isLoading = input<boolean>();
   public readonly locale = input<string>(getLocale());
+  public readonly netWorthChange = input<number>();
+  public readonly netWorthChangeInPercentage = input<number>();
   public readonly performance = input.required<PortfolioPerformance>();
   public readonly precision = input.required<number, number>({
     transform: (value) => {
@@ -44,7 +47,20 @@ export class GfPortfolioPerformanceComponent {
     }
   });
   public readonly showDetails = input<boolean>(false);
+  public readonly showNetWorth = input<boolean>(false);
   public readonly unit = input.required<string>();
+
+  protected readonly change = computed(() => {
+    return this.showNetWorth()
+      ? this.netWorthChange()
+      : this.performance()?.netPerformanceWithCurrencyEffect;
+  });
+
+  protected readonly changeInPercentage = computed(() => {
+    return this.showNetWorth()
+      ? this.netWorthChangeInPercentage()
+      : this.performance()?.netPerformancePercentageWithCurrencyEffect;
+  });
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
@@ -60,8 +76,12 @@ export class GfPortfolioPerformanceComponent {
           this.value().nativeElement.innerHTML = '';
         }
       } else {
-        if (isNumber(this.performance().currentValueInBaseCurrency)) {
-          new CountUp('value', this.performance().currentValueInBaseCurrency, {
+        const currentValue = this.showNetWorth()
+          ? this.performance().currentNetWorth
+          : this.performance().currentValueInBaseCurrency;
+
+        if (isNumber(currentValue)) {
+          new CountUp('value', currentValue, {
             decimal: getNumberFormatDecimal(this.locale()),
             decimalPlaces: this.precision(),
             duration: 1,

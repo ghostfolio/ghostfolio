@@ -3,6 +3,7 @@ import {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
+  OverviewChartMode,
   ViewMode
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
@@ -26,6 +27,7 @@ export interface UserSettings {
   isRestrictedView?: boolean;
   language?: string;
   locale?: string;
+  overviewChartMode?: OverviewChartMode;
   performanceCalculationType?: PerformanceCalculationType;
   projectedTotalAmount?: number;
   retirementDate?: string;
