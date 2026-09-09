@@ -82,7 +82,32 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           signal: AbortSignal.timeout(requestTimeout)
         }
       )
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          this.logger.debug(
+            `Trackinsight funds request failed for "${trackinsightSymbol}" with status ${res.status}`
+          );
+          return {};
+        }
+
+        const contentType = res.headers.get('content-type') ?? '';
+
+        if (!contentType.includes('application/json')) {
+          this.logger.debug(
+            `Trackinsight funds request returned non-JSON for "${trackinsightSymbol}": ${contentType}`
+          );
+          return {};
+        }
+
+        try {
+          return await res.json();
+        } catch {
+          this.logger.debug(
+            `Trackinsight funds request returned invalid JSON for "${trackinsightSymbol}"`
+          );
+          return {};
+        }
+      })
       .catch(() => {
         return {};
       });
@@ -106,7 +131,32 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           signal: AbortSignal.timeout(requestTimeout)
         }
       )
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          this.logger.debug(
+            `Trackinsight holdings request failed for "${trackinsightSymbol}" with status ${res.status}`
+          );
+          return {};
+        }
+
+        const contentType = res.headers.get('content-type') ?? '';
+
+        if (!contentType.includes('application/json')) {
+          this.logger.debug(
+            `Trackinsight holdings request returned non-JSON for "${trackinsightSymbol}": ${contentType}`
+          );
+          return {};
+        }
+
+        try {
+          return await res.json();
+        } catch {
+          this.logger.debug(
+            `Trackinsight holdings request returned invalid JSON for "${trackinsightSymbol}"`
+          );
+          return {};
+        }
+      })
       .catch(() => {
         return {};
       });
@@ -196,13 +246,42 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   }) {
     return this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+        `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${encodeURIComponent(symbol)}/_/ticker/default/0/3`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
       )
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          this.logger.debug(
+            `Trackinsight search failed for "${symbol}" with status ${res.status}`
+          );
+          return undefined;
+        }
+
+        const contentType = res.headers.get('content-type') ?? '';
+
+        if (!contentType.includes('application/json')) {
+          this.logger.debug(
+            `Trackinsight search returned non-JSON for "${symbol}": ${contentType}`
+          );
+          return undefined;
+        }
+
+        try {
+          return await res.json();
+        } catch {
+          this.logger.debug(
+            `Trackinsight search returned invalid JSON for "${symbol}"`
+          );
+          return undefined;
+        }
+      })
       .then((jsonRes) => {
+        if (!jsonRes) {
+          return undefined;
+        }
+
         if (
           jsonRes['results']?.['count'] === 1 ||
           // Allow exact match
