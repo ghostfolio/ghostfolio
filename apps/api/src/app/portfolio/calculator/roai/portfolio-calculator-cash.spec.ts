@@ -118,7 +118,6 @@ describe('PortfolioCalculator', () => {
     currentRateService = new CurrentRateService(
       null,
       dataProviderService,
-      null,
       null
     );
 

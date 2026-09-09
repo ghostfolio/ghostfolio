@@ -546,7 +546,8 @@ export class PortfolioService {
       filters,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
     });
 
     const { historicalData } = await portfolioCalculator.getSnapshot();
@@ -633,7 +634,8 @@ export class PortfolioService {
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency,
-      filters: portfolioSnapshotFilters
+      filters: portfolioSnapshotFilters,
+      subscriptionType: user.subscription?.type
     });
 
     const { createdAt, currentValueInBaseCurrency, hasErrors, positions } =
@@ -963,7 +965,8 @@ export class PortfolioService {
       calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency,
       filters: isExcludedHolding ? holdingFilters : undefined,
-      usePortfolioSnapshotCache: !isExcludedHolding
+      usePortfolioSnapshotCache: !isExcludedHolding,
+      subscriptionType: user.subscription?.type
     });
 
     const transactionPoints = portfolioCalculator.getTransactionPoints();
@@ -1218,7 +1221,8 @@ export class PortfolioService {
       filters,
       userId,
       calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
     });
 
     const { errors, hasErrors, historicalData } =
