@@ -30,6 +30,20 @@
     }
   }
 
+  mat-card {
+    &.holdings {
+      --mat-card-title-text-size: var(--mat-sys-title-medium-size);
+
+      mat-card-content {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+  }
+
   .introduction {
     max-width: 50rem;
   }

@@ -1,5 +1,5 @@
 <div
-  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
+  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative px-xl-3"
 >
   @if (
     !hasImpersonationId() &&
@@ -61,8 +61,8 @@
       </div>
     </div>
   } @else {
-    <div class="row w-100">
-      <div class="col p-0">
+    <div class="align-items-stretch flex-nowrap row w-100">
+      <div class="col-12 col-xl p-0">
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
@@ -80,21 +80,41 @@
             [showYAxis]="false"
           />
         </div>
+        <div class="overview-container row mt-1">
+          <div class="col">
+            <gf-portfolio-performance
+              class="pb-4"
+              [errors]="errors()"
+              [isLoading]="isLoadingPerformance()"
+              [locale]="user()?.settings?.locale"
+              [performance]="performance()"
+              [precision]="precision()"
+              [showDetails]="showDetails()"
+              [unit]="unit()"
+            />
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="overview-container row mt-1">
-      <div class="col">
-        <gf-portfolio-performance
-          class="pb-4"
-          [errors]="errors()"
-          [isLoading]="isLoadingPerformance()"
-          [locale]="user()?.settings?.locale"
-          [performance]="performance()"
-          [precision]="precision()"
-          [showDetails]="showDetails()"
-          [unit]="unit()"
-        />
-      </div>
+      @if (showExperimentalHoldings()) {
+        <div class="col-xl-4 d-none d-xl-block ml-5 p-0 position-relative">
+          <mat-card
+            appearance="outlined"
+            class="h-100 holdings position-absolute w-100"
+          >
+            <mat-card-header>
+              <mat-card-title i18n>Holdings</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="overflow-auto">
+              <gf-holdings-table
+                mode="simple"
+                [holdings]="holdings()"
+                [locale]="user()?.settings?.locale ?? DEFAULT_LOCALE"
+                (holdingClicked)="onHoldingClicked($event)"
+              />
+            </mat-card-content>
+          </mat-card>
+        </div>
+      }
     </div>
   }
 </div>

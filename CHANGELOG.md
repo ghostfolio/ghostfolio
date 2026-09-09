@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the holdings table to the overview tab of the home page on desktop (experimental)
+
 ### Changed
 
 - Improved the style of the activity type filter on the activities page (experimental)
