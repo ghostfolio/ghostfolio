@@ -57,6 +57,7 @@ import {
   InvestmentItem,
   PortfolioDetails,
   PortfolioHoldingResponse,
+  PortfolioHoldingsResponse,
   PortfolioInvestmentsResponse,
   PortfolioPerformanceResponse,
   PortfolioPosition,
@@ -506,7 +507,14 @@ export class PortfolioService {
       });
     }
 
-    return holdings;
+    return {
+      holdings,
+      totalValueInBaseCurrency: getSum(
+        holdings.map(({ valueInBaseCurrency }) => {
+          return new Big(valueInBaseCurrency ?? 0);
+        })
+      ).toNumber()
+    };
   }
 
   public async getInvestments({
@@ -1221,7 +1229,7 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const { errors, hasErrors, historicalData } =
+    const { currentValueInBaseCurrency, errors, hasErrors, historicalData } =
       await portfolioCalculator.getSnapshot();
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
@@ -1238,8 +1246,7 @@ export class PortfolioService {
       netPerformanceWithCurrencyEffect,
       netWorth,
       totalInvestment,
-      totalInvestmentValueWithCurrencyEffect,
-      valueWithCurrencyEffect
+      totalInvestmentValueWithCurrencyEffect
     } = chart?.at(-1) ?? {
       netPerformance: 0,
       netPerformanceInPercentage: 0,
@@ -1247,7 +1254,7 @@ export class PortfolioService {
       netPerformanceWithCurrencyEffect: 0,
       netWorth: 0,
       totalInvestment: 0,
-      valueWithCurrencyEffect: 0
+      totalInvestmentValueWithCurrencyEffect: 0
     };
 
     return {
@@ -1261,7 +1268,7 @@ export class PortfolioService {
         totalInvestment,
         totalInvestmentValueWithCurrencyEffect,
         currentNetWorth: netWorth,
-        currentValueInBaseCurrency: valueWithCurrencyEffect,
+        currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
         netPerformancePercentage: netPerformanceInPercentage,
         netPerformancePercentageWithCurrencyEffect:
           netPerformanceInPercentageWithCurrencyEffect
