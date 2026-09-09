@@ -33,6 +33,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { Router, RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
@@ -43,6 +44,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     GfLineChartComponent,
     GfPortfolioPerformanceComponent,
     MatButtonModule,
+    MatCardModule,
     RouterModule
   ],
   selector: 'gf-home-overview',
@@ -152,6 +154,7 @@ export class GfHomeOverviewComponent implements OnInit {
 
       this.dataService
         .fetchPortfolioHoldings({
+          filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }],
           range: this.user()?.settings?.dateRange
         })
         .pipe(takeUntilDestroyed(this.destroyRef))

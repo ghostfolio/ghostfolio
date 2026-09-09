@@ -30,9 +30,20 @@
     }
   }
 
-  .holdings-table-container {
-    max-height: 50vh;
-    overflow-y: auto;
+  mat-card {
+    &.holdings {
+      mat-card-content {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      mat-card-title {
+        font-size: 1rem;
+      }
+    }
   }
 
   .introduction {

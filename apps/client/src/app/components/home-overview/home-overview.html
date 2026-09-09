@@ -1,5 +1,5 @@
 <div
-  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
+  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative px-lg-3"
 >
   @if (
     !hasImpersonationId() &&
@@ -61,8 +61,8 @@
       </div>
     </div>
   } @else {
-    <div class="align-items-center row w-100">
-      <div class="col-12 p-0" [class.col-lg-9]="showExperimentalHoldings()">
+    <div class="align-items-stretch flex-nowrap row w-100">
+      <div class="col-12 col-lg p-0">
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
@@ -96,13 +96,23 @@
         </div>
       </div>
       @if (showExperimentalHoldings()) {
-        <div class="col-lg-3 d-none d-lg-block holdings-table-container p-0">
-          <gf-holdings-table
-            mode="simple"
-            [holdings]="holdings()"
-            [locale]="user()?.settings?.locale ?? DEFAULT_LOCALE"
-            (holdingClicked)="onHoldingClicked($event)"
-          />
+        <div class="col-lg-4 d-none d-lg-block ml-3 p-0 position-relative">
+          <mat-card
+            appearance="outlined"
+            class="h-100 holdings position-absolute w-100"
+          >
+            <mat-card-header>
+              <mat-card-title i18n>Holdings</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="overflow-auto">
+              <gf-holdings-table
+                mode="simple"
+                [holdings]="holdings()"
+                [locale]="user()?.settings?.locale ?? DEFAULT_LOCALE"
+                (holdingClicked)="onHoldingClicked($event)"
+              />
+            </mat-card-content>
+          </mat-card>
         </div>
       }
     </div>
