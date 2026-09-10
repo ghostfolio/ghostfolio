@@ -1,6 +1,13 @@
-import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
+import {
+  MCP_MAX_ACTIVITIES,
+  SEARCH_QUERY_MAXIMUM_LENGTH,
+  SEARCH_QUERY_MINIMUM_LENGTH
+} from '@ghostfolio/common/config';
 
-import { IMPORT_ACTIVITIES_PARAMETERS } from './mcp.schemas';
+import {
+  IMPORT_ACTIVITIES_PARAMETERS,
+  SEARCH_ASSET_PROFILES_PARAMETERS
+} from './mcp.schemas';
 import { createActivity } from './mcp.test-utils';
 
 describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
@@ -44,5 +51,41 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
         })
       )
     ).toBe(false);
+  });
+});
+
+describe('SEARCH_ASSET_PROFILES_PARAMETERS', () => {
+  it('Refuses a query that contains only spaces', () => {
+    expect(
+      SEARCH_ASSET_PROFILES_PARAMETERS.safeParse({ query: '  ' }).success
+    ).toBe(false);
+  });
+
+  it(`Refuses a query shorter than ${SEARCH_QUERY_MINIMUM_LENGTH} characters`, () => {
+    expect(
+      SEARCH_ASSET_PROFILES_PARAMETERS.safeParse({ query: 'A' }).success
+    ).toBe(false);
+  });
+
+  it(`Refuses a query longer than ${SEARCH_QUERY_MAXIMUM_LENGTH} characters`, () => {
+    expect(
+      SEARCH_ASSET_PROFILES_PARAMETERS.safeParse({
+        query: 'A'.repeat(SEARCH_QUERY_MAXIMUM_LENGTH + 1)
+      }).success
+    ).toBe(false);
+  });
+
+  it('Accepts a name, symbol or ISIN', () => {
+    for (const query of ['Apple', 'AAPL', 'US0378331005']) {
+      expect(
+        SEARCH_ASSET_PROFILES_PARAMETERS.safeParse({ query }).success
+      ).toBe(true);
+    }
+  });
+
+  it('Removes spaces at the start and the end of a query', () => {
+    expect(
+      SEARCH_ASSET_PROFILES_PARAMETERS.parse({ query: ' Apple ' }).query
+    ).toBe('Apple');
   });
 });

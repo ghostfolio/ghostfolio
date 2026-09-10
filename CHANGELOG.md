@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a tool to search for asset profiles to the server of the Model Context Protocol (MCP) (experimental)
+
 ### Changed
 
 - Improved the style of the activity type filter on the activities page (experimental)
