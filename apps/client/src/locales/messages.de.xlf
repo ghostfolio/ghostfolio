@@ -4103,7 +4103,7 @@
       </trans-unit>
       <trans-unit id="5521091503920831865" datatype="html">
         <source>Add to Watchlist</source>
-        <target state="new">Add to Watchlist</target>
+        <target state="translated">Zur Beobachtungsliste hinzufügen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">163</context>
