@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style of the activity type filter on the activities page (experimental)
 - Improved the style of the selector in the benchmark comparator
+- Upgraded `zone.js` from version `0.16.2` to `0.16.3`
 
 ## 3.69.0 - 2026-09-07
 
