@@ -126,7 +126,7 @@ export class CurrentRateService {
       for (const { dataSource, symbol } of quoteErrors) {
         try {
           // If missing quote, fallback to the latest available historical market price
-          let value: GetValueObject = response.values.find((currentValue) => {
+          const hasValueForToday = response.values.some((currentValue) => {
             return (
               currentValue.dataSource === dataSource &&
               currentValue.symbol === symbol &&
@@ -134,22 +134,8 @@ export class CurrentRateService {
             );
           });
 
-          if (!value) {
-            // Fallback to unit price of latest activity
-            const latestActivity =
-              await this.activitiesService.getLatestActivity({
-                dataSource,
-                symbol
-              });
-
-            value = {
-              dataSource,
-              symbol,
-              date: today,
-              marketPrice: latestActivity?.unitPrice ?? 0
-            };
-
-            response.values.push(value);
+          if (hasValueForToday) {
+            continue;
           }
 
           const [latestValue] = response.values
@@ -172,7 +158,21 @@ export class CurrentRateService {
               return 0;
             });
 
-          value.marketPrice = latestValue.marketPrice;
+          // Fallback to unit price of latest activity
+          const latestActivity = latestValue
+            ? undefined
+            : await this.activitiesService.getLatestActivity({
+                dataSource,
+                symbol
+              });
+
+          response.values.push({
+            dataSource,
+            symbol,
+            date: today,
+            marketPrice:
+              latestValue?.marketPrice ?? latestActivity?.unitPrice ?? 0
+          });
         } catch {}
       }
     }
