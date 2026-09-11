@@ -35,6 +35,7 @@ import {
 import {
   canDeleteAssetProfile,
   getAssetProfileIdentifier,
+  getStartOfUtcDateOfTomorrow,
   isDraftActivity,
   isValidCustomAssetProfileSymbol
 } from '@ghostfolio/common/helper';
@@ -59,7 +60,6 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { randomUUID } from 'node:crypto';
 
@@ -485,7 +485,7 @@ export class ActivitiesService {
     }
 
     const activities: Activity[] = [];
-    const endOfTodayDate = endOfToday();
+    const startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow();
 
     for (const account of cashDetails.accounts) {
       const { balances } = await this.accountBalanceService.getAccountBalances({
@@ -500,7 +500,7 @@ export class ActivitiesService {
       for (const balanceItem of balances) {
         if (
           isAccountBalanceInFuture({
-            endOfTodayDate,
+            startOfUtcDateOfTomorrow,
             date: balanceItem.date
           })
         ) {

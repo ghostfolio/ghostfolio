@@ -12,6 +12,7 @@ import {
 import { Big } from 'big.js';
 import { isISO4217CurrencyCode, isUUID } from 'class-validator';
 import {
+  addDays,
   getDate,
   getMonth,
   getYear,
@@ -486,6 +487,10 @@ export function getStartOfUtcDate(aDate: Date) {
   date.setUTCHours(0, 0, 0, 0);
 
   return date;
+}
+
+export function getStartOfUtcDateOfTomorrow() {
+  return addDays(getStartOfUtcDate(new Date()), 1, { in: utc });
 }
 
 export function getStartOfUtcDateOfYesterday() {
