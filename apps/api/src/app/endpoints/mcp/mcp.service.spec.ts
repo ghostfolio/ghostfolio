@@ -1,5 +1,6 @@
 import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
+import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -13,7 +14,12 @@ import { permissions } from '@ghostfolio/common/permissions';
 import type { UserWithSettings } from '@ghostfolio/common/types';
 
 import { HttpException } from '@nestjs/common';
-import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Type as ActivityType
+} from '@prisma/client';
 
 import { McpService } from './mcp.service';
 import { createActivity } from './mcp.test-utils';
@@ -29,12 +35,18 @@ describe('McpService', () => {
   let importService: ImportService;
   let mcpService: McpService;
   let portfolioTableService: PortfolioTableService;
+  let symbolService: SymbolService;
   let userService: UserService;
 
   function setupUser(userPermissions: string[]) {
-    jest.spyOn(userService, 'user').mockResolvedValue({
+    const user = {
+      id: userId,
       permissions: userPermissions
-    } as UserWithSettings);
+    } as UserWithSettings;
+
+    jest.spyOn(userService, 'user').mockResolvedValue(user);
+
+    return user;
   }
 
   beforeEach(() => {
@@ -63,6 +75,10 @@ describe('McpService', () => {
       getHoldingsTable: jest.fn().mockResolvedValue('## Holdings')
     } as unknown as PortfolioTableService;
 
+    symbolService = {
+      lookup: jest.fn().mockResolvedValue({ items: [] })
+    } as unknown as SymbolService;
+
     userService = { user: jest.fn() } as unknown as UserService;
 
     mcpService = new McpService(
@@ -70,6 +86,7 @@ describe('McpService', () => {
       configurationService,
       importService,
       portfolioTableService,
+      symbolService,
       userService
     );
   });
@@ -178,6 +195,70 @@ describe('McpService', () => {
       expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith({
         userId,
         languageCode: DEFAULT_LANGUAGE_CODE
+      });
+    });
+  });
+
+  describe('searchAssetProfiles', () => {
+    it('Refuses a user without the permission to create an activity', async () => {
+      setupUser([]);
+
+      await expect(
+        mcpService.searchAssetProfiles({ query: 'Apple', userId })
+      ).rejects.toThrow(HttpException);
+
+      expect(symbolService.lookup).not.toHaveBeenCalled();
+    });
+
+    it('Gives the import-ready asset profiles available to the user', async () => {
+      const user = setupUser([permissions.createActivity]);
+
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      jest.spyOn(symbolService, 'lookup').mockResolvedValue({
+        items: [
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataProviderInfo: { isPremium: false },
+            dataSource: DataSource.YAHOO,
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          },
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataProviderInfo: { isPremium: true },
+            dataSource: DataSource.GHOSTFOLIO,
+            name: 'Premium asset',
+            symbol: 'PREMIUM'
+          }
+        ]
+      });
+
+      const result = await mcpService.searchAssetProfiles({
+        query: 'Apple',
+        userId
+      });
+
+      expect(symbolService.lookup).toHaveBeenCalledWith({
+        query: 'Apple',
+        user
+      });
+      expect(JSON.parse(result.content[0].text)).toEqual({
+        assetProfiles: [
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataSource: DataSource.GHOSTFOLIO,
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]
       });
     });
   });

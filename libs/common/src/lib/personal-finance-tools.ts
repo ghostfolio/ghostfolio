@@ -2460,14 +2460,14 @@ export const personalFinanceTools: Product[] = [
   {
     categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
     founded: 2025,
-    hasFreePlan: false,
+    hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'turbobulls',
     name: 'Turbobulls',
     origin: 'RO',
     platforms: ['WEB'],
-    pricingPerYear: '€39.99',
-    slogan: 'Your complete financial dashboard. Actually private.',
+    pricingPerYear: '€35.90',
+    slogan: 'Your complete portfolio and expense tracker. Actually private.',
     url: 'https://www.turbobulls.com'
   },
   {
