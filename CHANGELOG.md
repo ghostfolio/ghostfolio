@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a tool to search for asset profiles to the server of the Model Context Protocol (MCP) (experimental)
+- Added a data provider for official foreign exchange reference rates (FXMacroData)
 
 ### Changed
 
