@@ -59,7 +59,7 @@ import {
 } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { debounceTime } from 'rxjs';
 

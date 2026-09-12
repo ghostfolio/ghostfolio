@@ -19,7 +19,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, format, parseISO } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 
 @Injectable()
 export class AccountBalanceService {

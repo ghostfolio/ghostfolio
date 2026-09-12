@@ -82,7 +82,7 @@ import {
   swapVerticalOutline,
   walletOutline
 } from 'ionicons/icons';
-import { isNumber, round, uniqBy } from 'lodash';
+import { isNumber, round, uniqBy } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { filter, switchMap } from 'rxjs/operators';
 

@@ -36,7 +36,7 @@ import {
 } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 import { tap } from 'rxjs';
 import {
   debounceTime,

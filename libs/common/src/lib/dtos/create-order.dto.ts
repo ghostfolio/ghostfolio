@@ -20,7 +20,7 @@ import {
   Min,
   Validate
 } from 'class-validator';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 
 export class CreateOrderDto {
   @IsOptional()

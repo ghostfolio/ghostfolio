@@ -51,7 +51,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { AssetClass } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
-import { isArray, sortBy } from 'lodash';
+import { isArray, sortBy } from 'lodash-es';
 import ms from 'ms';
 
 import { ImportStep } from './enums/import-step';

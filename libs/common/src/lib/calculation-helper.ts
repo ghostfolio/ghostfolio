@@ -10,7 +10,7 @@ import {
   subMilliseconds,
   subYears
 } from 'date-fns';
-import { isFinite, isNumber } from 'lodash';
+import { isFinite, isNumber } from 'lodash-es';
 
 import { resetHours } from './helper';
 import { DateRange } from './types';

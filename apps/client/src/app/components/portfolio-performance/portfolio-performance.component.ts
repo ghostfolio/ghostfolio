@@ -23,7 +23,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { CountUp } from 'countup.js';
 import { addIcons } from 'ionicons';
 import { timeOutline } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({

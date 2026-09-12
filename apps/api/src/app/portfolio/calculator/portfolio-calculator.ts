@@ -62,7 +62,7 @@ import {
   startOfYear,
   subDays
 } from 'date-fns';
-import { groupBy, isNumber, sortBy, sum, uniqBy } from 'lodash';
+import { groupBy, isNumber, sortBy, sum, uniqBy } from 'lodash-es';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;

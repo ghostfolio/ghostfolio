@@ -5,7 +5,7 @@ import {
 
 import { Prisma, Type as ActivityType } from '@prisma/client';
 import { endOfToday, isAfter } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { uniqBy } from 'lodash-es';
 
 export const WHERE_ACTIVITY_NOT_DRAFT: Prisma.OrderWhereInput = {
   tags: {
