@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.69.0 - 2026-09-07
 
+### Fixed
+
+- Fixed the tag filter of the holdings so that it no longer affects the quantity and the active or closed status of a holding
+
 ### Changed
 
 - Improved the loading state of the activity count in the portfolio summary

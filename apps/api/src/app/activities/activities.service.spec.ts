@@ -236,6 +236,57 @@ describe('ActivitiesService', () => {
       });
     });
 
+    it('resolves a tag filter to the full activity history of matching holdings', async () => {
+      const filters = [{ id: 'tag-1', type: 'TAG' }] as Filter[];
+      const matchingBuyActivity = createActivity({ symbol: 'AAPL' });
+      const matchingSellActivity = createActivity({ symbol: 'AAPL' });
+      const nonMatchingActivity = createActivity({ symbol: 'MSFT' });
+      const fetchedActivities = [
+        matchingBuyActivity,
+        matchingSellActivity,
+        nonMatchingActivity
+      ];
+
+      jest.spyOn(activitiesService, 'getActivities').mockResolvedValue({
+        activities: fetchedActivities,
+        count: 3
+      });
+      const keepActivitiesOfHoldingsMatchingTag = jest
+        .spyOn(
+          activitiesService as unknown as {
+            keepActivitiesOfHoldingsMatchingTag: (options: {
+              activities: Activity[];
+            }) => Promise<Activity[]>;
+          },
+          'keepActivitiesOfHoldingsMatchingTag'
+        )
+        .mockResolvedValue([matchingBuyActivity, matchingSellActivity]);
+
+      const result =
+        await activitiesService.getActivitiesForPortfolioCalculator({
+          filters,
+          userCurrency: 'USD',
+          userId: 'user-id'
+        });
+
+      expect(activitiesService.getActivities).toHaveBeenCalledWith({
+        filters: [],
+        userCurrency: 'USD',
+        userId: 'user-id',
+        withExcludedAccountsAndActivities: false
+      });
+      expect(keepActivitiesOfHoldingsMatchingTag).toHaveBeenCalledWith({
+        activities: fetchedActivities,
+        filters,
+        userId: 'user-id',
+        withExcludedAccountsAndActivities: false
+      });
+      expect(result.activities).toEqual([
+        matchingBuyActivity,
+        matchingSellActivity
+      ]);
+    });
+
     it('does not adjust synthetic cash activities', async () => {
       const activity = createActivity({ symbol: 'AAPL' });
       const cashActivity = createActivity({
