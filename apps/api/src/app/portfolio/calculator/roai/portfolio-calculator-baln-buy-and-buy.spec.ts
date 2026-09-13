@@ -82,7 +82,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with BALN.SW buy and buy', async () => {
+    it('with BALN.SW buy and buy', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const activities: Activity[] = [
@@ -204,6 +204,158 @@ describe('PortfolioCalculator', () => {
 
       expect(investments).toEqual([
         { date: '2021-11-22', investment: new Big('285.8') },
+        { date: '2021-11-30', investment: new Big('559') }
+      ]);
+
+      expect(investmentsByMonth).toEqual([
+        { date: '2021-11-01', investment: 559 },
+        { date: '2021-12-01', investment: 0 }
+      ]);
+
+      expect(investmentsByYear).toEqual([
+        { date: '2021-01-01', investment: 559 }
+      ]);
+    });
+
+    it('with BALN.SW buy, dividend and buy', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          date: new Date('2021-11-22'),
+          feeInAssetProfileCurrency: 1.55,
+          feeInBaseCurrency: 1.55,
+          quantity: 2,
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 142.9
+        },
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          date: new Date('2021-11-26'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.27
+        },
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          date: new Date('2021-11-30'),
+          feeInAssetProfileCurrency: 1.65,
+          feeInBaseCurrency: 1.65,
+          quantity: 2,
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 136.6
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const investments = portfolioCalculator.getInvestments();
+
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'month'
+      });
+
+      const investmentsByYear = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
+      });
+
+      expect(portfolioSnapshot).toMatchObject({
+        currentValueInBaseCurrency: new Big('595.6'),
+        errors: [],
+        hasErrors: false,
+        positions: [
+          {
+            activitiesCount: 3,
+            averagePrice: new Big('139.75'),
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            dateOfFirstActivity: '2021-11-22',
+            dividend: new Big('0.27'),
+            dividendInBaseCurrency: new Big('0.27'),
+            fee: new Big('3.2'),
+            feeInBaseCurrency: new Big('3.2'),
+            grossPerformance: new Big('36.6'),
+            grossPerformancePercentage: new Big('0.07706261539956593567'),
+            grossPerformancePercentageWithCurrencyEffect: new Big(
+              '0.07706261539956593567'
+            ),
+            grossPerformanceWithCurrencyEffect: new Big('36.6'),
+            investment: new Big('559'),
+            investmentWithCurrencyEffect: new Big('559'),
+            netPerformance: new Big('33.4'),
+            netPerformancePercentage: new Big('0.07032490039195361342'),
+            netPerformancePercentageWithCurrencyEffectMap: {
+              max: new Big('0.06986689805847808234')
+            },
+            netPerformanceWithCurrencyEffectMap: {
+              max: new Big('33.4')
+            },
+            marketPrice: 148.9,
+            marketPriceInBaseCurrency: 148.9,
+            quantity: new Big('4'),
+            symbol: 'BALN.SW',
+            tags: [],
+            averageInvestment: new Big('474.93846153846153846154'),
+            averageInvestmentWithCurrencyEffect: new Big(
+              '474.93846153846153846154'
+            ),
+            valueInBaseCurrency: new Big('595.6')
+          }
+        ],
+        totalFeesWithCurrencyEffect: new Big('3.2'),
+        totalInterestWithCurrencyEffect: new Big('0'),
+        totalInvestment: new Big('559'),
+        totalInvestmentWithCurrencyEffect: new Big('559'),
+        totalLiabilitiesWithCurrencyEffect: new Big('0')
+      });
+
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
+        expect.objectContaining({
+          netPerformance: 33.4,
+          netPerformanceInPercentage: 0.07032490039195362,
+          netPerformanceInPercentageWithCurrencyEffect: 0.07032490039195362,
+          netPerformanceWithCurrencyEffect: 33.4,
+          totalInvestment: 559,
+          totalInvestmentValueWithCurrencyEffect: 559
+        })
+      );
+
+      expect(investments).toEqual([
+        { date: '2021-11-22', investment: new Big('285.8') },
+        { date: '2021-11-26', investment: new Big('285.8') },
         { date: '2021-11-30', investment: new Big('559') }
       ]);
 
