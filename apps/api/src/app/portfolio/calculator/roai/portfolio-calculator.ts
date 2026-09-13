@@ -469,6 +469,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let totalInvestmentDays = 0;
     let sumOfTimeWeightedInvestments = new Big(0);
     let sumOfTimeWeightedInvestmentsWithCurrencyEffect = new Big(0);
+    // Track the previous BUY/SELL order for the TWI calculation.
+    // Non-BUY/SELL activities such as dividends should not reset the TWI period.
+    let previousQuantityActivityDate: Date | undefined;
 
     for (let i = 0; i < orders.length; i += 1) {
       const order = orders[i];
@@ -721,7 +724,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         ) {
           // Calculate the number of days since the previous order
           const orderDate = new Date(order.date);
-          const previousOrderDate = new Date(orders[i - 1].date);
+          const previousOrderDate =
+            previousQuantityActivityDate ?? new Date(orders[i - 1].date);
 
           let daysSinceLastOrder = differenceInDays(
             orderDate,
@@ -757,6 +761,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
         currentValuesWithCurrencyEffect[order.date] =
           valueOfInvestmentWithCurrencyEffect;
+
+        // Update the TWI reference date after BUY/SELL orders.
+        // Non-BUY/SELL activities such as dividends are ignored.
+        if (!order.itemType && ['BUY', 'SELL'].includes(order.type)) {
+          previousQuantityActivityDate = new Date(order.date);
+        }
 
         netPerformanceValues[order.date] = grossPerformance
           .minus(grossPerformanceAtStartDate)
