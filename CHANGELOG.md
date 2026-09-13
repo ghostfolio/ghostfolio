@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a tool to search for asset profiles to the server of the Model Context Protocol (MCP) (experimental)
+
 ### Changed
 
 - Improved the style of the activity type filter on the activities page (experimental)
-- Improved the style of the selector in the benchmark comparator
 - Improved the style of the no activities info component
+- Improved the style of the selector in the benchmark comparator
+- Improved the language localization for German (`de`)
+- Upgraded `papaparse` from version `5.5.3` to `5.7.0`
 
 ## 3.69.0 - 2026-09-07
 

@@ -2,7 +2,9 @@ import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import {
   DATE_RANGES,
   MCP_MAX_ACCOUNTS,
-  MCP_MAX_ACTIVITIES
+  MCP_MAX_ACTIVITIES,
+  SEARCH_QUERY_MAXIMUM_LENGTH,
+  SEARCH_QUERY_MINIMUM_LENGTH
 } from '@ghostfolio/common/config';
 import {
   isValidCurrencyCode,
@@ -112,4 +114,15 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
     .min(1)
     .max(MCP_MAX_ACTIVITIES)
     .describe(`The activities to import, at most ${MCP_MAX_ACTIVITIES}`)
+});
+
+export const SEARCH_ASSET_PROFILES_PARAMETERS = z.object({
+  query: z
+    .string()
+    .trim()
+    .min(SEARCH_QUERY_MINIMUM_LENGTH)
+    .max(SEARCH_QUERY_MAXIMUM_LENGTH)
+    .describe(
+      'The name, ticker symbol or ISIN of the financial asset, for example Apple, AAPL, Bitcoin or US0378331005'
+    )
 });

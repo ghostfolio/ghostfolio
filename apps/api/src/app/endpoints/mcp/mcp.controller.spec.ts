@@ -77,6 +77,12 @@ describe('GhostfolioMcpController', () => {
     ).toEqual([scopes.activityCreate]);
   });
 
+  it('Requires the scope to create an activity for the tool to search asset profiles', () => {
+    expect(
+      getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, 'searchAssetProfiles')
+    ).toEqual([scopes.activityCreate]);
+  });
+
   // The tools have no try and catch, hence the filter is the only guarantee
   // that an unexpected exception does not expose internals
   it('Applies the filter of the exceptions of the tools', () => {
