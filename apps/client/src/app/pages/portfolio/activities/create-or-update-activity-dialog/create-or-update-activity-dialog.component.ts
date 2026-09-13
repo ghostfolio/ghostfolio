@@ -16,6 +16,9 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import type { Tag } from '@ghostfolio/prisma/browser';
+import { AssetClass } from '@ghostfolio/prisma/enums';
+import type { Type } from '@ghostfolio/prisma/enums';
 import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
@@ -50,7 +53,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AssetClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';

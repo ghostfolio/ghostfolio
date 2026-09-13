@@ -1,4 +1,5 @@
 import { getEmojiFlag } from '@ghostfolio/common/helper';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 import { EntityLogoImageSourceService } from '@ghostfolio/ui/entity-logo/entity-logo-image-source.service';
 
 import {
@@ -8,7 +9,6 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
-import { DataSource } from '@prisma/client';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

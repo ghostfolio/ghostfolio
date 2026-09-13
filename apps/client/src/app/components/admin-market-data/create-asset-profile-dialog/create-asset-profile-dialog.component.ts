@@ -4,6 +4,7 @@ import {
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
 import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
@@ -31,7 +32,6 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
-import { DataSource } from '@prisma/client';
 import { isISO4217CurrencyCode } from 'class-validator';
 import { switchMap } from 'rxjs';
 

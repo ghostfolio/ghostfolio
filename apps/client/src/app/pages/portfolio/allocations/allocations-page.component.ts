@@ -22,6 +22,9 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { MarketAdvanced } from '@ghostfolio/common/types';
+import type { Account, Platform } from '@ghostfolio/prisma/browser';
+import { AssetClass, AssetSubClass } from '@ghostfolio/prisma/enums';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 import {
   GfPortfolioProportionChartComponent,
@@ -47,13 +50,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Account,
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  Platform
-} from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { filter, switchMap, tap } from 'rxjs';

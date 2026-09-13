@@ -6,6 +6,7 @@ import {
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 
@@ -48,7 +49,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Type as ActivityType } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { addIcons } from 'ionicons';
 import {
