@@ -171,6 +171,53 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
+          <mat-card-title
+            >How can I import transactions from Interactive Brokers
+            (IBKR)?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <ol>
+            <li>Log in to your Interactive Brokers Client Portal</li>
+            <li>
+              Navigate to <strong>Reports</strong> in the top menu, then select
+              <strong>Flex Queries</strong>
+            </li>
+            <li>
+              Click the <strong>+</strong> button next to Activity Flex Query
+            </li>
+            <li>Select <strong>Trades</strong> under Sections</li>
+            <li>Select <strong>Executions</strong> on the pop-up window</li>
+            <li>
+              Click <strong>SELECT ALL</strong> and then <strong>Save</strong>
+            </li>
+            <li>Enter a Query Name (e.g., "Ghostfolio Export")</li>
+            <li>
+              Under General Configuration, change Date Format to
+              <strong>mm/dd/yyyy</strong>
+            </li>
+            <li>Click <strong>Create</strong></li>
+            <li>Run the Activity Flex Query</li>
+            <li>
+              Under Period, select <strong>Custom Date Range</strong> to cover
+              all trades
+            </li>
+            <li>
+              Set Format as <strong>CSV</strong>, click <strong>Run</strong> and
+              download your trades
+            </li>
+            <li>Import the CSV file into Ghostfolio</li>
+          </ol>
+          <p class="mb-0 mt-3">
+            <small
+              >Note: Make sure your IBKR Client Portal language is set to
+              English before exporting to ensure proper CSV headers.</small
+            >
+          </p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
           <mat-card-title>Got any other questions?</mat-card-title>
         </mat-card-header>
         <mat-card-content
