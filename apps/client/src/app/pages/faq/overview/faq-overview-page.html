@@ -171,6 +171,63 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
+          <mat-card-title
+            >How can I import activities from Interactive Brokers
+            (IBKR)?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <ol>
+            <li>Log in to your Interactive Brokers Client Portal</li>
+            <li>
+              Navigate to <strong>Performance &amp; Reports</strong> in the top
+              menu, then select <strong>Flex Queries</strong>
+            </li>
+            <li>
+              Click the <strong>+</strong> button next to Activity Flex Query
+            </li>
+            <li>Select <strong>Trades</strong> under Sections</li>
+            <li>Select <strong>Executions</strong> on the pop-up window</li>
+            <li>
+              Click <strong>SELECT ALL</strong> and then <strong>Save</strong>
+            </li>
+            <li>Enter a Query Name (e.g., "Ghostfolio Export")</li>
+            <li>
+              Under General Configuration, set
+              <strong>Include header and trailer records</strong> to
+              <strong>No</strong> and <strong>Include column headers</strong> to
+              <strong>Yes</strong>
+            </li>
+            <li>Click <strong>Create</strong></li>
+            <li>Run the Activity Flex Query</li>
+            <li>
+              Under Period, select <strong>Custom Date Range</strong> and choose
+              the dates you want to export. Run separate exports for longer
+              histories if necessary
+            </li>
+            <li>
+              Set <strong>Format</strong> to <strong>CSV</strong>, click
+              <strong>Run</strong> and download your trades
+            </li>
+            <li>
+              Import the CSV file in Ghostfolio: <strong>Portfolio</strong> →
+              <strong>Activities</strong> →
+              <strong>Import Activities...</strong>
+            </li>
+          </ol>
+          <p class="mb-0 mt-3">
+            <small
+              >Note: The export contains trades only. It does not contain
+              dividends, interest or taxes. Remove currency conversions (asset
+              class <code>CASH</code>, for example <code>EUR.USD</code>) before
+              the import. Symbols from exchanges outside the US can need a
+              manual change.</small
+            >
+          </p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
           <mat-card-title>Got any other questions?</mat-card-title>
         </mat-card-header>
         <mat-card-content
