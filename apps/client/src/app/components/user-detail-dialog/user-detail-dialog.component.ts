@@ -4,6 +4,7 @@ import {
   getSum
 } from '@ghostfolio/common/helper';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
+import type { Subscription } from '@ghostfolio/prisma/browser';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -23,7 +24,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Subscription } from '@prisma/client';
 import { Big } from 'big.js';
 import { differenceInDays } from 'date-fns';
 import { addIcons } from 'ionicons';

@@ -1,6 +1,5 @@
 import { User } from '@ghostfolio/common/interfaces';
-
-import { Type } from '@prisma/client';
+import type { Type } from '@ghostfolio/prisma/enums';
 
 export interface ImportActivitiesDialogParams {
   activityTypes?: Type[];

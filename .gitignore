@@ -2,6 +2,7 @@
 
 # compiled output
 /out-tsc
+/prisma/generated
 /tmp
 
 # dependencies

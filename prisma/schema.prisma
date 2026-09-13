@@ -4,6 +4,11 @@ generator client {
   binaryTargets   = ["debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x", "native"]
 }
 
+generator workspaceClient {
+  provider     = "prisma-client"
+  output       = "./generated"
+}
+
 datasource db {
   provider = "postgresql"
 }

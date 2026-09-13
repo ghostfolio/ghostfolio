@@ -3,8 +3,9 @@ import {
   transformToMapOfBig
 } from '@ghostfolio/common/class-transformer';
 import { DateRange } from '@ghostfolio/common/types';
+import type { Tag } from '@ghostfolio/prisma/browser';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 
-import { DataSource, Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 

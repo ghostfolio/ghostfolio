@@ -1,4 +1,10 @@
-import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Type
+} from '@ghostfolio/prisma/enums';
+
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 

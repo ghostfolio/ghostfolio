@@ -1,3 +1,5 @@
+import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
+
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -6,7 +8,6 @@ import {
   OnChanges
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Type as ActivityType } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
   addCircleOutline,

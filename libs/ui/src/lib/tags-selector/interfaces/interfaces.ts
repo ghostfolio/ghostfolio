@@ -1,4 +1,4 @@
-import { Tag } from '@prisma/client';
+import type { Tag } from '@ghostfolio/prisma/browser';
 
 export interface NewTag extends Omit<Tag, 'id'> {
   id: undefined;

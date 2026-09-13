@@ -1,4 +1,4 @@
-import { Platform, Tag } from '@prisma/client';
+import type { Platform, Tag } from '@ghostfolio/prisma/browser';
 
 import { AccountWithBalance } from './account-with-balance.type';
 

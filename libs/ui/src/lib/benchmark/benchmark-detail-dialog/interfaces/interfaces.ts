@@ -1,6 +1,5 @@
 import { ColorScheme } from '@ghostfolio/common/types';
-
-import { DataSource } from '@prisma/client';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface BenchmarkDetailDialogParams {
   colorScheme?: ColorScheme;

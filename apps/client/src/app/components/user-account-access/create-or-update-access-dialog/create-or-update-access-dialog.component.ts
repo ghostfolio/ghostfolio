@@ -15,6 +15,7 @@ import {
 } from '@ghostfolio/common/scopes';
 import { AccessLevel, AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import type { AccessType } from '@ghostfolio/prisma/enums';
 import { GfAccessLevelIconComponent } from '@ghostfolio/ui/access-level-icon';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import {
@@ -57,7 +58,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AccessType } from '@prisma/client';
 import { addDays, addYears, endOfDay, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
