@@ -7,7 +7,12 @@ import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
-import { DATE_FORMAT, getSum, resetHours } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getStartOfUtcDateOfTomorrow,
+  getSum,
+  resetHours
+} from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
   Filter,
@@ -18,7 +23,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
-import { endOfToday, format, parseISO } from 'date-fns';
+import { endOfToday, format, min, parseISO } from 'date-fns';
 import { groupBy } from 'lodash';
 
 @Injectable()
@@ -118,13 +123,17 @@ export class AccountBalanceService {
       {};
     const lastBalancesByAccount: { [accountId: string]: Big } = {};
     const endOfTodayDate = endOfToday();
+    const startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow();
 
     for (const { accountId, date, valueInBaseCurrency } of balances) {
-      if (isAccountBalanceInFuture({ date, endOfTodayDate })) {
+      if (isAccountBalanceInFuture({ date, startOfUtcDateOfTomorrow })) {
         continue;
       }
 
-      const formattedDate = format(date, DATE_FORMAT);
+      // The date of a user in a time zone ahead of the instance can be after
+      // the end date of the chart. Set the date back to today, so that the item
+      // stays in the period of the calculation.
+      const formattedDate = format(min([date, endOfTodayDate]), DATE_FORMAT);
 
       lastBalancesByAccount[accountId] = new Big(valueInBaseCurrency);
 
