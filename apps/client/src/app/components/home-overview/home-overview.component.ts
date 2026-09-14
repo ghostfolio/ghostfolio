@@ -87,17 +87,24 @@ export class GfHomeOverviewComponent implements OnInit {
     const user = this.user();
 
     return user
-      ? !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN'
+      ? !user?.settings?.isRestrictedView && user?.settings?.viewMode !== 'ZEN'
       : false;
   });
 
   protected readonly showExperimentalHoldings = computed(() => {
-    return this.user()?.settings?.isExperimentalFeatures === true;
+    const user = this.user();
+
+    return (
+      user?.settings?.isExperimentalFeatures === true &&
+      user?.settings?.viewMode !== 'ZEN'
+    );
   });
 
   protected readonly unit = computed(() => {
+    const user = this.user();
+
     return this.showDetails()
-      ? (this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY)
+      ? (user?.settings?.baseCurrency ?? DEFAULT_CURRENCY)
       : '%';
   });
 
