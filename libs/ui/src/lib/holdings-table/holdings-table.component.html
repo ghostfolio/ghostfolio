@@ -5,13 +5,17 @@
     matSort
     [class.simple]="mode() === 'simple'"
     [dataSource]="dataSource"
-    [fixedLayout]="mode() === 'simple'"
     [matSortActive]="sortActive()"
     [matSortDirection]="sortDirection()"
   >
     <ng-container matColumnDef="icon" [sticky]="mode() === 'default'">
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="px-1 text-center"
+        mat-cell
+        [class.text-nowrap]="mode() === 'simple'"
+      >
         <gf-entity-logo
           [dataSource]="element.assetProfile.dataSource"
           [symbol]="element.assetProfile.symbol"
@@ -29,7 +33,12 @@
       >
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="line-height-normal px-1" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="line-height-normal px-1"
+        mat-cell
+        [class.w-100]="mode() === 'simple'"
+      >
         <div class="text-truncate" [title]="element.assetProfile.name">
           {{ element.assetProfile.name }}
           @if (element.assetProfile.name === element.assetProfile.symbol) {
@@ -175,7 +184,12 @@
         <span class="d-none d-sm-block" i18n>Performance</span>
         <span class="d-block d-sm-none" i18n-title title="Performance">±</span>
       </th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="px-1"
+        mat-cell
+        [class.text-nowrap]="mode() === 'simple'"
+      >
         <div class="d-flex justify-content-end">
           <gf-value
             [colorizeSign]="true"
