@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the style of the selector in the benchmark comparator
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for German (`de`)
+- Upgraded `@codewithdan/observable-store` from version `2.2.15` to `3.0.0`
 - Upgraded `bull-board` from version `9.5.0` to `9.8.0`
 - Upgraded `papaparse` from version `5.5.3` to `5.7.0`
 - Upgraded `zone.js` from version `0.16.2` to `0.16.3`
