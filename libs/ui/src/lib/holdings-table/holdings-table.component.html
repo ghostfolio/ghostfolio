@@ -3,11 +3,13 @@
     class="gf-table w-100"
     mat-table
     matSort
+    [class.simple]="mode() === 'simple'"
     [dataSource]="dataSource"
+    [fixedLayout]="mode() === 'simple'"
     [matSortActive]="sortActive()"
     [matSortDirection]="sortDirection()"
   >
-    <ng-container matColumnDef="icon" sticky>
+    <ng-container matColumnDef="icon" [sticky]="mode() === 'default'">
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
         <gf-entity-logo
@@ -28,7 +30,7 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="line-height-normal px-1" mat-cell>
-        <div class="text-truncate">
+        <div class="text-truncate" [title]="element.assetProfile.name">
           {{ element.assetProfile.name }}
           @if (element.assetProfile.name === element.assetProfile.symbol) {
             <span>({{ element.assetProfile.assetSubClassLabel }})</span>
@@ -160,7 +162,10 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="performanceInPercentage" stickyEnd>
+    <ng-container
+      matColumnDef="performanceInPercentage"
+      [stickyEnd]="mode() === 'default'"
+    >
       <th
         *matHeaderCellDef
         class="justify-content-end px-1"
