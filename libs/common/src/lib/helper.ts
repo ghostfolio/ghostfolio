@@ -1,14 +1,14 @@
-import { utc } from '@date-fns/utc';
-import { NumberParser } from '@internationalized/number';
-import {
-  AccessType,
-  Type as ActivityType,
+import type {
   AssetProfileOverrides,
-  AssetSubClass,
   MarketData,
   Prisma,
   SymbolProfile
-} from '@prisma/client';
+} from '@ghostfolio/prisma/browser';
+import { AssetSubClass, Type as ActivityType } from '@ghostfolio/prisma/enums';
+import type { AccessType } from '@ghostfolio/prisma/enums';
+
+import { utc } from '@date-fns/utc';
+import { NumberParser } from '@internationalized/number';
 import { Big } from 'big.js';
 import { isISO4217CurrencyCode, isUUID } from 'class-validator';
 import {

@@ -1,4 +1,5 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@ghostfolio/prisma/browser';
+
 import { IsArray, IsOptional } from 'class-validator';
 
 export class UpdateAssetProfileDataDto {

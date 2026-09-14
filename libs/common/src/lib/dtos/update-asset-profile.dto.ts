@@ -3,14 +3,14 @@ import {
   SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
-
+import type { Prisma } from '@ghostfolio/prisma/browser';
 import {
   AssetClass,
   AssetSubClass,
   DataGatheringFrequency,
-  DataSource,
-  Prisma
-} from '@prisma/client';
+  DataSource
+} from '@ghostfolio/prisma/enums';
+
 import { Type } from 'class-transformer';
 import {
   IsArray,

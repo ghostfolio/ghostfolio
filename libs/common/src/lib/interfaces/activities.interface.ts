@@ -1,7 +1,6 @@
 import { EnhancedAssetProfile } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
-
-import { Order, Tag } from '@prisma/client';
+import type { Order, Tag } from '@ghostfolio/prisma/browser';
 
 export interface Activity extends Order {
   account?: AccountWithPlatform;

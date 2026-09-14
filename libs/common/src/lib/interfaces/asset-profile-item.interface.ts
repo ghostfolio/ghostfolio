@@ -1,4 +1,8 @@
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import type {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 
 import { DataProviderInfo } from './data-provider-info.interface';
 

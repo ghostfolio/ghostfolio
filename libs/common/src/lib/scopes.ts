@@ -1,6 +1,5 @@
 import { AccessLevel } from '@ghostfolio/common/types';
-
-import { AccessType } from '@prisma/client';
+import type { AccessType } from '@ghostfolio/prisma/enums';
 
 /**
  * Scopes describe what a grantee may do on behalf of the granting user. They

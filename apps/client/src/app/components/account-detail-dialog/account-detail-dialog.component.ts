@@ -16,6 +16,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import type { Tag } from '@ghostfolio/prisma/browser';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
@@ -45,7 +46,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NavigationStart, Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';

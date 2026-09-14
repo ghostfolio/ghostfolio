@@ -1,6 +1,5 @@
 import { UserWithSettings } from '@ghostfolio/common/types';
-
-import { Role } from '@prisma/client';
+import type { Role } from '@ghostfolio/prisma/enums';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',

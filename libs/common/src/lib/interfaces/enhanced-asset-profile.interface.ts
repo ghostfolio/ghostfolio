@@ -1,9 +1,9 @@
-import {
+import type {
   AssetClass,
   AssetSubClass,
   DataGatheringFrequency,
   DataSource
-} from '@prisma/client';
+} from '@ghostfolio/prisma/enums';
 
 import { Country } from './country.interface';
 import { DataProviderInfo } from './data-provider-info.interface';

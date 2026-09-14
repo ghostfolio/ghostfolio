@@ -10,6 +10,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import type { SymbolProfile } from '@ghostfolio/prisma/browser';
+import { AssetSubClass, DataSource } from '@ghostfolio/prisma/enums';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -48,7 +50,6 @@ import {
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { addIcons } from 'ionicons';
 import {

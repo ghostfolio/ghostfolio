@@ -1,4 +1,10 @@
-import { Account, Order, Platform, SymbolProfile, Tag } from '@prisma/client';
+import type {
+  Account,
+  Order,
+  Platform,
+  SymbolProfile,
+  Tag
+} from '@ghostfolio/prisma/browser';
 
 import { AccountBalance } from '../account-balance.interface';
 import { AssetProfileIdentifier } from '../asset-profile-identifier.interface';

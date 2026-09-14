@@ -3,6 +3,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   AfterViewInit,
@@ -15,7 +16,6 @@ import {
   output,
   viewChild
 } from '@angular/core';
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import {
   ArcElement,
