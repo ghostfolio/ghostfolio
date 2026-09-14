@@ -23,7 +23,7 @@ import {
   ellipsisHorizontalCircleOutline,
   informationCircleOutline
 } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({

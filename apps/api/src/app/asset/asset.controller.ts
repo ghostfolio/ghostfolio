@@ -5,7 +5,7 @@ import type { AssetResponse } from '@ghostfolio/common/interfaces';
 
 import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import { pick } from 'lodash';
+import { pick } from 'lodash-es';
 
 @Controller('asset')
 export class AssetController {

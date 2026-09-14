@@ -29,7 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, searchOutline } from 'ionicons/icons';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 
 import { translate } from '../i18n';

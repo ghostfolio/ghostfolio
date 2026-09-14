@@ -54,7 +54,7 @@ import {
   DataSource,
   Platform
 } from '@prisma/client';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { filter, switchMap, tap } from 'rxjs';
 

@@ -60,7 +60,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday } from 'date-fns';
-import { groupBy, uniqBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()

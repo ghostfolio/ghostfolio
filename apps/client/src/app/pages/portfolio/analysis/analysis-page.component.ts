@@ -50,7 +50,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { SymbolProfile } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical } from 'ionicons/icons';
-import { isNumber, keyBy, sortBy, union } from 'lodash';
+import { isNumber, keyBy, sortBy, union } from 'lodash-es';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';

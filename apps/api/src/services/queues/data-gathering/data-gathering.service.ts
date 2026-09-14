@@ -33,7 +33,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job, JobOptions, Queue } from 'bull';
 import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 import ms, { StringValue } from 'ms';
 
 @Injectable()

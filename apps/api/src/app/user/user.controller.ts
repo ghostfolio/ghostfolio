@@ -52,7 +52,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Throttle } from '@nestjs/throttler';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { merge, size } from 'lodash';
+import { merge, size } from 'lodash-es';
 
 import { UserService } from './user.service';
 

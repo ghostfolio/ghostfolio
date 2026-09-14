@@ -25,7 +25,7 @@ import {
   isBefore,
   isThisYear
 } from 'date-fns';
-import { sortBy } from 'lodash';
+import { sortBy } from 'lodash-es';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];

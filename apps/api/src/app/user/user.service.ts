@@ -62,7 +62,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
-import { isNil, without } from 'lodash';
+import { isNil, without } from 'lodash-es';
 import { createHmac } from 'node:crypto';
 
 @Injectable()

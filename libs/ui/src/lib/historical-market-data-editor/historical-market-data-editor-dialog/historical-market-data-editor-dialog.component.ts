@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
 

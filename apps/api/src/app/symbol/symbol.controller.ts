@@ -25,7 +25,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { isValid, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 
 import { GetLookupDto } from './get-lookup.dto';
 import { SymbolService } from './symbol.service';

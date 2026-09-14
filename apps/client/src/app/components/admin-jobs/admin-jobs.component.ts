@@ -49,7 +49,7 @@ import {
   removeCircleOutline,
   timeOutline
 } from 'ionicons/icons';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({

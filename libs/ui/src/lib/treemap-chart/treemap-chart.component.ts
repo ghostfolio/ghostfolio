@@ -32,7 +32,7 @@ import { Chart, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { isUUID } from 'class-validator';
 import { differenceInDays, max } from 'date-fns';
-import { orderBy, round } from 'lodash';
+import { orderBy, round } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 

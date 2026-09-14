@@ -9,7 +9,7 @@ import {
   IsUUID,
   MaxLength
 } from 'class-validator';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 
 export class FilterDto {
   @IsOptional()

@@ -26,7 +26,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { MarketData } from '@prisma/client';
 import { subDays } from 'date-fns';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 @Injectable()
 export class InfoService {
