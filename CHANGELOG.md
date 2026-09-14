@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `bull-board` from version `9.5.0` to `9.8.0`
 - Upgraded `papaparse` from version `5.5.3` to `5.7.0`
+- Upgraded `zone.js` from version `0.16.2` to `0.16.3`
 
 ## 3.69.0 - 2026-09-07
 
