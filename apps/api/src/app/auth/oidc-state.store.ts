@@ -1,6 +1,6 @@
 import type { Request } from 'express';
 import ms from 'ms';
-import { randomBytes } from 'node:crypto';  // ADD THIS LINE
+import { randomBytes } from 'node:crypto';
 import type {
   SessionStore,
   SessionStoreCallback,
@@ -67,21 +67,21 @@ export class OidcStateStore implements SessionStore {
       const data = this.stateMap.get(handle);
 
       if (!data) {
-  return callback(
-    new Error('Invalid OIDC state parameter'),
-    undefined,
-    undefined
-  );
-}
+        return callback(
+          new Error('Invalid OIDC state parameter'),
+          undefined,
+          undefined
+        );
+      }
 
-if (Date.now() - data.timestamp > this.STATE_EXPIRY_MS) {
-  this.stateMap.delete(handle);
-  return callback(
-    new Error('OIDC state has expired, please try again'),
-    undefined,
-    undefined
-  );
-}
+      if (Date.now() - data.timestamp > this.STATE_EXPIRY_MS) {
+        this.stateMap.delete(handle);
+        return callback(
+          new Error('OIDC state has expired, please try again'),
+          undefined,
+          undefined
+        );
+      }
 
       // Remove state after verification (one-time use)
       this.stateMap.delete(handle);
@@ -114,6 +114,6 @@ if (Date.now() - data.timestamp > this.STATE_EXPIRY_MS) {
    * Generate a cryptographically secure random handle
    */
   private generateHandle() {
-  return randomBytes(32).toString('hex');
-}
+    return randomBytes(32).toString('hex');
+  }
 }
