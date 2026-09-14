@@ -1,4 +1,5 @@
 import { ImportModule } from '@ghostfolio/api/app/import/import.module';
+import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -24,6 +25,7 @@ import { McpService } from './mcp.service';
     ConfigurationModule,
     ImportModule,
     PortfolioTableModule,
+    SymbolModule,
     UserModule
   ],
   providers: [

@@ -65,10 +65,10 @@
     "@angular/platform-browser-dynamic": "22.1.2",
     "@angular/router": "22.1.2",
     "@angular/service-worker": "22.1.2",
-    "@bull-board/api": "9.5.0",
-    "@bull-board/express": "9.5.0",
-    "@bull-board/nestjs": "9.5.0",
-    "@codewithdan/observable-store": "2.2.15",
+    "@bull-board/api": "9.8.0",
+    "@bull-board/express": "9.8.0",
+    "@bull-board/nestjs": "9.8.0",
+    "@codewithdan/observable-store": "3.0.0",
     "@date-fns/utc": "2.1.1",
     "@internationalized/number": "3.6.7",
     "@ionic/angular": "8.8.12",
@@ -134,7 +134,7 @@
     "ngx-markdown": "22.0.0",
     "ngx-skeleton-loader": "13.0.0",
     "open-color": "1.9.1",
-    "papaparse": "5.5.3",
+    "papaparse": "5.7.0",
     "passport": "0.7.0",
     "passport-google-oauth20": "2.0.0",
     "passport-headerapikey": "1.2.2",
@@ -150,7 +150,7 @@
     "uuid": "14.0.2",
     "yahoo-finance2": "4.0.2",
     "zod": "4.5.4",
-    "zone.js": "0.16.2"
+    "zone.js": "0.16.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "22.1.4",
