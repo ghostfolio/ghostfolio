@@ -60,6 +60,8 @@ export const BULL_BOARD_ROUTE = '/admin/queues';
 export const CACHE_TTL_NO_CACHE = 1;
 export const CACHE_TTL_INFINITE = 0;
 
+export const COMMENT_MAXIMUM_LENGTH = 2000;
+
 export const DATA_GATHERING_QUEUE = 'DATA_GATHERING_QUEUE';
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
 export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
@@ -342,6 +344,7 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const SEARCH_QUERY_MAXIMUM_LENGTH = 255;
 export const SEARCH_QUERY_MINIMUM_LENGTH = 2;
 
 export const SECTORS = [
@@ -377,6 +380,8 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'uk',
   'zh'
 ] as const;
+
+export const SYMBOL_MAXIMUM_LENGTH = 255;
 
 export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
 export const TAG_ID_DRAFT = '0c077abd-eca2-4cbb-818c-6cefbf2d169a';

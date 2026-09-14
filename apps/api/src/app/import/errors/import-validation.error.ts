@@ -1,4 +1,6 @@
-export class ImportValidationError extends Error {
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
+
+export class ImportValidationError extends CallerFacingError {
   public constructor(message: string) {
     super(message);
 

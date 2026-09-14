@@ -182,8 +182,9 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected quantityPrecision = 2;
   protected reportDataGlitchMailHref: string;
   protected readonly round = round;
-  protected readonly routerLinkAdminControlMarketData =
-    internalRoutes.adminControl.subRoutes.marketData.routerLink;
+  protected readonly routerLinkAdminControlMarketDataUpdate =
+    internalRoutes.adminControl.subRoutes.marketData.subRoutes.update
+      .routerLink;
   protected sectors: {
     [name: string]: { name: string; value: number };
   };

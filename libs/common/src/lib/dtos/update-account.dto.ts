@@ -1,3 +1,4 @@
+import { COMMENT_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { Transform, TransformFnParams } from 'class-transformer';
@@ -7,6 +8,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   ValidateIf
 } from 'class-validator';
 import { isString } from 'lodash';
@@ -22,6 +24,7 @@ export class UpdateAccountDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(COMMENT_MAXIMUM_LENGTH)
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )

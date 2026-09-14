@@ -1,3 +1,7 @@
+import {
+  COMMENT_MAXIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
+} from '@ghostfolio/common/config';
 import { IsAfter1970Constraint } from '@ghostfolio/common/validator-constraints/is-after-1970';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
@@ -12,6 +16,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   Min,
   Validate
 } from 'class-validator';
@@ -32,6 +37,7 @@ export class CreateOrderDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(COMMENT_MAXIMUM_LENGTH)
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )
@@ -61,6 +67,7 @@ export class CreateOrderDto {
   quantity: number;
 
   @IsString()
+  @MaxLength(SYMBOL_MAXIMUM_LENGTH)
   symbol: string;
 
   @ArrayUnique()

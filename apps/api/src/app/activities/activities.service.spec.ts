@@ -216,6 +216,26 @@ describe('ActivitiesService', () => {
       });
     });
 
+    it('includes excluded accounts and activities when requested', async () => {
+      jest.spyOn(activitiesService, 'getActivities').mockResolvedValue({
+        activities: [],
+        count: 0
+      });
+
+      await activitiesService.getActivitiesForPortfolioCalculator({
+        userCurrency: 'USD',
+        userId: 'user-id',
+        withExcludedAccountsAndActivities: true
+      });
+
+      expect(activitiesService.getActivities).toHaveBeenCalledWith({
+        filters: undefined,
+        userCurrency: 'USD',
+        userId: 'user-id',
+        withExcludedAccountsAndActivities: true
+      });
+    });
+
     it('does not adjust synthetic cash activities', async () => {
       const activity = createActivity({ symbol: 'AAPL' });
       const cashActivity = createActivity({

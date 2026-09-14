@@ -3,9 +3,9 @@
     class="gf-table w-100"
     mat-table
     matSort
-    matSortActive="allocationInPercentage"
-    matSortDirection="desc"
     [dataSource]="dataSource"
+    [matSortActive]="sortActive()"
+    [matSortDirection]="sortDirection()"
   >
     <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
@@ -34,9 +34,11 @@
             <span>({{ element.assetProfile.assetSubClassLabel }})</span>
           }
         </div>
-        <div>
-          <small class="text-muted">{{ element.assetProfile.symbol }}</small>
-        </div>
+        @if (mode() === 'default') {
+          <div>
+            <small class="text-muted">{{ element.assetProfile.symbol }}</small>
+          </div>
+        }
       </td>
     </ng-container>
 
@@ -181,7 +183,11 @@
       </td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
+    <tr
+      *matHeaderRowDef="displayedColumns()"
+      mat-header-row
+      [class.d-none]="mode() === 'simple'"
+    ></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"
       mat-row
@@ -202,7 +208,8 @@
 @if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
-    class="px-4 py-3"
+    [class.px-4]="mode() === 'default'"
+    [class.py-3]="mode() === 'default'"
     [theme]="{
       height: '1.5rem',
       width: '100%'

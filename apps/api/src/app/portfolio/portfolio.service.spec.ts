@@ -9,9 +9,14 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { TAG_ID_EMERGENCY_FUND, UNKNOWN_KEY } from '@ghostfolio/common/config';
+import {
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS,
+  UNKNOWN_KEY
+} from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
+  Activity,
   AssetProfileIdentifier,
   Filter,
   PortfolioSummary
@@ -350,8 +355,13 @@ describe('PortfolioService', () => {
   describe('getDetails', () => {
     const setUpCashOnlyPortfolio = ({
       baseCurrency = 'CHF',
-      emergencyFund
-    }: { baseCurrency?: string; emergencyFund?: number } = {}) => {
+      emergencyFund,
+      quantity = 2000
+    }: {
+      baseCurrency?: string;
+      emergencyFund?: number;
+      quantity?: number;
+    } = {}) => {
       const cashAccount: AccountWithBalance = {
         balance: 2000,
         comment: null,
@@ -416,7 +426,7 @@ describe('PortfolioService', () => {
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffectMap: {},
         netPerformanceWithCurrencyEffectMap: {},
-        quantity: new Big(2000),
+        quantity: new Big(quantity),
         symbol: 'USD',
         tags: [],
         timeWeightedInvestment: new Big(0),
@@ -487,6 +497,270 @@ describe('PortfolioService', () => {
       expect(holdings).toHaveLength(1);
       expect(holdings[0].assetProfile.symbol).toBe('USD');
       expect(holdings[0].valueInBaseCurrency).toBe(1000);
+    });
+
+    it('should include closed holdings when all holdings are requested', async () => {
+      setUpCashOnlyPortfolio({ quantity: 0 });
+
+      const { holdings } = await portfolioService.getDetails({
+        filters: [],
+        includeAllHoldings: true,
+        userId: userDummyData.id
+      });
+
+      expect(holdings).toHaveLength(1);
+      expect(holdings[0].quantity).toBe(0);
+    });
+
+    it.each([
+      { holdingType: 'ACTIVE', quantity: 2000 },
+      { holdingType: 'CLOSED', quantity: 0 }
+    ])(
+      'should return $holdingType holdings when the holding type is specified',
+      async ({ holdingType, quantity }) => {
+        setUpCashOnlyPortfolio({ quantity });
+
+        const { holdings } = await portfolioService.getDetails({
+          filters: [{ id: holdingType, type: 'HOLDING_TYPE' }],
+          userId: userDummyData.id
+        });
+
+        expect(holdings).toHaveLength(1);
+        expect(holdings[0].quantity).toBe(quantity);
+      }
+    );
+
+    it('should remove the holding type only from the snapshot filters', async () => {
+      setUpCashOnlyPortfolio({ quantity: 0 });
+
+      await portfolioService.getDetails({
+        filters: [
+          { id: AssetClass.EQUITY, type: 'ASSET_CLASS' },
+          { id: 'CLOSED', type: 'HOLDING_TYPE' }
+        ],
+        userId: userDummyData.id
+      });
+
+      expect(portfolioCalculatorFactory.createCalculator).toHaveBeenCalledWith(
+        expect.objectContaining({
+          filters: [{ id: AssetClass.EQUITY, type: 'ASSET_CLASS' }]
+        })
+      );
+      expect(
+        activitiesService.getActivitiesForPortfolioCalculator
+      ).toHaveBeenCalledWith({
+        filters: [{ id: AssetClass.EQUITY, type: 'ASSET_CLASS' }],
+        userCurrency: 'CHF',
+        userId: userDummyData.id
+      });
+    });
+  });
+
+  describe('getHoldings', () => {
+    const activeHolding = {
+      assetProfile: {
+        isin: 'US0378331005',
+        name: 'Apple',
+        symbol: 'AAPL'
+      },
+      quantity: 1
+    };
+
+    const closedHolding = {
+      assetProfile: {
+        isin: 'US5949181045',
+        name: 'Microsoft',
+        symbol: 'MSFT'
+      },
+      quantity: 0
+    };
+
+    beforeEach(() => {
+      jest.spyOn(portfolioService, 'getDetails').mockResolvedValue({
+        holdings: [activeHolding, closedHolding]
+      } as unknown as Awaited<ReturnType<typeof portfolioService.getDetails>>);
+    });
+
+    it('should request all holdings when the holding type is not specified', async () => {
+      const holdings = await portfolioService.getHoldings({
+        dateRange: 'max',
+        userId: userDummyData.id
+      });
+
+      expect(holdings).toEqual([activeHolding, closedHolding]);
+      expect(portfolioService.getDetails).toHaveBeenCalledWith({
+        dateRange: 'max',
+        filters: undefined,
+        includeAllHoldings: true,
+        userId: userDummyData.id
+      });
+    });
+
+    it('should find a closed holding when the holding type is not specified', async () => {
+      const holdings = await portfolioService.getHoldings({
+        dateRange: 'max',
+        filters: [{ id: 'Microsoft', type: 'SEARCH_QUERY' }],
+        userId: userDummyData.id
+      });
+
+      expect(holdings).toEqual([closedHolding]);
+    });
+
+    it.each(['ACTIVE', 'CLOSED'])(
+      'should not request all holdings when the holding type is %s',
+      async (holdingType) => {
+        await portfolioService.getHoldings({
+          dateRange: 'max',
+          filters: [{ id: holdingType, type: 'HOLDING_TYPE' }],
+          userId: userDummyData.id
+        });
+
+        expect(portfolioService.getDetails).toHaveBeenCalledWith({
+          dateRange: 'max',
+          filters: [{ id: holdingType, type: 'HOLDING_TYPE' }],
+          includeAllHoldings: false,
+          userId: userDummyData.id
+        });
+      }
+    );
+  });
+
+  describe('getHolding', () => {
+    const dataSource = DataSource.YAHOO;
+    const symbol = 'AAPL';
+    const includedActivity = {
+      assetProfile: { dataSource, symbol },
+      tags: []
+    } as Activity;
+
+    beforeEach(() => {
+      jest.spyOn(userService, 'user').mockResolvedValue({
+        id: userDummyData.id,
+        settings: { settings: { baseCurrency: 'USD' } }
+      } as unknown as Awaited<ReturnType<typeof userService.user>>);
+
+      jest
+        .spyOn(symbolProfileService, 'getSymbolProfiles')
+        .mockResolvedValue([]);
+
+      jest
+        .spyOn(portfolioCalculatorFactory, 'createCalculator')
+        .mockReturnValue({
+          getSnapshot: jest.fn().mockResolvedValue({ positions: [] }),
+          getTransactionPoints: jest.fn().mockReturnValue([])
+        } as unknown as PortfolioCalculator);
+    });
+
+    it('keeps the cached path when the holding has included and excluded activities', async () => {
+      const excludedActivity = {
+        ...includedActivity,
+        tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }]
+      } as Activity;
+      const getActivities = jest
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+        .mockResolvedValueOnce({ activities: [includedActivity], count: 1 })
+        .mockResolvedValue({
+          activities: [includedActivity, excludedActivity],
+          count: 2
+        });
+
+      await portfolioService.getHolding({
+        dataSource,
+        symbol,
+        userId: userDummyData.id,
+        withExcludedActivities: true
+      });
+
+      expect(getActivities).toHaveBeenCalledTimes(1);
+      expect(getActivities).toHaveBeenCalledWith({
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+      expect(portfolioCalculatorFactory.createCalculator).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activities: [includedActivity],
+          filters: undefined,
+          usePortfolioSnapshotCache: true
+        })
+      );
+    });
+
+    it.each([
+      {
+        account: { tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }] },
+        name: 'account',
+        tags: []
+      },
+      {
+        account: { tags: [] },
+        name: 'activity tag',
+        tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }]
+      }
+    ])(
+      'uses the direct path for a holding excluded by its $name',
+      async ({ account, tags }) => {
+        const excludedActivity = {
+          ...includedActivity,
+          account,
+          tags
+        } as Activity;
+
+        const getActivities = jest
+          .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+          .mockResolvedValueOnce({ activities: [], count: 0 })
+          .mockResolvedValueOnce({
+            activities: [excludedActivity],
+            count: 1
+          });
+
+        await portfolioService.getHolding({
+          dataSource,
+          symbol,
+          userId: userDummyData.id,
+          withExcludedActivities: true
+        });
+
+        expect(getActivities).toHaveBeenCalledTimes(2);
+        expect(getActivities).toHaveBeenLastCalledWith({
+          filters: [
+            { id: dataSource, type: 'DATA_SOURCE' },
+            { id: symbol, type: 'SYMBOL' }
+          ],
+          userCurrency: 'USD',
+          userId: userDummyData.id,
+          withExcludedAccountsAndActivities: true
+        });
+        expect(
+          portfolioCalculatorFactory.createCalculator
+        ).toHaveBeenCalledWith(
+          expect.objectContaining({
+            activities: [excludedActivity],
+            filters: [
+              { id: dataSource, type: 'DATA_SOURCE' },
+              { id: symbol, type: 'SYMBOL' }
+            ],
+            usePortfolioSnapshotCache: false
+          })
+        );
+      }
+    );
+
+    it('does not load excluded activities by default', async () => {
+      const getActivities = jest
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+        .mockResolvedValue({ activities: [], count: 0 });
+
+      const holding = await portfolioService.getHolding({
+        dataSource,
+        symbol,
+        userId: userDummyData.id
+      });
+
+      expect(holding).toBeUndefined();
+      expect(getActivities).toHaveBeenCalledTimes(1);
+      expect(
+        portfolioCalculatorFactory.createCalculator
+      ).not.toHaveBeenCalled();
     });
   });
 

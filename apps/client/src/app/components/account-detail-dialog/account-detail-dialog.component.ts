@@ -393,8 +393,12 @@ export class GfAccountDetailDialogComponent implements OnInit {
       .fetchPortfolioHoldings({
         filters: [
           {
-            type: 'ACCOUNT',
-            id: this.data.accountId
+            id: this.data.accountId,
+            type: 'ACCOUNT'
+          },
+          {
+            id: 'ACTIVE',
+            type: 'HOLDING_TYPE'
           }
         ]
       })

@@ -32,6 +32,7 @@ import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { GetDividendsDto } from './get-dividends.dto';
 import { GetHistoricalDto } from './get-historical.dto';
+import { GetLookupDto } from './get-lookup.dto';
 import { GetQuotesDto } from './get-quotes.dto';
 import { GhostfolioService } from './ghostfolio.service';
 
@@ -142,10 +143,8 @@ export class GhostfolioController {
   @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
   @Version('2')
   public async lookupSymbol(
-    @Query('includeIndices') includeIndicesParam = 'false',
-    @Query('query') query = ''
+    @Query() { includeIndices, query }: GetLookupDto
   ): Promise<LookupResponse> {
-    const includeIndices = includeIndicesParam === 'true';
     await this.validateDailyRequestLimit();
 
     try {

@@ -275,7 +275,7 @@ export class UserService {
     }
 
     try {
-      const { isBlocked } = await this.throttlerStorage.increment(
+      const { totalHits } = await this.throttlerStorage.increment(
         `${THROTTLE_DAILY_KEY}-${user.id}`,
         THROTTLE_DAILY_TTL,
         maxDailyRequests,
@@ -283,7 +283,7 @@ export class UserService {
         THROTTLE_DAILY_KEY
       );
 
-      return isBlocked;
+      return totalHits > maxDailyRequests;
     } catch (error) {
       this.logger.error(error);
 

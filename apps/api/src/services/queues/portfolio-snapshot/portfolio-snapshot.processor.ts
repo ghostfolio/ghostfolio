@@ -82,9 +82,7 @@ export class PortfolioSnapshotProcessor {
 
       const expiration = addMilliseconds(
         new Date(),
-        (snapshot?.errors?.length ?? 0) === 0
-          ? this.configurationService.get('CACHE_QUOTES_TTL')
-          : 0
+        this.configurationService.get('CACHE_QUOTES_TTL')
       );
 
       await this.redisCacheService.set(
@@ -101,7 +99,9 @@ export class PortfolioSnapshotProcessor {
 
       return snapshot;
     } catch (error) {
-      this.logger.error(error.message);
+      this.logger.error(
+        `Portfolio snapshot calculation of user '${job.data.userId}' has failed: ${error.message}`
+      );
 
       throw new Error(error);
     }

@@ -9,6 +9,8 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo';
+import { EntityLogoImageSourceService } from '../entity-logo/entity-logo-image-source.service';
+import { EntityLogoImageSourceServiceMock } from '../mocks/entity-logo-image-source.service.mock';
 import { holdings } from '../mocks/holdings';
 import { GfValueComponent } from '../value';
 import { GfHoldingsTableComponent } from './holdings-table.component';
@@ -28,6 +30,12 @@ export default {
         MatSortModule,
         MatTableModule,
         NgxSkeletonLoaderModule
+      ],
+      providers: [
+        {
+          provide: EntityLogoImageSourceService,
+          useValue: new EntityLogoImageSourceServiceMock()
+        }
       ]
     })
   ]
@@ -54,5 +62,12 @@ export const Default: Story = {
     hasPermissionToShowValues: true,
     locale: 'en-US',
     pageSize: Number.MAX_SAFE_INTEGER
+  }
+};
+
+export const Simple: Story = {
+  args: {
+    ...Default.args,
+    mode: 'simple'
   }
 };

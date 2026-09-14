@@ -45,36 +45,6 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="details">
-      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
-      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        @if (element.type === 'PUBLIC') {
-          <div class="align-items-center d-flex">
-            <ion-icon class="mr-1" name="link-outline" />
-            <a target="_blank" [href]="getPublicUrl(element.id)">{{
-              getPublicUrl(element.id)
-            }}</a>
-          </div>
-          @if (user()?.settings?.isExperimentalFeatures) {
-            <div>
-              <code
-                >GET {{ baseUrl }}/api/v1/public/{{
-                  element.id
-                }}/portfolio</code
-              >
-            </div>
-          }
-        } @else if (element.type === 'MCP' && hasPermissionToEnableMcp) {
-          <div>
-            <code>{{ baseUrl }}{{ mcpEndpoint }}</code>
-          </div>
-          <div>
-            <code>Authorization: Bearer {{ element.id }}</code>
-          </div>
-        }
-      </td>
-    </ng-container>
-
     <ng-container matColumnDef="actions" stickyEnd>
       <th *matHeaderCellDef class="px-1 text-right" mat-header-cell></th>
 
@@ -110,14 +80,6 @@
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="copy-outline" />
                 <span i18n>Copy link to clipboard</span>
-              </span>
-            </button>
-          }
-          @if (element.type === 'MCP' && hasPermissionToEnableMcp) {
-            <button mat-menu-item (click)="onCopyIdToClipboard(element.id)">
-              <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="copy-outline" />
-                <span i18n>Copy identifier to clipboard</span>
               </span>
             </button>
           }

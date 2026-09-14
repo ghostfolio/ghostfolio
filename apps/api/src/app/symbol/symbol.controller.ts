@@ -27,6 +27,7 @@ import { isValid, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isEmpty } from 'lodash';
 
+import { GetLookupDto } from './get-lookup.dto';
 import { SymbolService } from './symbol.service';
 
 @Controller('symbol')
@@ -43,11 +44,8 @@ export class SymbolController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
-    @Query('includeIndices') includeIndicesParam = 'false',
-    @Query('query') query = ''
+    @Query() { includeIndices, query }: GetLookupDto
   ): Promise<LookupResponse> {
-    const includeIndices = includeIndicesParam === 'true';
-
     try {
       return this.symbolService.lookup({
         includeIndices,

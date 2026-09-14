@@ -1,1 +1,2 @@
-export type AccountDialogMode = 'create' | 'detail' | 'update';
+export type AccountDialogMode =
+  'create' | 'detail' | 'transferCashBalance' | 'update';

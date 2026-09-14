@@ -133,6 +133,18 @@
         [tags]="tags"
       />
     }
+    @if (showMcpDetails || showPublicDetails) {
+      <h2 class="h6" i18n>Details</h2>
+      @if (showMcpDetails) {
+        <pre class="m-0"><code>{{ mcpConfiguration | json }}</code></pre>
+      } @else if (showPublicDetails) {
+        <div>
+          <code class="text-break"
+            >GET {{ baseUrl }}/api/v1/public/{{ accessId }}/portfolio</code
+          >
+        </div>
+      }
+    }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button mat-button type="button" (click)="onCancel()">
