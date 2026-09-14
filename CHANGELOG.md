@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the holdings table to the overview tab of the home page on desktop (experimental)
 - Added a tool to search for asset profiles to the server of the Model Context Protocol (MCP) (experimental)
 
 ### Changed
