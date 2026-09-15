@@ -36,19 +36,19 @@ export class GfEntityLogoComponent implements OnChanges {
   ) {}
 
   public ngOnChanges() {
+    this.emojiFlag = '';
     this.hasError = false;
+    this.src = undefined;
 
-    this.emojiFlag = getEmojiFlag(this.countryCode);
-
-    if (this.dataSource && this.symbol) {
+    if (this.countryCode) {
+      this.emojiFlag = getEmojiFlag(this.countryCode);
+    } else if (this.dataSource && this.symbol) {
       this.src = this.imageSourceService.getLogoUrlByAssetProfileIdentifier({
         dataSource: this.dataSource,
         symbol: this.symbol
       });
     } else if (this.url) {
       this.src = this.imageSourceService.getLogoUrlByUrl(this.url);
-    } else {
-      this.src = undefined;
     }
   }
 
