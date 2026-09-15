@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `@internationalized/number` from version `3.6.7` to `3.6.8`
 
-## 3.70.0 - 2026-09-14
+## 3.70.1 - 2026-09-14
 
 ### Added
 
@@ -23,12 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the style of the activity type filter on the activities page (experimental)
 - Improved the style of the no activities info component
 - Improved the style of the selector in the benchmark comparator
+- Improved the responsive layout of the holdings table in simplified mode
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for German (`de`)
 - Upgraded `@codewithdan/observable-store` from version `2.2.15` to `3.0.0`
 - Upgraded `bull-board` from version `9.5.0` to `9.8.0`
 - Upgraded `papaparse` from version `5.5.3` to `5.7.0`
 - Upgraded `zone.js` from version `0.16.2` to `0.16.3`
+
+### Fixed
+
+- Hardened the authentication with _OpenID Connect_ (`OIDC`) (experimental)
 
 ## 3.69.0 - 2026-09-07
 

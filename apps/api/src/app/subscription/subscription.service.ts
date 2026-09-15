@@ -58,17 +58,23 @@ export class SubscriptionService {
     } =
       (await this.propertyService.getByKey<any>(PROPERTY_STRIPE_CONFIG)) ?? {};
 
-    const subscriptionOffer = Object.values(subscriptionOffers).find(
+    const subscriptionOffersForPrice = Object.values(subscriptionOffers).filter(
       (subscriptionOffer) => {
         return subscriptionOffer.priceId === priceId;
       }
     );
 
-    if (!subscriptionOffer) {
+    if (subscriptionOffersForPrice.length === 0) {
       throw new BadRequestException('Invalid priceId');
     }
 
-    if (couponId && couponId !== subscriptionOffer.couponId) {
+    const subscriptionOffer = subscriptionOffersForPrice.find(
+      (subscriptionOffer) => {
+        return subscriptionOffer.couponId === couponId;
+      }
+    );
+
+    if (!subscriptionOffer) {
       throw new BadRequestException('Invalid couponId');
     }
 
