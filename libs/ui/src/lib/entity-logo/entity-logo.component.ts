@@ -1,3 +1,4 @@
+import { getEmojiFlag } from '@ghostfolio/common/helper';
 import { EntityLogoImageSourceService } from '@ghostfolio/ui/entity-logo/entity-logo-image-source.service';
 
 import {
@@ -11,12 +12,14 @@ import { DataSource } from '@prisma/client';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'align-items-center d-flex' },
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-entity-logo',
   styleUrls: ['./entity-logo.component.scss'],
   templateUrl: './entity-logo.component.html'
 })
 export class GfEntityLogoComponent implements OnChanges {
+  @Input() countryCode: string;
   @Input() dataSource: DataSource;
   @Input() hasPlaceholder = false;
   @Input() size: 'large';
@@ -26,6 +29,8 @@ export class GfEntityLogoComponent implements OnChanges {
 
   public hasError = false;
   public src?: string;
+
+  public readonly getEmojiFlag = getEmojiFlag;
 
   public constructor(
     private readonly imageSourceService: EntityLogoImageSourceService
