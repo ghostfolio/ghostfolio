@@ -6,6 +6,7 @@ import {
   canApplyFiltersToAccess,
   extractNumberFromString,
   getCountryCodeFromCurrency,
+  getEmojiFlag,
   getNumberFormatGroup,
   getStringOrNull,
   getStringOrUndefined,
@@ -119,6 +120,25 @@ describe('Helper', () => {
 
     it('Empty currency', () => {
       expect(getCountryCodeFromCurrency('')).toEqual('');
+    });
+  });
+
+  describe('Get emoji flag', () => {
+    it('Country code', () => {
+      expect(getEmojiFlag('US')).toEqual('🇺🇸');
+      expect(getEmojiFlag('us')).toEqual('🇺🇸');
+    });
+
+    it('European Union code', () => {
+      expect(getEmojiFlag('EU')).toEqual('🇪🇺');
+    });
+
+    it('Invalid country code', () => {
+      expect(getEmojiFlag('XX')).toEqual('');
+    });
+
+    it('Empty country code', () => {
+      expect(getEmojiFlag('')).toEqual('');
     });
   });
 

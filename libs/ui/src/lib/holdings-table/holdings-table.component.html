@@ -17,6 +17,7 @@
         [class.text-nowrap]="mode() === 'simple'"
       >
         <gf-entity-logo
+          [countryCode]="getCountryCodeForCashPosition(element)"
           [dataSource]="element.assetProfile.dataSource"
           [symbol]="element.assetProfile.symbol"
           [tooltip]="element.assetProfile.name"

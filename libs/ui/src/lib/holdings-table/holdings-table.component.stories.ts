@@ -45,10 +45,10 @@ type Story = StoryObj<GfHoldingsTableComponent>;
 
 export const Loading: Story = {
   args: {
-    holdings: undefined,
     hasPermissionToOpenDetails: false,
     hasPermissionToShowQuantities: true,
     hasPermissionToShowValues: true,
+    holdings: undefined,
     locale: 'en-US',
     pageSize: Number.MAX_SAFE_INTEGER
   }
