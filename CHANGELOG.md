@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the holdings table to the overview tab of the home page on desktop (experimental)
 - Added a tool to search for asset profiles to the server of the Model Context Protocol (MCP) (experimental)
 
+### Added
+
+- Added an option to use the annualized performance as the annual interest rate in the _FIRE_ calculator
+
 ### Changed
 
 - Improved the style of the activity type filter on the activities page (experimental)
