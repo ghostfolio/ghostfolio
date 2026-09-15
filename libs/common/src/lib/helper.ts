@@ -11,6 +11,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISO4217CurrencyCode, isUUID } from 'class-validator';
+import { countries } from 'countries-list';
 import {
   getDate,
   getMonth,
@@ -63,6 +64,8 @@ import { BenchmarkTrend, ColorScheme } from './types';
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
+
+const VALID_COUNTRY_CODES = new Set([...Object.keys(countries), 'EU']);
 
 // Settings which describe the person looking at the screen rather than the
 // portfolio being looked at. They stay with the authenticated user while
@@ -438,15 +441,15 @@ export function getDateWithTimeFormatString(aLocale?: string) {
 }
 
 export function getEmojiFlag(aCountryCode: string) {
-  if (!aCountryCode) {
-    return aCountryCode;
+  const countryCode = aCountryCode?.toUpperCase();
+
+  if (!countryCode || !VALID_COUNTRY_CODES.has(countryCode)) {
+    return '';
   }
 
-  return aCountryCode
-    .toUpperCase()
-    .replace(/./g, (character) =>
-      String.fromCodePoint(127397 + character.charCodeAt(0))
-    );
+  return countryCode.replace(/./g, (character) =>
+    String.fromCodePoint(127397 + character.charCodeAt(0))
+  );
 }
 
 export function getLocale() {

@@ -27,10 +27,9 @@ export class GfEntityLogoComponent implements OnChanges {
   @Input() tooltip: string;
   @Input() url: string;
 
+  public emojiFlag = '';
   public hasError = false;
   public src?: string;
-
-  public readonly getEmojiFlag = getEmojiFlag;
 
   public constructor(
     private readonly imageSourceService: EntityLogoImageSourceService
@@ -38,6 +37,8 @@ export class GfEntityLogoComponent implements OnChanges {
 
   public ngOnChanges() {
     this.hasError = false;
+
+    this.emojiFlag = getEmojiFlag(this.countryCode);
 
     if (this.dataSource && this.symbol) {
       this.src = this.imageSourceService.getLogoUrlByAssetProfileIdentifier({

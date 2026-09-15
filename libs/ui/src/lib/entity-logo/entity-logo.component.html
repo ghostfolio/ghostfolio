@@ -1,4 +1,4 @@
-@if (countryCode) {
+@if (emojiFlag) {
   <span
     class="cursor-default d-block logo overflow-hidden position-relative"
     role="img"
@@ -10,7 +10,7 @@
       aria-hidden="true"
       class="align-items-center d-flex emoji justify-content-center line-height-1 position-absolute"
     >
-      {{ getEmojiFlag(countryCode) }}
+      {{ emojiFlag }}
     </span>
   </span>
 } @else if (src && !hasError) {
