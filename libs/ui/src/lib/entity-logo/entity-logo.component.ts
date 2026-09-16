@@ -27,7 +27,7 @@ export class GfEntityLogoComponent implements OnChanges {
   @Input() tooltip: string;
   @Input() url: string;
 
-  public emojiFlag = '';
+  public emojiFlag?: string;
   public hasError = false;
   public src?: string;
 
@@ -36,7 +36,7 @@ export class GfEntityLogoComponent implements OnChanges {
   ) {}
 
   public ngOnChanges() {
-    this.emojiFlag = '';
+    this.emojiFlag = undefined;
     this.hasError = false;
     this.src = undefined;
 

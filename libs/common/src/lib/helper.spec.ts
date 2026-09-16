@@ -134,11 +134,11 @@ describe('Helper', () => {
     });
 
     it('Invalid country code', () => {
-      expect(getEmojiFlag('XX')).toEqual('');
+      expect(getEmojiFlag('XX')).toEqual(undefined);
     });
 
     it('Empty country code', () => {
-      expect(getEmojiFlag('')).toEqual('');
+      expect(getEmojiFlag('')).toEqual(undefined);
     });
   });
 

@@ -444,12 +444,12 @@ export function getEmojiFlag(aCountryCode: string) {
   const countryCode = aCountryCode?.toUpperCase();
 
   if (!countryCode || !VALID_COUNTRY_CODES.has(countryCode)) {
-    return '';
+    return undefined;
   }
 
-  return countryCode.replace(/./g, (character) =>
-    String.fromCodePoint(127397 + character.charCodeAt(0))
-  );
+  return countryCode.replace(/./g, (character) => {
+    return String.fromCodePoint(127397 + character.charCodeAt(0));
+  });
 }
 
 export function getLocale() {
