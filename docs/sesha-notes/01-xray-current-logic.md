@@ -1,6 +1,6 @@
 # X-Ray Feature Notes — What Exists Today
 
-**Author:** Sesha Siva Sankar (Member 1)
+**Author:** sesha siva sankar (member 1)
 **Date:** Tue, Sep 15
 **Task:** Read existing Ghostfolio X-Ray code and document the current rule-based logic
 
@@ -48,35 +48,35 @@ all fits together, explained the way I'd explain it to a teammate over coffee, n
 Here's the full list, grouped the way the app groups them:
 
 - **Liquidity**
-  - *Buying Power* — checks if your uninvested cash is below a minimum threshold (default:
+  - _Buying Power_ — checks if your uninvested cash is below a minimum threshold (default:
     just checks it's not zero / not too low). Fully configurable.
 
 - **Emergency Fund**
-  - *Setup* — checks if you've even set an emergency fund target. No threshold, just
+  - _Setup_ — checks if you've even set an emergency fund target. No threshold, just
     "did you set one or not."
-  - *Coverage* — checks if your tagged emergency-fund holdings + cash actually cover your
+  - _Coverage_ — checks if your tagged emergency-fund holdings + cash actually cover your
     target. Can fail three ways: no target set, holdings alone overshoot the target
     (weird case), or holdings+cash undershoot it. Only runs if you've set a target > 0.
 
 - **Currency Cluster Risk** (are you too concentrated in one currency?)
-  - *Current Investment* — fails if your single biggest currency is more than 50% of your
+  - _Current Investment_ — fails if your single biggest currency is more than 50% of your
     portfolio value (configurable %).
-  - *Base Currency Investment* — fails if your biggest currency bucket (by money invested)
+  - _Base Currency Investment_ — fails if your biggest currency bucket (by money invested)
     isn't your home currency. No threshold to tune, it's just yes/no.
 
 - **Asset Class Cluster Risk** (stocks vs bonds balance)
-  - *Equity* — fails if equities are outside a 78%–82% band.
-  - *Fixed Income* — fails if bonds are outside an 18%–22% band.
-  - Interesting detail: these are *band* checks (too high OR too low both fail), not simple
+  - _Equity_ — fails if equities are outside a 78%–82% band.
+  - _Fixed Income_ — fails if bonds are outside an 18%–22% band.
+  - Interesting detail: these are _band_ checks (too high OR too low both fail), not simple
     ceilings like most of the others.
 
 - **Account Cluster Risk**
-  - *Current Investment* — fails if one account holds more than 50% of your total money.
-  - *Single Account* — fails if you only have one account at all (or zero, which is invalid).
+  - _Current Investment_ — fails if one account holds more than 50% of your total money.
+  - _Single Account_ — fails if you only have one account at all (or zero, which is invalid).
 
 - **Economic Market Cluster Risk** (developed vs emerging market split)
-  - *Developed Markets* — band check, must be within 68%–72%.
-  - *Emerging Markets* — band check, must be within 28%–32%.
+  - _Developed Markets_ — band check, must be within 68%–72%.
+  - _Emerging Markets_ — band check, must be within 28%–32%.
 
 - **Regional Market Cluster Risk** (geographic spread)
   - Five separate rules, one per region: Asia Pacific, Emerging Markets, Europe, Japan,
@@ -84,7 +84,7 @@ Here's the full list, grouped the way the app groups them:
     (e.g. North America should be 65%–69% of your advanced-market exposure).
 
 - **Fees**
-  - *Fee Ratio* — fails if total fees paid are more than 1% of your total trading volume
+  - _Fee Ratio_ — fails if total fees paid are more than 1% of your total trading volume
     (buys + sells combined). Configurable.
 
 ## 4. Can users customize any of this?
