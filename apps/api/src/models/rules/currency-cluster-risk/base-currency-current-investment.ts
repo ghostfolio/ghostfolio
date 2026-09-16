@@ -1,12 +1,7 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@ghostfolio/common/config';
-import {
-  PortfolioPosition,
-  RuleSettings,
-  UserSettings
-} from '@ghostfolio/common/interfaces';
+import { PortfolioPosition, RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Settings> {
   private holdings: PortfolioPosition[];
@@ -18,7 +13,7 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     languageCode: string
   ) {
     super(exchangeRateDataService, {
-      key: CurrencyClusterRiskBaseCurrencyCurrentInvestment.name,
+      key: 'CurrencyClusterRiskBaseCurrencyCurrentInvestment',
       languageCode
     });
 
@@ -92,18 +87,6 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
       id: 'rule.currencyClusterRiskBaseCurrencyCurrentInvestment',
       languageCode: this.getLanguageCode()
     });
-  }
-
-  public getSettings({
-    baseCurrency = DEFAULT_CURRENCY,
-    locale = DEFAULT_LOCALE,
-    xRayRules
-  }: UserSettings): Settings {
-    return {
-      baseCurrency,
-      locale,
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true
-    };
   }
 }
 

@@ -1,4 +1,5 @@
 import { Rule } from '@ghostfolio/api/models/rule';
+import { getRuleSettings } from '@ghostfolio/api/models/rules/rule-settings';
 import {
   PortfolioReportRule,
   RuleSettings,
@@ -14,7 +15,10 @@ export class RulesService {
     aUserSettings: UserSettings
   ): Promise<PortfolioReportRule[]> {
     return aRules.map((rule) => {
-      const settings = rule.getSettings(aUserSettings);
+      const settings = getRuleSettings<T>({
+        key: rule.getKey(),
+        userSettings: aUserSettings
+      });
 
       if (settings?.isActive) {
         const { evaluation, value } = rule.evaluate(settings);

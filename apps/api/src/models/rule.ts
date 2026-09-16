@@ -1,10 +1,9 @@
+import { XRayRuleKey } from '@ghostfolio/api/models/types/x-ray-rule-key.type';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import {
   PortfolioPosition,
   PortfolioReportRule,
-  RuleSettings,
-  UserSettings
+  RuleSettings
 } from '@ghostfolio/common/interfaces';
 
 import { Big } from 'big.js';
@@ -14,17 +13,17 @@ import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
-  private key: string;
+  private key: XRayRuleKey;
   private languageCode: string;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     {
       key,
-      languageCode = DEFAULT_LANGUAGE_CODE
+      languageCode
     }: {
-      key: string;
-      languageCode?: string; // TODO: Make mandatory
+      key: XRayRuleKey;
+      languageCode: string;
     }
   ) {
     this.key = key;
@@ -75,6 +74,4 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   >;
 
   public abstract getName(): string;
-
-  public abstract getSettings(aUserSettings: UserSettings): T;
 }
