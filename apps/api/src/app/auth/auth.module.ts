@@ -22,6 +22,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { getOidcDiscoveryUrl } from './oidc.helper';
 import { OidcStrategy } from './oidc.strategy';
 
 @Module({
@@ -94,14 +95,27 @@ import { OidcStrategy } from './oidc.strategy';
           // Fetch OIDC configuration from discovery endpoint
           try {
             const response = await fetchService.fetch(
-              `${issuer}/.well-known/openid-configuration`
+              getOidcDiscoveryUrl(issuer)
             );
+
+            if (!response.ok) {
+              throw new Error(
+                `OIDC discovery request failed with status ${response.status}`
+              );
+            }
 
             const config = (await response.json()) as {
               authorization_endpoint: string;
+              issuer: string;
               token_endpoint: string;
               userinfo_endpoint: string;
             };
+
+            if (config.issuer !== issuer) {
+              throw new Error(
+                'OIDC discovery response issuer does not match configured issuer'
+              );
+            }
 
             // Manual URLs take priority over discovered ones
             authorizationURL =
