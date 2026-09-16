@@ -4,6 +4,7 @@ import {
   CreateAccountDto,
   CreateOrderDto,
   CreateTagDto,
+  CreateUserDto,
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
   TransferBalanceDto,
@@ -896,8 +897,8 @@ export class DataService {
     return this.http.post<Tag>(`/api/v1/tags`, aTag);
   }
 
-  public postUser() {
-    return this.http.post<UserItem>('/api/v1/user', {});
+  public postUser(aData: CreateUserDto) {
+    return this.http.post<UserItem>('/api/v1/user', aData);
   }
 
   public postWatchlistItem(watchlistItem: CreateWatchlistItemDto) {

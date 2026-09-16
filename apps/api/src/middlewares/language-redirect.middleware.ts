@@ -1,8 +1,5 @@
 import { environment } from '@ghostfolio/api/environments/environment';
-import {
-  DEFAULT_LANGUAGE_CODE,
-  SUPPORTED_LANGUAGE_CODES
-} from '@ghostfolio/common/config';
+import { getLanguageCodeFromHeader } from '@ghostfolio/api/helper/language.helper';
 
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -20,15 +17,9 @@ export function languageRedirectMiddleware(
     return next();
   }
 
-  let languageCode = DEFAULT_LANGUAGE_CODE;
-
-  try {
-    const code = request.headers['accept-language'].split(',')[0].split('-')[0];
-
-    if ((SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(code)) {
-      languageCode = code;
-    }
-  } catch {}
+  const languageCode = getLanguageCodeFromHeader(
+    request.headers['accept-language']
+  );
 
   return response.redirect(
     StatusCodes.MOVED_PERMANENTLY,
