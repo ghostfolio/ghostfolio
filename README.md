@@ -211,7 +211,7 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
 }
 ```
 
-### Import Activities
+### Import Portfolio Data
 
 #### Prerequisites
 
@@ -271,6 +271,22 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
   ]
 }
 ```
+
+### Export Portfolio Data
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) for authorization
+
+#### Request
+
+`GET http://localhost:3333/api/v1/export`
+
+#### Response
+
+##### Success
+
+`200 OK`
 
 ### Portfolio (experimental)
 
