@@ -96,6 +96,8 @@ export class GfProductPageComponent {
   protected readonly routerLinkResourcesPersonalFinanceTools =
     publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
 
+  protected readonly titlePrefix = $localize`The Open Source Alternative to`;
+
   protected readonly nextProduct = computed(() => {
     return this.sortedPersonalFinanceTools[this.getCurrentProductIndex() + 1];
   });
@@ -164,6 +166,10 @@ export class GfProductPageComponent {
       ...this.routerLinkResourcesPersonalFinanceTools,
       `${publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product.path}-${product.alias ?? product.key}`
     ];
+  }
+
+  protected getProductTitle(product?: Product) {
+    return `Ghostfolio: ${this.titlePrefix} ${product?.name ?? ''}`;
   }
 
   private getCurrentProductIndex() {

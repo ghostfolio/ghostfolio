@@ -4,9 +4,8 @@
       <article>
         <div class="mb-4 text-center">
           <h1 class="mb-1">
-            <strong>Ghostfolio</strong>:
-            <ng-container i18n>The Open Source Alternative to</ng-container
-            >&nbsp;<strong>{{ product2().name }}</strong>
+            <strong>Ghostfolio</strong>: {{ titlePrefix }}
+            <strong>{{ product2().name }}</strong>
           </h1>
         </div>
         @if (product2().isArchived) {
@@ -392,11 +391,8 @@
           @if (previousProduct()) {
             <a
               class="font-weight-light link-primary text-decoration-none small"
-              i18n-title
-              title="Ghostfolio: The Open Source Alternative to {{
-                previousProduct()?.name
-              }}"
               [routerLink]="getProductRouterLink(previousProduct())"
+              [title]="getProductTitle(previousProduct())"
               >← <span i18n>Previous</span></a
             >
           } @else {
@@ -405,11 +401,8 @@
           @if (nextProduct()) {
             <a
               class="font-weight-light link-primary text-decoration-none small"
-              i18n-title
-              title="Ghostfolio: The Open Source Alternative to {{
-                nextProduct()?.name
-              }}"
               [routerLink]="getProductRouterLink(nextProduct())"
+              [title]="getProductTitle(nextProduct())"
               ><span i18n>Next</span> →</a
             >
           }
