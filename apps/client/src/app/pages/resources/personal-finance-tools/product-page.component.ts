@@ -41,6 +41,7 @@ export class GfProductPageComponent {
     isOpenSource: true,
     key: 'ghostfolio',
     languages: [
+      // 'Català',
       'Chinese (简体中文)',
       'Deutsch',
       'English',
@@ -50,8 +51,10 @@ export class GfProductPageComponent {
       // 'Japanese (日本語)',
       'Korean (한국어)',
       'Nederlands',
+      'Polski',
       'Português',
       'Türkçe'
+      // 'Ukrainian (Українська)'
     ],
     name: 'Ghostfolio',
     origin: getCountryName({ code: 'CH' }),
