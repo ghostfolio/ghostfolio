@@ -379,7 +379,7 @@
             >
           </div>
         </section>
-        <section class="mb-4">
+        <section>
           <ul class="list-inline">
             @for (tag of tags(); track tag) {
               <li class="list-inline-item">
@@ -388,9 +388,35 @@
             }
           </ul>
         </section>
+        <nav class="d-flex justify-content-between my-5">
+          @if (previousProduct()) {
+            <a
+              class="font-weight-light link-primary text-decoration-none small"
+              i18n-title
+              title="Ghostfolio: The Open Source Alternative to {{
+                previousProduct()?.name
+              }}"
+              [routerLink]="getProductRouterLink(previousProduct())"
+              >← <span i18n>Previous</span></a
+            >
+          } @else {
+            <span></span>
+          }
+          @if (nextProduct()) {
+            <a
+              class="font-weight-light link-primary text-decoration-none small"
+              i18n-title
+              title="Ghostfolio: The Open Source Alternative to {{
+                nextProduct()?.name
+              }}"
+              [routerLink]="getProductRouterLink(nextProduct())"
+              ><span i18n>Next</span> →</a
+            >
+          }
+        </nav>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item text-truncate">
               <a i18n [routerLink]="routerLinkResourcesPersonalFinanceTools"
                 >Personal Finance Tools</a
               >
