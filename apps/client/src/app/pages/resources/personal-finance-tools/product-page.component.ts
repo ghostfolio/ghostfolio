@@ -1,4 +1,5 @@
 import { getCountryName } from '@ghostfolio/common/helper';
+import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -91,8 +92,17 @@ export class GfProductPageComponent {
 
   protected readonly routerLinkAbout = publicRoutes.about.routerLink;
   protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
+
   protected readonly routerLinkResourcesPersonalFinanceTools =
     publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
+
+  protected readonly nextProduct = computed(() => {
+    return this.sortedPersonalFinanceTools[this.getCurrentProductIndex() + 1];
+  });
+
+  protected readonly previousProduct = computed(() => {
+    return this.sortedPersonalFinanceTools[this.getCurrentProductIndex() - 1];
+  });
 
   protected readonly tags = computed<string[]>(() => {
     const product1 = this.product1();
@@ -138,6 +148,29 @@ export class GfProductPageComponent {
 
   private readonly dataService = inject(DataService);
   private readonly route = inject(ActivatedRoute);
+
+  private readonly sortedPersonalFinanceTools = [...personalFinanceTools].sort(
+    (a, b) => {
+      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+    }
+  );
+
+  protected getProductRouterLink(product?: Product) {
+    if (!product) {
+      return this.routerLinkResourcesPersonalFinanceTools;
+    }
+
+    return [
+      ...this.routerLinkResourcesPersonalFinanceTools,
+      `${publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product.path}-${product.alias ?? product.key}`
+    ];
+  }
+
+  private getCurrentProductIndex() {
+    return this.sortedPersonalFinanceTools.findIndex(({ key }) => {
+      return key === this.product2().key;
+    });
+  }
 
   private getSortedTranslations(values?: string[]) {
     return values
