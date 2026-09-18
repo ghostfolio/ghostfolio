@@ -9,7 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a hint for the performance calculation type to the analysis page
 - Added support for country codes to the entity logo component and used it for cash holdings and currency selectors
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `@internationalized/number` from version `3.6.7` to `3.6.8`
+- Upgraded `bull-board` from version `9.8.0` to `9.9.0`
+
+### Fixed
+
+- Fixed the missing account balance of the current day for users in a time zone ahead of the instance
 
 ## 3.70.1 - 2026-09-14
 

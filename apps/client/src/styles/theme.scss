@@ -360,6 +360,12 @@ $_dense-form-field-theme: mat.define-theme(
     )
   );
 
+  @include mat.option-overrides(
+    (
+      selected-state-label-text-color: var(--gf-theme-primary-500)
+    )
+  );
+
   @include mat.paginator-overrides(
     (
       container-background-color: transparent
