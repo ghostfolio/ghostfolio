@@ -3039,7 +3039,7 @@
       </trans-unit>
       <trans-unit id="3885497195825665706" datatype="html">
         <source>Next</source>
-        <target state="new">Next</target>
+        <target state="translated">Weiter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">406</context>
@@ -3499,7 +3499,7 @@
       </trans-unit>
       <trans-unit id="7771702342975481710" datatype="html">
         <source>Add your first activity</source>
-        <target state="new">Add your first activity</target>
+        <target state="translated">Füge deine erste Aktivität hinzu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/no-activities-info/no-activities-info.component.html</context>
           <context context-type="linenumber">12</context>
@@ -6685,7 +6685,7 @@
       </trans-unit>
       <trans-unit id="251113330629316982" datatype="html">
         <source>Date must be in the future.</source>
-        <target state="new">Date must be in the future.</target>
+        <target state="translated">Das Datum muss in der Zukunft liegen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">70</context>
@@ -7066,7 +7066,7 @@
       </trans-unit>
       <trans-unit id="4452427314943113135" datatype="html">
         <source>Previous</source>
-        <target state="new">Previous</target>
+        <target state="translated">Zurück</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">396</context>
