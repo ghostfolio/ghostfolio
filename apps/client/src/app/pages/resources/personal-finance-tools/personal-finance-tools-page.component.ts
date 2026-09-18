@@ -20,10 +20,11 @@ export class PersonalFinanceToolsPageComponent {
   public pathAlternativeTo =
     publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product
       .path + '-';
-  public pathResources = publicRoutes.resources.path;
+
   public pathPersonalFinanceTools =
     publicRoutes.resources.subRoutes.personalFinanceTools.path;
 
+  public pathResources = publicRoutes.resources.path;
   public personalFinanceTools = personalFinanceTools;
   public routerLinkAbout = publicRoutes.about.routerLink;
 
