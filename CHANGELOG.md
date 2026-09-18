@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `@internationalized/number` from version `3.6.7` to `3.6.8`
 
+### Fixed
+
+- Fixed the missing account balance of the current day for users in a time zone ahead of the instance
+
 ## 3.70.1 - 2026-09-14
 
 ### Added
