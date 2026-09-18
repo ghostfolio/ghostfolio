@@ -58,7 +58,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { IonIcon } from '@ionic/angular/standalone';
 import { AccessType } from '@prisma/client';
-import { addDays, addYears, endOfDay, isValid, startOfDay } from 'date-fns';
+import { addDays, endOfDay, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline } from 'ionicons/icons';
@@ -158,9 +158,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       accessLevel: getAccessLevel(access?.scopes),
       alias: [access?.alias ?? ''],
       expiresAt: [
-        access?.expiresAt
-          ? new Date(access.expiresAt)
-          : addYears(this.today, 1),
+        access?.expiresAt ? new Date(access.expiresAt) : addDays(this.today, 1),
         Validators.required
       ],
       filters: [null],
