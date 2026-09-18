@@ -99,11 +99,11 @@ export class GfProductPageComponent {
   protected readonly titlePrefix = $localize`The Open Source Alternative to`;
 
   protected readonly nextProduct = computed(() => {
-    return this.sortedPersonalFinanceTools[this.getCurrentProductIndex() + 1];
+    return personalFinanceTools[this.getCurrentProductIndex() + 1];
   });
 
   protected readonly previousProduct = computed(() => {
-    return this.sortedPersonalFinanceTools[this.getCurrentProductIndex() - 1];
+    return personalFinanceTools[this.getCurrentProductIndex() - 1];
   });
 
   protected readonly tags = computed<string[]>(() => {
@@ -151,12 +151,6 @@ export class GfProductPageComponent {
   private readonly dataService = inject(DataService);
   private readonly route = inject(ActivatedRoute);
 
-  private readonly sortedPersonalFinanceTools = [...personalFinanceTools].sort(
-    (a, b) => {
-      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
-    }
-  );
-
   protected getProductRouterLink(product?: Product) {
     if (!product) {
       return this.routerLinkResourcesPersonalFinanceTools;
@@ -173,7 +167,7 @@ export class GfProductPageComponent {
   }
 
   private getCurrentProductIndex() {
-    return this.sortedPersonalFinanceTools.findIndex(({ key }) => {
+    return personalFinanceTools.findIndex(({ key }) => {
       return key === this.product2().key;
     });
   }
