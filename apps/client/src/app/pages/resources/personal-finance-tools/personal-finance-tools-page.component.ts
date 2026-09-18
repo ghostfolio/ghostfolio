@@ -25,11 +25,7 @@ export class PersonalFinanceToolsPageComponent {
     publicRoutes.resources.subRoutes.personalFinanceTools.path;
 
   public pathResources = publicRoutes.resources.path;
-
-  public personalFinanceTools = personalFinanceTools.sort((a, b) => {
-    return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
-  });
-
+  public personalFinanceTools = personalFinanceTools;
   public routerLinkAbout = publicRoutes.about.routerLink;
 
   public constructor() {
