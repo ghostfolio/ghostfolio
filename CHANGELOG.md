@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the cache key of the portfolio snapshot by the performance calculation type
 - Hardened the validation of the device id in the biometric authentication
 
 ### Fixed
