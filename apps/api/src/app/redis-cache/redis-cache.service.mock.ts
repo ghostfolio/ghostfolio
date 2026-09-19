@@ -1,4 +1,5 @@
 import { Filter } from '@ghostfolio/common/interfaces';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export const RedisCacheServiceMock = {
   cache: new Map<string, string>(),
@@ -8,15 +9,17 @@ export const RedisCacheServiceMock = {
     return Promise.resolve(value);
   },
   getPortfolioSnapshotKey: ({
+    calculationType,
     filters,
     userId
   }: {
+    calculationType: PerformanceCalculationType;
     filters?: Filter[];
     userId: string;
   }): string => {
     const filtersHash = filters?.length;
 
-    return `portfolio-snapshot-${userId}${filtersHash > 0 ? `-${filtersHash}` : ''}`;
+    return `portfolio-snapshot-${userId}-${calculationType}${filtersHash > 0 ? `-${filtersHash}` : ''}`;
   },
   reset: () => {
     RedisCacheServiceMock.cache.clear();
