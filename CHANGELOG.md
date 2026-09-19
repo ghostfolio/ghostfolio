@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Localized the default account name created during user registration
 - Improved the performance of deleting a watchlist item
 - Extended the `POST api/v1/user` endpoint by the language code
+  Improved the watchlist performance by removing an unnecessary index from the market data table
 - Improved the language localization for German (`de`)
 - Upgraded `@internationalized/number` from version `3.6.7` to `3.6.8`
 - Upgraded `bull-board` from version `9.8.0` to `9.9.0`
