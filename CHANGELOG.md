@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Hardened the validation of the device id in the biometric authentication
+- Moved the method-independent helpers of the portfolio calculator from the ROAI calculator into the base class
 
 ### Fixed
 
