@@ -1,6 +1,7 @@
 import {
   activityDummyData,
   assetProfileDummyData,
+  getPerformanceByDateRange,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -124,10 +125,16 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
+        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['1d', 'max', 'ytd']
+      });
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -213,6 +220,36 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2021-01-01', investment: 0 }
       ]);
+
+      expect(performanceByDateRange).toMatchObject({
+        '1d': {
+          date: '2021-12-18',
+          netPerformance: 0,
+          netPerformanceInPercentage: 0,
+          netPerformanceInPercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
+          totalInvestmentValueWithCurrencyEffect: 0,
+          valueWithCurrencyEffect: 0
+        },
+        max: {
+          date: '2021-12-18',
+          netPerformance: -15.8,
+          netPerformanceInPercentage: -0.05528341497550735,
+          netPerformanceInPercentageWithCurrencyEffect: -0.05528341497550735,
+          netPerformanceWithCurrencyEffect: -15.8,
+          totalInvestmentValueWithCurrencyEffect: 0,
+          valueWithCurrencyEffect: 0
+        },
+        ytd: {
+          date: '2021-12-18',
+          netPerformance: -15.8,
+          netPerformanceInPercentage: -0.05528341497550735,
+          netPerformanceInPercentageWithCurrencyEffect: -0.05528341497550735,
+          netPerformanceWithCurrencyEffect: -15.8,
+          totalInvestmentValueWithCurrencyEffect: 0,
+          valueWithCurrencyEffect: 0
+        }
+      });
     });
   });
 });
