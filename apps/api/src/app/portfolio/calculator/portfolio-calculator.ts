@@ -78,6 +78,7 @@ export abstract class PortfolioCalculator {
 
   protected accountBalanceItems: HistoricalDataItem[];
   protected activities: PortfolioCalculatorActivity[];
+
   protected activitiesByAssetProfileIdentifier: {
     [assetProfileIdentifier: string]: PortfolioCalculatorActivity[];
   };
@@ -944,9 +945,11 @@ export abstract class PortfolioCalculator {
     let grossPerformanceFromSellsWithCurrencyEffect = new Big(0);
     let initialValue: Big;
     const investmentValuesAccumulated: { [date: string]: Big } = {};
+
     const investmentValuesAccumulatedWithCurrencyEffect: {
       [date: string]: Big;
     } = {};
+
     const investmentValuesWithCurrencyEffect: { [date: string]: Big } = {};
     const items: HoldingValuationItem[] = [];
     let lastAveragePrice = new Big(0);
