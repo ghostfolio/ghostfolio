@@ -193,8 +193,8 @@ describe('PortfolioCalculator', () => {
         '1d': {
           date: '2023-07-10',
           netPerformance: -5.390000000000001,
-          netPerformanceInPercentage: -0.018052113336459244,
-          netPerformanceInPercentageWithCurrencyEffect: -0.018052113336459244,
+          netPerformanceInPercentage: -0.015983630864124312,
+          netPerformanceInPercentageWithCurrencyEffect: -0.015983630864124312,
           netPerformanceWithCurrencyEffect: -5.390000000000001,
           totalInvestmentValueWithCurrencyEffect: 298.58,
           valueWithCurrencyEffect: 331.83
@@ -211,8 +211,8 @@ describe('PortfolioCalculator', () => {
         ytd: {
           date: '2023-07-10',
           netPerformance: -7.68,
-          netPerformanceInPercentage: -0.025721749614843515,
-          netPerformanceInPercentageWithCurrencyEffect: -0.025721749614843515,
+          netPerformanceInPercentage: -0.022620835910577012,
+          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577012,
           netPerformanceWithCurrencyEffect: -7.68,
           totalInvestmentValueWithCurrencyEffect: 298.58,
           valueWithCurrencyEffect: 331.83

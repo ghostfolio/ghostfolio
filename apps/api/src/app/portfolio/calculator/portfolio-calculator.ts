@@ -794,15 +794,20 @@ export abstract class PortfolioCalculator {
 
     const chart: HistoricalDataItem[] = [];
 
+    let grossPerformanceWithCurrencyEffectAtStartDate: number;
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
-    const totalInvestmentValuesWithCurrencyEffect: number[] = [];
+    const timeWeightedInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
 
       if (!isBefore(date, start) && !isAfter(date, end)) {
         if (!isNumber(netPerformanceAtStartDate)) {
+          grossPerformanceWithCurrencyEffectAtStartDate =
+            historicalDataItem.valueWithCurrencyEffect -
+            historicalDataItem.totalInvestmentValueWithCurrencyEffect;
+
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
           netPerformanceWithCurrencyEffectAtStartDate =
@@ -817,15 +822,18 @@ export abstract class PortfolioCalculator {
           netPerformanceWithCurrencyEffectAtStartDate;
 
         if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-          totalInvestmentValuesWithCurrencyEffect.push(
-            historicalDataItem.totalInvestmentValueWithCurrencyEffect
+          // The invested capital in the date range is the value at its start
+          // date: the investment plus the gross performance up to that date
+          timeWeightedInvestmentValuesWithCurrencyEffect.push(
+            historicalDataItem.totalInvestmentValueWithCurrencyEffect +
+              grossPerformanceWithCurrencyEffectAtStartDate
           );
         }
 
         const timeWeightedInvestmentValue =
-          totalInvestmentValuesWithCurrencyEffect.length > 0
-            ? sum(totalInvestmentValuesWithCurrencyEffect) /
-              totalInvestmentValuesWithCurrencyEffect.length
+          timeWeightedInvestmentValuesWithCurrencyEffect.length > 0
+            ? sum(timeWeightedInvestmentValuesWithCurrencyEffect) /
+              timeWeightedInvestmentValuesWithCurrencyEffect.length
             : 0;
 
         chart.push({
