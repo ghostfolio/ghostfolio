@@ -714,8 +714,6 @@ export abstract class PortfolioCalculator {
     };
   }
 
-  protected abstract getPerformanceCalculationType(): PerformanceCalculationType;
-
   public getDataProviderInfos() {
     return this.dataProviderInfos;
   }
@@ -868,6 +866,8 @@ export abstract class PortfolioCalculator {
 
     return { chart };
   }
+
+  protected abstract getPerformanceCalculationType(): PerformanceCalculationType;
 
   public async getSnapshot() {
     await this.snapshotPromise;

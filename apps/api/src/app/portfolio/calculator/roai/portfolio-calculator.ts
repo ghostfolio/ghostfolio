@@ -134,7 +134,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     start,
     symbol
   }: {
-    chartDateMap?: { [date: string]: boolean };
+    chartDateMap: { [date: string]: boolean };
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
