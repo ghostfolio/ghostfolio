@@ -161,7 +161,7 @@ export class UserController {
 
     const { accessToken, id, role } = await this.userService.createUser({
       data: {},
-      languageCode: data?.languageCode
+      languageCode: data.languageCode
     });
 
     return {

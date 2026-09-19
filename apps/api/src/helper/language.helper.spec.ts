@@ -24,8 +24,17 @@ describe('getSupportedLanguageCode', () => {
     expect(getSupportedLanguageCode('de')).toEqual('de');
   });
 
+  it('should ignore the region subtag', () => {
+    expect(getSupportedLanguageCode('de-CH')).toEqual('de');
+  });
+
+  it('should ignore the case', () => {
+    expect(getSupportedLanguageCode('DE')).toEqual('de');
+  });
+
   it('should use the default language code if the language is not supported', () => {
     expect(getSupportedLanguageCode()).toEqual(DEFAULT_LANGUAGE_CODE);
+    expect(getSupportedLanguageCode('')).toEqual(DEFAULT_LANGUAGE_CODE);
     expect(getSupportedLanguageCode('xx')).toEqual(DEFAULT_LANGUAGE_CODE);
   });
 });

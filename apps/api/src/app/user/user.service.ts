@@ -716,8 +716,8 @@ export class UserService {
           create: {
             currency: DEFAULT_CURRENCY,
             name: this.i18nService.getTranslation({
-              languageCode: getSupportedLanguageCode(languageCode),
-              id: 'myAccount'
+              id: 'myAccount',
+              languageCode: getSupportedLanguageCode(languageCode)
             })
           }
         },
