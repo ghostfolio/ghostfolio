@@ -190,10 +190,14 @@ describe('PortfolioCalculator', () => {
             netPerformance: new Big('27172.74').mul(0.97373),
             netPerformancePercentage: new Big('42.41978276196153750666'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('41.72313811883729606471')
+              '1d': new Big('-0.04016229506406263535'),
+              max: new Big('41.72313811883729606471'),
+              ytd: new Big('-0.04016229506406263535')
             },
             netPerformanceWithCurrencyEffectMap: {
-              max: new Big('26516.208701400000064086')
+              '1d': new Big('-556.443324'),
+              max: new Big('26516.208701400000064086'),
+              ytd: new Big('-556.443324')
             },
             quantity: new Big('1'),
             symbol: 'BTCUSD',
@@ -281,8 +285,8 @@ describe('PortfolioCalculator', () => {
         '1d': {
           date: '2018-01-01',
           netPerformance: -486.0860160000011,
-          netPerformanceInPercentage: -1.5259683109961866,
-          netPerformanceInPercentageWithCurrencyEffect: -1.7468407881319952,
+          netPerformanceInPercentage: -0.035263202509112565,
+          netPerformanceInPercentageWithCurrencyEffect: -0.040162295064062624,
           netPerformanceWithCurrencyEffect: -556.4433239999998,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
           valueWithCurrencyEffect: 13298.425356
@@ -290,7 +294,7 @@ describe('PortfolioCalculator', () => {
         max: {
           date: '2018-01-01',
           netPerformance: 26458.9121202,
-          netPerformanceInPercentage: 41.63298219956282,
+          netPerformanceInPercentage: 42.50435329547954,
           netPerformanceInPercentageWithCurrencyEffect: 41.72313811883715,
           netPerformanceWithCurrencyEffect: 26516.2087014,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
@@ -299,8 +303,8 @@ describe('PortfolioCalculator', () => {
         ytd: {
           date: '2018-01-01',
           netPerformance: -486.0860160000011,
-          netPerformanceInPercentage: -1.5259683109961866,
-          netPerformanceInPercentageWithCurrencyEffect: -1.7468407881319952,
+          netPerformanceInPercentage: -0.035263202509112565,
+          netPerformanceInPercentageWithCurrencyEffect: -0.040162295064062624,
           netPerformanceWithCurrencyEffect: -556.4433239999998,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
           valueWithCurrencyEffect: 13298.425356
