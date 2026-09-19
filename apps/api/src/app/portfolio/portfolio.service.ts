@@ -66,7 +66,7 @@ import {
   PortfolioSummary,
   UserSettings
 } from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshotHolding } from '@ghostfolio/common/models';
 import {
   AccountWithBalance,
   AccountWithValue,
@@ -689,7 +689,7 @@ export class PortfolioService {
     }
 
     const portfolioItemsNow: {
-      [assetProfileIdentifier: string]: TimelinePosition;
+      [assetProfileIdentifier: string]: PortfolioSnapshotHolding;
     } = {};
 
     for (const position of positions) {
@@ -2316,7 +2316,7 @@ export class PortfolioService {
   }: {
     activities: Activity[];
     filters?: Filter[];
-    portfolioItemsNow: Record<string, TimelinePosition>;
+    portfolioItemsNow: Record<string, PortfolioSnapshotHolding>;
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;

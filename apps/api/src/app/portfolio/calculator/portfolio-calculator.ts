@@ -1,6 +1,7 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
-import { PortfolioCalculatorPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-position.interface';
+import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
@@ -35,8 +36,7 @@ import {
   Filter,
   HistoricalDataItem,
   InvestmentItem,
-  ResponseError,
-  SymbolMetrics
+  ResponseError
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
@@ -209,7 +209,7 @@ export abstract class PortfolioCalculator {
   }
 
   protected abstract calculateOverallPerformance(
-    positions: PortfolioCalculatorPosition[]
+    positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot;
 
   @LogPerformance
@@ -343,9 +343,9 @@ export abstract class PortfolioCalculator {
     }
 
     const errors: ResponseError['errors'] = [];
-    let hasAnySymbolMetricsErrors = false;
+    let hasAnyHoldingPerformanceErrors = false;
 
-    const positions: PortfolioCalculatorPosition[] = [];
+    const positions: PortfolioCalculatorHolding[] = [];
 
     const accumulatedValuesByDate: {
       [date: string]: {
@@ -424,7 +424,7 @@ export abstract class PortfolioCalculator {
         totalInvestment,
         totalInvestmentWithCurrencyEffect,
         totalLiabilitiesInBaseCurrency
-      } = this.getSymbolMetrics({
+      } = this.getHoldingPerformance({
         chartDateMap,
         marketSymbolMap,
         dataSource: item.dataSource,
@@ -435,7 +435,8 @@ export abstract class PortfolioCalculator {
         symbol: item.symbol
       });
 
-      hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
+      hasAnyHoldingPerformanceErrors =
+        hasAnyHoldingPerformanceErrors || hasErrors;
 
       // Cash in the base currency cannot generate a currency effect and thus
       // contributes nothing but its balance to the performance calculation. It
@@ -708,7 +709,7 @@ export abstract class PortfolioCalculator {
       totalCashInBaseCurrency,
       totalInterestWithCurrencyEffect,
       totalLiabilitiesWithCurrencyEffect,
-      hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors,
+      hasErrors: hasAnyHoldingPerformanceErrors || overall.hasErrors,
       positions: positionsIncludedInHoldings
     };
   }
@@ -734,6 +735,24 @@ export abstract class PortfolioCalculator {
 
     return this.snapshot.totalFeesWithCurrencyEffect;
   }
+
+  protected abstract getHoldingPerformance({
+    chartDateMap,
+    dataSource,
+    end,
+    exchangeRates,
+    marketSymbolMap,
+    start,
+    symbol
+  }: {
+    chartDateMap: { [date: string]: boolean };
+    end: Date;
+    exchangeRates: { [dateString: string]: number };
+    marketSymbolMap: {
+      [date: string]: { [assetProfileIdentifier: string]: Big };
+    };
+    start: Date;
+  } & AssetProfileIdentifier): HoldingPerformance;
 
   public async getInterestInBaseCurrency() {
     await this.snapshotPromise;
@@ -894,24 +913,6 @@ export abstract class PortfolioCalculator {
 
     return min(dates);
   }
-
-  protected abstract getSymbolMetrics({
-    chartDateMap,
-    dataSource,
-    end,
-    exchangeRates,
-    marketSymbolMap,
-    start,
-    symbol
-  }: {
-    chartDateMap: { [date: string]: boolean };
-    end: Date;
-    exchangeRates: { [dateString: string]: number };
-    marketSymbolMap: {
-      [date: string]: { [assetProfileIdentifier: string]: Big };
-    };
-    start: Date;
-  } & AssetProfileIdentifier): SymbolMetrics;
 
   public getTransactionPoints() {
     return this.transactionPoints;

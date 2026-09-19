@@ -19,7 +19,7 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshotHolding } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { DataSource } from '@prisma/client';
@@ -250,7 +250,7 @@ describe('PortfolioCalculator', () => {
        * Total account balance: 2000 USD * 0.85 = 1700 CHF (using the exchange rate on 2024-12-31)
        * Value in base currency: 2000 USD * 0.91 = 1820 CHF
        */
-      expect(position).toMatchObject<TimelinePosition>({
+      expect(position).toMatchObject<PortfolioSnapshotHolding>({
         activitiesCount: 2,
         averagePrice: new Big(1),
         currency: 'USD',
@@ -422,7 +422,7 @@ describe('PortfolioCalculator', () => {
        * The holding itself keeps its investment and value so that it remains
        * visible in the holdings table
        */
-      expect(position).toMatchObject<Partial<TimelinePosition>>({
+      expect(position).toMatchObject<Partial<PortfolioSnapshotHolding>>({
         currency: 'CHF',
         grossPerformance: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),

@@ -8,7 +8,7 @@ import { DataSource, Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 
-export class TimelinePosition {
+export class PortfolioSnapshotHolding {
   activitiesCount: number;
 
   @Transform(transformToBig, { toClassOnly: true })

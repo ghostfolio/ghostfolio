@@ -1,5 +1,6 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { PortfolioCalculatorPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-position.interface';
+import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
@@ -8,10 +9,7 @@ import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  SymbolMetrics
-} from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
@@ -31,7 +29,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
 
   protected calculateOverallPerformance(
-    positions: PortfolioCalculatorPosition[]
+    positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot {
     let currentValueInBaseCurrency = new Big(0);
     let grossPerformance = new Big(0);
@@ -127,11 +125,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     };
   }
 
-  protected getPerformanceCalculationType() {
-    return PerformanceCalculationType.ROAI;
-  }
-
-  protected getSymbolMetrics({
+  protected getHoldingPerformance({
     chartDateMap,
     dataSource,
     end,
@@ -147,7 +141,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       [date: string]: { [assetProfileIdentifier: string]: Big };
     };
     start: Date;
-  } & AssetProfileIdentifier): SymbolMetrics {
+  } & AssetProfileIdentifier): HoldingPerformance {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
@@ -162,7 +156,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceFromSells = new Big(0);
     let grossPerformanceFromSellsWithCurrencyEffect = new Big(0);
     let initialValue: Big;
-    let initialValueWithCurrencyEffect: Big;
     let investmentAtStartDate: Big;
     let investmentAtStartDateWithCurrencyEffect: Big;
     const investmentValuesAccumulated: { [date: string]: Big } = {};
@@ -180,16 +173,13 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       [date: string]: Big;
     } = {};
 
-    const totalAccountBalanceInBaseCurrency = new Big(0);
     let totalDividend = new Big(0);
     let totalDividendInBaseCurrency = new Big(0);
-    let totalInterest = new Big(0);
     let totalInterestInBaseCurrency = new Big(0);
     let totalInvestment = new Big(0);
     let totalInvestmentFromBuyTransactions = new Big(0);
     let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
-    let totalLiabilities = new Big(0);
     let totalLiabilitiesInBaseCurrency = new Big(0);
     let totalQuantity = new Big(0);
     let totalQuantityFromBuyTransactions = new Big(0);
@@ -215,14 +205,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       return {
         currentValues: {},
         currentValuesWithCurrencyEffect: {},
-        feesWithCurrencyEffect: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
         hasErrors: false,
-        initialValue: new Big(0),
-        initialValueWithCurrencyEffect: new Big(0),
         investmentValuesAccumulated: {},
         investmentValuesAccumulatedWithCurrencyEffect: {},
         investmentValuesWithCurrencyEffect: {},
@@ -236,14 +223,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         timeWeightedInvestmentValues: {},
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
-        totalAccountBalanceInBaseCurrency: new Big(0),
         totalDividend: new Big(0),
         totalDividendInBaseCurrency: new Big(0),
-        totalInterest: new Big(0),
         totalInterestInBaseCurrency: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
-        totalLiabilities: new Big(0),
         totalLiabilitiesInBaseCurrency: new Big(0)
       };
     }
@@ -264,14 +248,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       } else if (order.type === 'INTEREST') {
         const interest = order.quantity.mul(order.unitPrice);
 
-        totalInterest = totalInterest.plus(interest);
         totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
           interest.mul(exchangeRateAtOrderDate ?? 1)
         );
       } else if (order.type === 'LIABILITY') {
         const liabilities = order.quantity.mul(order.unitPrice);
 
-        totalLiabilities = totalLiabilities.plus(liabilities);
         totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
           liabilities.mul(exchangeRateAtOrderDate ?? 1)
         );
@@ -319,20 +301,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       return {
         totalDividend,
         totalDividendInBaseCurrency,
-        totalInterest,
         totalInterestInBaseCurrency,
-        totalLiabilities,
         totalLiabilitiesInBaseCurrency,
         currentValues: {},
         currentValuesWithCurrencyEffect: {},
-        feesWithCurrencyEffect: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
         hasErrors: hasActivitiesWithQuantity,
-        initialValue: new Big(0),
-        initialValueWithCurrencyEffect: new Big(0),
         investmentValuesAccumulated: {},
         investmentValuesAccumulatedWithCurrencyEffect: {},
         investmentValuesWithCurrencyEffect: {},
@@ -346,7 +323,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         timeWeightedInvestmentValues: {},
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
-        totalAccountBalanceInBaseCurrency: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0)
       };
@@ -607,14 +583,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           !valueOfInvestmentBeforeTransaction.eq(0)
         ) {
           initialValue = valueOfInvestmentBeforeTransaction;
-
-          initialValueWithCurrencyEffect =
-            valueOfInvestmentBeforeTransactionWithCurrencyEffect;
         } else if (transactionInvestment.gt(0)) {
           initialValue = transactionInvestment;
-
-          initialValueWithCurrencyEffect =
-            transactionInvestmentWithCurrencyEffect;
         }
       }
 
@@ -1016,11 +986,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     return {
       currentValues,
       currentValuesWithCurrencyEffect,
-      feesWithCurrencyEffect,
       grossPerformancePercentage,
       grossPerformancePercentageWithCurrencyEffect,
-      initialValue,
-      initialValueWithCurrencyEffect,
       investmentValuesAccumulated,
       investmentValuesAccumulatedWithCurrencyEffect,
       investmentValuesWithCurrencyEffect,
@@ -1031,14 +998,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       netPerformanceWithCurrencyEffectMap,
       timeWeightedInvestmentValues,
       timeWeightedInvestmentValuesWithCurrencyEffect,
-      totalAccountBalanceInBaseCurrency,
       totalDividend,
       totalDividendInBaseCurrency,
-      totalInterest,
       totalInterestInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
-      totalLiabilities,
       totalLiabilitiesInBaseCurrency,
       grossPerformance: totalGrossPerformance,
       grossPerformanceWithCurrencyEffect:
@@ -1050,5 +1014,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       timeWeightedInvestmentWithCurrencyEffect:
         timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
     };
+  }
+
+  protected getPerformanceCalculationType() {
+    return PerformanceCalculationType.ROAI;
   }
 }

@@ -92,7 +92,6 @@ import type {
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
 import type { SymbolItem } from './symbol-item.interface';
-import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { UserItem } from './user-item.interface';
 import type { UserSettings } from './user-settings.interface';
@@ -188,7 +187,6 @@ export {
   Statistics,
   SubscriptionOffer,
   SymbolItem,
-  SymbolMetrics,
   SystemMessage,
   User,
   UserItem,
