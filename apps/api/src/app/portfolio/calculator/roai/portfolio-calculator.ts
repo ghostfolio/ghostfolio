@@ -2,7 +2,6 @@ import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/po
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
 import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATE_FORMAT,
@@ -138,43 +137,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     };
     start: Date;
   } & AssetProfileIdentifier): HoldingPerformance {
-    const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
-    const currentValues: { [date: string]: Big } = {};
-    const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
-    let fees = new Big(0);
-    let feesAtStartDate = new Big(0);
-    let feesAtStartDateWithCurrencyEffect = new Big(0);
-    let feesWithCurrencyEffect = new Big(0);
-    let grossPerformance = new Big(0);
-    let grossPerformanceWithCurrencyEffect = new Big(0);
-    let grossPerformanceAtStartDate = new Big(0);
-    let grossPerformanceAtStartDateWithCurrencyEffect = new Big(0);
-    let grossPerformanceFromSells = new Big(0);
-    let grossPerformanceFromSellsWithCurrencyEffect = new Big(0);
-    let initialValue: Big;
     let investmentAtStartDate: Big;
     let investmentAtStartDateWithCurrencyEffect: Big;
-    const investmentValuesAccumulated: { [date: string]: Big } = {};
-    const investmentValuesAccumulatedWithCurrencyEffect: {
-      [date: string]: Big;
-    } = {};
-    const investmentValuesWithCurrencyEffect: { [date: string]: Big } = {};
-    let lastAveragePrice = new Big(0);
-    let lastAveragePriceWithCurrencyEffect = new Big(0);
-    const netPerformanceValues: { [date: string]: Big } = {};
-    const netPerformanceValuesWithCurrencyEffect: { [date: string]: Big } = {};
     const timeWeightedInvestmentValues: { [date: string]: Big } = {};
 
     const timeWeightedInvestmentValuesWithCurrencyEffect: {
       [date: string]: Big;
     } = {};
 
-    let totalInvestment = new Big(0);
-    let totalInvestmentFromBuyTransactions = new Big(0);
-    let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
-    let totalInvestmentWithCurrencyEffect = new Big(0);
-    let totalQuantity = new Big(0);
-    let totalQuantityFromBuyTransactions = new Big(0);
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
@@ -254,11 +224,27 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
     });
 
-    const indexOfStartActivity = activities.findIndex(({ itemType }) => {
+    const {
+      currentValues,
+      currentValuesWithCurrencyEffect,
+      initialValue,
+      investmentValuesAccumulated,
+      investmentValuesAccumulatedWithCurrencyEffect,
+      investmentValuesWithCurrencyEffect,
+      items,
+      netPerformanceValues,
+      netPerformanceValuesWithCurrencyEffect
+    } = this.getHoldingValuation({
+      activities,
+      exchangeRates,
+      unitPriceAtStartDate
+    });
+
+    const indexOfStartActivity = items.findIndex(({ itemType }) => {
       return itemType === 'start';
     });
 
-    const indexOfEndActivity = activities.findIndex(({ itemType }) => {
+    const indexOfEndActivity = items.findIndex(({ itemType }) => {
       return itemType === 'end';
     });
 
@@ -266,255 +252,31 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let sumOfTimeWeightedInvestments = new Big(0);
     let sumOfTimeWeightedInvestmentsWithCurrencyEffect = new Big(0);
 
-    for (let i = 0; i < activities.length; i += 1) {
-      const activity = activities[i];
-
-      if (PortfolioCalculator.ENABLE_LOGGING) {
-        console.log();
-        console.log();
-        console.log(
-          i + 1,
-          activity.date,
-          activity.type,
-          activity.itemType ? `(${activity.itemType})` : ''
-        );
-      }
-
-      const exchangeRateAtActivityDate = exchangeRates[activity.date];
-
-      if (activity.itemType === 'start') {
-        // Take the unit price of the activity as the market price if there are no
-        // activities of this symbol before the start date
-        activity.unitPrice =
-          indexOfStartActivity === 0
-            ? activities[i + 1]?.unitPrice
-            : unitPriceAtStartDate;
-      }
-
-      if (activity.fee) {
-        activity.feeInBaseCurrency = activity.fee.mul(currentExchangeRate ?? 1);
-        activity.feeInBaseCurrencyWithCurrencyEffect = activity.fee.mul(
-          exchangeRateAtActivityDate ?? 1
-        );
-      }
-
-      const unitPrice = ['BUY', 'SELL'].includes(activity.type)
-        ? activity.unitPrice
-        : activity.unitPriceFromMarketData;
-
-      if (unitPrice) {
-        activity.unitPriceInBaseCurrency = unitPrice.mul(
-          currentExchangeRate ?? 1
-        );
-
-        activity.unitPriceInBaseCurrencyWithCurrencyEffect = unitPrice.mul(
-          exchangeRateAtActivityDate ?? 1
-        );
-      }
-
-      const marketPriceInBaseCurrency =
-        activity.unitPriceFromMarketData?.mul(currentExchangeRate ?? 1) ??
-        new Big(0);
-      const marketPriceInBaseCurrencyWithCurrencyEffect =
-        activity.unitPriceFromMarketData?.mul(
-          exchangeRateAtActivityDate ?? 1
-        ) ?? new Big(0);
-
-      const valueOfInvestmentBeforeTransaction = totalQuantity.mul(
-        marketPriceInBaseCurrency
-      );
-
-      const valueOfInvestmentBeforeTransactionWithCurrencyEffect =
-        totalQuantity.mul(marketPriceInBaseCurrencyWithCurrencyEffect);
+    for (let i = 0; i < items.length; i += 1) {
+      const item = items[i];
 
       if (!investmentAtStartDate && i >= indexOfStartActivity) {
-        investmentAtStartDate = totalInvestment ?? new Big(0);
+        investmentAtStartDate = item.investmentBeforeTransaction;
 
         investmentAtStartDateWithCurrencyEffect =
-          totalInvestmentWithCurrencyEffect ?? new Big(0);
+          item.investmentBeforeTransactionWithCurrencyEffect;
 
-        valueAtStartDate = valueOfInvestmentBeforeTransaction;
+        valueAtStartDate = item.valueBeforeTransaction;
 
         valueAtStartDateWithCurrencyEffect =
-          valueOfInvestmentBeforeTransactionWithCurrencyEffect;
-      }
-
-      let transactionInvestment = new Big(0);
-      let transactionInvestmentWithCurrencyEffect = new Big(0);
-
-      if (activity.type === 'BUY') {
-        transactionInvestment = activity.quantity
-          .mul(activity.unitPriceInBaseCurrency)
-          .mul(getFactor(activity.type));
-
-        transactionInvestmentWithCurrencyEffect = activity.quantity
-          .mul(activity.unitPriceInBaseCurrencyWithCurrencyEffect)
-          .mul(getFactor(activity.type));
-
-        totalQuantityFromBuyTransactions =
-          totalQuantityFromBuyTransactions.plus(activity.quantity);
-
-        totalInvestmentFromBuyTransactions =
-          totalInvestmentFromBuyTransactions.plus(transactionInvestment);
-
-        totalInvestmentFromBuyTransactionsWithCurrencyEffect =
-          totalInvestmentFromBuyTransactionsWithCurrencyEffect.plus(
-            transactionInvestmentWithCurrencyEffect
-          );
-      } else if (activity.type === 'SELL') {
-        if (totalQuantity.gt(0)) {
-          const remainingQuantity = totalQuantity.minus(activity.quantity);
-
-          transactionInvestment = totalInvestment
-            .mul(remainingQuantity)
-            .div(totalQuantity)
-            .minus(totalInvestment);
-
-          transactionInvestmentWithCurrencyEffect =
-            totalInvestmentWithCurrencyEffect
-              .mul(remainingQuantity)
-              .div(totalQuantity)
-              .minus(totalInvestmentWithCurrencyEffect);
-        }
-      }
-
-      if (PortfolioCalculator.ENABLE_LOGGING) {
-        console.log('activity.quantity', activity.quantity.toNumber());
-        console.log('transactionInvestment', transactionInvestment.toNumber());
-
-        console.log(
-          'transactionInvestmentWithCurrencyEffect',
-          transactionInvestmentWithCurrencyEffect.toNumber()
-        );
-      }
-
-      const totalInvestmentBeforeTransaction = totalInvestment;
-
-      const totalInvestmentBeforeTransactionWithCurrencyEffect =
-        totalInvestmentWithCurrencyEffect;
-
-      totalInvestment = totalInvestment.plus(transactionInvestment);
-
-      totalInvestmentWithCurrencyEffect =
-        totalInvestmentWithCurrencyEffect.plus(
-          transactionInvestmentWithCurrencyEffect
-        );
-
-      if (i >= indexOfStartActivity && !initialValue) {
-        if (
-          i === indexOfStartActivity &&
-          !valueOfInvestmentBeforeTransaction.eq(0)
-        ) {
-          initialValue = valueOfInvestmentBeforeTransaction;
-        } else if (transactionInvestment.gt(0)) {
-          initialValue = transactionInvestment;
-        }
-      }
-
-      fees = fees.plus(activity.feeInBaseCurrency ?? 0);
-
-      feesWithCurrencyEffect = feesWithCurrencyEffect.plus(
-        activity.feeInBaseCurrencyWithCurrencyEffect ?? 0
-      );
-
-      totalQuantity = totalQuantity.plus(
-        activity.quantity.mul(getFactor(activity.type))
-      );
-
-      const valueOfInvestment = totalQuantity.mul(marketPriceInBaseCurrency);
-
-      const valueOfInvestmentWithCurrencyEffect = totalQuantity.mul(
-        marketPriceInBaseCurrencyWithCurrencyEffect
-      );
-
-      const grossPerformanceFromSell =
-        activity.type === 'SELL'
-          ? activity.unitPriceInBaseCurrency
-              .minus(lastAveragePrice)
-              .mul(activity.quantity)
-          : new Big(0);
-
-      const grossPerformanceFromSellWithCurrencyEffect =
-        activity.type === 'SELL'
-          ? activity.unitPriceInBaseCurrencyWithCurrencyEffect
-              .minus(lastAveragePriceWithCurrencyEffect)
-              .mul(activity.quantity)
-          : new Big(0);
-
-      grossPerformanceFromSells = grossPerformanceFromSells.plus(
-        grossPerformanceFromSell
-      );
-
-      grossPerformanceFromSellsWithCurrencyEffect =
-        grossPerformanceFromSellsWithCurrencyEffect.plus(
-          grossPerformanceFromSellWithCurrencyEffect
-        );
-
-      lastAveragePrice = totalQuantityFromBuyTransactions.eq(0)
-        ? new Big(0)
-        : totalInvestmentFromBuyTransactions.div(
-            totalQuantityFromBuyTransactions
-          );
-
-      lastAveragePriceWithCurrencyEffect = totalQuantityFromBuyTransactions.eq(
-        0
-      )
-        ? new Big(0)
-        : totalInvestmentFromBuyTransactionsWithCurrencyEffect.div(
-            totalQuantityFromBuyTransactions
-          );
-
-      if (totalQuantity.eq(0)) {
-        // Reset tracking variables when position is fully closed
-        totalInvestmentFromBuyTransactions = new Big(0);
-        totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
-        totalQuantityFromBuyTransactions = new Big(0);
-      }
-
-      if (PortfolioCalculator.ENABLE_LOGGING) {
-        console.log(
-          'grossPerformanceFromSells',
-          grossPerformanceFromSells.toNumber()
-        );
-        console.log(
-          'grossPerformanceFromSellWithCurrencyEffect',
-          grossPerformanceFromSellWithCurrencyEffect.toNumber()
-        );
-      }
-
-      const newGrossPerformance = valueOfInvestment
-        .minus(totalInvestment)
-        .plus(grossPerformanceFromSells);
-
-      const newGrossPerformanceWithCurrencyEffect =
-        valueOfInvestmentWithCurrencyEffect
-          .minus(totalInvestmentWithCurrencyEffect)
-          .plus(grossPerformanceFromSellsWithCurrencyEffect);
-
-      grossPerformance = newGrossPerformance;
-
-      grossPerformanceWithCurrencyEffect =
-        newGrossPerformanceWithCurrencyEffect;
-
-      if (activity.itemType === 'start') {
-        feesAtStartDate = fees;
-        feesAtStartDateWithCurrencyEffect = feesWithCurrencyEffect;
-        grossPerformanceAtStartDate = grossPerformance;
-
-        grossPerformanceAtStartDateWithCurrencyEffect =
-          grossPerformanceWithCurrencyEffect;
+          item.valueBeforeTransactionWithCurrencyEffect;
       }
 
       if (i > indexOfStartActivity) {
         // Only consider periods with an investment for the calculation of
         // the time weighted investment
         if (
-          valueOfInvestmentBeforeTransaction.gt(0) &&
-          ['BUY', 'SELL'].includes(activity.type)
+          item.valueBeforeTransaction.gt(0) &&
+          ['BUY', 'SELL'].includes(item.type)
         ) {
           // Calculate the number of days since the previous activity
-          const activityDate = new Date(activity.date);
-          const previousActivityDate = new Date(activities[i - 1].date);
+          const activityDate = new Date(item.date);
+          const previousActivityDate = new Date(items[i - 1].date);
 
           let daysSinceLastActivity = differenceInDays(
             activityDate,
@@ -533,7 +295,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           sumOfTimeWeightedInvestments = sumOfTimeWeightedInvestments.add(
             valueAtStartDate
               .minus(investmentAtStartDate)
-              .plus(totalInvestmentBeforeTransaction)
+              .plus(item.investmentBeforeTransaction)
               .mul(daysSinceLastActivity)
           );
 
@@ -541,80 +303,52 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             sumOfTimeWeightedInvestmentsWithCurrencyEffect.add(
               valueAtStartDateWithCurrencyEffect
                 .minus(investmentAtStartDateWithCurrencyEffect)
-                .plus(totalInvestmentBeforeTransactionWithCurrencyEffect)
+                .plus(item.investmentBeforeTransactionWithCurrencyEffect)
                 .mul(daysSinceLastActivity)
             );
         }
 
-        currentValues[activity.date] = valueOfInvestment;
-
-        currentValuesWithCurrencyEffect[activity.date] =
-          valueOfInvestmentWithCurrencyEffect;
-
-        netPerformanceValues[activity.date] = grossPerformance
-          .minus(grossPerformanceAtStartDate)
-          .minus(fees.minus(feesAtStartDate));
-
-        netPerformanceValuesWithCurrencyEffect[activity.date] =
-          grossPerformanceWithCurrencyEffect
-            .minus(grossPerformanceAtStartDateWithCurrencyEffect)
-            .minus(
-              feesWithCurrencyEffect.minus(feesAtStartDateWithCurrencyEffect)
-            );
-
-        investmentValuesAccumulated[activity.date] = totalInvestment;
-
-        investmentValuesAccumulatedWithCurrencyEffect[activity.date] =
-          totalInvestmentWithCurrencyEffect;
-
-        investmentValuesWithCurrencyEffect[activity.date] = (
-          investmentValuesWithCurrencyEffect[activity.date] ?? new Big(0)
-        ).add(transactionInvestmentWithCurrencyEffect);
-
         // If duration is effectively zero (first day), use the actual investment as the base.
         // Otherwise, use the calculated time-weighted average.
-        timeWeightedInvestmentValues[activity.date] =
+        timeWeightedInvestmentValues[item.date] =
           totalInvestmentDays > Number.EPSILON
             ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
-            : totalInvestment.gt(0)
-              ? totalInvestment
+            : item.investment.gt(0)
+              ? item.investment
               : new Big(0);
 
-        timeWeightedInvestmentValuesWithCurrencyEffect[activity.date] =
+        timeWeightedInvestmentValuesWithCurrencyEffect[item.date] =
           totalInvestmentDays > Number.EPSILON
             ? sumOfTimeWeightedInvestmentsWithCurrencyEffect.div(
                 totalInvestmentDays
               )
-            : totalInvestmentWithCurrencyEffect.gt(0)
-              ? totalInvestmentWithCurrencyEffect
+            : item.investmentWithCurrencyEffect.gt(0)
+              ? item.investmentWithCurrencyEffect
               : new Big(0);
-      }
-
-      if (PortfolioCalculator.ENABLE_LOGGING) {
-        console.log('totalInvestment', totalInvestment.toNumber());
-
-        console.log(
-          'totalInvestmentWithCurrencyEffect',
-          totalInvestmentWithCurrencyEffect.toNumber()
-        );
-
-        console.log(
-          'totalGrossPerformance',
-          grossPerformance.minus(grossPerformanceAtStartDate).toNumber()
-        );
-
-        console.log(
-          'totalGrossPerformanceWithCurrencyEffect',
-          grossPerformanceWithCurrencyEffect
-            .minus(grossPerformanceAtStartDateWithCurrencyEffect)
-            .toNumber()
-        );
       }
 
       if (i === indexOfEndActivity) {
         break;
       }
     }
+
+    const {
+      fees: feesAtStartDate,
+      feesWithCurrencyEffect: feesAtStartDateWithCurrencyEffect,
+      grossPerformance: grossPerformanceAtStartDate,
+      grossPerformanceWithCurrencyEffect:
+        grossPerformanceAtStartDateWithCurrencyEffect
+    } = items[indexOfStartActivity];
+
+    const {
+      fees,
+      feesWithCurrencyEffect,
+      grossPerformance,
+      grossPerformanceWithCurrencyEffect,
+      investment: totalInvestment,
+      investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
+      quantity: totalQuantity
+    } = items[indexOfEndActivity];
 
     const totalGrossPerformance = grossPerformance.minus(
       grossPerformanceAtStartDate
