@@ -406,6 +406,8 @@ describe('PortfolioService', () => {
 
       const usdPosition = {
         activitiesCount: 1,
+        averageInvestment: new Big(0),
+        averageInvestmentWithCurrencyEffect: new Big(0),
         averagePrice: new Big(1),
         currency: 'USD',
         dataSource: DataSource.YAHOO,
@@ -429,8 +431,6 @@ describe('PortfolioService', () => {
         quantity: new Big(quantity),
         symbol: 'USD',
         tags: [],
-        timeWeightedInvestment: new Big(0),
-        timeWeightedInvestmentWithCurrencyEffect: new Big(0),
         valueInBaseCurrency: new Big(1820)
       };
 

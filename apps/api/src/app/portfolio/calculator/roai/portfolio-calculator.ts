@@ -31,12 +31,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceWithCurrencyEffect = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
+    let totalAverageInvestment = new Big(0);
+    let totalAverageInvestmentWithCurrencyEffect = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
     const totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
-    let totalTimeWeightedInvestment = new Big(0);
-    let totalTimeWeightedInvestmentWithCurrencyEffect = new Big(0);
 
     for (const currentPosition of positions) {
       if (currentPosition.valueInBaseCurrency) {
@@ -83,14 +83,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         hasErrors = true;
       }
 
-      if (currentPosition.timeWeightedInvestment) {
-        totalTimeWeightedInvestment = totalTimeWeightedInvestment.plus(
-          currentPosition.timeWeightedInvestment
+      if (currentPosition.averageInvestment) {
+        totalAverageInvestment = totalAverageInvestment.plus(
+          currentPosition.averageInvestment
         );
 
-        totalTimeWeightedInvestmentWithCurrencyEffect =
-          totalTimeWeightedInvestmentWithCurrencyEffect.plus(
-            currentPosition.timeWeightedInvestmentWithCurrencyEffect
+        totalAverageInvestmentWithCurrencyEffect =
+          totalAverageInvestmentWithCurrencyEffect.plus(
+            currentPosition.averageInvestmentWithCurrencyEffect
           );
       } else if (!currentPosition.quantity.eq(0)) {
         this.logger.warn(
@@ -137,14 +137,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     };
     start: Date;
   } & AssetProfileIdentifier): HoldingPerformance {
-    let investmentAtStartDate: Big;
-    let investmentAtStartDateWithCurrencyEffect: Big;
-    const timeWeightedInvestmentValues: { [date: string]: Big } = {};
+    const averageInvestmentValues: { [date: string]: Big } = {};
 
-    const timeWeightedInvestmentValuesWithCurrencyEffect: {
+    const averageInvestmentValuesWithCurrencyEffect: {
       [date: string]: Big;
     } = {};
 
+    let investmentAtStartDate: Big;
+    let investmentAtStartDateWithCurrencyEffect: Big;
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
@@ -248,9 +248,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       return itemType === 'end';
     });
 
+    let sumOfWeightedInvestments = new Big(0);
+    let sumOfWeightedInvestmentsWithCurrencyEffect = new Big(0);
     let totalInvestmentDays = 0;
-    let sumOfTimeWeightedInvestments = new Big(0);
-    let sumOfTimeWeightedInvestmentsWithCurrencyEffect = new Big(0);
 
     for (let i = 0; i < items.length; i += 1) {
       const item = items[i];
@@ -269,7 +269,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       if (i > indexOfStartActivity) {
         // Only consider periods with an investment for the calculation of
-        // the time weighted investment
+        // the average investment
         if (
           item.valueBeforeTransaction.gt(0) &&
           ['BUY', 'SELL'].includes(item.type)
@@ -289,18 +289,18 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           }
 
           // Sum up the total investment days since the start date to calculate
-          // the time weighted investment
+          // the average investment
           totalInvestmentDays += daysSinceLastActivity;
 
-          sumOfTimeWeightedInvestments = sumOfTimeWeightedInvestments.add(
+          sumOfWeightedInvestments = sumOfWeightedInvestments.add(
             valueAtStartDate
               .minus(investmentAtStartDate)
               .plus(item.investmentBeforeTransaction)
               .mul(daysSinceLastActivity)
           );
 
-          sumOfTimeWeightedInvestmentsWithCurrencyEffect =
-            sumOfTimeWeightedInvestmentsWithCurrencyEffect.add(
+          sumOfWeightedInvestmentsWithCurrencyEffect =
+            sumOfWeightedInvestmentsWithCurrencyEffect.add(
               valueAtStartDateWithCurrencyEffect
                 .minus(investmentAtStartDateWithCurrencyEffect)
                 .plus(item.investmentBeforeTransactionWithCurrencyEffect)
@@ -309,17 +309,17 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         }
 
         // If duration is effectively zero (first day), use the actual investment as the base.
-        // Otherwise, use the calculated time-weighted average.
-        timeWeightedInvestmentValues[item.date] =
+        // Otherwise, use the calculated average investment.
+        averageInvestmentValues[item.date] =
           totalInvestmentDays > Number.EPSILON
-            ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
+            ? sumOfWeightedInvestments.div(totalInvestmentDays)
             : item.investment.gt(0)
               ? item.investment
               : new Big(0);
 
-        timeWeightedInvestmentValuesWithCurrencyEffect[item.date] =
+        averageInvestmentValuesWithCurrencyEffect[item.date] =
           totalInvestmentDays > Number.EPSILON
-            ? sumOfTimeWeightedInvestmentsWithCurrencyEffect.div(
+            ? sumOfWeightedInvestmentsWithCurrencyEffect.div(
                 totalInvestmentDays
               )
             : item.investmentWithCurrencyEffect.gt(0)
@@ -363,31 +363,25 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
 
-    const timeWeightedAverageInvestmentBetweenStartAndEndDate =
+    const averageInvestmentBetweenStartAndEndDate =
       totalInvestmentDays > 0
-        ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
+        ? sumOfWeightedInvestments.div(totalInvestmentDays)
         : new Big(0);
 
-    const timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect =
+    const averageInvestmentBetweenStartAndEndDateWithCurrencyEffect =
       totalInvestmentDays > 0
-        ? sumOfTimeWeightedInvestmentsWithCurrencyEffect.div(
-            totalInvestmentDays
-          )
+        ? sumOfWeightedInvestmentsWithCurrencyEffect.div(totalInvestmentDays)
         : new Big(0);
 
     const grossPerformancePercentage =
-      timeWeightedAverageInvestmentBetweenStartAndEndDate.gt(0)
-        ? totalGrossPerformance.div(
-            timeWeightedAverageInvestmentBetweenStartAndEndDate
-          )
+      averageInvestmentBetweenStartAndEndDate.gt(0)
+        ? totalGrossPerformance.div(averageInvestmentBetweenStartAndEndDate)
         : new Big(0);
 
     const grossPerformancePercentageWithCurrencyEffect =
-      timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect.gt(
-        0
-      )
+      averageInvestmentBetweenStartAndEndDateWithCurrencyEffect.gt(0)
         ? totalGrossPerformanceWithCurrencyEffect.div(
-            timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
+            averageInvestmentBetweenStartAndEndDateWithCurrencyEffect
           )
         : new Big(0);
 
@@ -401,12 +395,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           .div(totalQuantity)
       : new Big(0);
 
-    const netPerformancePercentage =
-      timeWeightedAverageInvestmentBetweenStartAndEndDate.gt(0)
-        ? totalNetPerformance.div(
-            timeWeightedAverageInvestmentBetweenStartAndEndDate
-          )
-        : new Big(0);
+    const netPerformancePercentage = averageInvestmentBetweenStartAndEndDate.gt(
+      0
+    )
+      ? totalNetPerformance.div(averageInvestmentBetweenStartAndEndDate)
+      : new Big(0);
 
     const netPerformancePercentageWithCurrencyEffectMap: {
       [key: DateRange]: Big;
@@ -512,10 +505,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         Total investment with currency effect: ${totalInvestmentWithCurrencyEffect.toFixed(
           2
         )}
-        Time weighted investment: ${timeWeightedAverageInvestmentBetweenStartAndEndDate.toFixed(
+        Average investment: ${averageInvestmentBetweenStartAndEndDate.toFixed(
           2
         )}
-        Time weighted investment with currency effect: ${timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect.toFixed(
+        Average investment with currency effect: ${averageInvestmentBetweenStartAndEndDateWithCurrencyEffect.toFixed(
           2
         )}
         Total dividend: ${totalDividend.toFixed(2)}
@@ -541,6 +534,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     }
 
     return {
+      averageInvestmentValues,
+      averageInvestmentValuesWithCurrencyEffect,
       currentValues,
       currentValuesWithCurrencyEffect,
       grossPerformancePercentage,
@@ -553,23 +548,20 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       netPerformanceValues,
       netPerformanceValuesWithCurrencyEffect,
       netPerformanceWithCurrencyEffectMap,
-      timeWeightedInvestmentValues,
-      timeWeightedInvestmentValuesWithCurrencyEffect,
       totalDividend,
       totalDividendInBaseCurrency,
       totalInterestInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
       totalLiabilitiesInBaseCurrency,
+      averageInvestment: averageInvestmentBetweenStartAndEndDate,
+      averageInvestmentWithCurrencyEffect:
+        averageInvestmentBetweenStartAndEndDateWithCurrencyEffect,
       grossPerformance: totalGrossPerformance,
       grossPerformanceWithCurrencyEffect:
         totalGrossPerformanceWithCurrencyEffect,
       hasErrors: totalQuantity.gt(0) && (!initialValue || !unitPriceAtEndDate),
-      netPerformance: totalNetPerformance,
-      timeWeightedInvestment:
-        timeWeightedAverageInvestmentBetweenStartAndEndDate,
-      timeWeightedInvestmentWithCurrencyEffect:
-        timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
+      netPerformance: totalNetPerformance
     };
   }
 

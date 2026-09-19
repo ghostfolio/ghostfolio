@@ -199,6 +199,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('44558.42'),
+            averageInvestmentWithCurrencyEffect: new Big('44558.42'),
             averagePrice: new Big('44558.42'),
             currency: 'USD',
             dataSource: 'YAHOO',
@@ -228,8 +230,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'BTCUSD',
             tags: [],
-            timeWeightedInvestment: new Big('44558.42'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('44558.42'),
             valueInBaseCurrency: new Big('43099.7')
           }
         ],

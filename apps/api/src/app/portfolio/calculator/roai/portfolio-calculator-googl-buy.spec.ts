@@ -144,6 +144,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('89.12').mul(0.8854),
+            averageInvestmentWithCurrencyEffect: new Big('82.329056'),
             averagePrice: new Big('89.12'),
             currency: 'USD',
             dataSource: 'YAHOO',
@@ -173,8 +175,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'GOOGL',
             tags: [],
-            timeWeightedInvestment: new Big('89.12').mul(0.8854),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
             valueInBaseCurrency: new Big('103.10483')
           }
         ],

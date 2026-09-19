@@ -252,6 +252,10 @@ describe('PortfolioCalculator', () => {
        */
       expect(position).toMatchObject<PortfolioSnapshotHolding>({
         activitiesCount: 2,
+        averageInvestment: new Big('912.47956403269754768392'),
+        averageInvestmentWithCurrencyEffect: new Big(
+          '852.45231607629427792916'
+        ),
         averagePrice: new Big(1),
         currency: 'USD',
         dataSource: DataSource.YAHOO,
@@ -292,10 +296,6 @@ describe('PortfolioCalculator', () => {
         },
         quantity: new Big(2000),
         symbol: 'USD',
-        timeWeightedInvestment: new Big('912.47956403269754768392'),
-        timeWeightedInvestmentWithCurrencyEffect: new Big(
-          '852.45231607629427792916'
-        ),
         valueInBaseCurrency: new Big(1820)
       });
 

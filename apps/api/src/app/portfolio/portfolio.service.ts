@@ -984,6 +984,8 @@ export class PortfolioService {
 
     const {
       activitiesCount,
+      averageInvestment,
+      averageInvestmentWithCurrencyEffect,
       averagePrice,
       currency,
       dateOfFirstActivity,
@@ -1000,9 +1002,7 @@ export class PortfolioService {
       netPerformancePercentageWithCurrencyEffectMap,
       netPerformanceWithCurrencyEffectMap,
       quantity,
-      tags,
-      timeWeightedInvestment,
-      timeWeightedInvestmentWithCurrencyEffect
+      tags
     } = holding;
 
     const activitiesOfHolding = activities.filter((activity) => {
@@ -1017,9 +1017,9 @@ export class PortfolioService {
         new Date(),
         parseDate(dateOfFirstActivity)
       ),
-      netPerformancePercentage: timeWeightedInvestment.eq(0)
+      netPerformancePercentage: averageInvestment.eq(0)
         ? new Big(0)
-        : dividendInBaseCurrency.div(timeWeightedInvestment)
+        : dividendInBaseCurrency.div(averageInvestment)
     });
 
     const dividendYieldPercentWithCurrencyEffect =
@@ -1028,9 +1028,9 @@ export class PortfolioService {
           new Date(),
           parseDate(dateOfFirstActivity)
         ),
-        netPerformancePercentage: timeWeightedInvestmentWithCurrencyEffect.eq(0)
+        netPerformancePercentage: averageInvestmentWithCurrencyEffect.eq(0)
           ? new Big(0)
-          : dividendInBaseCurrency.div(timeWeightedInvestmentWithCurrencyEffect)
+          : dividendInBaseCurrency.div(averageInvestmentWithCurrencyEffect)
       });
 
     const historicalData = await this.dataProviderService.getHistorical(
