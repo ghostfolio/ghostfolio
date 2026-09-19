@@ -822,8 +822,10 @@ export abstract class PortfolioCalculator {
           netPerformanceWithCurrencyEffectAtStartDate;
 
         if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-          // The invested capital in the date range is the value at its start
-          // date: the investment plus the gross performance up to that date
+          // Add the gross performance at the start date of the range to the
+          // investment of each day. Thus the range starts with the value of
+          // its first day, and subsequent buy and sell activities stay
+          // included.
           timeWeightedInvestmentValuesWithCurrencyEffect.push(
             historicalDataItem.totalInvestmentValueWithCurrencyEffect +
               grossPerformanceWithCurrencyEffectAtStartDate
@@ -838,19 +840,18 @@ export abstract class PortfolioCalculator {
 
         chart.push({
           ...historicalDataItem,
-          netPerformance:
-            historicalDataItem.netPerformance - netPerformanceAtStartDate,
+          netPerformance: netPerformanceSinceStartDate,
           netPerformanceWithCurrencyEffect:
             netPerformanceWithCurrencyEffectSinceStartDate,
           netPerformanceInPercentage:
-            timeWeightedInvestmentValue === 0
-              ? 0
-              : netPerformanceSinceStartDate / timeWeightedInvestmentValue,
+            timeWeightedInvestmentValue > 0
+              ? netPerformanceSinceStartDate / timeWeightedInvestmentValue
+              : 0,
           netPerformanceInPercentageWithCurrencyEffect:
-            timeWeightedInvestmentValue === 0
-              ? 0
-              : netPerformanceWithCurrencyEffectSinceStartDate /
+            timeWeightedInvestmentValue > 0
+              ? netPerformanceWithCurrencyEffectSinceStartDate /
                 timeWeightedInvestmentValue
+              : 0
         });
       }
     }
