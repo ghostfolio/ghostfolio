@@ -1358,7 +1358,7 @@ export class PortfolioService {
           [
             new EmergencyFundSetup({
               languageCode,
-              emergencyFund: totalEmergencyFundInBaseCurrency,
+              emergencyFundInBaseCurrency: totalEmergencyFundInBaseCurrency,
               exchangeRateDataService: this.exchangeRateDataService,
               i18nService: this.i18nService
             }),
