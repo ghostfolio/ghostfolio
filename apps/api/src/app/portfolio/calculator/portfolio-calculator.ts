@@ -1208,9 +1208,11 @@ export abstract class PortfolioCalculator {
     let cachedPortfolioSnapshot: PortfolioSnapshot | undefined;
     let isCachedPortfolioSnapshotExpired = false;
 
+    const calculationType = this.getPerformanceCalculationType();
+
     const portfolioSnapshotKey = this.redisCacheService.getPortfolioSnapshotKey(
       {
-        calculationType: this.getPerformanceCalculationType(),
+        calculationType,
         filters: this.filters,
         userId: this.userId
       }
@@ -1249,7 +1251,7 @@ export abstract class PortfolioCalculator {
         // Compute in the background
         this.portfolioSnapshotService.addJobToQueue({
           data: {
-            calculationType: this.getPerformanceCalculationType(),
+            calculationType,
             filters: this.filters,
             userCurrency: this.currency,
             userId: this.userId
@@ -1272,7 +1274,7 @@ export abstract class PortfolioCalculator {
       // Wait for computation
       await this.portfolioSnapshotService.addJobToQueue({
         data: {
-          calculationType: this.getPerformanceCalculationType(),
+          calculationType,
           filters: this.filters,
           userCurrency: this.currency,
           userId: this.userId
