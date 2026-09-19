@@ -121,6 +121,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('500000'),
+            averageInvestmentWithCurrencyEffect: new Big('500000'),
             averagePrice: new Big('500000'),
             currency: 'USD',
             dataSource: 'MANUAL',
@@ -148,8 +150,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde',
             tags: [],
-            timeWeightedInvestment: new Big('500000'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('500000'),
             valueInBaseCurrency: new Big('500000')
           }
         ],

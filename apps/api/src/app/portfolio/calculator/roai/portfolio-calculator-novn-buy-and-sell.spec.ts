@@ -197,6 +197,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 2,
+            averageInvestment: new Big('151.6'),
+            averageInvestmentWithCurrencyEffect: new Big('151.6'),
             averagePrice: new Big('0'),
             currency: 'CHF',
             dataSource: 'YAHOO',
@@ -226,8 +228,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('0'),
             symbol: 'NOVN.SW',
             tags: [],
-            timeWeightedInvestment: new Big('151.6'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('151.6'),
             valueInBaseCurrency: new Big('0')
           }
         ],

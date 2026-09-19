@@ -138,6 +138,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('273.2'),
+            averageInvestmentWithCurrencyEffect: new Big('273.2'),
             averagePrice: new Big('136.6'),
             currency: 'CHF',
             dataSource: 'YAHOO',
@@ -173,8 +175,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('2'),
             symbol: 'BALN.SW',
             tags: [],
-            timeWeightedInvestment: new Big('273.2'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('273.2'),
             valueInBaseCurrency: new Big('297.8')
           }
         ],
