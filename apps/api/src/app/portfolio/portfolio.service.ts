@@ -33,6 +33,7 @@ import {
 import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
+  DEFAULT_LANGUAGE_CODE,
   TAG_ID_DRAFT,
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
@@ -1288,6 +1289,8 @@ export class PortfolioService {
       userSettings: this.request.user.settings.settings as UserSettings
     });
 
+    const languageCode = userSettings.language ?? DEFAULT_LANGUAGE_CODE;
+
     const { accounts, holdings, markets, marketsAdvanced, summary } =
       await this.getDetails({
         user,
@@ -1330,8 +1333,8 @@ export class PortfolioService {
       {
         key: 'liquidity',
         name: this.i18nService.getTranslation({
-          id: 'rule.liquidity.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.liquidity.category'
         }),
         rules: await this.rulesService.evaluate(
           [
@@ -1339,7 +1342,7 @@ export class PortfolioService {
               this.exchangeRateDataService,
               this.i18nService,
               summary.cash,
-              userSettings.language
+              languageCode
             )
           ],
           userSettings
@@ -1348,15 +1351,15 @@ export class PortfolioService {
       {
         key: 'emergencyFund',
         name: this.i18nService.getTranslation({
-          id: 'rule.emergencyFund.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.emergencyFund.category'
         }),
         rules: await this.rulesService.evaluate(
           [
             new EmergencyFundSetup(
               this.exchangeRateDataService,
               this.i18nService,
-              userSettings.language,
+              languageCode,
               totalEmergencyFundInBaseCurrency
             ),
             // The coverage is only meaningful once an emergency fund has been
@@ -1366,7 +1369,7 @@ export class PortfolioService {
                   new EmergencyFundCoverage(
                     this.exchangeRateDataService,
                     this.i18nService,
-                    userSettings.language,
+                    languageCode,
                     emergencyFundInBaseCurrency,
                     emergencyFundHoldingsValueInBaseCurrency,
                     cashBalanceInBaseCurrency
@@ -1380,8 +1383,8 @@ export class PortfolioService {
       {
         key: 'currencyClusterRisk',
         name: this.i18nService.getTranslation({
-          id: 'rule.currencyClusterRisk.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.currencyClusterRisk.category'
         }),
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
@@ -1390,13 +1393,13 @@ export class PortfolioService {
                   this.exchangeRateDataService,
                   this.i18nService,
                   holdings,
-                  userSettings.language
+                  languageCode
                 ),
                 new CurrencyClusterRiskCurrentInvestment(
                   this.exchangeRateDataService,
                   this.i18nService,
                   holdings,
-                  userSettings.language
+                  languageCode
                 )
               ],
               userSettings
@@ -1406,8 +1409,8 @@ export class PortfolioService {
       {
         key: 'assetClassClusterRisk',
         name: this.i18nService.getTranslation({
-          id: 'rule.assetClassClusterRisk.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.assetClassClusterRisk.category'
         }),
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
@@ -1415,13 +1418,13 @@ export class PortfolioService {
                 new AssetClassClusterRiskEquity(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  userSettings.language,
+                  languageCode,
                   holdings
                 ),
                 new AssetClassClusterRiskFixedIncome(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  userSettings.language,
+                  languageCode,
                   holdings
                 )
               ],
@@ -1432,8 +1435,8 @@ export class PortfolioService {
       {
         key: 'accountClusterRisk',
         name: this.i18nService.getTranslation({
-          id: 'rule.accountClusterRisk.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.accountClusterRisk.category'
         }),
         rules:
           summary.activityCount > 0
@@ -1442,13 +1445,13 @@ export class PortfolioService {
                   new AccountClusterRiskCurrentInvestment(
                     this.exchangeRateDataService,
                     this.i18nService,
-                    userSettings.language,
+                    languageCode,
                     accounts
                   ),
                   new AccountClusterRiskSingleAccount(
                     this.exchangeRateDataService,
                     this.i18nService,
-                    userSettings.language,
+                    languageCode,
                     accounts
                   )
                 ],
@@ -1459,8 +1462,8 @@ export class PortfolioService {
       {
         key: 'economicMarketClusterRisk',
         name: this.i18nService.getTranslation({
-          id: 'rule.economicMarketClusterRisk.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.economicMarketClusterRisk.category'
         }),
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
@@ -1470,14 +1473,14 @@ export class PortfolioService {
                   this.i18nService,
                   marketsTotalInBaseCurrency,
                   markets.developedMarkets.valueInBaseCurrency,
-                  userSettings.language
+                  languageCode
                 ),
                 new EconomicMarketClusterRiskEmergingMarkets(
                   this.exchangeRateDataService,
                   this.i18nService,
                   marketsTotalInBaseCurrency,
                   markets.emergingMarkets.valueInBaseCurrency,
-                  userSettings.language
+                  languageCode
                 )
               ],
               userSettings
@@ -1487,8 +1490,8 @@ export class PortfolioService {
       {
         key: 'regionalMarketClusterRisk',
         name: this.i18nService.getTranslation({
-          id: 'rule.regionalMarketClusterRisk.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.regionalMarketClusterRisk.category'
         }),
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
@@ -1496,35 +1499,35 @@ export class PortfolioService {
                 new RegionalMarketClusterRiskAsiaPacific(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  userSettings.language,
+                  languageCode,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.asiaPacific.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskEmergingMarkets(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  userSettings.language,
+                  languageCode,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.emergingMarkets.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskEurope(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  userSettings.language,
+                  languageCode,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.europe.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskJapan(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  userSettings.language,
+                  languageCode,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.japan.valueInBaseCurrency
                 ),
                 new RegionalMarketClusterRiskNorthAmerica(
                   this.exchangeRateDataService,
                   this.i18nService,
-                  userSettings.language,
+                  languageCode,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.northAmerica.valueInBaseCurrency
                 )
@@ -1536,15 +1539,15 @@ export class PortfolioService {
       {
         key: 'fees',
         name: this.i18nService.getTranslation({
-          id: 'rule.fees.category',
-          languageCode: userSettings.language
+          languageCode,
+          id: 'rule.fees.category'
         }),
         rules: await this.rulesService.evaluate(
           [
             new FeeRatioTotalInvestmentVolume(
               this.exchangeRateDataService,
               this.i18nService,
-              userSettings.language,
+              languageCode,
               summary.totalBuy + summary.totalSell,
               summary.fees
             )
