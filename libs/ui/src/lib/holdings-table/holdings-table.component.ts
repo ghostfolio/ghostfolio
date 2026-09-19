@@ -1,7 +1,9 @@
 import {
   canOpenHoldingDetail,
+  getCountryCodeFromCurrency,
   getLocale,
-  getLowercase
+  getLowercase,
+  isCashPosition
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -118,6 +120,14 @@ export class GfHoldingsTableComponent {
 
   protected canShowDetails(holding: PortfolioPosition): boolean {
     return this.hasPermissionToOpenDetails() && canOpenHoldingDetail(holding);
+  }
+
+  protected getCountryCodeForCashPosition({
+    assetProfile
+  }: PortfolioPosition): string {
+    return isCashPosition(assetProfile)
+      ? getCountryCodeFromCurrency(assetProfile.currency)
+      : '';
   }
 
   protected onOpenHoldingDialog({
