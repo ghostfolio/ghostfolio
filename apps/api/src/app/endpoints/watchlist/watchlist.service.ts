@@ -152,4 +152,21 @@ export class WatchlistService {
       return a.name.localeCompare(b.name);
     });
   }
+
+  public async hasWatchlistItem({
+    dataSource,
+    symbol,
+    userId
+  }: { userId: string } & AssetProfileIdentifier): Promise<boolean> {
+    const assetProfile = await this.prismaService.symbolProfile.findFirst({
+      select: { id: true },
+      where: {
+        dataSource,
+        symbol,
+        watchedBy: { some: { id: userId } }
+      }
+    });
+
+    return !!assetProfile;
+  }
 }
