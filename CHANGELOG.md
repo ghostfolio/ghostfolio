@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the missing account balance of the current day for users in a time zone ahead of the instance
+- Fixed the discovery of the _OpenID Connect_ (`OIDC`) configuration for issuer URLs with a trailing slash (experimental)
 
 ## 3.70.1 - 2026-09-14
 
