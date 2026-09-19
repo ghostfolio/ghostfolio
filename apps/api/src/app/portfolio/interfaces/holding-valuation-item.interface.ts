@@ -1,6 +1,6 @@
-import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
-
 import { Big } from 'big.js';
+
+import { PortfolioCalculatorActivityItem } from './portfolio-calculator-activity-item.interface';
 
 export interface HoldingValuationItem extends Pick<
   PortfolioCalculatorActivityItem,

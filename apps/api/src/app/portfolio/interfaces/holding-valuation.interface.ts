@@ -1,6 +1,6 @@
-import { HoldingValuationItem } from '@ghostfolio/api/app/portfolio/interfaces/holding-valuation-item.interface';
-
 import { Big } from 'big.js';
+
+import { HoldingValuationItem } from './holding-valuation-item.interface';
 
 export interface HoldingValuation {
   currentValues: { [date: string]: Big };

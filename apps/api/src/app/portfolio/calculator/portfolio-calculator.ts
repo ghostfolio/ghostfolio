@@ -928,7 +928,7 @@ export abstract class PortfolioCalculator {
   }: {
     activities: PortfolioCalculatorActivityItem[];
     exchangeRates: { [dateString: string]: number };
-    unitPriceAtStartDate: Big;
+    unitPriceAtStartDate: Big | undefined;
   }): HoldingValuation {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
