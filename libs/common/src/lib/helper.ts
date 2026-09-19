@@ -66,8 +66,6 @@ export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
 
-const VALID_COUNTRY_CODES = new Set([...Object.keys(countries), 'EU']);
-
 // Settings which describe the person looking at the screen rather than the
 // portfolio being looked at. They stay with the authenticated user while
 // impersonating. Every other setting follows the impersonated user.
@@ -90,6 +88,8 @@ const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
   'locale',
   'viewMode'
 ];
+
+const VALID_COUNTRY_CODES = new Set([...Object.keys(countries), 'EU']);
 
 export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
   assetProfile: T,
