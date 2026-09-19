@@ -282,7 +282,11 @@ export class WebAuthService {
       });
 
       const portfolioSnapshotKey =
-        this.redisCacheService.getPortfolioSnapshotKey({ filters, userId });
+        this.redisCacheService.getPortfolioSnapshotKey({
+          filters,
+          userId,
+          calculationType: userSettings.performanceCalculationType
+        });
 
       if (await this.isPortfolioSnapshotExpired(portfolioSnapshotKey)) {
         await this.portfolioSnapshotService.addJobToQueue({

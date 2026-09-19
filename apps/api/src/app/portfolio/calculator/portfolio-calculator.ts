@@ -1182,8 +1182,10 @@ export abstract class PortfolioCalculator {
 
     let cachedPortfolioSnapshot: PortfolioSnapshot | undefined;
     let isCachedPortfolioSnapshotExpired = false;
+
     const portfolioSnapshotKey = this.redisCacheService.getPortfolioSnapshotKey(
       {
+        calculationType: this.getPerformanceCalculationType(),
         filters: this.filters,
         userId: this.userId
       }
