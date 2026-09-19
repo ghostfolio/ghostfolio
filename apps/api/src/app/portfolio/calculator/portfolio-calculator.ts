@@ -858,9 +858,18 @@ export abstract class PortfolioCalculator {
     unitPriceAtEndDate: Big;
     unitPriceAtStartDate: Big;
   }): PortfolioOrderItem[] {
+    if (orders.length <= 0) {
+      return [];
+    }
+
     const assetProfileIdentifier = getAssetProfileIdentifier(assetProfile);
     const dateStringOfFirstActivity = orders[0].date;
-    const ordersWithMarketPrices = [...orders];
+
+    // Copy the items as they are enriched below. A shallow copy is sufficient
+    // because only top-level properties are written.
+    const ordersWithMarketPrices = orders.map((order) => {
+      return { ...order };
+    });
 
     // Add a synthetic order at the start and the end date
     ordersWithMarketPrices.push({

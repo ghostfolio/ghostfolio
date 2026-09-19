@@ -183,13 +183,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       symbol
     });
 
-    // Copy the items as they are enriched below. A shallow copy is sufficient
-    // because only top-level properties are written.
-    let orders: PortfolioOrderItem[] = (
-      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? []
-    ).map((activity) => {
-      return { ...activity };
-    });
+    let orders: PortfolioOrderItem[] =
+      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? [];
 
     const isCash = orders[0]?.assetProfile?.assetSubClass === 'CASH';
 
