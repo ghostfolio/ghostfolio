@@ -4,24 +4,28 @@ import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class EmergencyFundSetup extends Rule<Settings> {
-  private emergencyFund: number;
+  private emergencyFundInBaseCurrency: number;
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    emergencyFund: number
-  ) {
-    super(exchangeRateDataService, {
-      languageCode,
-      key: 'EmergencyFundSetup'
-    });
+  public constructor({
+    emergencyFundInBaseCurrency,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    emergencyFundInBaseCurrency: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({ exchangeRateDataService, languageCode, key: 'EmergencyFundSetup' });
 
-    this.emergencyFund = emergencyFund;
+    this.emergencyFundInBaseCurrency = emergencyFundInBaseCurrency;
+    this.i18nService = i18nService;
   }
 
   public evaluate() {
-    if (!this.emergencyFund) {
+    if (!this.emergencyFundInBaseCurrency) {
       return {
         evaluation: this.i18nService.getTranslation({
           id: 'rule.emergencyFundSetup.false',

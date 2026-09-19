@@ -5,19 +5,27 @@ import { PortfolioDetails, RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
   private accounts: PortfolioDetails['accounts'];
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    accounts: PortfolioDetails['accounts']
-  ) {
-    super(exchangeRateDataService, {
+  public constructor({
+    accounts,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    accounts: PortfolioDetails['accounts'];
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'AccountClusterRiskSingleAccount'
     });
 
     this.accounts = accounts;
+    this.i18nService = i18nService;
   }
 
   public evaluate() {

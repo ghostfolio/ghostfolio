@@ -7,21 +7,30 @@ import { Settings } from './interfaces/rule-settings.interface';
 export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
   private europeValueInBaseCurrency: number;
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    currentValueInBaseCurrency: number,
-    europeValueInBaseCurrency: number
-  ) {
-    super(exchangeRateDataService, {
+  public constructor({
+    currentValueInBaseCurrency,
+    europeValueInBaseCurrency,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    currentValueInBaseCurrency: number;
+    europeValueInBaseCurrency: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'RegionalMarketClusterRiskEurope'
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
     this.europeValueInBaseCurrency = europeValueInBaseCurrency;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {

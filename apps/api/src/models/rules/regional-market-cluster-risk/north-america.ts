@@ -6,21 +6,30 @@ import { Settings } from './interfaces/rule-settings.interface';
 
 export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
+  private i18nService: I18nService;
   private northAmericaValueInBaseCurrency: number;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    currentValueInBaseCurrency: number,
-    northAmericaValueInBaseCurrency: number
-  ) {
-    super(exchangeRateDataService, {
+  public constructor({
+    currentValueInBaseCurrency,
+    exchangeRateDataService,
+    i18nService,
+    languageCode,
+    northAmericaValueInBaseCurrency
+  }: {
+    currentValueInBaseCurrency: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+    northAmericaValueInBaseCurrency: number;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'RegionalMarketClusterRiskNorthAmerica'
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
+    this.i18nService = i18nService;
     this.northAmericaValueInBaseCurrency = northAmericaValueInBaseCurrency;
   }
 

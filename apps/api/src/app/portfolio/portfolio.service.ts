@@ -1338,12 +1338,12 @@ export class PortfolioService {
         }),
         rules: await this.rulesService.evaluate(
           [
-            new BuyingPower(
-              this.exchangeRateDataService,
-              this.i18nService,
-              summary.cash,
-              languageCode
-            )
+            new BuyingPower({
+              languageCode,
+              buyingPower: summary.cash,
+              exchangeRateDataService: this.exchangeRateDataService,
+              i18nService: this.i18nService
+            })
           ],
           userSettings
         )
@@ -1356,24 +1356,24 @@ export class PortfolioService {
         }),
         rules: await this.rulesService.evaluate(
           [
-            new EmergencyFundSetup(
-              this.exchangeRateDataService,
-              this.i18nService,
+            new EmergencyFundSetup({
               languageCode,
-              totalEmergencyFundInBaseCurrency
-            ),
+              emergencyFundInBaseCurrency: totalEmergencyFundInBaseCurrency,
+              exchangeRateDataService: this.exchangeRateDataService,
+              i18nService: this.i18nService
+            }),
             // The coverage is only meaningful once an emergency fund has been
             // set up, either by an amount or by the tagged holdings
             ...(totalEmergencyFundInBaseCurrency > 0
               ? [
-                  new EmergencyFundCoverage(
-                    this.exchangeRateDataService,
-                    this.i18nService,
-                    languageCode,
-                    emergencyFundInBaseCurrency,
+                  new EmergencyFundCoverage({
+                    cashBalanceInBaseCurrency,
                     emergencyFundHoldingsValueInBaseCurrency,
-                    cashBalanceInBaseCurrency
-                  )
+                    emergencyFundInBaseCurrency,
+                    languageCode,
+                    exchangeRateDataService: this.exchangeRateDataService,
+                    i18nService: this.i18nService
+                  })
                 ]
               : [])
           ],
@@ -1389,18 +1389,18 @@ export class PortfolioService {
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
               [
-                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                new CurrencyClusterRiskBaseCurrencyCurrentInvestment({
                   holdings,
-                  languageCode
-                ),
-                new CurrencyClusterRiskCurrentInvestment(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                  languageCode,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                }),
+                new CurrencyClusterRiskCurrentInvestment({
                   holdings,
-                  languageCode
-                )
+                  languageCode,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                })
               ],
               userSettings
             )
@@ -1415,18 +1415,18 @@ export class PortfolioService {
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
               [
-                new AssetClassClusterRiskEquity(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                new AssetClassClusterRiskEquity({
+                  holdings,
                   languageCode,
-                  holdings
-                ),
-                new AssetClassClusterRiskFixedIncome(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                }),
+                new AssetClassClusterRiskFixedIncome({
+                  holdings,
                   languageCode,
-                  holdings
-                )
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                })
               ],
               userSettings
             )
@@ -1442,18 +1442,18 @@ export class PortfolioService {
           summary.activityCount > 0
             ? await this.rulesService.evaluate(
                 [
-                  new AccountClusterRiskCurrentInvestment(
-                    this.exchangeRateDataService,
-                    this.i18nService,
+                  new AccountClusterRiskCurrentInvestment({
+                    accounts,
                     languageCode,
-                    accounts
-                  ),
-                  new AccountClusterRiskSingleAccount(
-                    this.exchangeRateDataService,
-                    this.i18nService,
+                    exchangeRateDataService: this.exchangeRateDataService,
+                    i18nService: this.i18nService
+                  }),
+                  new AccountClusterRiskSingleAccount({
+                    accounts,
                     languageCode,
-                    accounts
-                  )
+                    exchangeRateDataService: this.exchangeRateDataService,
+                    i18nService: this.i18nService
+                  })
                 ],
                 userSettings
               )
@@ -1468,20 +1468,22 @@ export class PortfolioService {
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
               [
-                new EconomicMarketClusterRiskDevelopedMarkets(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  marketsTotalInBaseCurrency,
-                  markets.developedMarkets.valueInBaseCurrency,
-                  languageCode
-                ),
-                new EconomicMarketClusterRiskEmergingMarkets(
-                  this.exchangeRateDataService,
-                  this.i18nService,
-                  marketsTotalInBaseCurrency,
-                  markets.emergingMarkets.valueInBaseCurrency,
-                  languageCode
-                )
+                new EconomicMarketClusterRiskDevelopedMarkets({
+                  languageCode,
+                  currentValueInBaseCurrency: marketsTotalInBaseCurrency,
+                  developedMarketsValueInBaseCurrency:
+                    markets.developedMarkets.valueInBaseCurrency,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                }),
+                new EconomicMarketClusterRiskEmergingMarkets({
+                  languageCode,
+                  currentValueInBaseCurrency: marketsTotalInBaseCurrency,
+                  emergingMarketsValueInBaseCurrency:
+                    markets.emergingMarkets.valueInBaseCurrency,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                })
               ],
               userSettings
             )
@@ -1496,41 +1498,51 @@ export class PortfolioService {
         rules: hasOpenHoldings
           ? await this.rulesService.evaluate(
               [
-                new RegionalMarketClusterRiskAsiaPacific(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                new RegionalMarketClusterRiskAsiaPacific({
                   languageCode,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.asiaPacific.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskEmergingMarkets(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                  asiaPacificValueInBaseCurrency:
+                    marketsAdvanced.asiaPacific.valueInBaseCurrency,
+                  currentValueInBaseCurrency:
+                    marketsAdvancedTotalInBaseCurrency,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                }),
+                new RegionalMarketClusterRiskEmergingMarkets({
                   languageCode,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.emergingMarkets.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskEurope(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                  currentValueInBaseCurrency:
+                    marketsAdvancedTotalInBaseCurrency,
+                  emergingMarketsValueInBaseCurrency:
+                    marketsAdvanced.emergingMarkets.valueInBaseCurrency,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                }),
+                new RegionalMarketClusterRiskEurope({
                   languageCode,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.europe.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskJapan(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                  currentValueInBaseCurrency:
+                    marketsAdvancedTotalInBaseCurrency,
+                  europeValueInBaseCurrency:
+                    marketsAdvanced.europe.valueInBaseCurrency,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                }),
+                new RegionalMarketClusterRiskJapan({
                   languageCode,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.japan.valueInBaseCurrency
-                ),
-                new RegionalMarketClusterRiskNorthAmerica(
-                  this.exchangeRateDataService,
-                  this.i18nService,
+                  currentValueInBaseCurrency:
+                    marketsAdvancedTotalInBaseCurrency,
+                  japanValueInBaseCurrency:
+                    marketsAdvanced.japan.valueInBaseCurrency,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                }),
+                new RegionalMarketClusterRiskNorthAmerica({
                   languageCode,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.northAmerica.valueInBaseCurrency
-                )
+                  currentValueInBaseCurrency:
+                    marketsAdvancedTotalInBaseCurrency,
+                  northAmericaValueInBaseCurrency:
+                    marketsAdvanced.northAmerica.valueInBaseCurrency,
+                  exchangeRateDataService: this.exchangeRateDataService,
+                  i18nService: this.i18nService
+                })
               ],
               userSettings
             )
@@ -1544,13 +1556,14 @@ export class PortfolioService {
         }),
         rules: await this.rulesService.evaluate(
           [
-            new FeeRatioTotalInvestmentVolume(
-              this.exchangeRateDataService,
-              this.i18nService,
+            new FeeRatioTotalInvestmentVolume({
               languageCode,
-              summary.totalBuy + summary.totalSell,
-              summary.fees
-            )
+              exchangeRateDataService: this.exchangeRateDataService,
+              fees: summary.fees,
+              i18nService: this.i18nService,
+              totalInvestmentVolumeInBaseCurrency:
+                summary.totalBuy + summary.totalSell
+            })
           ],
           userSettings
         )

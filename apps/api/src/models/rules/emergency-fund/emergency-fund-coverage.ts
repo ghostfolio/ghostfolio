@@ -6,18 +6,37 @@ import { RuleSettings } from '@ghostfolio/common/interfaces';
 import { Big } from 'big.js';
 
 export class EmergencyFundCoverage extends Rule<Settings> {
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    private emergencyFundInBaseCurrency: number,
-    private emergencyFundHoldingsValueInBaseCurrency: number,
-    private cashBalanceInBaseCurrency: number
-  ) {
-    super(exchangeRateDataService, {
+  private cashBalanceInBaseCurrency: number;
+  private emergencyFundHoldingsValueInBaseCurrency: number;
+  private emergencyFundInBaseCurrency: number;
+  private i18nService: I18nService;
+
+  public constructor({
+    cashBalanceInBaseCurrency,
+    emergencyFundHoldingsValueInBaseCurrency,
+    emergencyFundInBaseCurrency,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    cashBalanceInBaseCurrency: number;
+    emergencyFundHoldingsValueInBaseCurrency: number;
+    emergencyFundInBaseCurrency: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'EmergencyFundCoverage'
     });
+
+    this.cashBalanceInBaseCurrency = cashBalanceInBaseCurrency;
+    this.emergencyFundHoldingsValueInBaseCurrency =
+      emergencyFundHoldingsValueInBaseCurrency;
+    this.emergencyFundInBaseCurrency = emergencyFundInBaseCurrency;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {
