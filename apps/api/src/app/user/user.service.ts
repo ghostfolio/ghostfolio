@@ -2,6 +2,7 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { getSupportedLanguageCode } from '@ghostfolio/api/helper/language.helper';
 import { getRandomString } from '@ghostfolio/api/helper/string.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -28,7 +29,6 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
-  DEFAULT_LANGUAGE_CODE,
   DEFAULT_LOCALE,
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_IS_READ_ONLY_MODE,
@@ -692,9 +692,11 @@ export class UserService {
 
   public async createUser(
     {
-      data
+      data,
+      languageCode
     }: {
       data: Prisma.UserCreateInput;
+      languageCode?: string;
     } = { data: {} }
   ): Promise<User> {
     if (!data.provider) {
@@ -715,7 +717,7 @@ export class UserService {
             currency: DEFAULT_CURRENCY,
             name: this.i18nService.getTranslation({
               id: 'myAccount',
-              languageCode: DEFAULT_LANGUAGE_CODE // TODO
+              languageCode: getSupportedLanguageCode(languageCode)
             })
           }
         },
