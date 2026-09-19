@@ -1,6 +1,7 @@
 import {
   activityDummyData,
   assetProfileDummyData,
+  getPerformanceByDateRange,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -136,10 +137,16 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
+        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['1d', 'max', 'ytd']
+      });
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -269,6 +276,36 @@ describe('PortfolioCalculator', () => {
         { date: '2017-01-01', investment: -318.54266729999995 },
         { date: '2018-01-01', investment: 0 }
       ]);
+
+      expect(performanceByDateRange).toMatchObject({
+        '1d': {
+          date: '2018-01-01',
+          netPerformance: -486.0860160000011,
+          netPerformanceInPercentage: -1.5259683109961866,
+          netPerformanceInPercentageWithCurrencyEffect: -1.7468407881319952,
+          netPerformanceWithCurrencyEffect: -556.4433239999998,
+          totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
+          valueWithCurrencyEffect: 13298.425356
+        },
+        max: {
+          date: '2018-01-01',
+          netPerformance: 26458.9121202,
+          netPerformanceInPercentage: 41.63298219956282,
+          netPerformanceInPercentageWithCurrencyEffect: 41.72313811883715,
+          netPerformanceWithCurrencyEffect: 26516.2087014,
+          totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
+          valueWithCurrencyEffect: 13298.425356
+        },
+        ytd: {
+          date: '2018-01-01',
+          netPerformance: -486.0860160000011,
+          netPerformanceInPercentage: -1.5259683109961866,
+          netPerformanceInPercentageWithCurrencyEffect: -1.7468407881319952,
+          netPerformanceWithCurrencyEffect: -556.4433239999998,
+          totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
+          valueWithCurrencyEffect: 13298.425356
+        }
+      });
     });
   });
 });

@@ -1,6 +1,7 @@
 import {
   activityDummyData,
   assetProfileDummyData,
+  getPerformanceByDateRange,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -124,10 +125,16 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'USD',
+        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['1d', 'max', 'ytd']
+      });
 
       expect(portfolioSnapshot).toMatchObject({
         errors: [],
@@ -181,6 +188,36 @@ describe('PortfolioCalculator', () => {
           totalInvestmentValueWithCurrencyEffect: 298.58
         })
       );
+
+      expect(performanceByDateRange).toMatchObject({
+        '1d': {
+          date: '2023-07-10',
+          netPerformance: -5.390000000000001,
+          netPerformanceInPercentage: -0.018052113336459244,
+          netPerformanceInPercentageWithCurrencyEffect: -0.018052113336459244,
+          netPerformanceWithCurrencyEffect: -5.390000000000001,
+          totalInvestmentValueWithCurrencyEffect: 298.58,
+          valueWithCurrencyEffect: 331.83
+        },
+        max: {
+          date: '2023-07-10',
+          netPerformance: 14.25,
+          netPerformanceInPercentage: 0.04772590260566659,
+          netPerformanceInPercentageWithCurrencyEffect: 0.04772590260566659,
+          netPerformanceWithCurrencyEffect: 14.25,
+          totalInvestmentValueWithCurrencyEffect: 298.58,
+          valueWithCurrencyEffect: 331.83
+        },
+        ytd: {
+          date: '2023-07-10',
+          netPerformance: -7.68,
+          netPerformanceInPercentage: -0.025721749614843515,
+          netPerformanceInPercentageWithCurrencyEffect: -0.025721749614843515,
+          netPerformanceWithCurrencyEffect: -7.68,
+          totalInvestmentValueWithCurrencyEffect: 298.58,
+          valueWithCurrencyEffect: 331.83
+        }
+      });
     });
   });
 });
