@@ -13,8 +13,8 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     languageCode: string
   ) {
     super(exchangeRateDataService, {
-      key: 'CurrencyClusterRiskBaseCurrencyCurrentInvestment',
-      languageCode
+      languageCode,
+      key: 'CurrencyClusterRiskBaseCurrencyCurrentInvestment'
     });
 
     this.holdings = holdings;

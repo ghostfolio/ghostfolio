@@ -20,7 +20,7 @@ export class RulesService {
         userSettings: aUserSettings
       });
 
-      if (settings?.isActive) {
+      if (settings.isActive) {
         const { evaluation, value } = rule.evaluate(settings);
 
         return {

@@ -13,8 +13,8 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     languageCode: string
   ) {
     super(exchangeRateDataService, {
-      key: 'CurrencyClusterRiskCurrentInvestment',
-      languageCode
+      languageCode,
+      key: 'CurrencyClusterRiskCurrentInvestment'
     });
 
     this.holdings = holdings;
