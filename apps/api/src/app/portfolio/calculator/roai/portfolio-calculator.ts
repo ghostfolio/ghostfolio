@@ -16,18 +16,14 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Big } from 'big.js';
 import {
-  addMilliseconds,
   differenceInDays,
   eachYearOfInterval,
   format,
   isBefore,
   isThisYear
 } from 'date-fns';
-import { sortBy } from 'lodash';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
-  private chartDates: string[];
-
   protected calculateOverallPerformance(
     positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot {
@@ -126,7 +122,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
   }
 
   protected getHoldingPerformance({
-    chartDateMap,
+    chartDates,
     dataSource,
     end,
     exchangeRates,
@@ -134,7 +130,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     start,
     symbol
   }: {
-    chartDateMap: { [date: string]: boolean };
+    chartDates: string[];
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
@@ -173,14 +169,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       [date: string]: Big;
     } = {};
 
-    let totalDividend = new Big(0);
-    let totalDividendInBaseCurrency = new Big(0);
-    let totalInterestInBaseCurrency = new Big(0);
     let totalInvestment = new Big(0);
     let totalInvestmentFromBuyTransactions = new Big(0);
     let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
-    let totalLiabilitiesInBaseCurrency = new Big(0);
     let totalQuantity = new Big(0);
     let totalQuantityFromBuyTransactions = new Big(0);
     let valueAtStartDate: Big;
@@ -191,77 +183,26 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       symbol
     });
 
-    // Copy the items as they are enriched below. A shallow copy is sufficient
-    // because only top-level properties are written.
-    let orders: PortfolioOrderItem[] = (
-      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? []
-    ).map((activity) => {
-      return { ...activity };
-    });
+    let orders: PortfolioOrderItem[] =
+      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? [];
 
     const isCash = orders[0]?.assetProfile?.assetSubClass === 'CASH';
 
     if (orders.length <= 0) {
-      return {
-        currentValues: {},
-        currentValuesWithCurrencyEffect: {},
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0),
-        grossPerformancePercentageWithCurrencyEffect: new Big(0),
-        grossPerformanceWithCurrencyEffect: new Big(0),
-        hasErrors: false,
-        investmentValuesAccumulated: {},
-        investmentValuesAccumulatedWithCurrencyEffect: {},
-        investmentValuesWithCurrencyEffect: {},
-        netPerformance: new Big(0),
-        netPerformancePercentage: new Big(0),
-        netPerformancePercentageWithCurrencyEffectMap: {},
-        netPerformanceValues: {},
-        netPerformanceValuesWithCurrencyEffect: {},
-        netPerformanceWithCurrencyEffectMap: {},
-        timeWeightedInvestment: new Big(0),
-        timeWeightedInvestmentValues: {},
-        timeWeightedInvestmentValuesWithCurrencyEffect: {},
-        timeWeightedInvestmentWithCurrencyEffect: new Big(0),
-        totalDividend: new Big(0),
-        totalDividendInBaseCurrency: new Big(0),
-        totalInterestInBaseCurrency: new Big(0),
-        totalInvestment: new Big(0),
-        totalInvestmentWithCurrencyEffect: new Big(0),
-        totalLiabilitiesInBaseCurrency: new Big(0)
-      };
+      return this.getEmptyHoldingPerformance();
     }
 
     // The dividends, the interest and the liabilities are derived from the
     // activities only. Accumulate them upfront so that they survive the bail
     // out for symbols without a market price below.
-    for (const order of orders) {
-      const exchangeRateAtOrderDate = exchangeRates[order.date];
+    const {
+      totalDividend,
+      totalDividendInBaseCurrency,
+      totalInterestInBaseCurrency,
+      totalLiabilitiesInBaseCurrency
+    } = this.getTotalsFromActivities({ exchangeRates, orders });
 
-      if (order.type === 'DIVIDEND') {
-        const dividend = order.quantity.mul(order.unitPrice);
-
-        totalDividend = totalDividend.plus(dividend);
-        totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
-          dividend.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'INTEREST') {
-        const interest = order.quantity.mul(order.unitPrice);
-
-        totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
-          interest.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'LIABILITY') {
-        const liabilities = order.quantity.mul(order.unitPrice);
-
-        totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
-          liabilities.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      }
-    }
-
-    const dateStringOfFirstActivity = orders[0].date;
-    const dateOfFirstActivity = parseDate(dateStringOfFirstActivity);
+    const dateOfFirstActivity = parseDate(orders[0].date);
 
     const endDateString = format(end, DATE_FORMAT);
     const startDateString = format(start, DATE_FORMAT);
@@ -269,23 +210,13 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     const unitPriceAtStartDate =
       marketSymbolMap[startDateString]?.[assetProfileIdentifier];
 
-    let unitPriceAtEndDate =
-      marketSymbolMap[endDateString]?.[assetProfileIdentifier];
-
-    const latestActivity = orders.at(-1);
-
-    if (
-      dataSource === 'MANUAL' &&
-      ['BUY', 'SELL'].includes(latestActivity?.type) &&
-      latestActivity?.unitPrice &&
-      !unitPriceAtEndDate
-    ) {
-      // For BUY / SELL activities with a MANUAL data source where no historical market price is available,
-      // the calculation should fall back to using the activity’s unit price.
-      unitPriceAtEndDate = latestActivity.unitPrice;
-    } else if (isCash) {
-      unitPriceAtEndDate = new Big(1);
-    }
+    const unitPriceAtEndDate = this.getUnitPriceAtEndDate({
+      dataSource,
+      isCash,
+      orders,
+      marketPriceAtEndDate:
+        marketSymbolMap[endDateString]?.[assetProfileIdentifier]
+    });
 
     if (
       !unitPriceAtEndDate ||
@@ -299,139 +230,28 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       });
 
       return {
+        ...this.getEmptyHoldingPerformance(),
         totalDividend,
         totalDividendInBaseCurrency,
         totalInterestInBaseCurrency,
         totalLiabilitiesInBaseCurrency,
-        currentValues: {},
-        currentValuesWithCurrencyEffect: {},
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0),
-        grossPerformancePercentageWithCurrencyEffect: new Big(0),
-        grossPerformanceWithCurrencyEffect: new Big(0),
-        hasErrors: hasActivitiesWithQuantity,
-        investmentValuesAccumulated: {},
-        investmentValuesAccumulatedWithCurrencyEffect: {},
-        investmentValuesWithCurrencyEffect: {},
-        netPerformance: new Big(0),
-        netPerformancePercentage: new Big(0),
-        netPerformancePercentageWithCurrencyEffectMap: {},
-        netPerformanceWithCurrencyEffectMap: {},
-        netPerformanceValues: {},
-        netPerformanceValuesWithCurrencyEffect: {},
-        timeWeightedInvestment: new Big(0),
-        timeWeightedInvestmentValues: {},
-        timeWeightedInvestmentValuesWithCurrencyEffect: {},
-        timeWeightedInvestmentWithCurrencyEffect: new Big(0),
-        totalInvestment: new Big(0),
-        totalInvestmentWithCurrencyEffect: new Big(0)
+        hasErrors: hasActivitiesWithQuantity
       };
     }
 
-    const assetProfile: PortfolioOrderItem['assetProfile'] = {
-      dataSource,
-      symbol,
-      assetSubClass: isCash ? 'CASH' : undefined
-    };
-
-    // Add a synthetic order at the start and the end date
-    orders.push({
-      assetProfile,
-      date: startDateString,
-      fee: new Big(0),
-      feeInBaseCurrency: new Big(0),
-      itemType: 'start',
-      quantity: new Big(0),
-      type: 'BUY',
-      unitPrice: unitPriceAtStartDate
-    });
-
-    orders.push({
-      assetProfile,
-      date: endDateString,
-      fee: new Big(0),
-      feeInBaseCurrency: new Big(0),
-      itemType: 'end',
-      quantity: new Big(0),
-      type: 'BUY',
-      unitPrice: unitPriceAtEndDate
-    });
-
-    // Fall back to the unit price of the most recent BUY / SELL activity for
-    // the chart dates before the first known market price of the symbol
-    let lastActivityUnitPrice: Big | undefined;
-    let lastMarketPrice: Big | undefined;
-
-    const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
-
-    for (const order of orders) {
-      ordersByDate[order.date] = ordersByDate[order.date] ?? [];
-      ordersByDate[order.date].push(order);
-    }
-
-    if (!this.chartDates) {
-      this.chartDates = Object.keys(chartDateMap).sort();
-    }
-
-    for (const dateString of this.chartDates) {
-      if (dateString < startDateString) {
-        continue;
-      } else if (dateString > endDateString) {
-        break;
+    orders = this.getOrdersWithMarketPrices({
+      chartDates,
+      endDateString,
+      marketSymbolMap,
+      orders,
+      startDateString,
+      unitPriceAtEndDate,
+      unitPriceAtStartDate,
+      assetProfile: {
+        dataSource,
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
       }
-
-      const ordersOfDate = ordersByDate[dateString];
-
-      if (!lastMarketPrice && ordersOfDate?.length > 0) {
-        for (const { itemType, type, unitPrice } of ordersOfDate) {
-          if (!itemType && ['BUY', 'SELL'].includes(type)) {
-            lastActivityUnitPrice = unitPrice;
-          }
-        }
-      }
-
-      const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
-
-      const unitPrice =
-        marketPrice ??
-        lastMarketPrice ??
-        lastActivityUnitPrice ??
-        unitPriceAtEndDate;
-
-      if (ordersOfDate?.length > 0) {
-        for (const order of ordersOfDate) {
-          order.unitPriceFromMarketData = unitPrice;
-        }
-      } else if (dateString >= dateStringOfFirstActivity) {
-        orders.push({
-          assetProfile,
-          unitPrice,
-          date: dateString,
-          fee: new Big(0),
-          feeInBaseCurrency: new Big(0),
-          quantity: new Big(0),
-          type: 'BUY',
-          unitPriceFromMarketData: unitPrice
-        });
-      }
-
-      if (marketPrice) {
-        lastMarketPrice = marketPrice;
-      }
-    }
-
-    // Sort orders so that the start and end placeholder order are at the correct
-    // position
-    orders = sortBy(orders, ({ date, itemType }) => {
-      let sortIndex = new Date(date);
-
-      if (itemType === 'end') {
-        sortIndex = addMilliseconds(sortIndex, 1);
-      } else if (itemType === 'start') {
-        sortIndex = addMilliseconds(sortIndex, -1);
-      }
-
-      return sortIndex.getTime();
     });
 
     const indexOfStartOrder = orders.findIndex(({ itemType }) => {
@@ -901,8 +721,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       let average = new Big(0);
       let dayCount = 0;
 
-      for (let i = this.chartDates.length - 1; i >= 0; i -= 1) {
-        const date = this.chartDates[i];
+      for (let i = chartDates.length - 1; i >= 0; i -= 1) {
+        const date = chartDates[i];
 
         if (date > rangeEndDateString) {
           continue;

@@ -11,7 +11,7 @@ export class TwrPortfolioCalculator extends PortfolioCalculator {
   }
 
   protected getHoldingPerformance({}: {
-    chartDateMap: { [date: string]: boolean };
+    chartDates: string[];
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {

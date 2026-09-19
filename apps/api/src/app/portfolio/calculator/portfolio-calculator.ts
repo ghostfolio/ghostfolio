@@ -2,6 +2,7 @@ import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.s
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
+import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
@@ -43,10 +44,11 @@ import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
-import { AssetSubClass } from '@prisma/client';
+import { AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
+  addMilliseconds,
   differenceInDays,
   eachDayOfInterval,
   eachYearOfInterval,
@@ -425,7 +427,7 @@ export abstract class PortfolioCalculator {
         totalInvestmentWithCurrencyEffect,
         totalLiabilitiesInBaseCurrency
       } = this.getHoldingPerformance({
-        chartDateMap,
+        chartDates,
         marketSymbolMap,
         dataSource: item.dataSource,
         end: this.endDate,
@@ -728,6 +730,37 @@ export abstract class PortfolioCalculator {
     );
   }
 
+  protected getEmptyHoldingPerformance(): HoldingPerformance {
+    return {
+      currentValues: {},
+      currentValuesWithCurrencyEffect: {},
+      grossPerformance: new Big(0),
+      grossPerformancePercentage: new Big(0),
+      grossPerformancePercentageWithCurrencyEffect: new Big(0),
+      grossPerformanceWithCurrencyEffect: new Big(0),
+      hasErrors: false,
+      investmentValuesAccumulated: {},
+      investmentValuesAccumulatedWithCurrencyEffect: {},
+      investmentValuesWithCurrencyEffect: {},
+      netPerformance: new Big(0),
+      netPerformancePercentage: new Big(0),
+      netPerformancePercentageWithCurrencyEffectMap: {},
+      netPerformanceValues: {},
+      netPerformanceValuesWithCurrencyEffect: {},
+      netPerformanceWithCurrencyEffectMap: {},
+      timeWeightedInvestment: new Big(0),
+      timeWeightedInvestmentValues: {},
+      timeWeightedInvestmentValuesWithCurrencyEffect: {},
+      timeWeightedInvestmentWithCurrencyEffect: new Big(0),
+      totalDividend: new Big(0),
+      totalDividendInBaseCurrency: new Big(0),
+      totalInterestInBaseCurrency: new Big(0),
+      totalInvestment: new Big(0),
+      totalInvestmentWithCurrencyEffect: new Big(0),
+      totalLiabilitiesInBaseCurrency: new Big(0)
+    };
+  }
+
   public async getFeesInBaseCurrency() {
     await this.snapshotPromise;
 
@@ -735,7 +768,7 @@ export abstract class PortfolioCalculator {
   }
 
   protected abstract getHoldingPerformance({
-    chartDateMap,
+    chartDates,
     dataSource,
     end,
     exchangeRates,
@@ -743,7 +776,7 @@ export abstract class PortfolioCalculator {
     start,
     symbol
   }: {
-    chartDateMap: { [date: string]: boolean };
+    chartDates: string[];
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
@@ -802,6 +835,137 @@ export abstract class PortfolioCalculator {
     await this.snapshotPromise;
 
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
+  }
+
+  protected getOrdersWithMarketPrices({
+    assetProfile,
+    chartDates,
+    endDateString,
+    marketSymbolMap,
+    orders,
+    startDateString,
+    unitPriceAtEndDate,
+    unitPriceAtStartDate
+  }: {
+    assetProfile: PortfolioOrderItem['assetProfile'];
+    chartDates: string[];
+    endDateString: string;
+    marketSymbolMap: {
+      [date: string]: { [assetProfileIdentifier: string]: Big };
+    };
+    orders: PortfolioOrderItem[];
+    startDateString: string;
+    unitPriceAtEndDate: Big;
+    unitPriceAtStartDate: Big;
+  }): PortfolioOrderItem[] {
+    if (orders.length <= 0) {
+      return [];
+    }
+
+    const assetProfileIdentifier = getAssetProfileIdentifier(assetProfile);
+    const dateStringOfFirstActivity = orders[0].date;
+
+    // Copy the items as they are enriched below. A shallow copy is sufficient
+    // because only top-level properties are written.
+    const ordersWithMarketPrices = orders.map((order) => {
+      return { ...order };
+    });
+
+    // Add a synthetic order at the start and the end date
+    ordersWithMarketPrices.push({
+      assetProfile,
+      date: startDateString,
+      fee: new Big(0),
+      feeInBaseCurrency: new Big(0),
+      itemType: 'start',
+      quantity: new Big(0),
+      type: 'BUY',
+      unitPrice: unitPriceAtStartDate
+    });
+
+    ordersWithMarketPrices.push({
+      assetProfile,
+      date: endDateString,
+      fee: new Big(0),
+      feeInBaseCurrency: new Big(0),
+      itemType: 'end',
+      quantity: new Big(0),
+      type: 'BUY',
+      unitPrice: unitPriceAtEndDate
+    });
+
+    // Fall back to the unit price of the most recent BUY / SELL activity for
+    // the chart dates before the first known market price of the symbol
+    let lastActivityUnitPrice: Big | undefined;
+    let lastMarketPrice: Big | undefined;
+
+    const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
+
+    for (const order of ordersWithMarketPrices) {
+      ordersByDate[order.date] = ordersByDate[order.date] ?? [];
+      ordersByDate[order.date].push(order);
+    }
+
+    for (const dateString of chartDates) {
+      if (dateString < startDateString) {
+        continue;
+      } else if (dateString > endDateString) {
+        break;
+      }
+
+      const ordersOfDate = ordersByDate[dateString];
+
+      if (!lastMarketPrice && ordersOfDate?.length > 0) {
+        for (const { itemType, type, unitPrice } of ordersOfDate) {
+          if (!itemType && ['BUY', 'SELL'].includes(type)) {
+            lastActivityUnitPrice = unitPrice;
+          }
+        }
+      }
+
+      const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
+
+      const unitPrice =
+        marketPrice ??
+        lastMarketPrice ??
+        lastActivityUnitPrice ??
+        unitPriceAtEndDate;
+
+      if (ordersOfDate?.length > 0) {
+        for (const order of ordersOfDate) {
+          order.unitPriceFromMarketData = unitPrice;
+        }
+      } else if (dateString >= dateStringOfFirstActivity) {
+        ordersWithMarketPrices.push({
+          assetProfile,
+          unitPrice,
+          date: dateString,
+          fee: new Big(0),
+          feeInBaseCurrency: new Big(0),
+          quantity: new Big(0),
+          type: 'BUY',
+          unitPriceFromMarketData: unitPrice
+        });
+      }
+
+      if (marketPrice) {
+        lastMarketPrice = marketPrice;
+      }
+    }
+
+    // Sort orders so that the start and end placeholder order are at the correct
+    // position
+    return sortBy(ordersWithMarketPrices, ({ date, itemType }) => {
+      let sortIndex = new Date(date);
+
+      if (itemType === 'end') {
+        sortIndex = addMilliseconds(sortIndex, 1);
+      } else if (itemType === 'start') {
+        sortIndex = addMilliseconds(sortIndex, -1);
+      }
+
+      return sortIndex.getTime();
+    });
   }
 
   public async getPerformance({ end, start }) {
@@ -939,8 +1103,82 @@ export abstract class PortfolioCalculator {
     return min(dates);
   }
 
+  protected getTotalsFromActivities({
+    exchangeRates,
+    orders
+  }: {
+    exchangeRates: { [dateString: string]: number };
+    orders: PortfolioOrder[];
+  }) {
+    let totalDividend = new Big(0);
+    let totalDividendInBaseCurrency = new Big(0);
+    let totalInterestInBaseCurrency = new Big(0);
+    let totalLiabilitiesInBaseCurrency = new Big(0);
+
+    for (const order of orders) {
+      const exchangeRateAtOrderDate = exchangeRates[order.date];
+
+      if (order.type === 'DIVIDEND') {
+        const dividend = order.quantity.mul(order.unitPrice);
+
+        totalDividend = totalDividend.plus(dividend);
+        totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
+          dividend.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'INTEREST') {
+        const interest = order.quantity.mul(order.unitPrice);
+
+        totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
+          interest.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'LIABILITY') {
+        const liabilities = order.quantity.mul(order.unitPrice);
+
+        totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
+          liabilities.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      }
+    }
+
+    return {
+      totalDividend,
+      totalDividendInBaseCurrency,
+      totalInterestInBaseCurrency,
+      totalLiabilitiesInBaseCurrency
+    };
+  }
+
   public getTransactionPoints() {
     return this.transactionPoints;
+  }
+
+  protected getUnitPriceAtEndDate({
+    dataSource,
+    isCash,
+    marketPriceAtEndDate,
+    orders
+  }: {
+    dataSource: DataSource;
+    isCash: boolean;
+    marketPriceAtEndDate: Big;
+    orders: PortfolioOrder[];
+  }): Big {
+    const latestActivity = orders.at(-1);
+
+    if (
+      dataSource === 'MANUAL' &&
+      ['BUY', 'SELL'].includes(latestActivity?.type) &&
+      latestActivity?.unitPrice &&
+      !marketPriceAtEndDate
+    ) {
+      // For BUY / SELL activities with a MANUAL data source where no historical market price is available,
+      // the calculation should fall back to using the activity’s unit price.
+      return latestActivity.unitPrice;
+    } else if (isCash) {
+      return new Big(1);
+    }
+
+    return marketPriceAtEndDate;
   }
 
   private getChartDateMap({
