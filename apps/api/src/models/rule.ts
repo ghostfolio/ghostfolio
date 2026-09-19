@@ -13,19 +13,21 @@ import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
+  protected exchangeRateDataService: ExchangeRateDataService;
+
   private key: XRayRuleKey;
   private languageCode: string;
 
-  public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
-    {
-      key,
-      languageCode
-    }: {
-      key: XRayRuleKey;
-      languageCode: string;
-    }
-  ) {
+  public constructor({
+    exchangeRateDataService,
+    key,
+    languageCode
+  }: {
+    exchangeRateDataService: ExchangeRateDataService;
+    key: XRayRuleKey;
+    languageCode: string;
+  }) {
+    this.exchangeRateDataService = exchangeRateDataService;
     this.key = key;
     this.languageCode = languageCode;
   }

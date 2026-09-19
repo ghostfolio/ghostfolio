@@ -22,7 +22,8 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     languageCode: string;
     northAmericaValueInBaseCurrency: number;
   }) {
-    super(exchangeRateDataService, {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'RegionalMarketClusterRiskNorthAmerica'
     });

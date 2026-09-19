@@ -18,10 +18,7 @@ export class BuyingPower extends Rule<Settings> {
     i18nService: I18nService;
     languageCode: string;
   }) {
-    super(exchangeRateDataService, {
-      languageCode,
-      key: 'BuyingPower'
-    });
+    super({ exchangeRateDataService, languageCode, key: 'BuyingPower' });
 
     this.buyingPower = buyingPower;
     this.i18nService = i18nService;

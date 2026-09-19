@@ -18,10 +18,7 @@ export class EmergencyFundSetup extends Rule<Settings> {
     i18nService: I18nService;
     languageCode: string;
   }) {
-    super(exchangeRateDataService, {
-      languageCode,
-      key: 'EmergencyFundSetup'
-    });
+    super({ exchangeRateDataService, languageCode, key: 'EmergencyFundSetup' });
 
     this.emergencyFund = emergencyFund;
     this.i18nService = i18nService;

@@ -18,7 +18,8 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     i18nService: I18nService;
     languageCode: string;
   }) {
-    super(exchangeRateDataService, {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'CurrencyClusterRiskBaseCurrencyCurrentInvestment'
     });

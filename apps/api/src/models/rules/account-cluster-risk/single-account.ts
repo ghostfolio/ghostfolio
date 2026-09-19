@@ -18,7 +18,8 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
     i18nService: I18nService;
     languageCode: string;
   }) {
-    super(exchangeRateDataService, {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'AccountClusterRiskSingleAccount'
     });

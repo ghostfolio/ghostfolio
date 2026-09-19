@@ -21,7 +21,8 @@ export class FeeRatioTotalInvestmentVolume extends Rule<Settings> {
     languageCode: string;
     totalInvestmentVolumeInBaseCurrency: number;
   }) {
-    super(exchangeRateDataService, {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'FeeRatioTotalInvestmentVolume'
     });

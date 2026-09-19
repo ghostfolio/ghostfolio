@@ -20,7 +20,8 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     i18nService: I18nService;
     languageCode: string;
   }) {
-    super(exchangeRateDataService, {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'AccountClusterRiskCurrentInvestment'
     });

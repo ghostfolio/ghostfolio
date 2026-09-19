@@ -22,7 +22,8 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
     japanValueInBaseCurrency: number;
     languageCode: string;
   }) {
-    super(exchangeRateDataService, {
+    super({
+      exchangeRateDataService,
       languageCode,
       key: 'RegionalMarketClusterRiskJapan'
     });
