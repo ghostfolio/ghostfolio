@@ -753,6 +753,11 @@ export class ActivitiesService {
   /**
    * Retrieves all activities required for the portfolio calculator, including both standard asset activities
    * and optional synthetic activities representing cash activities.
+   *
+   * A tag filter is resolved to holding scope: a holding qualifies if any of its activities (or its account)
+   * matches the tag, but all of its activities are included in the result. This ensures that the quantity and
+   * the status (active or closed) of a holding are always derived from its complete activity history and are
+   * not affected by the tag of individual activities.
    */
   @LogPerformance
   public async getActivitiesForPortfolioCalculator({
@@ -773,15 +778,33 @@ export class ActivitiesService {
     /** Whether to include activities that are excluded from analysis. */
     withExcludedAccountsAndActivities?: boolean;
   }) {
+    const hasTagFilter = filters?.some(({ type }) => {
+      return type === 'TAG';
+    });
+
+    const filtersWithoutTag = filters?.filter(({ type }) => {
+      return type !== 'TAG';
+    });
+
     const [activities, splits] = await Promise.all([
       this.getActivities({
-        filters,
+        filters: filtersWithoutTag,
         userCurrency,
         userId,
         withExcludedAccountsAndActivities
       }),
       this.assetProfileSplitService.getSplitsByUserId({ userId })
     ]);
+
+    if (hasTagFilter) {
+      activities.activities = await this.keepActivitiesOfHoldingsMatchingTag({
+        activities: activities.activities,
+        filters,
+        userId,
+        withExcludedAccountsAndActivities
+      });
+      activities.count = activities.activities.length;
+    }
 
     if (splits.length > 0) {
       const splitsBySymbolProfileId = groupBy(splits, 'symbolProfileId');
@@ -966,6 +989,73 @@ export class ActivitiesService {
     );
 
     return activity;
+  }
+
+  /**
+   * Keeps only the activities that belong to a holding matching at least one tag filter. A holding
+   * matches if any of its activities or its account has the tag; once it matches, every one of its
+   * activities is kept (not just the tagged ones). This way, a holding's quantity and status (active
+   * or closed) always reflect its complete activity history instead of being fragmented by the tag
+   * of an individual activity.
+   */
+  private async keepActivitiesOfHoldingsMatchingTag({
+    activities,
+    filters,
+    userId,
+    withExcludedAccountsAndActivities
+  }: {
+    activities: Activity[];
+    filters: Filter[];
+    userId: string;
+    withExcludedAccountsAndActivities: boolean;
+  }): Promise<Activity[]> {
+    const matchingAssetProfileIdentifiers =
+      await this.getAssetProfileIdentifiersMatching({
+        filters,
+        userId,
+        withExcludedAccountsAndActivities
+      });
+
+    return activities.filter((activity) => {
+      return matchingAssetProfileIdentifiers.has(
+        getAssetProfileIdentifier(activity.assetProfile)
+      );
+    });
+  }
+
+  /**
+   * Returns the identifiers of the asset profiles that have at least one activity or account
+   * matching the given filters.
+   */
+  private async getAssetProfileIdentifiersMatching({
+    filters,
+    userId,
+    withExcludedAccountsAndActivities
+  }: {
+    filters: Filter[];
+    userId: string;
+    withExcludedAccountsAndActivities: boolean;
+  }): Promise<Set<string>> {
+    const where = this.getWhereClause({
+      filters,
+      userId,
+      withExcludedAccountsAndActivities,
+      includeDrafts: false
+    });
+
+    const distinctSymbolProfiles = await this.prismaService.order.findMany({
+      distinct: ['symbolProfileId'],
+      select: {
+        SymbolProfile: { select: { dataSource: true, symbol: true } }
+      },
+      where
+    });
+
+    return new Set(
+      distinctSymbolProfiles.map(({ SymbolProfile }) => {
+        return getAssetProfileIdentifier(SymbolProfile);
+      })
+    );
   }
 
   private getWhereClause({
