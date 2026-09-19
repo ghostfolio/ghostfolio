@@ -1,8 +1,8 @@
 import { Big } from 'big.js';
 
-import { PortfolioOrder } from './portfolio-order.interface';
+import { PortfolioCalculatorActivity } from './portfolio-calculator-activity.interface';
 
-export interface PortfolioOrderItem extends PortfolioOrder {
+export interface PortfolioCalculatorActivityItem extends PortfolioCalculatorActivity {
   feeInBaseCurrencyWithCurrencyEffect?: Big;
   itemType?: 'end' | 'start';
   unitPriceFromMarketData?: Big;

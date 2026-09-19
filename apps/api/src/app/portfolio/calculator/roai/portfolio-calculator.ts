@@ -1,7 +1,7 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
-import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
@@ -183,12 +183,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       symbol
     });
 
-    let orders: PortfolioOrderItem[] =
+    let activities: PortfolioCalculatorActivityItem[] =
       this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? [];
 
-    const isCash = orders[0]?.assetProfile?.assetSubClass === 'CASH';
+    const isCash = activities[0]?.assetProfile?.assetSubClass === 'CASH';
 
-    if (orders.length <= 0) {
+    if (activities.length <= 0) {
       return this.getEmptyHoldingPerformance();
     }
 
@@ -200,9 +200,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       totalDividendInBaseCurrency,
       totalInterestInBaseCurrency,
       totalLiabilitiesInBaseCurrency
-    } = this.getTotalsFromActivities({ exchangeRates, orders });
+    } = this.getTotalsFromActivities({ activities, exchangeRates });
 
-    const dateOfFirstActivity = parseDate(orders[0].date);
+    const dateOfFirstActivity = parseDate(activities[0].date);
 
     const endDateString = format(end, DATE_FORMAT);
     const startDateString = format(start, DATE_FORMAT);
@@ -211,9 +211,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       marketSymbolMap[startDateString]?.[assetProfileIdentifier];
 
     const unitPriceAtEndDate = this.getUnitPriceAtEndDate({
+      activities,
       dataSource,
       isCash,
-      orders,
       marketPriceAtEndDate:
         marketSymbolMap[endDateString]?.[assetProfileIdentifier]
     });
@@ -225,7 +225,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       // A missing market price can only affect the quantity which is held. The
       // dividends, the interest and the liabilities do not hold any quantity
       // and are therefore not in error.
-      const hasActivitiesWithQuantity = orders.some(({ type }) => {
+      const hasActivitiesWithQuantity = activities.some(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       });
 
@@ -239,11 +239,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       };
     }
 
-    orders = this.getOrdersWithMarketPrices({
+    activities = this.getActivitiesWithMarketPrices({
+      activities,
       chartDates,
       endDateString,
       marketSymbolMap,
-      orders,
       startDateString,
       unitPriceAtEndDate,
       unitPriceAtStartDate,
@@ -254,11 +254,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
     });
 
-    const indexOfStartOrder = orders.findIndex(({ itemType }) => {
+    const indexOfStartActivity = activities.findIndex(({ itemType }) => {
       return itemType === 'start';
     });
 
-    const indexOfEndOrder = orders.findIndex(({ itemType }) => {
+    const indexOfEndActivity = activities.findIndex(({ itemType }) => {
       return itemType === 'end';
     });
 
@@ -266,56 +266,59 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let sumOfTimeWeightedInvestments = new Big(0);
     let sumOfTimeWeightedInvestmentsWithCurrencyEffect = new Big(0);
 
-    for (let i = 0; i < orders.length; i += 1) {
-      const order = orders[i];
+    for (let i = 0; i < activities.length; i += 1) {
+      const activity = activities[i];
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log();
         console.log();
         console.log(
           i + 1,
-          order.date,
-          order.type,
-          order.itemType ? `(${order.itemType})` : ''
+          activity.date,
+          activity.type,
+          activity.itemType ? `(${activity.itemType})` : ''
         );
       }
 
-      const exchangeRateAtOrderDate = exchangeRates[order.date];
+      const exchangeRateAtActivityDate = exchangeRates[activity.date];
 
-      if (order.itemType === 'start') {
-        // Take the unit price of the order as the market price if there are no
-        // orders of this symbol before the start date
-        order.unitPrice =
-          indexOfStartOrder === 0
-            ? orders[i + 1]?.unitPrice
+      if (activity.itemType === 'start') {
+        // Take the unit price of the activity as the market price if there are no
+        // activities of this symbol before the start date
+        activity.unitPrice =
+          indexOfStartActivity === 0
+            ? activities[i + 1]?.unitPrice
             : unitPriceAtStartDate;
       }
 
-      if (order.fee) {
-        order.feeInBaseCurrency = order.fee.mul(currentExchangeRate ?? 1);
-        order.feeInBaseCurrencyWithCurrencyEffect = order.fee.mul(
-          exchangeRateAtOrderDate ?? 1
+      if (activity.fee) {
+        activity.feeInBaseCurrency = activity.fee.mul(currentExchangeRate ?? 1);
+        activity.feeInBaseCurrencyWithCurrencyEffect = activity.fee.mul(
+          exchangeRateAtActivityDate ?? 1
         );
       }
 
-      const unitPrice = ['BUY', 'SELL'].includes(order.type)
-        ? order.unitPrice
-        : order.unitPriceFromMarketData;
+      const unitPrice = ['BUY', 'SELL'].includes(activity.type)
+        ? activity.unitPrice
+        : activity.unitPriceFromMarketData;
 
       if (unitPrice) {
-        order.unitPriceInBaseCurrency = unitPrice.mul(currentExchangeRate ?? 1);
+        activity.unitPriceInBaseCurrency = unitPrice.mul(
+          currentExchangeRate ?? 1
+        );
 
-        order.unitPriceInBaseCurrencyWithCurrencyEffect = unitPrice.mul(
-          exchangeRateAtOrderDate ?? 1
+        activity.unitPriceInBaseCurrencyWithCurrencyEffect = unitPrice.mul(
+          exchangeRateAtActivityDate ?? 1
         );
       }
 
       const marketPriceInBaseCurrency =
-        order.unitPriceFromMarketData?.mul(currentExchangeRate ?? 1) ??
+        activity.unitPriceFromMarketData?.mul(currentExchangeRate ?? 1) ??
         new Big(0);
       const marketPriceInBaseCurrencyWithCurrencyEffect =
-        order.unitPriceFromMarketData?.mul(exchangeRateAtOrderDate ?? 1) ??
-        new Big(0);
+        activity.unitPriceFromMarketData?.mul(
+          exchangeRateAtActivityDate ?? 1
+        ) ?? new Big(0);
 
       const valueOfInvestmentBeforeTransaction = totalQuantity.mul(
         marketPriceInBaseCurrency
@@ -324,7 +327,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       const valueOfInvestmentBeforeTransactionWithCurrencyEffect =
         totalQuantity.mul(marketPriceInBaseCurrencyWithCurrencyEffect);
 
-      if (!investmentAtStartDate && i >= indexOfStartOrder) {
+      if (!investmentAtStartDate && i >= indexOfStartActivity) {
         investmentAtStartDate = totalInvestment ?? new Big(0);
 
         investmentAtStartDateWithCurrencyEffect =
@@ -339,17 +342,17 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       let transactionInvestment = new Big(0);
       let transactionInvestmentWithCurrencyEffect = new Big(0);
 
-      if (order.type === 'BUY') {
-        transactionInvestment = order.quantity
-          .mul(order.unitPriceInBaseCurrency)
-          .mul(getFactor(order.type));
+      if (activity.type === 'BUY') {
+        transactionInvestment = activity.quantity
+          .mul(activity.unitPriceInBaseCurrency)
+          .mul(getFactor(activity.type));
 
-        transactionInvestmentWithCurrencyEffect = order.quantity
-          .mul(order.unitPriceInBaseCurrencyWithCurrencyEffect)
-          .mul(getFactor(order.type));
+        transactionInvestmentWithCurrencyEffect = activity.quantity
+          .mul(activity.unitPriceInBaseCurrencyWithCurrencyEffect)
+          .mul(getFactor(activity.type));
 
         totalQuantityFromBuyTransactions =
-          totalQuantityFromBuyTransactions.plus(order.quantity);
+          totalQuantityFromBuyTransactions.plus(activity.quantity);
 
         totalInvestmentFromBuyTransactions =
           totalInvestmentFromBuyTransactions.plus(transactionInvestment);
@@ -358,9 +361,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           totalInvestmentFromBuyTransactionsWithCurrencyEffect.plus(
             transactionInvestmentWithCurrencyEffect
           );
-      } else if (order.type === 'SELL') {
+      } else if (activity.type === 'SELL') {
         if (totalQuantity.gt(0)) {
-          const remainingQuantity = totalQuantity.minus(order.quantity);
+          const remainingQuantity = totalQuantity.minus(activity.quantity);
 
           transactionInvestment = totalInvestment
             .mul(remainingQuantity)
@@ -376,7 +379,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
-        console.log('order.quantity', order.quantity.toNumber());
+        console.log('activity.quantity', activity.quantity.toNumber());
         console.log('transactionInvestment', transactionInvestment.toNumber());
 
         console.log(
@@ -397,9 +400,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           transactionInvestmentWithCurrencyEffect
         );
 
-      if (i >= indexOfStartOrder && !initialValue) {
+      if (i >= indexOfStartActivity && !initialValue) {
         if (
-          i === indexOfStartOrder &&
+          i === indexOfStartActivity &&
           !valueOfInvestmentBeforeTransaction.eq(0)
         ) {
           initialValue = valueOfInvestmentBeforeTransaction;
@@ -408,14 +411,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         }
       }
 
-      fees = fees.plus(order.feeInBaseCurrency ?? 0);
+      fees = fees.plus(activity.feeInBaseCurrency ?? 0);
 
       feesWithCurrencyEffect = feesWithCurrencyEffect.plus(
-        order.feeInBaseCurrencyWithCurrencyEffect ?? 0
+        activity.feeInBaseCurrencyWithCurrencyEffect ?? 0
       );
 
       totalQuantity = totalQuantity.plus(
-        order.quantity.mul(getFactor(order.type))
+        activity.quantity.mul(getFactor(activity.type))
       );
 
       const valueOfInvestment = totalQuantity.mul(marketPriceInBaseCurrency);
@@ -425,17 +428,17 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       );
 
       const grossPerformanceFromSell =
-        order.type === 'SELL'
-          ? order.unitPriceInBaseCurrency
+        activity.type === 'SELL'
+          ? activity.unitPriceInBaseCurrency
               .minus(lastAveragePrice)
-              .mul(order.quantity)
+              .mul(activity.quantity)
           : new Big(0);
 
       const grossPerformanceFromSellWithCurrencyEffect =
-        order.type === 'SELL'
-          ? order.unitPriceInBaseCurrencyWithCurrencyEffect
+        activity.type === 'SELL'
+          ? activity.unitPriceInBaseCurrencyWithCurrencyEffect
               .minus(lastAveragePriceWithCurrencyEffect)
-              .mul(order.quantity)
+              .mul(activity.quantity)
           : new Big(0);
 
       grossPerformanceFromSells = grossPerformanceFromSells.plus(
@@ -493,7 +496,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       grossPerformanceWithCurrencyEffect =
         newGrossPerformanceWithCurrencyEffect;
 
-      if (order.itemType === 'start') {
+      if (activity.itemType === 'start') {
         feesAtStartDate = fees;
         feesAtStartDateWithCurrencyEffect = feesWithCurrencyEffect;
         grossPerformanceAtStartDate = grossPerformance;
@@ -502,36 +505,36 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           grossPerformanceWithCurrencyEffect;
       }
 
-      if (i > indexOfStartOrder) {
+      if (i > indexOfStartActivity) {
         // Only consider periods with an investment for the calculation of
         // the time weighted investment
         if (
           valueOfInvestmentBeforeTransaction.gt(0) &&
-          ['BUY', 'SELL'].includes(order.type)
+          ['BUY', 'SELL'].includes(activity.type)
         ) {
-          // Calculate the number of days since the previous order
-          const orderDate = new Date(order.date);
-          const previousOrderDate = new Date(orders[i - 1].date);
+          // Calculate the number of days since the previous activity
+          const activityDate = new Date(activity.date);
+          const previousActivityDate = new Date(activities[i - 1].date);
 
-          let daysSinceLastOrder = differenceInDays(
-            orderDate,
-            previousOrderDate
+          let daysSinceLastActivity = differenceInDays(
+            activityDate,
+            previousActivityDate
           );
-          if (daysSinceLastOrder <= 0) {
+          if (daysSinceLastActivity <= 0) {
             // The time between two activities on the same day is unknown
             // -> Set it to the smallest floating point number greater than 0
-            daysSinceLastOrder = Number.EPSILON;
+            daysSinceLastActivity = Number.EPSILON;
           }
 
           // Sum up the total investment days since the start date to calculate
           // the time weighted investment
-          totalInvestmentDays += daysSinceLastOrder;
+          totalInvestmentDays += daysSinceLastActivity;
 
           sumOfTimeWeightedInvestments = sumOfTimeWeightedInvestments.add(
             valueAtStartDate
               .minus(investmentAtStartDate)
               .plus(totalInvestmentBeforeTransaction)
-              .mul(daysSinceLastOrder)
+              .mul(daysSinceLastActivity)
           );
 
           sumOfTimeWeightedInvestmentsWithCurrencyEffect =
@@ -539,45 +542,45 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
               valueAtStartDateWithCurrencyEffect
                 .minus(investmentAtStartDateWithCurrencyEffect)
                 .plus(totalInvestmentBeforeTransactionWithCurrencyEffect)
-                .mul(daysSinceLastOrder)
+                .mul(daysSinceLastActivity)
             );
         }
 
-        currentValues[order.date] = valueOfInvestment;
+        currentValues[activity.date] = valueOfInvestment;
 
-        currentValuesWithCurrencyEffect[order.date] =
+        currentValuesWithCurrencyEffect[activity.date] =
           valueOfInvestmentWithCurrencyEffect;
 
-        netPerformanceValues[order.date] = grossPerformance
+        netPerformanceValues[activity.date] = grossPerformance
           .minus(grossPerformanceAtStartDate)
           .minus(fees.minus(feesAtStartDate));
 
-        netPerformanceValuesWithCurrencyEffect[order.date] =
+        netPerformanceValuesWithCurrencyEffect[activity.date] =
           grossPerformanceWithCurrencyEffect
             .minus(grossPerformanceAtStartDateWithCurrencyEffect)
             .minus(
               feesWithCurrencyEffect.minus(feesAtStartDateWithCurrencyEffect)
             );
 
-        investmentValuesAccumulated[order.date] = totalInvestment;
+        investmentValuesAccumulated[activity.date] = totalInvestment;
 
-        investmentValuesAccumulatedWithCurrencyEffect[order.date] =
+        investmentValuesAccumulatedWithCurrencyEffect[activity.date] =
           totalInvestmentWithCurrencyEffect;
 
-        investmentValuesWithCurrencyEffect[order.date] = (
-          investmentValuesWithCurrencyEffect[order.date] ?? new Big(0)
+        investmentValuesWithCurrencyEffect[activity.date] = (
+          investmentValuesWithCurrencyEffect[activity.date] ?? new Big(0)
         ).add(transactionInvestmentWithCurrencyEffect);
 
         // If duration is effectively zero (first day), use the actual investment as the base.
         // Otherwise, use the calculated time-weighted average.
-        timeWeightedInvestmentValues[order.date] =
+        timeWeightedInvestmentValues[activity.date] =
           totalInvestmentDays > Number.EPSILON
             ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
             : totalInvestment.gt(0)
               ? totalInvestment
               : new Big(0);
 
-        timeWeightedInvestmentValuesWithCurrencyEffect[order.date] =
+        timeWeightedInvestmentValuesWithCurrencyEffect[activity.date] =
           totalInvestmentDays > Number.EPSILON
             ? sumOfTimeWeightedInvestmentsWithCurrencyEffect.div(
                 totalInvestmentDays
@@ -608,7 +611,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         );
       }
 
-      if (i === indexOfEndOrder) {
+      if (i === indexOfEndActivity) {
         break;
       }
     }
@@ -768,7 +771,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       console.log(
         `
         ${symbol}
-        Unit price: ${orders[indexOfStartOrder].unitPrice.toFixed(
+        Unit price: ${activities[indexOfStartActivity].unitPrice.toFixed(
           2
         )} -> ${unitPriceAtEndDate.toFixed(2)}
         Total investment: ${totalInvestment.toFixed(2)}
