@@ -794,15 +794,25 @@ export abstract class PortfolioCalculator {
 
     const chart: HistoricalDataItem[] = [];
 
+    let grossPerformanceAtStartDate: number;
+    let grossPerformanceWithCurrencyEffectAtStartDate: number;
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
-    const totalInvestmentValuesWithCurrencyEffect: number[] = [];
+    const timeWeightedInvestmentValues: number[] = [];
+    const timeWeightedInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
 
       if (!isBefore(date, start) && !isAfter(date, end)) {
         if (!isNumber(netPerformanceAtStartDate)) {
+          grossPerformanceAtStartDate =
+            historicalDataItem.value - historicalDataItem.totalInvestment;
+
+          grossPerformanceWithCurrencyEffectAtStartDate =
+            historicalDataItem.valueWithCurrencyEffect -
+            historicalDataItem.totalInvestmentValueWithCurrencyEffect;
+
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
           netPerformanceWithCurrencyEffectAtStartDate =
@@ -816,33 +826,48 @@ export abstract class PortfolioCalculator {
           historicalDataItem.netPerformanceWithCurrencyEffect -
           netPerformanceWithCurrencyEffectAtStartDate;
 
+        // Add the gross performance at the start date of the range to the
+        // investment of each day. Thus the range starts with the value of its
+        // first day, and subsequent buy and sell activities stay included.
+        if (historicalDataItem.totalInvestment > 0) {
+          timeWeightedInvestmentValues.push(
+            historicalDataItem.totalInvestment + grossPerformanceAtStartDate
+          );
+        }
+
         if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-          totalInvestmentValuesWithCurrencyEffect.push(
-            historicalDataItem.totalInvestmentValueWithCurrencyEffect
+          timeWeightedInvestmentValuesWithCurrencyEffect.push(
+            historicalDataItem.totalInvestmentValueWithCurrencyEffect +
+              grossPerformanceWithCurrencyEffectAtStartDate
           );
         }
 
         const timeWeightedInvestmentValue =
-          totalInvestmentValuesWithCurrencyEffect.length > 0
-            ? sum(totalInvestmentValuesWithCurrencyEffect) /
-              totalInvestmentValuesWithCurrencyEffect.length
+          timeWeightedInvestmentValues.length > 0
+            ? sum(timeWeightedInvestmentValues) /
+              timeWeightedInvestmentValues.length
+            : 0;
+
+        const timeWeightedInvestmentValueWithCurrencyEffect =
+          timeWeightedInvestmentValuesWithCurrencyEffect.length > 0
+            ? sum(timeWeightedInvestmentValuesWithCurrencyEffect) /
+              timeWeightedInvestmentValuesWithCurrencyEffect.length
             : 0;
 
         chart.push({
           ...historicalDataItem,
-          netPerformance:
-            historicalDataItem.netPerformance - netPerformanceAtStartDate,
+          netPerformance: netPerformanceSinceStartDate,
           netPerformanceWithCurrencyEffect:
             netPerformanceWithCurrencyEffectSinceStartDate,
           netPerformanceInPercentage:
-            timeWeightedInvestmentValue === 0
-              ? 0
-              : netPerformanceSinceStartDate / timeWeightedInvestmentValue,
+            timeWeightedInvestmentValue > 0
+              ? netPerformanceSinceStartDate / timeWeightedInvestmentValue
+              : 0,
           netPerformanceInPercentageWithCurrencyEffect:
-            timeWeightedInvestmentValue === 0
-              ? 0
-              : netPerformanceWithCurrencyEffectSinceStartDate /
-                timeWeightedInvestmentValue
+            timeWeightedInvestmentValueWithCurrencyEffect > 0
+              ? netPerformanceWithCurrencyEffectSinceStartDate /
+                timeWeightedInvestmentValueWithCurrencyEffect
+              : 0
         });
       }
     }
