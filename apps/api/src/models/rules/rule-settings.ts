@@ -62,32 +62,28 @@ export function getRuleSettings<T extends RuleSettings>({
   userSettings: UserSettings;
 }): T {
   const configuration: RuleSettingsConfiguration =
-    RULE_SETTINGS_CONFIGURATIONS[key];
+    RULE_SETTINGS_CONFIGURATIONS[key] ?? {};
   const configuredSettings = userSettings.xRayRules?.[key];
-  const settings: RuleSettings & {
-    baseCurrency?: string;
-    thresholdMax?: number;
-    thresholdMin?: number;
-  } = {
+
+  return {
+    ...(configuration.withBaseCurrency === false
+      ? {}
+      : { baseCurrency: userSettings.baseCurrency ?? DEFAULT_CURRENCY }),
     isActive: configuredSettings?.isActive ?? true,
-    locale: userSettings.locale ?? DEFAULT_LOCALE
-  };
-
-  if (configuration.withBaseCurrency !== false) {
-    settings.baseCurrency = userSettings.baseCurrency ?? DEFAULT_CURRENCY;
-  }
-
-  if (configuration.thresholdMax !== undefined) {
-    settings.thresholdMax =
-      configuredSettings?.thresholdMax ?? configuration.thresholdMax;
-  }
-
-  if (configuration.thresholdMin !== undefined) {
-    settings.thresholdMin =
-      configuredSettings?.thresholdMin ?? configuration.thresholdMin;
-  }
-
-  return settings as T;
+    locale: userSettings.locale ?? DEFAULT_LOCALE,
+    ...(configuration.thresholdMax === undefined
+      ? {}
+      : {
+          thresholdMax:
+            configuredSettings?.thresholdMax ?? configuration.thresholdMax
+        }),
+    ...(configuration.thresholdMin === undefined
+      ? {}
+      : {
+          thresholdMin:
+            configuredSettings?.thresholdMin ?? configuration.thresholdMin
+        })
+  } as T;
 }
 
 export function getXRayRulesSettings(
