@@ -14,7 +14,7 @@
 1. Run `npm install`
 1. Run `docker compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `npm run database:setup` to initialize the database schema
-1. Start the [server](#start-server) and the [client](#start-client)
+1. Run `npm run dev` to start both the server and client
 1. Open https://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 
@@ -37,6 +37,14 @@ Run `npm run start:client` and open https://localhost:4200/en in your browser.
 #### Other Languages
 
 To start the client in a different language, such as German (`de`), adapt the `start:client` script in the `package.json` file by changing `--configuration=development-en` to `--configuration=development-de`. Then, run `npm run start:client` and open https://localhost:4200/de in your browser.
+
+### Start Server and Client
+
+To start both the server and client simultaneously, run:
+
+```bash
+npm run dev
+```
 
 ### Start _Storybook_
 
