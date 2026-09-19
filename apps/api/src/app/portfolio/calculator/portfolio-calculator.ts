@@ -794,9 +794,11 @@ export abstract class PortfolioCalculator {
 
     const chart: HistoricalDataItem[] = [];
 
+    let grossPerformanceAtStartDate: number;
     let grossPerformanceWithCurrencyEffectAtStartDate: number;
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
+    const timeWeightedInvestmentValues: number[] = [];
     const timeWeightedInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (const historicalDataItem of historicalData) {
@@ -804,6 +806,9 @@ export abstract class PortfolioCalculator {
 
       if (!isBefore(date, start) && !isAfter(date, end)) {
         if (!isNumber(netPerformanceAtStartDate)) {
+          grossPerformanceAtStartDate =
+            historicalDataItem.value - historicalDataItem.totalInvestment;
+
           grossPerformanceWithCurrencyEffectAtStartDate =
             historicalDataItem.valueWithCurrencyEffect -
             historicalDataItem.totalInvestmentValueWithCurrencyEffect;
@@ -821,11 +826,16 @@ export abstract class PortfolioCalculator {
           historicalDataItem.netPerformanceWithCurrencyEffect -
           netPerformanceWithCurrencyEffectAtStartDate;
 
+        // Add the gross performance at the start date of the range to the
+        // investment of each day. Thus the range starts with the value of its
+        // first day, and subsequent buy and sell activities stay included.
+        if (historicalDataItem.totalInvestment > 0) {
+          timeWeightedInvestmentValues.push(
+            historicalDataItem.totalInvestment + grossPerformanceAtStartDate
+          );
+        }
+
         if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-          // Add the gross performance at the start date of the range to the
-          // investment of each day. Thus the range starts with the value of
-          // its first day, and subsequent buy and sell activities stay
-          // included.
           timeWeightedInvestmentValuesWithCurrencyEffect.push(
             historicalDataItem.totalInvestmentValueWithCurrencyEffect +
               grossPerformanceWithCurrencyEffectAtStartDate
@@ -833,6 +843,12 @@ export abstract class PortfolioCalculator {
         }
 
         const timeWeightedInvestmentValue =
+          timeWeightedInvestmentValues.length > 0
+            ? sum(timeWeightedInvestmentValues) /
+              timeWeightedInvestmentValues.length
+            : 0;
+
+        const timeWeightedInvestmentValueWithCurrencyEffect =
           timeWeightedInvestmentValuesWithCurrencyEffect.length > 0
             ? sum(timeWeightedInvestmentValuesWithCurrencyEffect) /
               timeWeightedInvestmentValuesWithCurrencyEffect.length
@@ -848,9 +864,9 @@ export abstract class PortfolioCalculator {
               ? netPerformanceSinceStartDate / timeWeightedInvestmentValue
               : 0,
           netPerformanceInPercentageWithCurrencyEffect:
-            timeWeightedInvestmentValue > 0
+            timeWeightedInvestmentValueWithCurrencyEffect > 0
               ? netPerformanceWithCurrencyEffectSinceStartDate /
-                timeWeightedInvestmentValue
+                timeWeightedInvestmentValueWithCurrencyEffect
               : 0
         });
       }

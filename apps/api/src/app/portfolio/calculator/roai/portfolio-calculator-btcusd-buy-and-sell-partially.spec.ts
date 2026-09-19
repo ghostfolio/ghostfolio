@@ -285,7 +285,7 @@ describe('PortfolioCalculator', () => {
         '1d': {
           date: '2018-01-01',
           netPerformance: -486.0860160000011,
-          netPerformanceInPercentage: -0.035084130151423504,
+          netPerformanceInPercentage: -0.035263202509112565,
           netPerformanceInPercentageWithCurrencyEffect: -0.040162295064062624,
           netPerformanceWithCurrencyEffect: -556.4433239999998,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
@@ -294,7 +294,7 @@ describe('PortfolioCalculator', () => {
         max: {
           date: '2018-01-01',
           netPerformance: 26458.9121202,
-          netPerformanceInPercentage: 41.63298219956282,
+          netPerformanceInPercentage: 42.50435329547954,
           netPerformanceInPercentageWithCurrencyEffect: 41.72313811883715,
           netPerformanceWithCurrencyEffect: 26516.2087014,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
@@ -303,7 +303,7 @@ describe('PortfolioCalculator', () => {
         ytd: {
           date: '2018-01-01',
           netPerformance: -486.0860160000011,
-          netPerformanceInPercentage: -0.035084130151423504,
+          netPerformanceInPercentage: -0.035263202509112565,
           netPerformanceInPercentageWithCurrencyEffect: -0.040162295064062624,
           netPerformanceWithCurrencyEffect: -556.4433239999998,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
