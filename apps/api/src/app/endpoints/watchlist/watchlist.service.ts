@@ -159,7 +159,6 @@ export class WatchlistService {
     userId
   }: { userId: string } & AssetProfileIdentifier): Promise<boolean> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
-      select: { id: true },
       where: {
         dataSource,
         symbol,
