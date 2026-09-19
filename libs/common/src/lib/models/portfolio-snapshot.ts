@@ -3,7 +3,7 @@ import {
   AssetProfileIdentifier,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshotHolding } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
@@ -23,8 +23,8 @@ export class PortfolioSnapshot {
 
   historicalData: HistoricalDataItem[];
 
-  @Type(() => TimelinePosition)
-  positions: TimelinePosition[];
+  @Type(() => PortfolioSnapshotHolding)
+  positions: PortfolioSnapshotHolding[];
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

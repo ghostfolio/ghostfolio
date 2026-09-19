@@ -1,29 +1,28 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import {
-  AssetProfileIdentifier,
-  SymbolMetrics
-} from '@ghostfolio/common/interfaces';
+import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export class RoiPortfolioCalculator extends PortfolioCalculator {
-  protected calculateOverallPerformance(): PortfolioSnapshot {
+  protected calculateOverallPerformance([]: PortfolioCalculatorHolding[]): PortfolioSnapshot {
     throw new Error('Method not implemented.');
   }
 
-  protected getPerformanceCalculationType() {
-    return PerformanceCalculationType.ROI;
-  }
-
-  protected getSymbolMetrics({}: {
+  protected getHoldingPerformance({}: {
+    chartDateMap: { [date: string]: boolean };
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
       [date: string]: { [assetProfileIdentifier: string]: Big };
     };
     start: Date;
-    step?: number;
-  } & AssetProfileIdentifier): SymbolMetrics {
+  } & AssetProfileIdentifier): HoldingPerformance {
     throw new Error('Method not implemented.');
+  }
+
+  protected getPerformanceCalculationType() {
+    return PerformanceCalculationType.ROI;
   }
 }
