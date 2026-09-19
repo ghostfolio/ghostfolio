@@ -1,9 +1,9 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
+import { PortfolioCalculatorActivity } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
-import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
-import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
@@ -75,9 +75,9 @@ export abstract class PortfolioCalculator {
   protected readonly logger = new Logger(PortfolioCalculator.name);
 
   protected accountBalanceItems: HistoricalDataItem[];
-  protected activities: PortfolioOrder[];
+  protected activities: PortfolioCalculatorActivity[];
   protected activitiesByAssetProfileIdentifier: {
-    [assetProfileIdentifier: string]: PortfolioOrder[];
+    [assetProfileIdentifier: string]: PortfolioCalculatorActivity[];
   };
 
   private configurationService: ConfigurationService;
@@ -716,6 +716,139 @@ export abstract class PortfolioCalculator {
     };
   }
 
+  protected getActivitiesWithMarketPrices({
+    activities,
+    assetProfile,
+    chartDates,
+    endDateString,
+    marketSymbolMap,
+    startDateString,
+    unitPriceAtEndDate,
+    unitPriceAtStartDate
+  }: {
+    activities: PortfolioCalculatorActivityItem[];
+    assetProfile: PortfolioCalculatorActivityItem['assetProfile'];
+    chartDates: string[];
+    endDateString: string;
+    marketSymbolMap: {
+      [date: string]: { [assetProfileIdentifier: string]: Big };
+    };
+    startDateString: string;
+    unitPriceAtEndDate: Big;
+    unitPriceAtStartDate: Big;
+  }): PortfolioCalculatorActivityItem[] {
+    if (activities.length <= 0) {
+      return [];
+    }
+
+    const assetProfileIdentifier = getAssetProfileIdentifier(assetProfile);
+    const dateStringOfFirstActivity = activities[0].date;
+
+    // Copy the items as they are enriched below. A shallow copy is sufficient
+    // because only top-level properties are written.
+    const activitiesWithMarketPrices = activities.map((activity) => {
+      return { ...activity };
+    });
+
+    // Add a synthetic activity at the start and the end date
+    activitiesWithMarketPrices.push({
+      assetProfile,
+      date: startDateString,
+      fee: new Big(0),
+      feeInBaseCurrency: new Big(0),
+      itemType: 'start',
+      quantity: new Big(0),
+      type: 'BUY',
+      unitPrice: unitPriceAtStartDate
+    });
+
+    activitiesWithMarketPrices.push({
+      assetProfile,
+      date: endDateString,
+      fee: new Big(0),
+      feeInBaseCurrency: new Big(0),
+      itemType: 'end',
+      quantity: new Big(0),
+      type: 'BUY',
+      unitPrice: unitPriceAtEndDate
+    });
+
+    // Fall back to the unit price of the most recent BUY / SELL activity for
+    // the chart dates before the first known market price of the symbol
+    let lastActivityUnitPrice: Big | undefined;
+    let lastMarketPrice: Big | undefined;
+
+    const activitiesByDate: {
+      [date: string]: PortfolioCalculatorActivityItem[];
+    } = {};
+
+    for (const activity of activitiesWithMarketPrices) {
+      activitiesByDate[activity.date] = activitiesByDate[activity.date] ?? [];
+      activitiesByDate[activity.date].push(activity);
+    }
+
+    for (const dateString of chartDates) {
+      if (dateString < startDateString) {
+        continue;
+      } else if (dateString > endDateString) {
+        break;
+      }
+
+      const activitiesOfDate = activitiesByDate[dateString];
+
+      if (!lastMarketPrice && activitiesOfDate?.length > 0) {
+        for (const { itemType, type, unitPrice } of activitiesOfDate) {
+          if (!itemType && ['BUY', 'SELL'].includes(type)) {
+            lastActivityUnitPrice = unitPrice;
+          }
+        }
+      }
+
+      const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
+
+      const unitPrice =
+        marketPrice ??
+        lastMarketPrice ??
+        lastActivityUnitPrice ??
+        unitPriceAtEndDate;
+
+      if (activitiesOfDate?.length > 0) {
+        for (const activity of activitiesOfDate) {
+          activity.unitPriceFromMarketData = unitPrice;
+        }
+      } else if (dateString >= dateStringOfFirstActivity) {
+        activitiesWithMarketPrices.push({
+          assetProfile,
+          unitPrice,
+          date: dateString,
+          fee: new Big(0),
+          feeInBaseCurrency: new Big(0),
+          quantity: new Big(0),
+          type: 'BUY',
+          unitPriceFromMarketData: unitPrice
+        });
+      }
+
+      if (marketPrice) {
+        lastMarketPrice = marketPrice;
+      }
+    }
+
+    // Sort the activities so that the start and end placeholder activities
+    // are at the correct position
+    return sortBy(activitiesWithMarketPrices, ({ date, itemType }) => {
+      let sortIndex = new Date(date);
+
+      if (itemType === 'end') {
+        sortIndex = addMilliseconds(sortIndex, 1);
+      } else if (itemType === 'start') {
+        sortIndex = addMilliseconds(sortIndex, -1);
+      }
+
+      return sortIndex.getTime();
+    });
+  }
+
   public getDataProviderInfos() {
     return this.dataProviderInfos;
   }
@@ -835,137 +968,6 @@ export abstract class PortfolioCalculator {
     await this.snapshotPromise;
 
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
-  }
-
-  protected getOrdersWithMarketPrices({
-    assetProfile,
-    chartDates,
-    endDateString,
-    marketSymbolMap,
-    orders,
-    startDateString,
-    unitPriceAtEndDate,
-    unitPriceAtStartDate
-  }: {
-    assetProfile: PortfolioOrderItem['assetProfile'];
-    chartDates: string[];
-    endDateString: string;
-    marketSymbolMap: {
-      [date: string]: { [assetProfileIdentifier: string]: Big };
-    };
-    orders: PortfolioOrderItem[];
-    startDateString: string;
-    unitPriceAtEndDate: Big;
-    unitPriceAtStartDate: Big;
-  }): PortfolioOrderItem[] {
-    if (orders.length <= 0) {
-      return [];
-    }
-
-    const assetProfileIdentifier = getAssetProfileIdentifier(assetProfile);
-    const dateStringOfFirstActivity = orders[0].date;
-
-    // Copy the items as they are enriched below. A shallow copy is sufficient
-    // because only top-level properties are written.
-    const ordersWithMarketPrices = orders.map((order) => {
-      return { ...order };
-    });
-
-    // Add a synthetic order at the start and the end date
-    ordersWithMarketPrices.push({
-      assetProfile,
-      date: startDateString,
-      fee: new Big(0),
-      feeInBaseCurrency: new Big(0),
-      itemType: 'start',
-      quantity: new Big(0),
-      type: 'BUY',
-      unitPrice: unitPriceAtStartDate
-    });
-
-    ordersWithMarketPrices.push({
-      assetProfile,
-      date: endDateString,
-      fee: new Big(0),
-      feeInBaseCurrency: new Big(0),
-      itemType: 'end',
-      quantity: new Big(0),
-      type: 'BUY',
-      unitPrice: unitPriceAtEndDate
-    });
-
-    // Fall back to the unit price of the most recent BUY / SELL activity for
-    // the chart dates before the first known market price of the symbol
-    let lastActivityUnitPrice: Big | undefined;
-    let lastMarketPrice: Big | undefined;
-
-    const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
-
-    for (const order of ordersWithMarketPrices) {
-      ordersByDate[order.date] = ordersByDate[order.date] ?? [];
-      ordersByDate[order.date].push(order);
-    }
-
-    for (const dateString of chartDates) {
-      if (dateString < startDateString) {
-        continue;
-      } else if (dateString > endDateString) {
-        break;
-      }
-
-      const ordersOfDate = ordersByDate[dateString];
-
-      if (!lastMarketPrice && ordersOfDate?.length > 0) {
-        for (const { itemType, type, unitPrice } of ordersOfDate) {
-          if (!itemType && ['BUY', 'SELL'].includes(type)) {
-            lastActivityUnitPrice = unitPrice;
-          }
-        }
-      }
-
-      const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
-
-      const unitPrice =
-        marketPrice ??
-        lastMarketPrice ??
-        lastActivityUnitPrice ??
-        unitPriceAtEndDate;
-
-      if (ordersOfDate?.length > 0) {
-        for (const order of ordersOfDate) {
-          order.unitPriceFromMarketData = unitPrice;
-        }
-      } else if (dateString >= dateStringOfFirstActivity) {
-        ordersWithMarketPrices.push({
-          assetProfile,
-          unitPrice,
-          date: dateString,
-          fee: new Big(0),
-          feeInBaseCurrency: new Big(0),
-          quantity: new Big(0),
-          type: 'BUY',
-          unitPriceFromMarketData: unitPrice
-        });
-      }
-
-      if (marketPrice) {
-        lastMarketPrice = marketPrice;
-      }
-    }
-
-    // Sort orders so that the start and end placeholder order are at the correct
-    // position
-    return sortBy(ordersWithMarketPrices, ({ date, itemType }) => {
-      let sortIndex = new Date(date);
-
-      if (itemType === 'end') {
-        sortIndex = addMilliseconds(sortIndex, 1);
-      } else if (itemType === 'start') {
-        sortIndex = addMilliseconds(sortIndex, -1);
-      }
-
-      return sortIndex.getTime();
-    });
   }
 
   public async getPerformance({ end, start }) {
@@ -1104,38 +1106,38 @@ export abstract class PortfolioCalculator {
   }
 
   protected getTotalsFromActivities({
-    exchangeRates,
-    orders
+    activities,
+    exchangeRates
   }: {
+    activities: PortfolioCalculatorActivity[];
     exchangeRates: { [dateString: string]: number };
-    orders: PortfolioOrder[];
   }) {
     let totalDividend = new Big(0);
     let totalDividendInBaseCurrency = new Big(0);
     let totalInterestInBaseCurrency = new Big(0);
     let totalLiabilitiesInBaseCurrency = new Big(0);
 
-    for (const order of orders) {
-      const exchangeRateAtOrderDate = exchangeRates[order.date];
+    for (const activity of activities) {
+      const exchangeRateAtActivityDate = exchangeRates[activity.date];
 
-      if (order.type === 'DIVIDEND') {
-        const dividend = order.quantity.mul(order.unitPrice);
+      if (activity.type === 'DIVIDEND') {
+        const dividend = activity.quantity.mul(activity.unitPrice);
 
         totalDividend = totalDividend.plus(dividend);
         totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
-          dividend.mul(exchangeRateAtOrderDate ?? 1)
+          dividend.mul(exchangeRateAtActivityDate ?? 1)
         );
-      } else if (order.type === 'INTEREST') {
-        const interest = order.quantity.mul(order.unitPrice);
+      } else if (activity.type === 'INTEREST') {
+        const interest = activity.quantity.mul(activity.unitPrice);
 
         totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
-          interest.mul(exchangeRateAtOrderDate ?? 1)
+          interest.mul(exchangeRateAtActivityDate ?? 1)
         );
-      } else if (order.type === 'LIABILITY') {
-        const liabilities = order.quantity.mul(order.unitPrice);
+      } else if (activity.type === 'LIABILITY') {
+        const liabilities = activity.quantity.mul(activity.unitPrice);
 
         totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
-          liabilities.mul(exchangeRateAtOrderDate ?? 1)
+          liabilities.mul(exchangeRateAtActivityDate ?? 1)
         );
       }
     }
@@ -1153,17 +1155,17 @@ export abstract class PortfolioCalculator {
   }
 
   protected getUnitPriceAtEndDate({
+    activities,
     dataSource,
     isCash,
-    marketPriceAtEndDate,
-    orders
+    marketPriceAtEndDate
   }: {
+    activities: PortfolioCalculatorActivity[];
     dataSource: DataSource;
     isCash: boolean;
     marketPriceAtEndDate: Big;
-    orders: PortfolioOrder[];
   }): Big {
-    const latestActivity = orders.at(-1);
+    const latestActivity = activities.at(-1);
 
     if (
       dataSource === 'MANUAL' &&
