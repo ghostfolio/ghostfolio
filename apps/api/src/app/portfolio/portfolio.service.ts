@@ -984,12 +984,12 @@ export class PortfolioService {
 
     const {
       activitiesCount,
-      averageInvestment,
-      averageInvestmentWithCurrencyEffect,
       averagePrice,
       currency,
       dateOfFirstActivity,
       dividendInBaseCurrency,
+      dividendYieldPercent,
+      dividendYieldPercentWithCurrencyEffect,
       feeInBaseCurrency,
       grossPerformance,
       grossPerformancePercentage,
@@ -1011,27 +1011,6 @@ export class PortfolioService {
         activity.assetProfile.symbol === symbol
       );
     });
-
-    const dividendYieldPercent = getAnnualizedPerformancePercent({
-      daysInMarket: differenceInDays(
-        new Date(),
-        parseDate(dateOfFirstActivity)
-      ),
-      netPerformancePercentage: averageInvestment.eq(0)
-        ? new Big(0)
-        : dividendInBaseCurrency.div(averageInvestment)
-    });
-
-    const dividendYieldPercentWithCurrencyEffect =
-      getAnnualizedPerformancePercent({
-        daysInMarket: differenceInDays(
-          new Date(),
-          parseDate(dateOfFirstActivity)
-        ),
-        netPerformancePercentage: averageInvestmentWithCurrencyEffect.eq(0)
-          ? new Big(0)
-          : dividendInBaseCurrency.div(averageInvestmentWithCurrencyEffect)
-      });
 
     const historicalData = await this.dataProviderService.getHistorical(
       [{ dataSource, symbol }],
@@ -1138,9 +1117,11 @@ export class PortfolioService {
         .getDataProvider(dataSource)
         .getDataProviderInfo(),
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
-      dividendYieldPercent: dividendYieldPercent.toNumber(),
+      // TODO: Remove the fallback with the next release, when the cached
+      // portfolio snapshots have been recalculated
+      dividendYieldPercent: dividendYieldPercent?.toNumber() ?? 0,
       dividendYieldPercentWithCurrencyEffect:
-        dividendYieldPercentWithCurrencyEffect.toNumber(),
+        dividendYieldPercentWithCurrencyEffect?.toNumber() ?? 0,
       feeInBaseCurrency: feeInBaseCurrency.toNumber(),
       grossPerformance: grossPerformance?.toNumber(),
       grossPerformancePercent: grossPerformancePercentage?.toNumber(),
@@ -2097,6 +2078,8 @@ export class PortfolioService {
     }
 
     const {
+      dividendYieldPercent,
+      dividendYieldPercentWithCurrencyEffect,
       totalCashInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
@@ -2219,6 +2202,11 @@ export class PortfolioService {
         return ['BUY', 'SELL'].includes(type);
       }).length,
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+      // TODO: Remove the fallback with the next release, when the cached
+      // portfolio snapshots have been recalculated
+      dividendYieldPercent: dividendYieldPercent?.toNumber() ?? 0,
+      dividendYieldPercentWithCurrencyEffect:
+        dividendYieldPercentWithCurrencyEffect?.toNumber() ?? 0,
       emergencyFund: {
         assets: emergencyFundHoldingsValueInBaseCurrency,
         cash: totalEmergencyFund

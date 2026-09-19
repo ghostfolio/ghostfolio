@@ -62,6 +62,14 @@ export class PortfolioSnapshotHolding {
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
+  dividendYieldPercent: Big;
+
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
+  dividendYieldPercentWithCurrencyEffect: Big;
+
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
   fee: Big;
 
   @Transform(transformToBig, { toClassOnly: true })

@@ -1,14 +1,22 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accumulated-values.interface';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/interfaces/net-performance-percentages.interface';
 import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
-import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
+import {
+  getAnnualizedPerformancePercent,
+  getIntervalFromDateRange
+} from '@ghostfolio/common/calculation-helper';
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  HistoricalDataItem
+} from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
@@ -21,18 +29,120 @@ import {
   isBefore,
   isThisYear
 } from 'date-fns';
+import { isNumber, sum } from 'lodash';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
+  protected calculateNetPerformancePercentages({
+    accumulatedValuesByDate
+  }: {
+    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+  }): { [date: string]: NetPerformancePercentages } {
+    const netPerformancePercentagesByDate: {
+      [date: string]: NetPerformancePercentages;
+    } = {};
+
+    for (const [
+      date,
+      {
+        totalAverageInvestmentValue,
+        totalAverageInvestmentValueWithCurrencyEffect,
+        totalNetPerformanceValue,
+        totalNetPerformanceValueWithCurrencyEffect
+      }
+    ] of Object.entries(accumulatedValuesByDate)) {
+      netPerformancePercentagesByDate[date] = {
+        netPerformanceInPercentage: totalAverageInvestmentValue.eq(0)
+          ? 0
+          : totalNetPerformanceValue
+              .div(totalAverageInvestmentValue)
+              .toNumber(),
+        netPerformanceInPercentageWithCurrencyEffect:
+          totalAverageInvestmentValueWithCurrencyEffect.eq(0)
+            ? 0
+            : totalNetPerformanceValueWithCurrencyEffect
+                .div(totalAverageInvestmentValueWithCurrencyEffect)
+                .toNumber()
+      };
+    }
+
+    return netPerformancePercentagesByDate;
+  }
+
+  protected calculateNetPerformancePercentagesForDateRange({
+    historicalDataItems
+  }: {
+    historicalDataItems: HistoricalDataItem[];
+  }): { [date: string]: NetPerformancePercentages } {
+    const averageInvestmentValues: number[] = [];
+    const averageInvestmentValuesWithCurrencyEffect: number[] = [];
+    let grossPerformanceAtStartDate: number;
+    let grossPerformanceWithCurrencyEffectAtStartDate: number;
+
+    const netPerformancePercentagesByDate: {
+      [date: string]: NetPerformancePercentages;
+    } = {};
+
+    for (const historicalDataItem of historicalDataItems) {
+      if (!isNumber(grossPerformanceAtStartDate)) {
+        grossPerformanceAtStartDate =
+          historicalDataItem.value - historicalDataItem.totalInvestment;
+
+        grossPerformanceWithCurrencyEffectAtStartDate =
+          historicalDataItem.valueWithCurrencyEffect -
+          historicalDataItem.totalInvestmentValueWithCurrencyEffect;
+      }
+
+      // Add the gross performance at the start date of the range to the
+      // investment of each day. Thus the range starts with the value of its
+      // first day, and subsequent buy and sell activities stay included.
+      if (historicalDataItem.totalInvestment > 0) {
+        averageInvestmentValues.push(
+          historicalDataItem.totalInvestment + grossPerformanceAtStartDate
+        );
+      }
+
+      if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
+        averageInvestmentValuesWithCurrencyEffect.push(
+          historicalDataItem.totalInvestmentValueWithCurrencyEffect +
+            grossPerformanceWithCurrencyEffectAtStartDate
+        );
+      }
+
+      const averageInvestmentValue =
+        averageInvestmentValues.length > 0
+          ? sum(averageInvestmentValues) / averageInvestmentValues.length
+          : 0;
+
+      const averageInvestmentValueWithCurrencyEffect =
+        averageInvestmentValuesWithCurrencyEffect.length > 0
+          ? sum(averageInvestmentValuesWithCurrencyEffect) /
+            averageInvestmentValuesWithCurrencyEffect.length
+          : 0;
+
+      netPerformancePercentagesByDate[historicalDataItem.date] = {
+        netPerformanceInPercentage:
+          averageInvestmentValue > 0
+            ? historicalDataItem.netPerformance / averageInvestmentValue
+            : 0,
+        netPerformanceInPercentageWithCurrencyEffect:
+          averageInvestmentValueWithCurrencyEffect > 0
+            ? historicalDataItem.netPerformanceWithCurrencyEffect /
+              averageInvestmentValueWithCurrencyEffect
+            : 0
+      };
+    }
+
+    return netPerformancePercentagesByDate;
+  }
+
   protected calculateOverallPerformance(
     positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot {
     let currentValueInBaseCurrency = new Big(0);
-    let grossPerformance = new Big(0);
-    let grossPerformanceWithCurrencyEffect = new Big(0);
     let hasErrors = false;
-    let netPerformance = new Big(0);
     let totalAverageInvestment = new Big(0);
     let totalAverageInvestmentWithCurrencyEffect = new Big(0);
+    let totalDividendInBaseCurrency = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
     const totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
@@ -49,6 +159,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       if (!currentPosition.includeInPerformance) {
         continue;
+      }
+
+      if (currentPosition.dividendInBaseCurrency) {
+        totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
+          currentPosition.dividendInBaseCurrency
+        );
       }
 
       if (currentPosition.feeInBaseCurrency) {
@@ -68,18 +184,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         hasErrors = true;
       }
 
-      if (currentPosition.grossPerformance) {
-        grossPerformance = grossPerformance.plus(
-          currentPosition.grossPerformance
-        );
-
-        grossPerformanceWithCurrencyEffect =
-          grossPerformanceWithCurrencyEffect.plus(
-            currentPosition.grossPerformanceWithCurrencyEffect
-          );
-
-        netPerformance = netPerformance.plus(currentPosition.netPerformance);
-      } else if (!currentPosition.quantity.eq(0)) {
+      if (
+        !currentPosition.grossPerformance &&
+        !currentPosition.quantity.eq(0)
+      ) {
         hasErrors = true;
       }
 
@@ -101,8 +209,33 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       }
     }
 
+    const dateOfFirstActivity = this.getStartDate();
+
+    const daysInMarket = dateOfFirstActivity
+      ? differenceInDays(new Date(), dateOfFirstActivity)
+      : 0;
+
+    const dividendYieldPercent = getAnnualizedPerformancePercent({
+      daysInMarket,
+      netPerformancePercentage: totalAverageInvestment.eq(0)
+        ? new Big(0)
+        : totalDividendInBaseCurrency.div(totalAverageInvestment)
+    });
+
+    const dividendYieldPercentWithCurrencyEffect =
+      getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercentage: totalAverageInvestmentWithCurrencyEffect.eq(0)
+          ? new Big(0)
+          : totalDividendInBaseCurrency.div(
+              totalAverageInvestmentWithCurrencyEffect
+            )
+      });
+
     return {
       currentValueInBaseCurrency,
+      dividendYieldPercent,
+      dividendYieldPercentWithCurrencyEffect,
       hasErrors,
       positions,
       totalFeesWithCurrencyEffect,
@@ -401,6 +534,28 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       ? totalNetPerformance.div(averageInvestmentBetweenStartAndEndDate)
       : new Big(0);
 
+    const daysInMarket = differenceInDays(new Date(), dateOfFirstActivity);
+
+    const dividendYieldPercent = getAnnualizedPerformancePercent({
+      daysInMarket,
+      netPerformancePercentage: averageInvestmentBetweenStartAndEndDate.eq(0)
+        ? new Big(0)
+        : totalDividendInBaseCurrency.div(
+            averageInvestmentBetweenStartAndEndDate
+          )
+    });
+
+    const dividendYieldPercentWithCurrencyEffect =
+      getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercentage:
+          averageInvestmentBetweenStartAndEndDateWithCurrencyEffect.eq(0)
+            ? new Big(0)
+            : totalDividendInBaseCurrency.div(
+                averageInvestmentBetweenStartAndEndDateWithCurrencyEffect
+              )
+      });
+
     const netPerformancePercentageWithCurrencyEffectMap: {
       [key: DateRange]: Big;
     } = {};
@@ -538,6 +693,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       averageInvestmentValuesWithCurrencyEffect,
       currentValues,
       currentValuesWithCurrencyEffect,
+      dividendYieldPercent,
+      dividendYieldPercentWithCurrencyEffect,
       grossPerformancePercentage,
       grossPerformancePercentageWithCurrencyEffect,
       investmentValuesAccumulated,

@@ -1,12 +1,28 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accumulated-values.interface';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
-import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/interfaces/net-performance-percentages.interface';
+import {
+  AssetProfileIdentifier,
+  HistoricalDataItem
+} from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export class RoiPortfolioCalculator extends PortfolioCalculator {
-  protected calculateOverallPerformance([]: PortfolioCalculatorHolding[]): PortfolioSnapshot {
+  protected calculateNetPerformancePercentages({}: {
+    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+  }): { [date: string]: NetPerformancePercentages } {
+    throw new Error('Method not implemented.');
+  }
+
+  protected calculateNetPerformancePercentagesForDateRange({}: {
+    historicalDataItems: HistoricalDataItem[];
+  }): { [date: string]: NetPerformancePercentages } {
+    throw new Error('Method not implemented.');
+  }
+
+  protected calculateOverallPerformance(): PortfolioSnapshot {
     throw new Error('Method not implemented.');
   }
 
