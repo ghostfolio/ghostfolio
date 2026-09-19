@@ -6,21 +6,29 @@ import { Settings } from './interfaces/rule-settings.interface';
 
 export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
+  private i18nService: I18nService;
   private japanValueInBaseCurrency: number;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    currentValueInBaseCurrency: number,
-    japanValueInBaseCurrency: number
-  ) {
+  public constructor({
+    currentValueInBaseCurrency,
+    exchangeRateDataService,
+    i18nService,
+    japanValueInBaseCurrency,
+    languageCode
+  }: {
+    currentValueInBaseCurrency: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    japanValueInBaseCurrency: number;
+    languageCode: string;
+  }) {
     super(exchangeRateDataService, {
       languageCode,
       key: 'RegionalMarketClusterRiskJapan'
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
+    this.i18nService = i18nService;
     this.japanValueInBaseCurrency = japanValueInBaseCurrency;
   }
 

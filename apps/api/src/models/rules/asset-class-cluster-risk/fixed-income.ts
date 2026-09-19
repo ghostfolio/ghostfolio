@@ -5,19 +5,26 @@ import { PortfolioPosition, RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
   private holdings: PortfolioPosition[];
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    holdings: PortfolioPosition[]
-  ) {
+  public constructor({
+    exchangeRateDataService,
+    holdings,
+    i18nService,
+    languageCode
+  }: {
+    exchangeRateDataService: ExchangeRateDataService;
+    holdings: PortfolioPosition[];
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
     super(exchangeRateDataService, {
       languageCode,
       key: 'AssetClassClusterRiskFixedIncome'
     });
 
     this.holdings = holdings;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {

@@ -5,19 +5,26 @@ import { RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class EmergencyFundSetup extends Rule<Settings> {
   private emergencyFund: number;
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    emergencyFund: number
-  ) {
+  public constructor({
+    emergencyFund,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    emergencyFund: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
     super(exchangeRateDataService, {
       languageCode,
       key: 'EmergencyFundSetup'
     });
 
     this.emergencyFund = emergencyFund;
+    this.i18nService = i18nService;
   }
 
   public evaluate() {

@@ -5,21 +5,29 @@ import { RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class FeeRatioTotalInvestmentVolume extends Rule<Settings> {
   private fees: number;
+  private i18nService: I18nService;
   private totalInvestmentVolumeInBaseCurrency: number;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    totalInvestmentVolumeInBaseCurrency: number,
-    fees: number
-  ) {
+  public constructor({
+    exchangeRateDataService,
+    fees,
+    i18nService,
+    languageCode,
+    totalInvestmentVolumeInBaseCurrency
+  }: {
+    exchangeRateDataService: ExchangeRateDataService;
+    fees: number;
+    i18nService: I18nService;
+    languageCode: string;
+    totalInvestmentVolumeInBaseCurrency: number;
+  }) {
     super(exchangeRateDataService, {
       languageCode,
       key: 'FeeRatioTotalInvestmentVolume'
     });
 
     this.fees = fees;
+    this.i18nService = i18nService;
     this.totalInvestmentVolumeInBaseCurrency =
       totalInvestmentVolumeInBaseCurrency;
   }

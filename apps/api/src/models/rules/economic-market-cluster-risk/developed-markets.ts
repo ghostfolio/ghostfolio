@@ -6,14 +6,21 @@ import { RuleSettings } from '@ghostfolio/common/interfaces';
 export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
   private developedMarketsValueInBaseCurrency: number;
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    currentValueInBaseCurrency: number,
-    developedMarketsValueInBaseCurrency: number,
-    languageCode: string
-  ) {
+  public constructor({
+    currentValueInBaseCurrency,
+    developedMarketsValueInBaseCurrency,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    currentValueInBaseCurrency: number;
+    developedMarketsValueInBaseCurrency: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
     super(exchangeRateDataService, {
       languageCode,
       key: 'EconomicMarketClusterRiskDevelopedMarkets'
@@ -22,6 +29,7 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
     this.developedMarketsValueInBaseCurrency =
       developedMarketsValueInBaseCurrency;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {

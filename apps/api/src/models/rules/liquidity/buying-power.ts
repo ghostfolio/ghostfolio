@@ -5,19 +5,26 @@ import { RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class BuyingPower extends Rule<Settings> {
   private buyingPower: number;
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    buyingPower: number,
-    languageCode: string
-  ) {
+  public constructor({
+    buyingPower,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    buyingPower: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
     super(exchangeRateDataService, {
       languageCode,
       key: 'BuyingPower'
     });
 
     this.buyingPower = buyingPower;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {

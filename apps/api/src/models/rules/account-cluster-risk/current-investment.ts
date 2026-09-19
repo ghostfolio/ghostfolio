@@ -7,19 +7,26 @@ import { Account } from '@prisma/client';
 
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   private accounts: PortfolioDetails['accounts'];
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    accounts: PortfolioDetails['accounts']
-  ) {
+  public constructor({
+    accounts,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    accounts: PortfolioDetails['accounts'];
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
     super(exchangeRateDataService, {
       languageCode,
       key: 'AccountClusterRiskCurrentInvestment'
     });
 
     this.accounts = accounts;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {
