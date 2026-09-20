@@ -970,7 +970,8 @@ export class PortfolioService {
       subscriptionType: user.subscription?.type
     });
 
-    const transactionPoints = portfolioCalculator.getTransactionPoints();
+    const holdingBalancesByDate =
+      portfolioCalculator.getHoldingBalancesByDate();
 
     const { positions } = await portfolioCalculator.getSnapshot();
 
@@ -1071,8 +1072,11 @@ export class PortfolioService {
         historicalDataItems
       )) {
         while (
-          j + 1 < transactionPoints.length &&
-          !isAfter(parseDate(transactionPoints[j + 1].date), parseDate(date))
+          j + 1 < holdingBalancesByDate.length &&
+          !isAfter(
+            parseDate(holdingBalancesByDate[j + 1].date),
+            parseDate(date)
+          )
         ) {
           j++;
         }
@@ -1080,15 +1084,15 @@ export class PortfolioService {
         let currentAveragePrice = 0;
         let currentQuantity = 0;
 
-        const currentSymbol = transactionPoints[j]?.items.find(
-          (transactionPointSymbol) => {
-            return transactionPointSymbol.symbol === symbol;
+        const holdingBalance = holdingBalancesByDate[j]?.holdings.find(
+          ({ symbol: holdingBalanceSymbol }) => {
+            return holdingBalanceSymbol === symbol;
           }
         );
 
-        if (currentSymbol) {
-          currentAveragePrice = currentSymbol.averagePrice.toNumber();
-          currentQuantity = currentSymbol.quantity.toNumber();
+        if (holdingBalance) {
+          currentAveragePrice = holdingBalance.averagePrice.toNumber();
+          currentQuantity = holdingBalance.quantity.toNumber();
         }
 
         historicalDataArray.push({
