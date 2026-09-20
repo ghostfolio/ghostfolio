@@ -4,13 +4,13 @@ import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accu
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
 import { HoldingValuationItem } from '@ghostfolio/api/app/portfolio/interfaces/holding-valuation-item.interface';
 import { HoldingValuation } from '@ghostfolio/api/app/portfolio/interfaces/holding-valuation.interface';
-import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/interfaces/net-performance-percentages.interface';
 import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorActivity } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
+import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/types/net-performance-percentages.type';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
@@ -43,7 +43,10 @@ import {
   InvestmentItem,
   ResponseError
 } from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot } from '@ghostfolio/common/models';
+import {
+  PortfolioSnapshot,
+  PortfolioSnapshotHolding
+} from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -69,7 +72,7 @@ import {
   startOfYear,
   subDays
 } from 'date-fns';
-import { groupBy, isNumber, sortBy, uniqBy } from 'lodash';
+import { groupBy, sortBy, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -854,8 +857,14 @@ export abstract class PortfolioCalculator {
   public async getDividendInBaseCurrency() {
     await this.snapshotPromise;
 
+    return this.getDividendInBaseCurrencyOfHoldings(this.snapshot.positions);
+  }
+
+  protected getDividendInBaseCurrencyOfHoldings(
+    holdings: PortfolioSnapshotHolding[]
+  ) {
     return getSum(
-      this.snapshot.positions.map(({ dividendInBaseCurrency }) => {
+      holdings.map(({ dividendInBaseCurrency }) => {
         return dividendInBaseCurrency;
       })
     );
@@ -1350,7 +1359,9 @@ export abstract class PortfolioCalculator {
       const date = resetHours(parseDate(historicalDataItem.date));
 
       if (!isBefore(date, start) && !isAfter(date, end)) {
-        if (!isNumber(netPerformanceAtStartDate)) {
+        // Take the values at the start date from the first day of the date
+        // range
+        if (historicalDataItemsOfDateRange.length === 0) {
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
           netPerformanceWithCurrencyEffectAtStartDate =
