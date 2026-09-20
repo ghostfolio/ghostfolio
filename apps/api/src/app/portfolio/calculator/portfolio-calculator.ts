@@ -325,6 +325,10 @@ export abstract class PortfolioCalculator {
       [date: string]: { [assetProfileIdentifier: string]: Big };
     } = {};
 
+    const latestMarketPriceMap: {
+      [assetProfileIdentifier: string]: { date: string; price: Big };
+    } = {};
+
     for (const marketSymbol of marketSymbols) {
       const date = format(marketSymbol.date, DATE_FORMAT);
 
@@ -333,12 +337,32 @@ export abstract class PortfolioCalculator {
       }
 
       if (marketSymbol.marketPrice) {
-        marketSymbolMap[date][getAssetProfileIdentifier(marketSymbol)] =
-          new Big(marketSymbol.marketPrice);
+        const identifier = getAssetProfileIdentifier(marketSymbol);
+        const price = new Big(marketSymbol.marketPrice);
+
+        marketSymbolMap[date][identifier] = price;
+
+        if (
+          !latestMarketPriceMap[identifier] ||
+          latestMarketPriceMap[identifier].date < date
+        ) {
+          latestMarketPriceMap[identifier] = { date, price };
+        }
       }
     }
 
     const endDateString = format(this.endDate, DATE_FORMAT);
+
+    if (!marketSymbolMap[endDateString]) {
+      marketSymbolMap[endDateString] = {};
+    }
+
+    for (const identifier of Object.keys(latestMarketPriceMap)) {
+      if (!marketSymbolMap[endDateString][identifier]) {
+        marketSymbolMap[endDateString][identifier] =
+          latestMarketPriceMap[identifier].price;
+      }
+    }
 
     const daysInMarket = differenceInDays(this.endDate, this.startDate);
 
