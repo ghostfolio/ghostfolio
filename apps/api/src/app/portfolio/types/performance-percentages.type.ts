@@ -1,6 +1,6 @@
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 
-export type NetPerformancePercentages = Required<
+export type PerformancePercentages = Required<
   Pick<
     HistoricalDataItem,
     | 'netPerformanceInPercentage'

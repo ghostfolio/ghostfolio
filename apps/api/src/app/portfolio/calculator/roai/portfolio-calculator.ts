@@ -3,7 +3,7 @@ import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accu
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
 import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
-import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/types/net-performance-percentages.type';
+import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
 import {
   getAnnualizedPerformancePercent,
   getIntervalFromDateRange
@@ -32,111 +32,6 @@ import {
 import { sum } from 'lodash';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
-  protected calculateNetPerformancePercentages({
-    accumulatedValuesByDate
-  }: {
-    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
-  }): { [date: string]: NetPerformancePercentages } {
-    const netPerformancePercentagesByDate: {
-      [date: string]: NetPerformancePercentages;
-    } = {};
-
-    for (const [
-      date,
-      {
-        totalAverageInvestmentValue,
-        totalAverageInvestmentValueWithCurrencyEffect,
-        totalNetPerformanceValue,
-        totalNetPerformanceValueWithCurrencyEffect
-      }
-    ] of Object.entries(accumulatedValuesByDate)) {
-      netPerformancePercentagesByDate[date] = {
-        netPerformanceInPercentage: totalAverageInvestmentValue.eq(0)
-          ? 0
-          : totalNetPerformanceValue
-              .div(totalAverageInvestmentValue)
-              .toNumber(),
-        netPerformanceInPercentageWithCurrencyEffect:
-          totalAverageInvestmentValueWithCurrencyEffect.eq(0)
-            ? 0
-            : totalNetPerformanceValueWithCurrencyEffect
-                .div(totalAverageInvestmentValueWithCurrencyEffect)
-                .toNumber()
-      };
-    }
-
-    return netPerformancePercentagesByDate;
-  }
-
-  protected calculateNetPerformancePercentagesForDateRange({
-    historicalDataItems
-  }: {
-    historicalDataItems: HistoricalDataItem[];
-  }): { [date: string]: NetPerformancePercentages } {
-    const averageInvestmentValues: number[] = [];
-    const averageInvestmentValuesWithCurrencyEffect: number[] = [];
-    let grossPerformanceAtStartDate: number;
-    let grossPerformanceWithCurrencyEffectAtStartDate: number;
-
-    const netPerformancePercentagesByDate: {
-      [date: string]: NetPerformancePercentages;
-    } = {};
-
-    for (const [index, historicalDataItem] of historicalDataItems.entries()) {
-      // Take the values at the start date from the first day of the date
-      // range
-      if (index === 0) {
-        grossPerformanceAtStartDate =
-          historicalDataItem.value - historicalDataItem.totalInvestment;
-
-        grossPerformanceWithCurrencyEffectAtStartDate =
-          historicalDataItem.valueWithCurrencyEffect -
-          historicalDataItem.totalInvestmentValueWithCurrencyEffect;
-      }
-
-      // Add the gross performance at the start date of the range to the
-      // investment of each day. Thus the range starts with the value of its
-      // first day, and subsequent buy and sell activities stay included.
-      if (historicalDataItem.totalInvestment > 0) {
-        averageInvestmentValues.push(
-          historicalDataItem.totalInvestment + grossPerformanceAtStartDate
-        );
-      }
-
-      if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-        averageInvestmentValuesWithCurrencyEffect.push(
-          historicalDataItem.totalInvestmentValueWithCurrencyEffect +
-            grossPerformanceWithCurrencyEffectAtStartDate
-        );
-      }
-
-      const averageInvestmentValue =
-        averageInvestmentValues.length > 0
-          ? sum(averageInvestmentValues) / averageInvestmentValues.length
-          : 0;
-
-      const averageInvestmentValueWithCurrencyEffect =
-        averageInvestmentValuesWithCurrencyEffect.length > 0
-          ? sum(averageInvestmentValuesWithCurrencyEffect) /
-            averageInvestmentValuesWithCurrencyEffect.length
-          : 0;
-
-      netPerformancePercentagesByDate[historicalDataItem.date] = {
-        netPerformanceInPercentage:
-          averageInvestmentValue > 0
-            ? historicalDataItem.netPerformance / averageInvestmentValue
-            : 0,
-        netPerformanceInPercentageWithCurrencyEffect:
-          averageInvestmentValueWithCurrencyEffect > 0
-            ? historicalDataItem.netPerformanceWithCurrencyEffect /
-              averageInvestmentValueWithCurrencyEffect
-            : 0
-      };
-    }
-
-    return netPerformancePercentagesByDate;
-  }
-
   protected calculateOverallPerformance(
     positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot {
@@ -267,6 +162,111 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       totalCashInBaseCurrency: new Big(0),
       totalLiabilitiesWithCurrencyEffect: new Big(0)
     };
+  }
+
+  protected calculatePerformancePercentages({
+    accumulatedValuesByDate
+  }: {
+    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+  }): { [date: string]: PerformancePercentages } {
+    const performancePercentagesByDate: {
+      [date: string]: PerformancePercentages;
+    } = {};
+
+    for (const [
+      date,
+      {
+        totalAverageInvestmentValue,
+        totalAverageInvestmentValueWithCurrencyEffect,
+        totalNetPerformanceValue,
+        totalNetPerformanceValueWithCurrencyEffect
+      }
+    ] of Object.entries(accumulatedValuesByDate)) {
+      performancePercentagesByDate[date] = {
+        netPerformanceInPercentage: totalAverageInvestmentValue.eq(0)
+          ? 0
+          : totalNetPerformanceValue
+              .div(totalAverageInvestmentValue)
+              .toNumber(),
+        netPerformanceInPercentageWithCurrencyEffect:
+          totalAverageInvestmentValueWithCurrencyEffect.eq(0)
+            ? 0
+            : totalNetPerformanceValueWithCurrencyEffect
+                .div(totalAverageInvestmentValueWithCurrencyEffect)
+                .toNumber()
+      };
+    }
+
+    return performancePercentagesByDate;
+  }
+
+  protected calculatePerformancePercentagesForDateRange({
+    historicalDataItems
+  }: {
+    historicalDataItems: HistoricalDataItem[];
+  }): { [date: string]: PerformancePercentages } {
+    const averageInvestmentValues: number[] = [];
+    const averageInvestmentValuesWithCurrencyEffect: number[] = [];
+    let grossPerformanceAtStartDate: number;
+    let grossPerformanceWithCurrencyEffectAtStartDate: number;
+
+    const performancePercentagesByDate: {
+      [date: string]: PerformancePercentages;
+    } = {};
+
+    for (const [index, historicalDataItem] of historicalDataItems.entries()) {
+      // Take the values at the start date from the first day of the date
+      // range
+      if (index === 0) {
+        grossPerformanceAtStartDate =
+          historicalDataItem.value - historicalDataItem.totalInvestment;
+
+        grossPerformanceWithCurrencyEffectAtStartDate =
+          historicalDataItem.valueWithCurrencyEffect -
+          historicalDataItem.totalInvestmentValueWithCurrencyEffect;
+      }
+
+      // Add the gross performance at the start date of the range to the
+      // investment of each day. Thus the range starts with the value of its
+      // first day, and subsequent buy and sell activities stay included.
+      if (historicalDataItem.totalInvestment > 0) {
+        averageInvestmentValues.push(
+          historicalDataItem.totalInvestment + grossPerformanceAtStartDate
+        );
+      }
+
+      if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
+        averageInvestmentValuesWithCurrencyEffect.push(
+          historicalDataItem.totalInvestmentValueWithCurrencyEffect +
+            grossPerformanceWithCurrencyEffectAtStartDate
+        );
+      }
+
+      const averageInvestmentValue =
+        averageInvestmentValues.length > 0
+          ? sum(averageInvestmentValues) / averageInvestmentValues.length
+          : 0;
+
+      const averageInvestmentValueWithCurrencyEffect =
+        averageInvestmentValuesWithCurrencyEffect.length > 0
+          ? sum(averageInvestmentValuesWithCurrencyEffect) /
+            averageInvestmentValuesWithCurrencyEffect.length
+          : 0;
+
+      performancePercentagesByDate[historicalDataItem.date] = {
+        netPerformanceInPercentage:
+          averageInvestmentValue > 0
+            ? historicalDataItem.netPerformance / averageInvestmentValue
+            : 0,
+        netPerformanceInPercentageWithCurrencyEffect:
+          averageInvestmentValueWithCurrencyEffect > 0
+            ? historicalDataItem.netPerformanceWithCurrencyEffect /
+              averageInvestmentValueWithCurrencyEffect
+            : 0
+      };
+    }
+
+    return performancePercentagesByDate;
   }
 
   protected getHoldingPerformance({
