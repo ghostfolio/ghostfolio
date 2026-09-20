@@ -178,11 +178,18 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       {
         totalAverageInvestmentValue,
         totalAverageInvestmentValueWithCurrencyEffect,
+        totalDividendValue,
         totalNetPerformanceValue,
         totalNetPerformanceValueWithCurrencyEffect
       }
     ] of Object.entries(accumulatedValuesByDate)) {
       performancePercentagesByDate[date] = {
+        dividendInPercentageWithCurrencyEffect:
+          totalAverageInvestmentValueWithCurrencyEffect.eq(0)
+            ? 0
+            : totalDividendValue
+                .div(totalAverageInvestmentValueWithCurrencyEffect)
+                .toNumber(),
         netPerformanceInPercentage: totalAverageInvestmentValue.eq(0)
           ? 0
           : totalNetPerformanceValue
@@ -254,6 +261,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           : 0;
 
       performancePercentagesByDate[historicalDataItem.date] = {
+        dividendInPercentageWithCurrencyEffect:
+          averageInvestmentValueWithCurrencyEffect > 0
+            ? historicalDataItem.dividendInBaseCurrency /
+              averageInvestmentValueWithCurrencyEffect
+            : 0,
         netPerformanceInPercentage:
           averageInvestmentValue > 0
             ? historicalDataItem.netPerformance / averageInvestmentValue

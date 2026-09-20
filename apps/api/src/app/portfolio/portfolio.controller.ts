@@ -565,6 +565,7 @@ export class PortfolioController {
         [
           'currentNetWorth',
           'currentValueInBaseCurrency',
+          'dividendInBaseCurrency',
           'grossPerformance',
           'grossPerformanceWithCurrencyEffect',
           'netPerformance',
