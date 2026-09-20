@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the dividend performance to the analysis page (experimental)
 - Added a tool to get the watchlist to the server of the Model Context Protocol (MCP) (experimental)
 
 ### Changed
