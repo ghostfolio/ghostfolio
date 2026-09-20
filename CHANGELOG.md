@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the cache key of the portfolio snapshot by the performance calculation type
 - Hardened the validation of the device id in the biometric authentication
+- Upgraded `bull-board` from version `9.9.0` to `9.10.1`
 
 ### Fixed
 
