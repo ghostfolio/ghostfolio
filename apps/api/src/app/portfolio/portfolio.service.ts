@@ -1220,6 +1220,8 @@ export class PortfolioService {
         performance: {
           currentNetWorth: 0,
           currentValueInBaseCurrency: 0,
+          dividendInBaseCurrency: 0,
+          dividendPercentageWithCurrencyEffect: 0,
           netPerformance: 0,
           netPerformancePercentage: 0,
           netPerformancePercentageWithCurrencyEffect: 0,
@@ -1251,6 +1253,8 @@ export class PortfolioService {
     });
 
     const {
+      dividendInBaseCurrency,
+      dividendInPercentageWithCurrencyEffect,
       netPerformance,
       netPerformanceInPercentage,
       netPerformanceInPercentageWithCurrencyEffect,
@@ -1260,6 +1264,8 @@ export class PortfolioService {
       totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
     } = chart?.at(-1) ?? {
+      dividendInBaseCurrency: 0,
+      dividendInPercentageWithCurrencyEffect: 0,
       netPerformance: 0,
       netPerformanceInPercentage: 0,
       netPerformanceInPercentageWithCurrencyEffect: 0,
@@ -1275,12 +1281,15 @@ export class PortfolioService {
       hasErrors,
       dateOfFirstActivity: parseDate(historicalData[0]?.date),
       performance: {
+        dividendInBaseCurrency,
         netPerformance,
         netPerformanceWithCurrencyEffect,
         totalInvestment,
         totalInvestmentValueWithCurrencyEffect,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
+        dividendPercentageWithCurrencyEffect:
+          dividendInPercentageWithCurrencyEffect,
         netPerformancePercentage: netPerformanceInPercentage,
         netPerformancePercentageWithCurrencyEffect:
           netPerformanceInPercentageWithCurrencyEffect
@@ -2125,6 +2134,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      dividendPercentageWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
@@ -2224,6 +2234,7 @@ export class PortfolioService {
       cash,
       currentValueInBaseCurrency,
       dateOfFirstActivity,
+      dividendPercentageWithCurrencyEffect,
       excludedAccountsAndActivities,
       netPerformance,
       netPerformancePercentage,

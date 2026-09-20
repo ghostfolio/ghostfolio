@@ -1,7 +1,6 @@
 import {
   activityDummyData,
   assetProfileDummyData,
-  getPerformanceByDateRange,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -83,7 +82,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with MSFT buy', async () => {
+    it('with GOOGL fee and dividend', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
@@ -118,6 +117,42 @@ describe('PortfolioCalculator', () => {
           quantity: 1,
           type: 'DIVIDEND',
           unitPriceInAssetProfileCurrency: 0.62
+        },
+        {
+          // The first activity of this asset profile is a fee, which is not an
+          // investment activity. Thus the holding is not included in the
+          // holdings of the portfolio summary, and its dividend must not be
+          // included in the chart
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Alphabet Inc.',
+            symbol: 'GOOGL'
+          },
+          date: new Date('2023-01-03'),
+          feeInAssetProfileCurrency: 1,
+          feeInBaseCurrency: 1,
+          quantity: 0,
+          type: 'FEE',
+          unitPriceInAssetProfileCurrency: 0
+        },
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Alphabet Inc.',
+            symbol: 'GOOGL'
+          },
+          date: new Date('2023-07-10'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 5
         }
       ];
 
@@ -131,105 +166,21 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      const performanceByDateRange = await getPerformanceByDateRange({
-        portfolioCalculator,
-        dateRanges: ['1d', 'max', 'ytd']
-      });
+      const dividendInBaseCurrency =
+        await portfolioCalculator.getDividendInBaseCurrency();
 
-      expect(portfolioSnapshot).toMatchObject({
-        dividendYieldPercent: new Big('0.001144362748184'),
-        dividendYieldPercentWithCurrencyEffect: new Big('0.001144362748184'),
-        errors: [],
-        hasErrors: false,
-        positions: [
-          {
-            activitiesCount: 2,
-            averagePrice: new Big('298.58'),
-            currency: 'USD',
-            dataSource: 'YAHOO',
-            dateOfFirstActivity: '2021-09-16',
-            dividend: new Big('0.62'),
-            dividendInBaseCurrency: new Big('0.62'),
-            dividendYieldPercent: new Big('0.001144362748184'),
-            dividendYieldPercentWithCurrencyEffect: new Big(
-              '0.001144362748184'
-            ),
-            fee: new Big('19'),
-            grossPerformance: new Big('33.25'),
-            grossPerformancePercentage: new Big('0.11136043941322258691'),
-            grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.11136043941322258691'
-            ),
-            grossPerformanceWithCurrencyEffect: new Big('33.25'),
-            investment: new Big('298.58'),
-            investmentWithCurrencyEffect: new Big('298.58'),
-            marketPrice: 331.83,
-            marketPriceInBaseCurrency: 331.83,
-            netPerformance: new Big('14.25'),
-            netPerformancePercentage: new Big('0.04772590260566682296'),
-            netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.04772590260566682296')
-            },
-            netPerformanceWithCurrencyEffectMap: {
-              '1d': new Big('-5.39'),
-              '5y': new Big('14.25'),
-              max: new Big('14.25'),
-              wtd: new Big('-5.39')
-            },
-            quantity: new Big('1'),
-            symbol: 'MSFT',
-            tags: []
-          }
-        ],
-        totalFeesWithCurrencyEffect: new Big('19'),
-        totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('298.58'),
-        totalInvestmentWithCurrencyEffect: new Big('298.58'),
-        totalLiabilitiesWithCurrencyEffect: new Big('0')
-      });
-
-      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
-        expect.objectContaining({
-          totalInvestment: 298.58,
-          totalInvestmentValueWithCurrencyEffect: 298.58
+      expect(
+        portfolioSnapshot.positions.map(({ symbol }) => {
+          return symbol;
         })
-      );
+      ).toEqual(['MSFT']);
 
-      expect(performanceByDateRange).toMatchObject({
-        '1d': {
-          date: '2023-07-10',
-          dividendInBaseCurrency: 0,
-          dividendInPercentageWithCurrencyEffect: 0,
-          netPerformance: -5.390000000000001,
-          netPerformanceInPercentage: -0.015983630864124312,
-          netPerformanceInPercentageWithCurrencyEffect: -0.015983630864124312,
-          netPerformanceWithCurrencyEffect: -5.390000000000001,
-          totalInvestmentValueWithCurrencyEffect: 298.58,
-          valueWithCurrencyEffect: 331.83
-        },
-        max: {
-          date: '2023-07-10',
-          dividendInBaseCurrency: 0.62,
-          dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
-          netPerformance: 14.25,
-          netPerformanceInPercentage: 0.04772590260566659,
-          netPerformanceInPercentageWithCurrencyEffect: 0.04772590260566659,
-          netPerformanceWithCurrencyEffect: 14.25,
-          totalInvestmentValueWithCurrencyEffect: 298.58,
-          valueWithCurrencyEffect: 331.83
-        },
-        ytd: {
-          date: '2023-07-10',
-          dividendInBaseCurrency: 0,
-          dividendInPercentageWithCurrencyEffect: 0,
-          netPerformance: -7.68,
-          netPerformanceInPercentage: -0.022620835910577012,
-          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577012,
-          netPerformanceWithCurrencyEffect: -7.68,
-          totalInvestmentValueWithCurrencyEffect: 298.58,
-          valueWithCurrencyEffect: 331.83
-        }
-      });
+      // The chart and the portfolio summary must show the same dividend
+      expect(dividendInBaseCurrency).toEqual(new Big('0.62'));
+
+      expect(
+        portfolioSnapshot.historicalData.at(-1).dividendInBaseCurrency
+      ).toEqual(0.62);
     });
   });
 });

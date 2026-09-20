@@ -142,6 +142,8 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData[0]).toEqual({
         date: '2021-12-11',
+        dividendInBaseCurrency: 0,
+        dividendInPercentageWithCurrencyEffect: 0,
         investmentValueWithCurrencyEffect: 0,
         netPerformance: 0,
         netPerformanceInPercentage: 0,
@@ -160,6 +162,8 @@ describe('PortfolioCalculator', () => {
        */
       expect(portfolioSnapshot.historicalData[1]).toEqual({
         date: '2021-12-12',
+        dividendInBaseCurrency: 0,
+        dividendInPercentageWithCurrencyEffect: 0,
         investmentValueWithCurrencyEffect: 44558.42,
         netPerformance: 5535.42, // 1 * (50098.3 - 44558.42) - 4.46 = 5535.42
         netPerformanceInPercentage: 0.12422837255001412, // 5535.42 ÷ 44558.42 = 0.12422837255001412
@@ -179,6 +183,8 @@ describe('PortfolioCalculator', () => {
         ]
       ).toEqual({
         date: '2022-01-14',
+        dividendInBaseCurrency: 0,
+        dividendInPercentageWithCurrencyEffect: 0,
         investmentValueWithCurrencyEffect: 0,
         netPerformance: -1463.18,
         netPerformanceInPercentage: -0.032837340282712,
