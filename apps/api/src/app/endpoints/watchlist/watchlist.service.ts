@@ -151,7 +151,7 @@ export class WatchlistService {
     );
 
     return watchlist.sort((a, b) => {
-      return a.name.localeCompare(b.name);
+      return (a.name ?? '').localeCompare(b.name ?? '');
     });
   }
 
