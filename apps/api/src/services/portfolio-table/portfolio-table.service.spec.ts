@@ -126,7 +126,7 @@ function createWatchlistItem({
     performances: {
       allTimeHigh: {
         performancePercent,
-        date: new Date('2024-01-01')
+        date: new Date('2024-01-01T00:00:00')
       }
     },
     trend50d: 'UP',

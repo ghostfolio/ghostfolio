@@ -94,7 +94,7 @@ export class GhostfolioMcpController {
     },
     description: `Gives the watchlist of the user, sorted by name, with these columns: ${PortfolioTableService.getWatchlistTableColumnNames().join(
       ', '
-    )}. A trend compares the average market price of the last 50 or 200 days with the average of the 50 or 200 days before. The change from the all time high is the difference between the current market price and the all time high in percentage.`,
+    )}. A trend compares the average market price of the last 50 or 200 days with the average of the 50 or 200 days before. A trend is UNKNOWN if there is not sufficient market data. The change from the all time high is the difference between the current market price and the all time high in percentage.`,
     name: 'get-watchlist'
   })
   public async getWatchlist(@Impersonation() { userId }: ImpersonationContext) {
