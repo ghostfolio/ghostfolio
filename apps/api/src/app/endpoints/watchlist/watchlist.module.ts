@@ -15,6 +15,7 @@ import { WatchlistService } from './watchlist.service';
 
 @Module({
   controllers: [WatchlistController],
+  exports: [WatchlistService],
   imports: [
     BenchmarkModule,
     DataGatheringQueueModule,
