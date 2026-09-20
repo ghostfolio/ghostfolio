@@ -138,7 +138,7 @@ export class BenchmarkService {
         };
       })
       .sort((a, b) => {
-        return a.name?.localeCompare(b?.name) ?? 0;
+        return (a.name ?? '').localeCompare(b.name ?? '');
       });
   }
 
