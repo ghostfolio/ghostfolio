@@ -17,6 +17,14 @@ export class PortfolioSnapshot {
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
 
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
+  dividendYieldPercent: Big;
+
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
+  dividendYieldPercentWithCurrencyEffect: Big;
+
   errors: AssetProfileIdentifier[];
 
   hasErrors: boolean;

@@ -17,6 +17,8 @@ export interface HoldingPerformance {
   currentValuesWithCurrencyEffect: {
     [date: string]: Big;
   };
+  dividendYieldPercent: Big;
+  dividendYieldPercentWithCurrencyEffect: Big;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
   grossPerformancePercentageWithCurrencyEffect: Big;

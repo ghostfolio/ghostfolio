@@ -990,6 +990,9 @@ export class PortfolioService {
       currency,
       dateOfFirstActivity,
       dividendInBaseCurrency,
+      dividendYieldPercent: dividendYieldPercentOfSnapshot,
+      dividendYieldPercentWithCurrencyEffect:
+        dividendYieldPercentWithCurrencyEffectOfSnapshot,
       feeInBaseCurrency,
       grossPerformance,
       grossPerformancePercentage,
@@ -1005,33 +1008,40 @@ export class PortfolioService {
       tags
     } = holding;
 
+    // TODO: Remove the block below with the next release, when each cached
+    // portfolio snapshot contains the dividend yield. Then take
+    // dividendYieldPercent and dividendYieldPercentWithCurrencyEffect
+    // directly from the holding and remove averageInvestment and
+    // averageInvestmentWithCurrencyEffect from the properties above
+    const daysInMarket = differenceInDays(
+      new Date(),
+      parseDate(dateOfFirstActivity)
+    );
+
+    const dividendYieldPercent =
+      dividendYieldPercentOfSnapshot ??
+      getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercentage: averageInvestment.eq(0)
+          ? new Big(0)
+          : dividendInBaseCurrency.div(averageInvestment)
+      });
+
+    const dividendYieldPercentWithCurrencyEffect =
+      dividendYieldPercentWithCurrencyEffectOfSnapshot ??
+      getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercentage: averageInvestmentWithCurrencyEffect.eq(0)
+          ? new Big(0)
+          : dividendInBaseCurrency.div(averageInvestmentWithCurrencyEffect)
+      });
+
     const activitiesOfHolding = activities.filter((activity) => {
       return (
         activity.assetProfile.dataSource === dataSource &&
         activity.assetProfile.symbol === symbol
       );
     });
-
-    const dividendYieldPercent = getAnnualizedPerformancePercent({
-      daysInMarket: differenceInDays(
-        new Date(),
-        parseDate(dateOfFirstActivity)
-      ),
-      netPerformancePercentage: averageInvestment.eq(0)
-        ? new Big(0)
-        : dividendInBaseCurrency.div(averageInvestment)
-    });
-
-    const dividendYieldPercentWithCurrencyEffect =
-      getAnnualizedPerformancePercent({
-        daysInMarket: differenceInDays(
-          new Date(),
-          parseDate(dateOfFirstActivity)
-        ),
-        netPerformancePercentage: averageInvestmentWithCurrencyEffect.eq(0)
-          ? new Big(0)
-          : dividendInBaseCurrency.div(averageInvestmentWithCurrencyEffect)
-      });
 
     const historicalData = await this.dataProviderService.getHistorical(
       [{ dataSource, symbol }],
@@ -2097,6 +2107,8 @@ export class PortfolioService {
     }
 
     const {
+      dividendYieldPercent,
+      dividendYieldPercentWithCurrencyEffect,
       totalCashInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
@@ -2219,6 +2231,11 @@ export class PortfolioService {
         return ['BUY', 'SELL'].includes(type);
       }).length,
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+      // TODO: Remove the fallback to 0 with the next release, when each
+      // cached portfolio snapshot contains the dividend yield
+      dividendYieldPercent: dividendYieldPercent?.toNumber() ?? 0,
+      dividendYieldPercentWithCurrencyEffect:
+        dividendYieldPercentWithCurrencyEffect?.toNumber() ?? 0,
       emergencyFund: {
         assets: emergencyFundHoldingsValueInBaseCurrency,
         cash: totalEmergencyFund

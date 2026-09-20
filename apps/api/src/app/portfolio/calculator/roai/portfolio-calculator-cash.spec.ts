@@ -262,6 +262,8 @@ describe('PortfolioCalculator', () => {
         dateOfFirstActivity: '2023-12-31',
         dividend: new Big(0),
         dividendInBaseCurrency: new Big(0),
+        dividendYieldPercent: new Big(0),
+        dividendYieldPercentWithCurrencyEffect: new Big(0),
         fee: new Big(0),
         feeInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),

@@ -1,5 +1,6 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
+import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accumulated-values.interface';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
 import { HoldingValuationItem } from '@ghostfolio/api/app/portfolio/interfaces/holding-valuation-item.interface';
 import { HoldingValuation } from '@ghostfolio/api/app/portfolio/interfaces/holding-valuation.interface';
@@ -9,6 +10,7 @@ import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interf
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
+import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/types/net-performance-percentages.type';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
@@ -41,7 +43,10 @@ import {
   InvestmentItem,
   ResponseError
 } from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot } from '@ghostfolio/common/models';
+import {
+  PortfolioSnapshot,
+  PortfolioSnapshotHolding
+} from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -67,7 +72,7 @@ import {
   startOfYear,
   subDays
 } from 'date-fns';
-import { groupBy, isNumber, sortBy, sum, uniqBy } from 'lodash';
+import { groupBy, sortBy, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -213,6 +218,18 @@ export abstract class PortfolioCalculator {
     this.snapshotPromise.catch(() => undefined);
   }
 
+  protected abstract calculateNetPerformancePercentages({
+    accumulatedValuesByDate
+  }: {
+    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+  }): { [date: string]: NetPerformancePercentages };
+
+  protected abstract calculateNetPerformancePercentagesForDateRange({
+    historicalDataItems
+  }: {
+    historicalDataItems: HistoricalDataItem[];
+  }): { [date: string]: NetPerformancePercentages };
+
   protected abstract calculateOverallPerformance(
     positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot;
@@ -230,6 +247,8 @@ export abstract class PortfolioCalculator {
         activitiesCount: 0,
         createdAt: new Date(),
         currentValueInBaseCurrency: new Big(0),
+        dividendYieldPercent: new Big(0),
+        dividendYieldPercentWithCurrencyEffect: new Big(0),
         errors: [],
         hasErrors: false,
         historicalData: [],
@@ -353,19 +372,7 @@ export abstract class PortfolioCalculator {
     const positions: PortfolioCalculatorHolding[] = [];
 
     const accumulatedValuesByDate: {
-      [date: string]: {
-        investmentValueWithCurrencyEffect: Big;
-        totalAverageInvestmentValue: Big;
-        totalAverageInvestmentValueWithCurrencyEffect: Big;
-        totalCashValueWithCurrencyEffect: Big;
-        totalCurrentValue: Big;
-        totalCurrentValueWithCurrencyEffect: Big;
-        totalInvestmentValue: Big;
-        totalInvestmentValueWithCurrencyEffect: Big;
-        totalNetPerformanceValue: Big;
-        totalNetPerformanceValueWithCurrencyEffect: Big;
-        totalNetWorthValueWithCurrencyEffect: Big;
-      };
+      [date: string]: AccumulatedValues;
     } = {};
 
     const valuesByAssetProfileIdentifier: {
@@ -409,6 +416,8 @@ export abstract class PortfolioCalculator {
         averageInvestmentWithCurrencyEffect,
         currentValues,
         currentValuesWithCurrencyEffect,
+        dividendYieldPercent,
+        dividendYieldPercentWithCurrencyEffect,
         grossPerformance,
         grossPerformancePercentage,
         grossPerformancePercentageWithCurrencyEffect,
@@ -477,6 +486,8 @@ export abstract class PortfolioCalculator {
       positions.push({
         averageInvestment,
         averageInvestmentWithCurrencyEffect,
+        dividendYieldPercent,
+        dividendYieldPercentWithCurrencyEffect,
         activitiesCount: item.activitiesCount,
         averagePrice: item.averagePrice,
         currency: item.currency,
@@ -647,13 +658,14 @@ export abstract class PortfolioCalculator {
       }
     }
 
+    const netPerformancePercentagesByDate =
+      this.calculateNetPerformancePercentages({ accumulatedValuesByDate });
+
     const historicalData: HistoricalDataItem[] = Object.entries(
       accumulatedValuesByDate
     ).map(([date, values]) => {
       const {
         investmentValueWithCurrencyEffect,
-        totalAverageInvestmentValue,
-        totalAverageInvestmentValueWithCurrencyEffect,
         totalCashValueWithCurrencyEffect,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
@@ -664,21 +676,9 @@ export abstract class PortfolioCalculator {
         totalNetWorthValueWithCurrencyEffect
       } = values;
 
-      const netPerformanceInPercentage = totalAverageInvestmentValue.eq(0)
-        ? 0
-        : totalNetPerformanceValue.div(totalAverageInvestmentValue).toNumber();
-
-      const netPerformanceInPercentageWithCurrencyEffect =
-        totalAverageInvestmentValueWithCurrencyEffect.eq(0)
-          ? 0
-          : totalNetPerformanceValueWithCurrencyEffect
-              .div(totalAverageInvestmentValueWithCurrencyEffect)
-              .toNumber();
-
       return {
+        ...netPerformancePercentagesByDate[date],
         date,
-        netPerformanceInPercentage,
-        netPerformanceInPercentageWithCurrencyEffect,
         investmentValueWithCurrencyEffect:
           investmentValueWithCurrencyEffect.toNumber(),
         netPerformance: totalNetPerformanceValue.toNumber(),
@@ -857,8 +857,14 @@ export abstract class PortfolioCalculator {
   public async getDividendInBaseCurrency() {
     await this.snapshotPromise;
 
+    return this.getDividendInBaseCurrencyOfHoldings(this.snapshot.positions);
+  }
+
+  protected getDividendInBaseCurrencyOfHoldings(
+    holdings: PortfolioSnapshotHolding[]
+  ) {
     return getSum(
-      this.snapshot.positions.map(({ dividendInBaseCurrency }) => {
+      holdings.map(({ dividendInBaseCurrency }) => {
         return dividendInBaseCurrency;
       })
     );
@@ -872,6 +878,8 @@ export abstract class PortfolioCalculator {
       averageInvestmentWithCurrencyEffect: new Big(0),
       currentValues: {},
       currentValuesWithCurrencyEffect: {},
+      dividendYieldPercent: new Big(0),
+      dividendYieldPercentWithCurrencyEffect: new Big(0),
       grossPerformance: new Big(0),
       grossPerformancePercentage: new Big(0),
       grossPerformancePercentageWithCurrencyEffect: new Big(0),
@@ -1342,12 +1350,8 @@ export abstract class PortfolioCalculator {
 
     const { historicalData } = this.snapshot;
 
-    const chart: HistoricalDataItem[] = [];
+    const historicalDataItemsOfDateRange: HistoricalDataItem[] = [];
 
-    const averageInvestmentValues: number[] = [];
-    const averageInvestmentValuesWithCurrencyEffect: number[] = [];
-    let grossPerformanceAtStartDate: number;
-    let grossPerformanceWithCurrencyEffectAtStartDate: number;
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
 
@@ -1355,71 +1359,37 @@ export abstract class PortfolioCalculator {
       const date = resetHours(parseDate(historicalDataItem.date));
 
       if (!isBefore(date, start) && !isAfter(date, end)) {
-        if (!isNumber(netPerformanceAtStartDate)) {
-          grossPerformanceAtStartDate =
-            historicalDataItem.value - historicalDataItem.totalInvestment;
-
-          grossPerformanceWithCurrencyEffectAtStartDate =
-            historicalDataItem.valueWithCurrencyEffect -
-            historicalDataItem.totalInvestmentValueWithCurrencyEffect;
-
+        // Take the values at the start date from the first day of the date
+        // range
+        if (historicalDataItemsOfDateRange.length === 0) {
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
           netPerformanceWithCurrencyEffectAtStartDate =
             historicalDataItem.netPerformanceWithCurrencyEffect;
         }
 
-        const netPerformanceSinceStartDate =
-          historicalDataItem.netPerformance - netPerformanceAtStartDate;
-
-        const netPerformanceWithCurrencyEffectSinceStartDate =
-          historicalDataItem.netPerformanceWithCurrencyEffect -
-          netPerformanceWithCurrencyEffectAtStartDate;
-
-        // Add the gross performance at the start date of the range to the
-        // investment of each day. Thus the range starts with the value of its
-        // first day, and subsequent buy and sell activities stay included.
-        if (historicalDataItem.totalInvestment > 0) {
-          averageInvestmentValues.push(
-            historicalDataItem.totalInvestment + grossPerformanceAtStartDate
-          );
-        }
-
-        if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-          averageInvestmentValuesWithCurrencyEffect.push(
-            historicalDataItem.totalInvestmentValueWithCurrencyEffect +
-              grossPerformanceWithCurrencyEffectAtStartDate
-          );
-        }
-
-        const averageInvestmentValue =
-          averageInvestmentValues.length > 0
-            ? sum(averageInvestmentValues) / averageInvestmentValues.length
-            : 0;
-
-        const averageInvestmentValueWithCurrencyEffect =
-          averageInvestmentValuesWithCurrencyEffect.length > 0
-            ? sum(averageInvestmentValuesWithCurrencyEffect) /
-              averageInvestmentValuesWithCurrencyEffect.length
-            : 0;
-
-        chart.push({
+        historicalDataItemsOfDateRange.push({
           ...historicalDataItem,
-          netPerformance: netPerformanceSinceStartDate,
+          netPerformance:
+            historicalDataItem.netPerformance - netPerformanceAtStartDate,
           netPerformanceWithCurrencyEffect:
-            netPerformanceWithCurrencyEffectSinceStartDate,
-          netPerformanceInPercentage:
-            averageInvestmentValue > 0
-              ? netPerformanceSinceStartDate / averageInvestmentValue
-              : 0,
-          netPerformanceInPercentageWithCurrencyEffect:
-            averageInvestmentValueWithCurrencyEffect > 0
-              ? netPerformanceWithCurrencyEffectSinceStartDate /
-                averageInvestmentValueWithCurrencyEffect
-              : 0
+            historicalDataItem.netPerformanceWithCurrencyEffect -
+            netPerformanceWithCurrencyEffectAtStartDate
         });
       }
     }
+
+    const netPerformancePercentagesByDate =
+      this.calculateNetPerformancePercentagesForDateRange({
+        historicalDataItems: historicalDataItemsOfDateRange
+      });
+
+    const chart = historicalDataItemsOfDateRange.map((historicalDataItem) => {
+      return {
+        ...historicalDataItem,
+        ...netPerformancePercentagesByDate[historicalDataItem.date]
+      };
+    });
 
     return { chart };
   }

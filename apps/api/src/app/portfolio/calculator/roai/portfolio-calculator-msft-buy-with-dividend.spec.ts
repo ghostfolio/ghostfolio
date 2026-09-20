@@ -137,6 +137,8 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(portfolioSnapshot).toMatchObject({
+        dividendYieldPercent: new Big('0.001144362748184'),
+        dividendYieldPercentWithCurrencyEffect: new Big('0.001144362748184'),
         errors: [],
         hasErrors: false,
         positions: [
@@ -148,6 +150,10 @@ describe('PortfolioCalculator', () => {
             dateOfFirstActivity: '2021-09-16',
             dividend: new Big('0.62'),
             dividendInBaseCurrency: new Big('0.62'),
+            dividendYieldPercent: new Big('0.001144362748184'),
+            dividendYieldPercentWithCurrencyEffect: new Big(
+              '0.001144362748184'
+            ),
             fee: new Big('19'),
             grossPerformance: new Big('33.25'),
             grossPerformancePercentage: new Big('0.11136043941322258691'),

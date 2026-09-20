@@ -1,12 +1,24 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
-import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
+import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/types/net-performance-percentages.type';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export class MwrPortfolioCalculator extends PortfolioCalculator {
-  protected calculateOverallPerformance([]: PortfolioCalculatorHolding[]): PortfolioSnapshot {
+  protected calculateNetPerformancePercentages(): {
+    [date: string]: NetPerformancePercentages;
+  } {
+    throw new Error('Method not implemented.');
+  }
+
+  protected calculateNetPerformancePercentagesForDateRange(): {
+    [date: string]: NetPerformancePercentages;
+  } {
+    throw new Error('Method not implemented.');
+  }
+
+  protected calculateOverallPerformance(): PortfolioSnapshot {
     throw new Error('Method not implemented.');
   }
 
