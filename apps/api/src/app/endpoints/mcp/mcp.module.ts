@@ -38,7 +38,7 @@ import { McpService } from './mcp.service';
 
         return new McpStrategy({
           instructions:
-            'Ghostfolio is a wealth management application. The tools read the portfolio of the user who granted the access and import activities into it. They give no quantity and no monetary value (except the unit price of an activity).',
+            'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access and import activities into the portfolio. They give no quantity and no monetary value (except the unit price of an activity).',
           name: 'ghostfolio',
           title: 'Ghostfolio',
           transports: [

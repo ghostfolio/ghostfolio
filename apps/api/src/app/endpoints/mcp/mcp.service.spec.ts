@@ -72,7 +72,8 @@ describe('McpService', () => {
     portfolioTableService = {
       getAccountsTable: jest.fn().mockResolvedValue('## Accounts'),
       getActivitiesTable: jest.fn().mockResolvedValue('## Activities'),
-      getHoldingsTable: jest.fn().mockResolvedValue('## Holdings')
+      getHoldingsTable: jest.fn().mockResolvedValue('## Holdings'),
+      getWatchlistTable: jest.fn().mockResolvedValue('## Watchlist')
     } as unknown as PortfolioTableService;
 
     symbolService = {
@@ -195,6 +196,18 @@ describe('McpService', () => {
       expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith({
         userId,
         languageCode: DEFAULT_LANGUAGE_CODE
+      });
+    });
+  });
+
+  describe('getWatchlist', () => {
+    it('Gives the table of the watchlist', async () => {
+      expect(await mcpService.getWatchlist({ userId })).toEqual({
+        content: [{ text: '## Watchlist', type: 'text' }]
+      });
+
+      expect(portfolioTableService.getWatchlistTable).toHaveBeenCalledWith({
+        userId
       });
     });
   });

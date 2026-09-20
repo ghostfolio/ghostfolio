@@ -106,6 +106,14 @@ export class McpService {
     return this.getTextResult(table);
   }
 
+  public async getWatchlist({ userId }: { userId: string }) {
+    const table = await this.portfolioTableService.getWatchlistTable({
+      userId
+    });
+
+    return this.getTextResult(table);
+  }
+
   public async importActivities({
     activities,
     userId

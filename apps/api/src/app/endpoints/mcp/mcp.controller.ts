@@ -85,6 +85,22 @@ export class GhostfolioMcpController {
     return this.mcpService.getPortfolio({ userId });
   }
 
+  @RequiresScopeOfAccess(scopes.watchlistRead)
+  @Tool({
+    annotations: {
+      openWorldHint: false,
+      readOnlyHint: true,
+      title: 'Get watchlist'
+    },
+    description: `Gives the watchlist of the user, sorted by name, with these columns: ${PortfolioTableService.getWatchlistTableColumnNames().join(
+      ', '
+    )}. A trend compares the average market price of the last 50 or 200 days with the average of the 50 or 200 days before. The change from the all time high is the difference between the current market price and the all time high in percentage.`,
+    name: 'get-watchlist'
+  })
+  public async getWatchlist(@Impersonation() { userId }: ImpersonationContext) {
+    return this.mcpService.getWatchlist({ userId });
+  }
+
   /**
    * The transport gives the tool to every client, because it filters the list
    * of the tools by the scopes of request.user, which a request of an access

@@ -1,3 +1,4 @@
+import type { WatchlistService } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.service';
 import type { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import type { TableParameters } from '@ghostfolio/api/helper/interfaces/table-parameters.interface';
 import type { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
@@ -5,10 +6,13 @@ import {
   DEFAULT_LANGUAGE_CODE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPosition,
+  WatchlistResponse
+} from '@ghostfolio/common/interfaces';
 import { AccountWithValue } from '@ghostfolio/common/types';
 
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
 import { PortfolioTableService } from './portfolio-table.service';
 
@@ -105,12 +109,39 @@ function createHolding({
   } as unknown as PortfolioPosition;
 }
 
+function createWatchlistItem({
+  name = 'Name of AAPL',
+  performancePercent = -0.25,
+  symbol = 'AAPL'
+}: {
+  name?: string;
+  performancePercent?: number;
+  symbol?: string;
+} = {}): WatchlistResponse['watchlist'][number] {
+  return {
+    name,
+    symbol,
+    dataSource: DataSource.YAHOO,
+    marketCondition: 'BEAR_MARKET',
+    performances: {
+      allTimeHigh: {
+        performancePercent,
+        date: new Date('2024-01-01')
+      }
+    },
+    trend50d: 'UP',
+    trend200d: 'DOWN'
+  };
+}
+
 function createPortfolioTableService({
   accounts = [],
-  holdings = []
+  holdings = [],
+  watchlist = []
 }: {
   accounts?: AccountWithValue[];
   holdings?: PortfolioPosition[];
+  watchlist?: WatchlistResponse['watchlist'];
 } = {}) {
   // The mock gives the identifier of the translation, so that a test can tell
   // the translation of the asset class from that of the asset sub class
@@ -125,7 +156,16 @@ function createPortfolioTableService({
     getDetails: jest.fn().mockResolvedValue({ holdings })
   } as unknown as PortfolioService;
 
-  return new PortfolioTableService(null, i18nService, portfolioService);
+  const watchlistService = {
+    getWatchlistItems: jest.fn().mockResolvedValue(watchlist)
+  } as unknown as WatchlistService;
+
+  return new PortfolioTableService(
+    null,
+    i18nService,
+    portfolioService,
+    watchlistService
+  );
 }
 
 describe('PortfolioTableService', () => {
@@ -171,6 +211,20 @@ describe('PortfolioTableService', () => {
         'Date of First Activity',
         'Activities Count',
         'Allocation in Percentage'
+      ]);
+    });
+  });
+
+  describe('getWatchlistTableColumnNames', () => {
+    it('gives no column with a monetary value', () => {
+      expect(PortfolioTableService.getWatchlistTableColumnNames()).toEqual([
+        'Name',
+        'Symbol',
+        'Trend 50 Days',
+        'Trend 200 Days',
+        'Date of Last All Time High',
+        'Change from All Time High',
+        'Market Condition'
       ]);
     });
   });
@@ -267,6 +321,31 @@ describe('PortfolioTableService', () => {
 
       expect(firstRow).toContain('AAPL');
       expect(secondRow).toContain('MSFT');
+    });
+  });
+
+  describe('getWatchlistTable', () => {
+    function getWatchlistTable(watchlist: WatchlistResponse['watchlist']) {
+      return createPortfolioTableService({ watchlist }).getWatchlistTable({
+        userId: 'user-id'
+      });
+    }
+
+    it('gives the date and the change of the all time high', async () => {
+      const result = await getWatchlistTable([createWatchlistItem()]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain('2024-01-01');
+      expect(row).toContain('-25.000%');
+    });
+
+    it('tells that no watchlist items are found if the result is empty', async () => {
+      const result = await getWatchlistTable([]);
+
+      expect(result).toContain('No watchlist items found.');
     });
   });
 });

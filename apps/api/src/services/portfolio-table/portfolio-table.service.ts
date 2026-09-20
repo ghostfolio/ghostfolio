@@ -1,10 +1,15 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { WatchlistService } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { TableColumnDefinition } from '@ghostfolio/api/helper/interfaces/table-column-definition.interface';
 import { getMarkdownTable } from '@ghostfolio/api/helper/markdown-table.helper';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { DATE_FORMAT, isAccountExcluded } from '@ghostfolio/common/helper';
-import { Activity, Filter } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  Filter,
+  WatchlistResponse
+} from '@ghostfolio/common/interfaces';
 import { AccountWithValue } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -17,14 +22,14 @@ import { format } from 'date-fns';
 
 import { HoldingsTableColumnDefinition } from './types/holdings-table-column-definition.type';
 
-function getAllocationInPercentage(allocationInPercentage: number) {
-  return `${(allocationInPercentage * 100).toFixed(3)}%`;
+function getPercentage(value: number) {
+  return `${(value * 100).toFixed(3)}%`;
 }
 
 /**
- * Renders the accounts, the activities and the holdings of a portfolio as a
- * markdown table. No table has a column with a quantity or with a monetary
- * value, except the unit price of an activity.
+ * Renders the accounts, the activities and the holdings of a portfolio and the
+ * watchlist of its user as a markdown table. No table has a column with a
+ * quantity or with a monetary value, except the unit price of an activity.
  */
 @Injectable()
 export class PortfolioTableService {
@@ -64,7 +69,7 @@ export class PortfolioTableService {
       {
         align: 'right',
         getValue: ({ allocationInPercentage }) => {
-          return getAllocationInPercentage(allocationInPercentage);
+          return getPercentage(allocationInPercentage);
         },
         name: 'Allocation in Percentage'
       },
@@ -173,16 +178,67 @@ export class PortfolioTableService {
       {
         align: 'right',
         getValue: ({ allocationInPercentage }) => {
-          return getAllocationInPercentage(allocationInPercentage);
+          return getPercentage(allocationInPercentage);
         },
         name: 'Allocation in Percentage'
       }
     ];
 
+  private static readonly WATCHLIST_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<
+    WatchlistResponse['watchlist'][number]
+  >[] = [
+    {
+      getValue: ({ name }) => {
+        return name ?? '';
+      },
+      name: 'Name'
+    },
+    {
+      getValue: ({ symbol }) => {
+        return symbol;
+      },
+      name: 'Symbol'
+    },
+    {
+      getValue: ({ trend50d }) => {
+        return trend50d;
+      },
+      name: 'Trend 50 Days'
+    },
+    {
+      getValue: ({ trend200d }) => {
+        return trend200d;
+      },
+      name: 'Trend 200 Days'
+    },
+    {
+      getValue: ({ performances }) => {
+        return performances.allTimeHigh.date
+          ? format(performances.allTimeHigh.date, DATE_FORMAT)
+          : '';
+      },
+      name: 'Date of Last All Time High'
+    },
+    {
+      align: 'right',
+      getValue: ({ performances }) => {
+        return getPercentage(performances.allTimeHigh.performancePercent);
+      },
+      name: 'Change from All Time High'
+    },
+    {
+      getValue: ({ marketCondition }) => {
+        return marketCondition;
+      },
+      name: 'Market Condition'
+    }
+  ];
+
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly i18nService: I18nService,
-    private readonly portfolioService: PortfolioService
+    private readonly portfolioService: PortfolioService,
+    private readonly watchlistService: WatchlistService
   ) {}
 
   public static getAccountsTableColumnNames() {
@@ -203,6 +259,14 @@ export class PortfolioTableService {
 
   public static getHoldingsTableColumnNames() {
     return PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(
+      ({ name }) => {
+        return name;
+      }
+    );
+  }
+
+  public static getWatchlistTableColumnNames() {
+    return PortfolioTableService.WATCHLIST_TABLE_COLUMN_DEFINITIONS.map(
       ({ name }) => {
         return name;
       }
@@ -338,6 +402,26 @@ export class PortfolioTableService {
         rows: sortedHoldings
       })
     ].join('\n');
+  }
+
+  public async getWatchlistTable({ userId }: { userId: string }) {
+    const watchlist = await this.watchlistService.getWatchlistItems(userId);
+
+    const watchlistSection = ['## Watchlist', ''];
+
+    if (watchlist.length > 0) {
+      watchlistSection.push(
+        await getMarkdownTable({
+          columnDefinitions:
+            PortfolioTableService.WATCHLIST_TABLE_COLUMN_DEFINITIONS,
+          rows: watchlist
+        })
+      );
+    } else {
+      watchlistSection.push('No watchlist items found.');
+    }
+
+    return watchlistSection.join('\n');
   }
 
   private getActivitiesSummary({
