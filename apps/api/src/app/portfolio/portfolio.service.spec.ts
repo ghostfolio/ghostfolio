@@ -646,8 +646,8 @@ describe('PortfolioService', () => {
       jest
         .spyOn(portfolioCalculatorFactory, 'createCalculator')
         .mockReturnValue({
-          getSnapshot: jest.fn().mockResolvedValue({ positions: [] }),
-          getTransactionPoints: jest.fn().mockReturnValue([])
+          getHoldingBalancesByDate: jest.fn().mockReturnValue([]),
+          getSnapshot: jest.fn().mockResolvedValue({ positions: [] })
         } as unknown as PortfolioCalculator);
     });
 
