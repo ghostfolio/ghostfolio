@@ -1,15 +1,18 @@
-<form class="d-flex flex-column h-100">
+<form
+  class="d-flex flex-column h-100"
+  [formGroup]="historicalMarketDataForm"
+  (ngSubmit)="onUpdate()"
+>
   <h1 i18n mat-dialog-title>Details for {{ data.symbol }}</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
         <input
-          disabled
+          formControlName="date"
           matInput
           name="date"
           [matDatepicker]="date"
-          [(ngModel)]="data.dateString"
         />
         <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
@@ -25,11 +28,10 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Market Price</mat-label>
         <input
+          formControlName="marketPrice"
           matInput
           name="marketPrice"
           type="number"
-          [ngModel]="marketPrice()"
-          (ngModelChange)="marketPrice.set($event)"
         />
         <span class="ml-2" matTextSuffix>{{ data.currency }}</span>
       </mat-form-field>
@@ -38,6 +40,7 @@
         i18n-title
         mat-button
         title="Fetch market price"
+        type="button"
         (click)="onFetchSymbolForDate()"
       >
         <ion-icon class="text-muted" name="refresh-outline" />
@@ -45,8 +48,15 @@
     </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
-    <button i18n mat-button (click)="onCancel()">Cancel</button>
-    <button color="primary" mat-flat-button (click)="onUpdate()">
+    <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button
+      color="primary"
+      mat-flat-button
+      type="submit"
+      [disabled]="
+        !(historicalMarketDataForm.dirty && historicalMarketDataForm.valid)
+      "
+    >
       <ng-container i18n>Save</ng-container>
     </button>
   </div>
