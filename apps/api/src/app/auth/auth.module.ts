@@ -106,16 +106,9 @@ import { OidcStrategy } from './oidc.strategy';
 
             const config = (await response.json()) as {
               authorization_endpoint: string;
-              issuer: string;
               token_endpoint: string;
               userinfo_endpoint: string;
             };
-
-            if (config.issuer !== issuer) {
-              throw new Error(
-                'OIDC discovery response issuer does not match configured issuer'
-              );
-            }
 
             // Manual URLs take priority over discovered ones
             authorizationURL =
