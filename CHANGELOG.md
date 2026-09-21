@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `bull-board` from version `9.9.0` to `9.10.1`
 - Upgraded `zod` from version `4.5.4` to `4.6.5`
 
+### Fixed
+
+- Fixed the sorting of the watchlist for asset profiles without a name
+
 ## 3.72.0 - 2026-09-20
 
 ### Added
