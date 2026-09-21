@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `bull-board` from version `9.9.0` to `9.10.1`
+
+## 3.72.0 - 2026-09-20
+
 ### Added
 
 - Added a tool to get the watchlist to the server of the Model Context Protocol (MCP) (experimental)
@@ -15,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the cache key of the portfolio snapshot by the performance calculation type
 - Hardened the validation of the device id in the biometric authentication
-- Upgraded `bull-board` from version `9.9.0` to `9.10.1`
+- Upgraded `stripe` from version `22.5.0` to `22.6.2`
 
 ### Fixed
 

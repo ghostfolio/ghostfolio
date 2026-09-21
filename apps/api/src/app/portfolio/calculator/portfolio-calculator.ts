@@ -10,7 +10,7 @@ import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/i
 import { PortfolioCalculatorActivity } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
-import { NetPerformancePercentages } from '@ghostfolio/api/app/portfolio/types/net-performance-percentages.type';
+import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
@@ -218,21 +218,21 @@ export abstract class PortfolioCalculator {
     this.snapshotPromise.catch(() => undefined);
   }
 
-  protected abstract calculateNetPerformancePercentages({
-    accumulatedValuesByDate
-  }: {
-    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
-  }): { [date: string]: NetPerformancePercentages };
-
-  protected abstract calculateNetPerformancePercentagesForDateRange({
-    historicalDataItems
-  }: {
-    historicalDataItems: HistoricalDataItem[];
-  }): { [date: string]: NetPerformancePercentages };
-
   protected abstract calculateOverallPerformance(
     positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot;
+
+  protected abstract calculatePerformancePercentages({
+    accumulatedValuesByDate
+  }: {
+    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+  }): { [date: string]: PerformancePercentages };
+
+  protected abstract calculatePerformancePercentagesForDateRange({
+    historicalDataItems
+  }: {
+    historicalDataItems: HistoricalDataItem[];
+  }): { [date: string]: PerformancePercentages };
 
   @LogPerformance
   public async computeSnapshot(): Promise<PortfolioSnapshot> {
@@ -644,8 +644,9 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    const netPerformancePercentagesByDate =
-      this.calculateNetPerformancePercentages({ accumulatedValuesByDate });
+    const performancePercentagesByDate = this.calculatePerformancePercentages({
+      accumulatedValuesByDate
+    });
 
     const historicalData: HistoricalDataItem[] = Object.entries(
       accumulatedValuesByDate
@@ -663,7 +664,7 @@ export abstract class PortfolioCalculator {
       } = values;
 
       return {
-        ...netPerformancePercentagesByDate[date],
+        ...performancePercentagesByDate[date],
         date,
         investmentValueWithCurrencyEffect:
           investmentValueWithCurrencyEffect.toNumber(),
@@ -1369,15 +1370,15 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    const netPerformancePercentagesByDate =
-      this.calculateNetPerformancePercentagesForDateRange({
+    const performancePercentagesByDate =
+      this.calculatePerformancePercentagesForDateRange({
         historicalDataItems: historicalDataItemsOfDateRange
       });
 
     const chart = historicalDataItemsOfDateRange.map((historicalDataItem) => {
       return {
         ...historicalDataItem,
-        ...netPerformancePercentagesByDate[historicalDataItem.date]
+        ...performancePercentagesByDate[historicalDataItem.date]
       };
     });
 
