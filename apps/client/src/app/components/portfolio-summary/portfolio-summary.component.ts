@@ -55,6 +55,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
   );
 
+  protected readonly isNumber = isNumber;
   protected readonly PerformanceCalculationType = PerformanceCalculationType;
 
   protected isCashExpanded = false;

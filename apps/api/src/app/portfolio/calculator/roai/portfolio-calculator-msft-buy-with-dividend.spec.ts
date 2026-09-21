@@ -155,25 +155,25 @@ describe('PortfolioCalculator', () => {
               '0.001144362748184'
             ),
             fee: new Big('19'),
-            grossPerformance: new Big('33.25'),
-            grossPerformancePercentage: new Big('0.11136043941322258691'),
+            grossPerformance: new Big('33.87'),
+            grossPerformancePercentage: new Big('0.11343693482483756447'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.11136043941322258691'
+              '0.11343693482483756447'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('33.25'),
+            grossPerformanceWithCurrencyEffect: new Big('33.87'),
             investment: new Big('298.58'),
             investmentWithCurrencyEffect: new Big('298.58'),
             marketPrice: 331.83,
             marketPriceInBaseCurrency: 331.83,
-            netPerformance: new Big('14.25'),
-            netPerformancePercentage: new Big('0.04772590260566682296'),
+            netPerformance: new Big('14.87'),
+            netPerformancePercentage: new Big('0.04980239801728180052'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.04772590260566682296')
+              max: new Big('0.04980239801728180052')
             },
             netPerformanceWithCurrencyEffectMap: {
               '1d': new Big('-5.39'),
-              '5y': new Big('14.25'),
-              max: new Big('14.25'),
+              '5y': new Big('14.87'),
+              max: new Big('14.87'),
               wtd: new Big('-5.39')
             },
             quantity: new Big('1'),
@@ -199,11 +199,12 @@ describe('PortfolioCalculator', () => {
         '1d': {
           date: '2023-07-10',
           dividendInBaseCurrency: 0,
+          dividendInPercentage: 0,
           dividendInPercentageWithCurrencyEffect: 0,
-          netPerformance: -5.390000000000001,
-          netPerformanceInPercentage: -0.015983630864124312,
-          netPerformanceInPercentageWithCurrencyEffect: -0.015983630864124312,
-          netPerformanceWithCurrencyEffect: -5.390000000000001,
+          netPerformance: -5.390000000000002,
+          netPerformanceInPercentage: -0.015983630864124316,
+          netPerformanceInPercentageWithCurrencyEffect: -0.015983630864124316,
+          netPerformanceWithCurrencyEffect: -5.390000000000002,
           totalInvestmentValueWithCurrencyEffect: 298.58,
           valueWithCurrencyEffect: 331.83
         },
@@ -211,21 +212,22 @@ describe('PortfolioCalculator', () => {
           date: '2023-07-10',
           dividendInBaseCurrency: 0.62,
           dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
-          netPerformance: 14.25,
-          netPerformanceInPercentage: 0.04772590260566659,
-          netPerformanceInPercentageWithCurrencyEffect: 0.04772590260566659,
-          netPerformanceWithCurrencyEffect: 14.25,
+          netPerformance: 14.87,
+          netPerformanceInPercentage: 0.049802398017281556,
+          netPerformanceInPercentageWithCurrencyEffect: 0.049802398017281556,
+          netPerformanceWithCurrencyEffect: 14.87,
           totalInvestmentValueWithCurrencyEffect: 298.58,
           valueWithCurrencyEffect: 331.83
         },
         ytd: {
           date: '2023-07-10',
           dividendInBaseCurrency: 0,
+          dividendInPercentage: 0,
           dividendInPercentageWithCurrencyEffect: 0,
-          netPerformance: -7.68,
-          netPerformanceInPercentage: -0.022620835910577012,
-          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577012,
-          netPerformanceWithCurrencyEffect: -7.68,
+          netPerformance: -7.6800000000000015,
+          netPerformanceInPercentage: -0.022620835910577015,
+          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577015,
+          netPerformanceWithCurrencyEffect: -7.6800000000000015,
           totalInvestmentValueWithCurrencyEffect: 298.58,
           valueWithCurrencyEffect: 331.83
         }
