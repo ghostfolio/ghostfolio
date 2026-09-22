@@ -93,6 +93,7 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
         this.historicalMarketDataForm.controls.marketPrice.setValue(
           marketPrice
         );
+
         this.historicalMarketDataForm.controls.marketPrice.markAsDirty();
 
         this.changeDetectorRef.markForCheck();

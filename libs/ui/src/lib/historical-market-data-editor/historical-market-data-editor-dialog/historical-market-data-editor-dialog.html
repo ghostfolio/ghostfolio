@@ -8,12 +8,7 @@
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
-        <input
-          formControlName="date"
-          matInput
-          name="date"
-          [matDatepicker]="date"
-        />
+        <input formControlName="date" matInput [matDatepicker]="date" />
         <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
             class="text-muted"
@@ -27,12 +22,7 @@
     <div class="align-items-start d-flex">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Market Price</mat-label>
-        <input
-          formControlName="marketPrice"
-          matInput
-          name="marketPrice"
-          type="number"
-        />
+        <input formControlName="marketPrice" matInput type="number" />
         <span class="ml-2" matTextSuffix>{{ data.currency }}</span>
       </mat-form-field>
       <button
