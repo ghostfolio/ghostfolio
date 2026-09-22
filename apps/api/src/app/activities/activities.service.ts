@@ -901,6 +901,24 @@ export class ActivitiesService {
     ) {
       delete data.SymbolProfile.connect;
       delete data.SymbolProfile.update.name;
+
+      const { SymbolProfile: assetProfile } =
+        await this.prismaService.order.findUniqueOrThrow({
+          where,
+          select: {
+            SymbolProfile: {
+              select: {
+                userId: true
+              }
+            }
+          }
+        });
+
+      const isOwnAssetProfile = assetProfile.userId === userId;
+
+      if (!isOwnAssetProfile) {
+        delete data.SymbolProfile.update;
+      }
     } else {
       delete data.SymbolProfile.update;
 
