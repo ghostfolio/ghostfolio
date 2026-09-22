@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Hardened the update of an activity by validating the ownership of the asset profile
 - Upgraded `bull-board` from version `9.9.0` to `9.10.1`
 
 ## 3.72.0 - 2026-09-20
