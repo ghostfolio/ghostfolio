@@ -8,7 +8,7 @@ import { UpdateBulkMarketDataDto } from '@ghostfolio/common/dtos';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import { MarketDataOfMarketsResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,

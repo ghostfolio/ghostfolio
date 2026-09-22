@@ -5,7 +5,7 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
 import { isSystemTag } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
