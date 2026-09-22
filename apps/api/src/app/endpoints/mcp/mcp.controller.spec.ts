@@ -83,10 +83,12 @@ describe('GhostfolioMcpController', () => {
 
     expect(toolMethodNames.length).toBeGreaterThan(0);
 
-    for (const methodName of toolMethodNames) {
+    for (const toolMethodName of toolMethodNames) {
       expect(
-        getMetadataOfMethod<string[]>(MCP_SCOPES_METADATA_KEY, methodName)
-      ).toEqual(getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, methodName));
+        getMetadataOfMethod<string[]>(MCP_SCOPES_METADATA_KEY, toolMethodName)
+      ).toEqual(
+        getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, toolMethodName)
+      );
     }
   });
 
