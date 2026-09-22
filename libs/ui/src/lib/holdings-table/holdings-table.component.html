@@ -3,14 +3,21 @@
     class="gf-table w-100"
     mat-table
     matSort
-    matSortActive="allocationInPercentage"
-    matSortDirection="desc"
+    [class.simple]="mode() === 'simple'"
     [dataSource]="dataSource"
+    [matSortActive]="sortActive()"
+    [matSortDirection]="sortDirection()"
   >
-    <ng-container matColumnDef="icon" sticky>
+    <ng-container matColumnDef="icon" [sticky]="mode() === 'default'">
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="px-1 text-center"
+        mat-cell
+        [class.text-nowrap]="mode() === 'simple'"
+      >
         <gf-entity-logo
+          [countryCode]="getCountryCodeForCashPosition(element)"
           [dataSource]="element.assetProfile.dataSource"
           [symbol]="element.assetProfile.symbol"
           [tooltip]="element.assetProfile.name"
@@ -27,16 +34,23 @@
       >
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="line-height-normal px-1" mat-cell>
-        <div class="text-truncate">
+      <td
+        *matCellDef="let element"
+        class="line-height-normal px-1"
+        mat-cell
+        [class.w-100]="mode() === 'simple'"
+      >
+        <div class="text-truncate" [title]="element.assetProfile.name">
           {{ element.assetProfile.name }}
           @if (element.assetProfile.name === element.assetProfile.symbol) {
             <span>({{ element.assetProfile.assetSubClassLabel }})</span>
           }
         </div>
-        <div>
-          <small class="text-muted">{{ element.assetProfile.symbol }}</small>
-        </div>
+        @if (mode() === 'default') {
+          <div>
+            <small class="text-muted">{{ element.assetProfile.symbol }}</small>
+          </div>
+        }
       </td>
     </ng-container>
 
@@ -158,7 +172,10 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="performanceInPercentage" stickyEnd>
+    <ng-container
+      matColumnDef="performanceInPercentage"
+      [stickyEnd]="mode() === 'default'"
+    >
       <th
         *matHeaderCellDef
         class="justify-content-end px-1"
@@ -168,7 +185,12 @@
         <span class="d-none d-sm-block" i18n>Performance</span>
         <span class="d-block d-sm-none" i18n-title title="Performance">±</span>
       </th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td
+        *matCellDef="let element"
+        class="px-1"
+        mat-cell
+        [class.text-nowrap]="mode() === 'simple'"
+      >
         <div class="d-flex justify-content-end">
           <gf-value
             [colorizeSign]="true"
@@ -181,7 +203,11 @@
       </td>
     </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
+    <tr
+      *matHeaderRowDef="displayedColumns()"
+      mat-header-row
+      [class.d-none]="mode() === 'simple'"
+    ></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"
       mat-row
@@ -202,7 +228,8 @@
 @if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
-    class="px-4 py-3"
+    [class.px-4]="mode() === 'default'"
+    [class.py-3]="mode() === 'default'"
     [theme]="{
       height: '1.5rem',
       width: '100%'

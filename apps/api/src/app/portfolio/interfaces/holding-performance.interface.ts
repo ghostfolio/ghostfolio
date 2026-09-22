@@ -2,21 +2,28 @@ import { DateRange } from '@ghostfolio/common/types';
 
 import { Big } from 'big.js';
 
-export interface SymbolMetrics {
+export interface HoldingPerformance {
+  averageInvestment: Big;
+  averageInvestmentValues: {
+    [date: string]: Big;
+  };
+  averageInvestmentValuesWithCurrencyEffect: {
+    [date: string]: Big;
+  };
+  averageInvestmentWithCurrencyEffect: Big;
   currentValues: {
     [date: string]: Big;
   };
   currentValuesWithCurrencyEffect: {
     [date: string]: Big;
   };
-  feesWithCurrencyEffect: Big;
+  dividendYieldPercent: Big;
+  dividendYieldPercentWithCurrencyEffect: Big;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
   grossPerformancePercentageWithCurrencyEffect: Big;
   grossPerformanceWithCurrencyEffect: Big;
   hasErrors: boolean;
-  initialValue: Big;
-  initialValueWithCurrencyEffect: Big;
   investmentValuesAccumulated: {
     [date: string]: Big;
   };
@@ -34,21 +41,10 @@ export interface SymbolMetrics {
   };
   netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
   netPerformanceWithCurrencyEffectMap: { [key: DateRange]: Big };
-  timeWeightedInvestment: Big;
-  timeWeightedInvestmentValues: {
-    [date: string]: Big;
-  };
-  timeWeightedInvestmentValuesWithCurrencyEffect: {
-    [date: string]: Big;
-  };
-  timeWeightedInvestmentWithCurrencyEffect: Big;
-  totalAccountBalanceInBaseCurrency: Big;
   totalDividend: Big;
   totalDividendInBaseCurrency: Big;
-  totalInterest: Big;
   totalInterestInBaseCurrency: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
-  totalLiabilities: Big;
   totalLiabilitiesInBaseCurrency: Big;
 }

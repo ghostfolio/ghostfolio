@@ -1,30 +1,33 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@ghostfolio/common/config';
-import {
-  PortfolioDetails,
-  RuleSettings,
-  UserSettings
-} from '@ghostfolio/common/interfaces';
+import { PortfolioDetails, RuleSettings } from '@ghostfolio/common/interfaces';
 
 import { Account } from '@prisma/client';
 
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   private accounts: PortfolioDetails['accounts'];
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    accounts: PortfolioDetails['accounts']
-  ) {
-    super(exchangeRateDataService, {
+  public constructor({
+    accounts,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    accounts: PortfolioDetails['accounts'];
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
-      key: AccountClusterRiskCurrentInvestment.name
+      key: 'AccountClusterRiskCurrentInvestment'
     });
 
     this.accounts = accounts;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {
@@ -117,19 +120,6 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       id: 'rule.accountClusterRiskCurrentInvestment',
       languageCode: this.getLanguageCode()
     });
-  }
-
-  public getSettings({
-    baseCurrency = DEFAULT_CURRENCY,
-    locale = DEFAULT_LOCALE,
-    xRayRules
-  }: UserSettings): Settings {
-    return {
-      baseCurrency,
-      locale,
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
-      thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.5
-    };
   }
 }
 

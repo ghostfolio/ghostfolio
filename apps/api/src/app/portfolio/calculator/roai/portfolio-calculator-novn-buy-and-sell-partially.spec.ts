@@ -72,7 +72,7 @@ describe('PortfolioCalculator', () => {
 
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -144,6 +144,10 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 2,
+            averageInvestment: new Big('145.10285714285714285714'),
+            averageInvestmentWithCurrencyEffect: new Big(
+              '145.10285714285714285714'
+            ),
             averagePrice: new Big('75.80'),
             currency: 'CHF',
             dataSource: 'YAHOO',
@@ -173,10 +177,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'NOVN.SW',
             tags: [],
-            timeWeightedInvestment: new Big('145.10285714285714285714'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '145.10285714285714285714'
-            ),
             valueInBaseCurrency: new Big('87.8')
           }
         ],

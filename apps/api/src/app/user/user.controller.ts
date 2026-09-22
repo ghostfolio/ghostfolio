@@ -15,6 +15,7 @@ import {
   THROTTLE_SIGNUP_TTL
 } from '@ghostfolio/common/config';
 import {
+  CreateUserDto,
   DeleteOwnUserDto,
   UpdateOwnAccessTokenDto,
   UpdateUserSettingDto
@@ -147,7 +148,7 @@ export class UserController {
     }
   })
   @UseGuards(CustomThrottlerGuard)
-  public async signupUser(): Promise<UserItem> {
+  public async signupUser(@Body() data: CreateUserDto): Promise<UserItem> {
     const isUserSignupEnabled =
       await this.propertyService.isUserSignupEnabled();
 
@@ -158,7 +159,10 @@ export class UserController {
       );
     }
 
-    const { accessToken, id, role } = await this.userService.createUser();
+    const { accessToken, id, role } = await this.userService.createUser({
+      data: {},
+      languageCode: data.languageCode
+    });
 
     return {
       accessToken,

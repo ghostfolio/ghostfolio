@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -88,6 +89,7 @@ export class WatchlistService {
     });
   }
 
+  @LogPerformance
   public async getWatchlistItems(
     userId: string
   ): Promise<WatchlistResponse['watchlist']> {
@@ -151,5 +153,21 @@ export class WatchlistService {
     return watchlist.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
+  }
+
+  public async hasWatchlistItem({
+    dataSource,
+    symbol,
+    userId
+  }: { userId: string } & AssetProfileIdentifier): Promise<boolean> {
+    const assetProfile = await this.prismaService.symbolProfile.findFirst({
+      where: {
+        dataSource,
+        symbol,
+        watchedBy: { some: { id: userId } }
+      }
+    });
+
+    return !!assetProfile;
   }
 }

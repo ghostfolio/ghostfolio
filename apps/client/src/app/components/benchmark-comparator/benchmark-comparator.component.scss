@@ -1,14 +1,5 @@
-@use '@angular/material' as mat;
-
 :host {
   display: block;
-
-  @include mat.form-field-overrides(
-    (
-      container-height: 2rem,
-      container-vertical-padding: 0.33rem
-    )
-  );
 
   .chart-container {
     aspect-ratio: 16 / 9;

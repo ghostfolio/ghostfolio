@@ -7,6 +7,106 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `bull-board` from version `9.9.0` to `9.10.1`
+- Upgraded `zod` from version `4.5.4` to `4.6.5`
+
+### Fixed
+
+- Fixed the fallback of the market price in the portfolio calculation to use the latest historical market price before the unit price of the latest buy or sell activity
+
+## 3.72.0 - 2026-09-20
+
+### Added
+
+- Added a tool to get the watchlist to the server of the Model Context Protocol (MCP) (experimental)
+
+### Changed
+
+- Extended the cache key of the portfolio snapshot by the performance calculation type
+- Hardened the validation of the device id in the biometric authentication
+- Upgraded `stripe` from version `22.5.0` to `22.6.2`
+
+### Fixed
+
+- Fixed the net performance percentage of date ranges in the portfolio performance calculation by including the gross performance at the start date
+
+## 3.71.0 - 2026-09-19
+
+### Added
+
+- Added a hint for the performance calculation type to the analysis page
+- Added support for country codes to the entity logo component and used it for cash holdings and currency selectors
+
+### Changed
+
+- Localized the default account name created during user registration
+- Improved the performance of the watchlist by removing an unnecessary index from the market data table
+- Improved the performance of deleting a watchlist item
+- Extended the `POST api/v1/user` endpoint by the language code
+- Improved the language localization for German (`de`)
+- Upgraded `@internationalized/number` from version `3.6.7` to `3.6.8`
+- Upgraded `bull-board` from version `9.8.0` to `9.9.0`
+- Upgraded `marked` from version `17.0.2` to `18.0.12`
+- Upgraded `ngx-markdown` from version `22.0.0` to `22.0.2`
+
+### Fixed
+
+- Fixed the missing account balance of the current day for users in a time zone ahead of the instance
+
+## 3.70.1 - 2026-09-14
+
+### Added
+
+- Added the holdings table to the overview tab of the home page on desktop (experimental)
+- Added a tool to search for asset profiles to the server of the Model Context Protocol (MCP) (experimental)
+
+### Changed
+
+- Improved the style of the activity type filter on the activities page (experimental)
+- Improved the style of the no activities info component
+- Improved the style of the selector in the benchmark comparator
+- Improved the responsive layout of the holdings table in simplified mode
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for German (`de`)
+- Upgraded `@codewithdan/observable-store` from version `2.2.15` to `3.0.0`
+- Upgraded `bull-board` from version `9.5.0` to `9.8.0`
+- Upgraded `papaparse` from version `5.5.3` to `5.7.0`
+- Upgraded `zone.js` from version `0.16.2` to `0.16.3`
+
+### Fixed
+
+- Hardened the authentication with _OpenID Connect_ (`OIDC`) (experimental)
+
+## 3.69.0 - 2026-09-07
+
+### Changed
+
+- Improved the loading state of the activity count in the portfolio summary
+- Migrated the create dialog of the watchlist to a dedicated route
+- Changed the holdings endpoint to return active and closed holdings by default and reuse a single snapshot for both types
+- Upgraded `countries-and-timezones` from version `3.9.0` to `3.10.0`
+- Upgraded `bull-board` from version `9.0.1` to `9.5.0`
+- Upgraded `zod` from version `4.4.3` to `4.5.4`
+
+### Fixed
+
+- Resolved an issue when opening an asset profile from the watchlist
+
+## 3.68.0 - 2026-09-06
+
+### Added
+
+- Added a simplified mode to the holdings table component
+
+### Changed
+
+- Made the details of holdings excluded from analysis accessible via the activities table
+- Migrated the asset profile dialogs of the market data management in the admin control panel to dedicated routes
+
+## 3.67.1 - 2026-09-05
+
 ### Added
 
 - Introduced a DTO for the query parameters of the asset profiles endpoint
@@ -18,10 +118,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced a maximum length for the comment in the API endpoints
 - Introduced a maximum length for the search query and the symbol in the API endpoints
 - Hardened the validation of the query parameters (`accounts`, `assetClasses`, `dataSource` and `tags`) in the API endpoints with filters
+- Upgraded `nestjs` from version `11.1.28` to `11.2.3`
+- Upgraded `ngx-skeleton-loader` from version `12.0.0` to `13.0.0`
 
 ### Fixed
 
-- Fixed the fallback of the market price in the portfolio calculation to use the latest historical market price before the unit price of the latest buy or sell activity
+- Fixed the missing icon of the expiration date picker in the create or update access dialog
+- Fixed the data provider information in the holding detail dialog
+- Fixed the storage of the market data in the data provider service to only include the newly fetched quotes
+- Fixed the immediate expiration of a portfolio snapshot with errors
 - Fixed the missing country mapping of _Congo (Dem. Rep. of the)_ and _Congo (Rep. of)_ in the _Financial Modeling Prep_ service
 
 ## 3.66.0 - 2026-09-03

@@ -52,14 +52,13 @@ export class WatchlistController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
-    const watchlistItems =
-      await this.watchlistService.getWatchlistItems(userId);
-
-    const watchlistItem = watchlistItems.find((item) => {
-      return item.dataSource === dataSource && item.symbol === symbol;
+    const hasWatchlistItem = await this.watchlistService.hasWatchlistItem({
+      dataSource,
+      symbol,
+      userId
     });
 
-    if (!watchlistItem) {
+    if (!hasWatchlistItem) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
         StatusCodes.NOT_FOUND

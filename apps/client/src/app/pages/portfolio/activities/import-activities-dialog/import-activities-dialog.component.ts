@@ -144,6 +144,10 @@ export class GfImportActivitiesDialogComponent {
             {
               id: AssetClass.FIXED_INCOME,
               type: 'ASSET_CLASS'
+            },
+            {
+              id: 'ACTIVE',
+              type: 'HOLDING_TYPE'
             }
           ],
           range: DEFAULT_DATE_RANGE

@@ -153,9 +153,7 @@ export class GfHomeHoldingsComponent implements OnInit {
   private fetchHoldings() {
     const filters = this.userService.getFilters();
 
-    if (this.holdingType === 'CLOSED') {
-      filters.push({ id: 'CLOSED', type: 'HOLDING_TYPE' });
-    }
+    filters.push({ id: this.holdingType, type: 'HOLDING_TYPE' });
 
     return this.dataService.fetchPortfolioHoldings({
       filters,

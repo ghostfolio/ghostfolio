@@ -211,7 +211,7 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
 }
 ```
 
-### Import Activities
+### Import Portfolio Data
 
 #### Prerequisites
 
@@ -271,6 +271,22 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
   ]
 }
 ```
+
+### Export Portfolio Data
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) for authorization
+
+#### Request
+
+`GET http://localhost:3333/api/v1/export`
+
+#### Response
+
+##### Success
+
+`200 OK`
 
 ### Portfolio (experimental)
 
@@ -364,17 +380,17 @@ The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio 
 
 - Set `ENABLE_FEATURE_MCP` to `true`
 - Set `ROOT_URL` to the public URL of your instance if a client calls the endpoint from a browser page. The host name of `ROOT_URL` is the only accepted origin.
-- Grant an access of the type _MCP_ in _My Ghostfolio_ under _Access_ and copy its identifier
+- Grant an access of the type _MCP_ in _My Ghostfolio_ under _Access_ and copy its token
 
 An _MCP_ access has (restricted) read scopes and never reads the monetary values. Grant the _Restricted view and manage_ permission to let the client also import activities.
 
 ### Connect a client
 
-Point the client to the endpoint below and set the identifier of the access as the _Bearer Token_.
+Point the client to the endpoint below and set the MCP access token as the _Bearer Token_.
 
 ```
 POST http://localhost:3333/mcp
-"Authorization": "Bearer <INSERT_IDENTIFIER_OF_ACCESS>"
+"Authorization": "Bearer <INSERT_MCP_ACCESS_TOKEN>"
 ```
 
 ## Community Projects

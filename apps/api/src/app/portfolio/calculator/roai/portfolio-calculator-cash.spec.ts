@@ -19,7 +19,7 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshotHolding } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { DataSource } from '@prisma/client';
@@ -118,7 +118,6 @@ describe('PortfolioCalculator', () => {
     currentRateService = new CurrentRateService(
       null,
       dataProviderService,
-      null,
       null
     );
 
@@ -251,14 +250,20 @@ describe('PortfolioCalculator', () => {
        * Total account balance: 2000 USD * 0.85 = 1700 CHF (using the exchange rate on 2024-12-31)
        * Value in base currency: 2000 USD * 0.91 = 1820 CHF
        */
-      expect(position).toMatchObject<TimelinePosition>({
+      expect(position).toMatchObject<PortfolioSnapshotHolding>({
         activitiesCount: 2,
+        averageInvestment: new Big('912.47956403269754768392'),
+        averageInvestmentWithCurrencyEffect: new Big(
+          '852.45231607629427792916'
+        ),
         averagePrice: new Big(1),
         currency: 'USD',
         dataSource: DataSource.YAHOO,
         dateOfFirstActivity: '2023-12-31',
         dividend: new Big(0),
         dividendInBaseCurrency: new Big(0),
+        dividendYieldPercent: new Big(0),
+        dividendYieldPercentWithCurrencyEffect: new Big(0),
         fee: new Big(0),
         feeInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),
@@ -293,10 +298,6 @@ describe('PortfolioCalculator', () => {
         },
         quantity: new Big(2000),
         symbol: 'USD',
-        timeWeightedInvestment: new Big('912.47956403269754768392'),
-        timeWeightedInvestmentWithCurrencyEffect: new Big(
-          '852.45231607629427792916'
-        ),
         valueInBaseCurrency: new Big(1820)
       });
 
@@ -423,7 +424,7 @@ describe('PortfolioCalculator', () => {
        * The holding itself keeps its investment and value so that it remains
        * visible in the holdings table
        */
-      expect(position).toMatchObject<Partial<TimelinePosition>>({
+      expect(position).toMatchObject<Partial<PortfolioSnapshotHolding>>({
         currency: 'CHF',
         grossPerformance: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),

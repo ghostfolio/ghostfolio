@@ -1,6 +1,7 @@
 import {
   activityDummyData,
   assetProfileDummyData,
+  getPerformanceByDateRange,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -59,7 +60,7 @@ describe('PortfolioCalculator', () => {
 
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -124,12 +125,20 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'USD',
+        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['1d', 'max', 'ytd']
+      });
+
       expect(portfolioSnapshot).toMatchObject({
+        dividendYieldPercent: new Big('0.001144362748184'),
+        dividendYieldPercentWithCurrencyEffect: new Big('0.001144362748184'),
         errors: [],
         hasErrors: false,
         positions: [
@@ -141,6 +150,10 @@ describe('PortfolioCalculator', () => {
             dateOfFirstActivity: '2021-09-16',
             dividend: new Big('0.62'),
             dividendInBaseCurrency: new Big('0.62'),
+            dividendYieldPercent: new Big('0.001144362748184'),
+            dividendYieldPercentWithCurrencyEffect: new Big(
+              '0.001144362748184'
+            ),
             fee: new Big('19'),
             grossPerformance: new Big('33.25'),
             grossPerformancePercentage: new Big('0.11136043941322258691'),
@@ -181,6 +194,36 @@ describe('PortfolioCalculator', () => {
           totalInvestmentValueWithCurrencyEffect: 298.58
         })
       );
+
+      expect(performanceByDateRange).toMatchObject({
+        '1d': {
+          date: '2023-07-10',
+          netPerformance: -5.390000000000001,
+          netPerformanceInPercentage: -0.015983630864124312,
+          netPerformanceInPercentageWithCurrencyEffect: -0.015983630864124312,
+          netPerformanceWithCurrencyEffect: -5.390000000000001,
+          totalInvestmentValueWithCurrencyEffect: 298.58,
+          valueWithCurrencyEffect: 331.83
+        },
+        max: {
+          date: '2023-07-10',
+          netPerformance: 14.25,
+          netPerformanceInPercentage: 0.04772590260566659,
+          netPerformanceInPercentageWithCurrencyEffect: 0.04772590260566659,
+          netPerformanceWithCurrencyEffect: 14.25,
+          totalInvestmentValueWithCurrencyEffect: 298.58,
+          valueWithCurrencyEffect: 331.83
+        },
+        ytd: {
+          date: '2023-07-10',
+          netPerformance: -7.68,
+          netPerformanceInPercentage: -0.022620835910577012,
+          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577012,
+          netPerformanceWithCurrencyEffect: -7.68,
+          totalInvestmentValueWithCurrencyEffect: 298.58,
+          valueWithCurrencyEffect: 331.83
+        }
+      });
     });
   });
 });

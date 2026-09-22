@@ -1,13 +1,6 @@
-import {
-  DEFAULT_PAGE_SIZE,
-  TAG_ID_EXCLUDE_FROM_ANALYSIS
-} from '@ghostfolio/common/config';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import {
-  getLocale,
-  isAccountExcluded,
-  isDraftActivity
-} from '@ghostfolio/common/helper';
+import { getLocale, isDraftActivity } from '@ghostfolio/common/helper';
 import {
   Activity,
   AssetProfileIdentifier
@@ -286,7 +279,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public canClickActivity(activity: Activity) {
     return (
       this.hasPermissionToOpenDetails &&
-      this.isExcludedFromAnalysis(activity) === false &&
       isDraftActivity(activity) === false &&
       ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     );
@@ -303,15 +295,6 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     return (
       (this.dataSource()?.data.length ?? 0) > 0 &&
       this.hasPermissionToExportActivities
-    );
-  }
-
-  public isExcludedFromAnalysis(activity: Activity) {
-    return (
-      isAccountExcluded(activity.account) ||
-      activity.tags?.some(({ id }) => {
-        return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
-      }) === true
     );
   }
 

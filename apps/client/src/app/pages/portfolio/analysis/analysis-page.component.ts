@@ -21,6 +21,7 @@ import type {
   GroupBy,
   ToggleOption
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
@@ -99,6 +100,7 @@ export class GfAnalysisPageComponent implements OnInit {
     { label: $localize`Yearly`, value: 'year' }
   ];
   protected performance: PortfolioPerformance;
+  protected readonly PerformanceCalculationType = PerformanceCalculationType;
   protected performanceDataItems: HistoricalDataItem[];
   protected performanceDataItemsInPercentage: HistoricalDataItem[];
   protected readonly portfolioEvolutionDataLabel = $localize`Investment`;
@@ -377,7 +379,10 @@ export class GfAnalysisPageComponent implements OnInit {
 
     this.dataService
       .fetchPortfolioHoldings({
-        filters: this.userService.getFilters(),
+        filters: [
+          ...this.userService.getFilters(),
+          { id: 'ACTIVE', type: 'HOLDING_TYPE' }
+        ],
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntilDestroyed(this.destroyRef))

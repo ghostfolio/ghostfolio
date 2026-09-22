@@ -11,11 +11,10 @@
     (closed)="onPanelClosed()"
   >
     <mat-select-trigger>
-      <div class="d-flex">
-        @if (selectedAccount()) {
+      <div class="align-items-center align-middle d-inline-flex line-height-1">
+        @if (selectedAccount()?.platform?.url) {
           <gf-entity-logo
             class="mr-1"
-            [hasPlaceholder]="true"
             [tooltip]="selectedAccount()?.platform?.name ?? ''"
             [url]="selectedAccount()?.platform?.url ?? ''"
           />
