@@ -7,6 +7,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration/conf
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import { Module } from '@nestjs/common';
 import {
@@ -40,6 +41,16 @@ import { McpService } from './mcp.service';
           instructions:
             'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access and import activities into the portfolio. They give no quantity and no monetary value (except the unit price of an activity).',
           name: 'ghostfolio',
+          // The authorization middleware of the endpoint resolves the access
+          // and puts it on the request, hence the transport reads the scopes
+          // of the access and lists only the tools which they cover
+          resolveUser: (request: unknown) => {
+            const { impersonationOfBearerToken } = request as RequestWithUser;
+
+            return impersonationOfBearerToken?.isActive
+              ? { scopes: impersonationOfBearerToken.scopes }
+              : undefined;
+          },
           title: 'Ghostfolio',
           transports: [
             new StreamableHttpTransport({

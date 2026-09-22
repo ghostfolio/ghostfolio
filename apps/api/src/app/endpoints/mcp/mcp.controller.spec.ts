@@ -7,7 +7,11 @@ import {
   EXCEPTION_FILTERS_METADATA,
   GUARDS_METADATA
 } from '@nestjs/common/constants';
-import { MCP_TOOL_METADATA_KEY, ToolMetadata } from '@rekog/mcp-nest';
+import {
+  MCP_SCOPES_METADATA_KEY,
+  MCP_TOOL_METADATA_KEY,
+  ToolMetadata
+} from '@rekog/mcp-nest';
 
 import { GhostfolioMcpController } from './mcp.controller';
 
@@ -69,6 +73,21 @@ describe('GhostfolioMcpController', () => {
     );
 
     expect(toolMethodNamesWithoutGuardOfAccess).toEqual([]);
+  });
+
+  // The transport lists a tool only for an access whose scopes cover the
+  // scopes of the decorator ToolScopes, hence they have to be the scopes
+  // which the guard evaluates
+  it('Lists each tool by the scopes of its guard', () => {
+    const toolMethodNames = getToolMethodNames();
+
+    expect(toolMethodNames.length).toBeGreaterThan(0);
+
+    for (const methodName of toolMethodNames) {
+      expect(
+        getMetadataOfMethod<string[]>(MCP_SCOPES_METADATA_KEY, methodName)
+      ).toEqual(getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, methodName));
+    }
   });
 
   it('Requires the scope to create an activity for the tool to import activities', () => {
