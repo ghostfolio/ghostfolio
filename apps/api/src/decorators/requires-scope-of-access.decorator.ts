@@ -13,11 +13,12 @@ import { ToolScopes } from '@rekog/mcp-nest';
  *
  * The same scopes are declared to the transport of the model context
  * protocol, which lists a tool only for an access whose scopes cover it. The
- * guards refuse the call nevertheless, hence a hidden tool is also refused.
- * At least one scope is required, because the transport refuses an empty
- * list.
+ * transport refuses the call of a tool which it does not list with a protocol
+ * error before the guards and the filter of the exceptions run.
  */
-export function RequiresScopeOfAccess(...requiredScopes: Scope[]) {
+export function RequiresScopeOfAccess(scope: Scope, ...otherScopes: Scope[]) {
+  const requiredScopes = [scope, ...otherScopes];
+
   return applyDecorators(
     SetMetadata(REQUIRES_SCOPE_KEY, requiredScopes),
     ToolScopes(requiredScopes),
