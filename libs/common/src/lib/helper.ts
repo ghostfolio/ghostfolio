@@ -57,6 +57,7 @@ import {
   AssetProfileIdentifier,
   AssetProfileItem,
   Benchmark,
+  NullableLineChartItem,
   PortfolioPosition,
   UserSettings
 } from './interfaces';
@@ -90,6 +91,27 @@ const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
 ];
 
 const VALID_COUNTRY_CODES = new Set([...Object.keys(countries), 'EU']);
+
+export function alignLineChartItemsToDates({
+  dates,
+  items
+}: {
+  dates: string[];
+  items: NullableLineChartItem[];
+}): NullableLineChartItem[] {
+  let index = -1;
+
+  return dates.map((date) => {
+    while (
+      index + 1 < items.length &&
+      !isAfter(parseISO(items[index + 1].date), parseISO(date))
+    ) {
+      index++;
+    }
+
+    return { date, value: items[index]?.value ?? null };
+  });
+}
 
 export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
   assetProfile: T,

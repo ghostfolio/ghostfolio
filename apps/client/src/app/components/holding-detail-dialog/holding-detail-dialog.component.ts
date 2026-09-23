@@ -9,6 +9,7 @@ import {
 } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
+  alignLineChartItemsToDates,
   DATE_FORMAT,
   downloadAsFile,
   getCountryName
@@ -724,6 +725,13 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             };
           }
         );
+
+        this.benchmarkDataItems = alignLineChartItemsToDates({
+          dates: this.historicalDataItems.map(({ date }) => {
+            return date;
+          }),
+          items: this.benchmarkDataItems
+        });
 
         this.changeDetectorRef.markForCheck();
       });
