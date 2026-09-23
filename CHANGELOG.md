@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the ESLint configuration to the flat config without `FlatCompat` and replaced the direct dependencies `@eslint/eslintrc` and `@eslint/js` with `typescript-eslint`
 - Upgraded `bull-board` from version `9.9.0` to `9.10.1`
 - Upgraded `zod` from version `4.5.4` to `4.6.5`
 
