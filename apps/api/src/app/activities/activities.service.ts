@@ -900,7 +900,35 @@ export class ActivitiesService {
         data.type === 'BUY')
     ) {
       delete data.SymbolProfile.connect;
-      delete data.SymbolProfile.update.name;
+
+      const { SymbolProfile: assetProfile } =
+        await this.prismaService.order.findUniqueOrThrow({
+          where,
+          select: {
+            SymbolProfile: {
+              select: {
+                userId: true
+              }
+            }
+          }
+        });
+
+      const isOwnAssetProfile = assetProfile.userId === userId;
+
+      if (isOwnAssetProfile) {
+        data.SymbolProfile.update = {
+          data: {
+            assetClass: data.assetClass,
+            assetSubClass: data.assetSubClass
+          },
+          // Filter by the user again, so that a concurrent request which
+          // links the activity to a different asset profile cannot bypass
+          // the check
+          where: { userId }
+        };
+      } else {
+        delete data.SymbolProfile.update;
+      }
     } else {
       delete data.SymbolProfile.update;
 
