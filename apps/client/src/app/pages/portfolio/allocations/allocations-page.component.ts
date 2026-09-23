@@ -398,10 +398,10 @@ export class GfAllocationsPageComponent implements OnInit {
 
       this.holdings[assetProfileIdentifier] = {
         assetClass:
-          position.assetProfile.assetClass || (UNKNOWN_KEY as AssetClass),
+          position.assetProfile.assetClass ?? (UNKNOWN_KEY as AssetClass),
         assetClassLabel: position.assetProfile.assetClassLabel ?? UNKNOWN_KEY,
         assetSubClass:
-          position.assetProfile.assetSubClass || (UNKNOWN_KEY as AssetSubClass),
+          position.assetProfile.assetSubClass ?? (UNKNOWN_KEY as AssetSubClass),
         assetSubClassLabel:
           position.assetProfile.assetSubClassLabel ?? UNKNOWN_KEY,
         currency: this.extractCurrency(position.assetProfile),
