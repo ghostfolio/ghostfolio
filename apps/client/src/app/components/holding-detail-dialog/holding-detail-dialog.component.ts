@@ -69,6 +69,7 @@ import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
+import { utc } from '@date-fns/utc';
 import { IonIcon } from '@ionic/angular/standalone';
 import { MarketData, Tag } from '@prisma/client';
 import { isUUID } from 'class-validator';
@@ -720,7 +721,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
         this.historicalDataItems = this.marketDataItems.map(
           ({ date, marketPrice }) => {
             return {
-              date: format(date, DATE_FORMAT),
+              date: format(date, DATE_FORMAT, { in: utc }),
               value: marketPrice
             };
           }
