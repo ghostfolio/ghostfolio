@@ -6,6 +6,21 @@ export const personalFinanceTools: Product[] = (
       categories: [
         'FAMILY_OFFICE',
         'FINANCIAL_ADVISOR',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      key: '1fs-wealth',
+      name: '1fs Wealth',
+      origin: 'GB',
+      platforms: ['WEB'],
+      slogan: 'A single platform for all of your wealth.',
+      updatedAt: '2026-09-24',
+      url: 'https://www.1fs.co'
+    },
+    {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
         'FINANCIAL_PLANNING',
         'NET_WORTH_TRACKING',
         'WEALTH_MANAGEMENT'
@@ -44,7 +59,6 @@ export const personalFinanceTools: Product[] = (
       url: 'https://addepar.com'
     },
     {
-      alias: 'APX',
       categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
       hasSelfHostingAbility: true,
       key: 'advent-portfolio-exchange',
@@ -76,6 +90,22 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Composable Banking',
       updatedAt: '2026-07-09',
       url: 'https://akkuro.com'
+    },
+    {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasSelfHostingAbility: false,
+      key: 'aleta',
+      name: 'Aleta',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      slogan: 'Family Office Software for Forward-Thinking Families',
+      updatedAt: '2026-09-24',
+      url: 'https://aleta.io'
     },
     {
       categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
@@ -175,6 +205,26 @@ export const personalFinanceTools: Product[] = (
       url: 'https://altruist.com'
     },
     {
+      categories: ['BUDGETING', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasFreePlan: true,
+      key: 'alwy',
+      languages: [
+        'Dansk',
+        'Deutsch',
+        'English',
+        'Nederlands',
+        'Norsk',
+        'Suomi',
+        'Svenska'
+      ],
+      name: 'Alwy',
+      origin: 'SE',
+      platforms: ['IOS', 'WEB'],
+      slogan: 'Future-proof your business',
+      updatedAt: '2026-09-24',
+      url: 'https://alwy.se'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
       founded: 2023,
       hasFreePlan: false,
@@ -216,6 +266,21 @@ export const personalFinanceTools: Product[] = (
       url: 'https://anlage.app'
     },
     {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'TAX_REPORTING',
+        'WEALTH_MANAGEMENT'
+      ],
+      key: 'arch',
+      name: 'Arch',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Private Markets. Simplified.',
+      updatedAt: '2026-09-24',
+      url: 'https://arch.com'
+    },
+    {
       categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
       founded: 2002,
       key: 'archway',
@@ -241,6 +306,39 @@ export const personalFinanceTools: Product[] = (
       url: 'https://asignal.io'
     },
     {
+      categories: ['FAMILY_OFFICE', 'NET_WORTH_TRACKING', 'WEALTH_MANAGEMENT'],
+      founded: 2021,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'asora',
+      name: 'Asora',
+      origin: 'IE',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$10800',
+      slogan: 'Software for the modern family office',
+      updatedAt: '2026-09-24',
+      url: 'https://www.asora.com'
+    },
+    {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 2011,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'asset-vantage',
+      name: 'Asset Vantage',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$30000',
+      slogan:
+        'The Financial Operating System for Modern Family Offices and Their Advisors',
+      updatedAt: '2026-09-24',
+      url: 'https://www.assetvantage.com'
+    },
+    {
       categories: ['FAMILY_OFFICE'],
       founded: 2022,
       hasFreePlan: false,
@@ -254,6 +352,33 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.asseta.ai'
     },
     {
+      categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
+      key: 'atalaya',
+      languages: ['English', 'Español'],
+      name: 'Atalaya',
+      origin: 'ES',
+      slogan: 'Software for Family Offices',
+      updatedAt: '2026-09-24',
+      url: 'https://www.atalaya.ai'
+    },
+    {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'NET_WORTH_TRACKING',
+        'TAX_REPORTING',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasSelfHostingAbility: false,
+      key: 'atlasfive',
+      languages: ['English'],
+      name: 'AtlasFive®',
+      origin: 'US',
+      slogan: 'Experience Wealth Intelligence',
+      updatedAt: '2026-09-24',
+      url: 'https://eton-solutions.com'
+    },
+    {
       categories: ['WEALTH_MANAGEMENT'],
       founded: 2016,
       key: 'atominvest',
@@ -262,6 +387,20 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Portfolio Management',
       updatedAt: '2026-07-05',
       url: 'https://www.atominvest.co'
+    },
+    {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      key: 'auria',
+      name: 'Auria',
+      platforms: ['WEB'],
+      slogan: 'Simplify the complexities of wealth with a unified solution',
+      updatedAt: '2026-09-24',
+      url: 'https://auriaplatform.com'
     },
     {
       categories: ['BUDGETING'],
@@ -507,6 +646,41 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.buxfer.com'
     },
     {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 2017,
+      hasSelfHostingAbility: false,
+      key: 'canopy',
+      languages: [
+        'Bahasa Indonesia',
+        'Bahasa Melayu',
+        'Deutsch',
+        'English',
+        'Español',
+        'Français',
+        'Italiano',
+        'Português',
+        'Tiếng Việt',
+        'Русский',
+        'العربية',
+        'ภาษาไทย',
+        '日本語',
+        '简体中文',
+        '繁體中文',
+        '한국어'
+      ],
+      name: 'Canopy',
+      origin: 'SG',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      slogan: 'All your wealth, finally understood.',
+      updatedAt: '2026-09-24',
+      url: 'https://www.canopy.cloud'
+    },
+    {
       categories: ['NET_WORTH_TRACKING'],
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -556,6 +730,19 @@ export const personalFinanceTools: Product[] = (
       name: 'CleverBilling',
       slogan: 'Toma el control total de tus finanzas.',
       updatedAt: '2025-07-27'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2016,
+      hasFreePlan: false,
+      key: 'clockwork',
+      name: 'Clockwork',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan:
+        'Manage your alternative investments, and everything else, with Clockwork.',
+      updatedAt: '2026-09-24',
+      url: 'https://www.clockwork.app'
     },
     {
       categories: ['WEALTH_MANAGEMENT'],
@@ -883,6 +1070,22 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.donkycapital.com'
     },
     {
+      categories: [
+        'FAMILY_OFFICE',
+        'NET_WORTH_TRACKING',
+        'TAX_REPORTING',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 2006,
+      key: 'elysys',
+      name: 'Elysys',
+      origin: 'MC',
+      slogan:
+        'Complete front-to-back investment accounting and portfolio management on Business Central',
+      updatedAt: '2026-09-24',
+      url: 'https://www.elysys.com'
+    },
+    {
       categories: ['BUDGETING', 'FINANCIAL_ADVISOR', 'FINANCIAL_PLANNING'],
       hasSelfHostingAbility: false,
       key: 'emoney',
@@ -1115,6 +1318,17 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Die besten ETFs finden, vergleichen und beobachten',
       updatedAt: '2026-08-16',
       url: 'https://extraetf.com'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: false,
+      key: 'fa-platform',
+      languages: ['English'],
+      name: 'FA Platform',
+      origin: 'FI',
+      slogan: 'Empowering Investment Management with Innovation',
+      updatedAt: '2026-09-24',
+      url: 'https://fasolutions.com'
     },
     {
       categories: ['INVESTMENT_RESEARCH'],
@@ -1443,6 +1657,20 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.fundmanagersoftware.com'
     },
     {
+      categories: ['FAMILY_OFFICE', 'TAX_REPORTING', 'WEALTH_MANAGEMENT'],
+      founded: 1999,
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'fundcount',
+      name: 'FundCount',
+      origin: 'BB',
+      platforms: ['LINUX', 'MACOS', 'WEB', 'WINDOWS'],
+      pricingPerYear: '$14450',
+      slogan: 'One source of truth for every entity, fund, and asset class.',
+      updatedAt: '2026-09-24',
+      url: 'https://fundcount.com'
+    },
+    {
       categories: ['BUDGETING'],
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -1627,6 +1855,16 @@ export const personalFinanceTools: Product[] = (
       updatedAt: '2025-08-27'
     },
     {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      key: 'infront',
+      name: 'Infront',
+      origin: 'NO',
+      platforms: ['WEB'],
+      slogan: 'Built for Complex Wealth. Made for Family Offices',
+      updatedAt: '2026-09-24',
+      url: 'https://www.infront.co/global/en/your-industry/wealth/family-offices.html'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       hasFreePlan: true,
       key: 'insidearbitrage',
@@ -1761,6 +1999,18 @@ export const personalFinanceTools: Product[] = (
       url: 'https://istfin.com'
     },
     {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: false,
+      key: 'j-ray',
+      languages: ['English'],
+      name: 'J-Ray',
+      origin: 'FI',
+      platforms: ['WEB'],
+      slogan: 'The Guiding Light for Complex Wealth',
+      updatedAt: '2026-09-24',
+      url: 'https://jaysolutions.com'
+    },
+    {
       categories: ['ETF_TRACKING'],
       founded: 2011,
       hasFreePlan: true,
@@ -1773,6 +2023,18 @@ export const personalFinanceTools: Product[] = (
       slogan: 'ETF portfolios made simple',
       updatedAt: '2026-07-05',
       url: 'https://www.justetf.com'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2004,
+      hasSelfHostingAbility: true,
+      key: 'keesense',
+      languages: ['English', 'Français'],
+      name: 'KeeSense',
+      origin: 'MC',
+      slogan: 'Augmented Wealth Management',
+      updatedAt: '2026-09-24',
+      url: 'https://www.keesystem.com'
     },
     {
       categories: ['CRYPTOCURRENCY', 'TAX_REPORTING'],
@@ -2234,6 +2496,23 @@ export const personalFinanceTools: Product[] = (
       url: 'https://myfinancetools.io'
     },
     {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasSelfHostingAbility: false,
+      key: 'myfo',
+      languages: ['English'],
+      name: 'MYFO',
+      origin: 'CA',
+      platforms: ['WEB'],
+      slogan: 'The First Full Family Office Operating System',
+      updatedAt: '2026-09-24',
+      url: 'https://www.myfotech.com'
+    },
+    {
       categories: ['CRYPTOCURRENCY', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -2500,6 +2779,19 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.getpennies.com'
     },
     {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2020,
+      hasSelfHostingAbility: false,
+      key: 'performativ',
+      languages: ['Deutsch', 'English', 'Nederlands'],
+      name: 'Performativ',
+      origin: 'DK',
+      platforms: ['WEB'],
+      slogan: 'The Operating System Powering Tomorrow’s Wealth Management',
+      updatedAt: '2026-09-24',
+      url: 'https://www.performativ.com'
+    },
+    {
       categories: ['FAMILY_OFFICE'],
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -2553,6 +2845,22 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.plannix.co'
     },
     {
+      categories: [
+        'CRYPTOCURRENCY',
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 2012,
+      hasSelfHostingAbility: true,
+      key: 'pmplus',
+      name: 'PMplus®',
+      origin: 'CH',
+      platforms: ['WEB'],
+      updatedAt: '2026-09-24',
+      url: 'https://www.suissetechpartners.com'
+    },
+    {
       categories: ['BUDGETING'],
       founded: 2015,
       hasFreePlan: false,
@@ -2581,6 +2889,17 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Know where your money is going',
       updatedAt: '2026-07-05',
       url: 'https://www.pocketsmith.com'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2017,
+      key: 'point',
+      languages: ['English'],
+      name: 'Point',
+      origin: 'GB',
+      slogan: 'AI-Ready Investment Data',
+      updatedAt: '2026-09-24',
+      url: 'https://pointgroup.io'
     },
     {
       categories: ['FINANCIAL_PLANNING', 'WEALTH_MANAGEMENT'],
@@ -2776,6 +3095,16 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.portseido.com'
     },
     {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      key: 'private-wealth-systems',
+      name: 'Private Wealth Systems',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Portfolio Management & Reporting Software',
+      updatedAt: '2026-09-24',
+      url: 'https://privatewealthsystems.com'
+    },
+    {
       categories: ['FINANCIAL_PLANNING'],
       founded: 2021,
       hasFreePlan: true,
@@ -2814,6 +3143,23 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Portfolio Management and Reporting Software',
       updatedAt: '2026-09-23',
       url: 'https://www.assetbook.com'
+    },
+    {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'TAX_REPORTING',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 2012,
+      key: 'qplix',
+      languages: ['Deutsch', 'English'],
+      name: 'QPLIX',
+      origin: 'DE',
+      platforms: ['IOS', 'WEB'],
+      slogan: 'Your Software to Master Wealth Management.',
+      updatedAt: '2026-09-24',
+      url: 'https://www.qplix.com'
     },
     {
       categories: ['NET_WORTH_TRACKING'],
@@ -2962,6 +3308,20 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Track your net worth. Project every possible future.',
       updatedAt: '2026-07-05',
       url: 'https://www.segmio.com'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2019,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'sesame-one',
+      name: 'Sesame One',
+      origin: 'GB',
+      platforms: ['WEB'],
+      pricingPerYear: '£20000',
+      slogan: 'Spend more time building investment value, not spreadsheets',
+      updatedAt: '2026-09-24',
+      url: 'https://www.landytech.com'
     },
     {
       categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
@@ -3361,6 +3721,30 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.sumio.app'
     },
     {
+      categories: ['FAMILY_OFFICE'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'sumit',
+      languages: ['English'],
+      name: 'SumIt',
+      platforms: ['WEB'],
+      slogan: 'Powerfully simple family office accounting.',
+      updatedAt: '2026-09-24',
+      url: 'https://getsumit.com'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: true,
+      key: 'swimbird',
+      languages: ['English'],
+      name: 'Swimbird',
+      origin: 'SE',
+      platforms: ['ANDROID', 'IOS'],
+      slogan: 'Wealth Management Software',
+      updatedAt: '2026-09-24',
+      url: 'https://www.swimbird.com'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       key: 'tc2000',
       name: 'TC2000',
@@ -3407,6 +3791,22 @@ export const personalFinanceTools: Product[] = (
         'Your financial life in a spreadsheet, automatically updated each day',
       updatedAt: '2026-07-05',
       url: 'https://tiller.com'
+    },
+    {
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 2010,
+      hasFreePlan: false,
+      key: 'tindeco',
+      languages: ['English'],
+      name: 'Tindeco',
+      origin: 'CH',
+      slogan: 'Scalable Investing Made Simple',
+      updatedAt: '2026-09-24',
+      url: 'https://tindecofs.com'
     },
     {
       categories: ['CRYPTOCURRENCY', 'DIVIDEND_TRACKING', 'STOCK_TRACKING'],
@@ -3859,6 +4259,17 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.wallstreetzen.com'
     },
     {
+      categories: ['FINANCIAL_ADVISOR', 'FINANCIAL_PLANNING'],
+      key: 'wealth-wizards',
+      languages: ['English'],
+      name: 'Wealth Wizards',
+      origin: 'GB',
+      regions: ['GB'],
+      slogan: 'Get new regime ready.',
+      updatedAt: '2026-09-24',
+      url: 'https://www.wealthwizards.com'
+    },
+    {
       categories: ['FAMILY_OFFICE', 'TAX_REPORTING'],
       founded: 2001,
       hasFreePlan: false,
@@ -3941,6 +4352,18 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.wealthposition.com'
     },
     {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: true,
+      key: 'wealthspectrum',
+      languages: ['English'],
+      name: 'WealthSpectrum',
+      origin: 'IN',
+      platforms: ['WEB'],
+      slogan: 'Powering smart investment operations',
+      updatedAt: '2026-09-24',
+      url: 'https://www.wealthspectrum.com'
+    },
+    {
       categories: ['STOCK_TRACKING'],
       founded: 2018,
       hasSelfHostingAbility: false,
@@ -3969,6 +4392,18 @@ export const personalFinanceTools: Product[] = (
       slogan: 'The Ultimate Spreadsheet Add-On for Stock Investors',
       updatedAt: '2026-08-28',
       url: 'https://www.wisesheets.io'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2010,
+      hasSelfHostingAbility: true,
+      key: 'wize',
+      languages: ['English'],
+      name: 'WIZE',
+      origin: 'CH',
+      slogan: 'The all-in-one Wealth & Asset management IT platform',
+      updatedAt: '2026-09-24',
+      url: 'https://www.wize.net'
     },
     {
       categories: [
