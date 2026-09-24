@@ -12,8 +12,10 @@ import {
   ResponseError
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable } from '@nestjs/common';
-import { isBefore, isToday } from 'date-fns';
+import { Type as ActivityType } from '@prisma/client';
+import { compareDesc, isBefore, isSameDay } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -122,33 +124,19 @@ export class CurrentRateService {
     if (!isEmpty(quoteErrors)) {
       for (const { dataSource, symbol } of quoteErrors) {
         try {
-          // If missing quote, fallback to the latest available historical market price
-          let value: GetValueObject = response.values.find((currentValue) => {
+          const valueOfToday = response.values.find((currentValue) => {
             return (
               currentValue.dataSource === dataSource &&
               currentValue.symbol === symbol &&
-              isToday(currentValue.date)
+              isSameDay(currentValue.date, today, { in: utc })
             );
           });
 
-          if (!value) {
-            // Fallback to unit price of latest activity
-            const latestActivity =
-              await this.activitiesService.getLatestActivity({
-                dataSource,
-                symbol
-              });
-
-            value = {
-              dataSource,
-              symbol,
-              date: today,
-              marketPrice: latestActivity?.unitPrice ?? 0
-            };
-
-            response.values.push(value);
+          if (valueOfToday?.marketPrice) {
+            continue;
           }
 
+          // If missing quote, fallback to the latest available historical market price
           const [latestValue] = response.values
             .filter((currentValue) => {
               return (
@@ -158,18 +146,33 @@ export class CurrentRateService {
               );
             })
             .sort((a, b) => {
-              if (a.date < b.date) {
-                return 1;
-              }
-
-              if (a.date > b.date) {
-                return -1;
-              }
-
-              return 0;
+              return compareDesc(a.date, b.date);
             });
 
-          value.marketPrice = latestValue.marketPrice;
+          let marketPrice = latestValue?.marketPrice;
+
+          if (!marketPrice) {
+            // Fallback to unit price of latest buy or sell activity
+            const latestActivity =
+              await this.activitiesService.getLatestActivity({
+                dataSource,
+                symbol,
+                types: [ActivityType.BUY, ActivityType.SELL]
+              });
+
+            marketPrice = latestActivity?.unitPrice ?? 0;
+          }
+
+          if (valueOfToday) {
+            valueOfToday.marketPrice = marketPrice;
+          } else {
+            response.values.push({
+              dataSource,
+              marketPrice,
+              symbol,
+              date: today
+            });
+          }
         } catch {}
       }
     }
@@ -178,8 +181,10 @@ export class CurrentRateService {
   }
 
   private containsToday(dates: Date[]): boolean {
+    const today = resetHours(new Date());
+
     for (const date of dates) {
-      if (isToday(date)) {
+      if (isSameDay(date, today, { in: utc })) {
         return true;
       }
     }
