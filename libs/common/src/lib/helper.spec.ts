@@ -3,6 +3,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
+  alignLineChartItemsToDates,
   canApplyFiltersToAccess,
   extractNumberFromString,
   getCountryCodeFromCurrency,
@@ -23,6 +24,66 @@ import {
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 describe('Helper', () => {
+  describe('Align line chart items to dates', () => {
+    it('Dates before the first item', () => {
+      expect(
+        alignLineChartItemsToDates({
+          dates: ['2025-01-02', '2025-01-03'],
+          items: [{ date: '2026-01-09', value: 100 }]
+        })
+      ).toEqual([
+        { date: '2025-01-02', value: null },
+        { date: '2025-01-03', value: null }
+      ]);
+    });
+
+    it('Dates on and after the items', () => {
+      expect(
+        alignLineChartItemsToDates({
+          dates: [
+            '2026-01-08',
+            '2026-01-09',
+            '2026-01-10',
+            '2026-01-12',
+            '2026-01-13'
+          ],
+          items: [
+            { date: '2026-01-09', value: 100 },
+            { date: '2026-01-12', value: 110 }
+          ]
+        })
+      ).toEqual([
+        { date: '2026-01-08', value: null },
+        { date: '2026-01-09', value: 100 },
+        { date: '2026-01-10', value: 100 },
+        { date: '2026-01-12', value: 110 },
+        { date: '2026-01-13', value: 110 }
+      ]);
+    });
+
+    it('Null values', () => {
+      expect(
+        alignLineChartItemsToDates({
+          dates: ['2026-01-09', '2026-01-10', '2026-01-11'],
+          items: [
+            { date: '2026-01-09', value: 100 },
+            { date: '2026-01-10', value: null }
+          ]
+        })
+      ).toEqual([
+        { date: '2026-01-09', value: 100 },
+        { date: '2026-01-10', value: null },
+        { date: '2026-01-11', value: null }
+      ]);
+    });
+
+    it('No items', () => {
+      expect(
+        alignLineChartItemsToDates({ dates: ['2026-01-09'], items: [] })
+      ).toEqual([{ date: '2026-01-09', value: null }]);
+    });
+  });
+
   describe('Can apply filters to access', () => {
     it('An access of the model context protocol', () => {
       expect(canApplyFiltersToAccess({ type: 'MCP' })).toEqual(false);
