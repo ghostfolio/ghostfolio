@@ -94,18 +94,21 @@ import {
 import { Big } from 'big.js';
 import {
   differenceInDays,
+  endOfDay,
   format,
   isAfter,
   isBefore,
   isSameMonth,
   isSameYear,
   parseISO,
-  set
+  set,
+  startOfDay
 } from 'date-fns';
 import { groupBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
+import { CurrentRateService } from './current-rate.service';
 import { RulesService } from './rules.service';
 
 const Fuse = require('fuse.js');
@@ -125,6 +128,7 @@ export class PortfolioService {
     private readonly activitiesService: ActivitiesService,
     private readonly benchmarkService: BenchmarkService,
     private readonly calculatorFactory: PortfolioCalculatorFactory,
+    private readonly currentRateService: CurrentRateService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly i18nService: I18nService,
@@ -2530,11 +2534,15 @@ export class PortfolioService {
       return !quantity.eq(0);
     });
 
-    const quotes =
+    const now = new Date();
+
+    // Get the market prices of today with the same fallback as the portfolio
+    // calculator
+    const { values } =
       openHoldings.length > 0
-        ? await this.dataProviderService.getQuotes({
+        ? await this.currentRateService.getValues({
             subscriptionType,
-            items: openHoldings.map(
+            dataGatheringItems: openHoldings.map(
               ({
                 latestActivity: {
                   assetProfile: { dataSource, symbol }
@@ -2542,16 +2550,24 @@ export class PortfolioService {
               }) => {
                 return { dataSource, symbol };
               }
-            )
+            ),
+            dateQuery: {
+              gte: startOfDay(now),
+              lt: endOfDay(now)
+            }
           })
-        : {};
+        : { values: [] };
 
     return getSum(
       openHoldings.map(({ latestActivity, quantity }) => {
         const { assetProfile, currency, unitPrice } = latestActivity;
 
-        const marketPrice =
-          quotes[getAssetProfileIdentifier(assetProfile)]?.marketPrice;
+        const marketPrice = values.find((value) => {
+          return (
+            getAssetProfileIdentifier(value) ===
+            getAssetProfileIdentifier(assetProfile)
+          );
+        })?.marketPrice;
 
         if (!marketPrice) {
           // Fall back to the unit price of the latest activity without a
