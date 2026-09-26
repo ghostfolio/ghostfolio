@@ -132,6 +132,10 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     );
   }
 
+  protected get unit() {
+    return this.deviceType === 'mobile' ? undefined : this.baseCurrency;
+  }
+
   public ngOnChanges() {
     if (this.summary) {
       if (
