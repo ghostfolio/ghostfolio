@@ -401,6 +401,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let sumOfWeightedInvestmentsWithCurrencyEffect = new Big(0);
     let totalInvestmentDays = 0;
 
+    // Track the previous BUY/SELL activity.
+    // Non-BUY/SELL activities such as dividends should not reset the average investment period.
+    let previousQuantityActivityDate: Date | undefined;
+
     for (let i = 0; i < items.length; i += 1) {
       const item = items[i];
 
@@ -423,14 +427,17 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           item.valueBeforeTransaction.gt(0) &&
           ['BUY', 'SELL'].includes(item.type)
         ) {
-          // Calculate the number of days since the previous activity
+          // Calculate the number of days since the previous BUY/SELL activity.
+          // Non-BUY/SELL activities such as dividends should not reset the period.
           const activityDate = new Date(item.date);
-          const previousActivityDate = new Date(items[i - 1].date);
+          const previousActivityDate =
+            previousQuantityActivityDate ?? new Date(items[i - 1].date);
 
           let daysSinceLastActivity = differenceInDays(
             activityDate,
             previousActivityDate
           );
+
           if (daysSinceLastActivity <= 0) {
             // The time between two activities on the same day is unknown
             // -> Set it to the smallest floating point number greater than 0
@@ -457,6 +464,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
             );
         }
 
+                // Update the reference date after BUY/SELL activities.
+        // Non-BUY/SELL activities such as dividends are ignored.
+        if (!item.itemType && ['BUY', 'SELL'].includes(item.type)) {
+          previousQuantityActivityDate = new Date(item.date);
+        }
         // If duration is effectively zero (first day), use the actual investment as the base.
         // Otherwise, use the calculated average investment.
         averageInvestmentValues[item.date] =
