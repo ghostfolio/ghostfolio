@@ -135,11 +135,54 @@ export class RedisCacheService {
     return this.cache.clear();
   }
 
-  public async set(key: string, value: string, ttl?: number) {
-    return this.cache.set(
-      key,
-      value,
-      ttl ?? this.configurationService.get('CACHE_TTL')
+  public async set(
+    key: string,
+    value: string,
+    optionsOrTtl?: number | { ttl?: number; tags?: string[] }
+  ) {
+    const ttl =
+      typeof optionsOrTtl === 'number'
+        ? optionsOrTtl
+        : optionsOrTtl?.ttl ?? this.configurationService.get('CACHE_TTL');
+
+    const tags =
+      typeof optionsOrTtl === 'object' ? optionsOrTtl.tags ?? [] : [];
+
+    const result = await this.cache.set(key, value, ttl);
+
+    if (tags.length > 0) {
+      const redisClient = this.getRedisClient();
+
+      if (redisClient && typeof redisClient.sadd === 'function') {
+        for (const tag of tags) {
+          await redisClient.sadd(`tag:${tag}`, key);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  public async invalidateByTag(tag: string) {
+    const redisClient = this.getRedisClient();
+
+    if (redisClient && typeof redisClient.smembers === 'function') {
+      const keys = (await redisClient.smembers(`tag:${tag}`)) as string[];
+
+      if (keys?.length > 0) {
+        await this.cache.mdel(keys);
+      }
+
+      await redisClient.del(`tag:${tag}`);
+    }
+  }
+
+  private getRedisClient() {
+    return (
+      (this.client as any).opts?.store?.redis ||
+      (this.client as any).opts?.store?.client ||
+      (this.client as any).client ||
+      (this.client as any).redis
     );
   }
 
