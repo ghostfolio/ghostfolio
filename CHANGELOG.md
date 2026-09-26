@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the get quotes functionality of the _Manual_ service
 - Refreshed the cryptocurrencies list
 - Improved the language localization for Catalan (`ca`)
 - Upgraded `bull-board` from version `9.9.0` to `9.10.1`
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the value of the holdings excluded from analysis in the portfolio summary
+- Fixed an issue where holdings without a quote have been valued at the unit price of the latest activity instead of the latest market price
 
 ## 3.72.0 - 2026-09-20
 
