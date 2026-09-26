@@ -378,7 +378,8 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'pt',
   'tr',
   'uk',
-  'zh'
+  'zh',
+  'zh-TW'
 ] as const;
 
 export const SYMBOL_MAXIMUM_LENGTH = 255;
