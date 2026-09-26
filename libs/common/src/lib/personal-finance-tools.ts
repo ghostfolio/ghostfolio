@@ -3,6 +3,25 @@ import { Product } from '@ghostfolio/common/interfaces';
 export const personalFinanceTools: Product[] = (
   [
     {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'FINANCIAL_PLANNING',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasSelfHostingAbility: false,
+      key: 'abbove',
+      languages: ['English', 'Français', 'Nederlands'],
+      name: 'Abbove',
+      note: 'Originally named as PaxFamilia',
+      origin: 'BE',
+      platforms: ['WEB'],
+      slogan: 'Where every wealth planning journey begins',
+      updatedAt: '2026-09-23',
+      url: 'https://www.abbove.com'
+    },
+    {
       categories: ['BUDGETING'],
       hasFreePlan: true,
       hasSelfHostingAbility: true,
@@ -21,6 +40,32 @@ export const personalFinanceTools: Product[] = (
       name: 'Addepar',
       slogan: 'Transform your business with Addepar',
       url: 'https://addepar.com'
+    },
+    {
+      alias: 'APX',
+      categories: ['FAMILY_OFFICE', 'FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: true,
+      key: 'advent-portfolio-exchange',
+      name: 'Advent Portfolio Exchange',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Simplify portfolio accounting and reporting',
+      updatedAt: '2026-09-23',
+      url: 'https://www.advent.com/solutions/advent-portfolio-exchange'
+    },
+    {
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'FINANCIAL_PLANNING',
+        'NET_WORTH_TRACKING',
+        'WEALTH_MANAGEMENT'
+      ],
+      key: 'advisorengine',
+      name: 'AdvisorEngine',
+      origin: 'US',
+      slogan: 'Your complete wealth management platform',
+      updatedAt: '2026-09-23',
+      url: 'https://www.advisorengine.com'
     },
     {
       categories: ['WEALTH_MANAGEMENT'],
@@ -73,6 +118,21 @@ export const personalFinanceTools: Product[] = (
       url: 'https://alpgain.ch'
     },
     {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'alphaquark',
+      languages: ['English'],
+      name: 'AlphaQuark',
+      origin: 'IN',
+      platforms: ['WEB'],
+      regions: ['IN'],
+      slogan:
+        'Best Wealth Management Platform in India for RAs, RIAs & Sub-Brokers',
+      updatedAt: '2026-09-23',
+      url: 'https://alphaquark.in'
+    },
+    {
       categories: ['STOCK_TRACKING'],
       founded: 2016,
       key: 'alphatrackr',
@@ -94,7 +154,7 @@ export const personalFinanceTools: Product[] = (
       url: 'https://altoo.io'
     },
     {
-      categories: ['WEALTH_MANAGEMENT'],
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
       founded: 2018,
       hasFreePlan: false,
       hasSelfHostingAbility: false,
@@ -142,6 +202,31 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$120',
       slogan: 'Analyze and track your portfolio.',
       url: 'https://anlage.app'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
+      founded: 2002,
+      key: 'archway',
+      languages: ['English'],
+      name: 'Archway',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'The foundation for every transaction',
+      updatedAt: '2026-09-23',
+      url: 'https://www.archwaygroup.com'
+    },
+    {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'asignal',
+      languages: ['English'],
+      name: 'ASignal',
+      platforms: ['WEB'],
+      pricingPerYear: '$180',
+      slogan: 'Every signal comes with the research attached.',
+      updatedAt: '2026-09-23',
+      url: 'https://asignal.io'
     },
     {
       categories: ['FAMILY_OFFICE'],
@@ -247,6 +332,32 @@ export const personalFinanceTools: Product[] = (
       url: 'https://beanvest.com'
     },
     {
+      categories: ['INVESTMENT_RESEARCH'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'benzinga-pro',
+      languages: ['English'],
+      name: 'Benzinga Pro',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan:
+        'The Best Investment Research Software & Breaking Stock Market News',
+      updatedAt: '2026-09-23',
+      url: 'https://www.benzinga.com/pro'
+    },
+    {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2014,
+      hasSelfHostingAbility: false,
+      key: 'betterment-advisor-solutions',
+      name: 'Betterment Advisor Solutions',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      slogan: 'The independent custodian built for independent advisors',
+      updatedAt: '2026-09-23',
+      url: 'https://www.betterment.com/advisors'
+    },
+    {
       categories: ['BUDGETING'],
       founded: 2022,
       hasSelfHostingAbility: false,
@@ -296,6 +407,26 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$144',
       slogan: 'Take control with retirement planning tools that begin with you',
       url: 'https://www.boldin.com'
+    },
+    {
+      categories: [
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'FINANCIAL_PLANNING',
+        'STOCK_TRACKING'
+      ],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'borderfolio',
+      languages: ['English'],
+      name: 'BorderFolio',
+      origin: 'GE',
+      platforms: ['WEB'],
+      pricingPerYear: '$149',
+      slogan:
+        'Your broker shows what your portfolio is worth. BorderFolio shows how you built it.',
+      updatedAt: '2026-09-23',
+      url: 'https://borderfolio.app'
     },
     {
       categories: [
@@ -431,6 +562,16 @@ export const personalFinanceTools: Product[] = (
       url: 'https://cointracking.info'
     },
     {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: true,
+      key: 'comarch-wealth-management',
+      name: 'Comarch Wealth Management',
+      origin: 'PL',
+      slogan: 'Empower RMs. Engage customers. Enhance business growth.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.comarch.com/finance/banking/comarch-wealth-management'
+    },
+    {
       categories: ['WEALTH_MANAGEMENT'],
       founded: 2019,
       key: 'compound-planning',
@@ -466,6 +607,49 @@ export const personalFinanceTools: Product[] = (
       url: 'https://countabout.com'
     },
     {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      founded: 2025,
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'coveredge',
+      languages: ['English'],
+      name: 'CoverEdge',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$239.88',
+      slogan: 'Know what your options income is really earning.',
+      updatedAt: '2026-09-23',
+      url: 'https://coveredge.io'
+    },
+    {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 1987,
+      hasSelfHostingAbility: false,
+      key: 'croesus-advisor',
+      languages: ['English', 'Français'],
+      name: 'Croesus Advisor',
+      origin: 'CA',
+      slogan:
+        'A trusted, all-in-one, customizable portfolio management system that empowers top-performing advisors and firms.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.croesus.com/solutions/portfolio-management'
+    },
+    {
+      categories: ['CRYPTOCURRENCY'],
+      founded: 2021,
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'crypto-excel',
+      languages: ['English', 'Français'],
+      name: 'Crypto Excel',
+      origin: 'FR',
+      platforms: ['WEB'],
+      pricingPerYear: '€70.80',
+      slogan: 'Excel in your investments.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.cryptoexcel.io'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       hasFreePlan: true,
       key: 'danelfin',
@@ -494,7 +678,11 @@ export const personalFinanceTools: Product[] = (
       url: 'https://de.fi'
     },
     {
-      categories: ['INVESTMENT_RESEARCH', 'WEALTH_MANAGEMENT'],
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
       key: 'deepvest',
       name: 'DeepVest',
       slogan:
@@ -556,6 +744,21 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.digrin.com'
     },
     {
+      categories: ['INVESTMENT_RESEARCH'],
+      founded: 2020,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'diversiview',
+      languages: ['English'],
+      name: 'Diversiview',
+      origin: 'AU',
+      platforms: ['WEB'],
+      pricingPerYear: 'AUD 490',
+      slogan: 'Portfolio Analysis & Portfolio Optimization',
+      updatedAt: '2026-09-23',
+      url: 'https://diversiview.online'
+    },
+    {
       categories: ['DIVIDEND_TRACKING'],
       hasFreePlan: true,
       key: 'dividend-watch',
@@ -571,6 +774,26 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$99.99',
       slogan: 'Track Your Dividends Like a Pro',
       url: 'https://dividend-wealth.com'
+    },
+    {
+      categories: [
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'dividendatlas',
+      languages: ['English', 'Nederlands'],
+      name: 'DividendAtlas',
+      origin: 'NL',
+      platforms: ['WEB'],
+      pricingPerYear: '€79.90',
+      slogan:
+        'Research every dividend stock that pays. Then track what you own.',
+      updatedAt: '2026-09-23',
+      url: 'https://dividendatlas.com'
     },
     {
       categories: ['DIVIDEND_TRACKING'],
@@ -606,6 +829,17 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '€57.48',
       slogan: 'The Portfolio Tracker that replaces your spreadsheets',
       url: 'https://www.donkycapital.com'
+    },
+    {
+      categories: ['BUDGETING', 'FINANCIAL_ADVISOR', 'FINANCIAL_PLANNING'],
+      hasSelfHostingAbility: false,
+      key: 'emoney',
+      name: 'eMoney',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      slogan: 'Everything you need. Every stage of advice.',
+      updatedAt: '2026-09-23',
+      url: 'https://emoneyadvisor.com'
     },
     {
       categories: ['FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
@@ -651,6 +885,33 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.envestnet.com'
     },
     {
+      categories: [
+        'BUDGETING',
+        'FINANCIAL_ADVISOR',
+        'FINANCIAL_PLANNING',
+        'NET_WORTH_TRACKING'
+      ],
+      founded: 1985,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'envestnet-moneyguide',
+      name: 'Envestnet MoneyGuide',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$2000',
+      slogan: 'A Comprehensive Planning Platform',
+      updatedAt: '2026-09-23',
+      url: 'https://www.moneyguidepro.com'
+    },
+    {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      key: 'envestnet-tamarac',
+      name: 'Envestnet Tamarac',
+      slogan: 'Envestnet Tamarac. Built for the way RIAs work.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.envestnet.com/tamarac'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       hasFreePlan: true,
       key: 'epsmomentum',
@@ -659,6 +920,24 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$83.88',
       slogan: 'Stock Selection Analytics for Investors',
       url: 'https://epsmomentum.com'
+    },
+    {
+      categories: [
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'NET_WORTH_TRACKING',
+        'STOCK_TRACKING',
+        'TAX_REPORTING'
+      ],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'equitystat',
+      languages: ['English'],
+      name: 'EquityStat',
+      platforms: ['WEB'],
+      slogan: 'Track All Your Stocks In One Place',
+      updatedAt: '2026-09-23',
+      url: 'https://equitystat.com'
     },
     {
       categories: ['ETF_TRACKING', 'INVESTMENT_RESEARCH'],
@@ -683,6 +962,17 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.etfrc.com'
     },
     {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: false,
+      key: 'etna-financial-advisor-software',
+      name: 'ETNA Financial Advisor Software',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Transform wealth management with our turnkey SaaS solution',
+      updatedAt: '2026-09-23',
+      url: 'https://www.etnasoft.com/financial-advisor-software'
+    },
+    {
       categories: ['WEALTH_MANAGEMENT'],
       founded: 2010,
       hasFreePlan: false,
@@ -704,6 +994,25 @@ export const personalFinanceTools: Product[] = (
       platforms: ['ANDROID', 'IOS', 'WEB'],
       slogan: 'Plan, track, find more margin',
       url: 'https://www.ramseysolutions.com/money/everydollar'
+    },
+    {
+      categories: [
+        'CRYPTOCURRENCY',
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'excel-price-feed',
+      languages: ['English'],
+      name: 'Excel Price Feed',
+      origin: 'GB',
+      platforms: ['WINDOWS'],
+      pricingPerYear: '$165',
+      slogan: 'Live financial markets data in your Excel spreadsheet.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.excelpricefeed.com'
     },
     {
       categories: ['NET_WORTH_TRACKING'],
@@ -772,6 +1081,19 @@ export const personalFinanceTools: Product[] = (
       url: 'https://fey.com'
     },
     {
+      categories: ['FINANCIAL_ADVISOR', 'INVESTMENT_RESEARCH'],
+      founded: 1999,
+      hasSelfHostingAbility: false,
+      key: 'fiduciary-focus-toolkit',
+      name: 'Fiduciary Focus Toolkit',
+      note: 'Originally named as Fi360 Toolkit',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Your all-in-one solution',
+      updatedAt: '2026-09-23',
+      url: 'https://www.broadridge.com/hub/fiduciary-governance-solutions/investment-and-account-evaluation-tools'
+    },
+    {
       founded: 2023,
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -782,6 +1104,21 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$115',
       slogan: 'Flexible Financial Management',
       url: 'https://www.fina.money'
+    },
+    {
+      categories: ['CRYPTOCURRENCY', 'STOCK_TRACKING'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'financial-tech-wiz-trading-journal',
+      languages: ['English'],
+      name: 'Financial Tech Wiz Trading Journal',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$119',
+      slogan:
+        'The Trading Journal Built to Track, Analyze, and Improve Your Performance',
+      updatedAt: '2026-09-23',
+      url: 'https://journal.financialtechwiz.com'
     },
     {
       categories: ['NET_WORTH_TRACKING'],
@@ -855,6 +1192,17 @@ export const personalFinanceTools: Product[] = (
       url: 'https://fincite.de'
     },
     {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      hasSelfHostingAbility: true,
+      key: 'finfolio',
+      name: 'FinFolio',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      slogan: 'Wealth management simplified.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.finfolio.com'
+    },
+    {
       categories: ['BUDGETING'],
       hasSelfHostingAbility: false,
       key: 'fintable',
@@ -872,6 +1220,23 @@ export const personalFinanceTools: Product[] = (
       name: 'Fintel',
       slogan: 'Essential Tools for Investors and Traders',
       url: 'https://fintel.io'
+    },
+    {
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasSelfHostingAbility: false,
+      key: 'fintellion',
+      name: 'Fintellion',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$1188',
+      slogan:
+        'Research Companies. Track Market Events. Connect the Intelligence to Client Holdings.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.fintellion.ai'
     },
     {
       categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
@@ -952,6 +1317,21 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.folishare.com'
     },
     {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'foremetrics',
+      languages: ['English'],
+      name: 'Foremetrics',
+      origin: 'NL',
+      platforms: ['WEB'],
+      pricingPerYear: '€89',
+      slogan:
+        'Stock research, portfolio tracking, and valuation tools in one clear workspace',
+      updatedAt: '2026-09-23',
+      url: 'https://foremetrics.ai'
+    },
+    {
       categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -996,6 +1376,21 @@ export const personalFinanceTools: Product[] = (
       regions: ['Global'],
       slogan: 'Take control of your finances from WhatsApp',
       url: 'https://gasti.pro'
+    },
+    {
+      categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING', 'TAX_REPORTING'],
+      founded: 2026,
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'geckopro',
+      languages: ['English'],
+      name: 'GeckoPro',
+      origin: 'NZ',
+      platforms: ['ANDROID', 'WEB'],
+      pricingPerYear: 'NZD 79.90',
+      slogan: 'Portfolio intelligence, without the noise.',
+      updatedAt: '2026-09-23',
+      url: 'https://geckopro.app'
     },
     {
       categories: ['NET_WORTH_TRACKING', 'STOCK_TRACKING'],
@@ -1059,6 +1454,25 @@ export const personalFinanceTools: Product[] = (
       name: 'HedgeFollow',
       slogan: 'Follow Hedge Funds & Insiders using 13F filings',
       url: 'https://hedgefollow.com'
+    },
+    {
+      categories: [
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'NET_WORTH_TRACKING',
+        'STOCK_TRACKING'
+      ],
+      founded: 2025,
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'helm-terminal',
+      languages: ['English'],
+      name: 'Helm Terminal',
+      platforms: ['WEB'],
+      pricingPerYear: '$149',
+      slogan: 'Your portfolio. A clearer picture.',
+      updatedAt: '2026-09-23',
+      url: 'https://helmterminal.dev'
     },
     {
       categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
@@ -1151,6 +1565,56 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.investify.pk'
     },
     {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'investingpro',
+      name: 'InvestingPro',
+      origin: 'CY',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      slogan: 'Make your next trade LEGENDARY',
+      updatedAt: '2026-09-23',
+      url: 'https://www.investing.com/pro'
+    },
+    {
+      categories: [
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'STOCK_TRACKING',
+        'TAX_REPORTING'
+      ],
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'investment-account-manager',
+      languages: ['English'],
+      name: 'Investment Account Manager',
+      origin: 'US',
+      platforms: ['WINDOWS'],
+      pricingPerYear: '$159',
+      slogan: 'The Software Solution for Investing',
+      updatedAt: '2026-09-23',
+      url: 'https://www.investmentaccountmanager.com'
+    },
+    {
+      categories: [
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'FINANCIAL_PLANNING',
+        'STOCK_TRACKING'
+      ],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'investor-pilot',
+      languages: ['English'],
+      name: 'Investor Pilot',
+      origin: 'AU',
+      platforms: ['WEB'],
+      pricingPerYear: '$144',
+      slogan: 'Take control of your investing journey',
+      updatedAt: '2026-09-23',
+      url: 'https://investorpilot.co'
+    },
+    {
       categories: ['NET_WORTH_TRACKING'],
       founded: 2021,
       hasFreePlan: true,
@@ -1176,6 +1640,21 @@ export const personalFinanceTools: Product[] = (
       platforms: ['ANDROID', 'IOS', 'WEB'],
       slogan: 'Inwestujesz? Śledź swój majątek w jednym miejscu',
       url: 'https://inwestuje.app'
+    },
+    {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      founded: 2024,
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'istfin',
+      languages: ['Türkçe'],
+      name: 'İstfin',
+      origin: 'TR',
+      platforms: ['WEB'],
+      pricingPerYear: '₺1188',
+      slogan: 'Veriyi Stratejiye Dönüştürün',
+      updatedAt: '2026-09-23',
+      url: 'https://istfin.com'
     },
     {
       categories: ['ETF_TRACKING'],
@@ -1229,6 +1708,26 @@ export const personalFinanceTools: Product[] = (
     },
     {
       categories: [
+        'FINANCIAL_ADVISOR',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 2008,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'kwanti',
+      languages: ['English'],
+      name: 'Kwanti',
+      note: 'Originally named as Portfolio Lab',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$2628',
+      slogan: 'Smart Analytics for Data-Driven Advisors',
+      updatedAt: '2026-09-23',
+      url: 'https://kwanti.com'
+    },
+    {
+      categories: [
         'CRYPTOCURRENCY',
         'ETF_TRACKING',
         'INVESTMENT_RESEARCH',
@@ -1243,7 +1742,7 @@ export const personalFinanceTools: Product[] = (
       url: 'https://my.kyro.app'
     },
     {
-      categories: ['WEALTH_MANAGEMENT'],
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
       founded: 2021,
       hasFreePlan: false,
       key: 'leafs',
@@ -1289,6 +1788,21 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$132',
       slogan: 'AI Investing Assistant',
       url: 'https://magnifi.com'
+    },
+    {
+      categories: ['CRYPTOCURRENCY'],
+      founded: 2023,
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'mantapex',
+      languages: ['Deutsch', 'English', 'Español', 'Français', '中文'],
+      name: 'Mantapex',
+      origin: 'NO',
+      platforms: ['ANDROID', 'WEB'],
+      pricingPerYear: '$29',
+      slogan: 'Track Your Crypto Portfolio Across 50+ Chains',
+      updatedAt: '2026-09-23',
+      url: 'https://mantapex.com'
     },
     {
       categories: ['INVESTMENT_RESEARCH'],
@@ -1475,6 +1989,20 @@ export const personalFinanceTools: Product[] = (
       url: 'https://moneywell.app'
     },
     {
+      categories: ['BUDGETING', 'FINANCIAL_PLANNING', 'NET_WORTH_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'moneywellth',
+      languages: ['English'],
+      name: 'MoneyWellth',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$84.99',
+      slogan: 'Make Money Simple with MoneyWellth',
+      updatedAt: '2026-09-23',
+      url: 'https://www.moneywellth.com'
+    },
+    {
       categories: ['BUDGETING'],
       key: 'moneywiz',
       name: 'MoneyWiz',
@@ -1509,6 +2037,21 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$20',
       slogan: 'Smart, simple, stress-free money tracking.',
       url: 'https://www.monsy.app'
+    },
+    {
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'FINANCIAL_PLANNING',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
+      key: 'morningstar-direct-advisory-suite',
+      name: 'Morningstar Direct Advisory Suite',
+      note: 'Originally named as Advisor Workstation',
+      origin: 'US',
+      slogan: 'Build trust. Showcase value. Deliver elevated advice at scale.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.morningstar.com/business/products/direct-advisory-suite'
     },
     {
       categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
@@ -1634,6 +2177,25 @@ export const personalFinanceTools: Product[] = (
       url: 'https://nexafin.com'
     },
     {
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'FINANCIAL_PLANNING',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'nitrogen',
+      name: 'Nitrogen',
+      note: 'Originally named as Riskalyze',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$1188',
+      slogan: 'Showcase the value of advice in every client moment.',
+      updatedAt: '2026-09-23',
+      url: 'https://nitrogenwealth.com'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       key: 'okama',
       name: 'okama',
@@ -1651,6 +2213,74 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '€49.99',
       slogan: 'Dividend Day Should Feel Like Payday',
       url: 'https://onlydividends.app'
+    },
+    {
+      categories: [
+        'FAMILY_OFFICE',
+        'FINANCIAL_ADVISOR',
+        'FINANCIAL_PLANNING',
+        'WEALTH_MANAGEMENT'
+      ],
+      founded: 1999,
+      hasSelfHostingAbility: false,
+      key: 'orion-advisor-technology',
+      name: 'Orion Advisor Technology',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Run a firm where every advisor can thrive.',
+      updatedAt: '2026-09-23',
+      url: 'https://orion.com/advisor-tech'
+    },
+    {
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'orion-risk-intelligence',
+      name: 'Orion Risk Intelligence',
+      note: 'Originally named as HiddenLevers',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$2970',
+      slogan: 'Risk analytics. Built on BeFi.',
+      updatedAt: '2026-09-23',
+      url: 'https://orion.com/advisor-tech/risk-intelligence'
+    },
+    {
+      categories: [
+        'CRYPTOCURRENCY',
+        'ETF_TRACKING',
+        'FAMILY_OFFICE',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'palance',
+      languages: ['English', '日本語', '中文'],
+      name: 'Palance',
+      platforms: ['WEB'],
+      pricingPerYear: '$1200',
+      slogan: 'Markets, in clarity.',
+      updatedAt: '2026-09-23',
+      url: 'https://palance.co'
+    },
+    {
+      categories: ['INVESTMENT_RESEARCH'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'panda-trading-solutions',
+      languages: ['English', 'Español', 'Português'],
+      name: 'Panda Trading Solutions',
+      origin: 'BR',
+      platforms: ['WINDOWS'],
+      pricingPerYear: '$899',
+      slogan: 'One click on the board. Everything follows.',
+      updatedAt: '2026-09-23',
+      url: 'https://tspanda.com'
     },
     {
       categories: ['NET_WORTH_TRACKING'],
@@ -1721,6 +2351,19 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.getpennies.com'
     },
     {
+      categories: ['FAMILY_OFFICE'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'pinion',
+      languages: ['English'],
+      name: 'Pinion',
+      platforms: ['WEB'],
+      pricingPerYear: '$50',
+      slogan: 'Track your angel portfolio.',
+      updatedAt: '2026-09-23',
+      url: 'https://pinion.vc'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
       founded: 2022,
       hasFreePlan: true,
@@ -1784,6 +2427,19 @@ export const personalFinanceTools: Product[] = (
       regions: ['Global'],
       slogan: 'Know where your money is going',
       url: 'https://www.pocketsmith.com'
+    },
+    {
+      categories: ['FINANCIAL_PLANNING', 'WEALTH_MANAGEMENT'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'portax',
+      name: 'PORTAX',
+      origin: 'US',
+      platforms: ['WINDOWS'],
+      pricingPerYear: '$899',
+      slogan: 'After-Tax Portfolio Analysis',
+      updatedAt: '2026-09-23',
+      url: 'https://www.portaxsoftware.com'
     },
     {
       categories: ['BUDGETING', 'NET_WORTH_TRACKING', 'STOCK_TRACKING'],
@@ -1869,10 +2525,68 @@ export const personalFinanceTools: Product[] = (
     },
     {
       categories: ['INVESTMENT_RESEARCH'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'portfoliometrics',
+      languages: [
+        'Čeština',
+        'Deutsch',
+        'English',
+        'Español',
+        'Français',
+        'Italiano',
+        '日本語',
+        '简体中文',
+        '繁體中文'
+      ],
+      name: 'PortfolioMetrics',
+      origin: 'CZ',
+      platforms: ['WEB'],
+      pricingPerYear: '$139',
+      slogan: 'What do you want to backtest today?',
+      updatedAt: '2026-09-23',
+      url: 'https://portfoliometrics.net',
+      useAnonymously: true
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'TAX_REPORTING', 'WEALTH_MANAGEMENT'],
+      founded: 1999,
+      hasSelfHostingAbility: false,
+      key: 'portfolioshop',
+      name: 'PortfolioShop',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Precision in Every Position',
+      updatedAt: '2026-09-23',
+      url: 'https://www.portfolioshop.com'
+    },
+    {
+      categories: ['INVESTMENT_RESEARCH'],
       key: 'portfolioslab',
       name: 'PortfoliosLab',
       slogan: 'Financial tools for smart investors',
       url: 'https://portfolioslab.com'
+    },
+    {
+      categories: [
+        'CRYPTOCURRENCY',
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      founded: 2025,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'portfoliotrackr',
+      languages: ['English'],
+      name: 'PortfolioTrackr',
+      origin: 'AE',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$99.99',
+      slogan: 'Every position. One dashboard.',
+      updatedAt: '2026-09-23',
+      url: 'https://portfoliotrackr.com'
     },
     {
       categories: ['STOCK_TRACKING'],
@@ -1924,6 +2638,18 @@ export const personalFinanceTools: Product[] = (
       url: 'https://prostocktracker.com'
     },
     {
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
+      founded: 2007,
+      key: 'pulse-by-assetbook',
+      languages: ['English'],
+      name: 'Pulse by AssetBook',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Portfolio Management and Reporting Software',
+      updatedAt: '2026-09-23',
+      url: 'https://www.assetbook.com'
+    },
+    {
       categories: ['NET_WORTH_TRACKING'],
       hasSelfHostingAbility: false,
       key: 'quantive',
@@ -1931,6 +2657,25 @@ export const personalFinanceTools: Product[] = (
       platforms: ['WEB'],
       slogan: 'See your financial life clearly',
       url: 'https://usequantive.app'
+    },
+    {
+      categories: [
+        'CRYPTOCURRENCY',
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'quotrend',
+      languages: ['English'],
+      name: 'QuoTrend',
+      origin: 'CY',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$154.80',
+      slogan: 'Know what to trade in your own words.',
+      updatedAt: '2026-09-23',
+      url: 'https://quotrend.com'
     },
     {
       categories: ['INVESTMENT_RESEARCH', 'NET_WORTH_TRACKING'],
@@ -1949,6 +2694,7 @@ export const personalFinanceTools: Product[] = (
       categories: ['INVESTMENT_RESEARCH'],
       key: 'reflexivity',
       name: 'Reflexivity',
+      note: 'Originally named as Toggle AI',
       slogan: 'Faster Insights. Better Analysis. Greater Confidence.',
       url: 'https://reflexivity.com'
     },
@@ -1966,6 +2712,25 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.rentablo.de'
     },
     {
+      categories: [
+        'BUDGETING',
+        'FINANCIAL_ADVISOR',
+        'FINANCIAL_PLANNING',
+        'NET_WORTH_TRACKING'
+      ],
+      founded: 2015,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'rightcapital',
+      name: 'RightCapital',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$1799.40',
+      slogan: 'Financial planning software done right',
+      updatedAt: '2026-09-23',
+      url: 'https://www.rightcapital.com'
+    },
+    {
       categories: ['BUDGETING', 'NET_WORTH_TRACKING'],
       founded: 2015,
       hasSelfHostingAbility: false,
@@ -1975,6 +2740,20 @@ export const personalFinanceTools: Product[] = (
       platforms: ['ANDROID', 'IOS', 'WEB'],
       slogan: 'Track your net worth',
       url: 'https://www.rocketmoney.com'
+    },
+    {
+      categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'safe-dividend-tracker',
+      languages: ['English'],
+      name: 'Safe Dividend Tracker',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$95.88',
+      slogan: 'The Smarter Way to Build Dividend Income',
+      updatedAt: '2026-09-23',
+      url: 'https://safedividendtracker.com'
     },
     {
       categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
@@ -2087,6 +2866,27 @@ export const personalFinanceTools: Product[] = (
       url: 'https://simplywall.st'
     },
     {
+      categories: [
+        'CRYPTOCURRENCY',
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      founded: 2024,
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'sirius-investors',
+      languages: ['English'],
+      name: 'Sirius Investors',
+      origin: 'NL',
+      platforms: ['WEB'],
+      pricingPerYear: '$190',
+      slogan:
+        'Professional-Grade Investment Research with Automated Portfolio Management',
+      updatedAt: '2026-09-23',
+      url: 'https://www.siriusinvestors.com'
+    },
+    {
       categories: ['BUDGETING'],
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -2132,7 +2932,7 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Manage your money anytime, anywhere.'
     },
     {
-      categories: ['WEALTH_MANAGEMENT'],
+      categories: ['FINANCIAL_ADVISOR', 'WEALTH_MANAGEMENT'],
       key: 'ssc-black-diamond',
       name: 'SS&C Black Diamond Wealth Solutions',
       slogan: 'The Cornerstone of a Successful Business',
@@ -2144,6 +2944,22 @@ export const personalFinanceTools: Product[] = (
       name: 'Statfolio',
       slogan: 'Take control of your investments',
       url: 'https://statfolio.net'
+    },
+    {
+      categories: [
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      founded: 2010,
+      key: 'statmetrics',
+      name: 'Statmetrics',
+      origin: 'DE',
+      platforms: ['ANDROID'],
+      slogan: 'Mobile App Solution for investment analysis and management',
+      updatedAt: '2026-09-23',
+      url: 'https://statmetrics.org'
     },
     {
       categories: ['INVESTMENT_RESEARCH'],
@@ -2166,6 +2982,35 @@ export const personalFinanceTools: Product[] = (
       url: 'https://stockevents.app'
     },
     {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      founded: 2025,
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'stock-expert-ai',
+      name: 'Stock Expert AI',
+      origin: 'US',
+      platforms: ['WEB'],
+      slogan: 'Research US stocks with AI.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.stockexpertai.com'
+    },
+    {
+      categories: ['DIVIDEND_TRACKING', 'ETF_TRACKING', 'STOCK_TRACKING'],
+      founded: 2010,
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'stock-portfolio-organizer',
+      languages: ['English'],
+      name: 'Stock Portfolio Organizer',
+      note: 'License is a perpetual license',
+      origin: 'AU',
+      platforms: ['WINDOWS'],
+      pricingPerYear: '$99',
+      slogan: 'The Ultimate Stock Portfolio Management Software',
+      updatedAt: '2026-09-23',
+      url: 'https://www.stockportfolioorganizer.com'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       key: 'stockcharts',
       name: 'StockCharts',
@@ -2183,6 +3028,25 @@ export const personalFinanceTools: Product[] = (
       url: 'https://stockle.app'
     },
     {
+      categories: [
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'STOCK_TRACKING',
+        'TAX_REPORTING'
+      ],
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'stockmarket-plus',
+      languages: ['English'],
+      name: 'StockMarket Plus',
+      origin: 'AU',
+      platforms: ['WINDOWS'],
+      pricingPerYear: 'AUD 288',
+      slogan: 'Share Portfolio Management Software Australia',
+      updatedAt: '2026-09-23',
+      url: 'https://stockmarketplus.com.au'
+    },
+    {
       categories: ['STOCK_TRACKING'],
       founded: 2008,
       isArchived: true,
@@ -2191,6 +3055,20 @@ export const personalFinanceTools: Product[] = (
       origin: 'FR',
       note: 'StockMarketEye was discontinued in 2023',
       slogan: 'A Powerful Portfolio & Investment Tracking App'
+    },
+    {
+      categories: ['DIVIDEND_TRACKING', 'STOCK_TRACKING', 'TAX_REPORTING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: true,
+      key: 'stockmaster',
+      languages: ['English'],
+      name: 'StockMaster',
+      origin: 'AU',
+      platforms: ['WINDOWS'],
+      pricingPerYear: '$275',
+      slogan: 'Australia Leading Portfolio Management Software',
+      updatedAt: '2026-09-23',
+      url: 'https://supertech.com.au/stockmaster.html'
     },
     {
       categories: ['INVESTMENT_RESEARCH'],
@@ -2222,6 +3100,20 @@ export const personalFinanceTools: Product[] = (
       url: 'https://stockunlock.com'
     },
     {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: true,
+      key: 'stockwarepro',
+      languages: ['English'],
+      name: 'StockwarePro',
+      origin: 'IN',
+      platforms: ['WINDOWS'],
+      pricingPerYear: '$70',
+      slogan: 'Signals are often lagging, AI gives us the leading edge!',
+      updatedAt: '2026-09-23',
+      url: 'https://www.stockwarepro.com'
+    },
+    {
       categories: ['STOCK_TRACKING'],
       hasFreePlan: true,
       hasSelfHostingAbility: false,
@@ -2233,6 +3125,22 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '€49.90',
       slogan: 'Visualize all of your portfolios',
       url: 'https://stonksfolio.com'
+    },
+    {
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
+      hasFreePlan: false,
+      key: 'stratifi',
+      name: 'StratiFi',
+      platforms: ['WEB'],
+      pricingPerYear: '$5995',
+      slogan:
+        'Use AI trained by top independent wealth firms, engineered with sophisticated quant finance & grounded in proven behavioral finance.',
+      updatedAt: '2026-09-23',
+      url: 'https://www.stratifi.com'
     },
     {
       categories: ['INVESTMENT_RESEARCH'],
@@ -2331,6 +3239,25 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.todays-budget.com'
     },
     {
+      categories: [
+        'CRYPTOCURRENCY',
+        'DIVIDEND_TRACKING',
+        'ETF_TRACKING',
+        'STOCK_TRACKING',
+        'TAX_REPORTING'
+      ],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'track-my-shares',
+      languages: ['English'],
+      name: 'Track My Shares',
+      platforms: ['WEB'],
+      pricingPerYear: '$49.99',
+      slogan: 'The portfolio tracker that handles your tax time too.',
+      updatedAt: '2026-09-23',
+      url: 'https://trackmyshares.com'
+    },
+    {
       categories: ['ETF_TRACKING'],
       founded: 2016,
       key: 'trackinsight',
@@ -2365,6 +3292,22 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.trackyourdividends.com'
     },
     {
+      categories: ['CRYPTOCURRENCY', 'STOCK_TRACKING'],
+      founded: 2026,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'trade-journal-ai',
+      languages: ['English'],
+      name: 'Trade Journal AI',
+      origin: 'US',
+      platforms: ['IOS', 'WEB'],
+      pricingPerYear: '$195',
+      slogan:
+        'The AI trading journal that reads every entry — not just every trade',
+      updatedAt: '2026-09-23',
+      url: 'https://tradejournal.ai'
+    },
+    {
       key: 'tradebb',
       name: 'TradeBB',
       slogan:
@@ -2379,6 +3322,34 @@ export const personalFinanceTools: Product[] = (
       regions: ['US'],
       slogan: 'Take Control Of Trader Taxes',
       url: 'https://tradelog.com'
+    },
+    {
+      categories: ['CRYPTOCURRENCY', 'ETF_TRACKING', 'STOCK_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'tradersforge-journal',
+      languages: ['English', 'Español', 'Português'],
+      name: 'TradersForge Journal',
+      origin: 'US',
+      platforms: ['IOS', 'WEB'],
+      pricingPerYear: '$100',
+      slogan: 'Your Trading Journal — now with Forge.',
+      updatedAt: '2026-09-23',
+      url: 'https://app.tradersforge.net'
+    },
+    {
+      categories: ['CRYPTOCURRENCY', 'STOCK_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'traderswatcher',
+      languages: ['English'],
+      name: 'TradersWatcher',
+      origin: 'CA',
+      platforms: ['WEB'],
+      pricingPerYear: '$290',
+      slogan: 'The journal that watches you trade.',
+      updatedAt: '2026-09-23',
+      url: 'https://traderswatcher.com'
     },
     {
       founded: 2011,
@@ -2450,6 +3421,20 @@ export const personalFinanceTools: Product[] = (
       url: 'https://trendlyne.com'
     },
     {
+      categories: ['CRYPTOCURRENCY', 'INVESTMENT_RESEARCH'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'trendspider',
+      languages: ['English'],
+      name: 'TrendSpider',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$708',
+      slogan: 'Welcome to the AI-Powered Super Platform for Active Investors',
+      updatedAt: '2026-09-23',
+      url: 'https://trendspider.com'
+    },
+    {
       categories: ['NET_WORTH_TRACKING'],
       founded: 2020,
       hasSelfHostingAbility: false,
@@ -2483,12 +3468,56 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.tweenvest.com'
     },
     {
+      categories: [
+        'CRYPTOCURRENCY',
+        'ETF_TRACKING',
+        'INVESTMENT_RESEARCH',
+        'STOCK_TRACKING'
+      ],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'tykr',
+      languages: ['English'],
+      name: 'Tykr',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$99.99',
+      slogan: 'Clear Confident Investing',
+      updatedAt: '2026-09-23',
+      url: 'https://tykr.com'
+    },
+    {
+      categories: ['CRYPTOCURRENCY', 'STOCK_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'ultratrader',
+      name: 'UltraTrader',
+      platforms: ['ANDROID', 'IOS', 'WEB'],
+      pricingPerYear: '$108',
+      slogan: 'The Best Trading Journal for Web & Mobile',
+      updatedAt: '2026-09-23',
+      url: 'https://ultratrader.app'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       key: 'uncle-stock',
       name: 'Uncle Stock',
       pricingPerYear: '$130',
       slogan: 'Fundamental Stock Screener',
       url: 'https://www.unclestock.com'
+    },
+    {
+      categories: ['STOCK_TRACKING'],
+      hasFreePlan: true,
+      hasSelfHostingAbility: false,
+      key: 'upogee',
+      languages: ['English', 'Español'],
+      name: 'Upogee',
+      origin: 'ES',
+      platforms: ['WEB'],
+      slogan: 'See whether what you’re doing with your investments is working.',
+      updatedAt: '2026-09-23',
+      url: 'https://upogee.com'
     },
     {
       categories: ['STOCK_TRACKING'],
@@ -2522,6 +3551,35 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '€78',
       slogan: 'Track your real portfolio. Not a watchlist.',
       url: 'https://valuedge.app'
+    },
+    {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'valuescreener',
+      languages: ['English'],
+      name: 'ValueScreener',
+      origin: 'US',
+      platforms: ['WEB'],
+      pricingPerYear: '$228',
+      slogan:
+        'We draft the numbers. You write the reason. We tell you the day one breaks.',
+      updatedAt: '2026-09-23',
+      url: 'https://valuescreener.ai'
+    },
+    {
+      categories: ['INVESTMENT_RESEARCH', 'STOCK_TRACKING'],
+      hasFreePlan: false,
+      hasSelfHostingAbility: true,
+      key: 'vectorvest',
+      languages: ['English'],
+      name: 'VectorVest',
+      origin: 'US',
+      platforms: ['ANDROID', 'IOS', 'WEB', 'WINDOWS'],
+      pricingPerYear: '$499',
+      slogan: 'Protect & grow your stock portfolio in only 10 minutes a day',
+      updatedAt: '2026-09-23',
+      url: 'https://www.vectorvest.com'
     },
     {
       categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
@@ -2571,6 +3629,21 @@ export const personalFinanceTools: Product[] = (
       pricingPerYear: '$234',
       slogan: 'Stock market analysis for the serious part-time investor',
       url: 'https://www.wallstreetzen.com'
+    },
+    {
+      categories: ['FAMILY_OFFICE', 'TAX_REPORTING'],
+      founded: 2001,
+      hasFreePlan: false,
+      hasSelfHostingAbility: false,
+      key: 'wealth-write-up',
+      languages: ['English', 'Français'],
+      name: 'Wealth Write.Up',
+      origin: 'CA',
+      platforms: ['WEB'],
+      pricingPerYear: 'CAD 899',
+      slogan: 'The Competitive Edge in Investment Accounting',
+      updatedAt: '2026-09-23',
+      url: 'https://wealthwriteup.com'
     },
     {
       categories: ['FAMILY_OFFICE', 'WEALTH_MANAGEMENT'],
@@ -2662,7 +3735,11 @@ export const personalFinanceTools: Product[] = (
       url: 'https://www.wisesheets.io'
     },
     {
-      categories: ['INVESTMENT_RESEARCH', 'WEALTH_MANAGEMENT'],
+      categories: [
+        'FINANCIAL_ADVISOR',
+        'INVESTMENT_RESEARCH',
+        'WEALTH_MANAGEMENT'
+      ],
       key: 'ycharts',
       name: 'YCharts',
       slogan: 'Financial Research and Proposal Platform',

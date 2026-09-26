@@ -107,6 +107,7 @@ const locales = {
   DIVIDEND_TRACKING: $localize`Dividend Tracking`,
   ETF_TRACKING: $localize`ETF Tracking`,
   FAMILY_OFFICE: $localize`Family Office`,
+  FINANCIAL_ADVISOR: $localize`Financial Advisor`,
   FINANCIAL_PLANNING: $localize`Financial Planning`,
   INVESTMENT_RESEARCH: $localize`Investment Research`,
   NET_WORTH_TRACKING: $localize`Net Worth Tracking`,
