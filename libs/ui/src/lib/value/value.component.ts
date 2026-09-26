@@ -42,12 +42,12 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() locale: string;
+  @Input() locale?: string;
   @Input() position = '';
   @Input() size: 'large' | 'medium' | 'small' = 'small';
-  @Input() subLabel = '';
-  @Input() unit = '';
-  @Input() value: number | string = '';
+  @Input() subLabel?: string = '';
+  @Input() unit?: string | null = '';
+  @Input() value?: number | string | null = '';
 
   @ViewChild('labelContent', { static: false })
   labelContent!: ElementRef<HTMLSpanElement>;
@@ -219,7 +219,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isCopied = false;
     this.isNumber = false;
     this.isString = false;
-    this.locale = this.locale || getLocale();
+    this.locale = this.locale ?? getLocale();
     this.useAbsoluteValue = false;
 
     if (this.copyToClipboardTimeout) {
