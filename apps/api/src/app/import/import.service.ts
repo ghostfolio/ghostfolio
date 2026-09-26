@@ -1075,19 +1075,20 @@ export class ImportService {
         const date = parseISO(dateString);
 
         const isDuplicate = existingActivities.some((activity) => {
-          return (
-            (activity.comment || null) === (comment || null) &&
-            (activity.currency === currency ||
-              activity.assetProfile.currency === currency) &&
-            activity.assetProfile.dataSource === dataSource &&
-            isSameSecond(activity.date, date) &&
-            activity.fee === fee &&
-            activity.quantity === quantity &&
-            activity.assetProfile.symbol === symbol &&
-            activity.type === type &&
-            activity.unitPrice === unitPrice
-          );
-        });
+  return (
+    (!accountId || activity.accountId === accountId) &&
+    (activity.comment || null) === (comment || null) &&
+    ((activity.currency || null) === (currency || null) ||
+      activity.assetProfile.currency === currency) &&
+    activity.assetProfile.dataSource === dataSource &&
+    isSameSecond(activity.date, date) &&
+    activity.fee === fee &&
+    activity.quantity === quantity &&
+    activity.assetProfile.symbol === symbol &&
+    activity.type === type &&
+    activity.unitPrice === unitPrice
+  );
+});
 
         const error: ActivityError = isDuplicate
           ? { code: 'IS_DUPLICATE' }
