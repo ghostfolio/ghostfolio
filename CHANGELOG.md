@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Simplified the portfolio summary by hiding the currency on mobile
+- Improved the performance of the logo endpoints by enabling the browser cache
 - Improved the language localization for Catalan (`ca`)
 
 ### Fixed
