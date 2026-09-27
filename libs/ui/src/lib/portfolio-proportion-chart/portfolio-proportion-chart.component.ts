@@ -60,14 +60,14 @@ const {
 export class GfPortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() baseCurrency?: string = '';
-  @Input() colorScheme?: ColorScheme = DEFAULT_COLOR_SCHEME;
+  @Input() baseCurrency?: string;
+  @Input() colorScheme?: ColorScheme;
   @Input() cursor: string;
   @Input() data: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & {
       dataSource?: DataSource;
       isClickable?: boolean;
-      name: string;
+      name?: string | null;
       value: number;
     };
   } = {};
@@ -122,10 +122,11 @@ export class GfPortfolioProportionChartComponent
         value: Big;
       };
     } = {};
+    const textColor = getTextColor(this.colorScheme ?? DEFAULT_COLOR_SCHEME);
+
     this.colorMap = {
-      [this.OTHER_KEY]:
-        `rgba(${getTextColor(this.colorScheme ?? DEFAULT_COLOR_SCHEME)}, 0.24)`,
-      [UNKNOWN_KEY]: `rgba(${getTextColor(this.colorScheme ?? DEFAULT_COLOR_SCHEME)}, 0.12)`
+      [this.OTHER_KEY]: `rgba(${textColor}, 0.24)`,
+      [UNKNOWN_KEY]: `rgba(${textColor}, 0.12)`
     };
 
     if (this.keys.length > 0) {
@@ -179,7 +180,7 @@ export class GfPortfolioProportionChartComponent
             );
           } else {
             chartData[UNKNOWN_KEY] = {
-              name: this.data[symbol].name,
+              name: this.data[symbol].name ?? '',
               subCategory: secondaryKey
                 ? { [secondaryKey]: { value: new Big(0) } }
                 : undefined,
@@ -191,7 +192,7 @@ export class GfPortfolioProportionChartComponent
     } else {
       Object.keys(this.data).forEach((symbol) => {
         chartData[symbol] = {
-          name: this.data[symbol].name,
+          name: this.data[symbol].name ?? '',
           value: new Big(this.data[symbol].value || 0)
         };
       });
@@ -487,7 +488,7 @@ export class GfPortfolioProportionChartComponent
               `${value.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
-              })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
+              })} ${this.baseCurrency ?? ''} (${percentage.toFixed(2)}%)`
             ];
           }
         },
