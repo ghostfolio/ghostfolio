@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Catalan (`ca`)
 
+### Fixed
+
+- Fixed the wrapping of the name column in the accounts table component on mobile
+
 ## 3.73.0 - 2026-09-26
 
 ### Changed
