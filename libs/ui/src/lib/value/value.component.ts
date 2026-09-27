@@ -219,8 +219,11 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isCopied = false;
     this.isNumber = false;
     this.isString = false;
-    this.locale = this.locale ?? getLocale();
     this.useAbsoluteValue = false;
+
+    if (this.locale === undefined || this.locale === '') {
+      this.locale = getLocale();
+    }
 
     if (this.copyToClipboardTimeout) {
       clearTimeout(this.copyToClipboardTimeout);
