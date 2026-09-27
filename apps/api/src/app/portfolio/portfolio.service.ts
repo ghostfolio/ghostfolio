@@ -39,6 +39,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
@@ -1220,6 +1221,8 @@ export class PortfolioService {
         performance: {
           currentNetWorth: 0,
           currentValueInBaseCurrency: 0,
+          dividendInBaseCurrency: 0,
+          dividendPercentageWithCurrencyEffect: 0,
           netPerformance: 0,
           netPerformancePercentage: 0,
           netPerformancePercentageWithCurrencyEffect: 0,
@@ -1251,6 +1254,8 @@ export class PortfolioService {
     });
 
     const {
+      dividendInBaseCurrency,
+      dividendInPercentageWithCurrencyEffect,
       netPerformance,
       netPerformanceInPercentage,
       netPerformanceInPercentageWithCurrencyEffect,
@@ -1260,6 +1265,8 @@ export class PortfolioService {
       totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
     } = chart?.at(-1) ?? {
+      dividendInBaseCurrency: 0,
+      dividendInPercentageWithCurrencyEffect: 0,
       netPerformance: 0,
       netPerformanceInPercentage: 0,
       netPerformanceInPercentageWithCurrencyEffect: 0,
@@ -1275,12 +1282,15 @@ export class PortfolioService {
       hasErrors,
       dateOfFirstActivity: parseDate(historicalData[0]?.date),
       performance: {
+        dividendInBaseCurrency,
         netPerformance,
         netPerformanceWithCurrencyEffect,
         totalInvestment,
         totalInvestmentValueWithCurrencyEffect,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
+        dividendPercentageWithCurrencyEffect:
+          dividendInPercentageWithCurrencyEffect,
         netPerformancePercentage: netPerformanceInPercentage,
         netPerformancePercentageWithCurrencyEffect:
           netPerformanceInPercentageWithCurrencyEffect
@@ -2093,11 +2103,12 @@ export class PortfolioService {
   }): Promise<PortfolioSummary> {
     const user = await this.userService.user({ id: userId });
 
-    const { activities } = await this.activitiesService.getActivities({
-      userCurrency,
-      userId,
-      withExcludedAccountsAndActivities: true
-    });
+    const { activities } =
+      await this.activitiesService.getActivitiesForPortfolioCalculator({
+        userCurrency,
+        userId,
+        withExcludedAccountsAndActivities: true
+      });
 
     const excludedActivities: Activity[] = [];
     const nonExcludedActivities: Activity[] = [];
@@ -2164,31 +2175,28 @@ export class PortfolioService {
       .plus(emergencyFundHoldingsValueInBaseCurrency)
       .toNumber();
 
-    const totalOfExcludedActivities = this.getSumOfActivityType({
-      userCurrency,
-      activities: excludedActivities,
-      activityType: 'BUY'
-    }).minus(
-      this.getSumOfActivityType({
-        userCurrency,
-        activities: excludedActivities,
-        activityType: 'SELL'
-      })
-    );
-
-    const cashDetailsWithExcludedAccounts =
-      await this.accountService.getCashDetails({
+    const [
+      cashDetailsWithExcludedAccounts,
+      valueOfExcludedActivitiesInBaseCurrency
+    ] = await Promise.all([
+      this.accountService.getCashDetails({
         userId,
         currency: userCurrency,
         withExcludedAccounts: true
-      });
+      }),
+      this.getValueOfExcludedActivitiesInBaseCurrency({
+        userCurrency,
+        activities: excludedActivities,
+        subscriptionType: user.subscription?.type
+      })
+    ]);
 
     const excludedBalanceInBaseCurrency = new Big(
       cashDetailsWithExcludedAccounts.balanceInBaseCurrency
     ).minus(balanceInBaseCurrency);
 
     const excludedAccountsAndActivities = excludedBalanceInBaseCurrency
-      .plus(totalOfExcludedActivities)
+      .plus(valueOfExcludedActivitiesInBaseCurrency)
       .toNumber();
 
     // Exclude emergency fund from the financial independence calculation
@@ -2489,6 +2497,92 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
+  }
+
+  private async getValueOfExcludedActivitiesInBaseCurrency({
+    activities,
+    subscriptionType,
+    userCurrency
+  }: {
+    activities: Activity[];
+    subscriptionType?: SubscriptionType;
+    userCurrency: string;
+  }) {
+    const holdings: {
+      [assetProfileIdentifier: string]: {
+        latestActivity: Activity;
+        quantity: Big;
+      };
+    } = {};
+
+    // The activities are sorted by date in ascending order
+    for (const activity of activities) {
+      const factor = getFactor(activity.type);
+
+      if (factor === 0 || isDraftActivity(activity)) {
+        continue;
+      }
+
+      const assetProfileIdentifier = getAssetProfileIdentifier(
+        activity.assetProfile
+      );
+
+      const quantity = holdings[assetProfileIdentifier]?.quantity ?? new Big(0);
+
+      holdings[assetProfileIdentifier] = {
+        latestActivity: activity,
+        quantity: quantity.plus(new Big(activity.quantity).mul(factor))
+      };
+    }
+
+    const openHoldings = Object.values(holdings).filter(({ quantity }) => {
+      return !quantity.eq(0);
+    });
+
+    const quotes =
+      openHoldings.length > 0
+        ? await this.dataProviderService.getQuotes({
+            subscriptionType,
+            items: openHoldings.map(
+              ({
+                latestActivity: {
+                  assetProfile: { dataSource, symbol }
+                }
+              }) => {
+                return { dataSource, symbol };
+              }
+            )
+          })
+        : {};
+
+    return getSum(
+      openHoldings.map(({ latestActivity, quantity }) => {
+        const { assetProfile, currency, unitPrice } = latestActivity;
+
+        const marketPrice =
+          quotes[getAssetProfileIdentifier(assetProfile)]?.marketPrice;
+
+        if (!marketPrice) {
+          // Fall back to the unit price of the latest activity without a
+          // market price
+          return new Big(
+            this.exchangeRateDataService.toCurrency(
+              quantity.mul(unitPrice).toNumber(),
+              currency ?? assetProfile.currency,
+              userCurrency
+            )
+          );
+        }
+
+        return new Big(
+          this.exchangeRateDataService.toCurrency(
+            quantity.mul(marketPrice).toNumber(),
+            assetProfile.currency,
+            userCurrency
+          )
+        );
+      })
+    );
   }
 
   private isExcludedFromAnalysis(activity: Activity) {

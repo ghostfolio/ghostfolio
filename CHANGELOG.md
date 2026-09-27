@@ -7,14 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Fixed the alignment of the average price in the chart of the holding detail dialog for custom asset profiles
+
+## 3.74.0 - 2026-09-27
+
+### Added
+
+- Added the dividend performance to the analysis page (experimental)
+
 ### Changed
 
+- Simplified the portfolio summary by hiding the currency on mobile
+- Improved the performance of the logo endpoints by enabling the browser cache
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the wrapping of the name column in the accounts table component on mobile
+- Fixed the sorting of the watchlist for asset profiles without a name
+
+## 3.73.0 - 2026-09-26
+
+### Changed
+
+- Improved the server of the Model Context Protocol (MCP) to list only the tools covered by the scopes of the access (experimental)
+- Refreshed the cryptocurrencies list
+- Improved the language localization for Catalan (`ca`)
+- Upgraded `@rekog/mcp-nest` from version `2.0.2` to `2.0.7`
 - Upgraded `bull-board` from version `9.9.0` to `9.10.1`
 - Upgraded `zod` from version `4.5.4` to `4.6.5`
 
 ### Fixed
 
-- Fixed the alignment of the average price in the chart of the holding detail dialog for custom asset profiles
+- Fixed the value of the holdings excluded from analysis in the portfolio summary
 
 ## 3.72.0 - 2026-09-20
 

@@ -17,7 +17,10 @@ import {
   AssetProfileIdentifier,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot } from '@ghostfolio/common/models';
+import {
+  PortfolioSnapshot,
+  PortfolioSnapshotHolding
+} from '@ghostfolio/common/models';
 import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -165,10 +168,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
   }
 
   protected calculatePerformancePercentages({
-    accumulatedValuesByDate
+    accumulatedValuesByDate,
+    holdings
   }: {
     accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages } {
+    const hasDividendWithoutAverageInvestment =
+      this.hasDividendWithoutAverageInvestment(holdings);
+
     const performancePercentagesByDate: {
       [date: string]: PerformancePercentages;
     } = {};
@@ -178,11 +186,19 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       {
         totalAverageInvestmentValue,
         totalAverageInvestmentValueWithCurrencyEffect,
+        totalDividendValueWithCurrencyEffect,
         totalNetPerformanceValue,
         totalNetPerformanceValueWithCurrencyEffect
       }
     ] of Object.entries(accumulatedValuesByDate)) {
       performancePercentagesByDate[date] = {
+        dividendInPercentageWithCurrencyEffect:
+          hasDividendWithoutAverageInvestment ||
+          totalAverageInvestmentValueWithCurrencyEffect.eq(0)
+            ? 0
+            : totalDividendValueWithCurrencyEffect
+                .div(totalAverageInvestmentValueWithCurrencyEffect)
+                .toNumber(),
         netPerformanceInPercentage: totalAverageInvestmentValue.eq(0)
           ? 0
           : totalNetPerformanceValue
@@ -201,10 +217,15 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
   }
 
   protected calculatePerformancePercentagesForDateRange({
-    historicalDataItems
+    historicalDataItems,
+    holdings
   }: {
     historicalDataItems: HistoricalDataItem[];
+    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages } {
+    const hasDividendWithoutAverageInvestment =
+      this.hasDividendWithoutAverageInvestment(holdings);
+
     const averageInvestmentValues: number[] = [];
     const averageInvestmentValuesWithCurrencyEffect: number[] = [];
     let grossPerformanceAtStartDate: number;
@@ -254,6 +275,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           : 0;
 
       performancePercentagesByDate[historicalDataItem.date] = {
+        dividendInPercentageWithCurrencyEffect:
+          !hasDividendWithoutAverageInvestment &&
+          averageInvestmentValueWithCurrencyEffect > 0
+            ? historicalDataItem.dividendInBaseCurrency /
+              averageInvestmentValueWithCurrencyEffect
+            : 0,
         netPerformanceInPercentage:
           averageInvestmentValue > 0
             ? historicalDataItem.netPerformance / averageInvestmentValue
@@ -740,5 +767,22 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
   protected getPerformanceCalculationType() {
     return PerformanceCalculationType.ROAI;
+  }
+
+  private hasDividendWithoutAverageInvestment(
+    holdings: PortfolioSnapshotHolding[]
+  ) {
+    // A holding with a dividend only (without a buy activity), and a holding
+    // without a market price, gives a dividend but no average investment.
+    // Such a holding makes the dividend percentage too high. Therefore the
+    // dividend percentage stays 0 in this case, like the dividend yield.
+    return holdings.some(
+      ({ averageInvestmentWithCurrencyEffect, dividendInBaseCurrency }) => {
+        return (
+          !dividendInBaseCurrency.eq(0) &&
+          averageInvestmentWithCurrencyEffect.eq(0)
+        );
+      }
+    );
   }
 }

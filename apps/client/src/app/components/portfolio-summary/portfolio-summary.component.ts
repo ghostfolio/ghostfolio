@@ -79,6 +79,10 @@ export class GfPortfolioSummaryComponent implements OnChanges {
       : 0;
   }
 
+  protected get displayedCurrency() {
+    return this.deviceType === 'mobile' ? undefined : this.baseCurrency;
+  }
+
   protected get emergencyFundPercentage() {
     return this.summary?.totalValueInBaseCurrency
       ? (this.summary.emergencyFund?.total || 0) /
