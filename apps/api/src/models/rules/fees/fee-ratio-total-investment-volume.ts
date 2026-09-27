@@ -44,8 +44,8 @@ export class FeeRatioTotalInvestmentVolume extends Rule<Settings> {
           id: 'rule.feeRatioTotalInvestmentVolume.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
-            feeRatio: (ruleSettings.thresholdMax * 100).toFixed(2),
-            thresholdMax: (feeRatio * 100).toPrecision(3)
+            feeRatio: (feeRatio * 100).toPrecision(3),
+            thresholdMax: (ruleSettings.thresholdMax * 100).toFixed(2)
           }
         }),
         value: false
