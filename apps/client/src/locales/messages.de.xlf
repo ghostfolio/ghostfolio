@@ -3295,7 +3295,7 @@
       </trans-unit>
       <trans-unit id="1400496117963702686" datatype="html">
         <source>Absolute Dividend Performance</source>
-        <target state="new">Absolute Dividend Performance</target>
+        <target state="translated">Absolute Dividendenperformance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">288</context>
@@ -3647,7 +3647,7 @@
       </trans-unit>
       <trans-unit id="8717427042493194723" datatype="html">
         <source>Dividend Performance</source>
-        <target state="new">Dividend Performance</target>
+        <target state="translated">Dividendenperformance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">307</context>
@@ -4715,7 +4715,7 @@
       </trans-unit>
       <trans-unit id="5918319622596548216" datatype="html">
         <source>Financial Advisor</source>
-        <target state="new">Financial Advisor</target>
+        <target state="translated">Finanzberatung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">110</context>
