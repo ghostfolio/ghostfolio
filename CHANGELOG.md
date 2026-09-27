@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the dividend performance to the analysis page (experimental)
+
 ### Changed
 
 - Simplified the portfolio summary by hiding the currency on mobile
