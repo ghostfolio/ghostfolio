@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "3.72.0",
+  "version": "3.73.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -65,9 +65,9 @@
     "@angular/platform-browser-dynamic": "22.1.2",
     "@angular/router": "22.1.2",
     "@angular/service-worker": "22.1.2",
-    "@bull-board/api": "9.9.0",
-    "@bull-board/express": "9.9.0",
-    "@bull-board/nestjs": "9.9.0",
+    "@bull-board/api": "9.10.1",
+    "@bull-board/express": "9.10.1",
+    "@bull-board/nestjs": "9.10.1",
     "@codewithdan/observable-store": "3.0.0",
     "@date-fns/utc": "2.1.1",
     "@internationalized/number": "3.6.8",
@@ -93,7 +93,7 @@
     "@openrouter/ai-sdk-provider": "3.0.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
-    "@rekog/mcp-nest": "2.0.2",
+    "@rekog/mcp-nest": "2.0.7",
     "@simplewebauthn/browser": "13.3.0",
     "@simplewebauthn/server": "13.3.1",
     "ai": "7.0.37",
@@ -151,7 +151,7 @@
     "undici": "8.10.0",
     "uuid": "14.0.2",
     "yahoo-finance2": "4.0.2",
-    "zod": "4.5.4",
+    "zod": "4.6.5",
     "zone.js": "0.16.3"
   },
   "devDependencies": {

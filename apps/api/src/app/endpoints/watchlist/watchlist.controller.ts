@@ -7,7 +7,7 @@ import { CreateWatchlistItemDto } from '@ghostfolio/common/dtos';
 import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
-import { ImpersonationContext } from '@ghostfolio/common/types';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Body,
