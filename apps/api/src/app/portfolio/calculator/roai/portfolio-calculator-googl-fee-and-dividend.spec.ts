@@ -1,6 +1,7 @@
 import {
   activityDummyData,
   assetProfileDummyData,
+  getPerformanceByDateRange,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -181,6 +182,181 @@ describe('PortfolioCalculator', () => {
       expect(
         portfolioSnapshot.historicalData.at(-1).dividendInBaseCurrency
       ).toEqual(0.62);
+    });
+
+    it('with GOOGL dividend without investment', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          date: new Date('2021-09-16'),
+          feeInAssetProfileCurrency: 19,
+          feeInBaseCurrency: 19,
+          quantity: 1,
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 298.58
+        },
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          date: new Date('2021-11-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.62
+        },
+        {
+          // The holding has a dividend, but no average investment. Thus the
+          // dividend percentage stays 0, like the dividend yield
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Alphabet Inc.',
+            symbol: 'GOOGL'
+          },
+          date: new Date('2023-07-10'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 5
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'USD',
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['max']
+      });
+
+      expect(portfolioSnapshot).toMatchObject({
+        dividendYieldPercentWithCurrencyEffect: new Big(0)
+      });
+
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
+        dividendInBaseCurrency: 5.62,
+        dividendInPercentageWithCurrencyEffect: 0
+      });
+
+      expect(performanceByDateRange).toMatchObject({
+        max: {
+          dividendInBaseCurrency: 5.62,
+          dividendInPercentageWithCurrencyEffect: 0
+        }
+      });
+    });
+
+    it('with MSFT dividend before and in the date range', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          date: new Date('2021-09-16'),
+          feeInAssetProfileCurrency: 19,
+          feeInBaseCurrency: 19,
+          quantity: 1,
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 298.58
+        },
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          date: new Date('2021-11-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.62
+        },
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          date: new Date('2023-07-10'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.68
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'USD',
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['1d', 'max', 'ytd']
+      });
+
+      // The dividend before the date range is subtracted, so that the date
+      // range shows the dividend in the date range only
+      expect(performanceByDateRange).toMatchObject({
+        '1d': {
+          dividendInBaseCurrency: 0.68,
+          dividendInPercentageWithCurrencyEffect: 0.002016487752802325
+        },
+        max: {
+          dividendInBaseCurrency: 1.3,
+          dividendInPercentageWithCurrencyEffect: 0.004353941992095899
+        },
+        ytd: {
+          dividendInBaseCurrency: 0.68,
+          dividendInPercentageWithCurrencyEffect: 0.002002886512915673
+        }
+      });
     });
   });
 });

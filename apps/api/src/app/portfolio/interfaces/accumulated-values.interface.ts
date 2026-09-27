@@ -7,7 +7,7 @@ export interface AccumulatedValues {
   totalCashValueWithCurrencyEffect: Big;
   totalCurrentValue: Big;
   totalCurrentValueWithCurrencyEffect: Big;
-  totalDividendValue: Big;
+  totalDividendValueWithCurrencyEffect: Big;
   totalInvestmentValue: Big;
   totalInvestmentValueWithCurrencyEffect: Big;
   totalNetPerformanceValue: Big;

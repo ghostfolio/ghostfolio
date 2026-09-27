@@ -3,7 +3,7 @@ export interface PortfolioPerformance {
   currentNetWorth?: number;
   currentValueInBaseCurrency: number;
   dividendInBaseCurrency: number;
-  dividendPercentageWithCurrencyEffect: number;
+  dividendPercentageWithCurrencyEffect?: number;
   netPerformance: number;
   netPerformancePercentage: number;
   netPerformancePercentageWithCurrencyEffect: number;
