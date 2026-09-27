@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "3.72.0",
+  "version": "3.73.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -93,7 +93,7 @@
     "@openrouter/ai-sdk-provider": "3.0.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
-    "@rekog/mcp-nest": "2.0.2",
+    "@rekog/mcp-nest": "2.0.7",
     "@simplewebauthn/browser": "13.3.0",
     "@simplewebauthn/server": "13.3.1",
     "ai": "7.0.37",

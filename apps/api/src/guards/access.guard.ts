@@ -1,3 +1,4 @@
+import { getActiveImpersonationOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
 import { getRequest } from '@ghostfolio/api/helper/execution-context.helper';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -28,14 +29,17 @@ export class AccessGuard implements CanActivate {
   public canActivate(context: ExecutionContext) {
     const request = getRequest<RequestWithUser>(context);
 
-    if (!request?.impersonationOfBearerToken?.isActive) {
+    const impersonationOfBearerToken =
+      getActiveImpersonationOfBearerToken(request);
+
+    if (!impersonationOfBearerToken) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
       );
     }
 
-    request.impersonation = request.impersonationOfBearerToken;
+    request.impersonation = impersonationOfBearerToken;
 
     return true;
   }
