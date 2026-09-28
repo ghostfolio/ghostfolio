@@ -5,8 +5,8 @@ generator client {
 }
 
 generator workspaceClient {
-  provider     = "prisma-client"
-  output       = "./generated"
+  output   = "./generated"
+  provider = "prisma-client"
 }
 
 datasource db {
