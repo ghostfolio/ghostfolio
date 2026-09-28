@@ -198,6 +198,8 @@ describe('PortfolioCalculator', () => {
       expect(performanceByDateRange).toMatchObject({
         '1d': {
           date: '2023-07-10',
+          dividendInBaseCurrency: 0,
+          dividendInPercentageWithCurrencyEffect: 0,
           netPerformance: -5.390000000000001,
           netPerformanceInPercentage: -0.015983630864124312,
           netPerformanceInPercentageWithCurrencyEffect: -0.015983630864124312,
@@ -207,6 +209,8 @@ describe('PortfolioCalculator', () => {
         },
         max: {
           date: '2023-07-10',
+          dividendInBaseCurrency: 0.62,
+          dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
           netPerformance: 14.25,
           netPerformanceInPercentage: 0.04772590260566659,
           netPerformanceInPercentageWithCurrencyEffect: 0.04772590260566659,
@@ -216,6 +220,8 @@ describe('PortfolioCalculator', () => {
         },
         ytd: {
           date: '2023-07-10',
+          dividendInBaseCurrency: 0,
+          dividendInPercentageWithCurrencyEffect: 0,
           netPerformance: -7.68,
           netPerformanceInPercentage: -0.022620835910577012,
           netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577012,

@@ -101,12 +101,6 @@ export class GhostfolioMcpController {
     return this.mcpService.getWatchlist({ userId });
   }
 
-  /**
-   * The transport gives the tool to every client, because it filters the list
-   * of the tools by the scopes of request.user, which a request of an access
-   * never has. The guard refuses the call itself, hence the description names
-   * the permission which the access needs.
-   */
   @RequiresScopeOfAccess(scopes.activityCreate)
   @Tool({
     annotations: {
@@ -115,7 +109,7 @@ export class GhostfolioMcpController {
       readOnlyHint: false,
       title: 'Import activities'
     },
-    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. Use search-asset-profiles first unless the exact symbol and data source are already known. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. The access needs the permission "Restricted view and manage". At most ${MCP_MAX_ACTIVITIES} activities are imported per call, while the instance can have a lower limit, which an error names. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
+    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. Use search-asset-profiles first unless the exact symbol and data source are already known. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. At most ${MCP_MAX_ACTIVITIES} activities are imported per call, while the instance can have a lower limit, which an error names. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
     name: 'import-activities',
     parameters: IMPORT_ACTIVITIES_PARAMETERS
   })
