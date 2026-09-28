@@ -1,6 +1,7 @@
 const nxEslintPlugin = require('@nx/eslint-plugin');
 const importPlugin = require('eslint-plugin-import');
 const storybook = require('eslint-plugin-storybook');
+const { defineConfig } = require('eslint/config');
 const typescriptEslint = require('typescript-eslint');
 
 module.exports = [
@@ -25,14 +26,12 @@ module.exports = [
           ],
           enforceBuildableLibDependency: true
         }
-      ],
-      '@typescript-eslint/no-extra-semi': 'error',
-      'no-extra-semi': 'off'
+      ]
     }
   },
   ...nxEslintPlugin.configs['flat/typescript'],
   ...nxEslintPlugin.configs['flat/javascript'],
-  ...typescriptEslint.config({
+  ...defineConfig({
     files: ['**/*.ts'],
     plugins: { import: importPlugin },
     extends: [
@@ -91,8 +90,6 @@ module.exports = [
         }
       ],
       '@typescript-eslint/unified-signatures': 'error',
-      '@typescript-eslint/no-loss-of-precision': 'warn',
-      '@typescript-eslint/no-var-requires': 'warn',
       'arrow-body-style': 'off',
       'constructor-super': 'error',
       eqeqeq: ['error', 'smart'],
