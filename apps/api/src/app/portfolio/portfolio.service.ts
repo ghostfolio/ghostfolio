@@ -2140,6 +2140,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      dividendPercentageWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
@@ -2236,6 +2237,7 @@ export class PortfolioService {
       cash,
       currentValueInBaseCurrency,
       dateOfFirstActivity,
+      dividendPercentageWithCurrencyEffect,
       excludedAccountsAndActivities,
       netPerformance,
       netPerformancePercentage,
