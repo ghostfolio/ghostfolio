@@ -4,6 +4,7 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -33,6 +34,7 @@ describe('PortfolioService', () => {
   let accountService: AccountService;
   let activitiesService: ActivitiesService;
   let configurationService: ConfigurationService;
+  let currentRateService: CurrentRateService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
@@ -82,6 +84,12 @@ describe('PortfolioService', () => {
       null
     );
 
+    currentRateService = new CurrentRateService(
+      activitiesService,
+      dataProviderService,
+      null
+    );
+
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
       null,
@@ -110,6 +118,7 @@ describe('PortfolioService', () => {
       activitiesService,
       null,
       portfolioCalculatorFactory,
+      currentRateService,
       dataProviderService,
       exchangeRateDataService,
       null,
@@ -901,15 +910,19 @@ describe('PortfolioService', () => {
           count: 4
         });
 
-      const getQuotes = jest
-        .spyOn(dataProviderService, 'getQuotes')
+      const getValues = jest
+        .spyOn(currentRateService, 'getValues')
         .mockResolvedValue({
-          'YAHOO-AAPL': {
-            currency: 'CHF',
-            dataSource: DataSource.YAHOO,
-            marketPrice: 200,
-            marketState: 'open'
-          }
+          dataProviderInfos: [],
+          errors: [],
+          values: [
+            {
+              dataSource: DataSource.YAHOO,
+              date: new Date(),
+              marketPrice: 200,
+              symbol: 'AAPL'
+            }
+          ]
         });
 
       const summary = await getSummary({
@@ -921,10 +934,10 @@ describe('PortfolioService', () => {
         userId: userDummyData.id
       });
 
-      // The closed holding (MSFT) does not need a quote
-      expect(getQuotes).toHaveBeenCalledWith(
+      // The closed holding (MSFT) does not need a market price
+      expect(getValues).toHaveBeenCalledWith(
         expect.objectContaining({
-          items: [{ dataSource: DataSource.YAHOO, symbol: 'AAPL' }]
+          dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AAPL' }]
         })
       );
 
@@ -961,13 +974,17 @@ describe('PortfolioService', () => {
           count: 2
         });
 
-      jest.spyOn(dataProviderService, 'getQuotes').mockResolvedValue({
-        'YAHOO-AAPL': {
-          currency: 'USD',
-          dataSource: DataSource.YAHOO,
-          marketPrice: 200,
-          marketState: 'open'
-        }
+      jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
+        dataProviderInfos: [],
+        errors: [],
+        values: [
+          {
+            dataSource: DataSource.YAHOO,
+            date: new Date(),
+            marketPrice: 200,
+            symbol: 'AAPL'
+          }
+        ]
       });
 
       jest
@@ -1018,7 +1035,11 @@ describe('PortfolioService', () => {
           count: 2
         });
 
-      jest.spyOn(dataProviderService, 'getQuotes').mockResolvedValue({});
+      jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
+        dataProviderInfos: [],
+        errors: [],
+        values: []
+      });
 
       const summary = await getSummary({
         balanceInBaseCurrency: 1000,
