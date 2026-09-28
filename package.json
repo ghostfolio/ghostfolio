@@ -166,6 +166,7 @@
     "@angular/language-service": "22.1.2",
     "@angular/localize": "22.1.2",
     "@angular/pwa": "22.1.4",
+    "@eslint/js": "9.35.0",
     "@nestjs/schematics": "11.1.0",
     "@nestjs/testing": "11.2.3",
     "@nx/angular": "23.1.1",

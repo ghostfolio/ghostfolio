@@ -8,7 +8,7 @@ module.exports = [
     ignores: ['**/dist']
   },
   ...storybook.configs['flat/recommended'],
-  { plugins: { '@nx': nxEslintPlugin, import: importPlugin } },
+  { plugins: { '@nx': nxEslintPlugin } },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
@@ -34,6 +34,7 @@ module.exports = [
   ...nxEslintPlugin.configs['flat/javascript'],
   ...typescriptEslint.config({
     files: ['**/*.ts'],
+    plugins: { import: importPlugin },
     extends: [
       typescriptEslint.configs.recommendedTypeChecked,
       typescriptEslint.configs.stylisticTypeChecked
