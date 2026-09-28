@@ -2,7 +2,6 @@ export interface HistoricalDataItem {
   averagePrice?: number;
   date: string;
   dividendInBaseCurrency?: number;
-  dividendInPercentage?: number;
   dividendInPercentageWithCurrencyEffect?: number;
   grossPerformancePercent?: number;
   investmentValueWithCurrencyEffect?: number;

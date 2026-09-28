@@ -137,6 +137,36 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     );
   }
 
+  protected get netPerformancePercentageWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.summary?.netPerformancePercentageWithCurrencyEffect)
+    ) {
+      return this.summary?.netPerformancePercentageWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.summary.netPerformancePercentageWithCurrencyEffect +
+      (this.summary.dividendPercentageWithCurrencyEffect ?? 0)
+    );
+  }
+
+  protected get netPerformanceWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.summary?.netPerformanceWithCurrencyEffect)
+    ) {
+      return this.summary?.netPerformanceWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.summary.netPerformanceWithCurrencyEffect +
+      this.summary.dividendInBaseCurrency
+    );
+  }
+
   public ngOnChanges() {
     if (this.summary) {
       if (

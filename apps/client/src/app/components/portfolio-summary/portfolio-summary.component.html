@@ -94,13 +94,7 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="displayedCurrency"
-        [value]="
-          user?.settings?.isExperimentalFeatures &&
-          summary?.grossPerformanceWithCurrencyEffect !== null
-            ? summary?.grossPerformanceWithCurrencyEffect -
-              summary?.dividendInBaseCurrency
-            : summary?.grossPerformanceWithCurrencyEffect
-        "
+        [value]="summary?.grossPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
@@ -153,7 +147,7 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="displayedCurrency"
-        [value]="summary?.netPerformanceWithCurrencyEffect"
+        [value]="netPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
@@ -166,8 +160,7 @@
       ) {
         <abbr
           class="d-none d-sm-inline-block initialism ml-2 text-muted"
-          i18n-title
-          title="Return on Average Investment (total return with dividends)"
+          title="Return on Average Investment"
           >(ROAI)</abbr
         >
       }
@@ -180,7 +173,7 @@
         [isLoading]="isLoading"
         [isPercent]="true"
         [locale]="locale"
-        [value]="summary?.netPerformancePercentageWithCurrencyEffect"
+        [value]="netPerformancePercentageWithCurrencyEffect"
       />
     </div>
   </div>

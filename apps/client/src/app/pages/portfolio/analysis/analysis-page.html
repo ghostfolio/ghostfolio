@@ -167,13 +167,7 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="
-                  user?.settings?.isExperimentalFeatures &&
-                  performance?.netPerformance !== null
-                    ? performance?.netPerformance -
-                      performance?.dividendInBaseCurrency
-                    : performance?.netPerformance
-                "
+                [value]="performance?.netPerformance"
               />
             </div>
           </div>
@@ -189,12 +183,7 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
-                [value]="
-                  user?.settings?.isExperimentalFeatures
-                    ? performance?.netPerformancePercentage -
-                      (performance?.dividendPercentage ?? 0)
-                    : performance?.netPerformancePercentage
-                "
+                [value]="performance?.netPerformancePercentage"
               />
             </div>
           </div>
@@ -232,7 +221,7 @@
                   [isLoading]="isLoadingInvestmentChart"
                   [isPercent]="true"
                   [locale]="user?.settings?.locale"
-                  [value]="performance?.dividendPercentage"
+                  [value]="performance?.dividendPercentageWithCurrencyEffect"
                 />
               </div>
             </div>
@@ -297,7 +286,7 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="performance?.netPerformanceWithCurrencyEffect"
+                [value]="netPerformanceWithCurrencyEffect"
               />
             </div>
           </div>
@@ -310,8 +299,7 @@
               ) {
                 <abbr
                   class="d-none d-sm-inline-block initialism ml-2 text-muted"
-                  i18n-title
-                  title="Return on Average Investment (total return with dividends)"
+                  title="Return on Average Investment"
                   >(ROAI)</abbr
                 >
               }
@@ -324,9 +312,7 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
-                [value]="
-                  performance?.netPerformancePercentageWithCurrencyEffect
-                "
+                [value]="netPerformancePercentageWithCurrencyEffect"
               />
             </div>
           </div>
