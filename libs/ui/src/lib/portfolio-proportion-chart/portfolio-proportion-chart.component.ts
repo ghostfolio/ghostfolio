@@ -1,5 +1,5 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { DEFAULT_COLOR_SCHEME, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -60,20 +60,20 @@ const {
 export class GfPortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() baseCurrency: string;
-  @Input() colorScheme: ColorScheme;
+  @Input() baseCurrency?: string;
+  @Input() colorScheme?: ColorScheme;
   @Input() cursor: string;
   @Input() data: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & {
       dataSource?: DataSource;
       isClickable?: boolean;
-      name: string;
+      name?: string | null;
       value: number;
     };
   } = {};
-  @Input() isInPercentage = false;
+  @Input() isInPercentage?: boolean = false;
   @Input() keys: string[] = [];
-  @Input() locale = getLocale();
+  @Input() locale?: string = getLocale();
   @Input() maxItems?: number;
   @Input() showLabels = false;
 
@@ -114,6 +114,7 @@ export class GfPortfolioProportionChartComponent
 
   private initialize() {
     this.isLoading = true;
+
     const chartData: {
       [symbol: string]: {
         color?: string;
@@ -122,9 +123,12 @@ export class GfPortfolioProportionChartComponent
         value: Big;
       };
     } = {};
+
+    const textColor = getTextColor(this.colorScheme ?? DEFAULT_COLOR_SCHEME);
+
     this.colorMap = {
-      [this.OTHER_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.24)`,
-      [UNKNOWN_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.12)`
+      [this.OTHER_KEY]: `rgba(${textColor}, 0.24)`,
+      [UNKNOWN_KEY]: `rgba(${textColor}, 0.12)`
     };
 
     if (this.keys.length > 0) {
@@ -178,7 +182,7 @@ export class GfPortfolioProportionChartComponent
             );
           } else {
             chartData[UNKNOWN_KEY] = {
-              name: this.data[symbol].name,
+              name: this.data[symbol].name ?? '',
               subCategory: secondaryKey
                 ? { [secondaryKey]: { value: new Big(0) } }
                 : undefined,
@@ -190,7 +194,7 @@ export class GfPortfolioProportionChartComponent
     } else {
       Object.keys(this.data).forEach((symbol) => {
         chartData[symbol] = {
-          name: this.data[symbol].name,
+          name: this.data[symbol].name ?? '',
           value: new Big(this.data[symbol].value || 0)
         };
       });
@@ -444,7 +448,7 @@ export class GfPortfolioProportionChartComponent
   ): Partial<TooltipOptions<'doughnut'>> {
     return {
       ...getTooltipOptions({
-        colorScheme: this.colorScheme,
+        colorScheme: this.colorScheme ?? DEFAULT_COLOR_SCHEME,
         currency: this.baseCurrency,
         locale: this.locale
       }),
@@ -486,7 +490,7 @@ export class GfPortfolioProportionChartComponent
               `${value.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
-              })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
+              })} ${this.baseCurrency ?? ''} (${percentage.toFixed(2)}%)`
             ];
           }
         },
