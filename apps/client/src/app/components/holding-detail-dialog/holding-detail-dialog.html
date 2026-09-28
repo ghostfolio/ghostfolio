@@ -342,7 +342,7 @@
                 size="medium"
                 [enableCopyToClipboardButton]="true"
                 [hidden]="!assetProfile?.isin"
-                [value]="assetProfile?.isin"
+                [value]="assetProfile?.isin ?? null"
                 >ISIN</gf-value
               >
             </div>

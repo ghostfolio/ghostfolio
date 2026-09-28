@@ -16,7 +16,7 @@
             size="medium"
             [isLoading]="isLoading"
             [isPercent]="true"
-            [value]="portfolioDetails?.summary?.filteredValueInPercentage"
+            [value]="portfolioDetails?.summary?.filteredValueInPercentage ?? null"
           />
         </mat-card-header>
         <mat-card-content>
@@ -214,7 +214,7 @@
                 size="large"
                 [isLoading]="isLoading"
                 [isPercent]="true"
-                [value]="markets?.developedMarkets?.valueInPercentage"
+                [value]="markets?.developedMarkets?.valueInPercentage ?? null"
                 >Developed Markets</gf-value
               >
             </div>
@@ -224,7 +224,7 @@
                 size="large"
                 [isLoading]="isLoading"
                 [isPercent]="true"
-                [value]="markets?.emergingMarkets?.valueInPercentage"
+                [value]="markets?.emergingMarkets?.valueInPercentage ?? null"
                 >Emerging Markets</gf-value
               >
             </div>
@@ -234,7 +234,7 @@
                 size="large"
                 [isLoading]="isLoading"
                 [isPercent]="true"
-                [value]="markets?.otherMarkets?.valueInPercentage"
+                [value]="markets?.otherMarkets?.valueInPercentage ?? null"
                 >Other Markets</gf-value
               >
             </div>

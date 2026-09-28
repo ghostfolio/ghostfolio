@@ -5,7 +5,7 @@
       <gf-value
         class="justify-content-end"
         [isLoading]="isLoading"
-        [value]="timeInMarket"
+        [value]="timeInMarket ?? null"
       />
     </div>
   </div>
@@ -397,7 +397,7 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="displayedCurrency"
-        [value]="summary?.totalValueInBaseCurrency"
+        [value]="summary?.totalValueInBaseCurrency ?? null"
       />
     </div>
   </div>
