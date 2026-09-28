@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed the performance calculation to include the dividends (total return)
+- Extended the net performance on the analysis page to include the dividends (experimental)
+- Extended the net performance in the portfolio summary to include the dividends (experimental)
 - Improved the get quotes functionality of the _Manual_ service
 - Migrated the _ESLint_ configuration to the flat config format without `FlatCompat`
 - Upgraded `chartjs-chart-treemap` from version `4.2.0` to `4.2.2`
