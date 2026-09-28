@@ -50,6 +50,7 @@ export class GfFirePageComponent implements OnInit {
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
 
+  protected annualizedPerformancePercent: number | undefined;
   protected fireWealth: FireWealth;
   protected hasImpersonationId: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
@@ -99,6 +100,9 @@ export class GfFirePageComponent implements OnInit {
       .fetchPortfolioDetails()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ summary }) => {
+        this.annualizedPerformancePercent =
+          summary?.annualizedPerformancePercentWithCurrencyEffect;
+
         this.fireWealth = {
           today: {
             valueInBaseCurrency: summary?.fireWealth
@@ -230,6 +234,24 @@ export class GfFirePageComponent implements OnInit {
   protected onSavingsRateChange(savingsRate: number) {
     this.dataService
       .putUserSetting({ savingsRate })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  protected onUseAnnualizedPerformanceRateChange(
+    useAnnualizedPerformanceRate: boolean
+  ) {
+    this.dataService
+      .putUserSetting({ useAnnualizedPerformanceRate })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService

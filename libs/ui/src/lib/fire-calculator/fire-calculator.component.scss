@@ -1,6 +1,10 @@
 :host {
   display: block;
 
+  .use-annualized-performance-rate {
+    margin-top: -0.75rem;
+  }
+
   .chart-container {
     aspect-ratio: 16 / 9;
 

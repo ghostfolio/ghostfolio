@@ -11,6 +11,7 @@
         </h4>
         <gf-fire-calculator
           [annualInterestRate]="user?.settings?.annualInterestRate"
+          [annualizedPerformancePercent]="annualizedPerformancePercent"
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType()"
@@ -28,11 +29,17 @@
           [style.pointer-events]="
             user?.subscription?.type === 'Basic' ? 'none' : 'initial'
           "
+          [useAnnualizedPerformanceRate]="
+            user?.settings?.useAnnualizedPerformanceRate
+          "
           (annualInterestRateChanged)="onAnnualInterestRateChange($event)"
           (calculationCompleted)="onCalculationComplete($event)"
           (projectedTotalAmountChanged)="onProjectedTotalAmountChange($event)"
           (retirementDateChanged)="onRetirementDateChange($event)"
           (savingsRateChanged)="onSavingsRateChange($event)"
+          (useAnnualizedPerformanceRateChanged)="
+            onUseAnnualizedPerformanceRateChange($event)
+          "
         />
       </div>
     </div>
