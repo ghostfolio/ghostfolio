@@ -16,7 +16,9 @@
             size="medium"
             [isLoading]="isLoading"
             [isPercent]="true"
-            [value]="portfolioDetails?.summary?.filteredValueInPercentage ?? null"
+            [value]="
+              portfolioDetails?.summary?.filteredValueInPercentage ?? null
+            "
           />
         </mat-card-header>
         <mat-card-content>
