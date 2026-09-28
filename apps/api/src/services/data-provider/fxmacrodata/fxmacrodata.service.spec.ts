@@ -207,6 +207,40 @@ describe('FXMacroDataService', () => {
       });
     });
 
+    it('follows the pagination offsets until the last page', async () => {
+      responses['offset=0'] = {
+        data: [
+          { date: '2026-09-10', val: 1.16 },
+          { date: '2026-09-09', val: 1.15 }
+        ],
+        pagination: { has_more: true, next_offset: 2 }
+      };
+      responses['offset=2'] = {
+        data: [{ date: '2026-09-08', val: 1.14 }],
+        pagination: { has_more: false, next_offset: null }
+      };
+
+      const historical = await fxMacroDataService.getHistorical({
+        from: new Date('2026-09-08'),
+        symbol: 'EURUSD',
+        to: new Date('2026-09-10')
+      });
+
+      expect(historical).toEqual({
+        '2026-09-08': { marketPrice: 1.14 },
+        '2026-09-09': { marketPrice: 1.15 },
+        '2026-09-10': { marketPrice: 1.16 }
+      });
+
+      const urls = (fetchService.fetch as jest.Mock).mock.calls.map(([url]) => {
+        return url as string;
+      });
+
+      expect(urls).toHaveLength(2);
+      expect(urls[0]).toContain('limit=100');
+      expect(urls[1]).toContain('offset=2');
+    });
+
     it('skips a date whose rate is null', async () => {
       responses['forex/eur/usd'] = {
         data: [

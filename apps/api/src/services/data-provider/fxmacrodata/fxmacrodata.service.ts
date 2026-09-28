@@ -26,6 +26,9 @@ import {
   FXMacroDataSourcesResponse
 } from './interfaces/interfaces';
 
+const PAGE_SIZE = 100;
+const MAX_PAGES = 1000;
+
 @Injectable()
 export class FXMacroDataService implements DataProviderInterface {
   private readonly baseUrl = 'https://api.fxmacrodata.com/v1';
@@ -100,14 +103,16 @@ export class FXMacroDataService implements DataProviderInterface {
 
       // The endpoint caps a page at 100 rows and orders most-recent-first, so
       // longer ranges are walked page by page rather than silently truncated.
-      for (let page = 1; ; page++) {
-        const { data } = await this.get<FXMacroDataForexResponse>({
+      let offset = 0;
+
+      for (let page = 0; page < MAX_PAGES; page++) {
+        const { data, pagination } = await this.get<FXMacroDataForexResponse>({
           requestTimeout,
           path: `forex/${base.toLowerCase()}/${quote.toLowerCase()}`,
           searchParams: {
             end_date: format(to, DATE_FORMAT),
-            limit: '100',
-            page: page.toString(),
+            limit: PAGE_SIZE.toString(),
+            offset: offset.toString(),
             start_date: format(from, DATE_FORMAT)
           }
         });
@@ -124,9 +129,11 @@ export class FXMacroDataService implements DataProviderInterface {
           }
         }
 
-        if (data.length < 100) {
+        if (!pagination?.has_more) {
           break;
         }
+
+        offset = pagination.next_offset ?? offset + data.length;
       }
 
       return response;

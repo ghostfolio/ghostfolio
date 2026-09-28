@@ -5,6 +5,10 @@ export interface FXMacroDataForexResponse {
     // The rate is documented as anyOf[number, null].
     val: number | null;
   }[];
+  pagination?: {
+    has_more: boolean;
+    next_offset: number | null;
+  };
   quote: string;
 }
 
