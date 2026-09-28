@@ -132,18 +132,29 @@ export class CurrentRateService {
           });
 
           if (!value) {
-            // Fallback to unit price of latest activity
-            const latestActivity =
-              await this.activitiesService.getLatestActivity({
-                dataSource,
-                symbol
-              });
+            const latestMarketData = await this.marketDataService.getLatest({
+              dataSource,
+              symbol
+            });
+
+            let marketPrice = latestMarketData?.marketPrice;
+
+            if (!marketPrice) {
+              // Fallback to unit price of latest activity
+              const latestActivity =
+                await this.activitiesService.getLatestActivity({
+                  dataSource,
+                  symbol
+                });
+
+              marketPrice = latestActivity?.unitPrice ?? 0;
+            }
 
             value = {
               dataSource,
+              marketPrice,
               symbol,
-              date: today,
-              marketPrice: latestActivity?.unitPrice ?? 0
+              date: today
             };
 
             response.values.push(value);
