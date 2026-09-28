@@ -114,6 +114,7 @@ export class GfPortfolioProportionChartComponent
 
   private initialize() {
     this.isLoading = true;
+
     const chartData: {
       [symbol: string]: {
         color?: string;
@@ -122,6 +123,7 @@ export class GfPortfolioProportionChartComponent
         value: Big;
       };
     } = {};
+
     const textColor = getTextColor(this.colorScheme ?? DEFAULT_COLOR_SCHEME);
 
     this.colorMap = {
