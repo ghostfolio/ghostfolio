@@ -46,7 +46,7 @@
       [class.justify-content-end]="position === 'end'"
     >
       @if (isNumber || value === null) {
-        @if (colorizeSign && !useAbsoluteValue) {
+        @if (colorizeSign && !useAbsoluteValue && value !== null) {
           @if (+value > 0) {
             <div class="mr-1 text-success">+</div>
           }

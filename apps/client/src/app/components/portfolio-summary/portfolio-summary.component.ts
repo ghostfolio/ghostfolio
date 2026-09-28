@@ -55,6 +55,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
   );
 
+  protected readonly isNumber = isNumber;
   protected readonly PerformanceCalculationType = PerformanceCalculationType;
 
   protected isCashExpanded = false;
@@ -133,6 +134,36 @@ export class GfPortfolioSummaryComponent implements OnChanges {
 
     return (
       this.holdingsInBaseCurrency - (this.summary.emergencyFund?.assets ?? 0)
+    );
+  }
+
+  protected get netPerformancePercentageWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.summary?.netPerformancePercentageWithCurrencyEffect)
+    ) {
+      return this.summary?.netPerformancePercentageWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.summary.netPerformancePercentageWithCurrencyEffect +
+      (this.summary.dividendPercentageWithCurrencyEffect ?? 0)
+    );
+  }
+
+  protected get netPerformanceWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.summary?.netPerformanceWithCurrencyEffect)
+    ) {
+      return this.summary?.netPerformanceWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.summary.netPerformanceWithCurrencyEffect +
+      this.summary.dividendInBaseCurrency
     );
   }
 

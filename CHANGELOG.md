@@ -7,8 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Extended the net performance on the analysis page to include the dividends (experimental)
+- Extended the net performance in the portfolio summary to include the dividends (experimental)
+- Improved the get quotes functionality of the _Manual_ service
+- Migrated the _ESLint_ configuration to the flat config format without `FlatCompat`
+- Upgraded `chartjs-chart-treemap` from version `4.2.0` to `4.2.2`
+
 ### Fixed
 
+- Fixed an issue where holdings without a quote have been valued at the unit price of the latest activity instead of the latest market price
 - Fixed the alignment of the average price in the chart of the holding detail dialog for custom asset profiles
 
 ## 3.74.0 - 2026-09-27

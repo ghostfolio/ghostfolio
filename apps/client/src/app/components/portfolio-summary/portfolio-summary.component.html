@@ -98,10 +98,29 @@
       />
     </div>
   </div>
+  @if (user?.settings?.isExperimentalFeatures) {
+    <div class="flex-nowrap px-3 py-1 row">
+      <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
+      <div class="d-flex justify-content-end">
+        @if (isNumber(summary?.dividendInBaseCurrency)) {
+          <span class="mr-1">+</span>
+        }
+        <gf-value
+          class="justify-content-end"
+          [isCurrency]="true"
+          [isLoading]="isLoading"
+          [locale]="locale"
+          [precision]="precision"
+          [unit]="displayedCurrency"
+          [value]="summary?.dividendInBaseCurrency"
+        />
+      </div>
+    </div>
+  }
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Fees</div>
     <div class="d-flex justify-content-end">
-      @if (summary?.fees || summary?.fees === 0) {
+      @if (isNumber(summary?.fees)) {
         <span class="mr-1">-</span>
       }
       <gf-value
@@ -128,7 +147,7 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="displayedCurrency"
-        [value]="summary?.netPerformanceWithCurrencyEffect"
+        [value]="netPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
@@ -154,7 +173,7 @@
         [isLoading]="isLoading"
         [isPercent]="true"
         [locale]="locale"
-        [value]="summary?.netPerformancePercentageWithCurrencyEffect"
+        [value]="netPerformancePercentageWithCurrencyEffect"
       />
     </div>
   </div>
@@ -367,10 +386,7 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Liabilities</div>
     <div class="d-flex justify-content-end">
-      @if (
-        summary?.liabilitiesInBaseCurrency ||
-        summary?.liabilitiesInBaseCurrency === 0
-      ) {
+      @if (isNumber(summary?.liabilitiesInBaseCurrency)) {
         <span class="mr-1">-</span>
       }
       <gf-value
@@ -488,18 +504,20 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
-    <div class="justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        [isCurrency]="true"
-        [isLoading]="isLoading"
-        [locale]="locale"
-        [precision]="precision"
-        [unit]="displayedCurrency"
-        [value]="summary?.dividendInBaseCurrency"
-      />
+  @if (!user?.settings?.isExperimentalFeatures) {
+    <div class="flex-nowrap px-3 py-1 row">
+      <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
+      <div class="justify-content-end">
+        <gf-value
+          class="justify-content-end"
+          [isCurrency]="true"
+          [isLoading]="isLoading"
+          [locale]="locale"
+          [precision]="precision"
+          [unit]="displayedCurrency"
+          [value]="summary?.dividendInBaseCurrency"
+        />
+      </div>
     </div>
-  </div>
+  }
 </div>
