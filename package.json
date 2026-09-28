@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "3.72.0",
+  "version": "3.74.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -93,7 +93,7 @@
     "@openrouter/ai-sdk-provider": "3.0.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
-    "@rekog/mcp-nest": "2.0.2",
+    "@rekog/mcp-nest": "2.0.7",
     "@simplewebauthn/browser": "13.3.0",
     "@simplewebauthn/server": "13.3.1",
     "ai": "7.0.37",
@@ -103,7 +103,7 @@
     "bull": "4.16.5",
     "chart.js": "4.5.1",
     "chartjs-adapter-date-fns": "3.0.0",
-    "chartjs-chart-treemap": "4.2.0",
+    "chartjs-chart-treemap": "4.2.2",
     "chartjs-plugin-annotation": "3.1.0",
     "chartjs-plugin-datalabels": "2.2.0",
     "cheerio": "1.2.0",
@@ -151,7 +151,7 @@
     "undici": "8.10.0",
     "uuid": "14.0.2",
     "yahoo-finance2": "4.0.2",
-    "zod": "4.5.4",
+    "zod": "4.6.5",
     "zone.js": "0.16.3"
   },
   "devDependencies": {
@@ -166,7 +166,6 @@
     "@angular/language-service": "22.1.2",
     "@angular/localize": "22.1.2",
     "@angular/pwa": "22.1.4",
-    "@eslint/eslintrc": "3.3.1",
     "@eslint/js": "9.35.0",
     "@nestjs/schematics": "11.1.0",
     "@nestjs/testing": "11.2.3",
@@ -221,6 +220,7 @@
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "typescript": "6.0.3",
+    "typescript-eslint": "8.67.0",
     "webpack-cli": "7.1.0"
   },
   "engines": {

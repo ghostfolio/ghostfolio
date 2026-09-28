@@ -2,7 +2,7 @@ const baseConfig = require('../../eslint.config.cjs');
 const angularEslintPlugin = require('@angular-eslint/eslint-plugin');
 const angularTemplateEslintPlugin = require('@angular-eslint/eslint-plugin-template');
 const angularTemplateParser = require('@angular-eslint/template-parser');
-const typescriptEslintPlugin = require('@typescript-eslint/eslint-plugin');
+const typescriptEslintPlugin = require('typescript-eslint').plugin;
 
 module.exports = [
   {

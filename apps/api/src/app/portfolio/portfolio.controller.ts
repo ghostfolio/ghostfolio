@@ -565,6 +565,7 @@ export class PortfolioController {
         [
           'currentNetWorth',
           'currentValueInBaseCurrency',
+          'dividendInBaseCurrency',
           'grossPerformance',
           'grossPerformanceWithCurrencyEffect',
           'netPerformance',
@@ -580,12 +581,16 @@ export class PortfolioController {
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         (item) => {
-          return nullifyValuesInObject(item, ['totalInvestment', 'value']);
+          return nullifyValuesInObject(item, [
+            'dividendInBaseCurrency',
+            'totalInvestment',
+            'value'
+          ]);
         }
       );
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
-        ['netPerformance']
+        ['dividendInBaseCurrency', 'netPerformance']
       );
     }
 

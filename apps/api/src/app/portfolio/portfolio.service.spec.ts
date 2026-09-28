@@ -4,6 +4,7 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -33,6 +34,7 @@ describe('PortfolioService', () => {
   let accountService: AccountService;
   let activitiesService: ActivitiesService;
   let configurationService: ConfigurationService;
+  let currentRateService: CurrentRateService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
@@ -82,6 +84,12 @@ describe('PortfolioService', () => {
       null
     );
 
+    currentRateService = new CurrentRateService(
+      activitiesService,
+      dataProviderService,
+      null
+    );
+
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
       null,
@@ -110,6 +118,7 @@ describe('PortfolioService', () => {
       activitiesService,
       null,
       portfolioCalculatorFactory,
+      currentRateService,
       dataProviderService,
       exchangeRateDataService,
       null,
@@ -773,6 +782,27 @@ describe('PortfolioService', () => {
       ).getSummary(args);
     };
 
+    function createExcludedActivity({
+      currency = 'CHF',
+      quantity,
+      symbol,
+      type,
+      unitPrice
+    }: Pick<Activity, 'quantity' | 'type' | 'unitPrice'> & {
+      currency?: string;
+      symbol: string;
+    }) {
+      return {
+        currency,
+        quantity,
+        type,
+        unitPrice,
+        account: { tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }] },
+        assetProfile: { currency, symbol, dataSource: DataSource.YAHOO },
+        tags: []
+      } as unknown as Activity;
+    }
+
     function createPortfolioCalculator() {
       return {
         getDividendInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
@@ -791,8 +821,12 @@ describe('PortfolioService', () => {
 
     beforeEach(() => {
       jest
-        .spyOn(activitiesService, 'getActivities')
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
         .mockResolvedValue({ activities: [], count: 0 });
+
+      jest
+        .spyOn(exchangeRateDataService, 'toCurrency')
+        .mockImplementation((aValue) => aValue);
 
       jest.spyOn(portfolioService, 'getPerformance').mockResolvedValue({
         performance: {
@@ -836,6 +870,189 @@ describe('PortfolioService', () => {
       expect(summary.excludedAccountsAndActivities).toBe(0);
       expect(summary.totalAssetsInBaseCurrency).toBe(3000);
       expect(summary.totalValueInBaseCurrency).toBe(3000);
+    });
+
+    it('should value the open holdings of excluded accounts at the current market price', async () => {
+      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+        accounts: [],
+        balanceInBaseCurrency: 1500
+      });
+
+      jest
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+        .mockResolvedValue({
+          activities: [
+            createExcludedActivity({
+              quantity: 10,
+              symbol: 'AAPL',
+              type: 'BUY',
+              unitPrice: 100
+            }),
+            createExcludedActivity({
+              quantity: 4,
+              symbol: 'AAPL',
+              type: 'SELL',
+              unitPrice: 150
+            }),
+            createExcludedActivity({
+              quantity: 5,
+              symbol: 'MSFT',
+              type: 'BUY',
+              unitPrice: 100
+            }),
+            createExcludedActivity({
+              quantity: 5,
+              symbol: 'MSFT',
+              type: 'SELL',
+              unitPrice: 120
+            })
+          ],
+          count: 4
+        });
+
+      const getValues = jest
+        .spyOn(currentRateService, 'getValues')
+        .mockResolvedValue({
+          dataProviderInfos: [],
+          errors: [],
+          values: [
+            {
+              dataSource: DataSource.YAHOO,
+              date: new Date(),
+              marketPrice: 200,
+              symbol: 'AAPL'
+            }
+          ]
+        });
+
+      const summary = await getSummary({
+        balanceInBaseCurrency: 1000,
+        emergencyFundHoldingsValueInBaseCurrency: 0,
+        filteredValueInBaseCurrency: new Big(3000),
+        portfolioCalculator: createPortfolioCalculator(),
+        userCurrency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      // The closed holding (MSFT) does not need a market price
+      expect(getValues).toHaveBeenCalledWith(
+        expect.objectContaining({
+          dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AAPL' }]
+        })
+      );
+
+      // 500 (balance of excluded accounts) + 6 * 200 (AAPL) + 0 (MSFT)
+      expect(summary.excludedAccountsAndActivities).toBe(1700);
+      expect(summary.totalValueInBaseCurrency).toBe(4700);
+    });
+
+    it('should convert the market value of an excluded holding from the currency of the asset profile to the user currency', async () => {
+      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+        accounts: [],
+        balanceInBaseCurrency: 1000
+      });
+
+      jest
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+        .mockResolvedValue({
+          activities: [
+            createExcludedActivity({
+              currency: 'USD',
+              quantity: 10,
+              symbol: 'AAPL',
+              type: 'BUY',
+              unitPrice: 100
+            }),
+            createExcludedActivity({
+              currency: 'USD',
+              quantity: 4,
+              symbol: 'AAPL',
+              type: 'SELL',
+              unitPrice: 150
+            })
+          ],
+          count: 2
+        });
+
+      jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
+        dataProviderInfos: [],
+        errors: [],
+        values: [
+          {
+            dataSource: DataSource.YAHOO,
+            date: new Date(),
+            marketPrice: 200,
+            symbol: 'AAPL'
+          }
+        ]
+      });
+
+      jest
+        .spyOn(exchangeRateDataService, 'toCurrency')
+        .mockImplementation((aValue, aFromCurrency, aToCurrency) => {
+          return aFromCurrency === 'USD' && aToCurrency === 'CHF'
+            ? aValue * 0.8
+            : aValue;
+        });
+
+      const summary = await getSummary({
+        balanceInBaseCurrency: 1000,
+        emergencyFundHoldingsValueInBaseCurrency: 0,
+        filteredValueInBaseCurrency: new Big(3000),
+        portfolioCalculator: createPortfolioCalculator(),
+        userCurrency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      // 6 * 200 USD (AAPL) * 0.8 (USDCHF)
+      expect(summary.excludedAccountsAndActivities).toBe(960);
+      expect(summary.totalValueInBaseCurrency).toBe(3960);
+    });
+
+    it('should fall back to the unit price of the latest activity of an excluded holding without a market price', async () => {
+      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+        accounts: [],
+        balanceInBaseCurrency: 1000
+      });
+
+      jest
+        .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+        .mockResolvedValue({
+          activities: [
+            createExcludedActivity({
+              quantity: 10,
+              symbol: 'AAPL',
+              type: 'BUY',
+              unitPrice: 100
+            }),
+            createExcludedActivity({
+              quantity: 4,
+              symbol: 'AAPL',
+              type: 'SELL',
+              unitPrice: 150
+            })
+          ],
+          count: 2
+        });
+
+      jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
+        dataProviderInfos: [],
+        errors: [],
+        values: []
+      });
+
+      const summary = await getSummary({
+        balanceInBaseCurrency: 1000,
+        emergencyFundHoldingsValueInBaseCurrency: 0,
+        filteredValueInBaseCurrency: new Big(3000),
+        portfolioCalculator: createPortfolioCalculator(),
+        userCurrency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      // 6 * 150 (unit price of the latest activity)
+      expect(summary.excludedAccountsAndActivities).toBe(900);
+      expect(summary.totalValueInBaseCurrency).toBe(3900);
     });
   });
 

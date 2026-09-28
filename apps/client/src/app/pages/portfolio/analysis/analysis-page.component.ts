@@ -133,6 +133,36 @@ export class GfAnalysisPageComponent implements OnInit {
     addIcons({ copyOutline, ellipsisVertical });
   }
 
+  protected get netPerformancePercentageWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.performance?.netPerformancePercentageWithCurrencyEffect)
+    ) {
+      return this.performance?.netPerformancePercentageWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.performance.netPerformancePercentageWithCurrencyEffect +
+      (this.performance.dividendPercentageWithCurrencyEffect ?? 0)
+    );
+  }
+
+  protected get netPerformanceWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.performance?.netPerformanceWithCurrencyEffect)
+    ) {
+      return this.performance?.netPerformanceWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.performance.netPerformanceWithCurrencyEffect +
+      this.performance.dividendInBaseCurrency
+    );
+  }
+
   get savingsRate() {
     if (!this.savingsRatePerMonth) {
       return undefined;

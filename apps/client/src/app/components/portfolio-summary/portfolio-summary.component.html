@@ -48,7 +48,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.totalBuy"
       />
     </div>
@@ -62,7 +62,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.totalSell"
       />
     </div>
@@ -79,7 +79,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.totalInvestmentValueWithCurrencyEffect"
       />
     </div>
@@ -93,15 +93,34 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.grossPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
+  @if (user?.settings?.isExperimentalFeatures) {
+    <div class="flex-nowrap px-3 py-1 row">
+      <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
+      <div class="d-flex justify-content-end">
+        @if (isNumber(summary?.dividendInBaseCurrency)) {
+          <span class="mr-1">+</span>
+        }
+        <gf-value
+          class="justify-content-end"
+          [isCurrency]="true"
+          [isLoading]="isLoading"
+          [locale]="locale"
+          [precision]="precision"
+          [unit]="displayedCurrency"
+          [value]="summary?.dividendInBaseCurrency"
+        />
+      </div>
+    </div>
+  }
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Fees</div>
     <div class="d-flex justify-content-end">
-      @if (summary?.fees || summary?.fees === 0) {
+      @if (isNumber(summary?.fees)) {
         <span class="mr-1">-</span>
       }
       <gf-value
@@ -110,7 +129,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.fees"
       />
     </div>
@@ -127,8 +146,8 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
-        [value]="summary?.netPerformanceWithCurrencyEffect"
+        [unit]="displayedCurrency"
+        [value]="netPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
@@ -154,7 +173,7 @@
         [isLoading]="isLoading"
         [isPercent]="true"
         [locale]="locale"
-        [value]="summary?.netPerformancePercentageWithCurrencyEffect"
+        [value]="netPerformancePercentageWithCurrencyEffect"
       />
     </div>
   </div>
@@ -171,7 +190,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.totalAssetsInBaseCurrency"
       />
     </div>
@@ -217,7 +236,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="holdingsInBaseCurrency"
       />
     </div>
@@ -233,7 +252,7 @@
           [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
-          [unit]="baseCurrency"
+          [unit]="displayedCurrency"
           [value]="investmentsInBaseCurrency"
         />
       </div>
@@ -248,7 +267,7 @@
           [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
-          [unit]="baseCurrency"
+          [unit]="displayedCurrency"
           [value]="summary?.emergencyFund?.assets"
         />
       </div>
@@ -295,7 +314,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.totalCashInBaseCurrency"
       />
     </div>
@@ -311,7 +330,7 @@
           [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
-          [unit]="baseCurrency"
+          [unit]="displayedCurrency"
           [value]="summary?.cash"
         />
       </div>
@@ -326,7 +345,7 @@
           [isLoading]="isLoading"
           [locale]="locale"
           [precision]="precision"
-          [unit]="baseCurrency"
+          [unit]="displayedCurrency"
           [value]="summary?.emergencyFund?.cash"
         />
       </div>
@@ -356,7 +375,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.excludedAccountsAndActivities"
       />
     </div>
@@ -367,10 +386,7 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Liabilities</div>
     <div class="d-flex justify-content-end">
-      @if (
-        summary?.liabilitiesInBaseCurrency ||
-        summary?.liabilitiesInBaseCurrency === 0
-      ) {
+      @if (isNumber(summary?.liabilitiesInBaseCurrency)) {
         <span class="mr-1">-</span>
       }
       <gf-value
@@ -379,7 +395,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.liabilitiesInBaseCurrency"
       />
     </div>
@@ -396,7 +412,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.totalValueInBaseCurrency"
       />
     </div>
@@ -469,7 +485,7 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.emergencyFund?.total"
       />
     </div>
@@ -483,23 +499,25 @@
         [isLoading]="isLoading"
         [locale]="locale"
         [precision]="precision"
-        [unit]="baseCurrency"
+        [unit]="displayedCurrency"
         [value]="summary?.interestInBaseCurrency"
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
-    <div class="justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        [isCurrency]="true"
-        [isLoading]="isLoading"
-        [locale]="locale"
-        [precision]="precision"
-        [unit]="baseCurrency"
-        [value]="summary?.dividendInBaseCurrency"
-      />
+  @if (!user?.settings?.isExperimentalFeatures) {
+    <div class="flex-nowrap px-3 py-1 row">
+      <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
+      <div class="justify-content-end">
+        <gf-value
+          class="justify-content-end"
+          [isCurrency]="true"
+          [isLoading]="isLoading"
+          [locale]="locale"
+          [precision]="precision"
+          [unit]="displayedCurrency"
+          [value]="summary?.dividendInBaseCurrency"
+        />
+      </div>
     </div>
-  </div>
+  }
 </div>

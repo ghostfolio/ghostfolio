@@ -150,18 +150,21 @@ export class ManualService implements DataProviderInterface {
         })
       );
 
-      const marketData = await this.prismaService.marketData.findMany({
-        distinct: ['symbol'],
-        orderBy: {
-          date: 'desc'
-        },
-        take: symbols.length,
-        where: {
-          symbol: {
-            in: symbols
-          }
-        }
-      });
+      // Query the latest market data per symbol because distinct loads all
+      // the market data of the symbols into memory
+      const marketData = await Promise.all(
+        symbols.map((symbol) => {
+          return this.prismaService.marketData.findFirst({
+            orderBy: {
+              date: 'desc'
+            },
+            where: {
+              symbol,
+              dataSource: this.getName()
+            }
+          });
+        })
+      );
 
       const symbolProfilesToScrape = symbolProfiles.filter(
         ({ scraperConfiguration }) => {
@@ -202,7 +205,7 @@ export class ManualService implements DataProviderInterface {
         marketPrice =
           marketPrice ??
           marketData.find((marketDataItem) => {
-            return marketDataItem.symbol === symbol;
+            return marketDataItem?.symbol === symbol;
           })?.marketPrice ??
           0;
 
