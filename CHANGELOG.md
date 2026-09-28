@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the performance calculation to include the dividends (total return)
 - Improved the get quotes functionality of the _Manual_ service
+- Migrated the _ESLint_ configuration to the flat config format without `FlatCompat`
 - Upgraded `chartjs-chart-treemap` from version `4.2.0` to `4.2.2`
 
 ### Fixed
