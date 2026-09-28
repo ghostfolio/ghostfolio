@@ -223,15 +223,19 @@ export abstract class PortfolioCalculator {
   ): PortfolioSnapshot;
 
   protected abstract calculatePerformancePercentages({
-    accumulatedValuesByDate
+    accumulatedValuesByDate,
+    holdings
   }: {
     accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages };
 
   protected abstract calculatePerformancePercentagesForDateRange({
-    historicalDataItems
+    historicalDataItems,
+    holdings
   }: {
     historicalDataItems: HistoricalDataItem[];
+    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages };
 
   @LogPerformance
@@ -544,6 +548,13 @@ export abstract class PortfolioCalculator {
       }
     }
 
+    const totalDividendValueWithCurrencyEffectByDate =
+      this.getTotalDividendValueWithCurrencyEffectByDate({
+        chartDates,
+        exchangeRatesByCurrency,
+        holdings: positions
+      });
+
     const assetProfileIdentifiers = Object.keys(valuesByAssetProfileIdentifier);
 
     for (const dateString of chartDates) {
@@ -620,6 +631,8 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalCurrentValueWithCurrencyEffect ?? new Big(0)
           ).add(currentValueWithCurrencyEffect),
+          totalDividendValueWithCurrencyEffect:
+            totalDividendValueWithCurrencyEffectByDate[dateString],
           totalInvestmentValue: (
             accumulatedValuesByDate[dateString]?.totalInvestmentValue ??
             new Big(0)
@@ -644,8 +657,18 @@ export abstract class PortfolioCalculator {
       }
     }
 
+    const positionsIncludedInHoldings = positions
+      .filter(({ includeInHoldings }) => {
+        return includeInHoldings;
+      })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map(({ includeInHoldings, includeInPerformance, ...rest }) => {
+        return rest;
+      });
+
     const performancePercentagesByDate = this.calculatePerformancePercentages({
-      accumulatedValuesByDate
+      accumulatedValuesByDate,
+      holdings: positionsIncludedInHoldings
     });
 
     const historicalData: HistoricalDataItem[] = Object.entries(
@@ -656,6 +679,7 @@ export abstract class PortfolioCalculator {
         totalCashValueWithCurrencyEffect,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
+        totalDividendValueWithCurrencyEffect,
         totalInvestmentValue,
         totalInvestmentValueWithCurrencyEffect,
         totalNetPerformanceValue,
@@ -666,6 +690,7 @@ export abstract class PortfolioCalculator {
       return {
         ...performancePercentagesByDate[date],
         date,
+        dividendInBaseCurrency: totalDividendValueWithCurrencyEffect.toNumber(),
         investmentValueWithCurrencyEffect:
           investmentValueWithCurrencyEffect.toNumber(),
         netPerformance: totalNetPerformanceValue.toNumber(),
@@ -682,15 +707,6 @@ export abstract class PortfolioCalculator {
     });
 
     const overall = this.calculateOverallPerformance(positions);
-
-    const positionsIncludedInHoldings = positions
-      .filter(({ includeInHoldings }) => {
-        return includeInHoldings;
-      })
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map(({ includeInHoldings, includeInPerformance, ...rest }) => {
-        return rest;
-      });
 
     return {
       ...overall,
@@ -1343,6 +1359,7 @@ export abstract class PortfolioCalculator {
 
     const historicalDataItemsOfDateRange: HistoricalDataItem[] = [];
 
+    let dividendInBaseCurrencyAtStartDate: number;
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
 
@@ -1353,6 +1370,11 @@ export abstract class PortfolioCalculator {
         // Take the values at the start date from the first day of the date
         // range
         if (historicalDataItemsOfDateRange.length === 0) {
+          // TODO: Remove the fallback to 0 with the next release, when each
+          // cached portfolio snapshot contains the dividend
+          dividendInBaseCurrencyAtStartDate =
+            historicalDataItem.dividendInBaseCurrency ?? 0;
+
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
           netPerformanceWithCurrencyEffectAtStartDate =
@@ -1361,6 +1383,11 @@ export abstract class PortfolioCalculator {
 
         historicalDataItemsOfDateRange.push({
           ...historicalDataItem,
+          // TODO: Remove the fallback to 0 with the next release, when each
+          // cached portfolio snapshot contains the dividend
+          dividendInBaseCurrency:
+            (historicalDataItem.dividendInBaseCurrency ?? 0) -
+            dividendInBaseCurrencyAtStartDate,
           netPerformance:
             historicalDataItem.netPerformance - netPerformanceAtStartDate,
           netPerformanceWithCurrencyEffect:
@@ -1372,7 +1399,8 @@ export abstract class PortfolioCalculator {
 
     const performancePercentagesByDate =
       this.calculatePerformancePercentagesForDateRange({
-        historicalDataItems: historicalDataItemsOfDateRange
+        historicalDataItems: historicalDataItemsOfDateRange,
+        holdings: this.snapshot.positions
       });
 
     const chart = historicalDataItemsOfDateRange.map((historicalDataItem) => {
@@ -1732,6 +1760,77 @@ export abstract class PortfolioCalculator {
     }
 
     return chartDateMap;
+  }
+
+  private getTotalDividendValueWithCurrencyEffectByDate({
+    chartDates,
+    exchangeRatesByCurrency,
+    holdings
+  }: {
+    chartDates: string[];
+    exchangeRatesByCurrency: {
+      [currencyPair: string]: { [dateString: string]: number };
+    };
+    holdings: PortfolioCalculatorHolding[];
+  }): { [date: string]: Big } {
+    // Take the dividend from the same holdings as the portfolio summary, so
+    // that the response shows one dividend only
+    const assetProfileIdentifiersIncludedInHoldings = new Set(
+      holdings
+        .filter(({ includeInHoldings }) => {
+          return includeInHoldings;
+        })
+        .map(({ dataSource, symbol }) => {
+          return getAssetProfileIdentifier({ dataSource, symbol });
+        })
+    );
+
+    const dividendActivities = this.activities.filter(
+      ({ assetProfile, type }) => {
+        return (
+          type === 'DIVIDEND' &&
+          assetProfileIdentifiersIncludedInHoldings.has(
+            getAssetProfileIdentifier(assetProfile)
+          )
+        );
+      }
+    );
+
+    const totalDividendValueWithCurrencyEffectByDate: { [date: string]: Big } =
+      {};
+
+    let index = 0;
+    let totalDividendValueWithCurrencyEffect = new Big(0);
+
+    // The activities and the chart dates are sorted by date, so one pass over
+    // both gives the dividends received up to each chart date
+    for (const chartDate of chartDates) {
+      while (
+        index < dividendActivities.length &&
+        dividendActivities[index].date <= chartDate
+      ) {
+        const { assetProfile, date, quantity, unitPrice } =
+          dividendActivities[index];
+
+        totalDividendValueWithCurrencyEffect =
+          totalDividendValueWithCurrencyEffect.plus(
+            quantity
+              .mul(unitPrice)
+              .mul(
+                exchangeRatesByCurrency[
+                  `${assetProfile.currency}${this.currency}`
+                ]?.[date] ?? 1
+              )
+          );
+
+        index++;
+      }
+
+      totalDividendValueWithCurrencyEffectByDate[chartDate] =
+        totalDividendValueWithCurrencyEffect;
+    }
+
+    return totalDividendValueWithCurrencyEffectByDate;
   }
 
   @LogPerformance
