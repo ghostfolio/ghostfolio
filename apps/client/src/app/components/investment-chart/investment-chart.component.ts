@@ -7,7 +7,11 @@ import {
   getZeroLineAnnotation,
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import {
+  DEFAULT_COLOR_SCHEME,
+  primaryColorRgb,
+  secondaryColorRgb
+} from '@ghostfolio/common/config';
 import { getLocale, parseDate } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
@@ -170,13 +174,15 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
 
         this.chart.update();
       } else {
+        const colorScheme = this.colorScheme ?? DEFAULT_COLOR_SCHEME;
+
         this.chart = new Chart<'bar' | 'line'>(
           this.chartCanvas().nativeElement,
           {
             data: chartData,
             options: {
               animation: false,
-              elements: getChartElementsOptions(this.colorScheme),
+              elements: getChartElementsOptions(colorScheme),
               interaction: { intersect: false, mode: 'index' },
               maintainAspectRatio: true,
               plugins: {
@@ -204,7 +210,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                           value: this.savingsRate
                         }
                       : undefined,
-                    yAxis: getZeroLineAnnotation(this.colorScheme)
+                    yAxis: getZeroLineAnnotation(colorScheme)
                   }
                 },
                 legend: {
@@ -212,18 +218,18 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                 },
                 tooltip: this.getTooltipPluginConfiguration(),
                 verticalHoverLine: {
-                  color: getChartBorderColor(this.colorScheme)
+                  color: getChartBorderColor(colorScheme)
                 }
               },
               responsive: true,
               scales: {
                 x: getTimeAxisOptions({
+                  colorScheme,
                   borderWidth: this.groupBy ? 0 : 1,
-                  colorScheme: this.colorScheme,
                   locale: this.locale
                 }),
                 y: getValueAxisOptions({
-                  colorScheme: this.colorScheme,
+                  colorScheme,
                   display: !this.isInPercentage,
                   tickCallback: (tickValue) => {
                     return transformTickToAbbreviation(Number(tickValue));
@@ -232,7 +238,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
               }
             },
             plugins: [
-              getVerticalHoverLinePlugin(this.chartCanvas(), this.colorScheme)
+              getVerticalHoverLinePlugin(this.chartCanvas(), colorScheme)
             ],
             type: this.groupBy ? 'bar' : 'line'
           }
@@ -245,7 +251,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     TooltipOptions<'bar' | 'line'>
   > {
     return getTimeSeriesTooltipOptions<'bar' | 'line'>({
-      colorScheme: this.colorScheme,
+      colorScheme: this.colorScheme ?? DEFAULT_COLOR_SCHEME,
       currency: this.isInPercentage ? undefined : this.currency,
       groupBy: this.groupBy,
       locale: this.isInPercentage ? undefined : this.locale,
