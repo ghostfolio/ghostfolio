@@ -1,4 +1,4 @@
-import { AccessType } from '@prisma/client';
+import { AccessType } from '@ghostfolio/prisma/enums';
 
 import { AccessSettings } from './access-settings.interface';
 

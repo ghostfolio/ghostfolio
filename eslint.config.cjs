@@ -83,6 +83,18 @@ module.exports = [
         }
       ],
       '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              message:
+                'Import the types from @ghostfolio/prisma/browser and the enums from @ghostfolio/prisma/enums instead.',
+              name: '@prisma/client'
+            }
+          ]
+        }
+      ],
       '@typescript-eslint/no-shadow': [
         'warn',
         {

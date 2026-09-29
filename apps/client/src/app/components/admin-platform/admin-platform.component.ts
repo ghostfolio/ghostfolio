@@ -3,6 +3,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import type { Platform } from '@ghostfolio/prisma/browser';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -28,7 +29,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Platform } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
   createOutline,

@@ -21,11 +21,15 @@ import {
   EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
+import type {
+  AssetProfileSplit,
+  MarketData,
+  Platform
+} from '@ghostfolio/prisma/browser';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { AssetProfileSplit, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { isNumber } from 'lodash';
 

@@ -125,7 +125,8 @@
     "sharedGlobals": [
       "{workspaceRoot}/angular.json",
       "{workspaceRoot}/tsconfig.base.json",
-      "{workspaceRoot}/nx.json"
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/prisma/schema.prisma"
     ],
     "production": [
       "default",
