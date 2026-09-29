@@ -56,13 +56,13 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() public benchmarkDataItems: InvestmentItem[] = [];
   @Input() public benchmarkDataLabel = '';
   @Input() public colorScheme: ColorScheme;
-  @Input() public currency: string;
+  @Input() public currency?: string;
   @Input() public groupBy: GroupBy;
   @Input() public historicalDataItems: LineChartItem[] = [];
-  @Input() public isInPercentage = false;
+  @Input() public isInPercentage?: boolean = false;
   @Input() public isLoading = false;
-  @Input() public locale = getLocale();
-  @Input() public savingsRate = 0;
+  @Input() public locale?: string = getLocale();
+  @Input() public savingsRate?: number = 0;
 
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
