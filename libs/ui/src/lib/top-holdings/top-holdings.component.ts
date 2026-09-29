@@ -39,6 +39,7 @@ import { GfValueComponent } from '../value/value.component';
 })
 export class GfTopHoldingsComponent implements OnChanges {
   @Input() baseCurrency: string;
+  @Input() hasPermissionToShowValues = true;
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
   @Input() topHoldings: HoldingWithParents[];
@@ -48,14 +49,18 @@ export class GfTopHoldingsComponent implements OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   public dataSource = new MatTableDataSource<HoldingWithParents>();
-  public displayedColumns: string[] = [
-    'name',
-    'valueInBaseCurrency',
-    'allocationInPercentage'
-  ];
+  public displayedColumns: string[] = [];
   public isLoading = true;
 
   public ngOnChanges() {
+    this.displayedColumns = ['name'];
+
+    if (this.hasPermissionToShowValues) {
+      this.displayedColumns.push('valueInBaseCurrency');
+    }
+
+    this.displayedColumns.push('allocationInPercentage');
+
     this.isLoading = true;
 
     this.dataSource = new MatTableDataSource(this.topHoldings);

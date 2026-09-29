@@ -27,6 +27,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Big } from 'big.js';
+import { isFinite, isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -256,7 +257,8 @@ export class GfFirePageComponent implements OnInit {
   private calculateWithdrawalRatesProjected() {
     if (
       this.fireWealth &&
-      this.projectedTotalAmount &&
+      isNumber(this.projectedTotalAmount) &&
+      isFinite(this.projectedTotalAmount) &&
       this.user?.settings?.safeWithdrawalRate
     ) {
       this.withdrawalRatePerYearProjected = new Big(
