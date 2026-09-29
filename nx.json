@@ -98,6 +98,7 @@
       "cache": true
     },
     "lint": {
+      "inputs": ["default", "^default", "{workspaceRoot}/eslint.config.cjs"],
       "cache": true
     },
     "@nx/jest:jest": {
