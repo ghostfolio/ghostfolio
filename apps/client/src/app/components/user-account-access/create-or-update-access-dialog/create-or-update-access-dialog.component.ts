@@ -15,7 +15,7 @@ import {
 } from '@ghostfolio/common/scopes';
 import { AccessLevel, AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
-import type { AccessType } from '@ghostfolio/prisma/enums';
+import { AccessType } from '@ghostfolio/prisma/enums';
 import { GfAccessLevelIconComponent } from '@ghostfolio/ui/access-level-icon';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import {

@@ -35,10 +35,11 @@ import type {
   Prisma,
   SymbolProfile
 } from '@ghostfolio/prisma/browser';
-import { AssetClass, DataSource } from '@ghostfolio/prisma/enums';
-import type {
+import {
+  AssetClass,
   AssetSubClass,
-  DataGatheringFrequency
+  DataGatheringFrequency,
+  DataSource
 } from '@ghostfolio/prisma/enums';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';

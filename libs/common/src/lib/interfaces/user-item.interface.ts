@@ -1,4 +1,4 @@
-import type { Role } from '@ghostfolio/prisma/enums';
+import { Role } from '@ghostfolio/prisma/enums';
 
 export interface UserItem {
   accessToken?: string;

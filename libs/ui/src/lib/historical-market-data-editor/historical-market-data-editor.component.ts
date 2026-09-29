@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import type { MarketData } from '@ghostfolio/prisma/browser';
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';

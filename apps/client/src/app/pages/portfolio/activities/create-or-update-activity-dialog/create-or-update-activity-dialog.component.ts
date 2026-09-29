@@ -17,8 +17,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
 import type { Tag } from '@ghostfolio/prisma/browser';
-import { AssetClass } from '@ghostfolio/prisma/enums';
-import type { Type } from '@ghostfolio/prisma/enums';
+import { AssetClass, Type } from '@ghostfolio/prisma/enums';
 import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';

@@ -12,8 +12,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 import type { Account } from '@ghostfolio/prisma/browser';
-import { DataSource } from '@ghostfolio/prisma/enums';
-import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
+import { DataSource, Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';

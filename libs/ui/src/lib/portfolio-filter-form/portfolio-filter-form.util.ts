@@ -2,8 +2,7 @@ import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
 import type { Tag } from '@ghostfolio/prisma/browser';
-import { AssetClass } from '@ghostfolio/prisma/enums';
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { AssetClass, DataSource } from '@ghostfolio/prisma/enums';
 
 import { translate } from '../i18n';
 import { PortfolioFilterFormValue } from './interfaces';

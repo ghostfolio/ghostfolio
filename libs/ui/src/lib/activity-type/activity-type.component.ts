@@ -1,4 +1,4 @@
-import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,

@@ -1,5 +1,5 @@
 import { User } from '@ghostfolio/common/interfaces';
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface HistoricalMarketDataEditorDialogParams {
   currency: string;

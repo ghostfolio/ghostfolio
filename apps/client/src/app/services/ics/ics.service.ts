@@ -1,6 +1,6 @@
 import { capitalize } from '@ghostfolio/common/helper';
 import { ExportResponse } from '@ghostfolio/common/interfaces';
-import type { Type } from '@ghostfolio/prisma/enums';
+import { Type } from '@ghostfolio/prisma/enums';
 
 import { Service } from '@angular/core';
 import { format, parseISO } from 'date-fns';

@@ -5,7 +5,7 @@ import {
 } from '@ghostfolio/common/config';
 import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { AdminService } from '@ghostfolio/ui/services';
 
 import {

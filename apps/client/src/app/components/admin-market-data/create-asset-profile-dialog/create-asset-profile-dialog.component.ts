@@ -4,7 +4,7 @@ import {
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
 import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 

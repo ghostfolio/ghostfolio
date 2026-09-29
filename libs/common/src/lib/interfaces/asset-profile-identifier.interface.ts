@@ -1,4 +1,4 @@
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface AssetProfileIdentifier {
   dataSource: DataSource;

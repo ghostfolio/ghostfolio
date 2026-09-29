@@ -1,7 +1,7 @@
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import type { Access, Tag } from '@ghostfolio/prisma/browser';
-import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import { ReferralPartner } from './referral-partner.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';

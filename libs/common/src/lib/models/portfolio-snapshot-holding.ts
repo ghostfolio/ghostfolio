@@ -4,7 +4,7 @@ import {
 } from '@ghostfolio/common/class-transformer';
 import { DateRange } from '@ghostfolio/common/types';
 import type { Tag } from '@ghostfolio/prisma/browser';
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Big } from 'big.js';
 import { Expose, Transform, Type } from 'class-transformer';

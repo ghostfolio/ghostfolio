@@ -6,7 +6,7 @@ import {
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 

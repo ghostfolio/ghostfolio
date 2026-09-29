@@ -4,8 +4,11 @@ import type {
   Prisma,
   SymbolProfile
 } from '@ghostfolio/prisma/browser';
-import { AssetSubClass, Type as ActivityType } from '@ghostfolio/prisma/enums';
-import type { AccessType } from '@ghostfolio/prisma/enums';
+import {
+  AccessType,
+  Type as ActivityType,
+  AssetSubClass
+} from '@ghostfolio/prisma/enums';
 
 import { utc } from '@date-fns/utc';
 import { NumberParser } from '@internationalized/number';

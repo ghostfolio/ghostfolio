@@ -73,7 +73,7 @@ import type {
   Tag,
   User as UserModel
 } from '@ghostfolio/prisma/browser';
-import type { DataSource } from '@ghostfolio/prisma/enums';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
