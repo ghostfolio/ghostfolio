@@ -219,6 +219,7 @@
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
+        "host": "0.0.0.0",
         "buildTarget": "client:build",
         "proxyConfig": "apps/client/proxy.conf.json",
         "ssl": true,
