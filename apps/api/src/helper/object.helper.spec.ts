@@ -1,4 +1,5 @@
 import { DEFAULT_REDACTED_PATHS } from '@ghostfolio/common/config';
+import { PortfolioDetails } from '@ghostfolio/common/interfaces';
 
 import { query, redactPaths } from './object.helper';
 
@@ -3244,6 +3245,103 @@ describe('redactAttributes', () => {
           type: 'BUY',
           unitPrice: 220.79,
           value: null,
+          valueInBaseCurrency: null
+        }
+      ]
+    });
+  });
+
+  // The type makes sure that the object keeps the shape of the response, in
+  // which the holdings of an ETF are part of its asset profile
+  it('should redact the values of the holdings of an ETF', () => {
+    expect(
+      redactPaths({
+        object: {
+          holdings: [
+            {
+              activitiesCount: 5,
+              allocationInPercentage: 0.057358979326040366,
+              assetProfile: {
+                assetClass: 'EQUITY',
+                assetSubClass: 'ETF',
+                countries: [],
+                currency: 'USD',
+                dataSource: 'YAHOO',
+                holdings: [
+                  {
+                    allocationInPercentage: 0.06099941636982121,
+                    name: 'APPLE INC',
+                    valueInBaseCurrency: 860.2442693554036
+                  },
+                  {
+                    allocationInPercentage: 0.05862464529372787,
+                    name: 'MICROSOFT CORP',
+                    valueInBaseCurrency: 826.7540602547973
+                  }
+                ],
+                name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+                sectors: [],
+                symbol: 'VTI'
+              },
+              dateOfFirstActivity: new Date('2019-02-28T23:00:00.000Z'),
+              dividend: 0,
+              grossPerformance: 5856.3,
+              grossPerformancePercent: 0.8832083851170418,
+              grossPerformancePercentWithCurrencyEffect: 0.8832083851170418,
+              grossPerformanceWithCurrencyEffect: 5856.3,
+              investment: 8246.2,
+              marketPrice: 282.05,
+              netPerformance: 5756.8,
+              netPerformancePercent: 0.8682024540139314,
+              netPerformancePercentWithCurrencyEffect: 0.8328704068843998,
+              netPerformanceWithCurrencyEffect: 5756.8,
+              quantity: 50,
+              valueInBaseCurrency: 14102.5
+            }
+          ]
+        } satisfies Pick<PortfolioDetails, 'holdings'>,
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toStrictEqual({
+      holdings: [
+        {
+          activitiesCount: 5,
+          allocationInPercentage: 0.057358979326040366,
+          assetProfile: {
+            assetClass: 'EQUITY',
+            assetSubClass: 'ETF',
+            countries: [],
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            holdings: [
+              {
+                allocationInPercentage: 0.06099941636982121,
+                name: 'APPLE INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.05862464529372787,
+                name: 'MICROSOFT CORP',
+                valueInBaseCurrency: null
+              }
+            ],
+            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+            sectors: [],
+            symbol: 'VTI'
+          },
+          dateOfFirstActivity: '2019-02-28T23:00:00.000Z',
+          dividend: null,
+          grossPerformance: null,
+          grossPerformancePercent: 0.8832083851170418,
+          grossPerformancePercentWithCurrencyEffect: 0.8832083851170418,
+          grossPerformanceWithCurrencyEffect: null,
+          investment: null,
+          marketPrice: 282.05,
+          netPerformance: null,
+          netPerformancePercent: 0.8682024540139314,
+          netPerformancePercentWithCurrencyEffect: 0.8328704068843998,
+          netPerformanceWithCurrencyEffect: null,
+          quantity: null,
           valueInBaseCurrency: null
         }
       ]
