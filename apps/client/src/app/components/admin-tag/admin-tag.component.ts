@@ -7,7 +7,7 @@ import {
   getLowercase,
   isSystemTag
 } from '@ghostfolio/common/helper';
-import type { TagWithAccountAndActivityCount } from '@ghostfolio/common/types';
+import { TagWithAccountAndActivityCount } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
