@@ -12,6 +12,7 @@ import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
+import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 import {
   getTimeSeriesTooltipOptions,
   registerChartConfiguration
@@ -32,7 +33,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
   ChartData,

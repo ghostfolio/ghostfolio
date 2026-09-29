@@ -1,6 +1,5 @@
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
-
-import { DataSource } from '@prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 // Resolves like a logo of an unknown entity, but fails to load
 const UNAVAILABLE_LOGO_URL = 'data:image/png;base64,unavailable';

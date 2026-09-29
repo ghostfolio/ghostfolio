@@ -4,8 +4,13 @@ import {
 } from '@ghostfolio/common/config';
 import { IsAfter1970Constraint } from '@ghostfolio/common/validator-constraints/is-after-1970';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Type
+} from '@ghostfolio/prisma/enums';
 
-import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   ArrayUnique,

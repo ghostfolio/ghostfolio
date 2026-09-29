@@ -26,6 +26,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithValue } from '@ghostfolio/common/types';
+import type { MarketData, Tag } from '@ghostfolio/prisma/browser';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
@@ -71,7 +72,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { utc } from '@date-fns/utc';
 import { IonIcon } from '@ionic/angular/standalone';
-import { MarketData, Tag } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
