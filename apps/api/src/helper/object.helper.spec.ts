@@ -3082,6 +3082,20 @@ describe('redactAttributes', () => {
           feeInBaseCurrency: 18.2,
           id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
           quantity: 50,
+          // The relation of the database is part of the response next to the
+          // asset profile
+          SymbolProfile: {
+            comment: 'Reviewed by the administrator',
+            name: 'Apple Inc',
+            scraperConfiguration: {
+              headers: { Authorization: 'Bearer TOKEN' },
+              mode: 'lazy',
+              selector: '.price',
+              url: 'https://example.org/get_price'
+            },
+            symbol: 'AAPL',
+            symbolMapping: { YAHOO: 'AAPL' }
+          },
           type: 'BUY',
           unitPrice: 220.79,
           value: 11039.5,
@@ -3111,6 +3125,13 @@ describe('redactAttributes', () => {
       feeInBaseCurrency: null,
       id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
       quantity: null,
+      SymbolProfile: {
+        comment: null,
+        name: 'Apple Inc',
+        scraperConfiguration: null,
+        symbol: 'AAPL',
+        symbolMapping: null
+      },
       type: 'BUY',
       // A price per unit stays visible, like the average price and the market
       // price of a holding
@@ -3169,6 +3190,18 @@ describe('redactAttributes', () => {
               currency: 'USD',
               fee: 19.9,
               quantity: 50,
+              SymbolProfile: {
+                comment: 'Reviewed by the administrator',
+                name: 'Apple Inc',
+                scraperConfiguration: {
+                  headers: { Authorization: 'Bearer TOKEN' },
+                  mode: 'lazy',
+                  selector: '.price',
+                  url: 'https://example.org/get_price'
+                },
+                symbol: 'AAPL',
+                symbolMapping: { YAHOO: 'AAPL' }
+              },
               type: 'BUY',
               unitPrice: 220.79,
               value: 11039.5,
@@ -3194,6 +3227,13 @@ describe('redactAttributes', () => {
           currency: 'USD',
           fee: null,
           quantity: null,
+          SymbolProfile: {
+            comment: null,
+            name: 'Apple Inc',
+            scraperConfiguration: null,
+            symbol: 'AAPL',
+            symbolMapping: null
+          },
           type: 'BUY',
           unitPrice: 220.79,
           value: null,
