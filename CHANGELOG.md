@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the total column to the table of the tag management in the admin control panel
+
 ### Changed
 
 - Extended the emergency fund dialog in the portfolio summary to include the currency suffix
