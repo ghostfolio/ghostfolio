@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the colors of the investment chart component (dark mode)
 - Fixed the value column of the top holdings on the allocations page in the _Presenter View_
 - Fixed the projected sustainable retirement income on the _FIRE_ page for a projected total amount of zero (experimental)
+- Fixed the sustainable retirement income on the _FIRE_ page for redacted values
 - Fixed the emergency fund in the portfolio summary for redacted values
 
 ## 3.75.0 - 2026-09-28
