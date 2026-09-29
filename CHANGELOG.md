@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the value column of the top holdings on the allocations page in the _Presenter View_
 - Fixed the projected sustainable retirement income on the _FIRE_ page for a projected total amount of zero (experimental)
 - Fixed the emergency fund in the portfolio summary for redacted values
-- Fixed the redaction of the values of the holdings of ETFs in a restricted view
+- Fixed the redaction of `valueInBaseCurrency` in the holdings of ETFs in a restricted view
 
 ## 3.75.0 - 2026-09-28
 
