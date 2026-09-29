@@ -1,4 +1,4 @@
-import { Type } from '@prisma/client';
+import { Type } from '@ghostfolio/prisma/enums';
 
 export const ActivityType = {
   ...Type,

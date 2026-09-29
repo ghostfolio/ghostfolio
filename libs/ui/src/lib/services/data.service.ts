@@ -65,22 +65,22 @@ import type {
   GroupBy,
   TagWithAccountAndActivityCount
 } from '@ghostfolio/common/types';
+import type {
+  Account,
+  AccountBalance,
+  MarketData,
+  Order,
+  SymbolProfile,
+  Tag,
+  User as UserModel
+} from '@ghostfolio/prisma/browser';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
-import {
-  Account,
-  AccountBalance,
-  DataSource,
-  MarketData,
-  Order,
-  SymbolProfile,
-  Tag,
-  User as UserModel
-} from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';

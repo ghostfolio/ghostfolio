@@ -1,6 +1,5 @@
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
-
-import { Tag } from '@prisma/client';
+import type { Tag } from '@ghostfolio/prisma/browser';
 
 import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 
