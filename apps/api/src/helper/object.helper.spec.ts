@@ -1,4 +1,5 @@
 import { DEFAULT_REDACTED_PATHS } from '@ghostfolio/common/config';
+import { PortfolioDetails } from '@ghostfolio/common/interfaces';
 
 import { query, redactPaths } from './object.helper';
 
@@ -133,6 +134,7 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.044900865255793135,
               assetClass: 'EQUITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'STOCK',
               countries: [
                 {
@@ -149,7 +151,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.3183066634822068,
               grossPerformancePercentWithCurrencyEffect: 0.3183066634822068,
               grossPerformanceWithCurrencyEffect: 2665.5,
-              holdings: [],
               investment: 0.060265768702233234,
               name: 'Apple Inc',
               netPerformance: 2664.5,
@@ -185,6 +186,7 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.026912563036519527,
               assetClass: 'EQUITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'STOCK',
               countries: [
                 { code: 'DE', weight: 1, continent: 'Europe', name: 'Germany' }
@@ -196,7 +198,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.3719230057375532,
               grossPerformancePercentWithCurrencyEffect: 0.2650716044872953,
               grossPerformanceWithCurrencyEffect: 1386.429698978564,
-              holdings: [],
               investment: 0.03471025137190358,
               name: 'Allianz SE',
               netPerformance: 1789.1095737558583,
@@ -232,6 +233,7 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.07646101417126275,
               assetClass: 'EQUITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'STOCK',
               countries: [
                 {
@@ -248,7 +250,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.8594552890963852,
               grossPerformancePercentWithCurrencyEffect: 0.8594552890963852,
               grossPerformanceWithCurrencyEffect: 8689.05,
-              holdings: [],
               investment: 0.07275900505029173,
               name: 'Amazon.com, Inc.',
               netPerformance: 8608.26,
@@ -290,6 +291,7 @@ describe('redactAttributes', () => {
               ],
               allocationInPercentage: 0.15042891393226654,
               assetClass: 'LIQUIDITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'CRYPTOCURRENCY',
               countries: [],
               dataSource: 'COINGECKO',
@@ -299,7 +301,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 17.4925166352,
               grossPerformancePercentWithCurrencyEffect: 17.4925166352,
               grossPerformanceWithCurrencyEffect: 34985.0332704,
-              holdings: [],
               investment: 0.014393543993846005,
               name: 'Bitcoin',
               netPerformance: 34955.1332704,
@@ -341,6 +342,7 @@ describe('redactAttributes', () => {
               ],
               allocationInPercentage: 0.009076749759365777,
               assetClass: 'FIXED_INCOME',
+              assetProfile: { holdings: [] },
               assetSubClass: 'BOND',
               countries: [],
               dataSource: 'MANUAL',
@@ -350,7 +352,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0,
               grossPerformancePercentWithCurrencyEffect: -0.06153834320225245,
               grossPerformanceWithCurrencyEffect: -125.68932723700505,
-              holdings: [],
               investment: 0.016060638243523776,
               name: 'Bondora Go & Grow',
               netPerformance: 0,
@@ -392,6 +393,7 @@ describe('redactAttributes', () => {
               ],
               allocationInPercentage: 0.09095764645669335,
               assetClass: 'EQUITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'ETF',
               countries: [
                 {
@@ -474,7 +476,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.27579517683678895,
               grossPerformancePercentWithCurrencyEffect: 0.458553421589667,
               grossPerformanceWithCurrencyEffect: 5322.44900391902,
-              holdings: [],
               investment: 0.13551383737034509,
               name: 'frankly Extreme 95 Index',
               netPerformance: 3533.389614611676,
@@ -510,6 +511,7 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.05222646409742627,
               assetClass: 'EQUITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'STOCK',
               countries: [
                 {
@@ -526,7 +528,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.7865431171216295,
               grossPerformancePercentWithCurrencyEffect: 0.7865431171216295,
               grossPerformanceWithCurrencyEffect: 5653.2,
-              holdings: [],
               investment: 0.051726079050684395,
               name: 'Microsoft Corporation',
               netPerformance: 5653.2,
@@ -562,6 +563,7 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.1589050142378352,
               assetClass: 'EQUITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'STOCK',
               countries: [
                 {
@@ -578,7 +580,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 17.184314638161936,
               grossPerformancePercentWithCurrencyEffect: 17.184314638161936,
               grossPerformanceWithCurrencyEffect: 36920.500000005,
-              holdings: [],
               investment: 0.01546226463535309,
               name: 'Tesla, Inc.',
               netPerformance: 36890.500000005,
@@ -614,6 +615,85 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.057358979326040366,
               assetClass: 'EQUITY',
+              assetProfile: {
+                holdings: [
+                  {
+                    allocationInPercentage: 0.06099941636982121,
+                    name: 'APPLE INC',
+                    valueInBaseCurrency: 860.2442693554036
+                  },
+                  {
+                    allocationInPercentage: 0.05862464529372787,
+                    name: 'MICROSOFT CORP',
+                    valueInBaseCurrency: 826.7540602547973
+                  },
+                  {
+                    allocationInPercentage: 0.05156070760128074,
+                    name: 'NVIDIA CORP',
+                    valueInBaseCurrency: 727.1348789470617
+                  },
+                  {
+                    allocationInPercentage: 0.03301535551128066,
+                    name: 'AMAZON COM INC',
+                    valueInBaseCurrency: 465.5990510978355
+                  },
+                  {
+                    allocationInPercentage: 0.01962204914568647,
+                    name: 'FACEBOOK CLASS A  INC',
+                    valueInBaseCurrency: 276.71994807704345
+                  },
+                  {
+                    allocationInPercentage: 0.01902835637666313,
+                    name: 'ALPHABET INC CLASS A',
+                    valueInBaseCurrency: 268.34739580189176
+                  },
+                  {
+                    allocationInPercentage: 0.01555676306627245,
+                    name: 'ALPHABET INC CLASS C',
+                    valueInBaseCurrency: 219.3892511421072
+                  },
+                  {
+                    allocationInPercentage: 0.01463100485016827,
+                    name: 'BERKSHIRE HATHAWAY INC CLASS B',
+                    valueInBaseCurrency: 206.33374589949804
+                  },
+                  {
+                    allocationInPercentage: 0.01403731208114493,
+                    name: 'BROADCOM INC',
+                    valueInBaseCurrency: 197.96119362434638
+                  },
+                  {
+                    allocationInPercentage: 0.01297067761476403,
+                    name: 'ELI LILLY',
+                    valueInBaseCurrency: 182.91898106220972
+                  },
+                  {
+                    allocationInPercentage: 0.0118637927911612,
+                    name: 'TESLA INC',
+                    valueInBaseCurrency: 167.30913783735082
+                  },
+                  {
+                    allocationInPercentage: 0.01152166475477487,
+                    name: 'JPMORGAN CHASE & CO',
+                    valueInBaseCurrency: 162.48427720421262
+                  },
+                  {
+                    allocationInPercentage: 0.0100324015375638,
+                    name: 'EXXON MOBIL CORP',
+                    valueInBaseCurrency: 141.4819426834935
+                  },
+                  {
+                    allocationInPercentage: 0.01000221376964736,
+                    name: 'UNITEDHEALTH GROUP INC',
+                    valueInBaseCurrency: 141.0562196864519
+                  },
+                  {
+                    allocationInPercentage: 0.007818631890358146,
+                    name: 'VISA INC CLASS A',
+                    valueInBaseCurrency: 110.26225623377576
+                  }
+                ]
+              },
               assetSubClass: 'ETF',
               countries: [
                 {
@@ -660,83 +740,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.8832083851170418,
               grossPerformancePercentWithCurrencyEffect: 0.8832083851170418,
               grossPerformanceWithCurrencyEffect: 5856.3,
-              holdings: [
-                {
-                  allocationInPercentage: 0.06099941636982121,
-                  name: 'APPLE INC',
-                  valueInBaseCurrency: 860.2442693554036
-                },
-                {
-                  allocationInPercentage: 0.05862464529372787,
-                  name: 'MICROSOFT CORP',
-                  valueInBaseCurrency: 826.7540602547973
-                },
-                {
-                  allocationInPercentage: 0.05156070760128074,
-                  name: 'NVIDIA CORP',
-                  valueInBaseCurrency: 727.1348789470617
-                },
-                {
-                  allocationInPercentage: 0.03301535551128066,
-                  name: 'AMAZON COM INC',
-                  valueInBaseCurrency: 465.5990510978355
-                },
-                {
-                  allocationInPercentage: 0.01962204914568647,
-                  name: 'FACEBOOK CLASS A  INC',
-                  valueInBaseCurrency: 276.71994807704345
-                },
-                {
-                  allocationInPercentage: 0.01902835637666313,
-                  name: 'ALPHABET INC CLASS A',
-                  valueInBaseCurrency: 268.34739580189176
-                },
-                {
-                  allocationInPercentage: 0.01555676306627245,
-                  name: 'ALPHABET INC CLASS C',
-                  valueInBaseCurrency: 219.3892511421072
-                },
-                {
-                  allocationInPercentage: 0.01463100485016827,
-                  name: 'BERKSHIRE HATHAWAY INC CLASS B',
-                  valueInBaseCurrency: 206.33374589949804
-                },
-                {
-                  allocationInPercentage: 0.01403731208114493,
-                  name: 'BROADCOM INC',
-                  valueInBaseCurrency: 197.96119362434638
-                },
-                {
-                  allocationInPercentage: 0.01297067761476403,
-                  name: 'ELI LILLY',
-                  valueInBaseCurrency: 182.91898106220972
-                },
-                {
-                  allocationInPercentage: 0.0118637927911612,
-                  name: 'TESLA INC',
-                  valueInBaseCurrency: 167.30913783735082
-                },
-                {
-                  allocationInPercentage: 0.01152166475477487,
-                  name: 'JPMORGAN CHASE & CO',
-                  valueInBaseCurrency: 162.48427720421262
-                },
-                {
-                  allocationInPercentage: 0.0100324015375638,
-                  name: 'EXXON MOBIL CORP',
-                  valueInBaseCurrency: 141.4819426834935
-                },
-                {
-                  allocationInPercentage: 0.01000221376964736,
-                  name: 'UNITEDHEALTH GROUP INC',
-                  valueInBaseCurrency: 141.0562196864519
-                },
-                {
-                  allocationInPercentage: 0.007818631890358146,
-                  name: 'VISA INC CLASS A',
-                  valueInBaseCurrency: 110.26225623377576
-                }
-              ],
               investment: 0.05934602124102648,
               name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               netPerformance: 5756.8,
@@ -786,6 +789,85 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.09386983901959013,
               assetClass: 'EQUITY',
+              assetProfile: {
+                holdings: [
+                  {
+                    allocationInPercentage: 0.042520261085,
+                    name: 'APPLE INC',
+                    valueInBaseCurrency: 981.3336460398625
+                  },
+                  {
+                    allocationInPercentage: 0.037017038038,
+                    name: 'MICROSOFT CORP',
+                    valueInBaseCurrency: 854.3236559815404
+                  },
+                  {
+                    allocationInPercentage: 0.018861883836,
+                    name: 'AMAZON COM INC',
+                    valueInBaseCurrency: 435.31720557783655
+                  },
+                  {
+                    allocationInPercentage: 0.017806548325,
+                    name: 'NVIDIA CORP',
+                    valueInBaseCurrency: 410.9609053487602
+                  },
+                  {
+                    allocationInPercentage: 0.012188534864,
+                    name: 'ALPHABET INC CLASS A',
+                    valueInBaseCurrency: 281.3016442693628
+                  },
+                  {
+                    allocationInPercentage: 0.010831709166,
+                    name: 'ALPHABET INC CLASS C',
+                    valueInBaseCurrency: 249.98719145833246
+                  },
+                  {
+                    allocationInPercentage: 0.010813551981,
+                    name: 'TESLA INC',
+                    valueInBaseCurrency: 249.56813813873381
+                  },
+                  {
+                    allocationInPercentage: 0.009934819182,
+                    name: 'FACEBOOK CLASS A  INC',
+                    valueInBaseCurrency: 229.28768737165962
+                  },
+                  {
+                    allocationInPercentage: 0.007403227621000001,
+                    name: 'BERKSHIRE HATHAWAY INC CLASS B',
+                    valueInBaseCurrency: 170.8605772494153
+                  },
+                  {
+                    allocationInPercentage: 0.007076883908,
+                    name: 'ELI LILLY',
+                    valueInBaseCurrency: 163.32882514892185
+                  },
+                  {
+                    allocationInPercentage: 0.006844271583,
+                    name: 'EXXON MOBIL CORP',
+                    valueInBaseCurrency: 157.96031857861325
+                  },
+                  {
+                    allocationInPercentage: 0.006718061670999999,
+                    name: 'UNITEDHEALTH GROUP INC',
+                    valueInBaseCurrency: 155.0474946695187
+                  },
+                  {
+                    allocationInPercentage: 0.006456949621,
+                    name: 'JPMORGAN CHASE & CO',
+                    valueInBaseCurrency: 149.02123722158794
+                  },
+                  {
+                    allocationInPercentage: 0.006293890054,
+                    name: 'TAIWAN SEMICONDUCTOR MANUFACTURING',
+                    valueInBaseCurrency: 145.25795272326576
+                  },
+                  {
+                    allocationInPercentage: 0.00600392555,
+                    name: 'VISA INC CLASS A',
+                    valueInBaseCurrency: 138.56580369427397
+                  }
+                ]
+              },
               assetSubClass: 'ETF',
               countries: [
                 {
@@ -1060,83 +1142,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.3683200415015591,
               grossPerformancePercentWithCurrencyEffect: 0.5806366182968891,
               grossPerformanceWithCurrencyEffect: 6402.248165662604,
-              holdings: [
-                {
-                  allocationInPercentage: 0.042520261085,
-                  name: 'APPLE INC',
-                  valueInBaseCurrency: 981.3336460398625
-                },
-                {
-                  allocationInPercentage: 0.037017038038,
-                  name: 'MICROSOFT CORP',
-                  valueInBaseCurrency: 854.3236559815404
-                },
-                {
-                  allocationInPercentage: 0.018861883836,
-                  name: 'AMAZON COM INC',
-                  valueInBaseCurrency: 435.31720557783655
-                },
-                {
-                  allocationInPercentage: 0.017806548325,
-                  name: 'NVIDIA CORP',
-                  valueInBaseCurrency: 410.9609053487602
-                },
-                {
-                  allocationInPercentage: 0.012188534864,
-                  name: 'ALPHABET INC CLASS A',
-                  valueInBaseCurrency: 281.3016442693628
-                },
-                {
-                  allocationInPercentage: 0.010831709166,
-                  name: 'ALPHABET INC CLASS C',
-                  valueInBaseCurrency: 249.98719145833246
-                },
-                {
-                  allocationInPercentage: 0.010813551981,
-                  name: 'TESLA INC',
-                  valueInBaseCurrency: 249.56813813873381
-                },
-                {
-                  allocationInPercentage: 0.009934819182,
-                  name: 'FACEBOOK CLASS A  INC',
-                  valueInBaseCurrency: 229.28768737165962
-                },
-                {
-                  allocationInPercentage: 0.007403227621000001,
-                  name: 'BERKSHIRE HATHAWAY INC CLASS B',
-                  valueInBaseCurrency: 170.8605772494153
-                },
-                {
-                  allocationInPercentage: 0.007076883908,
-                  name: 'ELI LILLY',
-                  valueInBaseCurrency: 163.32882514892185
-                },
-                {
-                  allocationInPercentage: 0.006844271583,
-                  name: 'EXXON MOBIL CORP',
-                  valueInBaseCurrency: 157.96031857861325
-                },
-                {
-                  allocationInPercentage: 0.006718061670999999,
-                  name: 'UNITEDHEALTH GROUP INC',
-                  valueInBaseCurrency: 155.0474946695187
-                },
-                {
-                  allocationInPercentage: 0.006456949621,
-                  name: 'JPMORGAN CHASE & CO',
-                  valueInBaseCurrency: 149.02123722158794
-                },
-                {
-                  allocationInPercentage: 0.006293890054,
-                  name: 'TAIWAN SEMICONDUCTOR MANUFACTURING',
-                  valueInBaseCurrency: 145.25795272326576
-                },
-                {
-                  allocationInPercentage: 0.00600392555,
-                  name: 'VISA INC CLASS A',
-                  valueInBaseCurrency: 138.56580369427397
-                }
-              ],
               investment: 0.13346122254229614,
               name: 'Vanguard FTSE All-World UCITS ETF',
               netPerformance: 4438.993935069568,
@@ -1194,6 +1199,80 @@ describe('redactAttributes', () => {
               tags: [],
               allocationInPercentage: 0.03598477442100562,
               assetClass: 'EQUITY',
+              assetProfile: {
+                holdings: [
+                  {
+                    allocationInPercentage: 0.051778373,
+                    name: 'APPLE INC',
+                    valueInBaseCurrency: 458.1016731945994
+                  },
+                  {
+                    allocationInPercentage: 0.0403267055,
+                    name: 'MICROSOFT CORP',
+                    valueInBaseCurrency: 356.78469974280296
+                  },
+                  {
+                    allocationInPercentage: 0.0221895862,
+                    name: 'AMAZON COM INC',
+                    valueInBaseCurrency: 196.3191575315778
+                  },
+                  {
+                    allocationInPercentage: 0.0208100035,
+                    name: 'NVIDIA CORP',
+                    valueInBaseCurrency: 184.1134989416425
+                  },
+                  {
+                    allocationInPercentage: 0.0139820061,
+                    name: 'ALPHABET INC CLASS A',
+                    valueInBaseCurrency: 123.70377858390985
+                  },
+                  {
+                    allocationInPercentage: 0.0126263246,
+                    name: 'ALPHABET INC CLASS C',
+                    valueInBaseCurrency: 111.70958240727516
+                  },
+                  {
+                    allocationInPercentage: 0.0121596126,
+                    name: 'TESLA INC',
+                    valueInBaseCurrency: 107.58041542669048
+                  },
+                  {
+                    allocationInPercentage: 0.0114079282,
+                    name: 'FACEBOOK CLASS A  INC',
+                    valueInBaseCurrency: 100.92999631533141
+                  },
+                  {
+                    allocationInPercentage: 0.0081570352,
+                    name: 'BERKSHIRE HATHAWAY INC CLASS B',
+                    valueInBaseCurrency: 72.16819024860523
+                  },
+                  {
+                    allocationInPercentage: 0.0079471416,
+                    name: 'EXXON MOBIL CORP',
+                    valueInBaseCurrency: 70.31118695201964
+                  },
+                  {
+                    allocationInPercentage: 0.0078190388,
+                    name: 'ELI LILLY',
+                    valueInBaseCurrency: 69.1778159397456
+                  },
+                  {
+                    allocationInPercentage: 0.0077121293,
+                    name: 'UNITEDHEALTH GROUP INC',
+                    valueInBaseCurrency: 68.23194958681098
+                  },
+                  {
+                    allocationInPercentage: 0.0074484861,
+                    name: 'JPMORGAN CHASE & CO',
+                    valueInBaseCurrency: 65.89940447098863
+                  },
+                  {
+                    allocationInPercentage: 0.006978079,
+                    name: 'VISA INC CLASS A',
+                    valueInBaseCurrency: 61.73754562709217
+                  }
+                ]
+              },
               assetSubClass: 'ETF',
               countries: [
                 {
@@ -1342,78 +1421,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0.3474381850624522,
               grossPerformancePercentWithCurrencyEffect: 0.28744846894552306,
               grossPerformanceWithCurrencyEffect: 1975.348026988124,
-              holdings: [
-                {
-                  allocationInPercentage: 0.051778373,
-                  name: 'APPLE INC',
-                  valueInBaseCurrency: 458.1016731945994
-                },
-                {
-                  allocationInPercentage: 0.0403267055,
-                  name: 'MICROSOFT CORP',
-                  valueInBaseCurrency: 356.78469974280296
-                },
-                {
-                  allocationInPercentage: 0.0221895862,
-                  name: 'AMAZON COM INC',
-                  valueInBaseCurrency: 196.3191575315778
-                },
-                {
-                  allocationInPercentage: 0.0208100035,
-                  name: 'NVIDIA CORP',
-                  valueInBaseCurrency: 184.1134989416425
-                },
-                {
-                  allocationInPercentage: 0.0139820061,
-                  name: 'ALPHABET INC CLASS A',
-                  valueInBaseCurrency: 123.70377858390985
-                },
-                {
-                  allocationInPercentage: 0.0126263246,
-                  name: 'ALPHABET INC CLASS C',
-                  valueInBaseCurrency: 111.70958240727516
-                },
-                {
-                  allocationInPercentage: 0.0121596126,
-                  name: 'TESLA INC',
-                  valueInBaseCurrency: 107.58041542669048
-                },
-                {
-                  allocationInPercentage: 0.0114079282,
-                  name: 'FACEBOOK CLASS A  INC',
-                  valueInBaseCurrency: 100.92999631533141
-                },
-                {
-                  allocationInPercentage: 0.0081570352,
-                  name: 'BERKSHIRE HATHAWAY INC CLASS B',
-                  valueInBaseCurrency: 72.16819024860523
-                },
-                {
-                  allocationInPercentage: 0.0079471416,
-                  name: 'EXXON MOBIL CORP',
-                  valueInBaseCurrency: 70.31118695201964
-                },
-                {
-                  allocationInPercentage: 0.0078190388,
-                  name: 'ELI LILLY',
-                  valueInBaseCurrency: 69.1778159397456
-                },
-                {
-                  allocationInPercentage: 0.0077121293,
-                  name: 'UNITEDHEALTH GROUP INC',
-                  valueInBaseCurrency: 68.23194958681098
-                },
-                {
-                  allocationInPercentage: 0.0074484861,
-                  name: 'JPMORGAN CHASE & CO',
-                  valueInBaseCurrency: 65.89940447098863
-                },
-                {
-                  allocationInPercentage: 0.006978079,
-                  name: 'VISA INC CLASS A',
-                  valueInBaseCurrency: 61.73754562709217
-                }
-              ],
               investment: 0.04725441287200783,
               name: 'Xtrackers MSCI World UCITS ETF 1C',
               netPerformance: 2247.935728632002,
@@ -1454,6 +1461,7 @@ describe('redactAttributes', () => {
               currency: 'USD',
               allocationInPercentage: 0.20291717628620132,
               assetClass: 'LIQUIDITY',
+              assetProfile: { holdings: [] },
               assetSubClass: 'CASH',
               countries: [],
               dividend: 0,
@@ -1461,7 +1469,6 @@ describe('redactAttributes', () => {
               grossPerformancePercent: 0,
               grossPerformancePercentWithCurrencyEffect: 0,
               grossPerformanceWithCurrencyEffect: 0,
-              holdings: [],
               investment: 0.35904695492648864,
               marketPrice: 0,
               name: 'USD',
@@ -1637,6 +1644,7 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.044900865255793135,
           assetClass: 'EQUITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'STOCK',
           countries: [
             {
@@ -1653,7 +1661,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.3183066634822068,
           grossPerformancePercentWithCurrencyEffect: 0.3183066634822068,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'Apple Inc',
           netPerformance: null,
@@ -1689,6 +1696,7 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.026912563036519527,
           assetClass: 'EQUITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'STOCK',
           countries: [
             { code: 'DE', weight: 1, continent: 'Europe', name: 'Germany' }
@@ -1700,7 +1708,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.3719230057375532,
           grossPerformancePercentWithCurrencyEffect: 0.2650716044872953,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'Allianz SE',
           netPerformance: null,
@@ -1736,6 +1743,7 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.07646101417126275,
           assetClass: 'EQUITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'STOCK',
           countries: [
             {
@@ -1752,7 +1760,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.8594552890963852,
           grossPerformancePercentWithCurrencyEffect: 0.8594552890963852,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'Amazon.com, Inc.',
           netPerformance: null,
@@ -1794,6 +1801,7 @@ describe('redactAttributes', () => {
           ],
           allocationInPercentage: 0.15042891393226654,
           assetClass: 'LIQUIDITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'CRYPTOCURRENCY',
           countries: [],
           dataSource: 'COINGECKO',
@@ -1803,7 +1811,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 17.4925166352,
           grossPerformancePercentWithCurrencyEffect: 17.4925166352,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'Bitcoin',
           netPerformance: null,
@@ -1845,6 +1852,7 @@ describe('redactAttributes', () => {
           ],
           allocationInPercentage: 0.009076749759365777,
           assetClass: 'FIXED_INCOME',
+          assetProfile: { holdings: [] },
           assetSubClass: 'BOND',
           countries: [],
           dataSource: 'MANUAL',
@@ -1854,7 +1862,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0,
           grossPerformancePercentWithCurrencyEffect: -0.06153834320225245,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'Bondora Go & Grow',
           netPerformance: null,
@@ -1896,6 +1903,7 @@ describe('redactAttributes', () => {
           ],
           allocationInPercentage: 0.09095764645669335,
           assetClass: 'EQUITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'ETF',
           countries: [
             {
@@ -1958,7 +1966,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.27579517683678895,
           grossPerformancePercentWithCurrencyEffect: 0.458553421589667,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'frankly Extreme 95 Index',
           netPerformance: null,
@@ -1994,6 +2001,7 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.05222646409742627,
           assetClass: 'EQUITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'STOCK',
           countries: [
             {
@@ -2010,7 +2018,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.7865431171216295,
           grossPerformancePercentWithCurrencyEffect: 0.7865431171216295,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'Microsoft Corporation',
           netPerformance: null,
@@ -2046,6 +2053,7 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.1589050142378352,
           assetClass: 'EQUITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'STOCK',
           countries: [
             {
@@ -2062,7 +2070,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 17.184314638161936,
           grossPerformancePercentWithCurrencyEffect: 17.184314638161936,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           name: 'Tesla, Inc.',
           netPerformance: null,
@@ -2098,6 +2105,85 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.057358979326040366,
           assetClass: 'EQUITY',
+          assetProfile: {
+            holdings: [
+              {
+                allocationInPercentage: 0.06099941636982121,
+                name: 'APPLE INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.05862464529372787,
+                name: 'MICROSOFT CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.05156070760128074,
+                name: 'NVIDIA CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.03301535551128066,
+                name: 'AMAZON COM INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01962204914568647,
+                name: 'FACEBOOK CLASS A  INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01902835637666313,
+                name: 'ALPHABET INC CLASS A',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01555676306627245,
+                name: 'ALPHABET INC CLASS C',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01463100485016827,
+                name: 'BERKSHIRE HATHAWAY INC CLASS B',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01403731208114493,
+                name: 'BROADCOM INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01297067761476403,
+                name: 'ELI LILLY',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0118637927911612,
+                name: 'TESLA INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01152166475477487,
+                name: 'JPMORGAN CHASE & CO',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0100324015375638,
+                name: 'EXXON MOBIL CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.01000221376964736,
+                name: 'UNITEDHEALTH GROUP INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.007818631890358146,
+                name: 'VISA INC CLASS A',
+                valueInBaseCurrency: null
+              }
+            ]
+          },
           assetSubClass: 'ETF',
           countries: [
             {
@@ -2144,83 +2230,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.8832083851170418,
           grossPerformancePercentWithCurrencyEffect: 0.8832083851170418,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [
-            {
-              allocationInPercentage: 0.06099941636982121,
-              name: 'APPLE INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.05862464529372787,
-              name: 'MICROSOFT CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.05156070760128074,
-              name: 'NVIDIA CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.03301535551128066,
-              name: 'AMAZON COM INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01962204914568647,
-              name: 'FACEBOOK CLASS A  INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01902835637666313,
-              name: 'ALPHABET INC CLASS A',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01555676306627245,
-              name: 'ALPHABET INC CLASS C',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01463100485016827,
-              name: 'BERKSHIRE HATHAWAY INC CLASS B',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01403731208114493,
-              name: 'BROADCOM INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01297067761476403,
-              name: 'ELI LILLY',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0118637927911612,
-              name: 'TESLA INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01152166475477487,
-              name: 'JPMORGAN CHASE & CO',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0100324015375638,
-              name: 'EXXON MOBIL CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.01000221376964736,
-              name: 'UNITEDHEALTH GROUP INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.007818631890358146,
-              name: 'VISA INC CLASS A',
-              valueInBaseCurrency: null
-            }
-          ],
           investment: null,
           name: 'Vanguard Total Stock Market Index Fund ETF Shares',
           netPerformance: null,
@@ -2270,6 +2279,85 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.09386983901959013,
           assetClass: 'EQUITY',
+          assetProfile: {
+            holdings: [
+              {
+                allocationInPercentage: 0.042520261085,
+                name: 'APPLE INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.037017038038,
+                name: 'MICROSOFT CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.018861883836,
+                name: 'AMAZON COM INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.017806548325,
+                name: 'NVIDIA CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.012188534864,
+                name: 'ALPHABET INC CLASS A',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.010831709166,
+                name: 'ALPHABET INC CLASS C',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.010813551981,
+                name: 'TESLA INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.009934819182,
+                name: 'FACEBOOK CLASS A  INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.007403227621000001,
+                name: 'BERKSHIRE HATHAWAY INC CLASS B',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.007076883908,
+                name: 'ELI LILLY',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.006844271583,
+                name: 'EXXON MOBIL CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.006718061670999999,
+                name: 'UNITEDHEALTH GROUP INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.006456949621,
+                name: 'JPMORGAN CHASE & CO',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.006293890054,
+                name: 'TAIWAN SEMICONDUCTOR MANUFACTURING',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.00600392555,
+                name: 'VISA INC CLASS A',
+                valueInBaseCurrency: null
+              }
+            ]
+          },
           assetSubClass: 'ETF',
           countries: [
             {
@@ -2539,83 +2627,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.3683200415015591,
           grossPerformancePercentWithCurrencyEffect: 0.5806366182968891,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [
-            {
-              allocationInPercentage: 0.042520261085,
-              name: 'APPLE INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.037017038038,
-              name: 'MICROSOFT CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.018861883836,
-              name: 'AMAZON COM INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.017806548325,
-              name: 'NVIDIA CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.012188534864,
-              name: 'ALPHABET INC CLASS A',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.010831709166,
-              name: 'ALPHABET INC CLASS C',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.010813551981,
-              name: 'TESLA INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.009934819182,
-              name: 'FACEBOOK CLASS A  INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.007403227621000001,
-              name: 'BERKSHIRE HATHAWAY INC CLASS B',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.007076883908,
-              name: 'ELI LILLY',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.006844271583,
-              name: 'EXXON MOBIL CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.006718061670999999,
-              name: 'UNITEDHEALTH GROUP INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.006456949621,
-              name: 'JPMORGAN CHASE & CO',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.006293890054,
-              name: 'TAIWAN SEMICONDUCTOR MANUFACTURING',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.00600392555,
-              name: 'VISA INC CLASS A',
-              valueInBaseCurrency: null
-            }
-          ],
           investment: null,
           name: 'Vanguard FTSE All-World UCITS ETF',
           netPerformance: null,
@@ -2670,6 +2681,80 @@ describe('redactAttributes', () => {
           tags: [],
           allocationInPercentage: 0.03598477442100562,
           assetClass: 'EQUITY',
+          assetProfile: {
+            holdings: [
+              {
+                allocationInPercentage: 0.051778373,
+                name: 'APPLE INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0403267055,
+                name: 'MICROSOFT CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0221895862,
+                name: 'AMAZON COM INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0208100035,
+                name: 'NVIDIA CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0139820061,
+                name: 'ALPHABET INC CLASS A',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0126263246,
+                name: 'ALPHABET INC CLASS C',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0121596126,
+                name: 'TESLA INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0114079282,
+                name: 'FACEBOOK CLASS A  INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0081570352,
+                name: 'BERKSHIRE HATHAWAY INC CLASS B',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0079471416,
+                name: 'EXXON MOBIL CORP',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0078190388,
+                name: 'ELI LILLY',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0077121293,
+                name: 'UNITEDHEALTH GROUP INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.0074484861,
+                name: 'JPMORGAN CHASE & CO',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.006978079,
+                name: 'VISA INC CLASS A',
+                valueInBaseCurrency: null
+              }
+            ]
+          },
           assetSubClass: 'ETF',
           countries: [
             {
@@ -2818,78 +2903,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0.3474381850624522,
           grossPerformancePercentWithCurrencyEffect: 0.28744846894552306,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [
-            {
-              allocationInPercentage: 0.051778373,
-              name: 'APPLE INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0403267055,
-              name: 'MICROSOFT CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0221895862,
-              name: 'AMAZON COM INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0208100035,
-              name: 'NVIDIA CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0139820061,
-              name: 'ALPHABET INC CLASS A',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0126263246,
-              name: 'ALPHABET INC CLASS C',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0121596126,
-              name: 'TESLA INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0114079282,
-              name: 'FACEBOOK CLASS A  INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0081570352,
-              name: 'BERKSHIRE HATHAWAY INC CLASS B',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0079471416,
-              name: 'EXXON MOBIL CORP',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0078190388,
-              name: 'ELI LILLY',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0077121293,
-              name: 'UNITEDHEALTH GROUP INC',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.0074484861,
-              name: 'JPMORGAN CHASE & CO',
-              valueInBaseCurrency: null
-            },
-            {
-              allocationInPercentage: 0.006978079,
-              name: 'VISA INC CLASS A',
-              valueInBaseCurrency: null
-            }
-          ],
           investment: null,
           name: 'Xtrackers MSCI World UCITS ETF 1C',
           netPerformance: null,
@@ -2930,6 +2943,7 @@ describe('redactAttributes', () => {
           currency: 'USD',
           allocationInPercentage: 0.20291717628620132,
           assetClass: 'LIQUIDITY',
+          assetProfile: { holdings: [] },
           assetSubClass: 'CASH',
           countries: [],
           dividend: null,
@@ -2937,7 +2951,6 @@ describe('redactAttributes', () => {
           grossPerformancePercent: 0,
           grossPerformancePercentWithCurrencyEffect: 0,
           grossPerformanceWithCurrencyEffect: null,
-          holdings: [],
           investment: null,
           marketPrice: 0,
           name: 'USD',
@@ -3232,6 +3245,103 @@ describe('redactAttributes', () => {
           type: 'BUY',
           unitPrice: 220.79,
           value: null,
+          valueInBaseCurrency: null
+        }
+      ]
+    });
+  });
+
+  // The type makes sure that the object keeps the shape of the response, in
+  // which the holdings of an ETF are part of its asset profile
+  it('should redact the values of the holdings of an ETF', () => {
+    expect(
+      redactPaths({
+        object: {
+          holdings: [
+            {
+              activitiesCount: 5,
+              allocationInPercentage: 0.057358979326040366,
+              assetProfile: {
+                assetClass: 'EQUITY',
+                assetSubClass: 'ETF',
+                countries: [],
+                currency: 'USD',
+                dataSource: 'YAHOO',
+                holdings: [
+                  {
+                    allocationInPercentage: 0.06099941636982121,
+                    name: 'APPLE INC',
+                    valueInBaseCurrency: 860.2442693554036
+                  },
+                  {
+                    allocationInPercentage: 0.05862464529372787,
+                    name: 'MICROSOFT CORP',
+                    valueInBaseCurrency: 826.7540602547973
+                  }
+                ],
+                name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+                sectors: [],
+                symbol: 'VTI'
+              },
+              dateOfFirstActivity: new Date('2019-02-28T23:00:00.000Z'),
+              dividend: 0,
+              grossPerformance: 5856.3,
+              grossPerformancePercent: 0.8832083851170418,
+              grossPerformancePercentWithCurrencyEffect: 0.8832083851170418,
+              grossPerformanceWithCurrencyEffect: 5856.3,
+              investment: 8246.2,
+              marketPrice: 282.05,
+              netPerformance: 5756.8,
+              netPerformancePercent: 0.8682024540139314,
+              netPerformancePercentWithCurrencyEffect: 0.8328704068843998,
+              netPerformanceWithCurrencyEffect: 5756.8,
+              quantity: 50,
+              valueInBaseCurrency: 14102.5
+            }
+          ]
+        } satisfies Pick<PortfolioDetails, 'holdings'>,
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toStrictEqual({
+      holdings: [
+        {
+          activitiesCount: 5,
+          allocationInPercentage: 0.057358979326040366,
+          assetProfile: {
+            assetClass: 'EQUITY',
+            assetSubClass: 'ETF',
+            countries: [],
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            holdings: [
+              {
+                allocationInPercentage: 0.06099941636982121,
+                name: 'APPLE INC',
+                valueInBaseCurrency: null
+              },
+              {
+                allocationInPercentage: 0.05862464529372787,
+                name: 'MICROSOFT CORP',
+                valueInBaseCurrency: null
+              }
+            ],
+            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+            sectors: [],
+            symbol: 'VTI'
+          },
+          dateOfFirstActivity: '2019-02-28T23:00:00.000Z',
+          dividend: null,
+          grossPerformance: null,
+          grossPerformancePercent: 0.8832083851170418,
+          grossPerformancePercentWithCurrencyEffect: 0.8832083851170418,
+          grossPerformanceWithCurrencyEffect: null,
+          investment: null,
+          marketPrice: 282.05,
+          netPerformance: null,
+          netPerformancePercent: 0.8682024540139314,
+          netPerformancePercentWithCurrencyEffect: 0.8328704068843998,
+          netPerformanceWithCurrencyEffect: null,
+          quantity: null,
           valueInBaseCurrency: null
         }
       ]
