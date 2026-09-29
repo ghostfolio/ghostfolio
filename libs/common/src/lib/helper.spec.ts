@@ -13,6 +13,7 @@ import {
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol,
+  isDarkColorScheme,
   isSplitRatio,
   isValidCurrencyCode,
   isValidCustomAssetProfileSymbol,
@@ -345,6 +346,38 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is dark color scheme', () => {
+    const mockPrefersColorSchemeDark = (matches: boolean) => {
+      window.matchMedia = jest.fn(() => {
+        return { matches } as MediaQueryList;
+      });
+    };
+
+    afterEach(() => {
+      Reflect.deleteProperty(window, 'matchMedia');
+    });
+
+    it('Dark color scheme with operating system in light mode', () => {
+      mockPrefersColorSchemeDark(false);
+      expect(isDarkColorScheme('DARK')).toEqual(true);
+    });
+
+    it('Light color scheme with operating system in dark mode', () => {
+      mockPrefersColorSchemeDark(true);
+      expect(isDarkColorScheme('LIGHT')).toEqual(false);
+    });
+
+    it('Auto color scheme with operating system in dark mode', () => {
+      mockPrefersColorSchemeDark(true);
+      expect(isDarkColorScheme()).toEqual(true);
+    });
+
+    it('Auto color scheme with operating system in light mode', () => {
+      mockPrefersColorSchemeDark(false);
+      expect(isDarkColorScheme()).toEqual(false);
     });
   });
 

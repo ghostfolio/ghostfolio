@@ -1,4 +1,4 @@
-import { getCssVariable } from '@ghostfolio/common/helper';
+import { getCssVariable, isDarkColorScheme } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   InfoItem,
@@ -260,11 +260,7 @@ export class GfAppComponent implements OnInit {
   }
 
   private initializeTheme(userPreferredColorScheme?: ColorScheme) {
-    const isDarkTheme = userPreferredColorScheme
-      ? userPreferredColorScheme === 'DARK'
-      : window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    this.toggleTheme(isDarkTheme);
+    this.toggleTheme(isDarkColorScheme(userPreferredColorScheme));
 
     // Default chart styles
     Chart.defaults.font.family = getCssVariable('--font-family-sans-serif');

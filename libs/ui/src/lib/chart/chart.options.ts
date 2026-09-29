@@ -12,7 +12,7 @@ export function getTimeSeriesTooltipOptions<T extends 'bar' | 'line'>({
   locale,
   unit
 }: {
-  colorScheme: ColorScheme;
+  colorScheme?: ColorScheme;
   currency?: string;
   groupBy?: GroupBy;
   locale?: string;
