@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the colors of the investment chart component (dark mode)
 - Fixed an issue where holdings without a quote have been valued at the unit price of the latest activity instead of the latest market price
 - Fixed the discovery of the _OpenID Connect_ (`OIDC`) configuration for issuer URLs with a trailing slash (experimental)
 
