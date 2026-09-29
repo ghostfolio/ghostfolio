@@ -366,6 +366,7 @@ export class GfAllocationsPageComponent implements OnInit {
       }
     };
     this.topHoldingsMap = {};
+    this.totalValueInEtf = 0;
   }
 
   private initializeAllocationsData() {
