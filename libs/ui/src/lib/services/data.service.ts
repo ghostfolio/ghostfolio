@@ -62,7 +62,8 @@ import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
   AiPromptMode,
   DateRange,
-  GroupBy
+  GroupBy,
+  TagWithAccountAndActivityCount
 } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -843,7 +844,7 @@ export class DataService {
   }
 
   public fetchTags() {
-    return this.http.get<Tag[]>('/api/v1/tags');
+    return this.http.get<TagWithAccountAndActivityCount[]>('/api/v1/tags');
   }
 
   public fetchWatchlist() {

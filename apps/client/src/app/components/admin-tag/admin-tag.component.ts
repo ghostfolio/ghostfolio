@@ -7,6 +7,7 @@ import {
   getLowercase,
   isSystemTag
 } from '@ghostfolio/common/helper';
+import type { TagWithAccountAndActivityCount } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
@@ -32,7 +33,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Tag } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
   createOutline,
@@ -63,17 +63,20 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
 export class GfAdminTagComponent implements OnInit {
   public readonly locale = input(getLocale());
 
-  protected dataSource = new MatTableDataSource<Tag>();
+  protected dataSource =
+    new MatTableDataSource<TagWithAccountAndActivityCount>();
+
   protected readonly displayedColumns = [
     'name',
     'userId',
     'accounts',
     'activities',
+    'total',
     'actions'
   ];
   protected readonly isSystemTag = isSystemTag;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
-  protected tags: Tag[];
+  protected tags: TagWithAccountAndActivityCount[];
   protected readonly translate = translate;
 
   private readonly deviceType = computed(
@@ -120,6 +123,13 @@ export class GfAdminTagComponent implements OnInit {
     this.fetchTags();
   }
 
+  protected getTotalCount({
+    accountCount,
+    activityCount
+  }: TagWithAccountAndActivityCount) {
+    return accountCount + activityCount;
+  }
+
   protected onDeleteTag(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
@@ -130,7 +140,7 @@ export class GfAdminTagComponent implements OnInit {
     });
   }
 
-  protected onUpdateTag({ id }: Tag) {
+  protected onUpdateTag({ id }: TagWithAccountAndActivityCount) {
     this.router.navigate([], {
       queryParams: { editTagDialog: true, tagId: id }
     });
@@ -164,9 +174,13 @@ export class GfAdminTagComponent implements OnInit {
         this.dataSource.sort = this.sort();
 
         this.dataSource.sortingDataAccessor = (tag, path) => {
-          return path === 'name'
-            ? translate(tag.name).toLocaleLowerCase()
-            : (getLowercase(tag, path) as number | string);
+          if (path === 'name') {
+            return translate(tag.name).toLocaleLowerCase();
+          } else if (path === 'totalCount') {
+            return this.getTotalCount(tag);
+          }
+
+          return getLowercase(tag, path) as number | string;
         };
 
         this.dataService.updateInfo();
