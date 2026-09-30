@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the projected sustainable retirement income on the _FIRE_ page for a projected total amount of zero (experimental)
 - Fixed the emergency fund in the portfolio summary for redacted values
 - Fixed the redaction of `valueInBaseCurrency` in the holdings of ETFs in a restricted view
-- Fixed the redaction of `comment`, `scraperConfiguration` and `symbolMapping` in the `SymbolProfile` field of the activities in a restricted view
+- Fixed the redaction of `comment`, `scraperConfiguration` and `symbolMapping` in the asset profile relation of the activities in a restricted view
 
 ## 3.75.0 - 2026-09-28
 
