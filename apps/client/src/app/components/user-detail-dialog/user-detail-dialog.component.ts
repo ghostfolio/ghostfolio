@@ -91,25 +91,7 @@ export class GfUserDetailDialogComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.adminService
-      .fetchUserById(this.data.userId)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(() => {
-          this.dialogRef.close();
-
-          return EMPTY;
-        })
-      )
-      .subscribe((user) => {
-        this.user = user;
-
-        this.subscriptionsDataSource.data = this.user.subscriptions ?? [];
-
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.initialize();
   }
 
   protected deleteUser() {
@@ -139,6 +121,30 @@ export class GfUserDetailDialogComponent implements OnInit {
     return differenceInDays(expiresAt, createdAt) <= 90
       ? $localize`Trial`
       : $localize`Coupon`;
+  }
+
+  protected initialize() {
+    this.isLoading = true;
+
+    this.adminService
+      .fetchUserById(this.data.userId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.dialogRef.close();
+
+          return EMPTY;
+        })
+      )
+      .subscribe((user) => {
+        this.user = user;
+
+        this.subscriptionsDataSource.data = this.user.subscriptions ?? [];
+
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   protected onClose() {
