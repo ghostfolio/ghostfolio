@@ -60,7 +60,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { groupBy, uniqBy } from 'lodash-es';
+import { groupBy, omit, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
@@ -736,7 +736,7 @@ export class ActivitiesService {
         ]);
 
         return {
-          ...order,
+          ...omit(order, ['SymbolProfile']),
           assetProfile,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,

@@ -1004,7 +1004,7 @@ export class ImportService {
         )) ?? 0;
 
       activities.push({
-        ...order,
+        ...omit(order, ['SymbolProfile']),
         // @ts-ignore
         assetProfile,
         error,
