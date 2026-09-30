@@ -8,6 +8,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
@@ -53,6 +54,7 @@ export class GfFirePageComponent implements OnInit {
 
   protected fireWealth: FireWealth;
   protected hasImpersonationId: boolean;
+  protected hasPermissionToShowValues: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isLoading = false;
   protected retirementDate: Date;
@@ -141,6 +143,10 @@ export class GfFirePageComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToShowValues =
+            hasScope(this.user.scopes, scopes.portfolioReadValues) &&
+            !this.user.settings.isRestrictedView;
 
           this.hasPermissionToUpdateUserSettings =
             this.user.subscription?.type === SubscriptionType.Basic

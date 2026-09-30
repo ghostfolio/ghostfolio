@@ -73,7 +73,11 @@
                 [isCurrency]="true"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="withdrawalRatePerYear?.toNumber()"
+                [value]="
+                  hasPermissionToShowValues
+                    ? withdrawalRatePerYear?.toNumber()
+                    : null
+                "
               />
               per year</span
             >
@@ -84,7 +88,11 @@
                 [isCurrency]="true"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="withdrawalRatePerMonth?.toNumber()"
+                [value]="
+                  hasPermissionToShowValues
+                    ? withdrawalRatePerMonth?.toNumber()
+                    : null
+                "
               />
               per month</span
             >, based on your total assets of
@@ -94,7 +102,11 @@
                 [isCurrency]="true"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="fireWealth?.today.valueInBaseCurrency"
+                [value]="
+                  hasPermissionToShowValues
+                    ? fireWealth?.today.valueInBaseCurrency
+                    : null
+                "
             /></span>
             and a safe withdrawal rate (SWR) of</ng-container
           >
@@ -137,7 +149,11 @@
                   [isCurrency]="true"
                   [locale]="user?.settings?.locale"
                   [unit]="user?.settings?.baseCurrency"
-                  [value]="withdrawalRatePerYearProjected?.toNumber()"
+                  [value]="
+                    hasPermissionToShowValues
+                      ? withdrawalRatePerYearProjected?.toNumber()
+                      : null
+                  "
                 />
                 per year</span
               >
@@ -148,7 +164,11 @@
                   [isCurrency]="true"
                   [locale]="user?.settings?.locale"
                   [unit]="user?.settings?.baseCurrency"
-                  [value]="withdrawalRatePerMonthProjected?.toNumber()"
+                  [value]="
+                    hasPermissionToShowValues
+                      ? withdrawalRatePerMonthProjected?.toNumber()
+                      : null
+                  "
                 />
                 per month</span
               >, assuming a
