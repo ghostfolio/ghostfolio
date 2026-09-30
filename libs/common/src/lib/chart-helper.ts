@@ -101,9 +101,11 @@ export function getTooltipOptions<T extends ChartType>({
   locale?: string;
   unit?: string;
 }): Partial<TooltipOptions<T>> {
+  const textColor = getTextColor(colorScheme);
+
   return {
     backgroundColor: getBackgroundColor(colorScheme),
-    bodyColor: `rgb(${getTextColor(colorScheme)})`,
+    bodyColor: `rgb(${textColor})`,
     borderWidth: 1,
     borderColor: getChartBorderColor(colorScheme),
     // @ts-expect-error: no need to set all attributes in callbacks
@@ -144,12 +146,12 @@ export function getTooltipOptions<T extends ChartType>({
     },
     caretSize: 0,
     cornerRadius: 2,
-    footerColor: `rgb(${getTextColor(colorScheme)})`,
+    footerColor: `rgb(${textColor})`,
     itemSort: (a, b) => {
       // Reverse order
       return b.datasetIndex - a.datasetIndex;
     },
-    titleColor: `rgb(${getTextColor(colorScheme)})`,
+    titleColor: `rgb(${textColor})`,
     usePointStyle: true
   };
 }
@@ -183,6 +185,8 @@ export function getValueAxisOptions({
     ticks: Tick[]
   ) => string;
 }): ScaleOptions<'linear'> {
+  const borderColor = getChartBorderColor(colorScheme);
+
   return {
     display,
     border: {
@@ -196,7 +200,7 @@ export function getValueAxisOptions({
           tick.value === scale.min ||
           highlightedValues.includes(tick.value)
         ) {
-          return getChartBorderColor(colorScheme);
+          return borderColor;
         }
 
         return 'transparent';

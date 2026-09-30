@@ -33,6 +33,7 @@ import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
+import { onPrefersColorSchemeChange } from '../chart';
 import { PortfolioProportionChartClickEvent } from './interfaces/interfaces';
 
 const {
@@ -94,6 +95,12 @@ export class GfPortfolioProportionChartComponent
 
   public constructor() {
     Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.initialize();
+      }
+    });
   }
 
   public ngAfterViewInit() {
