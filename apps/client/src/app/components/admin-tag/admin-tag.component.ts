@@ -40,6 +40,7 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfCreateOrUpdateTagDialogComponent } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
 import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/interfaces/interfaces';
@@ -54,6 +55,7 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
+    NgxSkeletonLoaderModule,
     RouterModule
   ],
   selector: 'gf-admin-tag',
@@ -74,6 +76,8 @@ export class GfAdminTagComponent implements OnInit {
     'total',
     'actions'
   ];
+
+  protected isLoading = false;
   protected readonly isSystemTag = isSystemTag;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected tags: TagWithAccountAndActivityCount[];
@@ -82,6 +86,7 @@ export class GfAdminTagComponent implements OnInit {
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+
   private readonly paginator = viewChild.required(MatPaginator);
   private readonly sort = viewChild.required(MatSort);
 
@@ -163,6 +168,8 @@ export class GfAdminTagComponent implements OnInit {
   }
 
   private fetchTags() {
+    this.isLoading = true;
+
     this.dataService
       .fetchTags()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -184,6 +191,8 @@ export class GfAdminTagComponent implements OnInit {
         };
 
         this.dataService.updateInfo();
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
