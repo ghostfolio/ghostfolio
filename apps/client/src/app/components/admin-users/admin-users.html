@@ -32,7 +32,10 @@
                     class="ml-1"
                     i18n-title
                     title="Expires {{
-                      formatDistanceToNow(element.subscription.expiresAt)
+                      formatDistanceToNow({
+                        date: element.subscription.expiresAt,
+                        language: user?.settings?.language
+                      })
                     }} ({{
                       element.subscription.expiresAt | date: defaultDateFormat
                     }})"
@@ -79,7 +82,12 @@
               class="mat-mdc-cell px-1 py-2 text-nowrap"
               mat-cell
             >
-              {{ formatDistanceToNow(element.createdAt) }}
+              {{
+                formatDistanceToNow({
+                  date: element.createdAt,
+                  language: user?.settings?.language
+                })
+              }}
             </td>
           </ng-container>
 
@@ -185,7 +193,12 @@
                 class="mat-mdc-cell px-1 py-2 text-nowrap"
                 mat-cell
               >
-                {{ formatDistanceToNow(element.lastActivity) }}
+                {{
+                  formatDistanceToNow({
+                    date: element.lastActivity,
+                    language: user?.settings?.language
+                  })
+                }}
               </td>
             </ng-container>
           }

@@ -154,6 +154,25 @@
         </div>
       </div>
 
+      <div class="mb-3 row">
+        <div class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [isLoading]="isLoading"
+            [value]="
+              user?.lastActivity
+                ? formatDistanceToNow({
+                    date: user.lastActivity,
+                    language: data.language
+                  })
+                : '-'
+            "
+            >Last Request</gf-value
+          >
+        </div>
+      </div>
+
       @if (subscriptionsDataSource.data.length > 0) {
         <div class="row">
           <div class="col">
