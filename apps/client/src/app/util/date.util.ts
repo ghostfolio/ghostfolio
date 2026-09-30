@@ -6,7 +6,7 @@ import {
   parseISO
 } from 'date-fns';
 
-export function formatDistanceToNow({
+export function formatRelativeTime({
   date,
   language
 }: {

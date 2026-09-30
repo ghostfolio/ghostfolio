@@ -1,4 +1,4 @@
-import { formatDistanceToNow } from '@ghostfolio/client/util/date.util';
+import { formatRelativeTime } from '@ghostfolio/client/util/date.util';
 import {
   canDeleteUser,
   getCountryName,
@@ -56,7 +56,7 @@ import {
 export class GfUserDetailDialogComponent implements OnInit {
   protected readonly baseCurrency: string;
   protected readonly canDeleteUser = canDeleteUser;
-  protected readonly formatDistanceToNow = formatDistanceToNow;
+  protected readonly formatRelativeTime = formatRelativeTime;
   protected readonly getCountryName = getCountryName;
   protected isLoading = true;
 

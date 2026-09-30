@@ -5,12 +5,8 @@ import {
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { formatDistanceToNow } from '@ghostfolio/client/util/date.util';
-import {
-  DEFAULT_LANGUAGE_CODE,
-  DEFAULT_LOCALE,
-  DEFAULT_PAGE_SIZE
-} from '@ghostfolio/common/config';
+import { formatRelativeTime } from '@ghostfolio/client/util/date.util';
+import { DEFAULT_LOCALE, DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   canDeleteUser,
@@ -92,7 +88,7 @@ export class GfAdminUsersComponent implements OnInit {
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
   protected readonly canDeleteUser = canDeleteUser;
-  protected readonly formatDistanceToNow = formatDistanceToNow;
+  protected readonly formatRelativeTime = formatRelativeTime;
   protected readonly getCountryName = getCountryName;
   protected readonly getEmojiFlag = getEmojiFlag;
   protected hasPermissionForSubscription: boolean;
@@ -316,7 +312,7 @@ export class GfAdminUsersComponent implements OnInit {
         currentUserId: this.user?.id,
         deviceType: this.deviceType(),
         hasPermissionForSubscription: this.hasPermissionForSubscription,
-        language: this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE,
+        language: this.user?.settings?.language,
         locale: this.user?.settings?.locale ?? DEFAULT_LOCALE,
         userId: aUserId
       } satisfies UserDetailDialogParams,

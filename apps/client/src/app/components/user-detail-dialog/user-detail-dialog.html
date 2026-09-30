@@ -161,12 +161,10 @@
             size="medium"
             [isLoading]="isLoading"
             [value]="
-              user?.lastActivity
-                ? formatDistanceToNow({
-                    date: user.lastActivity,
-                    language: data.language
-                  })
-                : '-'
+              formatRelativeTime({
+                date: user?.lastActivity,
+                language: data.language
+              }) || '-'
             "
             >Last Request</gf-value
           >

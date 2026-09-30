@@ -32,7 +32,7 @@
                     class="ml-1"
                     i18n-title
                     title="Expires {{
-                      formatDistanceToNow({
+                      formatRelativeTime({
                         date: element.subscription.expiresAt,
                         language: user?.settings?.language
                       })
@@ -83,7 +83,7 @@
               mat-cell
             >
               {{
-                formatDistanceToNow({
+                formatRelativeTime({
                   date: element.createdAt,
                   language: user?.settings?.language
                 })
@@ -183,10 +183,9 @@
               <th
                 *matHeaderCellDef
                 class="mat-mdc-header-cell px-1 py-2"
-                i18n
                 mat-header-cell
               >
-                Last Request
+                <ng-container i18n>Last Request</ng-container>
               </th>
               <td
                 *matCellDef="let element"
@@ -194,7 +193,7 @@
                 mat-cell
               >
                 {{
-                  formatDistanceToNow({
+                  formatRelativeTime({
                     date: element.lastActivity,
                     language: user?.settings?.language
                   })
