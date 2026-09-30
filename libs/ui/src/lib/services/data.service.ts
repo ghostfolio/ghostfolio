@@ -82,7 +82,7 @@ import { inject, Service } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
 import { format, parseISO } from 'date-fns';
-import { cloneDeep, groupBy, isNumber } from 'lodash';
+import { cloneDeep, groupBy, isNumber } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

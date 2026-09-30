@@ -2,7 +2,7 @@ import { ActivitiesFilterDto } from '@ghostfolio/api/app/activities/activities-f
 
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsOptional, IsUUID } from 'class-validator';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 
 export class GetExportDto extends ActivitiesFilterDto {
   @IsOptional()

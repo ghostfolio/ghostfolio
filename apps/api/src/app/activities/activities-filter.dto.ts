@@ -5,7 +5,7 @@ import { DateRange } from '@ghostfolio/common/types';
 import { Type as ActivityType } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsEnum, IsOptional, Matches } from 'class-validator';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 
 export class ActivitiesFilterDto extends FilterDto {
   @IsEnum(ActivityType, { each: true })

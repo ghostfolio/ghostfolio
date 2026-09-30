@@ -104,7 +104,7 @@ import {
   set,
   startOfDay
 } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
