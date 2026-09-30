@@ -1,5 +1,4 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { isDarkColorScheme } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -37,7 +36,6 @@ import {
 export class GfAboutOverviewPageComponent implements OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
-  public isDarkTheme = isDarkColorScheme();
   public isLoggedIn: boolean;
   public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFaq = publicRoutes.faq.routerLink;
@@ -73,8 +71,6 @@ export class GfAboutOverviewPageComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
         }
-
-        this.isDarkTheme = isDarkColorScheme(this.user?.settings?.colorScheme);
 
         this.changeDetectorRef.markForCheck();
       });

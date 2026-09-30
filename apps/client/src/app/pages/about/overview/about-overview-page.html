@@ -221,7 +221,7 @@
               alt="TestMu AI Logo"
               height="32"
               [src]="
-                isDarkTheme
+                user?.settings?.colorScheme === 'DARK'
                   ? '../assets/images/sponsors/logo-testmu-light.svg'
                   : '../assets/images/sponsors/logo-testmu-dark.svg'
               "
