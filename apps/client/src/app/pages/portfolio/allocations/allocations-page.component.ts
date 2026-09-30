@@ -388,7 +388,7 @@ export class GfAllocationsPageComponent implements OnInit {
     } = {};
 
     let totalValueExcludingCashPositions = 0;
-    let totalValueInEtf = 0;
+    let totalValueInFunds = 0;
 
     for (const position of this.portfolioDetails.holdings) {
       const assetProfileIdentifier = getAssetProfileIdentifier(
@@ -464,7 +464,7 @@ export class GfAllocationsPageComponent implements OnInit {
         }
 
         if (position.assetProfile.holdings.length > 0) {
-          totalValueInEtf += this.holdings[assetProfileIdentifier].value;
+          totalValueInFunds += this.holdings[assetProfileIdentifier].value;
 
           for (const {
             allocationInPercentage,
@@ -592,7 +592,7 @@ export class GfAllocationsPageComponent implements OnInit {
         return {
           name,
           allocationInPercentage:
-            totalValueInEtf > 0 ? value / totalValueInEtf : 0,
+            totalValueInFunds > 0 ? value / totalValueInFunds : 0,
           parents: this.portfolioDetails.holdings
             .map((holding) => {
               if (holding.assetProfile.holdings.length > 0) {
