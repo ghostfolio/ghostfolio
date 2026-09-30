@@ -18,6 +18,7 @@ import {
   OnChanges,
   OnDestroy,
   output,
+  SimpleChanges,
   viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -63,6 +64,7 @@ import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { debounceTime } from 'rxjs';
 
+import { onPrefersColorSchemeChange } from '../chart';
 import { FireCalculatorService } from './fire-calculator.service';
 
 @Component({
@@ -85,7 +87,7 @@ import { FireCalculatorService } from './fire-calculator.service';
 })
 export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() annualInterestRate = 0;
-  @Input() colorScheme: ColorScheme;
+  @Input() colorScheme?: ColorScheme;
   @Input() currency: string;
   @Input() deviceType: string;
   @Input() fireWealth = 0;
@@ -103,7 +105,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     retirementDate: new FormControl<Date | null>(null)
   });
 
-  public chart: Chart<'bar'>;
+  public chart?: Chart<'bar'>;
   public isLoading = true;
   public minDate = addDays(new Date(), 1);
   public periodsToRetire = 0;
@@ -141,6 +143,15 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     );
 
     addIcons({ calendarClearOutline });
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.chart.destroy();
+        this.chart = undefined;
+
+        this.initialize();
+      }
+    });
 
     this.calculatorForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -221,7 +232,14 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     });
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.colorScheme && this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+
+      this.initialize();
+    }
+
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       this.calculatorForm.setValue(
         {

@@ -36,6 +36,7 @@ import { orderBy, round } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
+import { onPrefersColorSchemeChange } from '../chart';
 import type {
   GetColorParams,
   GfTreemapDataPoint,
@@ -55,7 +56,7 @@ export class GfTreemapChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   public readonly baseCurrency = input.required<string>();
-  public readonly colorScheme = input.required<ColorScheme>();
+  public readonly colorScheme = input<ColorScheme>();
   public readonly cursor = input.required<string>();
   public readonly dateRange = input.required<DateRange>();
   public readonly holdings = input<PortfolioPosition[]>();
@@ -71,6 +72,12 @@ export class GfTreemapChartComponent
 
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme()) {
+        this.initialize();
+      }
+    });
   }
 
   public ngAfterViewInit() {

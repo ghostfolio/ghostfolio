@@ -14,6 +14,7 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 import {
   getTimeSeriesTooltipOptions,
+  onPrefersColorSchemeChange,
   registerChartConfiguration
 } from '@ghostfolio/ui/chart';
 
@@ -24,6 +25,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  SimpleChanges,
   viewChild
 } from '@angular/core';
 import {
@@ -67,7 +69,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
-  private chart: Chart<'bar' | 'line'>;
+  private chart?: Chart<'bar' | 'line'>;
   private investments: InvestmentItem[];
   private values: LineChartItem[];
 
@@ -84,9 +86,23 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     );
 
     registerChartConfiguration();
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.chart.destroy();
+        this.chart = undefined;
+
+        this.initialize();
+      }
+    });
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.colorScheme && this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+    }
+
     if (this.benchmarkDataItems && this.historicalDataItems) {
       this.initialize();
     }
