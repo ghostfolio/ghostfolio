@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the colors of the investment chart component (dark mode)
+- Fixed the colors of the charts if the appearance is set to light and the operating system uses dark mode
 - Fixed the allocation column of the top holdings of ETFs on the allocations page after a change of the user settings
 - Fixed the value column of the top holdings of ETFs on the allocations page in the _Presenter View_
 - Fixed the projected sustainable retirement income on the _FIRE_ page for a projected total amount of zero (experimental)
