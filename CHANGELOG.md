@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a _Refresh_ action to the user detail dialog menu in the admin control panel
 - Added the total column to the table of the tag management in the admin control panel
 
 ### Changed
