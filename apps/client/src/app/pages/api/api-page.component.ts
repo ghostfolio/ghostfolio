@@ -32,7 +32,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { format, startOfYear } from 'date-fns';
-import { isObject } from 'lodash';
+import { isObject } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { catchError, map, Observable, of, OperatorFunction } from 'rxjs';
 

@@ -26,7 +26,7 @@ import {
   isToday,
   subDays
 } from 'date-fns';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import ms from 'ms';
 
 import { ExchangeRatesByCurrency } from './interfaces/exchange-rate-data.interface';

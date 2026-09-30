@@ -31,7 +31,7 @@ import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { JobStatus } from 'bull';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 
 @Service()
 export class AdminService {
