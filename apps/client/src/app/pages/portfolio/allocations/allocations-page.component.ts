@@ -53,7 +53,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { filter, switchMap, tap } from 'rxjs';
 

@@ -60,7 +60,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { groupBy, uniqBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()

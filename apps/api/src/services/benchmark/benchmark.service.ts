@@ -23,7 +23,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { addHours, isPast, subDays } from 'date-fns';
-import { round, uniqBy } from 'lodash';
+import { round, uniqBy } from 'lodash-es';
 import ms from 'ms';
 
 import { BenchmarkValue } from './interfaces/benchmark-value.interface';
