@@ -83,6 +83,7 @@ export class TransformDataSourceInResponseInterceptor<
               '["filters.dataSource"]',
               'activities[*].assetProfile.dataSource',
               'activities[*].dataSource',
+              'activities[*].SymbolProfile.dataSource',
               'assetProfile.dataSource',
               'benchmarks[*].dataSource',
               'errors[*].dataSource',
@@ -93,6 +94,7 @@ export class TransformDataSourceInResponseInterceptor<
               'items[*].dataSource',
               'latestActivities[*].assetProfile.dataSource',
               'settings["filters.dataSource"]',
+              'SymbolProfile.dataSource',
               'watchlist[*].dataSource'
             ]
           });
