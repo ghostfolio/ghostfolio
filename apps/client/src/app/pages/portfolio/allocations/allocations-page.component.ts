@@ -134,11 +134,6 @@ export class GfAllocationsPageComponent implements OnInit {
   protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
   protected user: User;
 
-  private topHoldingsMap: {
-    [name: string]: { name: string; value: number };
-  };
-  private totalValueInEtf = 0;
-
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
@@ -365,8 +360,6 @@ export class GfAllocationsPageComponent implements OnInit {
         value: 0
       }
     };
-    this.topHoldingsMap = {};
-    this.totalValueInEtf = 0;
   }
 
   private initializeAllocationsData() {
@@ -389,7 +382,12 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
+    const topHoldingsMap: {
+      [name: string]: { name: string; value: number };
+    } = {};
+
     let totalValueExcludingCashPositions = 0;
+    let totalValueInEtf = 0;
 
     for (const position of this.portfolioDetails.holdings) {
       const assetProfileIdentifier = getAssetProfileIdentifier(
@@ -475,12 +473,12 @@ export class GfAllocationsPageComponent implements OnInit {
               ? valueInBaseCurrency
               : allocationInPercentage * (position.valueInPercentage ?? 0);
 
-            const holdingData = this.topHoldingsMap[normalizedAssetName];
+            const holdingData = topHoldingsMap[normalizedAssetName];
 
             if (holdingData) {
               holdingData.value += value;
             } else {
-              this.topHoldingsMap[normalizedAssetName] = {
+              topHoldingsMap[normalizedAssetName] = {
                 name,
                 value
               };
@@ -516,7 +514,7 @@ export class GfAllocationsPageComponent implements OnInit {
       }
 
       if (this.holdings[assetProfileIdentifier].assetSubClass === 'ETF') {
-        this.totalValueInEtf += this.holdings[assetProfileIdentifier].value;
+        totalValueInEtf += this.holdings[assetProfileIdentifier].value;
       }
 
       const symbol = position.assetProfile.symbol;
@@ -583,7 +581,7 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
-    this.topHoldings = Object.values(this.topHoldingsMap)
+    this.topHoldings = Object.values(topHoldingsMap)
       .map(({ name, value }): HoldingWithParents => {
         if (this.showValuesInPercentage()) {
           return {
@@ -595,7 +593,7 @@ export class GfAllocationsPageComponent implements OnInit {
         return {
           name,
           allocationInPercentage:
-            this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
+            totalValueInEtf > 0 ? value / totalValueInEtf : 0,
           parents: this.portfolioDetails.holdings
             .map((holding) => {
               if (holding.assetProfile.holdings.length > 0) {
