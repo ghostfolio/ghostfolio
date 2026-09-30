@@ -130,7 +130,7 @@ export class GfAllocationsPageComponent implements OnInit {
       value: number;
     };
   };
-  protected topHoldings: HoldingWithParents[];
+  protected topHoldings: HoldingWithParents[] | undefined;
   protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
   protected user: User;
 
@@ -360,6 +360,7 @@ export class GfAllocationsPageComponent implements OnInit {
         value: 0
       }
     };
+    this.topHoldings = undefined;
   }
 
   private initializeAllocationsData() {
@@ -463,6 +464,8 @@ export class GfAllocationsPageComponent implements OnInit {
         }
 
         if (position.assetProfile.holdings.length > 0) {
+          totalValueInEtf += this.holdings[assetProfileIdentifier].value;
+
           for (const {
             allocationInPercentage,
             name,
@@ -511,10 +514,6 @@ export class GfAllocationsPageComponent implements OnInit {
             sectorData.value += value;
           }
         }
-      }
-
-      if (this.holdings[assetProfileIdentifier].assetSubClass === 'ETF') {
-        totalValueInEtf += this.holdings[assetProfileIdentifier].value;
       }
 
       const symbol = position.assetProfile.symbol;
@@ -610,7 +609,9 @@ export class GfAllocationsPageComponent implements OnInit {
                   isNumber(currentParentHolding.valueInBaseCurrency)
                   ? {
                       allocationInPercentage:
-                        currentParentHolding.valueInBaseCurrency / value,
+                        value > 0
+                          ? currentParentHolding.valueInBaseCurrency / value
+                          : 0,
                       name: holding.assetProfile.name ?? '',
                       position: holding,
                       symbol: holding.assetProfile.symbol,
