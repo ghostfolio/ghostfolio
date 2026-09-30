@@ -116,7 +116,24 @@ module.exports = [
       'no-eval': 'error',
       'no-fallthrough': 'error',
       'no-new-wrappers': 'error',
-      'no-restricted-imports': ['error', 'rxjs/Rx'],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            'rxjs/Rx',
+            {
+              message: 'Import from lodash-es instead.',
+              name: 'lodash'
+            }
+          ],
+          patterns: [
+            {
+              group: ['lodash/*'],
+              message: 'Import from lodash-es instead.'
+            }
+          ]
+        }
+      ],
       'no-undef-init': 'error',
       'no-underscore-dangle': 'off',
       'no-var': 'error',
