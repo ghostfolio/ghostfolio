@@ -8,7 +8,7 @@ import {
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ColorScheme, DateRange } from './types';
+import { DateRange } from './types';
 
 export const ghostfolioPrefix = 'GF';
 
@@ -100,7 +100,6 @@ export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW =
 
 export const STATISTICS_GATHERING_QUEUE = 'STATISTICS_GATHERING_QUEUE';
 
-export const DEFAULT_COLOR_SCHEME: ColorScheme = 'LIGHT';
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_DATE_RANGE: DateRange = 'max';

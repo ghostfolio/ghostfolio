@@ -373,11 +373,13 @@ describe('Helper', () => {
     it('Auto color scheme with operating system in dark mode', () => {
       mockPrefersColorSchemeDark(true);
       expect(isDarkColorScheme()).toEqual(true);
+      expect(isDarkColorScheme(null)).toEqual(true);
     });
 
     it('Auto color scheme with operating system in light mode', () => {
       mockPrefersColorSchemeDark(false);
       expect(isDarkColorScheme()).toEqual(false);
+      expect(isDarkColorScheme(null)).toEqual(false);
     });
   });
 

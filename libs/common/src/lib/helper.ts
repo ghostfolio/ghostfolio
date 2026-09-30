@@ -608,7 +608,7 @@ export function isCurrencySymbol(aSymbol: string) {
   );
 }
 
-export function isDarkColorScheme(aColorScheme?: ColorScheme) {
+export function isDarkColorScheme(aColorScheme?: ColorScheme | null) {
   if (aColorScheme) {
     return aColorScheme === 'DARK';
   }
