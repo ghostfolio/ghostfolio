@@ -7,6 +7,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
+  HistoricalDataItem,
   PortfolioPerformanceResponse,
   PortfolioPosition,
   WatchlistResponse
@@ -157,12 +158,14 @@ function createWatchlistItem({
 
 function createPortfolioTableService({
   accounts = [],
+  chart = [{ date: '2024-01-01' }],
   errors = [],
   holdings = [],
   performance = createPerformance(),
   watchlist = []
 }: {
   accounts?: AccountWithValue[];
+  chart?: HistoricalDataItem[];
   errors?: PortfolioPerformanceResponse['errors'];
   holdings?: PortfolioPosition[];
   performance?: PortfolioPerformanceResponse['performance'];
@@ -179,9 +182,12 @@ function createPortfolioTableService({
   const portfolioService = {
     getAccountsWithAggregations: jest.fn().mockResolvedValue({ accounts }),
     getDetails: jest.fn().mockResolvedValue({ holdings }),
-    getPerformance: jest
-      .fn()
-      .mockResolvedValue({ errors, performance, hasErrors: errors.length > 0 })
+    getPerformance: jest.fn().mockResolvedValue({
+      chart,
+      errors,
+      performance,
+      hasErrors: errors.length > 0
+    })
   } as unknown as PortfolioService;
 
   const watchlistService = {
@@ -382,29 +388,57 @@ describe('PortfolioTableService', () => {
       expect(row).toBe('| 10.000% | 5.000% | 15.000% |');
     });
 
+    it('gives a currency performance of zero without a sign', async () => {
+      const result = await getPerformanceTable({
+        performance: createPerformance({
+          netPerformancePercentage: 0.10000000000000003,
+          netPerformancePercentageWithCurrencyEffect: 0.1
+        })
+      });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 10.000%');
+      });
+
+      expect(row).toBe('| 10.000% | 0.000% | 10.000% |');
+    });
+
     it('gives no monetary value', async () => {
       const result = await getPerformanceTable();
 
-      for (const value of ['50', '200', '300', '1700', '2000', '3000']) {
-        expect(result).not.toContain(value);
+      const [, , row] = result.split('\n').filter((line) => {
+        return line.startsWith('|');
+      });
+
+      for (const cell of row.split('|').slice(1, -1)) {
+        expect(cell.trim()).toMatch(/^-?\d+\.\d{3}%$/);
       }
     });
 
-    it('tells the symbols of which the market data is delayed', async () => {
+    it('tells the asset profiles of which the market data is delayed', async () => {
       const result = await getPerformanceTable({
         errors: [
-          { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
-          { dataSource: DataSource.YAHOO, symbol: 'MSFT' }
+          { dataSource: DataSource.MANUAL, symbol: 'AAPL' },
+          { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
         ]
       });
 
-      expect(result).toContain('Market data is delayed for: AAPL, MSFT');
+      expect(result).toContain(
+        'Market data is delayed for: AAPL (MANUAL), AAPL (YAHOO)'
+      );
     });
 
     it('tells no delay of the market data if there is no error', async () => {
       const result = await getPerformanceTable();
 
       expect(result).not.toContain('Market data is delayed');
+    });
+
+    it('tells that no performance is found if the chart is empty', async () => {
+      const result = await getPerformanceTable({ chart: [] });
+
+      expect(result).toContain('No performance found.');
+      expect(result).not.toContain('%');
     });
   });
 

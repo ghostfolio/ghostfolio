@@ -201,10 +201,14 @@ export class PortfolioTableService {
           netPerformancePercentage,
           netPerformancePercentageWithCurrencyEffect
         }) => {
-          return getPercentage(
+          const currencyPerformancePercentage = getPercentage(
             netPerformancePercentageWithCurrencyEffect -
               netPerformancePercentage
           );
+
+          return Number.parseFloat(currencyPerformancePercentage) === 0
+            ? getPercentage(0)
+            : currencyPerformancePercentage;
         },
         name: 'Currency Performance in Percentage'
       },
@@ -454,31 +458,36 @@ export class PortfolioTableService {
     filters?: Filter[];
     userId: string;
   }) {
-    const { errors, performance } = await this.portfolioService.getPerformance({
-      dateRange,
-      filters,
-      userId
-    });
+    const { chart, errors, performance } =
+      await this.portfolioService.getPerformance({
+        dateRange,
+        filters,
+        userId
+      });
 
-    const performanceSection = [
-      '## Performance',
-      '',
-      await getMarkdownTable({
-        columnDefinitions:
-          PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS,
-        rows: [performance]
-      })
-    ];
+    const performanceSection = ['## Performance', ''];
 
-    if (errors?.length > 0) {
+    if (chart?.length > 0) {
       performanceSection.push(
-        '',
-        `Market data is delayed for: ${errors
-          .map(({ symbol }) => {
-            return symbol;
-          })
-          .join(', ')}`
+        await getMarkdownTable({
+          columnDefinitions:
+            PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS,
+          rows: [performance]
+        })
       );
+
+      if (errors?.length > 0) {
+        performanceSection.push(
+          '',
+          `Market data is delayed for: ${errors
+            .map(({ dataSource, symbol }) => {
+              return `${symbol} (${dataSource})`;
+            })
+            .join(', ')}`
+        );
+      }
+    } else {
+      performanceSection.push('No performance found.');
     }
 
     return performanceSection.join('\n');

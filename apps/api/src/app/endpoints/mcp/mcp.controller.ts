@@ -79,7 +79,7 @@ export class GhostfolioMcpController {
     },
     description: `Gives the performance of the portfolio in the date range with these columns: ${PortfolioTableService.getPerformanceTableColumnNames().join(
       ', '
-    )}. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
+    )}. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and excludes the dividends. The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
     name: 'get-performance',
     parameters: GET_PERFORMANCE_PARAMETERS
   })
