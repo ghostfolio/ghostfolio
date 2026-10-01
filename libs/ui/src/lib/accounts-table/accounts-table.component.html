@@ -183,7 +183,7 @@
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
           [locale]="locale()"
-          [value]="totalBalanceInBaseCurrency() ?? null"
+          [value]="totalBalanceInBaseCurrency()"
         />
       </td>
     </ng-container>
@@ -218,7 +218,7 @@
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
           [locale]="locale()"
-          [value]="totalValueInBaseCurrency() ?? null"
+          [value]="totalValueInBaseCurrency()"
         />
       </td>
     </ng-container>
@@ -253,7 +253,7 @@
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
           [locale]="locale()"
-          [value]="totalValueInBaseCurrency() ?? null"
+          [value]="totalValueInBaseCurrency()"
         />
       </td>
     </ng-container>

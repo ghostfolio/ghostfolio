@@ -219,7 +219,7 @@
                 i18n
                 size="medium"
                 [isLoading]="isLoading"
-                [value]="assetProfile?.currency ?? null"
+                [value]="assetProfile?.currency"
                 >Currency</gf-value
               >
             </div>
@@ -228,7 +228,7 @@
                 size="medium"
                 [enableCopyToClipboardButton]="true"
                 [hidden]="!assetProfile?.isin"
-                [value]="assetProfile?.isin ?? null"
+                [value]="assetProfile?.isin"
                 >ISIN</gf-value
               >
             </div>
@@ -249,7 +249,7 @@
                 size="medium"
                 [isLoading]="isLoading"
                 [locale]="data.locale"
-                [value]="assetProfile?.activitiesCount ?? null"
+                [value]="assetProfile?.activitiesCount"
                 >Activities</gf-value
               >
             </div>
