@@ -19,6 +19,7 @@ import { z } from 'zod';
 import {
   GET_ACCOUNTS_PARAMETERS,
   GET_ACTIVITIES_PARAMETERS,
+  GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
   SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
@@ -90,6 +91,29 @@ export class McpService {
       userCurrency,
       userId,
       types: activityTypes
+    });
+
+    return this.getTextResult(table);
+  }
+
+  public async getPerformance({
+    accountIds,
+    assetClasses,
+    holding,
+    range,
+    userId
+  }: z.infer<typeof GET_PERFORMANCE_PARAMETERS> & { userId: string }) {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts: accountIds,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: holding?.dataSource,
+      filterBySymbol: holding?.symbol
+    });
+
+    const table = await this.portfolioTableService.getPerformanceTable({
+      filters,
+      userId,
+      dateRange: range
     });
 
     return this.getTextResult(table);

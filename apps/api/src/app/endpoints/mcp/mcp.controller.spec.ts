@@ -133,6 +133,7 @@ describe('GhostfolioMcpController', () => {
     ).toEqual([
       'get-accounts',
       'get-activities',
+      'get-performance',
       'get-portfolio',
       'get-watchlist'
     ]);
@@ -154,6 +155,7 @@ describe('GhostfolioMcpController', () => {
     ).toEqual([
       'get-accounts',
       'get-activities',
+      'get-performance',
       'get-portfolio',
       'get-watchlist',
       'import-activities',

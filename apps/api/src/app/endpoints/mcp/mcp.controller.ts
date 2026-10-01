@@ -15,6 +15,7 @@ import 'zod/compile';
 import {
   GET_ACCOUNTS_PARAMETERS,
   GET_ACTIVITIES_PARAMETERS,
+  GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
   SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
@@ -67,6 +68,26 @@ export class GhostfolioMcpController {
       userId,
       userCurrency: userSettings.baseCurrency
     });
+  }
+
+  @RequiresScopeOfAccess(scopes.portfolioRead)
+  @Tool({
+    annotations: {
+      openWorldHint: false,
+      readOnlyHint: true,
+      title: 'Get performance'
+    },
+    description: `Gives the performance of the portfolio in the date range with these columns: ${PortfolioTableService.getPerformanceTableColumnNames().join(
+      ', '
+    )}. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and excludes the dividends. The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
+    name: 'get-performance',
+    parameters: GET_PERFORMANCE_PARAMETERS
+  })
+  public async getPerformance(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload() parameters: z.infer<typeof GET_PERFORMANCE_PARAMETERS>
+  ) {
+    return this.mcpService.getPerformance({ ...parameters, userId });
   }
 
   @RequiresScopeOfAccess(scopes.portfolioRead)
