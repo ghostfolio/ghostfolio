@@ -1,6 +1,7 @@
 import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import {
   DATE_RANGES,
+  DEFAULT_DATE_RANGE,
   MCP_MAX_ACCOUNTS,
   MCP_MAX_ACTIVITIES,
   SEARCH_QUERY_MAXIMUM_LENGTH,
@@ -82,6 +83,34 @@ export const GET_ACTIVITIES_PARAMETERS = z.object({
     .max(MCP_MAX_ACTIVITIES)
     .default(MCP_MAX_ACTIVITIES)
     .describe(`The number of activities to get, at most ${MCP_MAX_ACTIVITIES}`)
+});
+
+export const GET_PERFORMANCE_PARAMETERS = z.object({
+  accountIds: z
+    .array(z.string().min(1))
+    .min(1)
+    .max(MCP_MAX_ACCOUNTS)
+    .optional()
+    .describe(
+      `The identifiers of the accounts of the performance, at most ${MCP_MAX_ACCOUNTS}`
+    ),
+  assetClasses: z
+    .array(z.enum(AssetClass))
+    .min(1)
+    .optional()
+    .describe('The asset classes of the performance'),
+  holding: HOLDING_PARAMETER.optional().describe(
+    'The asset profile of the performance'
+  ),
+  range: z
+    .string()
+    .regex(DATE_RANGE_PATTERN)
+    .default(DEFAULT_DATE_RANGE)
+    .describe(
+      `The date range of the performance, either ${DATE_RANGES.join(
+        ', '
+      )} or a calendar year like 2024`
+    )
 });
 
 export const IMPORT_ACTIVITIES_PARAMETERS = z.object({

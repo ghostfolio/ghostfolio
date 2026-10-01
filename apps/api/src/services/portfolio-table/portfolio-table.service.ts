@@ -8,9 +8,10 @@ import { DATE_FORMAT, isAccountExcluded } from '@ghostfolio/common/helper';
 import {
   Activity,
   Filter,
+  PortfolioPerformance,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
-import { AccountWithValue } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import {
@@ -27,9 +28,10 @@ function getPercentage(value: number) {
 }
 
 /**
- * Renders the accounts, the activities and the holdings of a portfolio and the
- * watchlist of its user as a markdown table. No table has a column with a
- * quantity or with a monetary value, except the unit price of an activity.
+ * Renders the accounts, the activities, the holdings and the performance of a
+ * portfolio and the watchlist of its user as a markdown table. No table has a
+ * column with a quantity or with a monetary value, except the unit price of an
+ * activity.
  */
 @Injectable()
 export class PortfolioTableService {
@@ -184,6 +186,37 @@ export class PortfolioTableService {
       }
     ];
 
+  private static readonly PERFORMANCE_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<PortfolioPerformance>[] =
+    [
+      {
+        align: 'right',
+        getValue: ({ netPerformancePercentage }) => {
+          return getPercentage(netPerformancePercentage);
+        },
+        name: 'Asset Performance in Percentage'
+      },
+      {
+        align: 'right',
+        getValue: ({
+          netPerformancePercentage,
+          netPerformancePercentageWithCurrencyEffect
+        }) => {
+          return getPercentage(
+            netPerformancePercentageWithCurrencyEffect -
+              netPerformancePercentage
+          );
+        },
+        name: 'Currency Performance in Percentage'
+      },
+      {
+        align: 'right',
+        getValue: ({ netPerformancePercentageWithCurrencyEffect }) => {
+          return getPercentage(netPerformancePercentageWithCurrencyEffect);
+        },
+        name: 'Net Performance in Percentage'
+      }
+    ];
+
   private static readonly WATCHLIST_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<
     WatchlistResponse['watchlist'][number]
   >[] = [
@@ -259,6 +292,14 @@ export class PortfolioTableService {
 
   public static getHoldingsTableColumnNames() {
     return PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.map(
+      ({ name }) => {
+        return name;
+      }
+    );
+  }
+
+  public static getPerformanceTableColumnNames() {
+    return PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS.map(
       ({ name }) => {
         return name;
       }
@@ -402,6 +443,45 @@ export class PortfolioTableService {
         rows: sortedHoldings
       })
     ].join('\n');
+  }
+
+  public async getPerformanceTable({
+    dateRange,
+    filters,
+    userId
+  }: {
+    dateRange: DateRange;
+    filters?: Filter[];
+    userId: string;
+  }) {
+    const { errors, performance } = await this.portfolioService.getPerformance({
+      dateRange,
+      filters,
+      userId
+    });
+
+    const performanceSection = [
+      '## Performance',
+      '',
+      await getMarkdownTable({
+        columnDefinitions:
+          PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS,
+        rows: [performance]
+      })
+    ];
+
+    if (errors?.length > 0) {
+      performanceSection.push(
+        '',
+        `Market data is delayed for: ${errors
+          .map(({ symbol }) => {
+            return symbol;
+          })
+          .join(', ')}`
+      );
+    }
+
+    return performanceSection.join('\n');
   }
 
   public async getWatchlistTable({ userId }: { userId: string }) {

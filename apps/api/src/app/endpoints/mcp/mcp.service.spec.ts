@@ -73,6 +73,7 @@ describe('McpService', () => {
       getAccountsTable: jest.fn().mockResolvedValue('## Accounts'),
       getActivitiesTable: jest.fn().mockResolvedValue('## Activities'),
       getHoldingsTable: jest.fn().mockResolvedValue('## Holdings'),
+      getPerformanceTable: jest.fn().mockResolvedValue('## Performance'),
       getWatchlistTable: jest.fn().mockResolvedValue('## Watchlist')
     } as unknown as PortfolioTableService;
 
@@ -237,6 +238,37 @@ describe('McpService', () => {
         startDate: undefined,
         take: MCP_MAX_ACTIVITIES,
         types: [ActivityType.BUY]
+      });
+    });
+  });
+
+  describe('getPerformance', () => {
+    it('Maps the parameters of the tool to the filters', async () => {
+      await mcpService.getPerformance({
+        userId,
+        accountIds: ['account-id'],
+        assetClasses: [AssetClass.EQUITY],
+        holding: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith({
+        filterByAccounts: ['account-id'],
+        filterByAssetClasses: [AssetClass.EQUITY],
+        filterByDataSource: DataSource.YAHOO,
+        filterBySymbol: 'AAPL'
+      });
+    });
+
+    it('Gives the table of the performance of the filters in the range', async () => {
+      expect(
+        await mcpService.getPerformance({ userId, range: '2024' })
+      ).toEqual({ content: [{ text: '## Performance', type: 'text' }] });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith({
+        filters,
+        userId,
+        dateRange: '2024'
       });
     });
   });

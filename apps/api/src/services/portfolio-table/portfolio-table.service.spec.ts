@@ -7,6 +7,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
+  PortfolioPerformanceResponse,
   PortfolioPosition,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
@@ -109,6 +110,26 @@ function createHolding({
   } as unknown as PortfolioPosition;
 }
 
+function createPerformance({
+  netPerformancePercentage = 0.1,
+  netPerformancePercentageWithCurrencyEffect = 0.15
+}: {
+  netPerformancePercentage?: number;
+  netPerformancePercentageWithCurrencyEffect?: number;
+} = {}): PortfolioPerformanceResponse['performance'] {
+  return {
+    netPerformancePercentage,
+    netPerformancePercentageWithCurrencyEffect,
+    currentNetWorth: 3000,
+    currentValueInBaseCurrency: 2000,
+    dividendInBaseCurrency: 50,
+    netPerformance: 200,
+    netPerformanceWithCurrencyEffect: 300,
+    totalInvestment: 1700,
+    totalInvestmentValueWithCurrencyEffect: 1700
+  };
+}
+
 function createWatchlistItem({
   name = 'Name of AAPL',
   performancePercent = -0.25,
@@ -136,11 +157,15 @@ function createWatchlistItem({
 
 function createPortfolioTableService({
   accounts = [],
+  errors = [],
   holdings = [],
+  performance = createPerformance(),
   watchlist = []
 }: {
   accounts?: AccountWithValue[];
+  errors?: PortfolioPerformanceResponse['errors'];
   holdings?: PortfolioPosition[];
+  performance?: PortfolioPerformanceResponse['performance'];
   watchlist?: WatchlistResponse['watchlist'];
 } = {}) {
   // The mock gives the identifier of the translation, so that a test can tell
@@ -153,7 +178,10 @@ function createPortfolioTableService({
 
   const portfolioService = {
     getAccountsWithAggregations: jest.fn().mockResolvedValue({ accounts }),
-    getDetails: jest.fn().mockResolvedValue({ holdings })
+    getDetails: jest.fn().mockResolvedValue({ holdings }),
+    getPerformance: jest
+      .fn()
+      .mockResolvedValue({ errors, performance, hasErrors: errors.length > 0 })
   } as unknown as PortfolioService;
 
   const watchlistService = {
@@ -211,6 +239,16 @@ describe('PortfolioTableService', () => {
         'Date of First Activity',
         'Activities Count',
         'Allocation in Percentage'
+      ]);
+    });
+  });
+
+  describe('getPerformanceTableColumnNames', () => {
+    it('gives no column with a monetary value', () => {
+      expect(PortfolioTableService.getPerformanceTableColumnNames()).toEqual([
+        'Asset Performance in Percentage',
+        'Currency Performance in Percentage',
+        'Net Performance in Percentage'
       ]);
     });
   });
@@ -321,6 +359,52 @@ describe('PortfolioTableService', () => {
 
       expect(firstRow).toContain('AAPL');
       expect(secondRow).toContain('MSFT');
+    });
+  });
+
+  describe('getPerformanceTable', () => {
+    function getPerformanceTable(
+      parameters: Parameters<typeof createPortfolioTableService>[0] = {}
+    ) {
+      return createPortfolioTableService(parameters).getPerformanceTable({
+        dateRange: 'ytd',
+        userId: 'user-id'
+      });
+    }
+
+    it('gives the currency performance as the difference of the net performance and the asset performance', async () => {
+      const result = await getPerformanceTable();
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 10.000%');
+      });
+
+      expect(row).toBe('| 10.000% | 5.000% | 15.000% |');
+    });
+
+    it('gives no monetary value', async () => {
+      const result = await getPerformanceTable();
+
+      for (const value of ['50', '200', '300', '1700', '2000', '3000']) {
+        expect(result).not.toContain(value);
+      }
+    });
+
+    it('tells the symbols of which the market data is delayed', async () => {
+      const result = await getPerformanceTable({
+        errors: [
+          { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+          { dataSource: DataSource.YAHOO, symbol: 'MSFT' }
+        ]
+      });
+
+      expect(result).toContain('Market data is delayed for: AAPL, MSFT');
+    });
+
+    it('tells no delay of the market data if there is no error', async () => {
+      const result = await getPerformanceTable();
+
+      expect(result).not.toContain('Market data is delayed');
     });
   });
 
