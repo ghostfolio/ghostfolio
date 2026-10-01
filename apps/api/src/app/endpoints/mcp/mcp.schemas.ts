@@ -141,7 +141,12 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           ),
         fee: z.number().min(0).describe('The fee of the activity'),
         quantity: z.number().min(0).describe('The quantity of the activity'),
-        symbol: z.string().min(1).describe('The symbol of the asset profile'),
+        symbol: z
+          .string()
+          .trim()
+          .min(1)
+          .max(SYMBOL_MAXIMUM_LENGTH)
+          .describe('The symbol of the asset profile'),
         type: z.enum(ActivityType).describe('The type of the activity'),
         unitPrice: z.number().min(0).describe('The unit price of the activity')
       })
