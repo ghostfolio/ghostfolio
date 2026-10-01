@@ -68,6 +68,22 @@ describe('GET_PERFORMANCE_PARAMETERS', () => {
       false
     );
   });
+
+  it('Refuses an empty symbol of the holding', () => {
+    expect(
+      GET_PERFORMANCE_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_PERFORMANCE_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
 });
 
 describe('IMPORT_ACTIVITIES_PARAMETERS', () => {

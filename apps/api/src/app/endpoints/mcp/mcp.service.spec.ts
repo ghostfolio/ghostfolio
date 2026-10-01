@@ -260,6 +260,36 @@ describe('McpService', () => {
       });
     });
 
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
     it('Gives the table of the performance of the filters in the range', async () => {
       expect(
         await mcpService.getPerformance({ userId, range: '2024' })
