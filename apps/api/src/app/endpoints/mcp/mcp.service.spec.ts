@@ -127,6 +127,20 @@ describe('McpService', () => {
       );
     });
 
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
     it('Gives the table of the accounts of the filters', async () => {
       expect(await mcpService.getAccounts({ userId })).toEqual({
         content: [{ text: '## Accounts', type: 'text' }]
@@ -174,6 +188,19 @@ describe('McpService', () => {
 
       expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
         expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await getActivities({
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
       );
     });
 

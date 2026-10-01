@@ -4,7 +4,8 @@ import {
   MCP_MAX_ACCOUNTS,
   MCP_MAX_ACTIVITIES,
   SEARCH_QUERY_MAXIMUM_LENGTH,
-  SEARCH_QUERY_MINIMUM_LENGTH
+  SEARCH_QUERY_MINIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 import {
   isValidCurrencyCode,
@@ -18,7 +19,12 @@ const HOLDING_PARAMETER = z.object({
   dataSource: z
     .enum(DataSource)
     .describe('The data source of the asset profile'),
-  symbol: z.string().min(1).describe('The symbol of the asset profile')
+  symbol: z
+    .string()
+    .trim()
+    .min(1)
+    .max(SYMBOL_MAXIMUM_LENGTH)
+    .describe('The symbol of the asset profile')
 });
 
 export const GET_ACCOUNTS_PARAMETERS = z.object({

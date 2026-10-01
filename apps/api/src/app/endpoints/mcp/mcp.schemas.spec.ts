@@ -22,6 +22,14 @@ describe('GET_ACCOUNTS_PARAMETERS', () => {
       }).success
     ).toBe(false);
   });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
 });
 
 describe('GET_ACTIVITIES_PARAMETERS', () => {
@@ -29,6 +37,14 @@ describe('GET_ACTIVITIES_PARAMETERS', () => {
     expect(
       GET_ACTIVITIES_PARAMETERS.safeParse({
         holding: { dataSource: DataSource.YAHOO, symbol: '' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
       }).success
     ).toBe(false);
   });
