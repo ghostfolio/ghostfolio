@@ -811,6 +811,8 @@ describe('PortfolioService', () => {
         getLiabilitiesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
         getSnapshot: jest.fn().mockResolvedValue({
           currentValueInBaseCurrency: new Big(3000),
+          dividendYieldPercent: new Big(0),
+          dividendYieldPercentWithCurrencyEffect: new Big(0),
           totalCashInBaseCurrency: new Big(1000),
           totalInvestment: new Big(2000),
           totalInvestmentWithCurrencyEffect: new Big(2000)

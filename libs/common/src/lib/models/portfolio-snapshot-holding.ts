@@ -7,41 +7,16 @@ import type { Tag } from '@ghostfolio/prisma/browser';
 import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Big } from 'big.js';
-import { Expose, Transform, Type } from 'class-transformer';
-
-/**
- * @deprecated Backward compatibility to read the portfolio snapshots which
- * have been cached with the former name of the property
- *
- * TODO: Remove the fallback with the next release, together with the
- * `@Expose()` decorators of `averageInvestment` and
- * `averageInvestmentWithCurrencyEffect`
- */
-function transformToBigWithFallback(formerKey: string) {
-  return ({ obj, value }: { obj: Record<string, string>; value: string }) => {
-    const valueOrFallback = value ?? obj[formerKey];
-
-    return valueOrFallback === undefined
-      ? undefined
-      : transformToBig({ value: valueOrFallback });
-  };
-}
+import { Transform, Type } from 'class-transformer';
 
 export class PortfolioSnapshotHolding {
   activitiesCount: number;
 
-  @Expose()
-  @Transform(transformToBigWithFallback('timeWeightedInvestment'), {
-    toClassOnly: true
-  })
+  @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   averageInvestment: Big;
 
-  @Expose()
-  @Transform(
-    transformToBigWithFallback('timeWeightedInvestmentWithCurrencyEffect'),
-    { toClassOnly: true }
-  )
+  @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   averageInvestmentWithCurrencyEffect: Big;
 
