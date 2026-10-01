@@ -33,10 +33,9 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order, Prisma } from '@prisma/client';
+import { Order, SymbolProfile } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { omit } from 'lodash-es';
 
 import { ActivitiesFilterDto } from './activities-filter.dto';
 import { ActivitiesService } from './activities.service';
@@ -218,7 +217,16 @@ export class ActivitiesController {
       userId,
       userSubscription
     }: ImpersonationContext
-  ): Promise<Prisma.OrderGetPayload<{ include: { SymbolProfile: true } }>> {
+  ): Promise<
+    Order & {
+      assetProfile: SymbolProfile;
+
+      /**
+       * @deprecated Use `assetProfile` instead
+       */
+      SymbolProfile: SymbolProfile;
+    }
+  > {
     // Evaluate the more restrictive subscription of the authenticated user
     // and the owner of the activity
     const subscription =
@@ -304,7 +312,10 @@ export class ActivitiesController {
       });
     }
 
-    return omit(activity, ['SymbolProfile']);
+    return {
+      ...activity,
+      assetProfile: activity.SymbolProfile
+    };
   }
 
   @HasPermission(permissions.updateActivity)
