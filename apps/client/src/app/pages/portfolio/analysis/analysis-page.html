@@ -290,26 +290,23 @@
           <div class="d-flex ml-3 py-1">
             <div class="flex-grow-1 mr-2 text-truncate">
               <ng-container i18n>Net Performance</ng-container>
-              @if (
-                user?.settings?.performanceCalculationType ===
-                PerformanceCalculationType.ROAI
-              ) {
-                <abbr
-                  class="d-none d-sm-inline-block initialism ml-2 text-muted"
-                  i18n-title
-                  title="Return on Average Investment (total return with dividends)"
-                  >(ROAI)</abbr
-                >
-              } @else if (
-                user?.settings?.performanceCalculationType ===
-                PerformanceCalculationType.ROI
-              ) {
-                <abbr
-                  class="d-none d-sm-inline-block initialism ml-2 text-muted"
-                  i18n-title
-                  title="Return on Investment (total return with dividends)"
-                  >(ROI)</abbr
-                >
+              @switch (user?.settings?.performanceCalculationType) {
+                @case (PerformanceCalculationType.ROAI) {
+                  <abbr
+                    class="d-none d-sm-inline-block initialism ml-2 text-muted"
+                    i18n-title
+                    title="Return on Average Investment (total return with dividends)"
+                    >(ROAI)</abbr
+                  >
+                }
+                @case (PerformanceCalculationType.ROI) {
+                  <abbr
+                    class="d-none d-sm-inline-block initialism ml-2 text-muted"
+                    i18n-title
+                    title="Return on Investment (total return with dividends)"
+                    >(ROI)</abbr
+                  >
+                }
               }
             </div>
             <div class="d-flex justify-content-end">
