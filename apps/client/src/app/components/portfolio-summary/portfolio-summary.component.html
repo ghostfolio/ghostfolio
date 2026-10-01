@@ -159,6 +159,16 @@
           title="Return on Average Investment (total return with dividends)"
           >(ROAI)</abbr
         >
+      } @else if (
+        user?.settings?.performanceCalculationType ===
+        PerformanceCalculationType.ROI
+      ) {
+        <abbr
+          class="d-none d-sm-inline-block initialism ml-2 text-muted"
+          i18n-title
+          title="Return on Investment (total return with dividends)"
+          >(ROI)</abbr
+        >
       }
     </div>
     <div class="flex-column flex-wrap justify-content-end">

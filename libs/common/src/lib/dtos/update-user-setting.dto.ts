@@ -5,6 +5,7 @@ import type {
   HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import {
@@ -95,6 +96,10 @@ export class UpdateUserSettingDto {
   @IsString()
   @IsOptional()
   locale?: string;
+
+  @IsIn([PerformanceCalculationType.ROAI, PerformanceCalculationType.ROI])
+  @IsOptional()
+  performanceCalculationType?: PerformanceCalculationType;
 
   /**
    * The target financial amount the user aims to reach before retiring.
