@@ -2,7 +2,8 @@ import {
   DEFAULT_DATE_RANGE,
   MCP_MAX_ACTIVITIES,
   SEARCH_QUERY_MAXIMUM_LENGTH,
-  SEARCH_QUERY_MINIMUM_LENGTH
+  SEARCH_QUERY_MINIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 
 import { DataSource } from '@prisma/client';
@@ -105,6 +106,24 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
 
   it('Refuses an empty symbol', () => {
     expect(parse([createActivity({ symbol: '' })])).toBe(false);
+  });
+
+  it('Refuses a symbol that contains only spaces', () => {
+    expect(parse([createActivity({ symbol: '  ' })])).toBe(false);
+  });
+
+  it(`Refuses a symbol longer than ${SYMBOL_MAXIMUM_LENGTH} characters`, () => {
+    expect(
+      parse([createActivity({ symbol: 'A'.repeat(SYMBOL_MAXIMUM_LENGTH + 1) })])
+    ).toBe(false);
+  });
+
+  it('Removes spaces at the start and the end of a symbol', () => {
+    expect(
+      IMPORT_ACTIVITIES_PARAMETERS.parse({
+        activities: [createActivity({ symbol: ' AAPL ' })]
+      }).activities[0].symbol
+    ).toBe('AAPL');
   });
 
   it('Refuses an empty identifier of an account', () => {
