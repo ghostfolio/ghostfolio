@@ -104,10 +104,9 @@ export class McpService {
     userId
   }: z.infer<typeof GET_PERFORMANCE_PARAMETERS> & { userId: string }) {
     const filters = this.apiService.buildFiltersFromQueryParams({
+      ...this.getHoldingFilterParameters({ holding }),
       filterByAccounts: accountIds,
-      filterByAssetClasses: assetClasses,
-      filterByDataSource: holding?.dataSource,
-      filterBySymbol: holding?.symbol
+      filterByAssetClasses: assetClasses
     });
 
     const table = await this.portfolioTableService.getPerformanceTable({
