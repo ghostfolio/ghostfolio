@@ -98,25 +98,20 @@
       />
     </div>
   </div>
-  @if (user?.settings?.isExperimentalFeatures) {
-    <div class="flex-nowrap px-3 py-1 row">
-      <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
-      <div class="d-flex justify-content-end">
-        @if (isNumber(summary?.dividendInBaseCurrency)) {
-          <span class="mr-1">+</span>
-        }
-        <gf-value
-          class="justify-content-end"
-          [isCurrency]="true"
-          [isLoading]="isLoading"
-          [locale]="locale"
-          [precision]="precision"
-          [unit]="displayedCurrency"
-          [value]="summary?.dividendInBaseCurrency"
-        />
-      </div>
+  <div class="flex-nowrap px-3 py-1 row text-muted">
+    <div class="flex-grow-1 indent-1 text-truncate" i18n>thereof Dividend</div>
+    <div class="justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [isCurrency]="true"
+        [isLoading]="isLoading"
+        [locale]="locale"
+        [precision]="precision"
+        [unit]="displayedCurrency"
+        [value]="summary?.dividendInBaseCurrency"
+      />
     </div>
-  }
+  </div>
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Fees</div>
     <div class="d-flex justify-content-end">
@@ -147,7 +142,7 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="displayedCurrency"
-        [value]="netPerformanceWithCurrencyEffect"
+        [value]="summary?.netPerformanceWithCurrencyEffect"
       />
     </div>
   </div>
@@ -160,7 +155,8 @@
       ) {
         <abbr
           class="d-none d-sm-inline-block initialism ml-2 text-muted"
-          title="Return on Average Investment"
+          i18n-title
+          title="Return on Average Investment (total return with dividends)"
           >(ROAI)</abbr
         >
       }
@@ -173,7 +169,7 @@
         [isLoading]="isLoading"
         [isPercent]="true"
         [locale]="locale"
-        [value]="netPerformancePercentageWithCurrencyEffect"
+        [value]="summary?.netPerformancePercentageWithCurrencyEffect"
       />
     </div>
   </div>
@@ -506,20 +502,4 @@
       />
     </div>
   </div>
-  @if (!user?.settings?.isExperimentalFeatures) {
-    <div class="flex-nowrap px-3 py-1 row">
-      <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
-      <div class="justify-content-end">
-        <gf-value
-          class="justify-content-end"
-          [isCurrency]="true"
-          [isLoading]="isLoading"
-          [locale]="locale"
-          [precision]="precision"
-          [unit]="displayedCurrency"
-          [value]="summary?.dividendInBaseCurrency"
-        />
-      </div>
-    </div>
-  }
 </div>
