@@ -1,6 +1,5 @@
 import {
-  activityDummyData,
-  assetProfileDummyData,
+  loadActivitiesFromExportFile,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -13,7 +12,6 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
@@ -85,29 +83,13 @@ describe('PortfolioCalculator', () => {
     it.only('with BALN.SW buy', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 136.6
-        }
-      ];
+      const { activities, userCurrency } =
+        loadActivitiesFromExportFile('baln-buy.json');
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
+        currency: userCurrency,
         userId: userDummyData.id
       });
 
@@ -217,29 +199,14 @@ describe('PortfolioCalculator', () => {
     it.only('with BALN.SW buy (with unit price lower than closing price)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 135.0
-        }
-      ];
+      const { activities, userCurrency } = loadActivitiesFromExportFile(
+        'baln-buy-with-unit-price-lower-than-closing-price.json'
+      );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
+        currency: userCurrency,
         userId: userDummyData.id
       });
 
@@ -257,29 +224,14 @@ describe('PortfolioCalculator', () => {
     it.only('with BALN.SW buy (with unit price lower than closing price), calculated on buy date', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-11-30').getTime());
 
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 135.0
-        }
-      ];
+      const { activities, userCurrency } = loadActivitiesFromExportFile(
+        'baln-buy-with-unit-price-lower-than-closing-price.json'
+      );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
+        currency: userCurrency,
         userId: userDummyData.id
       });
 
@@ -297,29 +249,13 @@ describe('PortfolioCalculator', () => {
     it.only('with BALN.SW buy (on a date without historical market data)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 136.6
-        }
-      ];
+      const { activities, userCurrency } =
+        loadActivitiesFromExportFile('baln-buy.json');
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
+        currency: userCurrency,
         userId: userDummyData.id
       });
 
