@@ -14,6 +14,7 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 import {
   getTimeSeriesTooltipOptions,
+  onPrefersColorSchemeChange,
   registerChartConfiguration
 } from '@ghostfolio/ui/chart';
 
@@ -24,6 +25,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  SimpleChanges,
   viewChild
 } from '@angular/core';
 import {
@@ -55,19 +57,19 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() public benchmarkDataItems: InvestmentItem[] = [];
   @Input() public benchmarkDataLabel = '';
-  @Input() public colorScheme: ColorScheme;
-  @Input() public currency: string;
+  @Input() public colorScheme?: ColorScheme;
+  @Input() public currency?: string;
   @Input() public groupBy: GroupBy;
   @Input() public historicalDataItems: LineChartItem[] = [];
-  @Input() public isInPercentage = false;
+  @Input() public isInPercentage?: boolean = false;
   @Input() public isLoading = false;
-  @Input() public locale = getLocale();
-  @Input() public savingsRate = 0;
+  @Input() public locale?: string = getLocale();
+  @Input() public savingsRate?: number = 0;
 
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
-  private chart: Chart<'bar' | 'line'>;
+  private chart?: Chart<'bar' | 'line'>;
   private investments: InvestmentItem[];
   private values: LineChartItem[];
 
@@ -84,9 +86,23 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     );
 
     registerChartConfiguration();
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.chart.destroy();
+        this.chart = undefined;
+
+        this.initialize();
+      }
+    });
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.colorScheme && this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+    }
+
     if (this.benchmarkDataItems && this.historicalDataItems) {
       this.initialize();
     }

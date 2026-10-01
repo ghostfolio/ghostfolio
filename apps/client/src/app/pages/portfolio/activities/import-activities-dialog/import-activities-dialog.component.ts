@@ -8,6 +8,7 @@ import {
   CreateTagDto
 } from '@ghostfolio/common/dtos';
 import { Activity, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { AssetClass } from '@ghostfolio/prisma/enums';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
@@ -48,10 +49,9 @@ import { SortDirection } from '@angular/material/sort';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AssetClass } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
-import { isArray, sortBy } from 'lodash';
+import { isArray, sortBy } from 'lodash-es';
 import ms from 'ms';
 
 import { ImportStep } from './enums/import-step';

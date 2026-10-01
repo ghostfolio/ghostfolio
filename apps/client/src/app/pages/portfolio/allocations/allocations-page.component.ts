@@ -22,6 +22,12 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { MarketAdvanced } from '@ghostfolio/common/types';
+import type { Account, Platform } from '@ghostfolio/prisma/browser';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 import {
   GfPortfolioProportionChartComponent,
@@ -47,14 +53,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Account,
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  Platform
-} from '@prisma/client';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { filter, switchMap, tap } from 'rxjs';
 
@@ -131,14 +130,9 @@ export class GfAllocationsPageComponent implements OnInit {
       value: number;
     };
   };
-  protected topHoldings: HoldingWithParents[];
+  protected topHoldings: HoldingWithParents[] | undefined;
   protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
   protected user: User;
-
-  private topHoldingsMap: {
-    [name: string]: { name: string; value: number };
-  };
-  private totalValueInEtf = 0;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -366,7 +360,7 @@ export class GfAllocationsPageComponent implements OnInit {
         value: 0
       }
     };
-    this.topHoldingsMap = {};
+    this.topHoldings = undefined;
   }
 
   private initializeAllocationsData() {
@@ -389,7 +383,12 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
+    const topHoldingsMap: {
+      [name: string]: { name: string; value: number };
+    } = {};
+
     let totalValueExcludingCashPositions = 0;
+    let totalValueInFunds = 0;
 
     for (const position of this.portfolioDetails.holdings) {
       const assetProfileIdentifier = getAssetProfileIdentifier(
@@ -465,6 +464,8 @@ export class GfAllocationsPageComponent implements OnInit {
         }
 
         if (position.assetProfile.holdings.length > 0) {
+          totalValueInFunds += this.holdings[assetProfileIdentifier].value;
+
           for (const {
             allocationInPercentage,
             name,
@@ -475,12 +476,12 @@ export class GfAllocationsPageComponent implements OnInit {
               ? valueInBaseCurrency
               : allocationInPercentage * (position.valueInPercentage ?? 0);
 
-            const holdingData = this.topHoldingsMap[normalizedAssetName];
+            const holdingData = topHoldingsMap[normalizedAssetName];
 
             if (holdingData) {
               holdingData.value += value;
             } else {
-              this.topHoldingsMap[normalizedAssetName] = {
+              topHoldingsMap[normalizedAssetName] = {
                 name,
                 value
               };
@@ -513,10 +514,6 @@ export class GfAllocationsPageComponent implements OnInit {
             sectorData.value += value;
           }
         }
-      }
-
-      if (this.holdings[assetProfileIdentifier].assetSubClass === 'ETF') {
-        this.totalValueInEtf += this.holdings[assetProfileIdentifier].value;
       }
 
       const symbol = position.assetProfile.symbol;
@@ -583,7 +580,7 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
-    this.topHoldings = Object.values(this.topHoldingsMap)
+    this.topHoldings = Object.values(topHoldingsMap)
       .map(({ name, value }): HoldingWithParents => {
         if (this.showValuesInPercentage()) {
           return {
@@ -595,7 +592,7 @@ export class GfAllocationsPageComponent implements OnInit {
         return {
           name,
           allocationInPercentage:
-            this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
+            totalValueInFunds > 0 ? value / totalValueInFunds : 0,
           parents: this.portfolioDetails.holdings
             .map((holding) => {
               if (holding.assetProfile.holdings.length > 0) {
@@ -612,7 +609,9 @@ export class GfAllocationsPageComponent implements OnInit {
                   isNumber(currentParentHolding.valueInBaseCurrency)
                   ? {
                       allocationInPercentage:
-                        currentParentHolding.valueInBaseCurrency / value,
+                        value > 0
+                          ? currentParentHolding.valueInBaseCurrency / value
+                          : 0,
                       name: holding.assetProfile.name ?? '',
                       position: holding,
                       symbol: holding.assetProfile.symbol,

@@ -1,6 +1,7 @@
 const nxEslintPlugin = require('@nx/eslint-plugin');
 const importPlugin = require('eslint-plugin-import');
 const storybook = require('eslint-plugin-storybook');
+const { defineConfig } = require('eslint/config');
 const typescriptEslint = require('typescript-eslint');
 
 module.exports = [
@@ -25,14 +26,12 @@ module.exports = [
           ],
           enforceBuildableLibDependency: true
         }
-      ],
-      '@typescript-eslint/no-extra-semi': 'error',
-      'no-extra-semi': 'off'
+      ]
     }
   },
   ...nxEslintPlugin.configs['flat/typescript'],
   ...nxEslintPlugin.configs['flat/javascript'],
-  ...typescriptEslint.config({
+  ...defineConfig({
     files: ['**/*.ts'],
     plugins: { import: importPlugin },
     extends: [
@@ -84,6 +83,18 @@ module.exports = [
         }
       ],
       '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              message:
+                'Import the types from @ghostfolio/prisma/browser and the enums from @ghostfolio/prisma/enums instead.',
+              name: '@prisma/client'
+            }
+          ]
+        }
+      ],
       '@typescript-eslint/no-shadow': [
         'warn',
         {
@@ -91,8 +102,6 @@ module.exports = [
         }
       ],
       '@typescript-eslint/unified-signatures': 'error',
-      '@typescript-eslint/no-loss-of-precision': 'warn',
-      '@typescript-eslint/no-var-requires': 'warn',
       'arrow-body-style': 'off',
       'constructor-super': 'error',
       eqeqeq: ['error', 'smart'],
@@ -107,7 +116,24 @@ module.exports = [
       'no-eval': 'error',
       'no-fallthrough': 'error',
       'no-new-wrappers': 'error',
-      'no-restricted-imports': ['error', 'rxjs/Rx'],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            'rxjs/Rx',
+            {
+              message: 'Import from lodash-es instead.',
+              name: 'lodash'
+            }
+          ],
+          patterns: [
+            {
+              group: ['lodash/*'],
+              message: 'Import from lodash-es instead.'
+            }
+          ]
+        }
+      ],
       'no-undef-init': 'error',
       'no-underscore-dangle': 'off',
       'no-var': 'error',

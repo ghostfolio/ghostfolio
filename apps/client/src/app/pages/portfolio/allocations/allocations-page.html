@@ -343,6 +343,7 @@
         <mat-card-content>
           <gf-top-holdings
             [baseCurrency]="user?.settings?.baseCurrency"
+            [hasPermissionToShowValues]="!showValuesInPercentage()"
             [locale]="user?.settings?.locale"
             [pageSize]="10"
             [topHoldings]="topHoldings"

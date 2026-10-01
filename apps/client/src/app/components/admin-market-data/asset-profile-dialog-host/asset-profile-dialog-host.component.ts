@@ -1,10 +1,8 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  DEFAULT_COLOR_SCHEME,
-  DEFAULT_LOCALE
-} from '@ghostfolio/common/config';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { AdminService } from '@ghostfolio/ui/services';
 
 import {
@@ -19,7 +17,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, takeUntil, tap } from 'rxjs/operators';
@@ -150,7 +147,7 @@ export class GfAssetProfileDialogHostComponent implements OnDestroy, OnInit {
       data: {
         dataSource,
         symbol,
-        colorScheme: user?.settings.colorScheme ?? DEFAULT_COLOR_SCHEME,
+        colorScheme: user?.settings?.colorScheme,
         deviceType: this.deviceType(),
         locale: user?.settings?.locale ?? DEFAULT_LOCALE
       } satisfies AssetProfileDialogParams,

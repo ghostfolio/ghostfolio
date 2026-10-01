@@ -1,7 +1,12 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = []
   binaryTargets   = ["debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x", "native"]
+  previewFeatures = []
+  provider        = "prisma-client-js"
+}
+
+generator workspaceClient {
+  output   = "./generated"
+  provider = "prisma-client"
 }
 
 datasource db {

@@ -187,6 +187,45 @@
               />
             </div>
           </div>
+          @if (user?.settings?.isExperimentalFeatures) {
+            <div class="d-flex py-1">
+              <div
+                class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
+              >
+                <span i18n>Absolute Dividend Performance</span>
+                @if (user?.subscription?.type === 'Basic') {
+                  <gf-premium-indicator class="ml-1" />
+                }
+              </div>
+              <div class="d-flex justify-content-end">
+                <gf-value
+                  class="justify-content-end"
+                  position="end"
+                  [isCurrency]="true"
+                  [isLoading]="isLoadingInvestmentChart"
+                  [locale]="user?.settings?.locale"
+                  [unit]="user?.settings?.baseCurrency"
+                  [value]="performance?.dividendInBaseCurrency"
+                />
+              </div>
+            </div>
+            <div class="d-flex mb-3 ml-3 py-1">
+              <div class="flex-grow-1 mr-2 text-truncate">
+                <ng-container i18n>Dividend Performance</ng-container>
+              </div>
+              <div class="d-flex justify-content-end">
+                <gf-value
+                  class="justify-content-end"
+                  position="end"
+                  [colorizeSign]="true"
+                  [isLoading]="isLoadingInvestmentChart"
+                  [isPercent]="true"
+                  [locale]="user?.settings?.locale"
+                  [value]="performance?.dividendPercentageWithCurrencyEffect"
+                />
+              </div>
+            </div>
+          }
           <div class="d-flex py-1">
             <div
               class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
@@ -247,7 +286,7 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="performance?.netPerformanceWithCurrencyEffect"
+                [value]="netPerformanceWithCurrencyEffect"
               />
             </div>
           </div>
@@ -273,52 +312,10 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
-                [value]="
-                  performance?.netPerformancePercentageWithCurrencyEffect
-                "
+                [value]="netPerformancePercentageWithCurrencyEffect"
               />
             </div>
           </div>
-          @if (user?.settings?.isExperimentalFeatures) {
-            <div><hr /></div>
-            <div class="d-flex py-1">
-              <div
-                class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
-              >
-                <span i18n>Absolute Dividend Performance</span>
-                @if (user?.subscription?.type === 'Basic') {
-                  <gf-premium-indicator class="ml-1" />
-                }
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [isCurrency]="true"
-                  [isLoading]="isLoadingInvestmentChart"
-                  [locale]="user?.settings?.locale"
-                  [unit]="user?.settings?.baseCurrency"
-                  [value]="performance?.dividendInBaseCurrency"
-                />
-              </div>
-            </div>
-            <div class="d-flex ml-3 py-1">
-              <div class="flex-grow-1 mr-2 text-truncate">
-                <ng-container i18n>Dividend Performance</ng-container>
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [colorizeSign]="true"
-                  [isLoading]="isLoadingInvestmentChart"
-                  [isPercent]="true"
-                  [locale]="user?.settings?.locale"
-                  [value]="performance?.dividendPercentageWithCurrencyEffect"
-                />
-              </div>
-            </div>
-          }
         </mat-card-content>
       </mat-card>
     </div>
@@ -446,6 +443,7 @@
           class="h-100"
           [benchmarkDataItems]="investments"
           [benchmarkDataLabel]="portfolioEvolutionDataLabel"
+          [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
           [historicalDataItems]="performanceDataItems"
           [isInPercentage]="showValuesInPercentage()"
@@ -502,6 +500,7 @@
           class="h-100"
           [benchmarkDataItems]="investmentsByGroup"
           [benchmarkDataLabel]="investmentTimelineDataLabel"
+          [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
           [groupBy]="mode()"
           [isInPercentage]="showValuesInPercentage()"
@@ -537,6 +536,7 @@
           class="h-100"
           [benchmarkDataItems]="dividendsByGroup"
           [benchmarkDataLabel]="dividendTimelineDataLabel"
+          [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
           [groupBy]="mode()"
           [isInPercentage]="showValuesInPercentage()"

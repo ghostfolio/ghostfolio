@@ -48,12 +48,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import {
-  addMilliseconds,
-  differenceInSeconds,
-  formatDistanceToNowStrict,
-  parseISO
-} from 'date-fns';
+import { addMilliseconds, formatDistanceToNowStrict } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
   closeCircleOutline,
@@ -185,21 +180,6 @@ export class GfAdminOverviewComponent implements OnInit {
     this.isLoading = true;
 
     this.fetchAdminData();
-  }
-
-  protected formatDistanceToNow(aDateString: string) {
-    if (aDateString) {
-      const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
-        addSuffix: true
-      });
-
-      return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
-        60
-        ? 'just now'
-        : distanceString;
-    }
-
-    return '';
   }
 
   protected formatStringValue(aStringValue: StringValue) {

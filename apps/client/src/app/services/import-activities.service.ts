@@ -11,11 +11,12 @@ import {
   parseDate as parseDateHelper
 } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
+import type { Account } from '@ghostfolio/prisma/browser';
+import { DataSource, Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
-import { Account, DataSource, Type as ActivityType } from '@prisma/client';
-import { isFinite, isNumber, isString } from 'lodash';
+import { isFinite, isNumber, isString } from 'lodash-es';
 import { parse as csvToJson } from 'papaparse';
 import { firstValueFrom } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';

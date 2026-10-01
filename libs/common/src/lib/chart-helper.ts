@@ -41,12 +41,12 @@ export function formatGroupedDate({
   return format(date, DATE_FORMAT);
 }
 
-export function getChartBorderColor(colorScheme: ColorScheme) {
+export function getChartBorderColor(colorScheme?: ColorScheme) {
   return `rgba(${getTextColor(colorScheme)}, 0.1)`;
 }
 
 export function getChartElementsOptions(
-  colorScheme: ColorScheme
+  colorScheme?: ColorScheme
 ): ChartOptions<'bar' | 'line'>['elements'] {
   return {
     line: {
@@ -67,7 +67,7 @@ export function getTimeAxisOptions({
   locale = getLocale()
 }: {
   borderWidth?: number;
-  colorScheme: ColorScheme;
+  colorScheme?: ColorScheme;
   display?: boolean;
   locale?: string;
 }): ScaleOptions<'time'> {
@@ -95,15 +95,17 @@ export function getTooltipOptions<T extends ChartType>({
   locale = getLocale(),
   unit = ''
 }: {
-  colorScheme: ColorScheme;
+  colorScheme?: ColorScheme;
   currency?: string;
   groupBy?: GroupBy;
   locale?: string;
   unit?: string;
 }): Partial<TooltipOptions<T>> {
+  const textColor = getTextColor(colorScheme);
+
   return {
     backgroundColor: getBackgroundColor(colorScheme),
-    bodyColor: `rgb(${getTextColor(colorScheme)})`,
+    bodyColor: `rgb(${textColor})`,
     borderWidth: 1,
     borderColor: getChartBorderColor(colorScheme),
     // @ts-expect-error: no need to set all attributes in callbacks
@@ -144,12 +146,12 @@ export function getTooltipOptions<T extends ChartType>({
     },
     caretSize: 0,
     cornerRadius: 2,
-    footerColor: `rgb(${getTextColor(colorScheme)})`,
+    footerColor: `rgb(${textColor})`,
     itemSort: (a, b) => {
       // Reverse order
       return b.datasetIndex - a.datasetIndex;
     },
-    titleColor: `rgb(${getTextColor(colorScheme)})`,
+    titleColor: `rgb(${textColor})`,
     usePointStyle: true
   };
 }
@@ -174,7 +176,7 @@ export function getValueAxisOptions({
   highlightedValues = [],
   tickCallback
 }: {
-  colorScheme: ColorScheme;
+  colorScheme?: ColorScheme;
   display?: boolean;
   highlightedValues?: number[];
   tickCallback: (
@@ -183,6 +185,8 @@ export function getValueAxisOptions({
     ticks: Tick[]
   ) => string;
 }): ScaleOptions<'linear'> {
+  const borderColor = getChartBorderColor(colorScheme);
+
   return {
     display,
     border: {
@@ -196,7 +200,7 @@ export function getValueAxisOptions({
           tick.value === scale.min ||
           highlightedValues.includes(tick.value)
         ) {
-          return getChartBorderColor(colorScheme);
+          return borderColor;
         }
 
         return 'transparent';
@@ -214,7 +218,7 @@ export function getValueAxisOptions({
 
 export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
   chartCanvas: ElementRef<HTMLCanvasElement>,
-  colorScheme: ColorScheme
+  colorScheme?: ColorScheme
 ): Plugin<T, { color: string; width: number }> {
   return {
     afterDatasetsDraw: (chart, _, options) => {
@@ -249,7 +253,7 @@ export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
 }
 
 export function getZeroLineAnnotation(
-  colorScheme: ColorScheme
+  colorScheme?: ColorScheme
 ): AnnotationOptions<'line'> {
   return {
     borderColor: getChartBorderColor(colorScheme),

@@ -1,8 +1,14 @@
-import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Type
+} from '@ghostfolio/prisma/enums';
+
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ColorScheme, DateRange } from './types';
+import { DateRange } from './types';
 
 export const ghostfolioPrefix = 'GF';
 
@@ -94,7 +100,6 @@ export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW =
 
 export const STATISTICS_GATHERING_QUEUE = 'STATISTICS_GATHERING_QUEUE';
 
-export const DEFAULT_COLOR_SCHEME: ColorScheme = 'LIGHT';
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_DATE_RANGE: DateRange = 'max';
@@ -133,6 +138,9 @@ export const DEFAULT_REDACTED_PATHS = [
   'activities[*].feeInAssetProfileCurrency',
   'activities[*].feeInBaseCurrency',
   'activities[*].quantity',
+  'activities[*].SymbolProfile.comment',
+  'activities[*].SymbolProfile.scraperConfiguration',
+  'activities[*].SymbolProfile.symbolMapping',
   'activities[*].value',
   'activities[*].valueInBaseCurrency',
   'assetProfile.comment',
@@ -152,10 +160,10 @@ export const DEFAULT_REDACTED_PATHS = [
   'grossPerformance',
   'grossPerformanceWithCurrencyEffect',
   'historicalData[*].quantity',
+  'holdings[*].assetProfile.holdings[*].valueInBaseCurrency',
   'holdings[*].dividend',
   'holdings[*].grossPerformance',
   'holdings[*].grossPerformanceWithCurrencyEffect',
-  'holdings[*].holdings[*].valueInBaseCurrency',
   'holdings[*].investment',
   'holdings[*].netPerformance',
   'holdings[*].netPerformanceWithCurrencyEffect',
@@ -175,6 +183,9 @@ export const DEFAULT_REDACTED_PATHS = [
   'settings.emergencyFund',
   'settings.projectedTotalAmount',
   'settings.savingsRate',
+  'SymbolProfile.comment',
+  'SymbolProfile.scraperConfiguration',
+  'SymbolProfile.symbolMapping',
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',

@@ -22,6 +22,7 @@ import type {
   ToggleOption
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
@@ -48,10 +49,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { SymbolProfile } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical } from 'ionicons/icons';
-import { isNumber, keyBy, sortBy, union } from 'lodash';
+import { isNumber, keyBy, sortBy, union } from 'lodash-es';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -131,6 +131,36 @@ export class GfAnalysisPageComponent implements OnInit {
     this.benchmarks = benchmarks;
 
     addIcons({ copyOutline, ellipsisVertical });
+  }
+
+  protected get netPerformancePercentageWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.performance?.netPerformancePercentageWithCurrencyEffect)
+    ) {
+      return this.performance?.netPerformancePercentageWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.performance.netPerformancePercentageWithCurrencyEffect +
+      (this.performance.dividendPercentageWithCurrencyEffect ?? 0)
+    );
+  }
+
+  protected get netPerformanceWithCurrencyEffect() {
+    if (
+      !this.user?.settings?.isExperimentalFeatures ||
+      !isNumber(this.performance?.netPerformanceWithCurrencyEffect)
+    ) {
+      return this.performance?.netPerformanceWithCurrencyEffect;
+    }
+
+    // Include the dividends (total return)
+    return (
+      this.performance.netPerformanceWithCurrencyEffect +
+      this.performance.dividendInBaseCurrency
+    );
   }
 
   get savingsRate() {

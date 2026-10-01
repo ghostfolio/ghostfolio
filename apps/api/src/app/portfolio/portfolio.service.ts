@@ -104,7 +104,7 @@ import {
   set,
   startOfDay
 } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
@@ -2140,6 +2140,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      dividendPercentageWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
@@ -2236,6 +2237,7 @@ export class PortfolioService {
       cash,
       currentValueInBaseCurrency,
       dateOfFirstActivity,
+      dividendPercentageWithCurrencyEffect,
       excludedAccountsAndActivities,
       netPerformance,
       netPerformancePercentage,

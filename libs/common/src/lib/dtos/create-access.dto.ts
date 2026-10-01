@@ -1,8 +1,8 @@
 import { Filter } from '@ghostfolio/common/interfaces';
 import { Scope, scopes } from '@ghostfolio/common/scopes';
 import { IsInTheFutureConstraint } from '@ghostfolio/common/validator-constraints/is-in-the-future';
+import { AccessType } from '@ghostfolio/prisma/enums';
 
-import { AccessType } from '@prisma/client';
 import {
   IsArray,
   IsEnum,

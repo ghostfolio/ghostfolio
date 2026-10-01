@@ -1,4 +1,8 @@
-import { getCssVariable } from '@ghostfolio/common/helper';
+import {
+  getBackgroundColor,
+  getCssVariable,
+  isDarkColorScheme
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   InfoItem,
@@ -227,7 +231,7 @@ export class GfAppComponent implements OnInit {
           : !!this.info?.subscriptionOffer?.coupon ||
             !!this.info?.subscriptionOffer?.durationExtension;
 
-        this.initializeTheme(this.user?.settings.colorScheme);
+        this.toggleTheme(this.user?.settings.colorScheme);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -259,21 +263,19 @@ export class GfAppComponent implements OnInit {
     document.location.href = `/${document.documentElement.lang}`;
   }
 
-  private initializeTheme(userPreferredColorScheme?: ColorScheme) {
-    const isDarkTheme = userPreferredColorScheme
-      ? userPreferredColorScheme === 'DARK'
-      : window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    this.toggleTheme(isDarkTheme);
+  private initializeTheme() {
+    this.toggleTheme();
 
     // Default chart styles
     Chart.defaults.font.family = getCssVariable('--font-family-sans-serif');
 
-    window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
-      if (!this.user?.settings.colorScheme) {
-        this.toggleTheme(event.matches);
-      }
-    });
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', () => {
+        if (!this.user?.settings.colorScheme) {
+          this.toggleTheme();
+        }
+      });
   }
 
   private openHoldingDetailDialog({
@@ -344,12 +346,8 @@ export class GfAppComponent implements OnInit {
       });
   }
 
-  private toggleTheme(isDarkTheme: boolean) {
-    const themeColor = getCssVariable(
-      isDarkTheme ? '--dark-background' : '--light-background'
-    );
-
-    if (isDarkTheme) {
+  private toggleTheme(userPreferredColorScheme?: ColorScheme) {
+    if (isDarkColorScheme(userPreferredColorScheme)) {
       this.document.body.classList.add('theme-dark');
       this.document.body.classList.remove('theme-light');
     } else {
@@ -359,6 +357,6 @@ export class GfAppComponent implements OnInit {
 
     this.document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', themeColor);
+      ?.setAttribute('content', getBackgroundColor(userPreferredColorScheme));
   }
 }

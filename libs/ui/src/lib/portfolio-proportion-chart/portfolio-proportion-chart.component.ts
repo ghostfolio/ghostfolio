@@ -1,8 +1,9 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { DEFAULT_COLOR_SCHEME, UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   AfterViewInit,
@@ -15,7 +16,6 @@ import {
   output,
   viewChild
 } from '@angular/core';
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import {
   ArcElement,
@@ -33,6 +33,7 @@ import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
+import { onPrefersColorSchemeChange } from '../chart';
 import { PortfolioProportionChartClickEvent } from './interfaces/interfaces';
 
 const {
@@ -94,6 +95,12 @@ export class GfPortfolioProportionChartComponent
 
   public constructor() {
     Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.initialize();
+      }
+    });
   }
 
   public ngAfterViewInit() {
@@ -124,7 +131,7 @@ export class GfPortfolioProportionChartComponent
       };
     } = {};
 
-    const textColor = getTextColor(this.colorScheme ?? DEFAULT_COLOR_SCHEME);
+    const textColor = getTextColor(this.colorScheme);
 
     this.colorMap = {
       [this.OTHER_KEY]: `rgba(${textColor}, 0.24)`,
@@ -448,7 +455,7 @@ export class GfPortfolioProportionChartComponent
   ): Partial<TooltipOptions<'doughnut'>> {
     return {
       ...getTooltipOptions({
-        colorScheme: this.colorScheme ?? DEFAULT_COLOR_SCHEME,
+        colorScheme: this.colorScheme,
         currency: this.baseCurrency,
         locale: this.locale
       }),

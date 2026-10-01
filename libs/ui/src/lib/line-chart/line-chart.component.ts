@@ -4,11 +4,7 @@ import {
   getValueAxisOptions,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
-import {
-  DEFAULT_COLOR_SCHEME,
-  primaryColorRgb,
-  secondaryColorRgb
-} from '@ghostfolio/common/config';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import { getBackgroundColor, getLocale } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -22,6 +18,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -41,6 +38,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import {
   getTimeSeriesTooltipOptions,
+  onPrefersColorSchemeChange,
   registerChartConfiguration
 } from '../chart';
 
@@ -56,7 +54,7 @@ export class GfLineChartComponent
 {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
-  @Input() colorScheme: ColorScheme = DEFAULT_COLOR_SCHEME;
+  @Input() colorScheme?: ColorScheme;
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
@@ -75,7 +73,7 @@ export class GfLineChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart<'line'>;
+  public chart?: Chart<'line'>;
   public isLoading = true;
 
   private readonly ANIMATION_DURATION = 1200;
@@ -92,6 +90,15 @@ export class GfLineChartComponent
     );
 
     registerChartConfiguration();
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.chart.destroy();
+        this.chart = undefined;
+
+        this.initialize();
+      }
+    });
   }
 
   public ngAfterViewInit() {
@@ -105,7 +112,12 @@ export class GfLineChartComponent
     }
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.colorScheme && this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+    }
+
     if (this.historicalDataItems || this.historicalDataItems === null) {
       setTimeout(() => {
         // Wait for the chartCanvas
