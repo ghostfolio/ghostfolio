@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.81.0 - 2026-10-07
 
+### Added
+
+- Added the _Return on Investment_ (ROI) performance calculation type (experimental)
+
 ### Changed
 
 - Moved the performance calculation including dividends (total return) from experimental to general availability
