@@ -4,11 +4,51 @@ import {
   SEARCH_QUERY_MINIMUM_LENGTH
 } from '@ghostfolio/common/config';
 
+import { DataSource } from '@prisma/client';
+
 import {
+  GET_ACCOUNTS_PARAMETERS,
+  GET_ACTIVITIES_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
   SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
 import { createActivity } from './mcp.test-utils';
+
+describe('GET_ACCOUNTS_PARAMETERS', () => {
+  it('Refuses an empty symbol of the holding', () => {
+    expect(
+      GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
+});
+
+describe('GET_ACTIVITIES_PARAMETERS', () => {
+  it('Refuses an empty symbol of the holding', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
+});
 
 describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
   function parse(activities: unknown[]) {
