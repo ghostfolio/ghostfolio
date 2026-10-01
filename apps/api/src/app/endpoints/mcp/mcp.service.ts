@@ -43,7 +43,10 @@ export class McpService {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts: accountIds,
       filterByAssetClasses: assetClasses,
-      filterByDataSource: holding?.dataSource,
+      filterByDataSource: getUnmaskedGhostfolioDataSource({
+        dataSource: holding?.dataSource,
+        ghostfolioDataSources: this.getGhostfolioDataSources()
+      }),
       filterBySymbol: holding?.symbol
     });
 
@@ -79,7 +82,10 @@ export class McpService {
 
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetClasses: assetClasses,
-      filterByDataSource: holding?.dataSource,
+      filterByDataSource: getUnmaskedGhostfolioDataSource({
+        dataSource: holding?.dataSource,
+        ghostfolioDataSources: this.getGhostfolioDataSources()
+      }),
       filterBySymbol: holding?.symbol
     });
 
@@ -123,11 +129,7 @@ export class McpService {
       permission: permissions.createActivity
     });
 
-    const ghostfolioDataSources = this.configurationService.get(
-      'ENABLE_FEATURE_SUBSCRIPTION'
-    )
-      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
-      : [];
+    const ghostfolioDataSources = this.getGhostfolioDataSources();
 
     const activitiesDto = activities.map((activity) => {
       return {
@@ -171,11 +173,7 @@ export class McpService {
 
     const { items } = await this.symbolService.lookup({ query, user });
 
-    const ghostfolioDataSources = this.configurationService.get(
-      'ENABLE_FEATURE_SUBSCRIPTION'
-    )
-      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
-      : [];
+    const ghostfolioDataSources = this.getGhostfolioDataSources();
 
     const assetProfiles = items.flatMap(
       ({
@@ -208,6 +206,12 @@ export class McpService {
     );
 
     return this.getTextResult(JSON.stringify({ assetProfiles }, null, 2));
+  }
+
+  private getGhostfolioDataSources() {
+    return this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')
+      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
+      : [];
   }
 
   private getTextResult(text: string) {

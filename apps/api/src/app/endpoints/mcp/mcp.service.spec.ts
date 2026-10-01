@@ -113,6 +113,20 @@ describe('McpService', () => {
       });
     });
 
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
     it('Gives the table of the accounts of the filters', async () => {
       expect(await mcpService.getAccounts({ userId })).toEqual({
         content: [{ text: '## Accounts', type: 'text' }]
@@ -148,6 +162,19 @@ describe('McpService', () => {
         filterByDataSource: DataSource.YAHOO,
         filterBySymbol: 'AAPL'
       });
+    });
+
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await getActivities({
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
     });
 
     it('Changes the range into the start date and the end date', async () => {

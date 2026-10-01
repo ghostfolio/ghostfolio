@@ -18,7 +18,7 @@ const HOLDING_PARAMETER = z.object({
   dataSource: z
     .enum(DataSource)
     .describe('The data source of the asset profile'),
-  symbol: z.string().describe('The symbol of the asset profile')
+  symbol: z.string().min(1).describe('The symbol of the asset profile')
 });
 
 export const GET_ACCOUNTS_PARAMETERS = z.object({
