@@ -1,5 +1,4 @@
 import {
-  getPerformanceByDateRange,
   loadActivitiesFromExportFile,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
@@ -44,7 +43,7 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
   };
 });
 
-describe('PortfolioCalculator', () => {
+describe('PortfolioCalculator (ROI)', () => {
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
@@ -81,122 +80,106 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with MSFT buy', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
+    it.only('with BALN.SW buy and buy', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const { activities, userCurrency } = loadActivitiesFromExportFile(
-        'msft-buy-with-dividend.json'
+        'baln-buy-and-buy.json'
       );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.ROAI,
+        calculationType: PerformanceCalculationType.ROI,
         currency: userCurrency,
-        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      const performanceByDateRange = await getPerformanceByDateRange({
-        portfolioCalculator,
-        dateRanges: ['1d', 'max', 'ytd']
+      const investments = portfolioCalculator.getInvestments();
+
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'month'
+      });
+
+      const investmentsByYear = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'year'
       });
 
       expect(portfolioSnapshot).toMatchObject({
-        dividendYieldPercent: new Big('0.001144362748184'),
-        dividendYieldPercentWithCurrencyEffect: new Big('0.001144362748184'),
+        currentValueInBaseCurrency: new Big('595.6'),
         errors: [],
         hasErrors: false,
         positions: [
           {
             activitiesCount: 2,
-            averagePrice: new Big('298.58'),
-            currency: 'USD',
+            averageInvestment: new Big('559'),
+            averageInvestmentWithCurrencyEffect: new Big('559'),
+            averagePrice: new Big('139.75'),
+            currency: 'CHF',
             dataSource: 'YAHOO',
-            dateOfFirstActivity: '2021-09-16',
-            dividend: new Big('0.62'),
-            dividendInBaseCurrency: new Big('0.62'),
-            dividendYieldPercent: new Big('0.001144362748184'),
-            dividendYieldPercentWithCurrencyEffect: new Big(
-              '0.001144362748184'
-            ),
-            fee: new Big('19'),
-            grossPerformance: new Big('33.87'),
-            grossPerformancePercentage: new Big('0.11343693482483756447'),
+            dateOfFirstActivity: '2021-11-22',
+            dividend: new Big('0'),
+            dividendInBaseCurrency: new Big('0'),
+            fee: new Big('3.2'),
+            feeInBaseCurrency: new Big('3.2'),
+            grossPerformance: new Big('36.6'),
+            grossPerformancePercentage: new Big('0.0654740608228980322'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.11343693482483756447'
+              '0.0654740608228980322'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('33.87'),
-            investment: new Big('298.58'),
-            investmentWithCurrencyEffect: new Big('298.58'),
-            marketPrice: 331.83,
-            marketPriceInBaseCurrency: 331.83,
-            netPerformance: new Big('14.87'),
-            netPerformancePercentage: new Big('0.04980239801728180052'),
+            grossPerformanceWithCurrencyEffect: new Big('36.6'),
+            investment: new Big('559'),
+            investmentWithCurrencyEffect: new Big('559'),
+            netPerformance: new Big('33.4'),
+            netPerformancePercentage: new Big('0.05974955277280858676'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.04980239801728180052')
+              max: new Big('0.05974955277280858676')
             },
             netPerformanceWithCurrencyEffectMap: {
-              '1d': new Big('-5.39'),
-              '5y': new Big('14.87'),
-              max: new Big('14.87'),
-              wtd: new Big('-5.39')
+              max: new Big('33.4')
             },
-            quantity: new Big('1'),
-            symbol: 'MSFT',
-            tags: []
+            marketPrice: 148.9,
+            marketPriceInBaseCurrency: 148.9,
+            quantity: new Big('4'),
+            symbol: 'BALN.SW',
+            tags: [],
+            valueInBaseCurrency: new Big('595.6')
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('19'),
+        totalFeesWithCurrencyEffect: new Big('3.2'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('298.58'),
-        totalInvestmentWithCurrencyEffect: new Big('298.58'),
+        totalInvestment: new Big('559'),
+        totalInvestmentWithCurrencyEffect: new Big('559'),
         totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
-          totalInvestment: 298.58,
-          totalInvestmentValueWithCurrencyEffect: 298.58
+          netPerformance: 33.4,
+          netPerformanceInPercentage: 0.059749552772808585,
+          netPerformanceInPercentageWithCurrencyEffect: 0.059749552772808585,
+          netPerformanceWithCurrencyEffect: 33.4,
+          totalInvestment: 559,
+          totalInvestmentValueWithCurrencyEffect: 559
         })
       );
 
-      expect(performanceByDateRange).toMatchObject({
-        '1d': {
-          date: '2023-07-10',
-          dividendInBaseCurrency: 0,
-          dividendInPercentageWithCurrencyEffect: 0,
-          netPerformance: -5.390000000000002,
-          netPerformanceInPercentage: -0.015983630864124316,
-          netPerformanceInPercentageWithCurrencyEffect: -0.015983630864124316,
-          netPerformanceWithCurrencyEffect: -5.390000000000002,
-          totalInvestmentValueWithCurrencyEffect: 298.58,
-          valueWithCurrencyEffect: 331.83
-        },
-        max: {
-          date: '2023-07-10',
-          dividendInBaseCurrency: 0.62,
-          dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
-          netPerformance: 14.87,
-          netPerformanceInPercentage: 0.049802398017281556,
-          netPerformanceInPercentageWithCurrencyEffect: 0.049802398017281556,
-          netPerformanceWithCurrencyEffect: 14.87,
-          totalInvestmentValueWithCurrencyEffect: 298.58,
-          valueWithCurrencyEffect: 331.83
-        },
-        ytd: {
-          date: '2023-07-10',
-          dividendInBaseCurrency: 0,
-          dividendInPercentageWithCurrencyEffect: 0,
-          netPerformance: -7.6800000000000015,
-          netPerformanceInPercentage: -0.022620835910577015,
-          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577015,
-          netPerformanceWithCurrencyEffect: -7.6800000000000015,
-          totalInvestmentValueWithCurrencyEffect: 298.58,
-          valueWithCurrencyEffect: 331.83
-        }
-      });
+      expect(investments).toEqual([
+        { date: '2021-11-22', investment: new Big('285.8') },
+        { date: '2021-11-30', investment: new Big('559') }
+      ]);
+
+      expect(investmentsByMonth).toEqual([
+        { date: '2021-11-01', investment: 559 },
+        { date: '2021-12-01', investment: 0 }
+      ]);
+
+      expect(investmentsByYear).toEqual([
+        { date: '2021-01-01', investment: 559 }
+      ]);
     });
   });
 });

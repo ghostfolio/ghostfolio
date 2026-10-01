@@ -44,7 +44,7 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
   };
 });
 
-describe('PortfolioCalculator', () => {
+describe('PortfolioCalculator (ROI)', () => {
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
@@ -90,7 +90,7 @@ describe('PortfolioCalculator', () => {
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.ROAI,
+        calculationType: PerformanceCalculationType.ROI,
         currency: userCurrency,
         usePortfolioSnapshotCache: false,
         userId: userDummyData.id
@@ -177,10 +177,10 @@ describe('PortfolioCalculator', () => {
         max: {
           date: '2023-07-10',
           dividendInBaseCurrency: 0.62,
-          dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
+          dividendInPercentageWithCurrencyEffect: 0.0020764954116149776,
           netPerformance: 14.87,
-          netPerformanceInPercentage: 0.049802398017281556,
-          netPerformanceInPercentageWithCurrencyEffect: 0.049802398017281556,
+          netPerformanceInPercentage: 0.0498023980172818,
+          netPerformanceInPercentageWithCurrencyEffect: 0.0498023980172818,
           netPerformanceWithCurrencyEffect: 14.87,
           totalInvestmentValueWithCurrencyEffect: 298.58,
           valueWithCurrencyEffect: 331.83
@@ -190,8 +190,8 @@ describe('PortfolioCalculator', () => {
           dividendInBaseCurrency: 0,
           dividendInPercentageWithCurrencyEffect: 0,
           netPerformance: -7.6800000000000015,
-          netPerformanceInPercentage: -0.022620835910577015,
-          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577015,
+          netPerformanceInPercentage: -0.022620835910577012,
+          netPerformanceInPercentageWithCurrencyEffect: -0.022620835910577012,
           netPerformanceWithCurrencyEffect: -7.6800000000000015,
           totalInvestmentValueWithCurrencyEffect: 298.58,
           valueWithCurrencyEffect: 331.83
