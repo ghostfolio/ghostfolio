@@ -458,12 +458,11 @@ export class PortfolioTableService {
     filters?: Filter[];
     userId: string;
   }) {
-    const { chart, errors, performance } =
-      await this.portfolioService.getPerformance({
-        dateRange,
-        filters,
-        userId
-      });
+    const { chart, performance } = await this.portfolioService.getPerformance({
+      dateRange,
+      filters,
+      userId
+    });
 
     const performanceSection = ['## Performance', ''];
 
@@ -475,17 +474,6 @@ export class PortfolioTableService {
           rows: [performance]
         })
       );
-
-      if (errors?.length > 0) {
-        performanceSection.push(
-          '',
-          `Market data is delayed for: ${errors
-            .map(({ dataSource, symbol }) => {
-              return `${symbol} (${dataSource})`;
-            })
-            .join(', ')}`
-        );
-      }
     } else {
       performanceSection.push('No performance found.');
     }

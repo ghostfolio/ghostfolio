@@ -159,14 +159,12 @@ function createWatchlistItem({
 function createPortfolioTableService({
   accounts = [],
   chart = [{ date: '2024-01-01' }],
-  errors = [],
   holdings = [],
   performance = createPerformance(),
   watchlist = []
 }: {
   accounts?: AccountWithValue[];
   chart?: HistoricalDataItem[];
-  errors?: PortfolioPerformanceResponse['errors'];
   holdings?: PortfolioPosition[];
   performance?: PortfolioPerformanceResponse['performance'];
   watchlist?: WatchlistResponse['watchlist'];
@@ -182,12 +180,7 @@ function createPortfolioTableService({
   const portfolioService = {
     getAccountsWithAggregations: jest.fn().mockResolvedValue({ accounts }),
     getDetails: jest.fn().mockResolvedValue({ holdings }),
-    getPerformance: jest.fn().mockResolvedValue({
-      chart,
-      errors,
-      performance,
-      hasErrors: errors.length > 0
-    })
+    getPerformance: jest.fn().mockResolvedValue({ chart, performance })
   } as unknown as PortfolioService;
 
   const watchlistService = {
@@ -413,25 +406,6 @@ describe('PortfolioTableService', () => {
       for (const cell of row.split('|').slice(1, -1)) {
         expect(cell.trim()).toMatch(/^-?\d+\.\d{3}%$/);
       }
-    });
-
-    it('tells the asset profiles of which the market data is delayed', async () => {
-      const result = await getPerformanceTable({
-        errors: [
-          { dataSource: DataSource.MANUAL, symbol: 'AAPL' },
-          { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
-        ]
-      });
-
-      expect(result).toContain(
-        'Market data is delayed for: AAPL (MANUAL), AAPL (YAHOO)'
-      );
-    });
-
-    it('tells no delay of the market data if there is no error', async () => {
-      const result = await getPerformanceTable();
-
-      expect(result).not.toContain('Market data is delayed');
     });
 
     it('tells that no performance is found if the chart is empty', async () => {
