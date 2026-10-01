@@ -284,15 +284,18 @@ export class ActivitiesController {
       user: { connect: { id: userId } }
     });
 
-    if (dataSource && !isActivityInFuture({ date: activity.date })) {
-      // Gather symbol data in the background, if data source is set
-      // (not MANUAL) and the date is not in the future
+    if (
+      activity.SymbolProfile.dataSource !== 'MANUAL' &&
+      !isActivityInFuture({ date: activity.date })
+    ) {
+      // Gather symbol data in the background, if the data source is not
+      // MANUAL and the date is not in the future
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
-            dataSource,
+            dataSource: activity.SymbolProfile.dataSource,
             date: activity.date,
-            symbol: data.symbol
+            symbol: activity.SymbolProfile.symbol
           }
         ],
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
