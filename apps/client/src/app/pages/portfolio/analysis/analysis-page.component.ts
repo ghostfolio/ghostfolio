@@ -7,7 +7,6 @@ import {
 } from '@ghostfolio/common/config';
 import { canOpenHoldingDetail } from '@ghostfolio/common/helper';
 import {
-  HistoricalDataItem,
   InvestmentItem,
   LineChartItem,
   PortfolioInvestmentsResponse,
@@ -80,7 +79,7 @@ import { forkJoin } from 'rxjs';
 })
 export class GfAnalysisPageComponent implements OnInit {
   protected benchmark?: Partial<SymbolProfile>;
-  protected benchmarkDataItems: HistoricalDataItem[] = [];
+  protected benchmarkDataItems: LineChartItem[] = [];
   protected readonly benchmarks: Partial<SymbolProfile>[];
   protected bottom3: PortfolioPosition[];
   protected dividendsByGroup: InvestmentItem[];

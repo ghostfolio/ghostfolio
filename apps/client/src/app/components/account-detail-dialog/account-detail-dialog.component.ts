@@ -365,11 +365,15 @@ export class GfAccountDetailDialogComponent implements OnInit {
           portfolioPerformance.chart.length > 0
         ) {
           this.historicalDataItems = portfolioPerformance.chart
-            .map(({ date, netWorth, netWorthInPercentage }) => ({
-              date,
-              value: isNumber(netWorth) ? netWorth : netWorthInPercentage
-            }))
-            .filter((item): item is LineChartItem => isNumber(item.value));
+            .map(({ date, netWorth, netWorthInPercentage }) => {
+              return {
+                date,
+                value: isNumber(netWorth) ? netWorth : netWorthInPercentage
+              };
+            })
+            .filter((item): item is LineChartItem => {
+              return isNumber(item.value);
+            });
         } else {
           this.historicalDataItems = this.accountBalances.map(
             ({ date, valueInBaseCurrency }) => {
