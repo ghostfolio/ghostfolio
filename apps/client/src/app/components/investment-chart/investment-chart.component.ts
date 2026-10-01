@@ -59,7 +59,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() public benchmarkDataLabel = '';
   @Input() public colorScheme?: ColorScheme;
   @Input() public currency?: string;
-  @Input() public groupBy: GroupBy;
+  @Input() public groupBy?: GroupBy;
   @Input() public historicalDataItems: LineChartItem[] = [];
   @Input() public isInPercentage?: boolean = false;
   @Input() public isLoading = false;
