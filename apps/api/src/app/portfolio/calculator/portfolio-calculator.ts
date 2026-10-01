@@ -1428,10 +1428,8 @@ export abstract class PortfolioCalculator {
         // Take the values at the start date from the first day of the date
         // range
         if (historicalDataItemsOfDateRange.length === 0) {
-          // TODO: Remove the fallback to 0 with the next release, when each
-          // cached portfolio snapshot contains the dividend
           dividendInBaseCurrencyAtStartDate =
-            historicalDataItem.dividendInBaseCurrency ?? 0;
+            historicalDataItem.dividendInBaseCurrency;
 
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
@@ -1441,10 +1439,8 @@ export abstract class PortfolioCalculator {
 
         historicalDataItemsOfDateRange.push({
           ...historicalDataItem,
-          // TODO: Remove the fallback to 0 with the next release, when each
-          // cached portfolio snapshot contains the dividend
           dividendInBaseCurrency:
-            (historicalDataItem.dividendInBaseCurrency ?? 0) -
+            historicalDataItem.dividendInBaseCurrency -
             dividendInBaseCurrencyAtStartDate,
           netPerformance:
             historicalDataItem.netPerformance - netPerformanceAtStartDate,
