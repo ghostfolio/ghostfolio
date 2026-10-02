@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `@openrouter/ai-sdk-provider` from version `3.0.0` to `3.1.0`
+- Upgraded `ai` from version `7.0.37` to `7.0.114`
+- Upgraded `dotenv` from version `17.4.2` to `18.0.3`
+
 ### Fixed
 
 - Fixed the portfolio calculation for holdings with historical market prices between the chart dates
