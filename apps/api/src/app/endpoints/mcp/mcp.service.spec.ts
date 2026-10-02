@@ -73,6 +73,7 @@ describe('McpService', () => {
       getAccountsTable: jest.fn().mockResolvedValue('## Accounts'),
       getActivitiesTable: jest.fn().mockResolvedValue('## Activities'),
       getHoldingsTable: jest.fn().mockResolvedValue('## Holdings'),
+      getPerformanceTable: jest.fn().mockResolvedValue('## Performance'),
       getWatchlistTable: jest.fn().mockResolvedValue('## Watchlist')
     } as unknown as PortfolioTableService;
 
@@ -113,6 +114,34 @@ describe('McpService', () => {
       });
     });
 
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
     it('Gives the table of the accounts of the filters', async () => {
       expect(await mcpService.getAccounts({ userId })).toEqual({
         content: [{ text: '## Accounts', type: 'text' }]
@@ -150,6 +179,32 @@ describe('McpService', () => {
       });
     });
 
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await getActivities({
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await getActivities({
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
     it('Changes the range into the start date and the end date', async () => {
       await getActivities({ range: '2024' });
 
@@ -183,6 +238,67 @@ describe('McpService', () => {
         startDate: undefined,
         take: MCP_MAX_ACTIVITIES,
         types: [ActivityType.BUY]
+      });
+    });
+  });
+
+  describe('getPerformance', () => {
+    it('Maps the parameters of the tool to the filters', async () => {
+      await mcpService.getPerformance({
+        userId,
+        accountIds: ['account-id'],
+        assetClasses: [AssetClass.EQUITY],
+        holding: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith({
+        filterByAccounts: ['account-id'],
+        filterByAssetClasses: [AssetClass.EQUITY],
+        filterByDataSource: DataSource.YAHOO,
+        filterBySymbol: 'AAPL'
+      });
+    });
+
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
+    it('Gives the table of the performance of the filters in the range', async () => {
+      expect(
+        await mcpService.getPerformance({ userId, range: '2024' })
+      ).toEqual({ content: [{ text: '## Performance', type: 'text' }] });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith({
+        filters,
+        userId,
+        dateRange: '2024'
       });
     });
   });

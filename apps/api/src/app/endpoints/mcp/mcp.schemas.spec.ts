@@ -1,14 +1,90 @@
 import {
+  DEFAULT_DATE_RANGE,
   MCP_MAX_ACTIVITIES,
   SEARCH_QUERY_MAXIMUM_LENGTH,
   SEARCH_QUERY_MINIMUM_LENGTH
 } from '@ghostfolio/common/config';
 
+import { DataSource } from '@prisma/client';
+
 import {
+  GET_ACCOUNTS_PARAMETERS,
+  GET_ACTIVITIES_PARAMETERS,
+  GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
   SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
 import { createActivity } from './mcp.test-utils';
+
+describe('GET_ACCOUNTS_PARAMETERS', () => {
+  it('Refuses an empty symbol of the holding', () => {
+    expect(
+      GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
+});
+
+describe('GET_ACTIVITIES_PARAMETERS', () => {
+  it('Refuses an empty symbol of the holding', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
+});
+
+describe('GET_PERFORMANCE_PARAMETERS', () => {
+  it(`Gives the date range ${DEFAULT_DATE_RANGE} if the range is absent`, () => {
+    expect(GET_PERFORMANCE_PARAMETERS.parse({}).range).toBe(DEFAULT_DATE_RANGE);
+  });
+
+  it('Accepts a calendar year', () => {
+    expect(
+      GET_PERFORMANCE_PARAMETERS.safeParse({ range: '2024' }).success
+    ).toBe(true);
+  });
+
+  it('Refuses an unknown date range', () => {
+    expect(GET_PERFORMANCE_PARAMETERS.safeParse({ range: '2w' }).success).toBe(
+      false
+    );
+  });
+
+  it('Refuses an empty symbol of the holding', () => {
+    expect(
+      GET_PERFORMANCE_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Refuses a symbol of the holding that contains only spaces', () => {
+    expect(
+      GET_PERFORMANCE_PARAMETERS.safeParse({
+        holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
+});
 
 describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
   function parse(activities: unknown[]) {

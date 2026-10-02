@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a tool to get the performance to the server of the Model Context Protocol (MCP) (experimental)
+
 ### Changed
 
 - Upgraded `prettier` from version `3.9.6` to `3.9.9`
+
+### Fixed
+
+- Fixed the filtering by holding in the server of the Model Context Protocol (MCP) (experimental)
 
 ## 3.76.0 - 2026-09-30
 

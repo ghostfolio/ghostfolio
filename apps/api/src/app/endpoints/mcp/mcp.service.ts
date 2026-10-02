@@ -19,6 +19,7 @@ import { z } from 'zod';
 import {
   GET_ACCOUNTS_PARAMETERS,
   GET_ACTIVITIES_PARAMETERS,
+  GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
   SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
@@ -41,10 +42,9 @@ export class McpService {
     userId
   }: z.infer<typeof GET_ACCOUNTS_PARAMETERS> & { userId: string }) {
     const filters = this.apiService.buildFiltersFromQueryParams({
+      ...this.getHoldingFilterParameters({ holding }),
       filterByAccounts: accountIds,
-      filterByAssetClasses: assetClasses,
-      filterByDataSource: holding?.dataSource,
-      filterBySymbol: holding?.symbol
+      filterByAssetClasses: assetClasses
     });
 
     const table = await this.portfolioTableService.getAccountsTable({
@@ -78,9 +78,8 @@ export class McpService {
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAssetClasses: assetClasses,
-      filterByDataSource: holding?.dataSource,
-      filterBySymbol: holding?.symbol
+      ...this.getHoldingFilterParameters({ holding }),
+      filterByAssetClasses: assetClasses
     });
 
     const table = await this.portfolioTableService.getActivitiesTable({
@@ -92,6 +91,28 @@ export class McpService {
       userCurrency,
       userId,
       types: activityTypes
+    });
+
+    return this.getTextResult(table);
+  }
+
+  public async getPerformance({
+    accountIds,
+    assetClasses,
+    holding,
+    range,
+    userId
+  }: z.infer<typeof GET_PERFORMANCE_PARAMETERS> & { userId: string }) {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      ...this.getHoldingFilterParameters({ holding }),
+      filterByAccounts: accountIds,
+      filterByAssetClasses: assetClasses
+    });
+
+    const table = await this.portfolioTableService.getPerformanceTable({
+      filters,
+      userId,
+      dateRange: range
     });
 
     return this.getTextResult(table);
@@ -123,11 +144,7 @@ export class McpService {
       permission: permissions.createActivity
     });
 
-    const ghostfolioDataSources = this.configurationService.get(
-      'ENABLE_FEATURE_SUBSCRIPTION'
-    )
-      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
-      : [];
+    const ghostfolioDataSources = this.getGhostfolioDataSources();
 
     const activitiesDto = activities.map((activity) => {
       return {
@@ -171,11 +188,7 @@ export class McpService {
 
     const { items } = await this.symbolService.lookup({ query, user });
 
-    const ghostfolioDataSources = this.configurationService.get(
-      'ENABLE_FEATURE_SUBSCRIPTION'
-    )
-      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
-      : [];
+    const ghostfolioDataSources = this.getGhostfolioDataSources();
 
     const assetProfiles = items.flatMap(
       ({
@@ -208,6 +221,24 @@ export class McpService {
     );
 
     return this.getTextResult(JSON.stringify({ assetProfiles }, null, 2));
+  }
+
+  private getGhostfolioDataSources() {
+    return this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')
+      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
+      : [];
+  }
+
+  private getHoldingFilterParameters({
+    holding
+  }: Pick<z.infer<typeof GET_ACCOUNTS_PARAMETERS>, 'holding'>) {
+    return {
+      filterByDataSource: getUnmaskedGhostfolioDataSource({
+        dataSource: holding?.dataSource,
+        ghostfolioDataSources: this.getGhostfolioDataSources()
+      }),
+      filterBySymbol: holding?.symbol
+    };
   }
 
   private getTextResult(text: string) {
