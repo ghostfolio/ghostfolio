@@ -371,8 +371,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
                 value: isNumber(netWorth) ? netWorth : netWorthInPercentage
               };
             })
-            .filter((item): item is LineChartItem => {
-              return isNumber(item.value);
+            .filter(({ value }): item is LineChartItem => {
+              return isNumber(value);
             });
         } else {
           this.historicalDataItems = this.accountBalances.map(
