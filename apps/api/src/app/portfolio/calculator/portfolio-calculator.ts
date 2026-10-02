@@ -791,11 +791,33 @@ export abstract class PortfolioCalculator {
       activitiesByDate[activity.date].push(activity);
     }
 
+    // Carry forward the market prices of all dates, not only of the chart
+    // dates, as sparse market data (e.g. MANUAL) can be between two chart dates
+    const marketPriceDates = Object.keys(marketSymbolMap)
+      .filter((date) => {
+        return !!marketSymbolMap[date][assetProfileIdentifier];
+      })
+      .sort();
+
+    let indexOfMarketPriceDate = 0;
+
     for (const dateString of chartDates) {
       if (dateString < startDateString) {
         continue;
       } else if (dateString > endDateString) {
         break;
+      }
+
+      while (
+        indexOfMarketPriceDate < marketPriceDates.length &&
+        marketPriceDates[indexOfMarketPriceDate] < dateString
+      ) {
+        lastMarketPrice =
+          marketSymbolMap[marketPriceDates[indexOfMarketPriceDate]][
+            assetProfileIdentifier
+          ];
+
+        indexOfMarketPriceDate += 1;
       }
 
       const activitiesOfDate = activitiesByDate[dateString];
@@ -831,10 +853,6 @@ export abstract class PortfolioCalculator {
           type: 'BUY',
           unitPriceFromMarketData: unitPrice
         });
-      }
-
-      if (marketPrice) {
-        lastMarketPrice = marketPrice;
       }
     }
 
