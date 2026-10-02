@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue in the portfolio calculator where historical market prices between the chart dates have been ignored
+- Fixed the portfolio calculation for holdings with historical market prices between the chart dates
 
 ## 3.77.0 - 2026-10-02
 
