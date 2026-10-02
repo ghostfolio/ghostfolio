@@ -1,5 +1,6 @@
 import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import {
+  COMMENT_MAXIMUM_LENGTH,
   DATE_RANGES,
   DEFAULT_DATE_RANGE,
   MCP_MAX_ACCOUNTS,
@@ -122,7 +123,12 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           .min(1)
           .optional()
           .describe('The identifier of the account of the activity'),
-        comment: z.string().optional().describe('The comment of the activity'),
+        comment: z
+          .string()
+          .trim()
+          .max(COMMENT_MAXIMUM_LENGTH)
+          .optional()
+          .describe('The comment of the activity'),
         currency: z
           .string()
           .refine(isValidCurrencyCode)
