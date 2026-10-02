@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the label of the cash positions in the holdings charts and table
+- Upgraded `dotenv` from version `17.4.2` to `18.0.3`
 
 ## 3.77.0 - 2026-10-02
 
