@@ -115,7 +115,7 @@
     "countries-list": "3.4.1",
     "countup.js": "2.10.1",
     "date-fns": "4.4.0",
-    "dotenv": "17.4.2",
+    "dotenv": "18.0.3",
     "dotenv-expand": "13.0.0",
     "envalid": "8.2.0",
     "express": "5.2.1",
