@@ -120,13 +120,14 @@ describe('PortfolioCalculator', () => {
       );
 
       /**
-       * The only historical market price is on 2023-06-15, which is not a
-       * chart date (every third day from 2021-01-03)
+       * The only historical market prices are on 2023-06-14 and 2023-06-15,
+       * which are not chart dates (every third day from 2021-01-03)
        */
+      expect(historicalDataByDate['2023-06-14']).toBeUndefined();
       expect(historicalDataByDate['2023-06-15']).toBeUndefined();
 
       /**
-       * The chart dates before the market price use the unit price of the
+       * The chart dates before the market prices use the unit price of the
        * activity: 50
        */
       expect(historicalDataByDate['2023-06-13']).toMatchObject({
@@ -136,7 +137,8 @@ describe('PortfolioCalculator', () => {
       });
 
       /**
-       * The chart dates after the market price carry it forward: 100
+       * The chart dates after the market prices carry the latest one forward
+       * (100), not the first one (80)
        */
       expect(historicalDataByDate['2023-06-16']).toMatchObject({
         netPerformance: 500, // 10 * (100 - 50) = 500

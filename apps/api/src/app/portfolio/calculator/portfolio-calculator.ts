@@ -810,7 +810,7 @@ export abstract class PortfolioCalculator {
 
       while (
         indexOfMarketPriceDate < marketPriceDates.length &&
-        marketPriceDates[indexOfMarketPriceDate] < dateString
+        marketPriceDates[indexOfMarketPriceDate] <= dateString
       ) {
         lastMarketPrice =
           marketSymbolMap[marketPriceDates[indexOfMarketPriceDate]][
@@ -830,13 +830,8 @@ export abstract class PortfolioCalculator {
         }
       }
 
-      const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
-
       const unitPrice =
-        marketPrice ??
-        lastMarketPrice ??
-        lastActivityUnitPrice ??
-        unitPriceAtEndDate;
+        lastMarketPrice ?? lastActivityUnitPrice ?? unitPriceAtEndDate;
 
       if (activitiesOfDate?.length > 0) {
         for (const activity of activitiesOfDate) {
