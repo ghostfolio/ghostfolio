@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `prettier` from version `3.9.6` to `3.9.9`
+- Upgraded `undici` from version `8.10.0` to `8.11.2`
 
 ### Fixed
 
