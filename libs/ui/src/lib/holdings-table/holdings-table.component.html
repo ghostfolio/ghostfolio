@@ -40,11 +40,16 @@
         mat-cell
         [class.w-100]="mode() === 'simple'"
       >
-        <div
-          class="text-truncate"
-          [title]="getHoldingName(element.assetProfile)"
-        >
-          {{ getHoldingName(element.assetProfile) }}
+        @let holdingName = getHoldingName(element.assetProfile);
+
+        <div class="text-truncate" [title]="holdingName">
+          {{ holdingName }}
+          @if (
+            !isCashPosition(element.assetProfile) &&
+            element.assetProfile.name === element.assetProfile.symbol
+          ) {
+            <span>({{ element.assetProfile.assetSubClassLabel }})</span>
+          }
         </div>
         @if (mode() === 'default') {
           <div>

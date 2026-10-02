@@ -91,6 +91,7 @@ export class GfHoldingsTableComponent {
   });
 
   protected readonly getHoldingName = getHoldingName;
+  protected readonly isCashPosition = isCashPosition;
 
   protected readonly isLoading = computed(() => {
     return !this.holdings();
@@ -107,7 +108,13 @@ export class GfHoldingsTableComponent {
   });
 
   public constructor() {
-    this.dataSource.sortingDataAccessor = getLowercase;
+    this.dataSource.sortingDataAccessor = (holding, path) => {
+      if (path === 'assetProfile.name') {
+        return getHoldingName(holding.assetProfile).toLocaleLowerCase();
+      }
+
+      return getLowercase(holding, path) as number | string;
+    };
 
     // Reactive data update
     effect(() => {

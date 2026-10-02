@@ -462,7 +462,7 @@ export function getHoldingName({
   PortfolioPosition['assetProfile'],
   'assetSubClass' | 'assetSubClassLabel' | 'name' | 'symbol'
 >) {
-  if (isCashPosition({ assetSubClass })) {
+  if (isCashPosition({ assetSubClass }) && assetSubClassLabel) {
     return `${assetSubClassLabel} (${symbol})`;
   }
 

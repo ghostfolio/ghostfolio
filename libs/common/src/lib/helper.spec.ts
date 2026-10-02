@@ -156,6 +156,17 @@ describe('Helper', () => {
       ).toEqual('Cash (CHF)');
     });
 
+    it('Cash position without asset sub class label', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'CASH',
+          assetSubClassLabel: undefined,
+          name: 'CHF',
+          symbol: 'CHF'
+        })
+      ).toEqual('CHF');
+    });
+
     it('Holding with name', () => {
       expect(
         getHoldingName({
