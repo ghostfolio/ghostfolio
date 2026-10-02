@@ -1,4 +1,5 @@
 import {
+  COMMENT_MAXIMUM_LENGTH,
   DEFAULT_DATE_RANGE,
   MCP_MAX_ACTIVITIES,
   SEARCH_QUERY_MAXIMUM_LENGTH,
@@ -91,6 +92,30 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
   function parse(activities: unknown[]) {
     return IMPORT_ACTIVITIES_PARAMETERS.safeParse({ activities }).success;
   }
+
+  it(`Accepts a comment of ${COMMENT_MAXIMUM_LENGTH} characters with spaces at the start and the end`, () => {
+    expect(
+      parse([
+        createActivity({ comment: ` ${'A'.repeat(COMMENT_MAXIMUM_LENGTH)} ` })
+      ])
+    ).toBe(true);
+  });
+
+  it(`Refuses a comment longer than ${COMMENT_MAXIMUM_LENGTH} characters`, () => {
+    expect(
+      parse([
+        createActivity({ comment: 'A'.repeat(COMMENT_MAXIMUM_LENGTH + 1) })
+      ])
+    ).toBe(false);
+  });
+
+  it('Removes spaces at the start and the end of a comment', () => {
+    expect(
+      IMPORT_ACTIVITIES_PARAMETERS.parse({
+        activities: [createActivity({ comment: ' note ' })]
+      }).activities[0].comment
+    ).toBe('note');
+  });
 
   it('Refuses a currency in lower case', () => {
     expect(parse([createActivity({ currency: 'usd' })])).toBe(false);
