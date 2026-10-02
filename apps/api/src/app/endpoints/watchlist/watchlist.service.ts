@@ -140,8 +140,9 @@ export class WatchlistService {
           name: assetProfile?.name,
           performances: {
             allTimeHigh: {
-              performancePercent,
-              date: allTimeHigh?.date
+              date: allTimeHigh?.date,
+              performancePercent:
+                performancePercent >= 0 ? 0 : performancePercent
             }
           },
           trend50d: trends.trend50d,
