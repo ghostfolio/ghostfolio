@@ -39,15 +39,15 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './portfolio-summary.component.html'
 })
 export class GfPortfolioSummaryComponent implements OnChanges {
-  @Input() baseCurrency: string;
-  @Input() deviceType: string;
-  @Input() hasImpersonationId: boolean;
-  @Input() hasPermissionToUpdateUserSettings: boolean;
-  @Input() isLoading: boolean;
-  @Input() language: string;
-  @Input() locale = getLocale();
-  @Input() summary: PortfolioSummary;
-  @Input() user: User;
+  @Input() public baseCurrency?: string;
+  @Input() public deviceType: string;
+  @Input() public hasImpersonationId: boolean;
+  @Input() public hasPermissionToUpdateUserSettings: boolean;
+  @Input() public isLoading: boolean;
+  @Input() public language?: string;
+  @Input() public locale?: string = getLocale();
+  @Input() public summary?: PortfolioSummary;
+  @Input() public user?: User;
 
   public emergencyFundChanged = output<number>();
 
@@ -99,11 +99,11 @@ export class GfPortfolioSummaryComponent implements OnChanges {
   }
 
   protected get hasCashBreakdown() {
-    return !this.isLoading && this.summary?.emergencyFund?.cash > 0;
+    return !this.isLoading && (this.summary?.emergencyFund?.cash ?? 0) > 0;
   }
 
   protected get hasHoldingsBreakdown() {
-    return !this.isLoading && this.summary?.emergencyFund?.assets > 0;
+    return !this.isLoading && (this.summary?.emergencyFund?.assets ?? 0) > 0;
   }
 
   protected get holdingsInBaseCurrency() {
@@ -133,7 +133,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     }
 
     return (
-      this.holdingsInBaseCurrency - (this.summary.emergencyFund?.assets ?? 0)
+      this.holdingsInBaseCurrency - (this.summary?.emergencyFund?.assets ?? 0)
     );
   }
 
@@ -200,7 +200,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
         this.emergencyFundChanged.emit(emergencyFund);
       },
       confirmLabel: $localize`Save`,
-      defaultValue: this.summary.emergencyFund?.total?.toString() ?? '0',
+      defaultValue: this.summary?.emergencyFund?.total?.toString() ?? '0',
       title: $localize`Please set the amount of your emergency fund.`,
       valueSuffix: this.baseCurrency
     });
