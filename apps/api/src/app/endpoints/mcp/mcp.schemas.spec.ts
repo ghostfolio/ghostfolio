@@ -112,6 +112,20 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
     expect(parse([createActivity({ symbol: '  ' })])).toBe(false);
   });
 
+  it(`Accepts a symbol of ${SYMBOL_MAXIMUM_LENGTH} characters`, () => {
+    expect(
+      parse([createActivity({ symbol: 'A'.repeat(SYMBOL_MAXIMUM_LENGTH) })])
+    ).toBe(true);
+  });
+
+  it(`Accepts a symbol of ${SYMBOL_MAXIMUM_LENGTH} characters with spaces at the start and the end`, () => {
+    expect(
+      parse([
+        createActivity({ symbol: ` ${'A'.repeat(SYMBOL_MAXIMUM_LENGTH)} ` })
+      ])
+    ).toBe(true);
+  });
+
   it(`Refuses a symbol longer than ${SYMBOL_MAXIMUM_LENGTH} characters`, () => {
     expect(
       parse([createActivity({ symbol: 'A'.repeat(SYMBOL_MAXIMUM_LENGTH + 1) })])
