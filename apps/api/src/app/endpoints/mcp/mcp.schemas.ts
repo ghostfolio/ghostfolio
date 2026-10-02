@@ -16,16 +16,18 @@ import {
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { z } from 'zod';
 
+const SYMBOL_PARAMETER = z
+  .string()
+  .trim()
+  .min(1)
+  .max(SYMBOL_MAXIMUM_LENGTH)
+  .describe('The symbol of the asset profile');
+
 const HOLDING_PARAMETER = z.object({
   dataSource: z
     .enum(DataSource)
     .describe('The data source of the asset profile'),
-  symbol: z
-    .string()
-    .trim()
-    .min(1)
-    .max(SYMBOL_MAXIMUM_LENGTH)
-    .describe('The symbol of the asset profile')
+  symbol: SYMBOL_PARAMETER
 });
 
 export const GET_ACCOUNTS_PARAMETERS = z.object({
@@ -141,7 +143,7 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           ),
         fee: z.number().min(0).describe('The fee of the activity'),
         quantity: z.number().min(0).describe('The quantity of the activity'),
-        symbol: z.string().min(1).describe('The symbol of the asset profile'),
+        symbol: SYMBOL_PARAMETER,
         type: z.enum(ActivityType).describe('The type of the activity'),
         unitPrice: z.number().min(0).describe('The unit price of the activity')
       })
