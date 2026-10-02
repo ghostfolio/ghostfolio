@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `dotenv` from version `17.4.2` to `18.0.3`
+
 ### Fixed
 
 - Fixed the positive performance from the all time high in the watchlist
