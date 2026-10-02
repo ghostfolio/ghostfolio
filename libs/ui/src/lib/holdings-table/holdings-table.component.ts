@@ -1,6 +1,7 @@
 import {
   canOpenHoldingDetail,
   getCountryCodeFromCurrency,
+  getHoldingName,
   getLocale,
   getLowercase,
   isCashPosition
@@ -88,6 +89,8 @@ export class GfHoldingsTableComponent {
     columns.push('performanceInPercentage');
     return columns;
   });
+
+  protected readonly getHoldingName = getHoldingName;
 
   protected readonly isLoading = computed(() => {
     return !this.holdings();
