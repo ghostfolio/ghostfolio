@@ -869,7 +869,7 @@ export class ImportService {
 
       let order:
         | OrderWithAccount
-        | (Omit<OrderWithAccount, 'account' | 'tags'> & {
+        | (Omit<OrderWithAccount, 'account' | 'SymbolProfile' | 'tags'> & {
             account?: { id: string; name: string };
             tags?: { id: string; name: string }[];
           });
@@ -905,7 +905,7 @@ export class ImportService {
           continue;
         }
 
-        order = await this.activitiesService.createActivity({
+        const createdActivity = await this.activitiesService.createActivity({
           comment,
           currency,
           date,
@@ -939,10 +939,12 @@ export class ImportService {
           userId: user.id
         });
 
-        if (order.SymbolProfile?.symbol) {
+        if (createdActivity.SymbolProfile?.symbol) {
           // Update symbol that may have been assigned in createOrder()
-          assetProfile.symbol = order.SymbolProfile.symbol;
+          assetProfile.symbol = createdActivity.SymbolProfile.symbol;
         }
+
+        order = createdActivity;
       }
 
       const value = new Big(quantity).mul(unitPrice).toNumber();
