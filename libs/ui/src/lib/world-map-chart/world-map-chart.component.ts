@@ -23,10 +23,12 @@ import svgMap from 'svgmap';
   templateUrl: './world-map-chart.component.html'
 })
 export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
-  @Input() countries: { [code: string]: { name?: string; value: number } };
-  @Input() format: string;
-  @Input() isInPercentage = false;
-  @Input() locale = getLocale();
+  @Input() public countries?: {
+    [code: string]: { name?: string; value: number };
+  };
+  @Input() public format?: string;
+  @Input() public isInPercentage?: boolean = false;
+  @Input() public locale?: string = getLocale();
 
   public isLoading = true;
   public svgMapElement: any;
@@ -51,23 +53,29 @@ export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
+    if (!this.countries) {
+      return;
+    }
+
+    const countries = this.countries;
+
     if (this.isInPercentage) {
       // Convert value of countries to percentage
       let sum = 0;
-      Object.keys(this.countries).map((country) => {
-        sum += this.countries[country].value;
+      Object.keys(countries).map((country) => {
+        sum += countries[country].value;
       });
 
-      Object.keys(this.countries).map((country) => {
-        this.countries[country].value = Number(
-          ((this.countries[country].value * 100) / sum).toFixed(2)
+      Object.keys(countries).map((country) => {
+        countries[country].value = Number(
+          ((countries[country].value * 100) / sum).toFixed(2)
         );
       });
     } else {
       // Convert value to fixed-point notation
-      Object.keys(this.countries).map((country) => {
-        this.countries[country].value = Number(
-          this.countries[country].value.toFixed(2)
+      Object.keys(countries).map((country) => {
+        countries[country].value = Number(
+          countries[country].value.toFixed(2)
         );
       });
     }
@@ -84,7 +92,7 @@ export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
             thousandSeparator: getNumberFormatGroup(this.locale)
           }
         },
-        values: this.countries
+        values: countries
       },
       hideFlag: true,
       minZoom: 1.06,
