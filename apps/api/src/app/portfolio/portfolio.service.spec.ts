@@ -260,6 +260,66 @@ describe('PortfolioService', () => {
         AND: [whereActivityOfAssetClass, whereActivityOfTag]
       });
     });
+
+    it('should calculate the dividend and the interest of an account as quantity times unit price', async () => {
+      jest.spyOn(accountService, 'accounts').mockResolvedValue([
+        {
+          activities: [
+            {
+              currency: 'USD',
+              date: new Date('2024-01-02'),
+              quantity: 2,
+              SymbolProfile: { currency: 'USD' },
+              tags: [],
+              type: 'DIVIDEND',
+              unitPrice: 10
+            },
+            {
+              currency: 'USD',
+              date: new Date('2024-01-03'),
+              quantity: 3,
+              SymbolProfile: { currency: 'USD' },
+              tags: [],
+              type: 'INTEREST',
+              unitPrice: 5
+            }
+          ],
+          balance: 0,
+          currency: 'USD',
+          id: 'account-id',
+          name: 'Account'
+        }
+      ] as unknown as Awaited<ReturnType<typeof accountService.accounts>>);
+
+      jest.spyOn(portfolioService, 'getDetails').mockResolvedValue({
+        accounts: {}
+      } as unknown as Awaited<ReturnType<typeof portfolioService.getDetails>>);
+
+      jest.spyOn(userService, 'user').mockResolvedValue({
+        settings: { settings: { baseCurrency: 'USD' } }
+      } as unknown as Awaited<ReturnType<typeof userService.user>>);
+
+      jest
+        .spyOn(exchangeRateDataService, 'toCurrencyAtDate')
+        .mockImplementation(async (value) => {
+          return value;
+        });
+
+      jest
+        .spyOn(exchangeRateDataService, 'toCurrency')
+        .mockImplementation((value) => {
+          return value;
+        });
+
+      const [account] = await portfolioService.getAccounts({
+        userId: userDummyData.id
+      });
+
+      expect(account).toMatchObject({
+        dividendInBaseCurrency: 20,
+        interestInBaseCurrency: 15
+      });
+    });
   });
 
   describe('getAggregatedMarkets', () => {
