@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the label of the cash positions in the holdings charts and table
 - Extended the tools to get the activities, the portfolio and the watchlist in the server of the Model Context Protocol (MCP) to include the data source (experimental)
-- Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `POST api/v1/activities`
 - Removed the deprecated `SymbolProfile` field from the endpoints `GET api/v1/activities`, `GET api/v1/activities/:id` and `POST api/v1/import`
 - Upgraded `@openrouter/ai-sdk-provider` from version `3.0.0` to `3.1.0`
 - Upgraded `ai` from version `7.0.37` to `7.0.114`
