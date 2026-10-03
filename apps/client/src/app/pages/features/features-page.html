@@ -206,6 +206,29 @@
             </mat-card-content>
           </mat-card>
         </div>
+        <div class="col-xs-12 col-md-4 mb-3">
+          <mat-card appearance="outlined" class="d-flex flex-column h-100">
+            <mat-card-content>
+              <div class="flex-grow-1">
+                <h4 class="align-items-center d-flex">
+                  <span i18n>AI Integration</span>
+                  @if (hasPermissionForSubscription) {
+                    <gf-premium-indicator class="ml-1" />
+                  }
+                  <span
+                    class="badge badge-pill badge-secondary ml-2 text-uppercase"
+                    i18n
+                    >new</span
+                  >
+                </h4>
+                <p class="m-0">
+                  Let your AI client read your portfolio and import activities
+                  into it via the Model Context Protocol (MCP).
+                </p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
         @if (hasPermissionForSubscription) {
           <div class="col-xs-12 col-md-4 mb-3">
             <mat-card appearance="outlined" class="d-flex flex-column h-100">
