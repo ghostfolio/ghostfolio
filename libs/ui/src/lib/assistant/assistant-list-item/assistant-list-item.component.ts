@@ -16,7 +16,7 @@ import {
 import { Params, RouterModule } from '@angular/router';
 
 import { SearchMode } from '../enums/search-mode';
-import {
+import type {
   AssetSearchResultItem,
   SearchResultItem
 } from '../interfaces/interfaces';
