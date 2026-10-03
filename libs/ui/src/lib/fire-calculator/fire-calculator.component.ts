@@ -2,7 +2,7 @@ import {
   getTooltipOptions,
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb } from '@ghostfolio/common/config';
+import { DEFAULT_CURRENCY, primaryColorRgb } from '@ghostfolio/common/config';
 import { formatMonthAndYear, getLocale } from '@ghostfolio/common/helper';
 import { FireCalculationCompleteEvent } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -86,16 +86,16 @@ import { FireCalculatorService } from './fire-calculator.service';
   templateUrl: './fire-calculator.component.html'
 })
 export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
-  @Input() annualInterestRate = 0;
-  @Input() colorScheme?: ColorScheme;
-  @Input() currency: string;
-  @Input() deviceType: string;
-  @Input() fireWealth = 0;
-  @Input() hasPermissionToUpdateUserSettings: boolean;
-  @Input() locale = getLocale();
-  @Input() projectedTotalAmount = 0;
-  @Input() retirementDate: Date;
-  @Input() savingsRate = 0;
+  @Input() public annualInterestRate?: number = 0;
+  @Input() public colorScheme?: ColorScheme;
+  @Input() public currency?: string = DEFAULT_CURRENCY;
+  @Input() public deviceType: string;
+  @Input() public fireWealth = 0;
+  @Input() public hasPermissionToUpdateUserSettings: boolean;
+  @Input() public locale?: string = getLocale();
+  @Input() public projectedTotalAmount?: number;
+  @Input() public retirementDate?: Date | string;
+  @Input() public savingsRate?: number = 0;
 
   public calculatorForm = this.formBuilder.group({
     annualInterestRate: new FormControl<number | null>(null),
@@ -243,11 +243,13 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       this.calculatorForm.setValue(
         {
-          annualInterestRate: this.annualInterestRate,
-          paymentPerPeriod: this.savingsRate,
+          annualInterestRate: this.annualInterestRate ?? 0,
+          paymentPerPeriod: this.savingsRate ?? 0,
           principalInvestmentAmount: this.fireWealth,
-          projectedTotalAmount: this.projectedTotalAmount,
-          retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
+          projectedTotalAmount: this.projectedTotalAmount ?? null,
+          retirementDate: this.retirementDate
+            ? new Date(this.retirementDate)
+            : this.DEFAULT_RETIREMENT_DATE
         },
         {
           emitEvent: false
@@ -353,7 +355,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     );
 
                     return `Total: ${new Intl.NumberFormat(this.locale, {
-                      currency: this.currency,
+                      currency: this.currency ?? DEFAULT_CURRENCY,
                       currencyDisplay: 'code',
                       style: 'currency'
                     }).format(totalAmount)}`;
@@ -367,7 +369,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
                     if (context.parsed.y !== null) {
                       label += new Intl.NumberFormat(this.locale, {
-                        currency: this.currency,
+                        currency: this.currency ?? DEFAULT_CURRENCY,
                         currencyDisplay: 'code',
                         style: 'currency'
                       }).format(context.parsed.y);
@@ -509,8 +511,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       return periods;
     } else {
       const today = new Date();
-      const retirementDate =
-        this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE;
+      const retirementDate = this.retirementDate
+        ? new Date(this.retirementDate)
+        : this.DEFAULT_RETIREMENT_DATE;
 
       return (
         12 * (retirementDate.getFullYear() - today.getFullYear()) +
