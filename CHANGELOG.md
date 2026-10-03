@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `ai` from version `7.0.37` to `7.0.114`
 - Upgraded `dotenv` from version `17.4.2` to `18.0.3`
 
+### Fixed
+
+- Fixed the portfolio calculation for holdings with historical market prices between the chart dates
+
 ## 3.77.0 - 2026-10-02
 
 ### Added
