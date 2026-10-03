@@ -3,6 +3,7 @@ import {
   convertValuesToPercentagesOfTotal,
   getAssetProfileIdentifier,
   getCountryName,
+  getHoldingName,
   isCashPosition
 } from '@ghostfolio/common/helper';
 import {
@@ -260,7 +261,7 @@ export class GfPublicPageComponent implements OnInit {
         this.symbols[symbol] = {
           symbol,
           value,
-          name: position.assetProfile.name ?? symbol
+          name: getHoldingName(position.assetProfile)
         };
       }
     }

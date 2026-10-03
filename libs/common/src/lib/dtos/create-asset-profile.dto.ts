@@ -10,17 +10,19 @@ import {
   DataSource
 } from '@ghostfolio/prisma/enums';
 
-import { Type } from 'class-transformer';
+import { Transform, TransformFnParams, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
   IsUrl,
   MaxLength,
   ValidateNested
 } from 'class-validator';
+import { isString } from 'lodash-es';
 
 import { CountryDto } from './country.dto';
 import { HoldingDto } from './holding.dto';
@@ -92,8 +94,12 @@ export class CreateAssetProfileDto {
   @ValidateNested({ each: true })
   sectors?: Prisma.InputJsonArray;
 
+  @IsNotEmpty()
   @IsString()
   @MaxLength(SYMBOL_MAXIMUM_LENGTH)
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) ? value.trim() : value
+  )
   symbol: string;
 
   @IsOptional()
