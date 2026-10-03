@@ -277,11 +277,11 @@ describe('PortfolioService', () => {
             {
               currency: 'USD',
               date: new Date('2024-01-03'),
-              quantity: 2,
+              quantity: 3,
               SymbolProfile: { currency: 'USD' },
               tags: [],
               type: 'INTEREST',
-              unitPrice: 10
+              unitPrice: 5
             }
           ],
           balance: 0,
@@ -317,7 +317,7 @@ describe('PortfolioService', () => {
 
       expect(account).toMatchObject({
         dividendInBaseCurrency: 20,
-        interestInBaseCurrency: 20
+        interestInBaseCurrency: 15
       });
     });
   });
