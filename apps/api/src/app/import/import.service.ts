@@ -857,7 +857,6 @@ export class ImportService {
         dataSource: activity.assetProfile.dataSource,
         symbol: activity.assetProfile.symbol
       };
-      const { dataSource, name, symbol } = assetProfile;
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -904,6 +903,8 @@ export class ImportService {
         if (error) {
           continue;
         }
+
+        const { dataSource, name, symbol } = assetProfile;
 
         const createdActivity = await this.activitiesService.createActivity({
           comment,
