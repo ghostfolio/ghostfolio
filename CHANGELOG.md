@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Excluded the cash position in the base currency from the holdings table on the overview tab of the home page (experimental)
 - Extended the tools to get the activities, the portfolio and the watchlist in the server of the Model Context Protocol (MCP) to include the data source (experimental)
 - Removed the deprecated `SymbolProfile` field from the endpoints `GET api/v1/activities`, `GET api/v1/activities/:id` and `POST api/v1/import`
+- Improved the language localization for German (`de`)
 - Upgraded `@openrouter/ai-sdk-provider` from version `3.0.0` to `3.1.0`
 - Upgraded `ai` from version `7.0.37` to `7.0.114`
 - Upgraded `dotenv` from version `17.4.2` to `18.0.3`
