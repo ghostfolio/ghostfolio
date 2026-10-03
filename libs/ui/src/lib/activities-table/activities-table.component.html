@@ -574,7 +574,7 @@
 }
 
 <mat-paginator
-  [class.d-none]="(isLoading() && !totalItems) || (totalItems ?? 0) <= pageSize"
+  [class.d-none]="(totalItems ?? 0) <= pageSize"
   [hidePageSize]="true"
   [length]="totalItems ?? 0"
   [pageIndex]="pageIndex"
