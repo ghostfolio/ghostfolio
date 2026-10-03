@@ -193,11 +193,35 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
 
 ### Health Check (experimental)
 
+The endpoint checks the connection to the database and to _Redis_. It is suitable as the readiness probe of an orchestrator (e.g. `readinessProbe` in _Kubernetes_) and as the `healthcheck` in _Docker Compose_.
+
 #### Request
 
 `GET http://localhost:3333/api/v1/health`
 
 **Info:** No Bearer Token is required for health check
+
+#### Response
+
+##### Success
+
+`200 OK`
+
+```
+{
+  "status": "OK"
+}
+```
+
+### Liveness Probe (experimental)
+
+The endpoint answers without a check of the database or _Redis_. It is suitable as the liveness probe of an orchestrator (e.g. `livenessProbe` in _Kubernetes_), so that an outage of a dependency does not restart the container.
+
+#### Request
+
+`GET http://localhost:3333/api/v1/health/liveness`
+
+**Info:** No Bearer Token is required for liveness probe
 
 #### Response
 
