@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
 
+### Fixed
+
+- Fixed the asset profile of the activities after a fee, an interest or a liability with the same symbol in the activities import
+
 ## 3.78.0 - 2026-10-03
 
 ### Added
