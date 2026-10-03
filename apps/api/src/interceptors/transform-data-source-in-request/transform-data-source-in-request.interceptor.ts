@@ -1,6 +1,6 @@
 import {
   decodeDataSource,
-  getUnmaskedGhostfolioDataSource
+  transformDataSourceInRequest
 } from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
@@ -28,30 +28,19 @@ export class TransformDataSourceInRequestInterceptor<
     const http = context.switchToHttp();
     const request = http.getRequest();
 
+    if (request.body?.activities) {
+      request.body.activities = request.body.activities.map((activity) => {
+        return {
+          ...activity,
+          dataSource: transformDataSourceInRequest({
+            configurationService: this.configurationService,
+            dataSource: activity.dataSource
+          })
+        };
+      });
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      if (request.body?.activities) {
-        const ghostfolioDataSources = this.configurationService.get(
-          'DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER'
-        );
-
-        request.body.activities = request.body.activities.map((activity) => {
-          if (DataSource[activity.dataSource]) {
-            return {
-              ...activity,
-              dataSource: getUnmaskedGhostfolioDataSource({
-                ghostfolioDataSources,
-                dataSource: activity.dataSource
-              })
-            };
-          } else {
-            return {
-              ...activity,
-              dataSource: decodeDataSource(activity.dataSource)
-            };
-          }
-        });
-      }
-
       for (const type of ['body', 'params', 'query']) {
         const dataSourceValue = request[type]?.dataSource;
 
@@ -67,19 +56,6 @@ export class TransformDataSourceInRequestInterceptor<
             writable: true
           });
         }
-      }
-    } else {
-      if (request.body?.activities) {
-        request.body.activities = request.body.activities.map((activity) => {
-          if (DataSource[activity.dataSource]) {
-            return activity;
-          } else {
-            return {
-              ...activity,
-              dataSource: decodeDataSource(activity.dataSource)
-            };
-          }
-        });
       }
     }
 

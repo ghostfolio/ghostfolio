@@ -453,6 +453,22 @@ export function getEmojiFlag(aCountryCode: string) {
   });
 }
 
+export function getHoldingName({
+  assetSubClass,
+  assetSubClassLabel,
+  name,
+  symbol
+}: Pick<
+  PortfolioPosition['assetProfile'],
+  'assetSubClass' | 'assetSubClassLabel' | 'name' | 'symbol'
+>) {
+  if (isCashPosition({ assetSubClass }) && assetSubClassLabel) {
+    return `${assetSubClassLabel} (${symbol})`;
+  }
+
+  return name ?? symbol;
+}
+
 export function getLocale() {
   return navigator.language ?? DEFAULT_LOCALE;
 }
