@@ -7,13 +7,15 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { NON_INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
-  getAssetProfileIdentifier,
-  isValidCustomAssetProfileSymbol
-} from '@ghostfolio/common/helper';
+  Activity,
+  AssetProfileIdentifier
+} from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { DataSource, SymbolProfile } from '@prisma/client';
+import { parseISO } from 'date-fns';
 
 import { ImportService } from './import.service';
 
@@ -32,27 +34,7 @@ describe('ImportService', () => {
       MAX_ACTIVITIES_TO_IMPORT: Number.MAX_SAFE_INTEGER
     };
 
-    createActivity = jest.fn(
-      ({
-        SymbolProfile: { connectOrCreate },
-        type
-      }: Parameters<ActivitiesService['createActivity']>[0]) => {
-        let { dataSource, symbol } = connectOrCreate.create;
-
-        // Like createActivity(), refer a non-investment activity to a custom
-        // asset profile
-        if (NON_INVESTMENT_ACTIVITY_TYPES.includes(type)) {
-          dataSource = DataSource.MANUAL;
-
-          if (!isValidCustomAssetProfileSymbol(symbol)) {
-            symbol = CUSTOM_ASSET_PROFILE_SYMBOL;
-          }
-        }
-
-        return { type, SymbolProfile: { dataSource, symbol } };
-      }
-    );
-
+    createActivity = jest.fn();
     gatherSymbols = jest.fn();
 
     // Like validateActivities(), share one asset profile between the
@@ -106,58 +88,142 @@ describe('ImportService', () => {
   });
 
   describe('import', () => {
-    it('keeps the asset profile of the next activities if createActivity() replaces the data source', async () => {
-      const activities = await importActivities([
-        createActivityDto({
-          dataSource: DataSource.YAHOO,
-          date: '2024-01-01T00:00:00.000Z',
-          symbol: 'AAPL',
-          type: 'FEE'
-        }),
-        createActivityDto({
-          dataSource: DataSource.YAHOO,
-          date: '2024-01-02T00:00:00.000Z',
-          symbol: 'AAPL',
-          type: 'BUY'
-        })
+    it('keeps the asset profile of an investment activity after a non-investment activity', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
       ]);
+
+      const activities = await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'FEE'
+          }),
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          })
+        ]
+      });
 
       expect(
         createActivity.mock.calls[1][0].SymbolProfile.connectOrCreate.create
       ).toMatchObject({ dataSource: DataSource.YAHOO, symbol: 'AAPL' });
 
-      expect(
-        activities.map(({ assetProfile: { dataSource, symbol } }) => {
-          return { dataSource, symbol };
-        })
-      ).toEqual([
+      expect(getAssetProfileIdentifiers(activities)).toEqual([
         { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
         { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
       ]);
 
-      expect(gatherSymbols.mock.calls[0][0].dataGatheringItems).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            dataSource: DataSource.YAHOO,
-            symbol: 'AAPL'
-          })
-        ])
-      );
+      expect(gatherSymbols.mock.calls[0][0].dataGatheringItems).toEqual([
+        {
+          dataSource: DataSource.MANUAL,
+          date: parseISO('2024-01-01T00:00:00.000Z'),
+          symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+        },
+        {
+          dataSource: DataSource.YAHOO,
+          date: parseISO('2024-01-02T00:00:00.000Z'),
+          symbol: 'AAPL'
+        }
+      ]);
     });
 
-    it('refers the next activities to the custom asset profile which createActivity() has created', async () => {
-      await importActivities([
-        createActivityDto({
-          date: '2024-01-01T00:00:00.000Z',
-          symbol: 'Broker fee',
-          type: 'FEE'
-        }),
-        createActivityDto({
-          date: '2024-01-02T00:00:00.000Z',
-          symbol: 'Broker fee',
-          type: 'FEE'
-        })
+    it('shows the custom asset profile of a non-investment activity after an investment activity', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
       ]);
+
+      const activities = await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          }),
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'FEE'
+          })
+        ]
+      });
+
+      expect(
+        createActivity.mock.calls[1][0].SymbolProfile.connectOrCreate.create
+      ).toMatchObject({ dataSource: DataSource.YAHOO, symbol: 'AAPL' });
+
+      expect(activities[1].assetProfile).toEqual({
+        dataSource: DataSource.MANUAL,
+        symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+      });
+    });
+
+    it.each(NON_INVESTMENT_ACTIVITY_TYPES)(
+      'refers the next %s activities of a data provider to the custom asset profile which createActivity() has created',
+      async (type) => {
+        mockCreatedAssetProfiles([
+          {
+            dataSource: DataSource.MANUAL,
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+          },
+          { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+        ]);
+
+        await importActivities({
+          activitiesDto: [
+            createActivityDto({
+              type,
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL'
+            }),
+            createActivityDto({
+              type,
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-02T00:00:00.000Z',
+              symbol: 'AAPL'
+            })
+          ]
+        });
+
+        expect(
+          createActivity.mock.calls[1][0].SymbolProfile.connectOrCreate.create
+        ).toMatchObject({
+          dataSource: DataSource.MANUAL,
+          symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+        });
+      }
+    );
+
+    it('refers the next activities without a data source to the custom asset profile which createActivity() has created', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'Broker fee',
+            type: 'FEE'
+          }),
+          createActivityDto({
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'Broker fee',
+            type: 'FEE'
+          })
+        ]
+      });
 
       expect(
         createActivity.mock.calls[1][0].SymbolProfile.connectOrCreate.create
@@ -166,11 +232,46 @@ describe('ImportService', () => {
         symbol: CUSTOM_ASSET_PROFILE_SYMBOL
       });
     });
+
+    it('keeps the asset profiles of the activities in a dry run', async () => {
+      const activities = await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'FEE'
+          }),
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          })
+        ],
+        isDryRun: true
+      });
+
+      expect(createActivity).not.toHaveBeenCalled();
+      expect(gatherSymbols).not.toHaveBeenCalled();
+
+      expect(getAssetProfileIdentifiers(activities)).toEqual([
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+      ]);
+    });
   });
 
-  function importActivities(activitiesDto: CreateOrderDto[]) {
+  function importActivities({
+    activitiesDto,
+    isDryRun
+  }: {
+    activitiesDto: CreateOrderDto[];
+    isDryRun?: boolean;
+  }) {
     return importService.import({
       activitiesDto,
+      isDryRun,
       accountsWithBalancesDto: [],
       assetProfilesWithMarketDataDto: [],
       platformsDto: [],
@@ -181,6 +282,21 @@ describe('ImportService', () => {
         settings: { settings: { baseCurrency: 'USD' } }
       } as unknown as UserWithSettings
     });
+  }
+
+  // Let the next calls of createActivity() refer the activities to the given
+  // asset profiles, in this order
+  function mockCreatedAssetProfiles(assetProfiles: AssetProfileIdentifier[]) {
+    for (const assetProfile of assetProfiles) {
+      createActivity.mockImplementationOnce(
+        ({
+          date,
+          type
+        }: Parameters<ActivitiesService['createActivity']>[0]) => {
+          return { date, type, SymbolProfile: assetProfile };
+        }
+      );
+    }
   }
 });
 
@@ -200,4 +316,10 @@ function createActivityDto({
     quantity: 1,
     unitPrice: 100
   } as CreateOrderDto;
+}
+
+function getAssetProfileIdentifiers(activities: Activity[]) {
+  return activities.map(({ assetProfile: { dataSource, symbol } }) => {
+    return { dataSource, symbol };
+  });
 }

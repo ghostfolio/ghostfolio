@@ -836,6 +836,12 @@ export class ImportService {
 
     const activities: Activity[] = [];
 
+    // The symbols of the custom asset profiles which createActivity() has
+    // created, by the asset profile identifier of the activities to import
+    const customAssetProfileSymbols: {
+      [assetProfileIdentifier: string]: string;
+    } = {};
+
     for (const activity of activitiesExtendedWithErrors) {
       const accountId = activity.accountId;
       const comment = activity.comment;
@@ -848,12 +854,12 @@ export class ImportService {
       const type = activity.type;
       const unitPrice = activity.unitPrice;
 
-      let assetProfile = assetProfiles[
-        getAssetProfileIdentifier({
-          dataSource: activity.assetProfile.dataSource,
-          symbol: activity.assetProfile.symbol
-        })
-      ] ?? {
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource: activity.assetProfile.dataSource,
+        symbol: activity.assetProfile.symbol
+      });
+
+      let assetProfile = assetProfiles[assetProfileIdentifier] ?? {
         dataSource: activity.assetProfile.dataSource,
         symbol: activity.assetProfile.symbol
       };
@@ -904,7 +910,21 @@ export class ImportService {
           continue;
         }
 
-        const { dataSource, name, symbol } = assetProfile;
+        const isNonInvestmentActivity =
+          NON_INVESTMENT_ACTIVITY_TYPES.includes(type);
+
+        // Refer a non-investment activity to the custom asset profile which
+        // createActivity() has created for a previous activity of this asset
+        // profile. An investment activity keeps the asset profile.
+        const customAssetProfileSymbol = isNonInvestmentActivity
+          ? customAssetProfileSymbols[assetProfileIdentifier]
+          : undefined;
+
+        const { name } = assetProfile;
+        const dataSource = customAssetProfileSymbol
+          ? DataSource.MANUAL
+          : assetProfile.dataSource;
+        const symbol = customAssetProfileSymbol ?? assetProfile.symbol;
 
         const createdActivity = await this.activitiesService.createActivity({
           comment,
@@ -940,22 +960,14 @@ export class ImportService {
           userId: user.id
         });
 
-        if (
-          createdActivity.SymbolProfile?.dataSource === assetProfile.dataSource
-        ) {
-          // Update the symbol that may have been assigned in createActivity()
-          // in the shared asset profile, so that the next activities of this
-          // asset profile refer to the same custom asset profile
-          assetProfile.symbol = createdActivity.SymbolProfile.symbol;
-        } else if (createdActivity.SymbolProfile) {
-          // createActivity() has created a custom asset profile with the
-          // MANUAL data source, for example for a fee. The shared asset profile
-          // stays unchanged for the next activities.
-          assetProfile = {
-            ...assetProfile,
-            dataSource: createdActivity.SymbolProfile.dataSource,
-            symbol: createdActivity.SymbolProfile.symbol
-          };
+        if (createdActivity.SymbolProfile.dataSource === DataSource.MANUAL) {
+          // Keep the symbol which createActivity() may have assigned for the
+          // next activities of this asset profile and show the custom asset
+          // profile. The shared asset profile stays unchanged.
+          customAssetProfileSymbols[assetProfileIdentifier] =
+            createdActivity.SymbolProfile.symbol;
+
+          assetProfile = createdActivity.SymbolProfile;
         }
 
         order = createdActivity;
