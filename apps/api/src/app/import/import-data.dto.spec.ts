@@ -1,4 +1,5 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { DataSource, Type } from '@prisma/client';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -10,10 +11,10 @@ const validationPipe = new ValidationPipe({
   whitelist: true
 });
 
-function loadImportData(fileName: string): ImportDataDto {
+function loadImportData(directory: string, fileName: string): ImportDataDto {
   const { accounts, activities, assetProfiles, platforms, tags } = JSON.parse(
     readFileSync(
-      join(__dirname, '../../../../../test/import/not-ok', fileName),
+      join(__dirname, '../../../../../test/import', directory, fileName),
       'utf8'
     )
   ) as ImportDataDto;
@@ -22,13 +23,20 @@ function loadImportData(fileName: string): ImportDataDto {
 }
 
 describe('ImportDataDto', () => {
+  it('accepts sample.json', async () => {
+    await expect(
+      validationPipe.transform(loadImportData('ok', 'sample.json'), {
+        metatype: ImportDataDto,
+        type: 'body'
+      })
+    ).resolves.toBeInstanceOf(ImportDataDto);
+  });
+
   it.each([
     {
       fileName: 'invalid-data-source.json',
       messages: [
-        expect.stringMatching(
-          /^activities\.0\.dataSource must be one of the following values: /
-        )
+        `activities.0.dataSource must be one of the following values: ${Object.values(DataSource).join(', ')}`
       ]
     },
     {
@@ -45,14 +53,12 @@ describe('ImportDataDto', () => {
     {
       fileName: 'invalid-type.json',
       messages: [
-        expect.stringMatching(
-          /^activities\.0\.type must be one of the following values: /
-        )
+        `activities.0.type must be one of the following values: ${Object.values(Type).join(', ')}`
       ]
     }
   ])('refuses $fileName', async ({ fileName, messages }) => {
     const error: unknown = await validationPipe
-      .transform(loadImportData(fileName), {
+      .transform(loadImportData('not-ok', fileName), {
         metatype: ImportDataDto,
         type: 'body'
       })
