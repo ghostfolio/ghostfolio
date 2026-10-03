@@ -8,6 +8,7 @@ export interface Environment extends CleanedEnvAccessors {
   API_KEY_COINGECKO_PRO: string;
   API_KEY_EOD_HISTORICAL_DATA: string;
   API_KEY_FINANCIAL_MODELING_PREP: string;
+  API_KEY_FXMACRODATA: string;
   API_KEY_OPEN_FIGI: string;
   API_KEY_RAPID_API: string;
   CACHE_QUOTES_TTL: number;
