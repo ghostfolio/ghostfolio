@@ -53,6 +53,7 @@ import {
   addDays,
   addYears,
   getMonth,
+  parseISO,
   setMonth,
   setYear,
   startOfMonth,
@@ -60,7 +61,7 @@ import {
 } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline } from 'ionicons/icons';
-import { isNumber } from 'lodash-es';
+import { isNumber, isString } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { debounceTime } from 'rxjs';
 
@@ -88,12 +89,12 @@ import { FireCalculatorService } from './fire-calculator.service';
 export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() public annualInterestRate?: number = 0;
   @Input() public colorScheme?: ColorScheme;
-  @Input() public currency?: string = DEFAULT_CURRENCY;
+  @Input() public currency?: string;
   @Input() public deviceType: string;
   @Input() public fireWealth = 0;
   @Input() public hasPermissionToUpdateUserSettings: boolean;
   @Input() public locale?: string = getLocale();
-  @Input() public projectedTotalAmount?: number;
+  @Input() public projectedTotalAmount?: number = 0;
   @Input() public retirementDate?: Date | string;
   @Input() public savingsRate?: number = 0;
 
@@ -246,10 +247,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
           annualInterestRate: this.annualInterestRate ?? 0,
           paymentPerPeriod: this.savingsRate ?? 0,
           principalInvestmentAmount: this.fireWealth,
-          projectedTotalAmount: this.projectedTotalAmount ?? null,
-          retirementDate: this.retirementDate
-            ? new Date(this.retirementDate)
-            : this.DEFAULT_RETIREMENT_DATE
+          projectedTotalAmount: this.projectedTotalAmount ?? 0,
+          retirementDate: isString(this.retirementDate)
+            ? parseISO(this.retirementDate)
+            : (this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE)
         },
         {
           emitEvent: false
@@ -511,9 +512,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       return periods;
     } else {
       const today = new Date();
-      const retirementDate = this.retirementDate
-        ? new Date(this.retirementDate)
-        : this.DEFAULT_RETIREMENT_DATE;
+      const retirementDate =
+        this.calculatorForm.get('retirementDate')?.value ??
+        this.DEFAULT_RETIREMENT_DATE;
 
       return (
         12 * (retirementDate.getFullYear() - today.getFullYear()) +
