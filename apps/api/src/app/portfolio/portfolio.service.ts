@@ -334,7 +334,7 @@ export class PortfolioService {
             case ActivityType.INTEREST:
               interestInBaseCurrency +=
                 (await this.exchangeRateDataService.toCurrencyAtDate(
-                  unitPrice,
+                  new Big(quantity).mul(unitPrice).toNumber(),
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date

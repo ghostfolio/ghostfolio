@@ -655,7 +655,13 @@ export class ActivitiesService {
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          SymbolProfile: true,
+          SymbolProfile: {
+            select: {
+              currency: true,
+              dataSource: true,
+              symbol: true
+            }
+          },
           tags: true
         },
         orderBy: [...orderBy, { id: sortDirection }]
