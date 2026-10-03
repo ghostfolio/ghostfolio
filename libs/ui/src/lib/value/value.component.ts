@@ -47,7 +47,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel?: string = '';
   @Input() unit?: string | null = '';
-  @Input() value?: number | string | null = '';
+  @Input() value?: Date | number | string | null = '';
 
   @ViewChild('labelContent', { static: false })
   labelContent!: ElementRef<HTMLSpanElement>;
@@ -161,7 +161,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.isNumber = false;
         this.isString = true;
 
-        if (this.isDate) {
+        if (this.isDate || this.value instanceof Date) {
           this.formattedValue = new Date(this.value).toLocaleDateString(
             this.locale,
             {
