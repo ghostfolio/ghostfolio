@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the server of the Model Context Protocol (MCP) to the features page (experimental)
+
 ### Changed
 
 - Improved the label of the cash positions in the holdings charts and table
