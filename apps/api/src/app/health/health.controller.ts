@@ -3,7 +3,8 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import {
   AiServiceHealthResponse,
   DataEnhancerHealthResponse,
-  DataProviderHealthResponse
+  DataProviderHealthResponse,
+  LivenessHealthResponse
 } from '@ghostfolio/common/interfaces';
 
 import {
@@ -115,5 +116,10 @@ export class HealthController {
         .status(HttpStatus.SERVICE_UNAVAILABLE)
         .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
     }
+  }
+
+  @Get('liveness')
+  public getLiveness(): LivenessHealthResponse {
+    return { status: getReasonPhrase(StatusCodes.OK) };
   }
 }
