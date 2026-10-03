@@ -51,7 +51,8 @@
     "update": "nx migrate latest",
     "watch:server": "nx run api:copy-assets && nx run api:build --watch",
     "watch:test": "nx test --watch",
-    "workspace-generator": "nx workspace-generator"
+    "workspace-generator": "nx workspace-generator",
+    "format-fix": "npx prettier --write $(git diff --name-only --cached)"
   },
   "dependencies": {
     "@angular/animations": "22.1.2",
