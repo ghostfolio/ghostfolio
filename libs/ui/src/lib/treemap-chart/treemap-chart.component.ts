@@ -3,7 +3,11 @@ import {
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { canOpenHoldingDetail, getLocale } from '@ghostfolio/common/helper';
+import {
+  canOpenHoldingDetail,
+  getHoldingName,
+  getLocale
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -399,12 +403,10 @@ export class GfTreemapChartComponent
           const raw = context.raw as GfTreemapDataPoint;
 
           const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
-          const name = raw._data.assetProfile.name;
+          const name = getHoldingName(raw._data.assetProfile);
 
           const sign =
             raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
-
-          const symbol = raw._data.assetProfile.symbol;
 
           const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 
@@ -412,7 +414,7 @@ export class GfTreemapChartComponent
             const value = raw._data.valueInBaseCurrency;
 
             return [
-              `${name ?? symbol} (${allocationInPercentage})`,
+              `${name} (${allocationInPercentage})`,
               `${value?.toLocaleString(this.locale(), {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
@@ -429,7 +431,7 @@ export class GfTreemapChartComponent
             ];
           } else {
             return [
-              `${name ?? symbol} (${allocationInPercentage})`,
+              `${name} (${allocationInPercentage})`,
               '',
               $localize`Performance`,
               netPerformanceInPercentageWithSign

@@ -11,6 +11,7 @@ import {
   convertValuesToPercentagesOfTotal,
   getAssetProfileIdentifier,
   getCountryName,
+  getHoldingName,
   isCashPosition
 } from '@ghostfolio/common/helper';
 import {
@@ -533,7 +534,7 @@ export class GfAllocationsPageComponent implements OnInit {
           value,
           dataSource: position.assetProfile.dataSource,
           isClickable: canOpenHoldingDetail(position),
-          name: position.assetProfile.name ?? ''
+          name: getHoldingName(position.assetProfile)
         };
       }
     }
