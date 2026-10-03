@@ -67,6 +67,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the redaction of `comment`, `scraperConfiguration` and `symbolMapping` in the asset profile relation of the activities in a restricted view
 - Resolved the data source transformation in the asset profile relation of the activities
 
+### Fixed
+
+- Fixed the alignment of the average price in the chart of the holding detail dialog for custom asset profiles
+
 ## 3.75.0 - 2026-09-28
 
 ### Changed
