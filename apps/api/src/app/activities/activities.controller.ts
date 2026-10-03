@@ -9,13 +9,15 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   ActivitiesResponse,
-  ActivityResponse
+  ActivityResponse,
+  CreateActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -33,7 +35,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order, Prisma } from '@prisma/client';
+import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -47,7 +49,8 @@ export class ActivitiesController {
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
-    private readonly dataGatheringService: DataGatheringService
+    private readonly dataGatheringService: DataGatheringService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Delete()
@@ -209,6 +212,7 @@ export class ActivitiesController {
   @RequiresScope(scopes.activityCreate)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async createActivity(
     @Body() data: CreateOrderDto,
     @Impersonation()
@@ -217,7 +221,7 @@ export class ActivitiesController {
       userId,
       userSubscription
     }: ImpersonationContext
-  ): Promise<Prisma.OrderGetPayload<{ include: { SymbolProfile: true } }>> {
+  ): Promise<CreateActivityResponse> {
     // Evaluate the more restrictive subscription of the authenticated user
     // and the owner of the activity
     const subscription =
@@ -303,7 +307,14 @@ export class ActivitiesController {
       });
     }
 
-    return activity;
+    const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
+      }
+    ]);
+
+    return { ...activity, assetProfile };
   }
 
   @HasPermission(permissions.updateActivity)
