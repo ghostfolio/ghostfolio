@@ -65,6 +65,11 @@ async function bootstrap() {
   });
 
   app.enableCors();
+
+  // Let the open requests and the active queue jobs finish on SIGTERM before
+  // the process stops
+  app.enableShutdownHooks();
+
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI
