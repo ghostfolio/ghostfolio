@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
-import { DataSource } from '@prisma/client';
+import { DataSource, Prisma } from '@prisma/client';
+import { isEmpty } from 'lodash-es';
 import { createHash } from 'node:crypto';
 
 const DATA_SOURCES_WITHOUT_ENCODING: DataSource[] = [
@@ -93,6 +94,18 @@ export function getUnmaskedGhostfolioDataSource({
   return dataSource === DataSource.GHOSTFOLIO && ghostfolioDataSources?.[0]
     ? (ghostfolioDataSources[0] as DataSource)
     : dataSource;
+}
+
+export function isDataGatheringSupported({
+  dataSource,
+  scraperConfiguration
+}: {
+  dataSource: DataSource;
+  scraperConfiguration: Prisma.JsonValue;
+}) {
+  // An asset profile with the MANUAL data source supports data gathering only
+  // with a scraper configuration
+  return dataSource !== DataSource.MANUAL || !isEmpty(scraperConfiguration);
 }
 
 export function isDataSourceEncodedInResponse(dataSource: DataSource) {
