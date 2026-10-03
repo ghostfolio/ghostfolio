@@ -33,7 +33,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order, SymbolProfile } from '@prisma/client';
+import { Order, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -217,16 +217,7 @@ export class ActivitiesController {
       userId,
       userSubscription
     }: ImpersonationContext
-  ): Promise<
-    Order & {
-      assetProfile: SymbolProfile;
-
-      /**
-       * @deprecated Use `assetProfile` instead
-       */
-      SymbolProfile: SymbolProfile;
-    }
-  > {
+  ): Promise<Prisma.OrderGetPayload<{ include: { SymbolProfile: true } }>> {
     // Evaluate the more restrictive subscription of the authenticated user
     // and the owner of the activity
     const subscription =
@@ -312,10 +303,7 @@ export class ActivitiesController {
       });
     }
 
-    return {
-      ...activity,
-      assetProfile: activity.SymbolProfile
-    };
+    return activity;
   }
 
   @HasPermission(permissions.updateActivity)
