@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the positive performance from the all time high in the watchlist
 - Fixed the portfolio calculation for holdings with historical market prices between the chart dates
-- Fixed the historical market data gathering in the `POST api/v1/activities` endpoint for the `MANUAL` data source
+- Fixed the asset profile identifier in the historical market data gathering of the `POST api/v1/activities` endpoint
 
 ## 3.77.0 - 2026-10-02
 
