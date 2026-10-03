@@ -7,6 +7,7 @@ import {
   extractNumberFromString,
   getCountryCodeFromCurrency,
   getEmojiFlag,
+  getHoldingName,
   getNumberFormatGroup,
   getStringOrNull,
   getStringOrUndefined,
@@ -140,6 +141,52 @@ describe('Helper', () => {
 
     it('Empty country code', () => {
       expect(getEmojiFlag('')).toEqual(undefined);
+    });
+  });
+
+  describe('Get holding name', () => {
+    it('Cash position', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'CASH',
+          assetSubClassLabel: 'Cash',
+          name: 'CHF',
+          symbol: 'CHF'
+        })
+      ).toEqual('Cash (CHF)');
+    });
+
+    it('Cash position without asset sub class label', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'CASH',
+          assetSubClassLabel: undefined,
+          name: 'CHF',
+          symbol: 'CHF'
+        })
+      ).toEqual('CHF');
+    });
+
+    it('Holding with name', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'STOCK',
+          assetSubClassLabel: 'Stock',
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        })
+      ).toEqual('Apple Inc.');
+    });
+
+    it('Holding without name', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'STOCK',
+          assetSubClassLabel: 'Stock',
+          name: undefined,
+          symbol: 'AAPL'
+        })
+      ).toEqual('AAPL');
     });
   });
 

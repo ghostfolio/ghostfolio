@@ -30,6 +30,20 @@ function mockGetValue({
 
       return { marketPrice: 0 };
 
+    case '6c0c5cee-0208-4975-b473-03baf2518497':
+      // Sparse market data with the quote of today, which falls back to the
+      // latest market price
+      if (isSameDay(parseDate('2023-06-14'), date)) {
+        return { marketPrice: 80 };
+      } else if (
+        isSameDay(parseDate('2023-06-15'), date) ||
+        isSameDay(parseDate('2024-01-31'), date)
+      ) {
+        return { marketPrice: 100 };
+      }
+
+      return { marketPrice: 0 };
+
     case 'BALN.SW':
       if (isSameDay(parseDate('2021-11-12'), date)) {
         return { marketPrice: 146 };
