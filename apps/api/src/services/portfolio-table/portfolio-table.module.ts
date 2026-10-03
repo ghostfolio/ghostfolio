@@ -1,6 +1,7 @@
 import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { WatchlistModule } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.module';
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 
 import { Module } from '@nestjs/common';
@@ -9,7 +10,13 @@ import { PortfolioTableService } from './portfolio-table.service';
 
 @Module({
   exports: [PortfolioTableService],
-  imports: [ActivitiesModule, I18nModule, PortfolioModule, WatchlistModule],
+  imports: [
+    ActivitiesModule,
+    ConfigurationModule,
+    I18nModule,
+    PortfolioModule,
+    WatchlistModule
+  ],
   providers: [PortfolioTableService]
 })
 export class PortfolioTableModule {}

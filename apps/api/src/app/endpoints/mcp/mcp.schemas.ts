@@ -1,4 +1,5 @@
 import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
+import { isValidEncodedDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import {
   COMMENT_MAXIMUM_LENGTH,
   DATE_RANGES,
@@ -17,6 +18,20 @@ import {
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { z } from 'zod';
 
+const DATA_SOURCE_PARAMETER_ERROR = `Invalid option: expected one of ${Object.values(DataSource).join('|')} or a data source as given by a tool`;
+
+const DATA_SOURCE_PARAMETER = z
+  .union(
+    [
+      z.enum(DataSource),
+      z.string().refine(isValidEncodedDataSource, {
+        error: DATA_SOURCE_PARAMETER_ERROR
+      })
+    ],
+    { error: DATA_SOURCE_PARAMETER_ERROR }
+  )
+  .describe('The data source of the asset profile');
+
 const SYMBOL_PARAMETER = z
   .string()
   .trim()
@@ -25,9 +40,7 @@ const SYMBOL_PARAMETER = z
   .describe('The symbol of the asset profile');
 
 const HOLDING_PARAMETER = z.object({
-  dataSource: z
-    .enum(DataSource)
-    .describe('The data source of the asset profile'),
+  dataSource: DATA_SOURCE_PARAMETER,
   symbol: SYMBOL_PARAMETER
 });
 
@@ -137,10 +150,7 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           .describe(
             'The currency of the fee and of the unit price, as an ISO 4217 code in upper case'
           ),
-        dataSource: z
-          .enum(DataSource)
-          .optional()
-          .describe('The data source of the asset profile'),
+        dataSource: DATA_SOURCE_PARAMETER.optional(),
         date: z
           .string()
           .refine(isValidDateAfter1970)

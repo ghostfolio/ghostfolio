@@ -1,10 +1,16 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { WatchlistService } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { transformDataSourceInResponse } from '@ghostfolio/api/helper/data-source.helper';
 import { TableColumnDefinition } from '@ghostfolio/api/helper/interfaces/table-column-definition.interface';
 import { getMarkdownTable } from '@ghostfolio/api/helper/markdown-table.helper';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { DATE_FORMAT, isAccountExcluded } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  isAccountExcluded,
+  isCashPosition
+} from '@ghostfolio/common/helper';
 import {
   Activity,
   Filter,
@@ -17,11 +23,30 @@ import { Injectable } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
+  DataSource,
   Type as ActivityType
 } from '@prisma/client';
 import { format } from 'date-fns';
 
+import { DataSourceTableContext } from './interfaces/data-source-table-context.interface';
 import { HoldingsTableColumnDefinition } from './types/holdings-table-column-definition.type';
+
+const DATA_SOURCE_COLUMN_NAME = 'Data Source';
+
+function getDataSourceColumnDefinition<T>(
+  getDataSource: (row: T) => DataSource | undefined
+): TableColumnDefinition<T, DataSourceTableContext> {
+  return {
+    getValue: (row, { configurationService }) => {
+      const dataSource = getDataSource(row);
+
+      return dataSource
+        ? transformDataSourceInResponse({ configurationService, dataSource })
+        : '';
+    },
+    name: DATA_SOURCE_COLUMN_NAME
+  };
+}
 
 function getPercentage(value: number) {
   return `${(value * 100).toFixed(3)}%`;
@@ -83,52 +108,57 @@ export class PortfolioTableService {
       }
     ];
 
-  private static readonly ACTIVITIES_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<Activity>[] =
-    [
-      {
-        getValue: ({ date }) => {
-          return format(date, DATE_FORMAT);
-        },
-        name: 'Date'
+  private static readonly ACTIVITIES_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<
+    Activity,
+    DataSourceTableContext
+  >[] = [
+    {
+      getValue: ({ date }) => {
+        return format(date, DATE_FORMAT);
       },
-      {
-        getValue: ({ type }) => {
-          return type;
-        },
-        name: 'Type'
+      name: 'Date'
+    },
+    {
+      getValue: ({ type }) => {
+        return type;
       },
-      {
-        getValue: ({ assetProfile }) => {
-          return assetProfile.name ?? '';
-        },
-        name: 'Name'
+      name: 'Type'
+    },
+    {
+      getValue: ({ assetProfile }) => {
+        return assetProfile.name ?? '';
       },
-      {
-        getValue: ({ assetProfile }) => {
-          return assetProfile.symbol;
-        },
-        name: 'Symbol'
+      name: 'Name'
+    },
+    {
+      getValue: ({ assetProfile }) => {
+        return assetProfile.symbol;
       },
-      {
-        getValue: ({ assetProfile, currency }) => {
-          return currency ?? assetProfile.currency;
-        },
-        name: 'Currency'
+      name: 'Symbol'
+    },
+    getDataSourceColumnDefinition(({ assetProfile }) => {
+      return assetProfile.dataSource;
+    }),
+    {
+      getValue: ({ assetProfile, currency }) => {
+        return currency ?? assetProfile.currency;
       },
-      {
-        align: 'right',
-        getValue: ({ unitPrice }) => {
-          return unitPrice.toString();
-        },
-        name: 'Unit Price'
+      name: 'Currency'
+    },
+    {
+      align: 'right',
+      getValue: ({ unitPrice }) => {
+        return unitPrice.toString();
       },
-      {
-        getValue: ({ account }) => {
-          return account?.name ?? '';
-        },
-        name: 'Account'
-      }
-    ];
+      name: 'Unit Price'
+    },
+    {
+      getValue: ({ account }) => {
+        return account?.name ?? '';
+      },
+      name: 'Account'
+    }
+  ];
 
   private static readonly HOLDINGS_TABLE_COLUMN_DEFINITIONS: HoldingsTableColumnDefinition[] =
     [
@@ -144,6 +174,11 @@ export class PortfolioTableService {
         },
         name: 'Symbol'
       },
+      getDataSourceColumnDefinition(({ assetProfile }) => {
+        return isCashPosition(assetProfile)
+          ? undefined
+          : assetProfile.dataSource;
+      }),
       {
         getValue: ({ assetProfile }) => {
           return assetProfile.currency;
@@ -222,7 +257,8 @@ export class PortfolioTableService {
     ];
 
   private static readonly WATCHLIST_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<
-    WatchlistResponse['watchlist'][number]
+    WatchlistResponse['watchlist'][number],
+    DataSourceTableContext
   >[] = [
     {
       getValue: ({ name }) => {
@@ -236,6 +272,9 @@ export class PortfolioTableService {
       },
       name: 'Symbol'
     },
+    getDataSourceColumnDefinition(({ dataSource }) => {
+      return dataSource;
+    }),
     {
       getValue: ({ trend50d }) => {
         return trend50d;
@@ -273,6 +312,7 @@ export class PortfolioTableService {
 
   public constructor(
     private readonly activitiesService: ActivitiesService,
+    private readonly configurationService: ConfigurationService,
     private readonly i18nService: I18nService,
     private readonly portfolioService: PortfolioService,
     private readonly watchlistService: WatchlistService
@@ -399,6 +439,7 @@ export class PortfolioTableService {
         await getMarkdownTable({
           columnDefinitions:
             PortfolioTableService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS,
+          context: { configurationService: this.configurationService },
           rows: activities
         })
       );
@@ -410,11 +451,13 @@ export class PortfolioTableService {
   public async getHoldingsTable({
     filters,
     languageCode,
-    userId
+    userId,
+    withDataSource = false
   }: {
     filters?: Filter[];
     languageCode: string;
     userId: string;
+    withDataSource?: boolean;
   }) {
     const { holdings } = await this.portfolioService.getDetails({
       filters,
@@ -442,8 +485,16 @@ export class PortfolioTableService {
       '',
       await getMarkdownTable({
         columnDefinitions:
-          PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS,
-        context: { assetClassTranslations, assetSubClassTranslations },
+          PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.filter(
+            ({ name }) => {
+              return withDataSource || name !== DATA_SOURCE_COLUMN_NAME;
+            }
+          ),
+        context: {
+          assetClassTranslations,
+          assetSubClassTranslations,
+          configurationService: this.configurationService
+        },
         rows: sortedHoldings
       })
     ].join('\n');
@@ -491,6 +542,7 @@ export class PortfolioTableService {
         await getMarkdownTable({
           columnDefinitions:
             PortfolioTableService.WATCHLIST_TABLE_COLUMN_DEFINITIONS,
+          context: { configurationService: this.configurationService },
           rows: watchlist
         })
       );

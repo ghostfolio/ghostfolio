@@ -1,3 +1,4 @@
+import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import {
   COMMENT_MAXIMUM_LENGTH,
   DEFAULT_DATE_RANGE,
@@ -18,6 +19,8 @@ import {
 } from './mcp.schemas';
 import { createActivity } from './mcp.test-utils';
 
+const UNKNOWN_ENCODED_DATA_SOURCE = 'ffffffff';
+
 describe('GET_ACCOUNTS_PARAMETERS', () => {
   it('Refuses an empty symbol of the holding', () => {
     expect(
@@ -34,6 +37,40 @@ describe('GET_ACCOUNTS_PARAMETERS', () => {
       }).success
     ).toBe(false);
   });
+
+  it('Accepts an encoded data source of the holding', () => {
+    expect(
+      GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        }
+      }).success
+    ).toBe(true);
+  });
+
+  it('Refuses an unknown encoded data source of the holding', () => {
+    expect(
+      GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource: UNKNOWN_ENCODED_DATA_SOURCE, symbol: 'AAPL' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Gives the valid data sources in the error of an unknown data source of the holding', () => {
+    for (const dataSource of ['yahoo', 1]) {
+      const { error } = GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource, symbol: 'AAPL' }
+      });
+
+      expect(error.issues).toEqual([
+        expect.objectContaining({
+          message: expect.stringContaining(`|${DataSource.YAHOO}`),
+          path: ['holding', 'dataSource']
+        })
+      ]);
+    }
+  });
 });
 
 describe('GET_ACTIVITIES_PARAMETERS', () => {
@@ -49,6 +86,25 @@ describe('GET_ACTIVITIES_PARAMETERS', () => {
     expect(
       GET_ACTIVITIES_PARAMETERS.safeParse({
         holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Accepts an encoded data source of the holding', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        }
+      }).success
+    ).toBe(true);
+  });
+
+  it('Refuses an unknown encoded data source of the holding', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        holding: { dataSource: UNKNOWN_ENCODED_DATA_SOURCE, symbol: 'AAPL' }
       }).success
     ).toBe(false);
   });
@@ -83,6 +139,25 @@ describe('GET_PERFORMANCE_PARAMETERS', () => {
     expect(
       GET_PERFORMANCE_PARAMETERS.safeParse({
         holding: { dataSource: DataSource.YAHOO, symbol: '  ' }
+      }).success
+    ).toBe(false);
+  });
+
+  it('Accepts an encoded data source of the holding', () => {
+    expect(
+      GET_PERFORMANCE_PARAMETERS.safeParse({
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        }
+      }).success
+    ).toBe(true);
+  });
+
+  it('Refuses an unknown encoded data source of the holding', () => {
+    expect(
+      GET_PERFORMANCE_PARAMETERS.safeParse({
+        holding: { dataSource: UNKNOWN_ENCODED_DATA_SOURCE, symbol: 'AAPL' }
       }).success
     ).toBe(false);
   });
@@ -123,6 +198,20 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
 
   it('Accepts a currency in upper case', () => {
     expect(parse([createActivity({ currency: 'USD' })])).toBe(true);
+  });
+
+  it('Accepts an encoded data source', () => {
+    expect(
+      parse([
+        createActivity({ dataSource: encodeDataSource(DataSource.YAHOO) })
+      ])
+    ).toBe(true);
+  });
+
+  it('Refuses an unknown encoded data source', () => {
+    expect(
+      parse([createActivity({ dataSource: UNKNOWN_ENCODED_DATA_SOURCE })])
+    ).toBe(false);
   });
 
   it('Refuses a date at or before the epoch', () => {
