@@ -18,6 +18,7 @@ import {
   IsBoolean,
   IsEnum,
   IsISO8601,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -71,8 +72,12 @@ export class CreateOrderDto {
   @Min(0)
   quantity: number;
 
+  @IsNotEmpty()
   @IsString()
   @MaxLength(SYMBOL_MAXIMUM_LENGTH)
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) ? value.trim() : value
+  )
   symbol: string;
 
   @ArrayUnique()
