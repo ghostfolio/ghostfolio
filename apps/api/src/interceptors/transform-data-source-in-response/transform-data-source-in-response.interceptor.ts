@@ -1,6 +1,7 @@
 import {
   encodeDataSource,
-  getMaskedGhostfolioDataSource
+  getMaskedGhostfolioDataSource,
+  isDataSourceEncodedInResponse
 } from '@ghostfolio/api/helper/data-source.helper';
 import { redactPaths } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -30,7 +31,7 @@ export class TransformDataSourceInResponseInterceptor<
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       this.encodedDataSourceMap = Object.keys(DataSource).reduce(
         (encodedDataSourceMap, dataSource) => {
-          if (!['GHOSTFOLIO', 'MANUAL'].includes(dataSource)) {
+          if (isDataSourceEncodedInResponse(DataSource[dataSource])) {
             encodedDataSourceMap[dataSource] = encodeDataSource(
               DataSource[dataSource]
             );
