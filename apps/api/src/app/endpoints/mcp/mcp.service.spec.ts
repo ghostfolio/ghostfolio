@@ -2,6 +2,7 @@ import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
@@ -128,6 +129,22 @@ describe('McpService', () => {
       );
     });
 
+    it('Decodes an encoded data source', async () => {
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
     it('Keeps the data source if the subscription is not enabled', async () => {
       configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
       configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
@@ -185,6 +202,21 @@ describe('McpService', () => {
 
       await getActivities({
         holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Decodes an encoded data source', async () => {
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await getActivities({
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        }
       });
 
       expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
@@ -275,6 +307,23 @@ describe('McpService', () => {
       );
     });
 
+    it('Decodes an encoded data source', async () => {
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
     it('Keeps the data source if the subscription is not enabled', async () => {
       configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
       configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
@@ -304,14 +353,15 @@ describe('McpService', () => {
   });
 
   describe('getPortfolio', () => {
-    it('Gives the table of the holdings in the default language', async () => {
+    it('Gives the table of the holdings with the data source in the default language', async () => {
       expect(await mcpService.getPortfolio({ userId })).toEqual({
         content: [{ text: '## Holdings', type: 'text' }]
       });
 
       expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith({
         userId,
-        languageCode: DEFAULT_LANGUAGE_CODE
+        languageCode: DEFAULT_LANGUAGE_CODE,
+        withDataSource: true
       });
     });
   });
@@ -341,9 +391,6 @@ describe('McpService', () => {
 
     it('Gives the import-ready asset profiles available to the user', async () => {
       const user = setupUser([permissions.createActivity]);
-
-      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
-      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
 
       jest.spyOn(symbolService, 'lookup').mockResolvedValue({
         items: [
@@ -383,10 +430,44 @@ describe('McpService', () => {
             assetClass: AssetClass.EQUITY,
             assetSubClass: AssetSubClass.STOCK,
             currency: 'USD',
-            dataSource: DataSource.GHOSTFOLIO,
+            dataSource: DataSource.YAHOO,
             name: 'Apple Inc.',
             symbol: 'AAPL'
           }
+        ]
+      });
+    });
+
+    it('Encodes the data source if the subscription is enabled', async () => {
+      setupUser([permissions.createActivity]);
+
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      jest.spyOn(symbolService, 'lookup').mockResolvedValue({
+        items: [
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataProviderInfo: { isPremium: false },
+            dataSource: DataSource.YAHOO,
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]
+      });
+
+      const result = await mcpService.searchAssetProfiles({
+        query: 'Apple',
+        userId
+      });
+
+      expect(JSON.parse(result.content[0].text)).toEqual({
+        assetProfiles: [
+          expect.objectContaining({
+            dataSource: encodeDataSource(DataSource.YAHOO)
+          })
         ]
       });
     });
@@ -437,6 +518,27 @@ describe('McpService', () => {
       await mcpService.importActivities({
         userId,
         activities: [createActivity({ dataSource: DataSource.GHOSTFOLIO })]
+      });
+
+      expect(importService.import).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activitiesDto: [
+            expect.objectContaining({ dataSource: DataSource.YAHOO })
+          ]
+        })
+      );
+    });
+
+    it('Decodes an encoded data source', async () => {
+      setupUser([permissions.createActivity]);
+
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.importActivities({
+        userId,
+        activities: [
+          createActivity({ dataSource: encodeDataSource(DataSource.YAHOO) })
+        ]
       });
 
       expect(importService.import).toHaveBeenCalledWith(

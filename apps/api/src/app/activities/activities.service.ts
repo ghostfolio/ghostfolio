@@ -183,7 +183,7 @@ export class ActivitiesService {
       updateAccountBalance?: boolean;
       userId: string;
     }
-  ): Promise<Order> {
+  ): Promise<Prisma.OrderGetPayload<{ include: { SymbolProfile: true } }>> {
     const tags = data.tags ?? [];
 
     await this.tagService.validateTagIds({

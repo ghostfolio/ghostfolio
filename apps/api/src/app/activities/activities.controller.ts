@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
+import { isDataGatheringSupported } from '@ghostfolio/api/helper/data-source.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
@@ -32,7 +33,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order } from '@prisma/client';
+import { Order, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -216,7 +217,7 @@ export class ActivitiesController {
       userId,
       userSubscription
     }: ImpersonationContext
-  ): Promise<Order> {
+  ): Promise<Prisma.OrderGetPayload<{ include: { SymbolProfile: true } }>> {
     // Evaluate the more restrictive subscription of the authenticated user
     // and the owner of the activity
     const subscription =
@@ -284,15 +285,18 @@ export class ActivitiesController {
       user: { connect: { id: userId } }
     });
 
-    if (dataSource && !isActivityInFuture({ date: activity.date })) {
-      // Gather symbol data in the background, if data source is set
-      // (not MANUAL) and the date is not in the future
+    if (
+      isDataGatheringSupported(activity.SymbolProfile) &&
+      !isActivityInFuture({ date: activity.date })
+    ) {
+      // Gather symbol data in the background, if the asset profile supports
+      // data gathering and the date is not in the future
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
-            dataSource,
+            dataSource: activity.SymbolProfile.dataSource,
             date: activity.date,
-            symbol: data.symbol
+            symbol: activity.SymbolProfile.symbol
           }
         ],
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH

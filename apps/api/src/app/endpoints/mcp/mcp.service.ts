@@ -2,8 +2,8 @@ import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
-  getMaskedGhostfolioDataSource,
-  getUnmaskedGhostfolioDataSource
+  transformDataSourceInRequest,
+  transformDataSourceInResponse
 } from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -121,7 +121,8 @@ export class McpService {
   public async getPortfolio({ userId }: { userId: string }) {
     const table = await this.portfolioTableService.getHoldingsTable({
       userId,
-      languageCode: DEFAULT_LANGUAGE_CODE
+      languageCode: DEFAULT_LANGUAGE_CODE,
+      withDataSource: true
     });
 
     return this.getTextResult(table);
@@ -144,13 +145,11 @@ export class McpService {
       permission: permissions.createActivity
     });
 
-    const ghostfolioDataSources = this.getGhostfolioDataSources();
-
     const activitiesDto = activities.map((activity) => {
       return {
         ...activity,
-        dataSource: getUnmaskedGhostfolioDataSource({
-          ghostfolioDataSources,
+        dataSource: transformDataSourceInRequest({
+          configurationService: this.configurationService,
           dataSource: activity.dataSource
         })
       };
@@ -188,8 +187,6 @@ export class McpService {
 
     const { items } = await this.symbolService.lookup({ query, user });
 
-    const ghostfolioDataSources = this.getGhostfolioDataSources();
-
     const assetProfiles = items.flatMap(
       ({
         assetClass,
@@ -211,9 +208,9 @@ export class McpService {
             currency,
             name,
             symbol,
-            dataSource: getMaskedGhostfolioDataSource({
+            dataSource: transformDataSourceInResponse({
               dataSource,
-              ghostfolioDataSources
+              configurationService: this.configurationService
             })
           }
         ];
@@ -223,19 +220,13 @@ export class McpService {
     return this.getTextResult(JSON.stringify({ assetProfiles }, null, 2));
   }
 
-  private getGhostfolioDataSources() {
-    return this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')
-      ? this.configurationService.get('DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER')
-      : [];
-  }
-
   private getHoldingFilterParameters({
     holding
   }: Pick<z.infer<typeof GET_ACCOUNTS_PARAMETERS>, 'holding'>) {
     return {
-      filterByDataSource: getUnmaskedGhostfolioDataSource({
-        dataSource: holding?.dataSource,
-        ghostfolioDataSources: this.getGhostfolioDataSources()
+      filterByDataSource: transformDataSourceInRequest({
+        configurationService: this.configurationService,
+        dataSource: holding?.dataSource
       }),
       filterBySymbol: holding?.symbol
     };
