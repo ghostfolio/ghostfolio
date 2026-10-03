@@ -848,7 +848,7 @@ export class ImportService {
       const type = activity.type;
       const unitPrice = activity.unitPrice;
 
-      const assetProfile = assetProfiles[
+      let assetProfile = assetProfiles[
         getAssetProfileIdentifier({
           dataSource: activity.assetProfile.dataSource,
           symbol: activity.assetProfile.symbol
@@ -940,9 +940,22 @@ export class ImportService {
           userId: user.id
         });
 
-        if (createdActivity.SymbolProfile?.symbol) {
-          // Update symbol that may have been assigned in createOrder()
+        if (
+          createdActivity.SymbolProfile?.dataSource === assetProfile.dataSource
+        ) {
+          // Update the symbol that may have been assigned in createActivity()
+          // in the shared asset profile, so that the next activities of this
+          // asset profile refer to the same custom asset profile
           assetProfile.symbol = createdActivity.SymbolProfile.symbol;
+        } else if (createdActivity.SymbolProfile) {
+          // createActivity() has created a custom asset profile with the
+          // MANUAL data source, for example for a fee. The shared asset profile
+          // stays unchanged for the next activities.
+          assetProfile = {
+            ...assetProfile,
+            dataSource: createdActivity.SymbolProfile.dataSource,
+            symbol: createdActivity.SymbolProfile.symbol
+          };
         }
 
         order = createdActivity;
