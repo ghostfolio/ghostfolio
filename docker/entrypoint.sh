@@ -9,4 +9,4 @@ echo "Seeding the database"
 npx prisma db seed
 
 echo "Starting the server"
-exec node main
+exec node --enable-source-maps main
