@@ -38,11 +38,11 @@ import { GfValueComponent } from '../value/value.component';
   templateUrl: './top-holdings.component.html'
 })
 export class GfTopHoldingsComponent implements OnChanges {
-  @Input() baseCurrency: string;
-  @Input() hasPermissionToShowValues = true;
-  @Input() locale = getLocale();
-  @Input() pageSize = Number.MAX_SAFE_INTEGER;
-  @Input() topHoldings: HoldingWithParents[];
+  @Input() public baseCurrency?: string;
+  @Input() public hasPermissionToShowValues = true;
+  @Input() public locale?: string = getLocale();
+  @Input() public pageSize = Number.MAX_SAFE_INTEGER;
+  @Input() public topHoldings?: HoldingWithParents[];
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
