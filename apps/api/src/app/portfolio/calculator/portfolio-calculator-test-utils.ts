@@ -1,12 +1,15 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
+import { parseDate } from '@ghostfolio/common/helper';
 import {
+  Activity,
   ExportResponse,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 
 import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 export const activityDummyData = {
   accountId: undefined,
@@ -69,6 +72,43 @@ export async function getPerformanceByDateRange({
   }
 
   return performanceByDateRange;
+}
+
+/**
+ * Loads the activities of an export file in test/import/ok for the portfolio
+ * calculator. The user currency of the file is the base currency of the test.
+ *
+ * The activity currency must be the asset profile currency. The helper does
+ * not convert the fee to the base currency and does not load the tags.
+ */
+export function loadActivitiesFromExportFile(fileName: string): {
+  activities: Activity[];
+  userCurrency: string;
+} {
+  const exportResponse = loadExportFile(
+    join(__dirname, '../../../../../../test/import/ok', fileName)
+  );
+
+  const activities: Activity[] = exportResponse.activities.map((activity) => {
+    return {
+      ...activityDummyData,
+      ...activity,
+      assetProfile: {
+        ...assetProfileDummyData,
+        currency: activity.currency,
+        dataSource: activity.dataSource,
+        name: activity.symbol,
+        symbol: activity.symbol
+      },
+      date: parseDate(activity.date),
+      feeInAssetProfileCurrency: activity.fee,
+      feeInBaseCurrency: activity.fee,
+      tags: [],
+      unitPriceInAssetProfileCurrency: activity.unitPrice
+    };
+  });
+
+  return { activities, userCurrency: exportResponse.user.settings.currency };
 }
 
 export function loadExportFile(filePath: string): ExportResponse {

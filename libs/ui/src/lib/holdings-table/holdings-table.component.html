@@ -20,7 +20,7 @@
           [countryCode]="getCountryCodeForCashPosition(element)"
           [dataSource]="element.assetProfile.dataSource"
           [symbol]="element.assetProfile.symbol"
-          [tooltip]="element.assetProfile.name"
+          [tooltip]="getHoldingName(element.assetProfile)"
         />
       </td>
     </ng-container>
@@ -40,9 +40,14 @@
         mat-cell
         [class.w-100]="mode() === 'simple'"
       >
-        <div class="text-truncate" [title]="element.assetProfile.name">
-          {{ element.assetProfile.name }}
-          @if (element.assetProfile.name === element.assetProfile.symbol) {
+        @let holdingName = getHoldingName(element.assetProfile);
+
+        <div class="text-truncate" [title]="holdingName">
+          {{ holdingName }}
+          @if (
+            !isCashPosition(element.assetProfile) &&
+            element.assetProfile.name === element.assetProfile.symbol
+          ) {
             <span>({{ element.assetProfile.assetSubClassLabel }})</span>
           }
         </div>
