@@ -137,10 +137,10 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">
+                <h4 class="gf-text-wrap-balance">
                   <span i18n>Portfolio Calculations</span>
                   @if (hasPermissionForSubscription) {
-                    <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="d-inline-block ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -157,10 +157,10 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">
+                <h4 class="gf-text-wrap-balance">
                   <span i18n>Portfolio Allocations</span>
                   @if (hasPermissionForSubscription) {
-                    <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="d-inline-block ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -175,10 +175,10 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">
+                <h4 class="gf-text-wrap-balance">
                   <span i18n>Static Analysis</span>
                   @if (hasPermissionForSubscription) {
-                    <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="d-inline-block ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -193,10 +193,10 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">
+                <h4 class="gf-text-wrap-balance">
                   <span i18n>Watchlist</span>
                   @if (hasPermissionForSubscription) {
-                    <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="d-inline-block ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -211,12 +211,14 @@
             <mat-card-content>
               <div class="flex-grow-1">
                 <h4 class="align-items-center d-flex">
-                  <span>Ghostfolio MCP</span>
-                  @if (hasPermissionForSubscription) {
-                    <gf-premium-indicator class="ml-1" />
-                  }
+                  <span class="gf-text-wrap-balance">
+                    <span>Ghostfolio MCP</span>
+                    @if (hasPermissionForSubscription) {
+                      <gf-premium-indicator class="d-inline-block ml-1" />
+                    }
+                  </span>
                   <span
-                    class="badge badge-pill badge-secondary ml-2 text-uppercase"
+                    class="badge badge-pill badge-secondary ml-auto text-uppercase"
                     i18n
                     >new</span
                   >
@@ -234,9 +236,9 @@
             <mat-card appearance="outlined" class="d-flex flex-column h-100">
               <mat-card-content>
                 <div class="flex-grow-1">
-                  <h4 class="align-items-center d-flex">
+                  <h4 class="gf-text-wrap-balance">
                     <span i18n>Market Mood</span>
-                    <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="d-inline-block ml-1" />
                   </h4>
                   <p class="m-0">
                     Check the current market mood (<a
