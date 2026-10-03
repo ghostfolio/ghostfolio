@@ -161,7 +161,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.isNumber = false;
         this.isString = true;
 
-        if (this.isDate || this.value instanceof Date) {
+        if (this.isDate) {
           this.formattedValue = new Date(this.value).toLocaleDateString(
             this.locale,
             {
@@ -171,7 +171,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
             }
           );
         } else {
-          this.formattedValue = this.value;
+          this.formattedValue = String(this.value);
         }
       }
     }
