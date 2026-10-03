@@ -69,7 +69,7 @@
               <ion-icon class="mr-2" name="cloud-download-outline" />
               @if (canExportActivities()) {
                 <span i18n
-                  >Export {{ totalItems > 1 ? totalItems : '' }}
+                  >Export {{ (totalItems ?? 0) > 1 ? totalItems : '' }}
                   {totalItems, plural, =1 {Activity} other {Activities}}</span
                 >
               } @else {
@@ -107,7 +107,7 @@
               <ion-icon class="mr-2" name="trash-outline" />
               @if (canDeleteActivities()) {
                 <span i18n
-                  >Delete {{ totalItems > 1 ? totalItems : '' }}
+                  >Delete {{ (totalItems ?? 0) > 1 ? totalItems : '' }}
                   {totalItems, plural, =1 {Activity} other {Activities}}</span
                 >
               } @else {
@@ -126,7 +126,7 @@
     class="gf-table w-100"
     mat-table
     matSort
-    [dataSource]="dataSource()"
+    [dataSource]="dataSource() ?? []"
     [matSortActive]="sortColumn"
     [matSortDirection]="sortDirection"
     [matSortDisabled]="sortDisabled"
@@ -574,9 +574,9 @@
 }
 
 <mat-paginator
-  [class.d-none]="(isLoading() && !totalItems) || totalItems <= pageSize"
+  [class.d-none]="(isLoading() && !totalItems) || (totalItems ?? 0) <= pageSize"
   [hidePageSize]="true"
-  [length]="totalItems"
+  [length]="totalItems ?? 0"
   [pageIndex]="pageIndex"
   [pageSize]="pageSize"
   [showFirstLastButtons]="true"
