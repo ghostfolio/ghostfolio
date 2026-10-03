@@ -171,7 +171,7 @@
               />
             </div>
           </div>
-          <div class="d-flex mb-3 ml-3 py-1">
+          <div class="d-flex ml-3 py-1">
             <div class="flex-grow-1 mr-2 text-truncate">
               <ng-container i18n>Asset Performance</ng-container>
             </div>
@@ -187,45 +187,42 @@
               />
             </div>
           </div>
-          @if (user?.settings?.isExperimentalFeatures) {
-            <div class="d-flex py-1">
-              <div
-                class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
-              >
-                <span i18n>Absolute Dividend Performance</span>
-                @if (user?.subscription?.type === 'Basic') {
-                  <gf-premium-indicator class="ml-1" />
-                }
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [isCurrency]="true"
-                  [isLoading]="isLoadingInvestmentChart"
-                  [locale]="user?.settings?.locale"
-                  [unit]="user?.settings?.baseCurrency"
-                  [value]="performance?.dividendInBaseCurrency"
-                />
-              </div>
+          <div class="d-flex ml-3 py-1 text-muted">
+            <div
+              class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
+            >
+              <span i18n>thereof Dividend</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
             </div>
-            <div class="d-flex mb-3 ml-3 py-1">
-              <div class="flex-grow-1 mr-2 text-truncate">
-                <ng-container i18n>Dividend Performance</ng-container>
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [colorizeSign]="true"
-                  [isLoading]="isLoadingInvestmentChart"
-                  [isPercent]="true"
-                  [locale]="user?.settings?.locale"
-                  [value]="performance?.dividendPercentageWithCurrencyEffect"
-                />
-              </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isCurrency]="true"
+                [isLoading]="isLoadingInvestmentChart"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="performance?.dividendInBaseCurrency"
+              />
             </div>
-          }
+          </div>
+          <div class="d-flex mb-3 ml-3 py-1 text-muted">
+            <div class="flex-grow-1 mr-2 text-truncate">
+              <ng-container i18n>thereof Dividend Performance</ng-container>
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isLoading]="isLoadingInvestmentChart"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="performance?.dividendPercentageWithCurrencyEffect"
+              />
+            </div>
+          </div>
           <div class="d-flex py-1">
             <div
               class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
@@ -286,7 +283,7 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="netPerformanceWithCurrencyEffect"
+                [value]="performance?.netPerformanceWithCurrencyEffect"
               />
             </div>
           </div>
@@ -299,7 +296,8 @@
               ) {
                 <abbr
                   class="d-none d-sm-inline-block initialism ml-2 text-muted"
-                  title="Return on Average Investment"
+                  i18n-title
+                  title="Return on Average Investment (total return with dividends)"
                   >(ROAI)</abbr
                 >
               }
@@ -312,7 +310,9 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
-                [value]="netPerformancePercentageWithCurrencyEffect"
+                [value]="
+                  performance?.netPerformancePercentageWithCurrencyEffect
+                "
               />
             </div>
           </div>

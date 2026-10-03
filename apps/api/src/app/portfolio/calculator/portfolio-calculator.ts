@@ -959,6 +959,7 @@ export abstract class PortfolioCalculator {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
+    let dividends = new Big(0);
     let fees = new Big(0);
     let feesAtStartDate = new Big(0);
     let feesAtStartDateWithCurrencyEffect = new Big(0);
@@ -1201,14 +1202,26 @@ export abstract class PortfolioCalculator {
         );
       }
 
+      if (activity.type === 'DIVIDEND') {
+        // The amount of a dividend in the base currency is the same with and
+        // without currency effect, like the dividend of the holding
+        dividends = dividends.plus(
+          activity.quantity
+            .mul(activity.unitPrice)
+            .mul(exchangeRateAtActivityDate ?? 1)
+        );
+      }
+
       const newGrossPerformance = valueOfInvestment
         .minus(totalInvestment)
-        .plus(grossPerformanceFromSells);
+        .plus(grossPerformanceFromSells)
+        .plus(dividends);
 
       const newGrossPerformanceWithCurrencyEffect =
         valueOfInvestmentWithCurrencyEffect
           .minus(totalInvestmentWithCurrencyEffect)
-          .plus(grossPerformanceFromSellsWithCurrencyEffect);
+          .plus(grossPerformanceFromSellsWithCurrencyEffect)
+          .plus(dividends);
 
       grossPerformance = newGrossPerformance;
 
