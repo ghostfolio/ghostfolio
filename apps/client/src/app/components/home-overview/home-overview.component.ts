@@ -175,7 +175,8 @@ export class GfHomeOverviewComponent implements OnInit {
             holdings.filter(({ assetProfile }) => {
               return !(
                 isCashPosition(assetProfile) &&
-                assetProfile.currency === baseCurrency
+                assetProfile.currency === baseCurrency &&
+                assetProfile.symbol === baseCurrency
               );
             })
           );
