@@ -978,16 +978,11 @@ export abstract class PortfolioCalculator {
 
     const investmentValuesWithCurrencyEffect: { [date: string]: Big } = {};
     const items: HoldingValuationItem[] = [];
-    let lastAveragePrice = new Big(0);
-    let lastAveragePriceWithCurrencyEffect = new Big(0);
     const netPerformanceValues: { [date: string]: Big } = {};
     const netPerformanceValuesWithCurrencyEffect: { [date: string]: Big } = {};
     let totalInvestment = new Big(0);
-    let totalInvestmentFromBuyTransactions = new Big(0);
-    let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalQuantity = new Big(0);
-    let totalQuantityFromBuyTransactions = new Big(0);
 
     const indexOfStartActivity = activities.findIndex(({ itemType }) => {
       return itemType === 'start';
@@ -1069,17 +1064,6 @@ export abstract class PortfolioCalculator {
         transactionInvestmentWithCurrencyEffect = activity.quantity
           .mul(activity.unitPriceInBaseCurrencyWithCurrencyEffect)
           .mul(getFactor(activity.type));
-
-        totalQuantityFromBuyTransactions =
-          totalQuantityFromBuyTransactions.plus(activity.quantity);
-
-        totalInvestmentFromBuyTransactions =
-          totalInvestmentFromBuyTransactions.plus(transactionInvestment);
-
-        totalInvestmentFromBuyTransactionsWithCurrencyEffect =
-          totalInvestmentFromBuyTransactionsWithCurrencyEffect.plus(
-            transactionInvestmentWithCurrencyEffect
-          );
       } else if (activity.type === 'SELL') {
         if (totalQuantity.gt(0)) {
           const remainingQuantity = totalQuantity.minus(activity.quantity);
@@ -1136,6 +1120,8 @@ export abstract class PortfolioCalculator {
         activity.feeInBaseCurrencyWithCurrencyEffect ?? 0
       );
 
+      const totalQuantityBeforeTransaction = totalQuantity;
+
       totalQuantity = totalQuantity.plus(
         activity.quantity.mul(getFactor(activity.type))
       );
@@ -1149,14 +1135,26 @@ export abstract class PortfolioCalculator {
       const grossPerformanceFromSell =
         activity.type === 'SELL'
           ? activity.unitPriceInBaseCurrency
-              .minus(lastAveragePrice)
+              .minus(
+                totalQuantityBeforeTransaction.eq(0)
+                  ? new Big(0)
+                  : totalInvestmentBeforeTransaction.div(
+                      totalQuantityBeforeTransaction
+                    )
+              )
               .mul(activity.quantity)
           : new Big(0);
 
       const grossPerformanceFromSellWithCurrencyEffect =
         activity.type === 'SELL'
           ? activity.unitPriceInBaseCurrencyWithCurrencyEffect
-              .minus(lastAveragePriceWithCurrencyEffect)
+              .minus(
+                totalQuantityBeforeTransaction.eq(0)
+                  ? new Big(0)
+                  : totalInvestmentBeforeTransactionWithCurrencyEffect.div(
+                      totalQuantityBeforeTransaction
+                    )
+              )
               .mul(activity.quantity)
           : new Big(0);
 
@@ -1168,27 +1166,6 @@ export abstract class PortfolioCalculator {
         grossPerformanceFromSellsWithCurrencyEffect.plus(
           grossPerformanceFromSellWithCurrencyEffect
         );
-
-      lastAveragePrice = totalQuantityFromBuyTransactions.eq(0)
-        ? new Big(0)
-        : totalInvestmentFromBuyTransactions.div(
-            totalQuantityFromBuyTransactions
-          );
-
-      lastAveragePriceWithCurrencyEffect = totalQuantityFromBuyTransactions.eq(
-        0
-      )
-        ? new Big(0)
-        : totalInvestmentFromBuyTransactionsWithCurrencyEffect.div(
-            totalQuantityFromBuyTransactions
-          );
-
-      if (totalQuantity.eq(0)) {
-        // Reset tracking variables when position is fully closed
-        totalInvestmentFromBuyTransactions = new Big(0);
-        totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
-        totalQuantityFromBuyTransactions = new Big(0);
-      }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log(
