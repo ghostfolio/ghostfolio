@@ -857,28 +857,7 @@ export class ImportService {
         dataSource: activity.assetProfile.dataSource,
         symbol: activity.assetProfile.symbol
       };
-      const {
-        assetClass,
-        assetSubClass,
-        countries,
-        createdAt,
-        cusip,
-        dataSource,
-        figi,
-        figiComposite,
-        figiShareClass,
-        holdings,
-        id,
-        isActive,
-        isin,
-        name,
-        scraperConfiguration,
-        sectors,
-        symbol,
-        symbolMapping,
-        url,
-        updatedAt
-      } = assetProfile;
+      const { dataSource, name, symbol } = assetProfile;
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -916,33 +895,6 @@ export class ImportService {
           accountUserId: undefined,
           createdAt: new Date(),
           id: randomUUID(),
-          SymbolProfile: {
-            assetClass,
-            assetSubClass,
-            countries,
-            createdAt,
-            cusip,
-            dataSource,
-            figi,
-            figiComposite,
-            figiShareClass,
-            holdings,
-            id,
-            isActive,
-            isin,
-            name,
-            scraperConfiguration,
-            sectors,
-            symbol,
-            symbolMapping,
-            updatedAt,
-            url,
-            comment: assetProfile.comment,
-            currency: assetProfile.currency,
-            dataGatheringFrequency:
-              assetProfile.dataGatheringFrequency ?? 'DAILY',
-            userId: dataSource === 'MANUAL' ? user.id : undefined
-          },
           symbolProfileId: undefined,
           tags: previewTags,
           updatedAt: new Date(),
