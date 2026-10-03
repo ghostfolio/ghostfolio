@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the graceful shutdown of the server on `SIGTERM`
+- Added `stop_grace_period` to the _Ghostfolio_ service in the `docker-compose` file (`docker-compose.yml`)
+
 ### Changed
 
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
