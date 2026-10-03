@@ -142,7 +142,9 @@ export class WatchlistService {
             allTimeHigh: {
               date: allTimeHigh?.date,
               performancePercent:
-                performancePercent >= 0 ? 0 : performancePercent
+                this.benchmarkService.getPerformancePercentFromAllTimeHigh(
+                  performancePercent
+                )
             }
           },
           trend50d: trends.trend50d,
