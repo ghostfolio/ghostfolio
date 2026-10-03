@@ -121,7 +121,8 @@ export class McpService {
   public async getPortfolio({ userId }: { userId: string }) {
     const table = await this.portfolioTableService.getHoldingsTable({
       userId,
-      languageCode: DEFAULT_LANGUAGE_CODE
+      languageCode: DEFAULT_LANGUAGE_CODE,
+      withDataSource: true
     });
 
     return this.getTextResult(table);

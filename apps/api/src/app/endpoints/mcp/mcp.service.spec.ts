@@ -353,14 +353,15 @@ describe('McpService', () => {
   });
 
   describe('getPortfolio', () => {
-    it('Gives the table of the holdings in the default language', async () => {
+    it('Gives the table of the holdings with the data source in the default language', async () => {
       expect(await mcpService.getPortfolio({ userId })).toEqual({
         content: [{ text: '## Holdings', type: 'text' }]
       });
 
       expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith({
         userId,
-        languageCode: DEFAULT_LANGUAGE_CODE
+        languageCode: DEFAULT_LANGUAGE_CODE,
+        withDataSource: true
       });
     });
   });
@@ -437,8 +438,6 @@ describe('McpService', () => {
       });
     });
 
-    // A response of the instance encodes the data source for a user who is
-    // not an admin, and the client of the access is not a user
     it('Encodes the data source if the subscription is enabled', async () => {
       setupUser([permissions.createActivity]);
 

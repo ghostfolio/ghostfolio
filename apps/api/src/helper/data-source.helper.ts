@@ -115,7 +115,7 @@ export function transformDataSourceInRequest({
   configurationService: ConfigurationService;
   dataSource?: string;
 }) {
-  if (DataSource[dataSource]) {
+  if (Object.hasOwn(DataSource, dataSource)) {
     return getUnmaskedGhostfolioDataSource({
       dataSource: dataSource as DataSource,
       ghostfolioDataSources: getGhostfolioDataSources({ configurationService })

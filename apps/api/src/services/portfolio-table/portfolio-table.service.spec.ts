@@ -380,9 +380,8 @@ describe('PortfolioTableService', () => {
       expect(result).toContain('No accounts found.');
     });
   });
+
   describe('getActivitiesTable', () => {
-    // The holding parameter of the tools takes the data source, which a
-    // response of the instance encodes, hence the table encodes it alike
     it('gives the data source, encoded if the subscription is enabled', async () => {
       const result = await createPortfolioTableService({
         activities: [
@@ -411,16 +410,32 @@ describe('PortfolioTableService', () => {
   describe('getHoldingsTable', () => {
     function getHoldingsTable(
       holdings: PortfolioPosition[],
-      configuration?: Record<string, unknown>
+      {
+        configuration,
+        withDataSource
+      }: {
+        configuration?: Record<string, unknown>;
+        withDataSource?: boolean;
+      } = {}
     ) {
       return createPortfolioTableService({
         configuration,
         holdings
       }).getHoldingsTable({
+        withDataSource,
         languageCode: DEFAULT_LANGUAGE_CODE,
         userId: 'user-id'
       });
     }
+
+    it('gives no data source by default', async () => {
+      const result = await getHoldingsTable([createHolding()], {
+        configuration: SUBSCRIPTION_CONFIGURATION
+      });
+
+      expect(result).not.toContain('Data Source');
+      expect(result).not.toContain(encodeDataSource(DataSource.YAHOO));
+    });
 
     it('gives the data source, encoded if the subscription is enabled', async () => {
       const result = await getHoldingsTable(
@@ -432,7 +447,7 @@ describe('PortfolioTableService', () => {
             symbol: 'GF_GOLD'
           })
         ],
-        SUBSCRIPTION_CONFIGURATION
+        { configuration: SUBSCRIPTION_CONFIGURATION, withDataSource: true }
       );
 
       const [rowOfAapl, rowOfGold] = result.split('\n').filter((line) => {
@@ -445,7 +460,8 @@ describe('PortfolioTableService', () => {
 
     it('gives the data source unencoded if the subscription is disabled', async () => {
       const result = await getHoldingsTable([createHolding()], {
-        ENABLE_FEATURE_SUBSCRIPTION: false
+        configuration: { ENABLE_FEATURE_SUBSCRIPTION: false },
+        withDataSource: true
       });
 
       const [row] = result.split('\n').filter((line) => {
@@ -453,6 +469,27 @@ describe('PortfolioTableService', () => {
       });
 
       expect(row).toContain(`| ${DataSource.YAHOO} |`);
+    });
+
+    it('gives no data source of a cash position', async () => {
+      const result = await getHoldingsTable(
+        [
+          createHolding({
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            dataSource: DataSource.YAHOO,
+            symbol: 'USD'
+          })
+        ],
+        { configuration: SUBSCRIPTION_CONFIGURATION, withDataSource: true }
+      );
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of USD');
+      });
+
+      expect(row).toContain('| USD |  | CHF |');
+      expect(row).not.toContain(encodeDataSource(DataSource.YAHOO));
     });
 
     it('gives the translation of the asset class and of the asset sub class', async () => {

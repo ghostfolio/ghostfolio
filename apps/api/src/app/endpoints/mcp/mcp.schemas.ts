@@ -18,8 +18,18 @@ import {
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { z } from 'zod';
 
+const DATA_SOURCE_PARAMETER_ERROR = `Invalid option: expected one of ${Object.values(DataSource).join('|')} or a data source as given by a tool`;
+
 const DATA_SOURCE_PARAMETER = z
-  .union([z.enum(DataSource), z.string().refine(isValidEncodedDataSource)])
+  .union(
+    [
+      z.enum(DataSource),
+      z.string().refine(isValidEncodedDataSource, {
+        error: DATA_SOURCE_PARAMETER_ERROR
+      })
+    ],
+    { error: DATA_SOURCE_PARAMETER_ERROR }
+  )
   .describe('The data source of the asset profile');
 
 const SYMBOL_PARAMETER = z

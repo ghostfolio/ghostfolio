@@ -6,7 +6,11 @@ import { TableColumnDefinition } from '@ghostfolio/api/helper/interfaces/table-c
 import { getMarkdownTable } from '@ghostfolio/api/helper/markdown-table.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { DATE_FORMAT, isAccountExcluded } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  isAccountExcluded,
+  isCashPosition
+} from '@ghostfolio/common/helper';
 import {
   Activity,
   Filter,
@@ -19,12 +23,30 @@ import { Injectable } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
+  DataSource,
   Type as ActivityType
 } from '@prisma/client';
 import { format } from 'date-fns';
 
 import { DataSourceTableContext } from './interfaces/data-source-table-context.interface';
 import { HoldingsTableColumnDefinition } from './types/holdings-table-column-definition.type';
+
+const DATA_SOURCE_COLUMN_NAME = 'Data Source';
+
+function getDataSourceColumnDefinition<T>(
+  getDataSource: (row: T) => DataSource | undefined
+): TableColumnDefinition<T, DataSourceTableContext> {
+  return {
+    getValue: (row, { configurationService }) => {
+      const dataSource = getDataSource(row);
+
+      return dataSource
+        ? transformDataSourceInResponse({ configurationService, dataSource })
+        : '';
+    },
+    name: DATA_SOURCE_COLUMN_NAME
+  };
+}
 
 function getPercentage(value: number) {
   return `${(value * 100).toFixed(3)}%`;
@@ -114,15 +136,9 @@ export class PortfolioTableService {
       },
       name: 'Symbol'
     },
-    {
-      getValue: ({ assetProfile }, { configurationService }) => {
-        return transformDataSourceInResponse({
-          configurationService,
-          dataSource: assetProfile.dataSource
-        });
-      },
-      name: 'Data Source'
-    },
+    getDataSourceColumnDefinition(({ assetProfile }) => {
+      return assetProfile.dataSource;
+    }),
     {
       getValue: ({ assetProfile, currency }) => {
         return currency ?? assetProfile.currency;
@@ -158,15 +174,11 @@ export class PortfolioTableService {
         },
         name: 'Symbol'
       },
-      {
-        getValue: ({ assetProfile }, { configurationService }) => {
-          return transformDataSourceInResponse({
-            configurationService,
-            dataSource: assetProfile.dataSource
-          });
-        },
-        name: 'Data Source'
-      },
+      getDataSourceColumnDefinition(({ assetProfile }) => {
+        return isCashPosition(assetProfile)
+          ? undefined
+          : assetProfile.dataSource;
+      }),
       {
         getValue: ({ assetProfile }) => {
           return assetProfile.currency;
@@ -260,15 +272,9 @@ export class PortfolioTableService {
       },
       name: 'Symbol'
     },
-    {
-      getValue: ({ dataSource }, { configurationService }) => {
-        return transformDataSourceInResponse({
-          configurationService,
-          dataSource
-        });
-      },
-      name: 'Data Source'
-    },
+    getDataSourceColumnDefinition(({ dataSource }) => {
+      return dataSource;
+    }),
     {
       getValue: ({ trend50d }) => {
         return trend50d;
@@ -445,11 +451,13 @@ export class PortfolioTableService {
   public async getHoldingsTable({
     filters,
     languageCode,
-    userId
+    userId,
+    withDataSource = false
   }: {
     filters?: Filter[];
     languageCode: string;
     userId: string;
+    withDataSource?: boolean;
   }) {
     const { holdings } = await this.portfolioService.getDetails({
       filters,
@@ -477,7 +485,11 @@ export class PortfolioTableService {
       '',
       await getMarkdownTable({
         columnDefinitions:
-          PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS,
+          PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.filter(
+            ({ name }) => {
+              return withDataSource || name !== DATA_SOURCE_COLUMN_NAME;
+            }
+          ),
         context: {
           assetClassTranslations,
           assetSubClassTranslations,

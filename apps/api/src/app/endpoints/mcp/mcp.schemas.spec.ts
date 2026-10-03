@@ -56,6 +56,21 @@ describe('GET_ACCOUNTS_PARAMETERS', () => {
       }).success
     ).toBe(false);
   });
+
+  it('Gives the valid data sources in the error of an unknown data source of the holding', () => {
+    for (const dataSource of ['yahoo', 1]) {
+      const { error } = GET_ACCOUNTS_PARAMETERS.safeParse({
+        holding: { dataSource, symbol: 'AAPL' }
+      });
+
+      expect(error.issues).toEqual([
+        expect.objectContaining({
+          message: expect.stringContaining(`|${DataSource.YAHOO}`),
+          path: ['holding', 'dataSource']
+        })
+      ]);
+    }
+  });
 });
 
 describe('GET_ACTIVITIES_PARAMETERS', () => {
