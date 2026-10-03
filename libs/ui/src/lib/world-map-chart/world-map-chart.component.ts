@@ -74,9 +74,7 @@ export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
     } else {
       // Convert value to fixed-point notation
       Object.keys(countries).map((country) => {
-        countries[country].value = Number(
-          countries[country].value.toFixed(2)
-        );
+        countries[country].value = Number(countries[country].value.toFixed(2));
       });
     }
 
