@@ -48,6 +48,18 @@ function getGhostfolioDataSources({
     : [];
 }
 
+function getUnmaskedGhostfolioDataSource({
+  dataSource,
+  ghostfolioDataSources
+}: {
+  dataSource?: DataSource;
+  ghostfolioDataSources: string[];
+}) {
+  return dataSource === DataSource.GHOSTFOLIO && ghostfolioDataSources?.[0]
+    ? (ghostfolioDataSources[0] as DataSource)
+    : dataSource;
+}
+
 function hashDataSource(dataSource: DataSource) {
   return createHash('sha256').update(dataSource).digest('hex').slice(0, 8);
 }
@@ -84,18 +96,6 @@ export function getMaskedGhostfolioDataSource({
     : dataSource;
 }
 
-export function getUnmaskedGhostfolioDataSource({
-  dataSource,
-  ghostfolioDataSources
-}: {
-  dataSource?: DataSource;
-  ghostfolioDataSources: string[];
-}) {
-  return dataSource === DataSource.GHOSTFOLIO && ghostfolioDataSources?.[0]
-    ? (ghostfolioDataSources[0] as DataSource)
-    : dataSource;
-}
-
 export function isDataGatheringSupported({
   dataSource,
   scraperConfiguration
@@ -118,8 +118,8 @@ export function isValidEncodedDataSource(encodedDataSource: string) {
 
 /**
  * Gives the data source of a request without a transformation: an encoded data
- * source is decoded, and the mask of the Ghostfolio data provider is resolved
- * (see the TransformDataSourceInRequestInterceptor)
+ * source is decoded, and the mask of the Ghostfolio data provider is resolved if
+ * the subscription is enabled (see the TransformDataSourceInRequestInterceptor)
  */
 export function transformDataSourceInRequest({
   configurationService,

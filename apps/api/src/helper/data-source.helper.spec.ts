@@ -83,6 +83,28 @@ describe('DataSourceHelper', () => {
         })
       ).toBeUndefined();
     });
+
+    it('Decodes an encoded data source if the subscription is not enabled', () => {
+      expect(
+        transformDataSourceInRequest({
+          configurationService: createConfigurationService({
+            isSubscriptionEnabled: false
+          }),
+          dataSource: encodeDataSource(DataSource.COINGECKO)
+        })
+      ).toBe(DataSource.COINGECKO);
+    });
+
+    it('Keeps the data source GHOSTFOLIO if the subscription is not enabled', () => {
+      expect(
+        transformDataSourceInRequest({
+          configurationService: createConfigurationService({
+            isSubscriptionEnabled: false
+          }),
+          dataSource: DataSource.GHOSTFOLIO
+        })
+      ).toBe(DataSource.GHOSTFOLIO);
+    });
   });
 
   describe('transformDataSourceInResponse', () => {
