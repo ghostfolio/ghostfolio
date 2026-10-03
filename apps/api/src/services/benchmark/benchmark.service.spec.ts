@@ -24,4 +24,14 @@ describe('BenchmarkService', () => {
     );
     expect(benchmarkService.getMarketCondition(-0.2)).toEqual('BEAR_MARKET');
   });
+
+  it('getPerformancePercentFromAllTimeHigh', async () => {
+    expect(benchmarkService.getPerformancePercentFromAllTimeHigh(0.1)).toEqual(
+      0
+    );
+    expect(benchmarkService.getPerformancePercentFromAllTimeHigh(0)).toEqual(0);
+    expect(benchmarkService.getPerformancePercentFromAllTimeHigh(-0.1)).toEqual(
+      -0.1
+    );
+  });
 });
