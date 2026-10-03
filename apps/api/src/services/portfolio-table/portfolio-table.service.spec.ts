@@ -1,12 +1,16 @@
+import type { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import type { WatchlistService } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.service';
 import type { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import type { TableParameters } from '@ghostfolio/api/helper/interfaces/table-parameters.interface';
+import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import type { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {
   DEFAULT_LANGUAGE_CODE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
+  Activity,
   HistoricalDataItem,
   PortfolioPerformanceResponse,
   PortfolioPosition,
@@ -60,6 +64,8 @@ jest.mock('@ghostfolio/api/helper/markdown-table.helper', () => {
   };
 });
 
+const SUBSCRIPTION_CONFIGURATION = { ENABLE_FEATURE_SUBSCRIPTION: true };
+
 function createAccount({
   id = 'account-a-id',
   isExcluded = false,
@@ -82,15 +88,39 @@ function createAccount({
   } as unknown as AccountWithValue;
 }
 
+function createActivity({
+  dataSource = DataSource.YAHOO,
+  symbol = 'AAPL'
+}: {
+  dataSource?: DataSource;
+  symbol?: string;
+} = {}) {
+  return {
+    account: { name: 'Account A' },
+    assetProfile: {
+      dataSource,
+      symbol,
+      currency: 'CHF',
+      name: `Name of ${symbol}`
+    },
+    currency: 'CHF',
+    date: new Date('2024-01-01'),
+    type: 'BUY',
+    unitPrice: 100
+  } as unknown as Activity;
+}
+
 function createHolding({
   allocationInPercentage = 0.75,
   assetClass = AssetClass.EQUITY,
   assetSubClass = AssetSubClass.STOCK,
+  dataSource = DataSource.YAHOO,
   symbol = 'AAPL'
 }: {
   allocationInPercentage?: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
+  dataSource?: DataSource;
   symbol?: string;
 } = {}) {
   return {
@@ -99,6 +129,7 @@ function createHolding({
     assetProfile: {
       assetClass,
       assetSubClass,
+      dataSource,
       symbol,
       currency: 'CHF',
       name: `Name of ${symbol}`
@@ -132,18 +163,20 @@ function createPerformance({
 }
 
 function createWatchlistItem({
+  dataSource = DataSource.YAHOO,
   name = 'Name of AAPL',
   performancePercent = -0.25,
   symbol = 'AAPL'
 }: {
+  dataSource?: DataSource;
   name?: string;
   performancePercent?: number;
   symbol?: string;
 } = {}): WatchlistResponse['watchlist'][number] {
   return {
+    dataSource,
     name,
     symbol,
-    dataSource: DataSource.YAHOO,
     marketCondition: 'BEAR_MARKET',
     performances: {
       allTimeHigh: {
@@ -158,17 +191,33 @@ function createWatchlistItem({
 
 function createPortfolioTableService({
   accounts = [],
+  activities = [],
   chart = [{ date: '2024-01-01' }],
+  configuration = { ENABLE_FEATURE_SUBSCRIPTION: false },
   holdings = [],
   performance = createPerformance(),
   watchlist = []
 }: {
   accounts?: AccountWithValue[];
+  activities?: Activity[];
   chart?: HistoricalDataItem[];
+  configuration?: Record<string, unknown>;
   holdings?: PortfolioPosition[];
   performance?: PortfolioPerformanceResponse['performance'];
   watchlist?: WatchlistResponse['watchlist'];
 } = {}) {
+  const activitiesService = {
+    getActivities: jest
+      .fn()
+      .mockResolvedValue({ activities, count: activities.length })
+  } as unknown as ActivitiesService;
+
+  const configurationService = {
+    get: jest.fn((key: string) => {
+      return configuration[key];
+    })
+  } as unknown as ConfigurationService;
+
   // The mock gives the identifier of the translation, so that a test can tell
   // the translation of the asset class from that of the asset sub class
   const i18nService = {
@@ -188,7 +237,8 @@ function createPortfolioTableService({
   } as unknown as WatchlistService;
 
   return new PortfolioTableService(
-    null,
+    activitiesService,
+    configurationService,
     i18nService,
     portfolioService,
     watchlistService
@@ -220,6 +270,7 @@ describe('PortfolioTableService', () => {
         'Type',
         'Name',
         'Symbol',
+        'Data Source',
         'Currency',
         'Unit Price',
         'Account'
@@ -232,6 +283,7 @@ describe('PortfolioTableService', () => {
       expect(PortfolioTableService.getHoldingsTableColumnNames()).toEqual([
         'Name',
         'Symbol',
+        'Data Source',
         'Currency',
         'Asset Class',
         'Asset Sub Class',
@@ -257,6 +309,7 @@ describe('PortfolioTableService', () => {
       expect(PortfolioTableService.getWatchlistTableColumnNames()).toEqual([
         'Name',
         'Symbol',
+        'Data Source',
         'Trend 50 Days',
         'Trend 200 Days',
         'Date of Last All Time High',
@@ -327,13 +380,117 @@ describe('PortfolioTableService', () => {
       expect(result).toContain('No accounts found.');
     });
   });
+
+  describe('getActivitiesTable', () => {
+    it('gives the data source, encoded if the subscription is enabled', async () => {
+      const result = await createPortfolioTableService({
+        activities: [
+          createActivity({ dataSource: DataSource.YAHOO, symbol: 'AAPL' }),
+          createActivity({
+            dataSource: DataSource.MANUAL,
+            symbol: 'GF_GOLD'
+          })
+        ],
+        configuration: SUBSCRIPTION_CONFIGURATION
+      }).getActivitiesTable({
+        take: 50,
+        userCurrency: 'CHF',
+        userId: 'user-id'
+      });
+
+      const [rowOfAapl, rowOfGold] = result.split('\n').filter((line) => {
+        return line.startsWith('| 2024-01-01');
+      });
+
+      expect(rowOfAapl).toContain(`| ${encodeDataSource(DataSource.YAHOO)} |`);
+      expect(rowOfGold).toContain(`| ${DataSource.MANUAL} |`);
+    });
+  });
+
   describe('getHoldingsTable', () => {
-    function getHoldingsTable(holdings: PortfolioPosition[]) {
-      return createPortfolioTableService({ holdings }).getHoldingsTable({
+    function getHoldingsTable(
+      holdings: PortfolioPosition[],
+      {
+        configuration,
+        withDataSource
+      }: {
+        configuration?: Record<string, unknown>;
+        withDataSource?: boolean;
+      } = {}
+    ) {
+      return createPortfolioTableService({
+        configuration,
+        holdings
+      }).getHoldingsTable({
+        withDataSource,
         languageCode: DEFAULT_LANGUAGE_CODE,
         userId: 'user-id'
       });
     }
+
+    it('gives no data source by default', async () => {
+      const result = await getHoldingsTable([createHolding()], {
+        configuration: SUBSCRIPTION_CONFIGURATION
+      });
+
+      expect(result).not.toContain('Data Source');
+      expect(result).not.toContain(encodeDataSource(DataSource.YAHOO));
+    });
+
+    it('gives the data source, encoded if the subscription is enabled', async () => {
+      const result = await getHoldingsTable(
+        [
+          createHolding({ dataSource: DataSource.YAHOO, symbol: 'AAPL' }),
+          createHolding({
+            allocationInPercentage: 0.25,
+            dataSource: DataSource.MANUAL,
+            symbol: 'GF_GOLD'
+          })
+        ],
+        { configuration: SUBSCRIPTION_CONFIGURATION, withDataSource: true }
+      );
+
+      const [rowOfAapl, rowOfGold] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of');
+      });
+
+      expect(rowOfAapl).toContain(`| ${encodeDataSource(DataSource.YAHOO)} |`);
+      expect(rowOfGold).toContain(`| ${DataSource.MANUAL} |`);
+    });
+
+    it('gives the data source unencoded if the subscription is disabled', async () => {
+      const result = await getHoldingsTable([createHolding()], {
+        configuration: { ENABLE_FEATURE_SUBSCRIPTION: false },
+        withDataSource: true
+      });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain(`| ${DataSource.YAHOO} |`);
+    });
+
+    it('gives no data source of a cash position', async () => {
+      const result = await getHoldingsTable(
+        [
+          createHolding({
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            dataSource: DataSource.YAHOO,
+            symbol: 'USD'
+          })
+        ],
+        { configuration: SUBSCRIPTION_CONFIGURATION, withDataSource: true }
+      );
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of USD');
+      });
+
+      expect(row).toContain('| USD |  | CHF |');
+      expect(row).not.toContain(encodeDataSource(DataSource.YAHOO));
+    });
 
     it('gives the translation of the asset class and of the asset sub class', async () => {
       const result = await getHoldingsTable([createHolding()]);
@@ -417,11 +574,38 @@ describe('PortfolioTableService', () => {
   });
 
   describe('getWatchlistTable', () => {
-    function getWatchlistTable(watchlist: WatchlistResponse['watchlist']) {
-      return createPortfolioTableService({ watchlist }).getWatchlistTable({
+    function getWatchlistTable(
+      watchlist: WatchlistResponse['watchlist'],
+      configuration?: Record<string, unknown>
+    ) {
+      return createPortfolioTableService({
+        configuration,
+        watchlist
+      }).getWatchlistTable({
         userId: 'user-id'
       });
     }
+
+    it('gives the data source, encoded if the subscription is enabled', async () => {
+      const result = await getWatchlistTable(
+        [
+          createWatchlistItem(),
+          createWatchlistItem({
+            dataSource: DataSource.MANUAL,
+            name: 'Name of GF_GOLD',
+            symbol: 'GF_GOLD'
+          })
+        ],
+        SUBSCRIPTION_CONFIGURATION
+      );
+
+      const [rowOfAapl, rowOfGold] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of');
+      });
+
+      expect(rowOfAapl).toContain(`| ${encodeDataSource(DataSource.YAHOO)} |`);
+      expect(rowOfGold).toContain(`| ${DataSource.MANUAL} |`);
+    });
 
     it('gives the date and the change of the all time high', async () => {
       const result = await getWatchlistTable([createWatchlistItem()]);
