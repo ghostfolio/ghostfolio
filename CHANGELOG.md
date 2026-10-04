@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the _Public API_ with the liveness probe endpoint (`GET api/v1/health/liveness`) (experimental)
+
 ### Changed
 
 - Set the change detection strategy to `OnPush` in the _X-ray_ page

@@ -204,11 +204,35 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 
 ### Health Check (experimental)
 
+The endpoint checks the connection to the database and to _Redis_. It is suitable as the readiness probe of an orchestrator (e.g. `readinessProbe` in _Kubernetes_) and as the `healthcheck` in _Docker Compose_. The check of _Redis_ can take up to 5 seconds. Thus, set the timeout of the probe to at least 5 seconds (e.g. `timeoutSeconds: 5` in _Kubernetes_).
+
 #### Request
 
 `GET http://localhost:3333/api/v1/health`
 
 **Info:** No Bearer Token is required for health check
+
+#### Response
+
+##### Success
+
+`200 OK`
+
+```
+{
+  "status": "OK"
+}
+```
+
+### Liveness Probe (experimental)
+
+The endpoint answers without a check of the database or _Redis_. It is suitable as the liveness probe of an orchestrator (e.g. `livenessProbe` in _Kubernetes_), so that an outage of a dependency after the start does not restart the container. The database migrations run before the server starts. Thus, also use the endpoint as the startup probe (e.g. `startupProbe` in _Kubernetes_), so that a long migration does not restart the container.
+
+#### Request
+
+`GET http://localhost:3333/api/v1/health/liveness`
+
+**Info:** No Bearer Token is required for liveness probe
 
 #### Response
 

@@ -3,7 +3,8 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import {
   AiServiceHealthResponse,
   DataEnhancerHealthResponse,
-  DataProviderHealthResponse
+  DataProviderHealthResponse,
+  LivenessHealthResponse
 } from '@ghostfolio/common/interfaces';
 
 import {
@@ -33,9 +34,11 @@ export class HealthController {
 
   @Get()
   public async getHealth(@Res() response: Response) {
-    const databaseServiceHealthy = await this.healthService.isDatabaseHealthy();
-    const redisCacheServiceHealthy =
-      await this.healthService.isRedisCacheHealthy();
+    const [databaseServiceHealthy, redisCacheServiceHealthy] =
+      await Promise.all([
+        this.healthService.isDatabaseHealthy(),
+        this.healthService.isRedisCacheHealthy()
+      ]);
 
     if (databaseServiceHealthy && redisCacheServiceHealthy) {
       return response
@@ -115,5 +118,10 @@ export class HealthController {
         .status(HttpStatus.SERVICE_UNAVAILABLE)
         .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
     }
+  }
+
+  @Get('liveness')
+  public getLiveness(): LivenessHealthResponse {
+    return { status: getReasonPhrase(StatusCodes.OK) };
   }
 }
