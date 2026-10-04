@@ -397,7 +397,12 @@ export class GfTreemapChartComponent
         label: (context: TooltipItem<'treemap'>) => {
           const raw = context.raw as GfTreemapDataPoint;
 
-          const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
+          const allocationInPercentage = `${(
+            raw._data.allocationInPercentage * 100
+          ).toLocaleString(this.locale(), {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })}%`;
           const name = getHoldingName(raw._data.assetProfile);
 
           const netPerformanceInPercentageWithSign = `${(
