@@ -3122,7 +3122,7 @@ describe('redactAttributes', () => {
 
   // The endpoint POST api/v1/activities returns a row of the database with the
   // asset profile and the deprecated relation to the symbol profile
-  it('should redact an activity with the relation to the symbol profile', () => {
+  it('should redact an activity with the asset profile and the relation to the symbol profile', () => {
     expect(
       redactPaths({
         object: {
