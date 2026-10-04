@@ -5,7 +5,7 @@ import { getHelmetOptions } from './security-headers.helper';
 
 /**
  * Gives the headers which the helmet middleware sets on a response with the
- * options of the helper.
+ * options of the helper, and the function which it calls as next middleware.
  */
 function getHeaders({
   isSubscriptionEnabled
@@ -13,6 +13,7 @@ function getHeaders({
   isSubscriptionEnabled: boolean;
 }) {
   const headers = new Map<string, string>();
+  const next = jest.fn();
 
   const response = {
     removeHeader: (name: string) => {
@@ -26,15 +27,24 @@ function getHeaders({
   helmet(getHelmetOptions({ isSubscriptionEnabled }))(
     {} as IncomingMessage,
     response as unknown as ServerResponse,
-    jest.fn()
+    next
   );
 
-  return headers;
+  return { headers, next };
 }
 
 describe('getHelmetOptions', () => {
   describe('without the subscription', () => {
-    const headers = getHeaders({ isSubscriptionEnabled: false });
+    let headers: Map<string, string>;
+    let next: jest.Mock;
+
+    beforeAll(() => {
+      ({ headers, next } = getHeaders({ isSubscriptionEnabled: false }));
+    });
+
+    it('should call the next middleware without an error', () => {
+      expect(next).toHaveBeenCalledWith();
+    });
 
     it('should set the Content-Security-Policy header', () => {
       expect(headers.get('content-security-policy')).toContain(
@@ -52,6 +62,10 @@ describe('getHelmetOptions', () => {
       expect(headers.has('strict-transport-security')).toBe(false);
     });
 
+    it('should not set the Cross-Origin-Opener-Policy header', () => {
+      expect(headers.has('cross-origin-opener-policy')).toBe(false);
+    });
+
     it('should not allow resources of Stripe', () => {
       expect(headers.get('content-security-policy')).not.toContain(
         'https://js.stripe.com'
@@ -60,7 +74,16 @@ describe('getHelmetOptions', () => {
   });
 
   describe('with the subscription', () => {
-    const headers = getHeaders({ isSubscriptionEnabled: true });
+    let headers: Map<string, string>;
+    let next: jest.Mock;
+
+    beforeAll(() => {
+      ({ headers, next } = getHeaders({ isSubscriptionEnabled: true }));
+    });
+
+    it('should call the next middleware without an error', () => {
+      expect(next).toHaveBeenCalledWith();
+    });
 
     it('should upgrade insecure requests', () => {
       expect(headers.get('content-security-policy')).toContain(
