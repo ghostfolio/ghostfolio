@@ -836,6 +836,10 @@ export class ImportService {
 
     const activities: Activity[] = [];
 
+    const customAssetProfileSymbols: {
+      [assetProfileIdentifier: string]: string;
+    } = {};
+
     for (const activity of activitiesExtendedWithErrors) {
       const accountId = activity.accountId;
       const comment = activity.comment;
@@ -848,37 +852,15 @@ export class ImportService {
       const type = activity.type;
       const unitPrice = activity.unitPrice;
 
-      const assetProfile = assetProfiles[
-        getAssetProfileIdentifier({
-          dataSource: activity.assetProfile.dataSource,
-          symbol: activity.assetProfile.symbol
-        })
-      ] ?? {
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource: activity.assetProfile.dataSource,
+        symbol: activity.assetProfile.symbol
+      });
+
+      let assetProfile = assetProfiles[assetProfileIdentifier] ?? {
         dataSource: activity.assetProfile.dataSource,
         symbol: activity.assetProfile.symbol
       };
-      const {
-        assetClass,
-        assetSubClass,
-        countries,
-        createdAt,
-        cusip,
-        dataSource,
-        figi,
-        figiComposite,
-        figiShareClass,
-        holdings,
-        id,
-        isActive,
-        isin,
-        name,
-        scraperConfiguration,
-        sectors,
-        symbol,
-        symbolMapping,
-        url,
-        updatedAt
-      } = assetProfile;
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -890,7 +872,7 @@ export class ImportService {
 
       let order:
         | OrderWithAccount
-        | (Omit<OrderWithAccount, 'account' | 'tags'> & {
+        | (Omit<OrderWithAccount, 'account' | 'SymbolProfile' | 'tags'> & {
             account?: { id: string; name: string };
             tags?: { id: string; name: string }[];
           });
@@ -916,33 +898,6 @@ export class ImportService {
           accountUserId: undefined,
           createdAt: new Date(),
           id: randomUUID(),
-          SymbolProfile: {
-            assetClass,
-            assetSubClass,
-            countries,
-            createdAt,
-            cusip,
-            dataSource,
-            figi,
-            figiComposite,
-            figiShareClass,
-            holdings,
-            id,
-            isActive,
-            isin,
-            name,
-            scraperConfiguration,
-            sectors,
-            symbol,
-            symbolMapping,
-            updatedAt,
-            url,
-            comment: assetProfile.comment,
-            currency: assetProfile.currency,
-            dataGatheringFrequency:
-              assetProfile.dataGatheringFrequency ?? 'DAILY',
-            userId: dataSource === 'MANUAL' ? user.id : undefined
-          },
           symbolProfileId: undefined,
           tags: previewTags,
           updatedAt: new Date(),
@@ -953,7 +908,16 @@ export class ImportService {
           continue;
         }
 
-        order = await this.activitiesService.createActivity({
+        const customAssetProfileSymbol =
+          NON_INVESTMENT_ACTIVITY_TYPES.includes(type) ||
+          assetProfile.dataSource === DataSource.MANUAL
+            ? customAssetProfileSymbols[assetProfileIdentifier]
+            : undefined;
+
+        const { dataSource, name } = assetProfile;
+        const symbol = customAssetProfileSymbol ?? assetProfile.symbol;
+
+        const createdActivity = await this.activitiesService.createActivity({
           comment,
           currency,
           date,
@@ -987,10 +951,18 @@ export class ImportService {
           userId: user.id
         });
 
-        if (order.SymbolProfile?.symbol) {
-          // Update symbol that may have been assigned in createOrder()
-          assetProfile.symbol = order.SymbolProfile.symbol;
+        if (createdActivity.SymbolProfile.dataSource === DataSource.MANUAL) {
+          customAssetProfileSymbols[assetProfileIdentifier] =
+            createdActivity.SymbolProfile.symbol;
+
+          assetProfile = {
+            ...assetProfile,
+            dataSource: DataSource.MANUAL,
+            symbol: createdActivity.SymbolProfile.symbol
+          };
         }
+
+        order = createdActivity;
       }
 
       const value = new Big(quantity).mul(unitPrice).toNumber();

@@ -7,9 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the _Public API_ with the liveness probe endpoint (`GET api/v1/health/liveness`) (experimental)
+- Added the graceful shutdown of the server on `SIGINT` and `SIGTERM`
+- Added `stop_grace_period` to the _Ghostfolio_ service in the `docker-compose` file (`docker-compose.yml`)
+
 ### Changed
 
 - Moved the performance calculation including dividends (total return) from experimental to general availability
+- Changed the installation of the dependencies from `npm install` to `npm ci` in the `Dockerfile`
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
+- Upgraded `nestjs` from version `11.2.3` to `11.2.6`
+
+### Fixed
+
+- Fixed the asset profile of the activities after a fee, an interest or a liability with the same symbol in the activities import
+
+### Todo
+
+- Add `stop_grace_period: 1m` to the _Ghostfolio_ service in your `docker-compose` file (see `docker-compose.yml`)
 
 ## 3.78.0 - 2026-10-03
 
