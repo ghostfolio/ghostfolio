@@ -422,11 +422,6 @@ export class GfTreemapChartComponent
           const netPerformanceInPercentageWithSign = `${sign}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
-            const netPerformanceWithCurrencyEffect = this.getRoundedValue({
-              precision: 2,
-              value: raw._data.netPerformanceWithCurrencyEffect
-            });
-
             const value = raw._data.valueInBaseCurrency;
 
             return [
@@ -437,11 +432,12 @@ export class GfTreemapChartComponent
               })} ${this.baseCurrency()}`,
               '',
               $localize`Change` + ' (' + $localize`Performance` + ')',
-              `${sign}${netPerformanceWithCurrencyEffect.toLocaleString(
+              `${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
                 this.locale(),
                 {
                   maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
+                  minimumFractionDigits: 2,
+                  signDisplay: 'exceptZero'
                 }
               )} ${this.baseCurrency()} (${netPerformanceInPercentageWithSign})`
             ];
