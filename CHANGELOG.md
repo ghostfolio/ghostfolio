@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the installation of the dependencies from `npm install` to `npm ci` in the `Dockerfile`
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
 - Upgraded `nestjs` from version `11.2.3` to `11.2.6`
 
