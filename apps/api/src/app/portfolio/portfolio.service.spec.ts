@@ -320,6 +320,69 @@ describe('PortfolioService', () => {
         interestInBaseCurrency: 15
       });
     });
+
+    it('should apply the manual exchange rate to the dividend and the interest in the currency of the asset profile', async () => {
+      jest.spyOn(accountService, 'accounts').mockResolvedValue([
+        {
+          activities: [
+            {
+              currency: 'USD',
+              date: new Date('2024-01-02'),
+              exchangeRate: 1.35,
+              quantity: 2,
+              SymbolProfile: { currency: 'USD' },
+              tags: [],
+              type: 'DIVIDEND',
+              unitPrice: 10
+            },
+            {
+              currency: 'USD',
+              date: new Date('2024-01-03'),
+              exchangeRate: 1.3,
+              quantity: 3,
+              SymbolProfile: { currency: 'USD' },
+              tags: [],
+              type: 'INTEREST',
+              unitPrice: 5
+            }
+          ],
+          balance: 0,
+          currency: 'SGD',
+          id: 'account-id',
+          name: 'Account'
+        }
+      ] as unknown as Awaited<ReturnType<typeof accountService.accounts>>);
+
+      jest.spyOn(portfolioService, 'getDetails').mockResolvedValue({
+        accounts: {}
+      } as unknown as Awaited<ReturnType<typeof portfolioService.getDetails>>);
+
+      jest.spyOn(userService, 'user').mockResolvedValue({
+        settings: { settings: { baseCurrency: 'SGD' } }
+      } as unknown as Awaited<ReturnType<typeof userService.user>>);
+
+      // Market rate USD to SGD of 2, which the manual rate must replace
+      jest
+        .spyOn(exchangeRateDataService, 'toCurrencyAtDate')
+        .mockImplementation(async (value, from, to) => {
+          return from === to ? value : value * 2;
+        });
+
+      jest
+        .spyOn(exchangeRateDataService, 'toCurrency')
+        .mockImplementation((value) => {
+          return value;
+        });
+
+      const [account] = await portfolioService.getAccounts({
+        userId: userDummyData.id
+      });
+
+      expect(account).toMatchObject({
+        dividendInBaseCurrency: 27,
+        interestInBaseCurrency: 19.5
+      });
+    });
   });
 
   describe('getAggregatedMarkets', () => {

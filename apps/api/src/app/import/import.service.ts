@@ -169,6 +169,7 @@ export class ImportService {
             comment: undefined,
             currency: undefined,
             createdAt: undefined,
+            exchangeRate: null,
             fee: 0,
             feeInAssetProfileCurrency: 0,
             feeInBaseCurrency: 0,
@@ -842,6 +843,7 @@ export class ImportService {
       const currency = activity.currency;
       const date = activity.date;
       const error = activity.error;
+      const exchangeRate = activity.exchangeRate;
       const fee = activity.fee;
       const quantity = activity.quantity;
       const tagIds = activity.tagIds ?? [];
@@ -885,6 +887,7 @@ export class ImportService {
           comment,
           currency,
           date,
+          exchangeRate,
           fee,
           quantity,
           type,
@@ -910,6 +913,7 @@ export class ImportService {
           comment,
           currency,
           date,
+          exchangeRate,
           fee,
           quantity,
           type,
@@ -951,12 +955,14 @@ export class ImportService {
       const value = new Big(quantity).mul(unitPrice).toNumber();
 
       const valueInBaseCurrency =
-        (await this.exchangeRateDataService.toCurrencyAtDate(
+        (await this.exchangeRateDataService.toCurrencyAtDateWithExchangeRate({
+          date,
+          exchangeRate,
           value,
-          currency ?? assetProfile.currency,
-          userCurrency,
-          date
-        )) ?? 0;
+          assetProfileCurrency: assetProfile.currency,
+          currency: currency ?? assetProfile.currency,
+          targetCurrency: userCurrency
+        })) ?? 0;
 
       activities.push({
         ...omit(order, ['SymbolProfile']),
@@ -1020,6 +1026,7 @@ export class ImportService {
         currency,
         dataSource,
         date: dateString,
+        exchangeRate,
         fee,
         quantity,
         symbol,
@@ -1054,6 +1061,7 @@ export class ImportService {
           currency,
           date,
           error,
+          exchangeRate,
           fee,
           quantity,
           type,

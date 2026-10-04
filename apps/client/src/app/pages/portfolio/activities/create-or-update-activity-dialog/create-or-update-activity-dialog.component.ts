@@ -224,6 +224,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
         Validators.required
       ],
       date: [this.data.activity?.date, Validators.required],
+      exchangeRate: [this.data.activity?.exchangeRate ?? null],
       fee: [this.data.activity?.fee, Validators.required],
       name: [this.data.activity?.assetProfile?.name, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
@@ -488,6 +489,10 @@ export class GfCreateOrUpdateActivityDialogComponent {
   }
 
   protected async onSubmit() {
+    const assetCurrency = this.activityForm.get('currency')?.value;
+    const baseCurrency = this.data.user?.settings?.baseCurrency;
+    const exchangeRateValue = this.activityForm.get('exchangeRate')?.value;
+
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.get('accountId')?.value,
       assetClass: this.activityForm.get('assetClass')?.value,
@@ -501,6 +506,10 @@ export class GfCreateOrUpdateActivityDialogComponent {
         ? 'MANUAL'
         : this.activityForm.get('dataSource')?.value,
       date: this.activityForm.get('date')?.value,
+      exchangeRate:
+        assetCurrency && baseCurrency && assetCurrency !== baseCurrency
+          ? (exchangeRateValue ?? null)
+          : null,
       fee: this.activityForm.get('fee')?.value,
       quantity: this.activityForm.get('quantity')?.value,
       symbol:

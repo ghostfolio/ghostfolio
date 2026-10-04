@@ -9,6 +9,7 @@ export interface PortfolioCalculatorActivity extends Pick<
     'assetSubClass' | 'currency' | 'dataSource' | 'name' | 'symbol' | 'userId'
   >;
   date: string;
+  exchangeRate?: number;
   fee: Big;
   feeInBaseCurrency: Big;
   quantity: Big;

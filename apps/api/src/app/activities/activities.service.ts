@@ -532,6 +532,7 @@ export class ActivitiesService {
           createdAt: new Date(balanceItem.date),
           currency: account.currency,
           date: new Date(balanceItem.date),
+          exchangeRate: null,
           fee: 0,
           feeInAssetProfileCurrency: 0,
           feeInBaseCurrency: 0,
@@ -721,24 +722,28 @@ export class ActivitiesService {
             order.SymbolProfile.currency,
             order.date
           ),
-          this.exchangeRateDataService.toCurrencyAtDate(
-            order.fee,
-            order.currency ?? order.SymbolProfile.currency,
-            userCurrency,
-            order.date
-          ),
+          this.exchangeRateDataService.toCurrencyAtDateWithExchangeRate({
+            assetProfileCurrency: order.SymbolProfile.currency,
+            currency: order.currency ?? order.SymbolProfile.currency,
+            date: order.date,
+            exchangeRate: order.exchangeRate,
+            targetCurrency: userCurrency,
+            value: order.fee
+          }),
           this.exchangeRateDataService.toCurrencyAtDate(
             order.unitPrice,
             order.currency ?? order.SymbolProfile.currency,
             order.SymbolProfile.currency,
             order.date
           ),
-          this.exchangeRateDataService.toCurrencyAtDate(
-            value,
-            order.currency ?? order.SymbolProfile.currency,
-            userCurrency,
-            order.date
-          )
+          this.exchangeRateDataService.toCurrencyAtDateWithExchangeRate({
+            assetProfileCurrency: order.SymbolProfile.currency,
+            currency: order.currency ?? order.SymbolProfile.currency,
+            date: order.date,
+            exchangeRate: order.exchangeRate,
+            targetCurrency: userCurrency,
+            value
+          })
         ]);
 
         return {

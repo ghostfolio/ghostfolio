@@ -309,6 +309,7 @@ export class PortfolioService {
         for (const {
           currency,
           date,
+          exchangeRate,
           quantity,
           SymbolProfile,
           tags,
@@ -324,20 +325,28 @@ export class PortfolioService {
           switch (type) {
             case ActivityType.DIVIDEND:
               dividendInBaseCurrency +=
-                (await this.exchangeRateDataService.toCurrencyAtDate(
-                  new Big(quantity).mul(unitPrice).toNumber(),
-                  currency ?? SymbolProfile.currency,
-                  userCurrency,
-                  date
+                (await this.exchangeRateDataService.toCurrencyAtDateWithExchangeRate(
+                  {
+                    date,
+                    exchangeRate,
+                    assetProfileCurrency: SymbolProfile.currency,
+                    currency: currency ?? SymbolProfile.currency,
+                    targetCurrency: userCurrency,
+                    value: new Big(quantity).mul(unitPrice).toNumber()
+                  }
                 )) ?? 0;
               break;
             case ActivityType.INTEREST:
               interestInBaseCurrency +=
-                (await this.exchangeRateDataService.toCurrencyAtDate(
-                  new Big(quantity).mul(unitPrice).toNumber(),
-                  currency ?? SymbolProfile.currency,
-                  userCurrency,
-                  date
+                (await this.exchangeRateDataService.toCurrencyAtDateWithExchangeRate(
+                  {
+                    date,
+                    exchangeRate,
+                    assetProfileCurrency: SymbolProfile.currency,
+                    currency: currency ?? SymbolProfile.currency,
+                    targetCurrency: userCurrency,
+                    value: new Big(quantity).mul(unitPrice).toNumber()
+                  }
                 )) ?? 0;
               break;
           }
