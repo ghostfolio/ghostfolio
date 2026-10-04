@@ -178,6 +178,7 @@
     "@nx/node": "23.2.1",
     "@nx/storybook": "23.2.1",
     "@nx/web": "23.2.1",
+    "@nx/webpack": "23.2.1",
     "@nx/workspace": "23.2.1",
     "@prisma/config": "7.10.0",
     "@schematics/angular": "22.1.4",
