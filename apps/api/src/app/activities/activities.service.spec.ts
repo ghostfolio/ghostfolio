@@ -54,6 +54,26 @@ describe('ActivitiesService', () => {
         symbol: 'AAPL'
       };
 
+      const findMany = jest.fn().mockResolvedValue([
+        {
+          ...activityDummyData,
+          account: null,
+          currency: 'USD',
+          date: parseDate('2021-01-01'),
+          fee: 1,
+          id: 'activity-id',
+          quantity: 10,
+          SymbolProfile: {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            symbol: 'AAPL'
+          },
+          tags: [],
+          type: 'BUY',
+          unitPrice: 100
+        }
+      ]);
+
       const service = new ActivitiesService(
         null,
         null,
@@ -68,32 +88,17 @@ describe('ActivitiesService', () => {
         null,
         {
           order: {
-            count: jest.fn().mockResolvedValue(1),
-            findMany: jest.fn().mockResolvedValue([
-              {
-                ...activityDummyData,
-                account: null,
-                currency: 'USD',
-                date: parseDate('2021-01-01'),
-                fee: 1,
-                id: 'activity-id',
-                quantity: 10,
-                // The relation of the database
-                SymbolProfile: {
-                  currency: 'USD',
-                  dataSource: DataSource.YAHOO,
-                  name: 'Apple',
-                  symbol: 'AAPL'
-                },
-                tags: [],
-                type: 'BUY',
-                unitPrice: 100
-              }
-            ])
+            findMany,
+            count: jest.fn().mockResolvedValue(1)
           }
         } as unknown as PrismaService,
         {
-          getSymbolProfiles: jest.fn().mockResolvedValue([assetProfile])
+          getSymbolProfiles: jest
+            .fn()
+            .mockResolvedValue([
+              { ...assetProfile, dataSource: DataSource.MANUAL },
+              assetProfile
+            ])
         } as unknown as SymbolProfileService,
         null
       );
@@ -103,6 +108,15 @@ describe('ActivitiesService', () => {
         userId: 'user-id'
       });
 
+      expect(findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.objectContaining({
+            SymbolProfile: {
+              select: { currency: true, dataSource: true, symbol: true }
+            }
+          })
+        })
+      );
       expect(activities).toHaveLength(1);
       expect(activities[0]).not.toHaveProperty('SymbolProfile');
       expect(activities[0].assetProfile).toBe(assetProfile);
