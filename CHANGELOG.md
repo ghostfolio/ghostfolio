@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the graceful shutdown of the server on `SIGTERM`
+- Added the graceful shutdown of the server on `SIGINT` and `SIGTERM`
 - Added `stop_grace_period` to the _Ghostfolio_ service in the `docker-compose` file (`docker-compose.yml`)
 
 ### Changed
@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the asset profile of the activities after a fee, an interest or a liability with the same symbol in the activities import
+
+### Todo
+
+- Add `stop_grace_period: 1m` to the _Ghostfolio_ service in your `docker-compose` file (see `docker-compose.yml`)
 
 ## 3.78.0 - 2026-10-03
 
