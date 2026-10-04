@@ -23,8 +23,9 @@ import {
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
 import { AccountWithBalance } from '@ghostfolio/common/types';
+import { Prisma } from '@ghostfolio/prisma/client';
+import { AssetClass, DataSource } from '@ghostfolio/prisma/enums';
 
-import { AssetClass, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { randomUUID } from 'node:crypto';
 

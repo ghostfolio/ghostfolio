@@ -35,9 +35,10 @@ import {
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { addMilliseconds, isBefore } from 'date-fns';
 import { isEmpty } from 'lodash-es';

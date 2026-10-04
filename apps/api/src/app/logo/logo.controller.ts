@@ -1,4 +1,5 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   Controller,
@@ -9,7 +10,6 @@ import {
   Res,
   UseInterceptors
 } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { Response } from 'express';
 import ms from 'ms';
 

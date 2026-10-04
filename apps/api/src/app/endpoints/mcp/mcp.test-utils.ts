@@ -1,4 +1,4 @@
-import { Type as ActivityType } from '@prisma/client';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import { ActivityToImport } from './types/activity-to-import.type';
 

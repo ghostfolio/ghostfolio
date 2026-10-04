@@ -3,8 +3,8 @@ import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
-import { DataSource } from '@prisma/client';
 import { Job } from 'bull';
 
 import { DataGatheringProcessor } from './data-gathering.processor';

@@ -18,14 +18,14 @@ import {
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
-
-import { Injectable } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
   DataSource,
   Type as ActivityType
-} from '@prisma/client';
+} from '@ghostfolio/prisma/enums';
+
+import { Injectable } from '@nestjs/common';
 import { format } from 'date-fns';
 
 import { DataSourceTableContext } from './interfaces/data-source-table-context.interface';

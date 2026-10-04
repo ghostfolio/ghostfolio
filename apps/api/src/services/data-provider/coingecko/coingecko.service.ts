@@ -17,15 +17,15 @@ import {
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
-
-import { utc } from '@date-fns/utc';
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
 import {
   AssetClass,
   AssetSubClass,
-  DataSource,
-  SymbolProfile
-} from '@prisma/client';
+  DataSource
+} from '@ghostfolio/prisma/enums';
+
+import { utc } from '@date-fns/utc';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
 
 @Injectable()

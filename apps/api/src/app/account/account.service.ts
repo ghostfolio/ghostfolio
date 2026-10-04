@@ -14,10 +14,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { AccountWithBalance } from '@ghostfolio/common/types';
-
-import { Injectable } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import {
+import type {
   Account,
   AccountBalance,
   Order,
@@ -25,7 +22,10 @@ import {
   Prisma,
   SymbolProfile,
   Tag
-} from '@prisma/client';
+} from '@ghostfolio/prisma/client';
+
+import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
 import { groupBy, isNil } from 'lodash-es';

@@ -21,10 +21,10 @@ import {
 } from '@ghostfolio/common/config';
 import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
+import type { MarketData } from '@ghostfolio/prisma/client';
 
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { MarketData } from '@prisma/client';
 import { subDays } from 'date-fns';
 import { isNil } from 'lodash-es';
 

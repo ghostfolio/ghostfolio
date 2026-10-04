@@ -2,10 +2,11 @@ import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.ser
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import type { AssetProfileSplit } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AssetProfileSplit, DataSource } from '@prisma/client';
 
 import { AssetProfilesService } from './asset-profiles.service';
 

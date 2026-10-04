@@ -4,13 +4,9 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { MarketData, Order } from '@ghostfolio/prisma/client';
+import { DataSource, Type as ActivityType } from '@ghostfolio/prisma/enums';
 
-import {
-  DataSource,
-  MarketData,
-  Order,
-  Type as ActivityType
-} from '@prisma/client';
 import { addDays, subDays } from 'date-fns';
 
 import { CurrentRateService } from './current-rate.service';

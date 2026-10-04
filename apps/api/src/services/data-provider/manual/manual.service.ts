@@ -23,10 +23,11 @@ import {
   LookupResponse,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
 

@@ -14,8 +14,12 @@ import {
   isValidCurrencyCode,
   isValidDateAfter1970
 } from '@ghostfolio/common/helper';
+import {
+  AssetClass,
+  DataSource,
+  Type as ActivityType
+} from '@ghostfolio/prisma/enums';
 
-import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
 import { z } from 'zod';
 
 const DATA_SOURCE_PARAMETER_ERROR = `Invalid option: expected one of ${Object.values(DataSource).join('|')} or a data source as given by a tool`;

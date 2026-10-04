@@ -1,4 +1,4 @@
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import type { AssetClass, AssetSubClass } from '@ghostfolio/prisma/enums';
 
 import { DataSourceTableContext } from './data-source-table-context.interface';
 

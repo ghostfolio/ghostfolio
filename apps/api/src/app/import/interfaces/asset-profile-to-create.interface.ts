@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@ghostfolio/prisma/client';
 
 export interface AssetProfileToCreate {
   assetProfile: Prisma.SymbolProfileCreateInput;

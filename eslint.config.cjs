@@ -89,7 +89,7 @@ module.exports = [
           paths: [
             {
               message:
-                'Import the types from @ghostfolio/prisma/browser and the enums from @ghostfolio/prisma/enums instead.',
+                'Import server code from @ghostfolio/prisma/client, browser types from @ghostfolio/prisma/browser, and enums from @ghostfolio/prisma/enums instead.',
               name: '@prisma/client'
             }
           ]

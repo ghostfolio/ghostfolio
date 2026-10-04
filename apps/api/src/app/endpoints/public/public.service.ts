@@ -11,9 +11,9 @@ import {
   AccessSettings,
   PublicPortfolioResponse
 } from '@ghostfolio/common/interfaces';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import { HttpException, Injectable } from '@nestjs/common';
-import { Type as ActivityType } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 

@@ -1,7 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import type { Platform, Prisma } from '@ghostfolio/prisma/client';
 
 import { Injectable } from '@nestjs/common';
-import { Platform, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PlatformService {

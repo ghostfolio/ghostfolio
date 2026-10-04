@@ -13,14 +13,14 @@ import {
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { UserWithSettings } from '@ghostfolio/common/types';
-
-import { HttpException } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
   DataSource,
   Type as ActivityType
-} from '@prisma/client';
+} from '@ghostfolio/prisma/enums';
+
+import { HttpException } from '@nestjs/common';
 
 import { McpService } from './mcp.service';
 import { createActivity } from './mcp.test-utils';

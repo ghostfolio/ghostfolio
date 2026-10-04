@@ -1,9 +1,9 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { AccessSettings, Filter } from '@ghostfolio/common/interfaces';
 import { AccessWithGranteeUser } from '@ghostfolio/common/types';
+import type { Access, Prisma } from '@ghostfolio/prisma/client';
 
 import { Injectable } from '@nestjs/common';
-import { Access, Prisma } from '@prisma/client';
 import { isBefore, isToday, isValid } from 'date-fns';
 
 @Injectable()

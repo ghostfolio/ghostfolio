@@ -1,7 +1,7 @@
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import type { Prisma } from '@ghostfolio/prisma/client';
 
 import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import ms from 'ms';
 

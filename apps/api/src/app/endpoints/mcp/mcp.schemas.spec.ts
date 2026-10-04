@@ -7,8 +7,7 @@ import {
   SEARCH_QUERY_MINIMUM_LENGTH,
   SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
-
-import { DataSource } from '@prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   GET_ACCOUNTS_PARAMETERS,

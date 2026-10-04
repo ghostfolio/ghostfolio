@@ -32,6 +32,7 @@ import type {
   ImpersonationContext,
   RequestWithUser
 } from '@ghostfolio/common/types';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   Body,
@@ -46,7 +47,6 @@ import {
   Version
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 

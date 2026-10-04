@@ -1,9 +1,9 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { AssetProfileSplit } from '@ghostfolio/prisma/client';
 
 import { Injectable } from '@nestjs/common';
-import { AssetProfileSplit } from '@prisma/client';
 
 @Injectable()
 export class AssetProfileSplitService {

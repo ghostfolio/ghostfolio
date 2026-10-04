@@ -32,6 +32,7 @@ import type {
   ImpersonationContext,
   RequestWithUser
 } from '@ghostfolio/common/types';
+import type { User as UserModel } from '@ghostfolio/prisma/client';
 
 import {
   Body,
@@ -51,7 +52,6 @@ import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { Throttle } from '@nestjs/throttler';
-import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash-es';
 

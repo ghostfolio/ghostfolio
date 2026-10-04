@@ -15,9 +15,10 @@ import {
   DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
 import Alphavantage from 'alphavantage';
 import { format, isAfter, isBefore, parse } from 'date-fns';
 

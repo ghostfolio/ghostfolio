@@ -2,9 +2,9 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { HttpException, Injectable } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()

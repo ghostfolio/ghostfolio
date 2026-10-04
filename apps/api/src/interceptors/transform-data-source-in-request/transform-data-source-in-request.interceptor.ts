@@ -3,6 +3,7 @@ import {
   transformDataSourceInRequest
 } from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   CallHandler,
@@ -10,7 +11,6 @@ import {
   Injectable,
   NestInterceptor
 } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { Observable } from 'rxjs';
 
 @Injectable()

@@ -6,8 +6,8 @@ import {
   MarketDataOfMarketsResponse
 } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
-
-import { DataSource, SymbolProfile } from '@prisma/client';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;

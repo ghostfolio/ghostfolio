@@ -9,14 +9,14 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
-
-import { Injectable } from '@nestjs/common';
-import {
+import type {
   AssetProfileOverrides,
-  DataSource,
   Prisma,
   SymbolProfile
-} from '@prisma/client';
+} from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
+
+import { Injectable } from '@nestjs/common';
 import { continents, countries } from 'countries-list';
 
 @Injectable()

@@ -7,6 +7,7 @@ import {
   SymbolItem
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { utc } from '@date-fns/utc';
 import {
@@ -22,7 +23,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource } from '@prisma/client';
 import { isValid, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isEmpty } from 'lodash-es';

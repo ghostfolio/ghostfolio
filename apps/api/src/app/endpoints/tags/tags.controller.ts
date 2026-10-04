@@ -6,6 +6,7 @@ import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
 import { isSystemTag } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { Tag } from '@ghostfolio/prisma/client';
 
 import {
   Body,
@@ -21,7 +22,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Tag } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @AllowDuringImpersonation()

@@ -17,8 +17,11 @@ import {
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 import { AccountWithValue } from '@ghostfolio/common/types';
-
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 
 import { PortfolioTableService } from './portfolio-table.service';
 

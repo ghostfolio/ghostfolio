@@ -1,7 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import type { AuthDevice, Prisma } from '@ghostfolio/prisma/client';
 
 import { Injectable } from '@nestjs/common';
-import { AuthDevice, Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthDeviceService {

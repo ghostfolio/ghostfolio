@@ -7,6 +7,7 @@ import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
+import type { AccountBalance } from '@ghostfolio/prisma/client';
 
 import {
   Controller,
@@ -17,7 +18,6 @@ import {
   Param,
   UseInterceptors
 } from '@nestjs/common';
-import { AccountBalance } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountBalanceService } from './account-balance.service';

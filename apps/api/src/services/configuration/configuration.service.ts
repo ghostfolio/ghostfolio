@@ -10,9 +10,9 @@ import {
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY,
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT
 } from '@ghostfolio/common/config';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Injectable } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import {
   bool,
   cleanEnv,

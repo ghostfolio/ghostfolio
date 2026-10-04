@@ -18,10 +18,11 @@ import {
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { uniqBy } from 'lodash-es';

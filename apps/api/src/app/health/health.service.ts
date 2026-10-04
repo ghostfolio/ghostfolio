@@ -3,9 +3,9 @@ import { DataEnhancerService } from '@ghostfolio/api/services/data-provider/data
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Injectable } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 
 @Injectable()
 export class HealthService {

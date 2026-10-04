@@ -10,9 +10,9 @@ import {
   AssetProfileIdentifier,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
+import type { Prisma } from '@ghostfolio/prisma/client';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class WatchlistService {

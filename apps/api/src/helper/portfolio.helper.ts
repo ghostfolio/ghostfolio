@@ -1,6 +1,5 @@
 import { PortfolioDetails } from '@ghostfolio/common/interfaces';
-
-import { Type as ActivityType } from '@prisma/client';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 export function convertValuesToPercentages({
   accounts,

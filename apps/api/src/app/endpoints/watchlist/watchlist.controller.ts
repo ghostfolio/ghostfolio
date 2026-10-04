@@ -8,6 +8,7 @@ import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   Body,
@@ -19,7 +20,6 @@ import {
   Post,
   UseInterceptors
 } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { WatchlistService } from './watchlist.service';

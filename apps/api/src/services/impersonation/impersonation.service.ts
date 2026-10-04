@@ -14,9 +14,10 @@ import type {
   ImpersonationContext,
   UserWithSettings
 } from '@ghostfolio/common/types';
+import type { Access } from '@ghostfolio/prisma/client';
+import { AccessType } from '@ghostfolio/prisma/enums';
 
 import { Injectable } from '@nestjs/common';
-import { Access, AccessType } from '@prisma/client';
 
 @Injectable()
 export class ImpersonationService {

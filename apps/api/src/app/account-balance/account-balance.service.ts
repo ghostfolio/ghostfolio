@@ -18,10 +18,10 @@ import {
   Filter,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
+import type { AccountBalance, Prisma } from '@ghostfolio/prisma/client';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AccountBalance, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, format, min, parseISO } from 'date-fns';
 import { groupBy } from 'lodash-es';

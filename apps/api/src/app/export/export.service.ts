@@ -8,9 +8,10 @@ import {
   Filter,
   UserSettings
 } from '@ghostfolio/common/interfaces';
+import type { Platform, Prisma } from '@ghostfolio/prisma/client';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import { Injectable } from '@nestjs/common';
-import { Platform, Prisma, Type as ActivityType } from '@prisma/client';
 import { groupBy, uniqBy } from 'lodash-es';
 
 @Injectable()
