@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Localized the number formatting in the chart of the holdings tab on the home page
 - Moved the performance calculation including dividends (total return) from experimental to general availability
 - Changed the installation of the dependencies from `npm install` to `npm ci` in the `Dockerfile`
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the algebraic sign in the tooltip of the chart of the holdings tab on the home page
 - Fixed the asset profile of the activities after a fee, an interest or a liability with the same symbol in the activities import
 
 ### Todo
