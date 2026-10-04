@@ -83,7 +83,8 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     return {
       maximumFractionDigits: digits,
-      minimumFractionDigits: digits
+      minimumFractionDigits: digits,
+      useGrouping: true
     };
   });
 

@@ -324,6 +324,7 @@ export class GfTreemapChartComponent
                 ).toLocaleString(this.locale(), {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
+                  useGrouping: true,
                   signDisplay: 'exceptZero'
                 })}%`
               ];
@@ -401,7 +402,8 @@ export class GfTreemapChartComponent
             raw._data.allocationInPercentage * 100
           ).toLocaleString(this.locale(), {
             maximumFractionDigits: 2,
-            minimumFractionDigits: 2
+            minimumFractionDigits: 2,
+            useGrouping: true
           })}%`;
           const name = getHoldingName(raw._data.assetProfile);
 
@@ -410,6 +412,7 @@ export class GfTreemapChartComponent
           ).toLocaleString(this.locale(), {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2,
+            useGrouping: true,
             signDisplay: 'exceptZero'
           })}%`;
 
@@ -420,7 +423,8 @@ export class GfTreemapChartComponent
               `${name} (${allocationInPercentage})`,
               `${value?.toLocaleString(this.locale(), {
                 maximumFractionDigits: 2,
-                minimumFractionDigits: 2
+                minimumFractionDigits: 2,
+                useGrouping: true
               })} ${this.baseCurrency()}`,
               '',
               $localize`Change` + ' (' + $localize`Performance` + ')',
@@ -429,7 +433,8 @@ export class GfTreemapChartComponent
                 {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
-                  signDisplay: 'exceptZero'
+                  signDisplay: 'exceptZero',
+                  useGrouping: true
                 }
               )} ${this.baseCurrency()} (${netPerformanceInPercentageWithSign})`
             ];

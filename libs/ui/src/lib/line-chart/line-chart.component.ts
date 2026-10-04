@@ -258,7 +258,8 @@ export class GfLineChartComponent
                       if (typeof tickValue === 'number') {
                         return tickValue.toLocaleString(this.locale, {
                           maximumFractionDigits: 2,
-                          minimumFractionDigits: 2
+                          minimumFractionDigits: 2,
+                          useGrouping: true
                         });
                       }
 
