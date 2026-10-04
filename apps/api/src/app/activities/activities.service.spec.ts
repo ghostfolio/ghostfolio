@@ -4,6 +4,9 @@ import {
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
@@ -39,6 +42,85 @@ describe('ActivitiesService', () => {
       null,
       null
     );
+  });
+
+  describe('getActivities', () => {
+    it('returns the activities with the asset profile but without the relation to the symbol profile', async () => {
+      const assetProfile = {
+        ...assetProfileDummyData,
+        currency: 'USD',
+        dataSource: DataSource.YAHOO,
+        name: 'Apple Inc.',
+        symbol: 'AAPL'
+      };
+
+      const findMany = jest.fn().mockResolvedValue([
+        {
+          ...activityDummyData,
+          account: null,
+          currency: 'USD',
+          date: parseDate('2021-01-01'),
+          fee: 1,
+          id: 'activity-id',
+          quantity: 10,
+          SymbolProfile: {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            symbol: 'AAPL'
+          },
+          tags: [],
+          type: 'BUY',
+          unitPrice: 100
+        }
+      ]);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          toCurrencyAtDate: jest.fn().mockResolvedValue(0)
+        } as unknown as ExchangeRateDataService,
+        null,
+        {
+          order: {
+            findMany,
+            count: jest.fn().mockResolvedValue(1)
+          }
+        } as unknown as PrismaService,
+        {
+          getSymbolProfiles: jest
+            .fn()
+            .mockResolvedValue([
+              { ...assetProfile, dataSource: DataSource.MANUAL },
+              assetProfile
+            ])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      const { activities } = await service.getActivities({
+        userCurrency: 'USD',
+        userId: 'user-id'
+      });
+
+      expect(findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.objectContaining({
+            SymbolProfile: {
+              select: { currency: true, dataSource: true, symbol: true }
+            }
+          })
+        })
+      );
+      expect(activities).toHaveLength(1);
+      expect(activities[0]).not.toHaveProperty('SymbolProfile');
+      expect(activities[0].assetProfile).toBe(assetProfile);
+    });
   });
 
   describe('getActivitiesForPortfolioCalculator', () => {
