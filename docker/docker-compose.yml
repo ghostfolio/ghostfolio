@@ -5,8 +5,6 @@ services:
     container_name: ghostfolio
     restart: unless-stopped
     init: true
-    # Time for the open requests and the active queue jobs to finish before
-    # the container is killed
     stop_grace_period: 1m
     cap_drop:
       - ALL
