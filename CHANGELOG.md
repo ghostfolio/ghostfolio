@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Localized the number formatting in the chart of the holdings tab on the home page
+- Moved the dividend and the dividend yield in the holding detail dialog from experimental to general availability
 - Changed the installation of the dependencies from `npm install` to `npm ci` in the `Dockerfile`
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
 - Upgraded `nestjs` from version `11.2.3` to `11.2.6`
