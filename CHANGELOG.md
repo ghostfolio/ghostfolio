@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Moved the performance calculation including dividends (total return) from experimental to general availability
+
+## 3.79.0 - 2026-10-04
+
 ### Added
 
 - Extended the _Public API_ with the liveness probe endpoint (`GET api/v1/health/liveness`) (experimental)
@@ -16,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Localized the number formatting in the chart of the holdings tab on the home page
-- Moved the performance calculation including dividends (total return) from experimental to general availability
+- Moved the dividend and the dividend yield in the holding detail dialog from experimental to general availability
 - Changed the installation of the dependencies from `npm install` to `npm ci` in the `Dockerfile`
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
 - Upgraded `nestjs` from version `11.2.3` to `11.2.6`

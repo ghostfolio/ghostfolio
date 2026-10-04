@@ -183,9 +183,7 @@
                 >Invested Capital</gf-value
               >
             </div>
-            @if (
-              dividendInBaseCurrency && user?.settings?.isExperimentalFeatures
-            ) {
+            @if (dividendInBaseCurrency) {
               <div class="col-6 mb-3">
                 <gf-value
                   i18n
