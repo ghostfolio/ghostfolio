@@ -186,18 +186,6 @@ export class GfTreemapChartComponent
     return dataset[activeElement.index];
   }
 
-  private getRoundedValue({
-    precision,
-    value
-  }: {
-    precision: number;
-    value: number;
-  }) {
-    const roundedValue = round(value, precision);
-
-    return roundedValue === 0 ? 0 : roundedValue;
-  }
-
   private initialize() {
     const holdings = this.holdings();
 
@@ -326,18 +314,18 @@ export class GfTreemapChartComponent
             formatter: (context: GfTreemapScriptableContext) => {
               const raw = context.raw as GfTreemapDataPoint;
 
-              const netPerformancePercentWithCurrencyEffect =
-                this.getRoundedValue({
-                  precision: 4,
-                  value: raw._data.netPerformancePercentWithCurrencyEffect
-                });
-
               const name = raw._data.assetProfile.name;
               const symbol = raw._data.assetProfile.symbol;
 
               return [
                 isUUID(symbol) ? (name ?? symbol) : symbol,
-                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
+                `${(
+                  raw._data.netPerformancePercentWithCurrencyEffect * 100
+                ).toLocaleString(this.locale(), {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2,
+                  signDisplay: 'exceptZero'
+                })}%`
               ];
             },
             hoverColor: undefined,
@@ -412,14 +400,13 @@ export class GfTreemapChartComponent
           const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
           const name = getHoldingName(raw._data.assetProfile);
 
-          const netPerformancePercentWithCurrencyEffect = this.getRoundedValue({
-            precision: 4,
-            value: raw._data.netPerformancePercentWithCurrencyEffect
-          });
-
-          const sign = netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
-
-          const netPerformanceInPercentageWithSign = `${sign}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
+          const netPerformanceInPercentageWithSign = `${(
+            raw._data.netPerformancePercentWithCurrencyEffect * 100
+          ).toLocaleString(this.locale(), {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+            signDisplay: 'exceptZero'
+          })}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
             const value = raw._data.valueInBaseCurrency;
