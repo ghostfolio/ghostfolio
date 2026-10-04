@@ -10,6 +10,7 @@ import {
   MODULE_METADATA,
   PATH_METADATA
 } from '@nestjs/common/constants';
+import { MetadataScanner } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AppModule } from './app.module';
@@ -26,8 +27,13 @@ type ModuleDefinition =
   DynamicModule | ForwardReference<() => Type> | Promise<DynamicModule> | Type;
 
 /**
- * The routes which answer a request without the authentication of a user or
- * of an API key, sorted by the request method and the path
+ * The routes of the controllers which answer a request without the
+ * authentication of a user or of an API key, sorted by the request method and
+ * the path. A new route has to apply AuthGuard('api-key') or AuthGuard('jwt')
+ * (e.g. via the decorator RequiresScope) or has to be added here.
+ *
+ * The MCP transport, Bull Board and the static files are not covered, as they
+ * are not served by a controller
  */
 const PUBLIC_ROUTES = [
   'GET /asset/:dataSource/:symbol',
@@ -89,7 +95,7 @@ async function getControllers(
     controllers.push(...(await getControllers(importedModule, visitedModules)));
   }
 
-  return controllers;
+  return [...new Set(controllers)];
 }
 
 /**
@@ -112,8 +118,9 @@ function getRoutesWithoutAuthentication(controller: Type) {
   ];
   const routeHandlersByName = controller.prototype as Record<string, object>;
 
-  return Object.getOwnPropertyNames(routeHandlersByName).flatMap(
-    (methodName) => {
+  return new MetadataScanner()
+    .getAllMethodNames(routeHandlersByName)
+    .flatMap((methodName) => {
       const routeHandler = routeHandlersByName[methodName];
       const requestMethod = Reflect.getMetadata(
         METHOD_METADATA,
@@ -147,14 +154,10 @@ function getRoutesWithoutAuthentication(controller: Type) {
           return `${RequestMethod[requestMethod]} /${path}`;
         });
       });
-    }
-  );
+    });
 }
 
 describe('AppModule', () => {
-  // A route which applies neither AuthGuard('api-key') nor AuthGuard('jwt')
-  // (e.g. via the decorator RequiresScope) is open to every request, hence a
-  // new route has to apply one of them or has to be added to the public routes
   it('should require the authentication for each route which is not public', async () => {
     const controllers = await getControllers(AppModule);
 
