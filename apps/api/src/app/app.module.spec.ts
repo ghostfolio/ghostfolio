@@ -41,6 +41,7 @@ const PUBLIC_ROUTES = [
   'GET /health/ai',
   'GET /health/data-enhancer/:name',
   'GET /health/data-provider/:dataSource',
+  'GET /health/liveness',
   'GET /info',
   'GET /logo',
   'GET /logo/:dataSource/:symbol',
