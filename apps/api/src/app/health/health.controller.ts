@@ -34,9 +34,11 @@ export class HealthController {
 
   @Get()
   public async getHealth(@Res() response: Response) {
-    const databaseServiceHealthy = await this.healthService.isDatabaseHealthy();
-    const redisCacheServiceHealthy =
-      await this.healthService.isRedisCacheHealthy();
+    const [databaseServiceHealthy, redisCacheServiceHealthy] =
+      await Promise.all([
+        this.healthService.isDatabaseHealthy(),
+        this.healthService.isRedisCacheHealthy()
+      ]);
 
     if (databaseServiceHealthy && redisCacheServiceHealthy) {
       return response
