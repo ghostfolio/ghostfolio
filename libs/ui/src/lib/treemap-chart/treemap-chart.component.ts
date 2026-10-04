@@ -186,6 +186,18 @@ export class GfTreemapChartComponent
     return dataset[activeElement.index];
   }
 
+  private getRoundedValue({
+    precision,
+    value
+  }: {
+    precision: number;
+    value: number;
+  }) {
+    const roundedValue = round(value, precision);
+
+    return roundedValue === 0 ? 0 : roundedValue;
+  }
+
   private initialize() {
     const holdings = this.holdings();
 
@@ -314,16 +326,11 @@ export class GfTreemapChartComponent
             formatter: (context: GfTreemapScriptableContext) => {
               const raw = context.raw as GfTreemapDataPoint;
 
-              let netPerformancePercentWithCurrencyEffect = round(
-                raw._data.netPerformancePercentWithCurrencyEffect,
-                4
-              );
-
-              if (Math.abs(netPerformancePercentWithCurrencyEffect) === 0) {
-                netPerformancePercentWithCurrencyEffect = Math.abs(
-                  netPerformancePercentWithCurrencyEffect
-                );
-              }
+              const netPerformancePercentWithCurrencyEffect =
+                this.getRoundedValue({
+                  precision: 4,
+                  value: raw._data.netPerformancePercentWithCurrencyEffect
+                });
 
               const name = raw._data.assetProfile.name;
               const symbol = raw._data.assetProfile.symbol;
@@ -405,12 +412,21 @@ export class GfTreemapChartComponent
           const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
           const name = getHoldingName(raw._data.assetProfile);
 
-          const sign =
-            raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
+          const netPerformancePercentWithCurrencyEffect = this.getRoundedValue({
+            precision: 4,
+            value: raw._data.netPerformancePercentWithCurrencyEffect
+          });
 
-          const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
+          const sign = netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
+
+          const netPerformanceInPercentageWithSign = `${sign}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
+            const netPerformanceWithCurrencyEffect = this.getRoundedValue({
+              precision: 2,
+              value: raw._data.netPerformanceWithCurrencyEffect
+            });
+
             const value = raw._data.valueInBaseCurrency;
 
             return [
@@ -421,7 +437,7 @@ export class GfTreemapChartComponent
               })} ${this.baseCurrency()}`,
               '',
               $localize`Change` + ' (' + $localize`Performance` + ')',
-              `${sign}${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
+              `${sign}${netPerformanceWithCurrencyEffect.toLocaleString(
                 this.locale(),
                 {
                   maximumFractionDigits: 2,
