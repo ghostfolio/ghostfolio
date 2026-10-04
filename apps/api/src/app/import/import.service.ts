@@ -836,8 +836,6 @@ export class ImportService {
 
     const activities: Activity[] = [];
 
-    // The symbols of the custom asset profiles which createActivity() has
-    // created, by the asset profile identifier of the activities to import
     const customAssetProfileSymbols: {
       [assetProfileIdentifier: string]: string;
     } = {};
@@ -910,20 +908,13 @@ export class ImportService {
           continue;
         }
 
-        const isNonInvestmentActivity =
-          NON_INVESTMENT_ACTIVITY_TYPES.includes(type);
+        const customAssetProfileSymbol =
+          NON_INVESTMENT_ACTIVITY_TYPES.includes(type) ||
+          assetProfile.dataSource === DataSource.MANUAL
+            ? customAssetProfileSymbols[assetProfileIdentifier]
+            : undefined;
 
-        // Refer a non-investment activity to the custom asset profile which
-        // createActivity() has created for a previous activity of this asset
-        // profile. An investment activity keeps the asset profile.
-        const customAssetProfileSymbol = isNonInvestmentActivity
-          ? customAssetProfileSymbols[assetProfileIdentifier]
-          : undefined;
-
-        const { name } = assetProfile;
-        const dataSource = customAssetProfileSymbol
-          ? DataSource.MANUAL
-          : assetProfile.dataSource;
+        const { dataSource, name } = assetProfile;
         const symbol = customAssetProfileSymbol ?? assetProfile.symbol;
 
         const createdActivity = await this.activitiesService.createActivity({
@@ -961,13 +952,14 @@ export class ImportService {
         });
 
         if (createdActivity.SymbolProfile.dataSource === DataSource.MANUAL) {
-          // Keep the symbol which createActivity() may have assigned for the
-          // next activities of this asset profile and show the custom asset
-          // profile. The shared asset profile stays unchanged.
           customAssetProfileSymbols[assetProfileIdentifier] =
             createdActivity.SymbolProfile.symbol;
 
-          assetProfile = createdActivity.SymbolProfile;
+          assetProfile = {
+            ...assetProfile,
+            dataSource: DataSource.MANUAL,
+            symbol: createdActivity.SymbolProfile.symbol
+          };
         }
 
         order = createdActivity;

@@ -19,7 +19,6 @@ import { parseISO } from 'date-fns';
 
 import { ImportService } from './import.service';
 
-// The symbol which createActivity() assigns to a new custom asset profile
 const CUSTOM_ASSET_PROFILE_SYMBOL = '1ad7d4a2-6b2d-4e0f-9b1f-2c0f8d3e5a7b';
 
 describe('ImportService', () => {
@@ -37,8 +36,6 @@ describe('ImportService', () => {
     createActivity = jest.fn();
     gatherSymbols = jest.fn();
 
-    // Like validateActivities(), share one asset profile between the
-    // activities with the same asset profile identifier
     const validateActivities = jest.fn(
       ({ activitiesDto }: { activitiesDto: CreateOrderDto[] }) => {
         const assetProfiles: {
@@ -73,7 +70,10 @@ describe('ImportService', () => {
         }
       } as unknown as ConfigurationService,
       { gatherSymbols } as unknown as DataGatheringService,
-      { validateActivities } as unknown as DataProviderService,
+      {
+        validateActivities,
+        getDataSourceForImport: jest.fn().mockReturnValue(DataSource.MANUAL)
+      } as unknown as DataProviderService,
       {
         toCurrencyAtDate: jest.fn().mockResolvedValue(0)
       } as unknown as ExchangeRateDataService,
@@ -161,10 +161,10 @@ describe('ImportService', () => {
         createActivity.mock.calls[1][0].SymbolProfile.connectOrCreate.create
       ).toMatchObject({ dataSource: DataSource.YAHOO, symbol: 'AAPL' });
 
-      expect(activities[1].assetProfile).toEqual({
-        dataSource: DataSource.MANUAL,
-        symbol: CUSTOM_ASSET_PROFILE_SYMBOL
-      });
+      expect(getAssetProfileIdentifiers(activities)).toEqual([
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
     });
 
     it.each(NON_INVESTMENT_ACTIVITY_TYPES)(
@@ -197,10 +197,7 @@ describe('ImportService', () => {
 
         expect(
           createActivity.mock.calls[1][0].SymbolProfile.connectOrCreate.create
-        ).toMatchObject({
-          dataSource: DataSource.MANUAL,
-          symbol: CUSTOM_ASSET_PROFILE_SYMBOL
-        });
+        ).toMatchObject({ symbol: CUSTOM_ASSET_PROFILE_SYMBOL });
       }
     );
 
@@ -231,6 +228,51 @@ describe('ImportService', () => {
         dataSource: DataSource.MANUAL,
         symbol: CUSTOM_ASSET_PROFILE_SYMBOL
       });
+    });
+
+    it('refers the next investment activities without a data source to the custom asset profile which createActivity() has created', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'Gold',
+            type: 'BUY'
+          }),
+          createActivityDto({
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'Gold',
+            type: 'BUY'
+          }),
+          createActivityDto({
+            date: '2024-01-03T00:00:00.000Z',
+            symbol: 'Gold',
+            type: 'SELL'
+          })
+        ]
+      });
+
+      expect(
+        createActivity.mock.calls.slice(1).map(([activity]) => {
+          return activity.SymbolProfile.connectOrCreate.create;
+        })
+      ).toMatchObject([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      expect(gatherSymbols.mock.calls[0][0].dataGatheringItems).toEqual([
+        {
+          dataSource: DataSource.MANUAL,
+          date: parseISO('2024-01-01T00:00:00.000Z'),
+          symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+        }
+      ]);
     });
 
     it('keeps the asset profiles of the activities in a dry run', async () => {
@@ -284,8 +326,6 @@ describe('ImportService', () => {
     });
   }
 
-  // Let the next calls of createActivity() refer the activities to the given
-  // asset profiles, in this order
   function mockCreatedAssetProfiles(assetProfiles: AssetProfileIdentifier[]) {
     for (const assetProfile of assetProfiles) {
       createActivity.mockImplementationOnce(
