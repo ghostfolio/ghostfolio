@@ -14,6 +14,7 @@ import {
 import {
   Logger,
   LogLevel,
+  ShutdownSignal,
   ValidationPipe,
   VersioningType
 } from '@nestjs/common';
@@ -65,6 +66,14 @@ async function bootstrap() {
   });
 
   app.enableCors();
+
+  // Let the open requests and the active queue jobs finish on SIGINT and
+  // SIGTERM before the process stops. Exit explicitly because Linux ignores
+  // the re-raised signal if the process runs as PID 1
+  app.enableShutdownHooks([ShutdownSignal.SIGINT, ShutdownSignal.SIGTERM], {
+    useProcessExit: true
+  });
+
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI

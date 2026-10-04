@@ -69,6 +69,7 @@ import type { ExportResponse } from './responses/export-response.interface';
 import type { HistoricalResponse } from './responses/historical-response.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { InfoResponse } from './responses/info-response.interface';
+import type { LivenessHealthResponse } from './responses/liveness-health-response.interface';
 import type { LookupResponse } from './responses/lookup-response.interface';
 import type { MarketDataOfMarketsResponse } from './responses/market-data-of-markets-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
@@ -158,6 +159,7 @@ export {
   InfoResponse,
   InvestmentItem,
   LineChartItem,
+  LivenessHealthResponse,
   LookupItem,
   LookupResponse,
   MarketData,

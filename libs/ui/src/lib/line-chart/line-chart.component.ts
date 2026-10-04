@@ -6,7 +6,10 @@ import {
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import { getBackgroundColor, getLocale } from '@ghostfolio/common/helper';
-import { LineChartItem } from '@ghostfolio/common/interfaces';
+import {
+  LineChartItem,
+  NullableLineChartItem
+} from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
@@ -24,6 +27,7 @@ import {
 import {
   type AnimationsSpec,
   Chart,
+  type ChartData,
   Filler,
   LinearScale,
   LineController,
@@ -52,10 +56,10 @@ import {
 export class GfLineChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() benchmarkDataItems: LineChartItem[] = [];
+  @Input() benchmarkDataItems: NullableLineChartItem[] = [];
   @Input() benchmarkLabel = '';
   @Input() colorScheme?: ColorScheme;
-  @Input() currency: string;
+  @Input() currency?: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
   @Input() label: string;
@@ -134,12 +138,12 @@ export class GfLineChartComponent
 
   private initialize() {
     this.isLoading = true;
-    const benchmarkPrices: number[] = [];
+    const benchmarkPrices: (number | null)[] = [];
     const labels: string[] = [];
     const marketPrices: number[] = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
+      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value ?? null);
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
@@ -164,7 +168,7 @@ export class GfLineChartComponent
       gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
 
-    const data = {
+    const data: ChartData<'line'> = {
       labels,
       datasets: [
         {
@@ -205,7 +209,7 @@ export class GfLineChartComponent
 
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'line'>(this.chartCanvas.nativeElement, {
           data,
           options: {
             animations: this.isAnimated ? animations : undefined,
