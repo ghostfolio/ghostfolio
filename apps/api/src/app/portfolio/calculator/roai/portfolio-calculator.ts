@@ -403,6 +403,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     const {
       currentValues,
       currentValuesWithCurrencyEffect,
+      dividendValuesWithCurrencyEffect,
       initialValue,
       investmentValuesAccumulated,
       investmentValuesAccumulatedWithCurrencyEffect,
@@ -736,6 +737,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       averageInvestmentValuesWithCurrencyEffect,
       currentValues,
       currentValuesWithCurrencyEffect,
+      dividendValuesWithCurrencyEffect,
       dividendYieldPercent,
       dividendYieldPercentWithCurrencyEffect,
       grossPerformancePercentage,

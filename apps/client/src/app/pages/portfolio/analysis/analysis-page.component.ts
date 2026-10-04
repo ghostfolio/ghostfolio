@@ -333,6 +333,7 @@ export class GfAnalysisPageComponent implements OnInit {
           index,
           {
             date,
+            dividendInPercentageWithCurrencyEffect,
             netPerformanceInPercentageWithCurrencyEffect,
             totalInvestmentValueWithCurrencyEffect,
             valueInPercentage,
@@ -363,7 +364,9 @@ export class GfAnalysisPageComponent implements OnInit {
           if (isNumber(netPerformanceInPercentageWithCurrencyEffect)) {
             this.performanceDataItemsInPercentage.push({
               date,
-              value: netPerformanceInPercentageWithCurrencyEffect
+              value:
+                netPerformanceInPercentageWithCurrencyEffect -
+                (dividendInPercentageWithCurrencyEffect ?? 0)
             });
           }
         }

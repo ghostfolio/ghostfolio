@@ -122,9 +122,9 @@ describe('PortfolioCalculator', () => {
         {
           // The first activity of this asset profile is a fee, which is not an
           // investment activity. Thus the holding is not included in the
-          // holdings of the portfolio summary, and its dividend is not part of
-          // the dividend of the chart. But its fee and its dividend are part of
-          // the net performance
+          // holdings of the portfolio summary. But its fee and its dividend are
+          // part of the net performance, and thus its dividend is part of the
+          // dividend of the chart
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -180,8 +180,8 @@ describe('PortfolioCalculator', () => {
       ).toEqual(['MSFT']);
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
-        dividendInBaseCurrency: 0.62,
-        dividendInPercentageWithCurrencyEffect: 0.0020764954116149776,
+        dividendInBaseCurrency: 5.62,
+        dividendInPercentageWithCurrencyEffect: 0.01882242615044544,
         netPerformance: 18.87,
         netPerformanceInPercentage: 0.06319914260834618
       });
@@ -189,8 +189,8 @@ describe('PortfolioCalculator', () => {
       // The portfolio summary takes the dividend of the date range max
       expect(performanceByDateRange).toMatchObject({
         max: {
-          dividendInBaseCurrency: 0.62,
-          dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
+          dividendInBaseCurrency: 5.62,
+          dividendInPercentageWithCurrencyEffect: 0.01882242615044535,
           netPerformance: 18.87,
           netPerformanceInPercentage: 0.06319914260834586
         }
@@ -327,8 +327,8 @@ describe('PortfolioCalculator', () => {
         },
         {
           // The holding has no market price, thus it has no value. Its dividend
-          // is part of the dividend of the chart, but not part of the net
-          // performance (unlike the dividend in the scenario above)
+          // is not part of the net performance (unlike the dividend in the
+          // scenario above), and thus not part of the dividend of the chart
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -364,7 +364,7 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot.hasErrors).toBe(false);
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
-        dividendInBaseCurrency: 5.62,
+        dividendInBaseCurrency: 0.62,
         dividendInPercentageWithCurrencyEffect: 0,
         netPerformance: 14.87,
         netPerformanceInPercentage: 0.0498023980172818
@@ -372,7 +372,7 @@ describe('PortfolioCalculator', () => {
 
       expect(performanceByDateRange).toMatchObject({
         max: {
-          dividendInBaseCurrency: 5.62,
+          dividendInBaseCurrency: 0.62,
           dividendInPercentageWithCurrencyEffect: 0,
           netPerformance: 14.87,
           netPerformanceInPercentage: 0.049802398017281556

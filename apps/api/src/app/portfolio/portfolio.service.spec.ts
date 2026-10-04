@@ -865,7 +865,6 @@ describe('PortfolioService', () => {
 
     function createPortfolioCalculator() {
       return {
-        getDividendInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
         getFeesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
         getInterestInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),
         getLiabilitiesInBaseCurrency: jest.fn().mockResolvedValue(new Big(0)),

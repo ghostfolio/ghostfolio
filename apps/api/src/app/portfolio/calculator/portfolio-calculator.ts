@@ -371,6 +371,7 @@ export abstract class PortfolioCalculator {
         averageInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
         currentValues: { [date: string]: Big };
         currentValuesWithCurrencyEffect: { [date: string]: Big };
+        dividendValuesWithCurrencyEffect: { [date: string]: Big };
         investmentValuesAccumulated: { [date: string]: Big };
         investmentValuesAccumulatedWithCurrencyEffect: { [date: string]: Big };
         investmentValuesWithCurrencyEffect: { [date: string]: Big };
@@ -406,6 +407,7 @@ export abstract class PortfolioCalculator {
         averageInvestmentWithCurrencyEffect,
         currentValues,
         currentValuesWithCurrencyEffect,
+        dividendValuesWithCurrencyEffect,
         dividendYieldPercent,
         dividendYieldPercentWithCurrencyEffect,
         grossPerformance,
@@ -453,6 +455,7 @@ export abstract class PortfolioCalculator {
               averageInvestmentValuesWithCurrencyEffect: {},
               currentValues: {},
               currentValuesWithCurrencyEffect: {},
+              dividendValuesWithCurrencyEffect: {},
               investmentValuesAccumulated: {},
               investmentValuesAccumulatedWithCurrencyEffect: {},
               investmentValuesWithCurrencyEffect: {},
@@ -465,6 +468,7 @@ export abstract class PortfolioCalculator {
               averageInvestmentValuesWithCurrencyEffect,
               currentValues,
               currentValuesWithCurrencyEffect,
+              dividendValuesWithCurrencyEffect,
               investmentValuesAccumulated,
               investmentValuesAccumulatedWithCurrencyEffect,
               investmentValuesWithCurrencyEffect,
@@ -548,13 +552,6 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    const totalDividendValueWithCurrencyEffectByDate =
-      this.getTotalDividendValueWithCurrencyEffectByDate({
-        chartDates,
-        exchangeRatesByCurrency,
-        holdings: positions
-      });
-
     const assetProfileIdentifiers = Object.keys(valuesByAssetProfileIdentifier);
 
     for (const dateString of chartDates) {
@@ -567,6 +564,10 @@ export abstract class PortfolioCalculator {
 
         const currentValueWithCurrencyEffect =
           assetProfileValues.currentValuesWithCurrencyEffect?.[dateString] ??
+          new Big(0);
+
+        const dividendValueWithCurrencyEffect =
+          assetProfileValues.dividendValuesWithCurrencyEffect?.[dateString] ??
           new Big(0);
 
         const investmentValueAccumulated =
@@ -631,8 +632,10 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalCurrentValueWithCurrencyEffect ?? new Big(0)
           ).add(currentValueWithCurrencyEffect),
-          totalDividendValueWithCurrencyEffect:
-            totalDividendValueWithCurrencyEffectByDate[dateString],
+          totalDividendValueWithCurrencyEffect: (
+            accumulatedValuesByDate[dateString]
+              ?.totalDividendValueWithCurrencyEffect ?? new Big(0)
+          ).add(dividendValueWithCurrencyEffect),
           totalInvestmentValue: (
             accumulatedValuesByDate[dateString]?.totalInvestmentValue ??
             new Big(0)
@@ -870,12 +873,6 @@ export abstract class PortfolioCalculator {
     return this.dataProviderInfos;
   }
 
-  public async getDividendInBaseCurrency() {
-    await this.snapshotPromise;
-
-    return this.getDividendInBaseCurrencyOfHoldings(this.snapshot.positions);
-  }
-
   protected getDividendInBaseCurrencyOfHoldings(
     holdings: PortfolioSnapshotHolding[]
   ) {
@@ -894,6 +891,7 @@ export abstract class PortfolioCalculator {
       averageInvestmentWithCurrencyEffect: new Big(0),
       currentValues: {},
       currentValuesWithCurrencyEffect: {},
+      dividendValuesWithCurrencyEffect: {},
       dividendYieldPercent: new Big(0),
       dividendYieldPercentWithCurrencyEffect: new Big(0),
       grossPerformance: new Big(0),
@@ -959,7 +957,10 @@ export abstract class PortfolioCalculator {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
+    const dividendValuesWithCurrencyEffect: { [date: string]: Big } = {};
     let dividends = new Big(0);
+    let dividendsAtStartDateWithCurrencyEffect = new Big(0);
+    let dividendsWithCurrencyEffect = new Big(0);
     let fees = new Big(0);
     let feesAtStartDate = new Big(0);
     let feesAtStartDateWithCurrencyEffect = new Big(0);
@@ -1203,12 +1204,12 @@ export abstract class PortfolioCalculator {
       }
 
       if (activity.type === 'DIVIDEND') {
-        // The amount of a dividend in the base currency is the same with and
-        // without currency effect, like the dividend of the holding
-        dividends = dividends.plus(
-          activity.quantity
-            .mul(activity.unitPrice)
-            .mul(exchangeRateAtActivityDate ?? 1)
+        const dividend = activity.quantity.mul(activity.unitPrice);
+
+        dividends = dividends.plus(dividend.mul(currentExchangeRate ?? 1));
+
+        dividendsWithCurrencyEffect = dividendsWithCurrencyEffect.plus(
+          dividend.mul(exchangeRateAtActivityDate ?? 1)
         );
       }
 
@@ -1221,7 +1222,7 @@ export abstract class PortfolioCalculator {
         valueOfInvestmentWithCurrencyEffect
           .minus(totalInvestmentWithCurrencyEffect)
           .plus(grossPerformanceFromSellsWithCurrencyEffect)
-          .plus(dividends);
+          .plus(dividendsWithCurrencyEffect);
 
       grossPerformance = newGrossPerformance;
 
@@ -1229,6 +1230,7 @@ export abstract class PortfolioCalculator {
         newGrossPerformanceWithCurrencyEffect;
 
       if (activity.itemType === 'start') {
+        dividendsAtStartDateWithCurrencyEffect = dividendsWithCurrencyEffect;
         feesAtStartDate = fees;
         feesAtStartDateWithCurrencyEffect = feesWithCurrencyEffect;
         grossPerformanceAtStartDate = grossPerformance;
@@ -1242,6 +1244,11 @@ export abstract class PortfolioCalculator {
 
         currentValuesWithCurrencyEffect[activity.date] =
           valueOfInvestmentWithCurrencyEffect;
+
+        dividendValuesWithCurrencyEffect[activity.date] =
+          dividendsWithCurrencyEffect.minus(
+            dividendsAtStartDateWithCurrencyEffect
+          );
 
         netPerformanceValues[activity.date] = grossPerformance
           .minus(grossPerformanceAtStartDate)
@@ -1316,6 +1323,7 @@ export abstract class PortfolioCalculator {
     return {
       currentValues,
       currentValuesWithCurrencyEffect,
+      dividendValuesWithCurrencyEffect,
       initialValue,
       investmentValuesAccumulated,
       investmentValuesAccumulatedWithCurrencyEffect,
@@ -1786,77 +1794,6 @@ export abstract class PortfolioCalculator {
     }
 
     return chartDateMap;
-  }
-
-  private getTotalDividendValueWithCurrencyEffectByDate({
-    chartDates,
-    exchangeRatesByCurrency,
-    holdings
-  }: {
-    chartDates: string[];
-    exchangeRatesByCurrency: {
-      [currencyPair: string]: { [dateString: string]: number };
-    };
-    holdings: PortfolioCalculatorHolding[];
-  }): { [date: string]: Big } {
-    // Take the dividend from the same holdings as the portfolio summary, so
-    // that the response shows one dividend only
-    const assetProfileIdentifiersIncludedInHoldings = new Set(
-      holdings
-        .filter(({ includeInHoldings }) => {
-          return includeInHoldings;
-        })
-        .map(({ dataSource, symbol }) => {
-          return getAssetProfileIdentifier({ dataSource, symbol });
-        })
-    );
-
-    const dividendActivities = this.activities.filter(
-      ({ assetProfile, type }) => {
-        return (
-          type === 'DIVIDEND' &&
-          assetProfileIdentifiersIncludedInHoldings.has(
-            getAssetProfileIdentifier(assetProfile)
-          )
-        );
-      }
-    );
-
-    const totalDividendValueWithCurrencyEffectByDate: { [date: string]: Big } =
-      {};
-
-    let index = 0;
-    let totalDividendValueWithCurrencyEffect = new Big(0);
-
-    // The activities and the chart dates are sorted by date, so one pass over
-    // both gives the dividends received up to each chart date
-    for (const chartDate of chartDates) {
-      while (
-        index < dividendActivities.length &&
-        dividendActivities[index].date <= chartDate
-      ) {
-        const { assetProfile, date, quantity, unitPrice } =
-          dividendActivities[index];
-
-        totalDividendValueWithCurrencyEffect =
-          totalDividendValueWithCurrencyEffect.plus(
-            quantity
-              .mul(unitPrice)
-              .mul(
-                exchangeRatesByCurrency[
-                  `${assetProfile.currency}${this.currency}`
-                ]?.[date] ?? 1
-              )
-          );
-
-        index++;
-      }
-
-      totalDividendValueWithCurrencyEffectByDate[chartDate] =
-        totalDividendValueWithCurrencyEffect;
-    }
-
-    return totalDividendValueWithCurrencyEffectByDate;
   }
 
   @LogPerformance

@@ -171,7 +171,7 @@
               />
             </div>
           </div>
-          <div class="d-flex ml-3 py-1">
+          <div class="d-flex mb-3 ml-3 py-1">
             <div class="flex-grow-1 mr-2 text-truncate">
               <ng-container i18n>Asset Performance</ng-container>
             </div>
@@ -184,42 +184,6 @@
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
                 [value]="performance?.netPerformancePercentage"
-              />
-            </div>
-          </div>
-          <div class="d-flex ml-3 py-1 text-muted">
-            <div
-              class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
-            >
-              <span i18n>thereof Dividend</span>
-              @if (user?.subscription?.type === 'Basic') {
-                <gf-premium-indicator class="ml-1" />
-              }
-            </div>
-            <div class="d-flex justify-content-end">
-              <gf-value
-                class="justify-content-end"
-                position="end"
-                [isCurrency]="true"
-                [isLoading]="isLoadingInvestmentChart"
-                [locale]="user?.settings?.locale"
-                [unit]="user?.settings?.baseCurrency"
-                [value]="performance?.dividendInBaseCurrency"
-              />
-            </div>
-          </div>
-          <div class="d-flex mb-3 ml-3 py-1 text-muted">
-            <div class="flex-grow-1 mr-2 text-truncate">
-              <ng-container i18n>thereof Dividend Performance</ng-container>
-            </div>
-            <div class="d-flex justify-content-end">
-              <gf-value
-                class="justify-content-end"
-                position="end"
-                [isLoading]="isLoadingInvestmentChart"
-                [isPercent]="true"
-                [locale]="user?.settings?.locale"
-                [value]="performance?.dividendPercentageWithCurrencyEffect"
               />
             </div>
           </div>
@@ -313,6 +277,42 @@
                 [value]="
                   performance?.netPerformancePercentageWithCurrencyEffect
                 "
+              />
+            </div>
+          </div>
+          <div class="d-flex ml-3 py-1 text-muted">
+            <div
+              class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
+            >
+              <span i18n>thereof Dividend</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isCurrency]="true"
+                [isLoading]="isLoadingInvestmentChart"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="performance?.dividendInBaseCurrency"
+              />
+            </div>
+          </div>
+          <div class="d-flex ml-3 py-1 text-muted">
+            <div class="flex-grow-1 mr-2 text-truncate">
+              <ng-container i18n>thereof Dividend Performance</ng-container>
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isLoading]="isLoadingInvestmentChart"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="performance?.dividendPercentageWithCurrencyEffect"
               />
             </div>
           </div>
