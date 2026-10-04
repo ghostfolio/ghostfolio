@@ -27,6 +27,7 @@ import {
 import {
   type AnimationsSpec,
   Chart,
+  type ChartData,
   Filler,
   LinearScale,
   LineController,
@@ -167,7 +168,7 @@ export class GfLineChartComponent
       gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
 
-    const data = {
+    const data: ChartData<'line', (number | null)[]> = {
       labels,
       datasets: [
         {
@@ -208,7 +209,7 @@ export class GfLineChartComponent
 
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'line'>(this.chartCanvas.nativeElement, {
           data,
           options: {
             animations: this.isAnimated ? animations : undefined,
