@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the algebraic sign in the tooltip of the chart of the holdings tab on the home page
 - Fixed the asset profile of the activities after a fee, an interest or a liability with the same symbol in the activities import
 
 ## 3.78.0 - 2026-10-03
