@@ -122,9 +122,9 @@ describe('PortfolioCalculator', () => {
         {
           // The first activity of this asset profile is a fee, which is not an
           // investment activity. Thus the holding is not included in the
-          // holdings of the portfolio summary. But its fee and its dividend are
-          // part of the net performance, so its dividend is part of the
-          // dividend of the chart too
+          // holdings of the portfolio summary, and its dividend is not part of
+          // the dividend of the chart. But its fee and its dividend are part of
+          // the net performance
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -180,8 +180,8 @@ describe('PortfolioCalculator', () => {
       ).toEqual(['MSFT']);
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
-        dividendInBaseCurrency: 5.62,
-        dividendInPercentageWithCurrencyEffect: 0.01882242615044544,
+        dividendInBaseCurrency: 0.62,
+        dividendInPercentageWithCurrencyEffect: 0.0020764954116149776,
         netPerformance: 18.87,
         netPerformanceInPercentage: 0.06319914260834618
       });
@@ -189,8 +189,8 @@ describe('PortfolioCalculator', () => {
       // The portfolio summary takes the dividend of the date range max
       expect(performanceByDateRange).toMatchObject({
         max: {
-          dividendInBaseCurrency: 5.62,
-          dividendInPercentageWithCurrencyEffect: 0.01882242615044535,
+          dividendInBaseCurrency: 0.62,
+          dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
           netPerformance: 18.87,
           netPerformanceInPercentage: 0.06319914260834586
         }
@@ -234,9 +234,8 @@ describe('PortfolioCalculator', () => {
           unitPriceInAssetProfileCurrency: 0.62
         },
         {
-          // The holding has a dividend, but no average investment. The dividend
-          // is part of the net performance, so the dividend percentage is the
-          // part of the net performance percentage. The dividend yield stays 0
+          // The holding has a dividend, but no average investment. Thus the
+          // dividend percentage stays 0, like the dividend yield
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -275,7 +274,7 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
         dividendInBaseCurrency: 5.62,
-        dividendInPercentageWithCurrencyEffect: 0.01882242615044544,
+        dividendInPercentageWithCurrencyEffect: 0,
         netPerformance: 19.87,
         netPerformanceInPercentage: 0.06654832875611226
       });
@@ -283,7 +282,7 @@ describe('PortfolioCalculator', () => {
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 5.62,
-          dividendInPercentageWithCurrencyEffect: 0.01882242615044535,
+          dividendInPercentageWithCurrencyEffect: 0,
           netPerformance: 19.87,
           netPerformanceInPercentage: 0.06654832875611194
         }
@@ -327,9 +326,9 @@ describe('PortfolioCalculator', () => {
           unitPriceInAssetProfileCurrency: 0.62
         },
         {
-          // The holding has no market price, thus it has no value. But its
-          // dividend is part of the net performance, like the dividend of a
-          // holding with a market price (see the scenario above)
+          // The holding has no market price, thus it has no value. Its dividend
+          // is part of the dividend of the chart, but not part of the net
+          // performance (unlike the dividend in the scenario above)
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -366,17 +365,17 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
         dividendInBaseCurrency: 5.62,
-        dividendInPercentageWithCurrencyEffect: 0.01882242615044544,
-        netPerformance: 19.87,
-        netPerformanceInPercentage: 0.06654832875611226
+        dividendInPercentageWithCurrencyEffect: 0,
+        netPerformance: 14.87,
+        netPerformanceInPercentage: 0.0498023980172818
       });
 
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 5.62,
-          dividendInPercentageWithCurrencyEffect: 0.01882242615044535,
-          netPerformance: 19.87,
-          netPerformanceInPercentage: 0.06654832875611194
+          dividendInPercentageWithCurrencyEffect: 0,
+          netPerformance: 14.87,
+          netPerformanceInPercentage: 0.049802398017281556
         }
       });
     });
