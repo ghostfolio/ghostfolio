@@ -6,7 +6,10 @@ import {
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import { getBackgroundColor, getLocale } from '@ghostfolio/common/helper';
-import { LineChartItem } from '@ghostfolio/common/interfaces';
+import {
+  LineChartItem,
+  NullableLineChartItem
+} from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
@@ -52,10 +55,10 @@ import {
 export class GfLineChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() benchmarkDataItems: LineChartItem[] = [];
+  @Input() benchmarkDataItems: NullableLineChartItem[] = [];
   @Input() benchmarkLabel = '';
   @Input() colorScheme?: ColorScheme;
-  @Input() currency: string;
+  @Input() currency?: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
   @Input() label: string;
@@ -134,12 +137,12 @@ export class GfLineChartComponent
 
   private initialize() {
     this.isLoading = true;
-    const benchmarkPrices: number[] = [];
+    const benchmarkPrices: (number | null)[] = [];
     const labels: string[] = [];
     const marketPrices: number[] = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
+      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value ?? null);
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
