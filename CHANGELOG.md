@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for a manual exchange rate in the create or update activity dialog
+
 ### Changed
 
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
