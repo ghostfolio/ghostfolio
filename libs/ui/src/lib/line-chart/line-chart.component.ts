@@ -168,7 +168,7 @@ export class GfLineChartComponent
       gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
 
-    const data: ChartData<'line', (number | null)[]> = {
+    const data: ChartData<'line'> = {
       labels,
       datasets: [
         {
