@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the _Public API_ with the liveness probe endpoint (`GET api/v1/health/liveness`) (experimental)
 - Added the graceful shutdown of the server on `SIGINT` and `SIGTERM`
 - Added `stop_grace_period` to the _Ghostfolio_ service in the `docker-compose` file (`docker-compose.yml`)
 
