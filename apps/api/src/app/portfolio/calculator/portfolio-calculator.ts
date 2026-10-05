@@ -291,7 +291,6 @@ export abstract class PortfolioCalculator {
         });
 
         if (!quantity.eq(0)) {
-          // Get a quote for active holdings only
           assetProfileIdentifiersWithQuotes.push({
             dataSource,
             symbol

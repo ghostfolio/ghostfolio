@@ -123,8 +123,6 @@ export class CurrentRateService {
     };
 
     if (includesToday) {
-      // A holding without a quote request also needs a market price of today,
-      // but it is not in error
       const assetProfileIdentifiersWithoutQuotes = [
         ...quoteErrors,
         ...dataGatheringItems.filter(({ dataSource, symbol }) => {
