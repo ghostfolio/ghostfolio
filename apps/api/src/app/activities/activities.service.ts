@@ -583,15 +583,14 @@ export class ActivitiesService {
     dataSource,
     symbol,
     types
-  }: AssetProfileIdentifier & { types?: ActivityType[] }) {
+  }: AssetProfileIdentifier & { types: ActivityType[] }) {
     return this.prismaService.order.findFirst({
-      orderBy: {
-        date: 'desc'
-      },
+      orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
       where: {
         ...WHERE_ACTIVITY_NOT_DRAFT,
         SymbolProfile: { dataSource, symbol },
-        ...(types?.length > 0 && { type: { in: types } })
+        type: { in: types },
+        unitPrice: { gt: 0 }
       }
     });
   }

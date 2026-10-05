@@ -388,7 +388,7 @@ describe('ActivitiesService', () => {
   });
 
   describe('getLatestActivity', () => {
-    it('filters by type and excludes draft activities', async () => {
+    it('filters by type and unit price and excludes draft activities', async () => {
       const findFirst = jest.fn().mockResolvedValue(null);
 
       const service = new ActivitiesService(
@@ -413,11 +413,12 @@ describe('ActivitiesService', () => {
       });
 
       expect(findFirst).toHaveBeenCalledWith({
-        orderBy: { date: 'desc' },
+        orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
         where: {
           ...WHERE_ACTIVITY_NOT_DRAFT,
           SymbolProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
-          type: { in: [ActivityType.BUY, ActivityType.SELL] }
+          type: { in: [ActivityType.BUY, ActivityType.SELL] },
+          unitPrice: { gt: 0 }
         }
       });
     });
