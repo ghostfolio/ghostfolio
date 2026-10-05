@@ -23,7 +23,7 @@ import {
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
 import { AccountWithBalance } from '@ghostfolio/common/types';
-import { Prisma } from '@ghostfolio/prisma/client';
+import type { Prisma } from '@ghostfolio/prisma/client';
 import { AssetClass, DataSource } from '@ghostfolio/prisma/enums';
 
 import { Big } from 'big.js';

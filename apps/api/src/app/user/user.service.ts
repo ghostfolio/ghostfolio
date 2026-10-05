@@ -40,7 +40,7 @@ import {
 import { getScopesOfAccess } from '@ghostfolio/common/scopes';
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
-import { Prisma, type User } from '@ghostfolio/prisma/client';
+import type { Prisma, User } from '@ghostfolio/prisma/client';
 import { Role } from '@ghostfolio/prisma/enums';
 
 import { Injectable, Logger } from '@nestjs/common';

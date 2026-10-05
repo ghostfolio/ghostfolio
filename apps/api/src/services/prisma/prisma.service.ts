@@ -1,4 +1,5 @@
-import { Prisma, PrismaClient } from '@ghostfolio/prisma/client';
+import type { Prisma } from '@ghostfolio/prisma/client';
+import { PrismaClient } from '@ghostfolio/prisma/client';
 
 import {
   Injectable,

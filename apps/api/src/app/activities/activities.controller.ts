@@ -22,7 +22,7 @@ import {
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
-import type { Order, Prisma } from '@ghostfolio/prisma/client';
+import type { Order } from '@ghostfolio/prisma/client';
 
 import {
   Body,

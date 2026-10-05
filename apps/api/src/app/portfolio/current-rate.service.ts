@@ -11,10 +11,10 @@ import {
   DataProviderInfo,
   ResponseError
 } from '@ghostfolio/common/interfaces';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 import { utc } from '@date-fns/utc';
 import { Injectable } from '@nestjs/common';
-import { Type as ActivityType } from '@prisma/client';
 import { isBefore, isSameDay } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash-es';
 

@@ -21,7 +21,19 @@ module.exports = [
   {
     files: ['**/*.ts', '**/*.tsx'],
     // Override or add rules here
-    rules: {}
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              message: 'Import from @ghostfolio/prisma/client instead.',
+              name: '@prisma/client'
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     files: ['**/*.js', '**/*.jsx'],

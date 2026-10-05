@@ -41,7 +41,7 @@ import {
   OrderWithAccount,
   UserWithSettings
 } from '@ghostfolio/common/types';
-import { type Account, Prisma } from '@ghostfolio/prisma/client';
+import type { Account, Prisma } from '@ghostfolio/prisma/client';
 import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Injectable } from '@nestjs/common';
