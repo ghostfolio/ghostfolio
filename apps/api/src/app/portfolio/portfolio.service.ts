@@ -2545,6 +2545,16 @@ export class PortfolioService {
       return !quantity.eq(0);
     });
 
+    const assetProfileIdentifiers: AssetProfileIdentifier[] = openHoldings.map(
+      ({
+        latestActivity: {
+          assetProfile: { dataSource, symbol }
+        }
+      }) => {
+        return { dataSource, symbol };
+      }
+    );
+
     const now = new Date();
 
     // Get the market prices of today with the same fallback as the portfolio
@@ -2553,15 +2563,8 @@ export class PortfolioService {
       openHoldings.length > 0
         ? await this.currentRateService.getValues({
             subscriptionType,
-            dataGatheringItems: openHoldings.map(
-              ({
-                latestActivity: {
-                  assetProfile: { dataSource, symbol }
-                }
-              }) => {
-                return { dataSource, symbol };
-              }
-            ),
+            assetProfileIdentifiersWithQuotes: assetProfileIdentifiers,
+            dataGatheringItems: assetProfileIdentifiers,
             dateQuery: {
               gte: startOfDay(now),
               lt: endOfDay(now)
