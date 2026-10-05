@@ -39,14 +39,14 @@ export class CurrentRateService {
     subscriptionType
   }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
+    const today = resetHours(new Date());
 
     const includesToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
-      (!dateQuery.in || this.containsToday(dateQuery.in));
+      (!dateQuery.in || this.containsToday({ today, dates: dateQuery.in }));
 
     const quoteErrors: ResponseError['errors'] = [];
-    const today = resetHours(new Date());
     const values: GetValueObject[] = [];
 
     if (includesToday) {
@@ -191,14 +191,15 @@ export class CurrentRateService {
     return response;
   }
 
-  private containsToday(dates: Date[]): boolean {
-    const today = resetHours(new Date());
-
-    for (const date of dates) {
-      if (isSameDay(date, today, { in: utc })) {
-        return true;
-      }
-    }
-    return false;
+  private containsToday({
+    dates,
+    today
+  }: {
+    dates: Date[];
+    today: Date;
+  }): boolean {
+    return dates.some((date) => {
+      return isSameDay(date, today, { in: utc });
+    });
   }
 }
