@@ -53,7 +53,8 @@ export class EmergencyFundCoverage extends Rule<Settings> {
     const placeholders = {
       baseCurrency: ruleSettings.baseCurrency,
       emergencyFund: this.emergencyFundInBaseCurrency.toLocaleString(
-        ruleSettings.locale
+        ruleSettings.locale,
+        { useGrouping: true }
       )
     };
 

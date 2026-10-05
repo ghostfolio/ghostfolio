@@ -123,7 +123,8 @@ export function getTooltipOptions<T extends ChartType>({
           if (currency) {
             label += `${yPoint.toLocaleString(locale, {
               maximumFractionDigits: 2,
-              minimumFractionDigits: 2
+              minimumFractionDigits: 2,
+              useGrouping: true
             })} ${currency}`;
           } else if (unit) {
             label += `${yPoint.toFixed(2)} ${unit}`;

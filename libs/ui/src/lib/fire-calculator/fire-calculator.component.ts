@@ -358,7 +358,8 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                     return `Total: ${new Intl.NumberFormat(this.locale, {
                       currency: this.currency ?? DEFAULT_CURRENCY,
                       currencyDisplay: 'code',
-                      style: 'currency'
+                      style: 'currency',
+                      useGrouping: true
                     }).format(totalAmount)}`;
                   },
                   label: (context) => {
@@ -372,7 +373,8 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
                       label += new Intl.NumberFormat(this.locale, {
                         currency: this.currency ?? DEFAULT_CURRENCY,
                         currencyDisplay: 'code',
-                        style: 'currency'
+                        style: 'currency',
+                        useGrouping: true
                       }).format(context.parsed.y);
                     }
 

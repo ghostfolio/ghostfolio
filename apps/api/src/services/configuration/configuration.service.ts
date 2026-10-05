@@ -75,6 +75,9 @@ export class ConfigurationService {
       ENABLE_FEATURE_MCP: bool({ default: false }),
       ENABLE_FEATURE_RATE_LIMITING: bool({ default: false }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
+      // TODO: Change the default to true, when the security headers were
+      // available for some releases without a report of a defect
+      ENABLE_FEATURE_SECURITY_HEADERS: bool({ default: false }),
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
       ENABLE_FEATURE_SUBSCRIPTION: bool({ default: false }),
       ENABLE_FEATURE_SYSTEM_MESSAGE: bool({ default: false }),
