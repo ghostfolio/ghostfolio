@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the performance of the historical market data table of the admin control panel by counting the market data per asset profile
 
+### Fixed
+
+- Fixed the state of the market data in the historical market data gathering endpoint for a specific date
+
 ## 3.91.0 - 2026-10-23
 
 ### Added
