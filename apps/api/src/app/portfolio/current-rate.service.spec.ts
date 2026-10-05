@@ -5,7 +5,12 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
-import { DataSource, MarketData, Order } from '@prisma/client';
+import {
+  DataSource,
+  MarketData,
+  Order,
+  Type as ActivityType
+} from '@prisma/client';
 import { addDays, subDays } from 'date-fns';
 
 import { CurrentRateService } from './current-rate.service';
@@ -220,8 +225,8 @@ describe('CurrentRateService', () => {
       ]);
     });
 
-    it('should fall back to the unit price of the latest activity without market data', async () => {
-      jest
+    it('should fall back to the unit price of the latest buy or sell activity without market data', async () => {
+      const getLatestActivity = jest
         .spyOn(activitiesService, 'getLatestActivity')
         .mockResolvedValue({ unitPrice: 1000 } as Order);
 
@@ -232,6 +237,11 @@ describe('CurrentRateService', () => {
         dateQuery
       });
 
+      expect(getLatestActivity).toHaveBeenCalledWith({
+        dataSource: DataSource.YAHOO,
+        symbol: 'AMZN',
+        types: [ActivityType.BUY, ActivityType.SELL]
+      });
       expect(errors).toEqual(dataGatheringItems);
       expect(values).toEqual([
         {
