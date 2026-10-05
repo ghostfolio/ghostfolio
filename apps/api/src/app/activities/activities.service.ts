@@ -26,6 +26,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  GATHER_ASSET_PROFILE_COOLDOWN_IN_MS,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
   NON_INVESTMENT_ACTIVITY_TYPES,
@@ -261,7 +262,10 @@ export class ActivitiesService {
             dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
             symbol: data.SymbolProfile.connectOrCreate.create.symbol
           }),
-          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+          removeOnComplete: {
+            age: GATHER_ASSET_PROFILE_COOLDOWN_IN_MS / 1000
+          }
         }
       });
     }
