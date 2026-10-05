@@ -173,9 +173,8 @@ model MarketData {
   state            MarketDataState @default(CLOSE)
   symbol           String
 
-  @@unique([dataSource, date, symbol])
+  @@unique([dataSource, symbol, date])
   @@index([dataSource])
-  @@index([dataSource, symbol])
   @@index([date])
   @@index([state])
   @@index([symbol])
