@@ -15,7 +15,7 @@ import {
 import { utc } from '@date-fns/utc';
 import { Injectable } from '@nestjs/common';
 import { Type as ActivityType } from '@prisma/client';
-import { isBefore, isSameDay, isToday } from 'date-fns';
+import { isBefore, isSameDay } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash-es';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -129,7 +129,7 @@ export class CurrentRateService {
             return (
               currentValue.dataSource === dataSource &&
               currentValue.symbol === symbol &&
-              isToday(currentValue.date)
+              isSameDay(currentValue.date, today, { in: utc })
             );
           });
 
