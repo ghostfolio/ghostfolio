@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
+
+### Fixed
+
 - Fixed the missing thousands separator of 4-digit numbers in certain locales
 
 ## 3.79.0 - 2026-10-04
