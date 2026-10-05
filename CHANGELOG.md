@@ -14,12 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the performance of getting the latest market data by reordering the columns of the unique constraint in the market data table
+- Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `POST api/v1/activities`
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
 
 ### Fixed
 
+- Fixed a layout issue in the top and bottom holdings of the analysis page by truncating long names
 - Fixed the missing thousands separator of 4-digit numbers in certain locales
 - Fixed an issue where holdings without a market price have been valued at the unit price of a dividend, a fee, an interest or a liability
+- Fixed the check for today in the current rate service for instances running in a time zone behind UTC
 
 ## 3.79.0 - 2026-10-04
 

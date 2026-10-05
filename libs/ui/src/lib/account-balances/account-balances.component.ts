@@ -69,11 +69,18 @@ export class GfAccountBalancesComponent implements OnChanges, OnInit {
 
   public readonly accountBalances =
     input.required<AccountBalancesResponse['balances']>();
-  public readonly accountCurrency = input.required<string>();
+
+  public readonly accountCurrency = input.required<string | null>();
   public readonly accountId = input.required<string>();
   public readonly currentBalance = input<number | null>();
   public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
-  public readonly locale = input(getLocale());
+
+  public readonly locale = input(getLocale(), {
+    transform: (value?: string) => {
+      return value ?? getLocale();
+    }
+  });
+
   public readonly showActions = input(true);
   public readonly sort = viewChild(MatSort);
 
