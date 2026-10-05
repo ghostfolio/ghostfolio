@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Introduced a cooldown of 12 hours for the asset profile and exchange rate gathering on activity creation by retaining the completed jobs
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
 
 ## 3.79.0 - 2026-10-04
