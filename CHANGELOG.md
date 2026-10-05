@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
 
+### Fixed
+
+- Fixed a layout issue in the top and bottom holdings of the analysis page by truncating long names
+
 ## 3.79.0 - 2026-10-04
 
 ### Added
