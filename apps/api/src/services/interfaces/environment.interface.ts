@@ -26,6 +26,7 @@ export interface Environment extends CleanedEnvAccessors {
   ENABLE_FEATURE_MCP: boolean;
   ENABLE_FEATURE_RATE_LIMITING: boolean;
   ENABLE_FEATURE_READ_ONLY_MODE: boolean;
+  ENABLE_FEATURE_SECURITY_HEADERS: boolean;
   ENABLE_FEATURE_STATISTICS: boolean;
   ENABLE_FEATURE_SUBSCRIPTION: boolean;
   ENABLE_FEATURE_SYSTEM_MESSAGE: boolean;
