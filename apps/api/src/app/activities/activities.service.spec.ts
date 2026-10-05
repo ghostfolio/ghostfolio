@@ -88,7 +88,8 @@ describe('ActivitiesService', () => {
         null,
         null,
         {
-          toCurrencyAtDate: jest.fn().mockResolvedValue(0)
+          toCurrencyAtDate: jest.fn().mockResolvedValue(0),
+          toCurrencyAtDateWithExchangeRate: jest.fn().mockResolvedValue(0)
         } as unknown as ExchangeRateDataService,
         null,
         {

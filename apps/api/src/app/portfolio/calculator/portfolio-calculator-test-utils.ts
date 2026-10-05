@@ -17,6 +17,7 @@ export const activityDummyData = {
   comment: undefined,
   createdAt: new Date(),
   currency: undefined,
+  exchangeRate: null,
   fee: undefined,
   feeInAssetProfileCurrency: undefined,
   feeInBaseCurrency: undefined,

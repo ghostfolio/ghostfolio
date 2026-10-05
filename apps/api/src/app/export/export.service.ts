@@ -237,6 +237,7 @@ export class ExportService {
           comment,
           currency,
           date,
+          exchangeRate,
           fee,
           id,
           quantity,
@@ -247,6 +248,7 @@ export class ExportService {
           return {
             accountId,
             comment,
+            exchangeRate,
             fee,
             id,
             quantity,

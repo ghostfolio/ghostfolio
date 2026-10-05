@@ -377,6 +377,42 @@ export class ExchangeRateDataService {
     return undefined;
   }
 
+  /**
+   * Converts the value of an activity at its date. A manual exchange rate of
+   * the activity replaces the market rate from the currency of the asset
+   * profile to the target currency.
+   */
+  public async toCurrencyAtDateWithExchangeRate({
+    assetProfileCurrency,
+    currency,
+    date,
+    exchangeRate,
+    targetCurrency,
+    value
+  }: {
+    assetProfileCurrency: string;
+    currency: string;
+    date: Date;
+    exchangeRate?: number | null;
+    targetCurrency: string;
+    value: number;
+  }) {
+    if (exchangeRate == null) {
+      return this.toCurrencyAtDate(value, currency, targetCurrency, date);
+    }
+
+    const valueInAssetProfileCurrency = await this.toCurrencyAtDate(
+      value,
+      currency,
+      assetProfileCurrency,
+      date
+    );
+
+    return valueInAssetProfileCurrency === undefined
+      ? undefined
+      : valueInAssetProfileCurrency * exchangeRate;
+  }
+
   private async getExchangeRates({
     currencyFrom,
     currencyTo,

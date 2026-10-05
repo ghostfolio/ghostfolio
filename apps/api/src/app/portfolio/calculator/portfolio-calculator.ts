@@ -150,6 +150,7 @@ export abstract class PortfolioCalculator {
         ({
           assetProfile,
           date,
+          exchangeRate,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
           quantity,
@@ -172,6 +173,7 @@ export abstract class PortfolioCalculator {
             tags,
             type,
             date: format(date, DATE_FORMAT),
+            exchangeRate,
             fee: new Big(feeInAssetProfileCurrency),
             feeInBaseCurrency: new Big(feeInBaseCurrency),
             quantity: new Big(quantity),
@@ -1023,6 +1025,13 @@ export abstract class PortfolioCalculator {
 
       const exchangeRateAtActivityDate = exchangeRates[activity.date];
 
+      // Manual override of the asset to base currency rate at the activity
+      // date. It only applies to the cost-basis path (with currency effect of
+      // the activity itself). Current valuations and historical market prices
+      // stay on market rates.
+      const exchangeRateAtActivityDateForCostBasis =
+        activity.exchangeRate ?? exchangeRateAtActivityDate;
+
       if (activity.itemType === 'start') {
         // Take the unit price of the activity as the market price if there are no
         // activities of this symbol before the start date
@@ -1035,7 +1044,7 @@ export abstract class PortfolioCalculator {
       if (activity.fee) {
         activity.feeInBaseCurrency = activity.fee.mul(currentExchangeRate ?? 1);
         activity.feeInBaseCurrencyWithCurrencyEffect = activity.fee.mul(
-          exchangeRateAtActivityDate ?? 1
+          exchangeRateAtActivityDateForCostBasis ?? 1
         );
       }
 
@@ -1049,7 +1058,7 @@ export abstract class PortfolioCalculator {
         );
 
         activity.unitPriceInBaseCurrencyWithCurrencyEffect = unitPrice.mul(
-          exchangeRateAtActivityDate ?? 1
+          exchangeRateAtActivityDateForCostBasis ?? 1
         );
       }
 
@@ -1496,7 +1505,8 @@ export abstract class PortfolioCalculator {
     let totalLiabilitiesInBaseCurrency = new Big(0);
 
     for (const activity of activities) {
-      const exchangeRateAtActivityDate = exchangeRates[activity.date];
+      const exchangeRateAtActivityDate =
+        activity.exchangeRate ?? exchangeRates[activity.date];
 
       if (activity.type === 'DIVIDEND') {
         const dividend = activity.quantity.mul(activity.unitPrice);

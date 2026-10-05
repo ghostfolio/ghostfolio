@@ -20,6 +20,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   MaxLength,
   Min,
@@ -61,6 +62,11 @@ export class UpdateOrderDto {
   @IsISO8601()
   @Validate(IsAfter1970Constraint)
   date: string;
+
+  @IsNumber()
+  @IsOptional()
+  @IsPositive()
+  exchangeRate?: number | null;
 
   @IsNumber()
   @Min(0)

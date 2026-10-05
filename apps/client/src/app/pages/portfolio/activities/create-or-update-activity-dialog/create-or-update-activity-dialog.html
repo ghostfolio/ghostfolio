@@ -227,6 +227,25 @@
         }
       </div>
     </div>
+    @if (
+      activityForm.get('currency')?.value &&
+      data.user?.settings?.baseCurrency &&
+      activityForm.get('currency')?.value !== data.user?.settings?.baseCurrency
+    ) {
+      <div class="mb-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n
+            >Exchange rate ({{ activityForm.get('currency')?.value }}
+            →
+            {{ data.user?.settings?.baseCurrency }})</mat-label
+          >
+          <input formControlName="exchangeRate" matInput type="number" />
+          <mat-hint i18n
+            >Optional. Leave empty to use the market rate.</mat-hint
+          >
+        </mat-form-field>
+      </div>
+    }
     <div
       class="mb-3"
       [class.d-none]="

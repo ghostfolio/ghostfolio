@@ -75,7 +75,8 @@ describe('ImportService', () => {
         getDataSourceForImport: jest.fn().mockReturnValue(DataSource.MANUAL)
       } as unknown as DataProviderService,
       {
-        toCurrencyAtDate: jest.fn().mockResolvedValue(0)
+        toCurrencyAtDate: jest.fn().mockResolvedValue(0),
+        toCurrencyAtDateWithExchangeRate: jest.fn().mockResolvedValue(0)
       } as unknown as ExchangeRateDataService,
       null,
       null,
