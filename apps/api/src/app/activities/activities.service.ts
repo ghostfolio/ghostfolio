@@ -589,6 +589,7 @@ export class ActivitiesService {
         date: 'desc'
       },
       where: {
+        ...WHERE_ACTIVITY_NOT_DRAFT,
         SymbolProfile: { dataSource, symbol },
         ...(types?.length > 0 && { type: { in: types } })
       }

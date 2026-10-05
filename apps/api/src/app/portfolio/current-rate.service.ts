@@ -12,10 +12,9 @@ import {
   ResponseError
 } from '@ghostfolio/common/interfaces';
 
-import { utc } from '@date-fns/utc';
 import { Injectable } from '@nestjs/common';
 import { Type as ActivityType } from '@prisma/client';
-import { compareDesc, isBefore, isSameDay } from 'date-fns';
+import { isBefore, isToday } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash-es';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -124,19 +123,45 @@ export class CurrentRateService {
     if (!isEmpty(quoteErrors)) {
       for (const { dataSource, symbol } of quoteErrors) {
         try {
-          const valueOfToday = response.values.find((currentValue) => {
+          // If missing quote, fallback to the latest available historical market price
+          let value: GetValueObject = response.values.find((currentValue) => {
             return (
               currentValue.dataSource === dataSource &&
               currentValue.symbol === symbol &&
-              isSameDay(currentValue.date, today, { in: utc })
+              isToday(currentValue.date)
             );
           });
 
-          if (valueOfToday?.marketPrice) {
-            continue;
+          if (!value) {
+            const latestMarketData = await this.marketDataService.getLatest({
+              dataSource,
+              symbol
+            });
+
+            let marketPrice = latestMarketData?.marketPrice;
+
+            if (!marketPrice) {
+              // Fallback to unit price of latest buy or sell activity
+              const latestActivity =
+                await this.activitiesService.getLatestActivity({
+                  dataSource,
+                  symbol,
+                  types: [ActivityType.BUY, ActivityType.SELL]
+                });
+
+              marketPrice = latestActivity?.unitPrice ?? 0;
+            }
+
+            value = {
+              dataSource,
+              marketPrice,
+              symbol,
+              date: today
+            };
+
+            response.values.push(value);
           }
 
-          // If missing quote, fallback to the latest available historical market price
           const [latestValue] = response.values
             .filter((currentValue) => {
               return (
@@ -146,43 +171,18 @@ export class CurrentRateService {
               );
             })
             .sort((a, b) => {
-              return compareDesc(a.date, b.date);
+              if (a.date < b.date) {
+                return 1;
+              }
+
+              if (a.date > b.date) {
+                return -1;
+              }
+
+              return 0;
             });
 
-          let marketPrice = latestValue?.marketPrice;
-
-          if (!marketPrice) {
-            // Fallback to latest market price outside of the date range
-            const latestMarketData = await this.marketDataService.getLatest({
-              dataSource,
-              symbol
-            });
-
-            marketPrice = latestMarketData?.marketPrice;
-          }
-
-          if (!marketPrice) {
-            // Fallback to unit price of latest buy or sell activity
-            const latestActivity =
-              await this.activitiesService.getLatestActivity({
-                dataSource,
-                symbol,
-                types: [ActivityType.BUY, ActivityType.SELL]
-              });
-
-            marketPrice = latestActivity?.unitPrice ?? 0;
-          }
-
-          if (valueOfToday) {
-            valueOfToday.marketPrice = marketPrice;
-          } else {
-            response.values.push({
-              dataSource,
-              marketPrice,
-              symbol,
-              date: today
-            });
-          }
+          value.marketPrice = latestValue.marketPrice;
         } catch {}
       }
     }
@@ -191,10 +191,8 @@ export class CurrentRateService {
   }
 
   private containsToday(dates: Date[]): boolean {
-    const today = resetHours(new Date());
-
     for (const date of dates) {
-      if (isSameDay(date, today, { in: utc })) {
+      if (isToday(date)) {
         return true;
       }
     }

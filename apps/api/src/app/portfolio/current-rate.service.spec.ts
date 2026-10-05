@@ -192,53 +192,6 @@ describe('CurrentRateService', () => {
       jest.restoreAllMocks();
     });
 
-    it('should fall back to the latest market price in the date range', async () => {
-      const getLatestActivity = jest.spyOn(
-        activitiesService,
-        'getLatestActivity'
-      );
-
-      const getLatestMarketData = jest.spyOn(marketDataService, 'getLatest');
-
-      jest.spyOn(marketDataService, 'getRangeCount').mockResolvedValue(1);
-
-      jest.spyOn(marketDataService, 'getRange').mockResolvedValue([
-        {
-          createdAt: yesterday,
-          dataSource: DataSource.YAHOO,
-          date: yesterday,
-          id: '3b1a3f4c-3d2b-4a19-9f5a-5c0f5b4a2e11',
-          isCarriedForward: false,
-          marketPrice: 1841.823902,
-          state: 'CLOSE',
-          symbol: 'AMZN'
-        }
-      ]);
-
-      const { errors, values } = await currentRateService.getValues({
-        dataGatheringItems,
-        dateQuery
-      });
-
-      expect(getLatestActivity).not.toHaveBeenCalled();
-      expect(getLatestMarketData).not.toHaveBeenCalled();
-      expect(errors).toEqual(dataGatheringItems);
-      expect(values).toEqual([
-        {
-          dataSource: DataSource.YAHOO,
-          date: yesterday,
-          marketPrice: 1841.823902,
-          symbol: 'AMZN'
-        },
-        {
-          dataSource: DataSource.YAHOO,
-          date: today,
-          marketPrice: 1841.823902,
-          symbol: 'AMZN'
-        }
-      ]);
-    });
-
     it('should fall back to the latest market price', async () => {
       const getLatestActivity = jest
         .spyOn(activitiesService, 'getLatestActivity')
