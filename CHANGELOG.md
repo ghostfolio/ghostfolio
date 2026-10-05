@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
 
+### Fixed
+
+- Fixed an issue where holdings without a market price have been valued at the unit price of a dividend, a fee, an interest or a liability
+
 ## 3.79.0 - 2026-10-04
 
 ### Added
