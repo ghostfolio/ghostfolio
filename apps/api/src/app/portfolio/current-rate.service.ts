@@ -12,9 +12,10 @@ import {
   ResponseError
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable } from '@nestjs/common';
 import { Type as ActivityType } from '@prisma/client';
-import { isBefore, isToday } from 'date-fns';
+import { isBefore, isSameDay } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash-es';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -38,14 +39,14 @@ export class CurrentRateService {
     subscriptionType
   }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
+    const today = resetHours(new Date());
 
     const includesToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
-      (!dateQuery.in || this.containsToday(dateQuery.in));
+      (!dateQuery.in || this.containsToday({ today, dates: dateQuery.in }));
 
     const quoteErrors: ResponseError['errors'] = [];
-    const today = resetHours(new Date());
     const values: GetValueObject[] = [];
 
     if (includesToday) {
@@ -128,7 +129,7 @@ export class CurrentRateService {
             return (
               currentValue.dataSource === dataSource &&
               currentValue.symbol === symbol &&
-              isToday(currentValue.date)
+              isSameDay(currentValue.date, today, { in: utc })
             );
           });
 
@@ -190,12 +191,15 @@ export class CurrentRateService {
     return response;
   }
 
-  private containsToday(dates: Date[]): boolean {
-    for (const date of dates) {
-      if (isToday(date)) {
-        return true;
-      }
-    }
-    return false;
+  private containsToday({
+    dates,
+    today
+  }: {
+    dates: Date[];
+    today: Date;
+  }): boolean {
+    return dates.some((date) => {
+      return isSameDay(date, today, { in: utc });
+    });
   }
 }
