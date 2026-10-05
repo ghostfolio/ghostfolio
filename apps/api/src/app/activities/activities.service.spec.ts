@@ -3,6 +3,7 @@ import {
   activityDummyData,
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import { WHERE_ACTIVITY_NOT_DRAFT } from '@ghostfolio/api/helper/activity.helper';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -14,7 +15,11 @@ import {
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
 
-import { AssetProfileSplit, DataSource } from '@prisma/client';
+import {
+  AssetProfileSplit,
+  DataSource,
+  Type as ActivityType
+} from '@prisma/client';
 import { Big } from 'big.js';
 
 import { ActivitiesService } from './activities.service';
@@ -380,6 +385,43 @@ describe('ActivitiesService', () => {
 
       return result.activities[0];
     }
+  });
+
+  describe('getLatestActivity', () => {
+    it('filters by type and unit price and excludes draft activities', async () => {
+      const findFirst = jest.fn().mockResolvedValue(null);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        { order: { findFirst } } as unknown as PrismaService,
+        null,
+        null
+      );
+
+      await service.getLatestActivity({
+        dataSource: DataSource.YAHOO,
+        symbol: 'AAPL',
+        types: [ActivityType.BUY, ActivityType.SELL]
+      });
+
+      expect(findFirst).toHaveBeenCalledWith({
+        orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+        where: {
+          ...WHERE_ACTIVITY_NOT_DRAFT,
+          SymbolProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+          type: { in: [ActivityType.BUY, ActivityType.SELL] },
+          unitPrice: { gt: 0 }
+        }
+      });
+    });
   });
 });
 

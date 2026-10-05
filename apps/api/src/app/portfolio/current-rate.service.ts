@@ -13,6 +13,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
+import { Type as ActivityType } from '@prisma/client';
 import { isBefore, isToday } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash-es';
 
@@ -140,11 +141,12 @@ export class CurrentRateService {
             let marketPrice = latestMarketData?.marketPrice;
 
             if (!marketPrice) {
-              // Fallback to unit price of latest activity
+              // Fallback to unit price of latest buy or sell activity
               const latestActivity =
                 await this.activitiesService.getLatestActivity({
                   dataSource,
-                  symbol
+                  symbol,
+                  types: [ActivityType.BUY, ActivityType.SELL]
                 });
 
               marketPrice = latestActivity?.unitPrice ?? 0;
