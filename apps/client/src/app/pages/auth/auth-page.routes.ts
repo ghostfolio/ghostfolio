@@ -1,6 +1,6 @@
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { GfAuthPageComponent } from './auth-page.component';
 

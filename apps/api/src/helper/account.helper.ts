@@ -1,7 +1,7 @@
 import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 import { getStartOfUtcDateOfTomorrow } from '@ghostfolio/common/helper';
 
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { isAfter } from 'date-fns';
 
 export const WHERE_ACCOUNT_NOT_EXCLUDED: Prisma.AccountWhereInput = {

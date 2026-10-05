@@ -1,5 +1,5 @@
-import { UserSettings } from '@ghostfolio/common/interfaces';
-import { UserWithSettings } from '@ghostfolio/common/types';
+import type { UserSettings } from '@ghostfolio/common/interfaces';
+import type { UserWithSettings } from '@ghostfolio/common/types';
 
 /**
  * Describes whose data a request presents. The user id, the settings and the

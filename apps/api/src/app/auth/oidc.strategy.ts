@@ -2,7 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { Request } from 'express';
-import { Strategy, type StrategyOptions } from 'passport-openidconnect';
+import { Strategy } from 'passport-openidconnect';
+import type { StrategyOptions } from 'passport-openidconnect';
 
 import { AuthService } from './auth.service';
 import {

@@ -1,5 +1,5 @@
+import type { Scope } from '@ghostfolio/common/scopes';
 import {
-  Scope,
   SCOPES_OF_READ_ACCESS,
   SCOPES_OF_READ_RESTRICTED_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
@@ -12,7 +12,7 @@ import {
   hasScope,
   scopes
 } from '@ghostfolio/common/scopes';
-import { AccessLevel } from '@ghostfolio/common/types';
+import type { AccessLevel } from '@ghostfolio/common/types';
 
 describe('Scopes', () => {
   describe('Scopes of read access', () => {

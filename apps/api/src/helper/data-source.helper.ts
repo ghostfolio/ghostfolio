@@ -1,6 +1,7 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
-import { DataSource, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { isEmpty } from 'lodash-es';
 import { createHash } from 'node:crypto';
 

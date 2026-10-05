@@ -1,6 +1,6 @@
-import { Big } from 'big.js';
+import type { Big } from 'big.js';
 
-import { HoldingValuationItem } from './holding-valuation-item.interface';
+import type { HoldingValuationItem } from './holding-valuation-item.interface';
 
 export interface HoldingValuation {
   currentValues: { [date: string]: Big };

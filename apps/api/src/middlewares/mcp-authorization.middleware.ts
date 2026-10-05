@@ -1,9 +1,9 @@
 import { getAccessIdOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import type { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_TOKEN, MCP_REALM } from '@ghostfolio/common/config';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 /**

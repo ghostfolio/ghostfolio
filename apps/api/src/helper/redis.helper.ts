@@ -1,4 +1,4 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
 export function getRedisConnectionOptions(
   configurationService: ConfigurationService

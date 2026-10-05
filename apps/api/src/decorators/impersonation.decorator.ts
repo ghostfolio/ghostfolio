@@ -4,9 +4,9 @@ import type {
   RequestWithUser
 } from '@ghostfolio/common/types';
 
+import type { ExecutionContext } from '@nestjs/common';
 import {
   createParamDecorator,
-  ExecutionContext,
   InternalServerErrorException
 } from '@nestjs/common';
 

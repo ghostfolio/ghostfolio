@@ -1,25 +1,22 @@
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import type { AccountService } from '@ghostfolio/api/app/account/account.service';
 import {
   activityDummyData,
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { WHERE_ACTIVITY_NOT_DRAFT } from '@ghostfolio/api/helper/activity.helper';
-import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import type { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import type { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import type { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import type { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity, Filter } from '@ghostfolio/common/interfaces';
+import type { Activity, Filter } from '@ghostfolio/common/interfaces';
 
-import {
-  AssetProfileSplit,
-  DataSource,
-  Type as ActivityType
-} from '@prisma/client';
+import type { AssetProfileSplit } from '@prisma/client';
+import { DataSource, Type as ActivityType } from '@prisma/client';
 import { Big } from 'big.js';
 
 import { ActivitiesService } from './activities.service';

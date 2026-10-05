@@ -1,21 +1,17 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import type { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { resetHours } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
-import {
-  DataSource,
-  MarketData,
-  Order,
-  Type as ActivityType
-} from '@prisma/client';
+import type { MarketData, Order } from '@prisma/client';
+import { DataSource, Type as ActivityType } from '@prisma/client';
 import { addDays, subDays } from 'date-fns';
 
 import { CurrentRateService } from './current-rate.service';
-import { DateQuery } from './interfaces/date-query.interface';
-import { GetValuesObject } from './interfaces/get-values-object.interface';
+import type { DateQuery } from './interfaces/date-query.interface';
+import type { GetValuesObject } from './interfaces/get-values-object.interface';
 
 jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
   return {

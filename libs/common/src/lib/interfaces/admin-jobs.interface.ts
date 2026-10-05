@@ -1,4 +1,4 @@
-import { Job, JobStatus } from 'bull';
+import type { Job, JobStatus } from 'bull';
 
 export interface AdminJobs {
   jobs: (Pick<

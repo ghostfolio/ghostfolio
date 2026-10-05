@@ -1,5 +1,5 @@
 import { DEFAULT_REDACTED_PATHS } from '@ghostfolio/common/config';
-import { PortfolioDetails } from '@ghostfolio/common/interfaces';
+import type { PortfolioDetails } from '@ghostfolio/common/interfaces';
 
 import { query, redactPaths } from './object.helper';
 

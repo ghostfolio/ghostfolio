@@ -1,6 +1,6 @@
 import type { Platform, Tag } from '@ghostfolio/prisma/browser';
 
-import { AccountWithBalance } from './account-with-balance.type';
+import type { AccountWithBalance } from './account-with-balance.type';
 
 export type AccountWithValue = AccountWithBalance & {
   activitiesCount: number;

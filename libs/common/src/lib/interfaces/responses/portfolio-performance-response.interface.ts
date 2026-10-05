@@ -1,6 +1,6 @@
-import { HistoricalDataItem } from '../historical-data-item.interface';
-import { PortfolioPerformance } from '../portfolio-performance.interface';
-import { ResponseError } from './errors.interface';
+import type { HistoricalDataItem } from '../historical-data-item.interface';
+import type { PortfolioPerformance } from '../portfolio-performance.interface';
+import type { ResponseError } from './errors.interface';
 
 export interface PortfolioPerformanceResponse extends ResponseError {
   chart?: HistoricalDataItem[];

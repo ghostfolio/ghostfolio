@@ -1,4 +1,4 @@
-import {
+import type {
   AssetProfileIdentifier,
   Benchmark
 } from '@ghostfolio/common/interfaces';

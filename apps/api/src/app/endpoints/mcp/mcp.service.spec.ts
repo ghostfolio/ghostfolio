@@ -1,16 +1,16 @@
 import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
-import { ImportService } from '@ghostfolio/api/app/import/import.service';
-import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
+import type { ImportService } from '@ghostfolio/api/app/import/import.service';
+import type { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
+import type { UserService } from '@ghostfolio/api/app/user/user.service';
 import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
-import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
+import type { ApiService } from '@ghostfolio/api/services/api/api.service';
+import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import type { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import {
   DEFAULT_LANGUAGE_CODE,
   MCP_MAX_ACTIVITIES
 } from '@ghostfolio/common/config';
-import { Activity, Filter } from '@ghostfolio/common/interfaces';
+import type { Activity, Filter } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { UserWithSettings } from '@ghostfolio/common/types';
 

@@ -12,9 +12,9 @@ import {
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 
+import type { LogLevel } from '@nestjs/common';
 import {
   Logger,
-  LogLevel,
   ShutdownSignal,
   ValidationPipe,
   VersioningType
@@ -22,9 +22,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
-import { MCP_STRATEGY, McpStrategy } from '@rekog/mcp-nest';
+import type { McpStrategy } from '@rekog/mcp-nest';
+import { MCP_STRATEGY } from '@rekog/mcp-nest';
 import cookieParser from 'cookie-parser';
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
 

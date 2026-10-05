@@ -1,4 +1,4 @@
-import { TableParameters } from './interfaces/table-parameters.interface';
+import type { TableParameters } from './interfaces/table-parameters.interface';
 
 /**
  * Gives the columns and the rows in the form which the renderer takes, with

@@ -1,6 +1,7 @@
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import type { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 
-import { AssetProfileSplit, DataSource } from '@prisma/client';
+import type { AssetProfileSplit } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 
 import { AssetProfileSplitService } from './asset-profile-split.service';
 

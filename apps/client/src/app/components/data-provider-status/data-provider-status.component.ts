@@ -11,7 +11,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { catchError, map, type Observable, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 import { DataProviderStatus } from './interfaces/interfaces';
 

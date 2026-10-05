@@ -7,7 +7,7 @@ import { GfAdminUsersComponent } from '@ghostfolio/client/components/admin-users
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Routes, UrlMatcher, UrlSegment } from '@angular/router';
+import type { Routes, UrlMatcher, UrlSegment } from '@angular/router';
 
 import { AdminPageComponent } from './admin-page.component';
 

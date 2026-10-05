@@ -1,4 +1,4 @@
-import { Params } from '@angular/router';
+import type { Params } from '@angular/router';
 
 export interface AllocationsPageParams extends Params {
   accountDetailDialog?: string;

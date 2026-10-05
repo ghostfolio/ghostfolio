@@ -1,3 +1,3 @@
-import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
+import type { XRayRulesSettings } from '@ghostfolio/common/interfaces';
 
 export type XRayRuleKey = keyof XRayRulesSettings;

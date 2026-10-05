@@ -20,13 +20,11 @@ import { Big } from 'big.js';
 import {
   ArcElement,
   Chart,
-  type ChartData,
-  type ChartDataset,
   DoughnutController,
   LinearScale,
-  Tooltip,
-  type TooltipOptions
+  Tooltip
 } from 'chart.js';
+import type { ChartData, ChartDataset, TooltipOptions } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { isUUID } from 'class-validator';
 import Color from 'color';

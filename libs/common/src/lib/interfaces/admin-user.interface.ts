@@ -1,5 +1,5 @@
 import type { Subscription } from '@ghostfolio/prisma/browser';
-import { Provider, Role } from '@ghostfolio/prisma/enums';
+import type { Provider, Role } from '@ghostfolio/prisma/enums';
 
 export interface AdminUser {
   accountCount: number;

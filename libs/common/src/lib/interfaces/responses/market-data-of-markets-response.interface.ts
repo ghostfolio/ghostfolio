@@ -1,4 +1,4 @@
-import { SymbolItem } from '@ghostfolio/common/interfaces';
+import type { SymbolItem } from '@ghostfolio/common/interfaces';
 
 export interface MarketDataOfMarketsResponse {
   fearAndGreedIndex: {

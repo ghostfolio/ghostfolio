@@ -1,15 +1,15 @@
-import {
+import type {
   AssetClass,
   AssetSubClass,
   DataGatheringFrequency,
   DataSource
 } from '@ghostfolio/prisma/enums';
 
-import { Country } from './country.interface';
-import { DataProviderInfo } from './data-provider-info.interface';
-import { Holding } from './holding.interface';
-import { ScraperConfiguration } from './scraper-configuration.interface';
-import { Sector } from './sector.interface';
+import type { Country } from './country.interface';
+import type { DataProviderInfo } from './data-provider-info.interface';
+import type { Holding } from './holding.interface';
+import type { ScraperConfiguration } from './scraper-configuration.interface';
+import type { Sector } from './sector.interface';
 
 export interface EnhancedAssetProfile {
   activitiesCount: number;

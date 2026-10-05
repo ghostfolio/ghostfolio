@@ -1,5 +1,5 @@
 import helmet from 'helmet';
-import { IncomingMessage, ServerResponse } from 'node:http';
+import type { IncomingMessage, ServerResponse } from 'node:http';
 
 import { getHelmetOptions } from './security-headers.helper';
 

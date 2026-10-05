@@ -1,6 +1,6 @@
-import { AuthDeviceDto } from '@ghostfolio/common/dtos';
+import type { AuthDeviceDto } from '@ghostfolio/common/dtos';
 
-import { Provider } from '@prisma/client';
+import type { Provider } from '@prisma/client';
 
 export interface AuthDeviceDialogParams {
   authDevice: AuthDeviceDto;

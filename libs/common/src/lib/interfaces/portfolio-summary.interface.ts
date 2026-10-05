@@ -1,5 +1,5 @@
-import { FireWealth } from './fire-wealth.interface';
-import { PortfolioPerformance } from './portfolio-performance.interface';
+import type { FireWealth } from './fire-wealth.interface';
+import type { PortfolioPerformance } from './portfolio-performance.interface';
 
 export interface PortfolioSummary extends PortfolioPerformance {
   activityCount: number;

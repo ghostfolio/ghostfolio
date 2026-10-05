@@ -1,11 +1,11 @@
-import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
+import type { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 
 import type { Job, JobId, JobOptions } from 'bull';
 import ms from 'ms';
 import { setTimeout } from 'timers/promises';
 
-import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
+import type { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 export const PortfolioSnapshotServiceMock = {
   addJobToQueue: ({

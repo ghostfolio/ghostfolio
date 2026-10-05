@@ -22,7 +22,7 @@ import {
   isValidGranteeOfAccess,
   resolveUserSettings
 } from '@ghostfolio/common/helper';
-import { UserSettings } from '@ghostfolio/common/interfaces';
+import type { UserSettings } from '@ghostfolio/common/interfaces';
 
 describe('Helper', () => {
   describe('Can apply filters to access', () => {

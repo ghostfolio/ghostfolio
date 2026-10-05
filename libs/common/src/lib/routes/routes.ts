@@ -1,8 +1,8 @@
-import { User } from '@ghostfolio/common/interfaces';
+import type { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { InternalRoute } from './interfaces/internal-route.interface';
-import { PublicRoute } from './interfaces/public-route.interface';
+import type { InternalRoute } from './interfaces/internal-route.interface';
+import type { PublicRoute } from './interfaces/public-route.interface';
 
 if (typeof window !== 'undefined') {
   import('@angular/localize');

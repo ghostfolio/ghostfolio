@@ -1,7 +1,7 @@
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { AccessGuard } from '@ghostfolio/api/guards/access.guard';
 import { ScopeGuard } from '@ghostfolio/api/guards/scope.guard';
-import { Scope } from '@ghostfolio/common/scopes';
+import type { Scope } from '@ghostfolio/common/scopes';
 
 import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
 import { ToolScopes } from '@rekog/mcp-nest';

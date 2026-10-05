@@ -1,5 +1,5 @@
-import { User } from '@ghostfolio/common/interfaces';
-import { AccountWithBalance } from '@ghostfolio/common/types';
+import type { User } from '@ghostfolio/common/interfaces';
+import type { AccountWithBalance } from '@ghostfolio/common/types';
 import type { Tag } from '@ghostfolio/prisma/browser';
 
 export interface CreateOrUpdateAccountDialogParams {

@@ -1,4 +1,4 @@
-import { InfoResponse } from '@ghostfolio/common/interfaces';
+import type { InfoResponse } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';

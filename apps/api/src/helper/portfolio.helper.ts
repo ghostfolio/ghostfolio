@@ -1,6 +1,6 @@
-import { PortfolioDetails } from '@ghostfolio/common/interfaces';
+import type { PortfolioDetails } from '@ghostfolio/common/interfaces';
 
-import { Type as ActivityType } from '@prisma/client';
+import type { Type as ActivityType } from '@prisma/client';
 
 export function convertValuesToPercentages({
   accounts,

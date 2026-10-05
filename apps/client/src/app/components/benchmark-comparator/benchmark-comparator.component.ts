@@ -23,7 +23,6 @@ import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import {
   ChangeDetectionStrategy,
   Component,
-  type ElementRef,
   input,
   OnChanges,
   OnDestroy,
@@ -31,6 +30,7 @@ import {
   SimpleChanges,
   viewChild
 } from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
@@ -43,9 +43,9 @@ import {
   LineElement,
   PointElement,
   TimeScale,
-  Tooltip,
-  type TooltipOptions
+  Tooltip
 } from 'chart.js';
+import type { TooltipOptions } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { addIcons } from 'ionicons';
 import { arrowForwardOutline } from 'ionicons/icons';

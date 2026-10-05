@@ -1,6 +1,6 @@
-import { Big } from 'big.js';
+import type { Big } from 'big.js';
 
-import { PortfolioCalculatorActivity } from './portfolio-calculator-activity.interface';
+import type { PortfolioCalculatorActivity } from './portfolio-calculator-activity.interface';
 
 export interface PortfolioCalculatorActivityItem extends PortfolioCalculatorActivity {
   feeInBaseCurrencyWithCurrencyEffect?: Big;

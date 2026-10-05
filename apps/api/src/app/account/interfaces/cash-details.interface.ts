@@ -1,4 +1,4 @@
-import { AccountWithBalance } from '@ghostfolio/common/types';
+import type { AccountWithBalance } from '@ghostfolio/common/types';
 
 export interface CashDetails {
   accounts: AccountWithBalance[];

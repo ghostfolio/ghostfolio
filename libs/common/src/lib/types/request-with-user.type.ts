@@ -1,4 +1,4 @@
-import {
+import type {
   ImpersonationContext,
   UserWithSettings
 } from '@ghostfolio/common/types';

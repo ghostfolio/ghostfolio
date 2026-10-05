@@ -21,13 +21,13 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
-  type ElementRef,
   Input,
   OnChanges,
   OnDestroy,
   SimpleChanges,
   viewChild
 } from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import {
   BarController,
   BarElement,
@@ -37,13 +37,12 @@ import {
   LineController,
   LineElement,
   PointElement,
-  type ScriptableLineSegmentContext,
   TimeScale,
-  Tooltip,
-  type TooltipOptions
+  Tooltip
 } from 'chart.js';
+import type { ScriptableLineSegmentContext, TooltipOptions } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import { type AnnotationOptions } from 'chartjs-plugin-annotation';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { isFuture } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 

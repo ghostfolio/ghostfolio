@@ -5,10 +5,10 @@ import {
   Type
 } from '@ghostfolio/prisma/enums';
 
-import { JobOptions, JobStatus } from 'bull';
+import type { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { DateRange } from './types';
+import type { DateRange } from './types';
 
 export const ghostfolioPrefix = 'GF';
 

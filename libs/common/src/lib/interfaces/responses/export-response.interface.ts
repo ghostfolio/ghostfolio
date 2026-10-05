@@ -6,10 +6,10 @@ import type {
   Tag
 } from '@ghostfolio/prisma/browser';
 
-import { AccountBalance } from '../account-balance.interface';
-import { AssetProfileIdentifier } from '../asset-profile-identifier.interface';
-import { MarketData } from '../market-data.interface';
-import { UserSettings } from '../user-settings.interface';
+import type { AccountBalance } from '../account-balance.interface';
+import type { AssetProfileIdentifier } from '../asset-profile-identifier.interface';
+import type { MarketData } from '../market-data.interface';
+import type { UserSettings } from '../user-settings.interface';
 
 export interface ExportResponse {
   accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {

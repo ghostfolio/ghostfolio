@@ -1,7 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
+import type { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
-import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import type { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
@@ -16,15 +16,16 @@ import {
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
-import {
+import type {
   Activity,
   AssetProfileIdentifier,
   Filter,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
-import { AccountWithBalance } from '@ghostfolio/common/types';
+import type { AccountWithBalance } from '@ghostfolio/common/types';
 
-import { AssetClass, DataSource, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
+import { AssetClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { randomUUID } from 'node:crypto';
 

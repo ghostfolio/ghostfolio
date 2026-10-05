@@ -1,4 +1,4 @@
-import { DataSource } from '@ghostfolio/prisma/enums';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface DataProviderInfo {
   dataSource?: DataSource;

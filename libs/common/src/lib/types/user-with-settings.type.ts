@@ -1,5 +1,8 @@
-import { SubscriptionType } from '@ghostfolio/common/enums';
-import { SubscriptionOffer, UserSettings } from '@ghostfolio/common/interfaces';
+import type { SubscriptionType } from '@ghostfolio/common/enums';
+import type {
+  SubscriptionOffer,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
 import type { Account, Settings, User } from '@ghostfolio/prisma/browser';
 
 // TODO: Compare with User interface

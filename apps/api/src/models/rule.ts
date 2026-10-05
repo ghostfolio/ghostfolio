@@ -1,6 +1,6 @@
-import { XRayRuleKey } from '@ghostfolio/api/models/types/x-ray-rule-key.type';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import {
+import type { XRayRuleKey } from '@ghostfolio/api/models/types/x-ray-rule-key.type';
+import type { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import type {
   PortfolioPosition,
   PortfolioReportRule,
   RuleSettings
@@ -9,8 +9,8 @@ import {
 import { Big } from 'big.js';
 import { groupBy } from 'lodash-es';
 
-import { EvaluationResult } from './interfaces/evaluation-result.interface';
-import { RuleInterface } from './interfaces/rule.interface';
+import type { EvaluationResult } from './interfaces/evaluation-result.interface';
+import type { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   protected exchangeRateDataService: ExchangeRateDataService;

@@ -1,8 +1,8 @@
 import { INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
-import { Activity } from '@ghostfolio/common/interfaces';
+import type { Activity } from '@ghostfolio/common/interfaces';
 
-import { AssetProfileSplit } from '@prisma/client';
+import type { AssetProfileSplit } from '@prisma/client';
 import { Big } from 'big.js';
 import { isBefore } from 'date-fns';
 

@@ -1,5 +1,5 @@
-import { ColorScheme } from '@ghostfolio/common/types';
-import { DataSource } from '@ghostfolio/prisma/enums';
+import type { ColorScheme } from '@ghostfolio/common/types';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface HoldingDetailDialogParams {
   baseCurrency: string;

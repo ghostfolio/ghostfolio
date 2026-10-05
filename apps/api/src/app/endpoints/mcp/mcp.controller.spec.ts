@@ -2,10 +2,10 @@ import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.de
 import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
 import { AccessGuard } from '@ghostfolio/api/guards/access.guard';
 import { getMcpUserOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
+import type { Scope } from '@ghostfolio/common/scopes';
 import {
   getScopesOfAccess,
   getScopesOfAccessLevel,
-  Scope,
   scopes
 } from '@ghostfolio/common/scopes';
 
@@ -13,13 +13,12 @@ import {
   EXCEPTION_FILTERS_METADATA,
   GUARDS_METADATA
 } from '@nestjs/common/constants';
+import type { AccessMatchMode, ToolMetadata } from '@rekog/mcp-nest';
 import {
-  AccessMatchMode,
   MCP_SCOPES_MATCH_METADATA_KEY,
   MCP_SCOPES_METADATA_KEY,
   MCP_TOOL_METADATA_KEY,
-  ToolAuthorizationService,
-  ToolMetadata
+  ToolAuthorizationService
 } from '@rekog/mcp-nest';
 
 import { GhostfolioMcpController } from './mcp.controller';

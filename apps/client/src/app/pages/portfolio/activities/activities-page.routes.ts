@@ -1,7 +1,7 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { GfActivitiesPageComponent } from './activities-page.component';
 import { GfActivityDialogHostComponent } from './activity-dialog-host/activity-dialog-host.component';

@@ -1,5 +1,5 @@
-import { Filter } from '@ghostfolio/common/interfaces';
-import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+import type { Filter } from '@ghostfolio/common/interfaces';
+import type { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export const RedisCacheServiceMock = {
   cache: new Map<string, string>(),

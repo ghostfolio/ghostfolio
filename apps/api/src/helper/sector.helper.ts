@@ -1,5 +1,5 @@
 import { SECTORS } from '@ghostfolio/common/config';
-import { SectorName } from '@ghostfolio/common/types';
+import type { SectorName } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
 

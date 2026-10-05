@@ -1,7 +1,7 @@
-import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { SubscriptionType } from '@ghostfolio/common/enums';
+import type { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import type { SubscriptionType } from '@ghostfolio/common/enums';
 
-import { DateQuery } from './date-query.interface';
+import type { DateQuery } from './date-query.interface';
 
 export interface GetValuesParams {
   dataGatheringItems: DataGatheringItem[];

@@ -1,4 +1,4 @@
-import { Filter } from './filter.interface';
+import type { Filter } from './filter.interface';
 
 export interface FilterGroup {
   filters: Filter[];

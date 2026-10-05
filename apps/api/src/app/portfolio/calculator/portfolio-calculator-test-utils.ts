@@ -1,12 +1,12 @@
-import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import type { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { parseDate } from '@ghostfolio/common/helper';
-import {
+import type {
   Activity,
   ExportResponse,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
+import type { DateRange } from '@ghostfolio/common/types';
 
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';

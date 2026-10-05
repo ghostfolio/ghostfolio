@@ -5,7 +5,7 @@ import { GfUserAccountSettingsComponent } from '@ghostfolio/client/components/us
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { GfUserAccountPageComponent } from './user-account-page.component';
 

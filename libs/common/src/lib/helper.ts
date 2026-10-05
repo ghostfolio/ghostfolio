@@ -4,11 +4,8 @@ import type {
   Prisma,
   SymbolProfile
 } from '@ghostfolio/prisma/browser';
-import {
-  AccessType,
-  Type as ActivityType,
-  AssetSubClass
-} from '@ghostfolio/prisma/enums';
+import type { AccessType } from '@ghostfolio/prisma/enums';
+import { Type as ActivityType, AssetSubClass } from '@ghostfolio/prisma/enums';
 
 import { utc } from '@date-fns/utc';
 import { NumberParser } from '@internationalized/number';
@@ -56,14 +53,14 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   TAG_IDS_SYSTEM
 } from './config';
-import {
+import type {
   AssetProfileIdentifier,
   AssetProfileItem,
   Benchmark,
   PortfolioPosition,
   UserSettings
 } from './interfaces';
-import { BenchmarkTrend, ColorScheme } from './types';
+import type { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';

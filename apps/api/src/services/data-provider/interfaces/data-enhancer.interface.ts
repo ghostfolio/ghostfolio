@@ -1,4 +1,4 @@
-import { SymbolProfile } from '@prisma/client';
+import type { SymbolProfile } from '@prisma/client';
 
 export interface DataEnhancerInterface {
   enhance({
