@@ -151,7 +151,9 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
             );
           } catch {}
         } else {
-          this.formattedValue = this.value?.toLocaleString(this.locale);
+          this.formattedValue = this.value?.toLocaleString(this.locale, {
+            useGrouping: true
+          });
         }
 
         if (this.isAbsolute) {
