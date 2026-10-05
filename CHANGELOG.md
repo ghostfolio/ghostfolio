@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Exposed the `ENABLE_FEATURE_SECURITY_HEADERS` environment variable to enable HTTP security headers (experimental)
+
 ### Changed
 
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
