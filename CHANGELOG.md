@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 - Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `POST api/v1/activities`
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
 
