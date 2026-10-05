@@ -212,6 +212,7 @@ export const DERIVED_CURRENCIES = [
 
 export const E_MAIL_LINE_BREAK = '%0D%0A';
 
+export const GATHER_ASSET_PROFILE_COOLDOWN_IN_MS = ms('12 hours');
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
   attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
