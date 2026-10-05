@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the fallback of the market price in the portfolio calculation to use the unit price of the latest buy or sell activity
+- Fixed an issue where holdings without a market price have been valued at the unit price of a dividend, a fee, an interest or a liability
 
 ## 3.79.0 - 2026-10-04
 
