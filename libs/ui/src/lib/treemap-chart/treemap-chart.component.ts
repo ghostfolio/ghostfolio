@@ -324,8 +324,8 @@ export class GfTreemapChartComponent
                 ).toLocaleString(this.locale(), {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2,
-                  useGrouping: true,
-                  signDisplay: 'exceptZero'
+                  signDisplay: 'exceptZero',
+                  useGrouping: true
                 })}%`
               ];
             },
@@ -412,8 +412,8 @@ export class GfTreemapChartComponent
           ).toLocaleString(this.locale(), {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2,
-            useGrouping: true,
-            signDisplay: 'exceptZero'
+            signDisplay: 'exceptZero',
+            useGrouping: true
           })}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
