@@ -496,7 +496,8 @@ export class GfPortfolioProportionChartComponent
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
-                minimumFractionDigits: 2
+                minimumFractionDigits: 2,
+                useGrouping: true
               })} ${this.baseCurrency ?? ''} (${percentage.toFixed(2)}%)`
             ];
           }
