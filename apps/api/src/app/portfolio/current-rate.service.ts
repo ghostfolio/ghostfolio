@@ -12,9 +12,10 @@ import {
   ResponseError
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable } from '@nestjs/common';
 import { Type as ActivityType } from '@prisma/client';
-import { isBefore, isToday } from 'date-fns';
+import { isBefore, isSameDay, isToday } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash-es';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -191,8 +192,10 @@ export class CurrentRateService {
   }
 
   private containsToday(dates: Date[]): boolean {
+    const today = resetHours(new Date());
+
     for (const date of dates) {
-      if (isToday(date)) {
+      if (isSameDay(date, today, { in: utc })) {
         return true;
       }
     }
