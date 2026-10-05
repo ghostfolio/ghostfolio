@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the performance of getting the latest market data by reordering the columns of the unique constraint in the market data table
+- Improved the performance of getting the latest market data by optimizing the indexes of the market data table
 - Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `POST api/v1/activities`
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`
 
