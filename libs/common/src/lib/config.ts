@@ -180,9 +180,16 @@ export const DEFAULT_REDACTED_PATHS = [
   'settings.emergencyFund',
   'settings.projectedTotalAmount',
   'settings.savingsRate',
+
+  /* @deprecated */
   'SymbolProfile.comment',
+
+  /* @deprecated */
   'SymbolProfile.scraperConfiguration',
+
+  /* @deprecated */
   'SymbolProfile.symbolMapping',
+
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',
