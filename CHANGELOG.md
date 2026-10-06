@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 
-## 3.80.0 - 2026-10-05
+## 3.80.2 - 2026-10-06
 
 ### Added
 
