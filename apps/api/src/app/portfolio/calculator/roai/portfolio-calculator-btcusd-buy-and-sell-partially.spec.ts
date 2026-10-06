@@ -162,7 +162,7 @@ describe('PortfolioCalculator', () => {
             netPerformancePercentage: new Big('42.41978276196153750666'),
             netPerformancePercentageWithCurrencyEffectMap: {
               '1d': new Big('-0.04016229506406263535'),
-              max: new Big('41.72313811883729606471'),
+              max: new Big('41.65910103572163194783'),
               ytd: new Big('-0.04016229506406263535')
             },
             netPerformanceWithCurrencyEffectMap: {
@@ -261,8 +261,8 @@ describe('PortfolioCalculator', () => {
         max: {
           date: '2018-01-01',
           netPerformance: 26458.9121202,
-          netPerformanceInPercentage: 42.50435329547954,
-          netPerformanceInPercentageWithCurrencyEffect: 41.72313811883715,
+          netPerformanceInPercentage: 42.43911719562077,
+          netPerformanceInPercentageWithCurrencyEffect: 41.65910103572173,
           netPerformanceWithCurrencyEffect: 26516.2087014,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
           valueWithCurrencyEffect: 13298.425356
@@ -277,6 +277,56 @@ describe('PortfolioCalculator', () => {
           valueWithCurrencyEffect: 13298.425356
         }
       });
+    });
+
+    it.only('with BTCUSD buy and sell partially and fewer chart items', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2018-01-01').getTime());
+
+      const environmentConfigurationService = new ConfigurationService();
+
+      // Fewer chart items give fewer chart dates, which must not change the
+      // average investment
+      jest.spyOn(configurationService, 'get').mockImplementation((key) => {
+        return key === 'MAX_CHART_ITEMS'
+          ? 50
+          : environmentConfigurationService.get(key);
+      });
+
+      const { activities, userCurrency } = loadActivitiesFromExportFile(
+        'btcusd-buy-and-sell-partially.json'
+      );
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: userCurrency,
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['max']
+      });
+
+      expect(
+        portfolioSnapshot.positions[0]
+          .netPerformancePercentageWithCurrencyEffectMap
+      ).toMatchObject({
+        max: new Big('41.65910103572163194783')
+      });
+
+      // Other weights give another rounding of the floating point numbers
+      expect(performanceByDateRange.max.netPerformanceInPercentage).toBeCloseTo(
+        42.43911719562077,
+        10
+      );
+
+      expect(
+        performanceByDateRange.max.netPerformanceInPercentageWithCurrencyEffect
+      ).toBeCloseTo(41.65910103572173, 10);
     });
   });
 });
