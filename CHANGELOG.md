@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved the performance calculation including dividends (total return) from experimental to general availability
 
+### Fixed
+
+- Fixed the missing mapping for Aland Islands in the country weightings of the _Financial Modeling Prep_ service
+
 ## 3.80.2 - 2026-10-06
 
 ### Added
