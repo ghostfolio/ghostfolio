@@ -890,6 +890,7 @@ describe('PortfolioService', () => {
       jest.spyOn(portfolioService, 'getPerformance').mockResolvedValue({
         performance: {
           currentValueInBaseCurrency: 3000,
+          dividendInBaseCurrency: 50,
           netPerformance: 500,
           netPerformancePercentage: 0.2,
           netPerformancePercentageWithCurrencyEffect: 0.2,
@@ -925,6 +926,7 @@ describe('PortfolioService', () => {
       });
 
       expect(summary.cash).toBe(1000);
+      expect(summary.dividendInBaseCurrency).toBe(50);
       expect(summary.emergencyFund.total).toBe(0);
       expect(summary.excludedAccountsAndActivities).toBe(0);
       expect(summary.totalAssetsInBaseCurrency).toBe(3000);
