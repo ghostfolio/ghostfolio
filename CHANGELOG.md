@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the performance calculation including dividends (total return) from experimental to general availability
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
