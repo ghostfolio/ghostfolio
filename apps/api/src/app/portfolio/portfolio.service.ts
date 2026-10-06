@@ -104,7 +104,7 @@ import {
   set,
   startOfDay
 } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
@@ -334,7 +334,7 @@ export class PortfolioService {
             case ActivityType.INTEREST:
               interestInBaseCurrency +=
                 (await this.exchangeRateDataService.toCurrencyAtDate(
-                  unitPrice,
+                  new Big(quantity).mul(unitPrice).toNumber(),
                   currency ?? SymbolProfile.currency,
                   userCurrency,
                   date
@@ -2545,6 +2545,16 @@ export class PortfolioService {
       return !quantity.eq(0);
     });
 
+    const assetProfileIdentifiers: AssetProfileIdentifier[] = openHoldings.map(
+      ({
+        latestActivity: {
+          assetProfile: { dataSource, symbol }
+        }
+      }) => {
+        return { dataSource, symbol };
+      }
+    );
+
     const now = new Date();
 
     // Get the market prices of today with the same fallback as the portfolio
@@ -2553,15 +2563,8 @@ export class PortfolioService {
       openHoldings.length > 0
         ? await this.currentRateService.getValues({
             subscriptionType,
-            dataGatheringItems: openHoldings.map(
-              ({
-                latestActivity: {
-                  assetProfile: { dataSource, symbol }
-                }
-              }) => {
-                return { dataSource, symbol };
-              }
-            ),
+            assetProfileIdentifiersWithQuotes: assetProfileIdentifiers,
+            dataGatheringItems: assetProfileIdentifiers,
             dateQuery: {
               gte: startOfDay(now),
               lt: endOfDay(now)

@@ -10,7 +10,7 @@ import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
   Activity,
-  HistoricalDataItem,
+  LineChartItem,
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
@@ -55,7 +55,7 @@ import {
   readerOutline,
   swapVerticalOutline
 } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { filter, forkJoin } from 'rxjs';
 
@@ -99,7 +99,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected equity: number | null;
   protected equityPrecision = 2;
   protected hasPermissionToDeleteAccountBalance: boolean;
-  protected historicalDataItems: HistoricalDataItem[];
+  protected historicalDataItems: LineChartItem[];
   protected holdings: PortfolioPosition[];
   protected interestInBaseCurrency: number;
   protected interestInBaseCurrencyPrecision = 2;
@@ -364,12 +364,16 @@ export class GfAccountDetailDialogComponent implements OnInit {
           portfolioPerformance.chart &&
           portfolioPerformance.chart.length > 0
         ) {
-          this.historicalDataItems = portfolioPerformance.chart.map(
-            ({ date, netWorth, netWorthInPercentage }) => ({
-              date,
-              value: isNumber(netWorth) ? netWorth : netWorthInPercentage
+          this.historicalDataItems = portfolioPerformance.chart
+            .map(({ date, netWorth, netWorthInPercentage }) => {
+              return {
+                date,
+                value: isNumber(netWorth) ? netWorth : netWorthInPercentage
+              };
             })
-          );
+            .filter((item): item is LineChartItem => {
+              return isNumber(item.value);
+            });
         } else {
           this.historicalDataItems = this.accountBalances.map(
             ({ date, valueInBaseCurrency }) => {

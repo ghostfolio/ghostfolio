@@ -60,7 +60,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { groupBy, uniqBy } from 'lodash';
+import { groupBy, omit, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
 @Injectable()
@@ -183,7 +183,7 @@ export class ActivitiesService {
       updateAccountBalance?: boolean;
       userId: string;
     }
-  ): Promise<Order> {
+  ): Promise<Prisma.OrderGetPayload<{ include: { SymbolProfile: true } }>> {
     const tags = data.tags ?? [];
 
     await this.tagService.validateTagIds({
@@ -581,14 +581,16 @@ export class ActivitiesService {
 
   public async getLatestActivity({
     dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
+    symbol,
+    types
+  }: AssetProfileIdentifier & { types: ActivityType[] }) {
     return this.prismaService.order.findFirst({
-      orderBy: {
-        date: 'desc'
-      },
+      orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
       where: {
-        SymbolProfile: { dataSource, symbol }
+        ...WHERE_ACTIVITY_NOT_DRAFT,
+        SymbolProfile: { dataSource, symbol },
+        type: { in: types },
+        unitPrice: { gt: 0 }
       }
     });
   }
@@ -655,7 +657,13 @@ export class ActivitiesService {
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          SymbolProfile: true,
+          SymbolProfile: {
+            select: {
+              currency: true,
+              dataSource: true,
+              symbol: true
+            }
+          },
           tags: true
         },
         orderBy: [...orderBy, { id: sortDirection }]
@@ -736,7 +744,7 @@ export class ActivitiesService {
         ]);
 
         return {
-          ...order,
+          ...omit(order, ['SymbolProfile']),
           assetProfile,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,

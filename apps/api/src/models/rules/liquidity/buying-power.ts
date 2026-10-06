@@ -44,7 +44,8 @@ export class BuyingPower extends Rule<Settings> {
           placeholders: {
             baseCurrency: ruleSettings.baseCurrency,
             thresholdMin: ruleSettings.thresholdMin.toLocaleString(
-              ruleSettings.locale
+              ruleSettings.locale,
+              { useGrouping: true }
             )
           }
         }),
@@ -59,7 +60,8 @@ export class BuyingPower extends Rule<Settings> {
         placeholders: {
           baseCurrency: ruleSettings.baseCurrency,
           thresholdMin: ruleSettings.thresholdMin.toLocaleString(
-            ruleSettings.locale
+            ruleSettings.locale,
+            { useGrouping: true }
           )
         }
       }),

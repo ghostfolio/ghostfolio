@@ -72,7 +72,7 @@ import {
   startOfYear,
   subDays
 } from 'date-fns';
-import { groupBy, sortBy, uniqBy } from 'lodash';
+import { groupBy, sortBy, uniqBy } from 'lodash-es';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -268,6 +268,7 @@ export abstract class PortfolioCalculator {
       };
     }
 
+    const assetProfileIdentifiersWithQuotes: AssetProfileIdentifier[] = [];
     const cashAssetProfileIdentifiers = new Set<string>();
     const currencies: { [assetProfileIdentifier: string]: string } = {};
     const dataGatheringItems: DataGatheringItem[] = [];
@@ -279,6 +280,7 @@ export abstract class PortfolioCalculator {
       assetSubClass,
       currency,
       dataSource,
+      quantity,
       symbol
     } of holdingBalancesByDate.at(-1).holdings) {
       // Gather data for all assets except CASH
@@ -287,6 +289,13 @@ export abstract class PortfolioCalculator {
           dataSource,
           symbol
         });
+
+        if (!quantity.eq(0)) {
+          assetProfileIdentifiersWithQuotes.push({
+            dataSource,
+            symbol
+          });
+        }
       }
 
       currencies[getAssetProfileIdentifier({ dataSource, symbol })] = currency;
@@ -305,6 +314,7 @@ export abstract class PortfolioCalculator {
       errors: currentRateErrors,
       values: marketSymbols
     } = await this.currentRateService.getValues({
+      assetProfileIdentifiersWithQuotes,
       dataGatheringItems,
       dateQuery: {
         gte: this.startDate,
@@ -791,11 +801,33 @@ export abstract class PortfolioCalculator {
       activitiesByDate[activity.date].push(activity);
     }
 
+    // Carry forward the market prices of all dates, not only of the chart
+    // dates, as sparse market data (e.g. MANUAL) can be between two chart dates
+    const marketPriceDates = Object.keys(marketSymbolMap)
+      .filter((date) => {
+        return !!marketSymbolMap[date][assetProfileIdentifier];
+      })
+      .sort();
+
+    let indexOfMarketPriceDate = 0;
+
     for (const dateString of chartDates) {
       if (dateString < startDateString) {
         continue;
       } else if (dateString > endDateString) {
         break;
+      }
+
+      while (
+        indexOfMarketPriceDate < marketPriceDates.length &&
+        marketPriceDates[indexOfMarketPriceDate] <= dateString
+      ) {
+        lastMarketPrice =
+          marketSymbolMap[marketPriceDates[indexOfMarketPriceDate]][
+            assetProfileIdentifier
+          ];
+
+        indexOfMarketPriceDate += 1;
       }
 
       const activitiesOfDate = activitiesByDate[dateString];
@@ -808,13 +840,8 @@ export abstract class PortfolioCalculator {
         }
       }
 
-      const marketPrice = marketSymbolMap[dateString]?.[assetProfileIdentifier];
-
       const unitPrice =
-        marketPrice ??
-        lastMarketPrice ??
-        lastActivityUnitPrice ??
-        unitPriceAtEndDate;
+        lastMarketPrice ?? lastActivityUnitPrice ?? unitPriceAtEndDate;
 
       if (activitiesOfDate?.length > 0) {
         for (const activity of activitiesOfDate) {
@@ -831,10 +858,6 @@ export abstract class PortfolioCalculator {
           type: 'BUY',
           unitPriceFromMarketData: unitPrice
         });
-      }
-
-      if (marketPrice) {
-        lastMarketPrice = marketPrice;
       }
     }
 

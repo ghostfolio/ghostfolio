@@ -244,7 +244,7 @@
         <target state="translated">부탁드립니다</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">333</context>
+          <context context-type="linenumber">341</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8650499415827640724" datatype="html">
@@ -260,7 +260,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
@@ -320,7 +320,7 @@
         <target state="translated">현금 잔액</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -336,7 +336,7 @@
         <target state="translated">플랫폼</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -352,7 +352,7 @@
         <target state="translated">현금 잔액</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9011425576088183078" datatype="html">
@@ -439,6 +439,10 @@
         <source>Total</source>
         <target state="translated">합계</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-tag/admin-tag.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
@@ -524,7 +528,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
@@ -552,7 +556,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/admin-tag.component.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
@@ -588,15 +592,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/admin-tag.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">254</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/account-balances/account-balances.component.html</context>
@@ -628,7 +632,7 @@
         <target state="translated">유료</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3175281009707730014" datatype="html">
@@ -784,7 +788,7 @@
         <target state="translated"><x id="INTERPOLATION" equiv-text="{{ data.symbol }}"/>에 대한 세부정보</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3973560112150137298" datatype="html">
@@ -820,7 +824,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8410000928786197012" datatype="html">
@@ -844,7 +848,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8298612418414367990" datatype="html">
@@ -852,7 +856,7 @@
         <target state="translated">통화</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">124</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -872,7 +876,7 @@
         <target state="translated">국가 정보 없는 ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2346990364415437072" datatype="html">
@@ -880,7 +884,7 @@
         <target state="translated">섹터 정보 없는 ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
-          <context context-type="linenumber">133</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2353112900480812851" datatype="html">
@@ -888,7 +892,7 @@
         <target state="new">An error occurred while converting the data source to <x id="PH" equiv-text="DataSource.MANUAL"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">528</context>
+          <context context-type="linenumber">530</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6786981261778452561" datatype="html">
@@ -908,7 +912,7 @@
         <target state="translated">다음 기준으로 필터...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">351</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6182733719813772142" datatype="html">
@@ -928,7 +932,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="641154803270226443" datatype="html">
@@ -988,7 +992,7 @@
         <target state="translated">구독 내역</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3720539089813177542" datatype="html">
@@ -1032,7 +1036,7 @@
         <target state="translated">이런! 과거 데이터를 파싱할 수 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor.component.ts</context>
-          <context context-type="linenumber">286</context>
+          <context context-type="linenumber">287</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7194017842579795231" datatype="html">
@@ -1049,6 +1053,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">21</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2960393019464273155" datatype="html">
@@ -1076,11 +1084,11 @@
         </context-group>
       </trans-unit>
       <trans-unit id="5298486223740169185" datatype="html">
-        <source>By <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="INTERPOLATION" equiv-text="{{ retirementDateLabel }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, this is projected to increase to <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYearProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonthProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, assuming a <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> annual interest rate.</source>
-        <target state="translated"><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="INTERPOLATION" equiv-text="{{ retirementDateLabel }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>까지 이 금액은 연간 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYearProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> 또는 매월 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonthProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>(으)로 증가할 것으로 예상되며, 연이율 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>을(를) 가정합니다.</target>
+        <source>By <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="INTERPOLATION" equiv-text="{{ retirementDateLabel }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, this is projected to increase to <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerYearProjected?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerMonthProjected?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, assuming a <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> annual interest rate.</source>
+        <target state="new"><x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="INTERPOLATION" equiv-text="{{ retirementDateLabel }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>까지 이 금액은 연간 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYearProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> 또는 매월 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonthProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>(으)로 증가할 것으로 예상되며, 연이율 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>을(를) 가정합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5299488188278756127" datatype="html">
@@ -1104,7 +1112,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -1112,7 +1120,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4136685477767543249" datatype="html">
@@ -1188,7 +1196,7 @@
         <target state="translated">합계</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5918319622596548216" datatype="html">
@@ -1300,7 +1308,7 @@
         <target state="translated">이 쿠폰을 정말 삭제하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">247</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="297546430113071258" datatype="html">
@@ -1308,7 +1316,7 @@
         <target state="translated">이 시스템 메시지를 정말 삭제하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">260</context>
+          <context context-type="linenumber">240</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6470890277760887814" datatype="html">
@@ -1316,7 +1324,7 @@
         <target state="translated">정말로 캐시를 플러시하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">270</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2712770700065625080" datatype="html">
@@ -1324,7 +1332,7 @@
         <target state="translated">시스템 메시지를 설정하십시오:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">310</context>
+          <context context-type="linenumber">290</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2724055831234181057" datatype="html">
@@ -1340,7 +1348,7 @@
         <target state="translated">사용자당</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">176</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8455870515256854977" datatype="html">
@@ -1480,7 +1488,7 @@
         <target state="translated">자산 정보가 저장되었습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">754</context>
+          <context context-type="linenumber">756</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7214871309640504920" datatype="html">
@@ -1488,7 +1496,7 @@
         <target state="translated">정말로 이 플랫폼을 삭제하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.ts</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">131</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7701575534145602925" datatype="html">
@@ -1504,7 +1512,7 @@
         <target state="new">The data of this asset profile is moved to <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) and this asset profile is deleted.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">961</context>
+          <context context-type="linenumber">963</context>
         </context-group>
       </trans-unit>
       <trans-unit id="774722884061553775" datatype="html">
@@ -1520,7 +1528,7 @@
         <target state="translated">올해</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">267</context>
+          <context context-type="linenumber">269</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4343859224042481913" datatype="html">
@@ -1536,7 +1544,7 @@
         <target state="new">Cache has been flushed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7966917302907632321" datatype="html">
@@ -1576,7 +1584,7 @@
         <target state="translated">이 태그를 정말로 삭제하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/admin-tag.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3653624484380347431" datatype="html">
@@ -1600,7 +1608,7 @@
         <target state="translated">이 사용자를 정말로 삭제하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">233</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2392488717875840729" datatype="html">
@@ -1632,19 +1640,23 @@
         <target state="translated">일일 참여</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3462698906491525936" datatype="html">
+      <trans-unit id="4383282101688538452" datatype="html">
         <source>Last Request</source>
         <target state="translated">마지막 요청</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
+          <context context-type="linenumber">169</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8197682624172763038" datatype="html">
@@ -1652,7 +1664,7 @@
         <target state="translated">사용자 대리 접속</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">240</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7341990227686441824" datatype="html">
@@ -1660,11 +1672,11 @@
         <target state="translated">양식 유효성 검사에 실패했습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">730</context>
+          <context context-type="linenumber">732</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">733</context>
+          <context context-type="linenumber">735</context>
         </context-group>
       </trans-unit>
       <trans-unit id="735924103945447056" datatype="html">
@@ -1688,7 +1700,7 @@
         <target state="translated">포트폴리오</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
@@ -1716,7 +1728,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.ts</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7695539617502213949" datatype="html">
@@ -1828,7 +1840,7 @@
         <target state="new">An error occurred while merging this asset profile into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">944</context>
+          <context context-type="linenumber">946</context>
         </context-group>
       </trans-unit>
       <trans-unit id="103717583691217276" datatype="html">
@@ -1924,7 +1936,7 @@
         <target state="translated">이번주</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6005640251215534178" datatype="html">
@@ -1944,7 +1956,7 @@
         <target state="translated">총액</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8186013988289067040" datatype="html">
@@ -1960,7 +1972,7 @@
         <target state="translated">저축률</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2232148295564585586" datatype="html">
@@ -2028,7 +2040,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">326</context>
+          <context context-type="linenumber">334</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
@@ -2088,7 +2100,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">121</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4072809765904753879" datatype="html">
@@ -2096,11 +2108,11 @@
         <target state="translated">절대 순 성과</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">279</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3118565567530464051" datatype="html">
@@ -2108,11 +2120,11 @@
         <target state="translated">순 성과</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4980697492087090765" datatype="html">
@@ -2120,7 +2132,7 @@
         <target state="translated">총자산</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4993097165849036956" datatype="html">
@@ -2128,7 +2140,7 @@
         <target state="translated">매수 가능 금액</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="linenumber">324</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2105957921933737059" datatype="html">
@@ -2136,7 +2148,7 @@
         <target state="translated">분석에서 제외됨</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">337</context>
+          <context context-type="linenumber">356</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5003799027167349722" datatype="html">
@@ -2144,7 +2156,7 @@
         <target state="translated">부채</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">368</context>
+          <context context-type="linenumber">387</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -2156,7 +2168,7 @@
         <target state="translated">순자산</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">391</context>
+          <context context-type="linenumber">407</context>
         </context-group>
       </trans-unit>
       <trans-unit id="293512063893966488" datatype="html">
@@ -2164,7 +2176,7 @@
         <target state="translated">연환산 성과</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">406</context>
+          <context context-type="linenumber">422</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5403336912114537863" datatype="html">
@@ -2172,7 +2184,7 @@
         <target state="translated">비상금 금액을 설정해 주세요.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">204</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2067863610333602482" datatype="html">
@@ -2212,7 +2224,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5376727317218692773" datatype="html">
@@ -2252,7 +2264,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="296005715452289357" datatype="html">
@@ -2272,7 +2284,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5777928097698511040" datatype="html">
@@ -2288,7 +2300,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="685453282455108461" datatype="html">
@@ -2304,7 +2316,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">220</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2486744036183712016" datatype="html">
@@ -2316,7 +2328,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4809229280245558999" datatype="html">
@@ -2328,11 +2340,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4505804162157040890" datatype="html">
@@ -2388,7 +2400,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">289</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6048892649018070225" datatype="html">
@@ -2408,7 +2420,7 @@
         <target state="translated">연초 대비</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">267</context>
+          <context context-type="linenumber">269</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
@@ -2420,7 +2432,7 @@
         <target state="translated">1년</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">271</context>
+          <context context-type="linenumber">273</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
@@ -2440,7 +2452,7 @@
         <target state="translated">5년</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">277</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
@@ -2460,7 +2472,7 @@
         <target state="translated">맥스</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">281</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
@@ -2560,7 +2572,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">265</context>
+          <context context-type="linenumber">273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8589730128931685735" datatype="html">
@@ -2636,7 +2648,7 @@
         <target state="translated">쿠폰</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2826581353496868063" datatype="html">
@@ -2728,7 +2740,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6337822466854281629" datatype="html">
@@ -2744,7 +2756,7 @@
         <target state="new">Investments</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">246</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3014406080070038652" datatype="html">
@@ -2792,7 +2804,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6077108904130724618" datatype="html">
@@ -2968,7 +2980,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">100</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
@@ -2984,7 +2996,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.html</context>
@@ -3124,7 +3136,7 @@
         <target state="translated">개요</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -3276,11 +3288,11 @@
         <target state="translated">스크래퍼 설정을 파싱할 수 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">678</context>
+          <context context-type="linenumber">680</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">681</context>
+          <context context-type="linenumber">683</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5152858168588361831" datatype="html">
@@ -3432,7 +3444,7 @@
         <target state="translated">다크 모드</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">233</context>
+          <context context-type="linenumber">258</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4925563362569564548" datatype="html">
@@ -3440,7 +3452,7 @@
         <target state="translated">시장 분위기</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">240</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2667768225333033163" datatype="html">
@@ -3456,7 +3468,7 @@
         <target state="translated">다국어</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">284</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3556628518893194463" datatype="html">
@@ -3472,7 +3484,7 @@
         <target state="translated">오픈 소스 소프트웨어</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">296</context>
+          <context context-type="linenumber">321</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2045779543869682721" datatype="html">
@@ -3484,7 +3496,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">321</context>
+          <context context-type="linenumber">346</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
@@ -3496,7 +3508,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">360</context>
+          <context context-type="linenumber">368</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -3516,7 +3528,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">186</context>
         </context-group>
       </trans-unit>
       <trans-unit id="803941175683258052" datatype="html">
@@ -3524,7 +3536,7 @@
         <target state="translated">보유 종목</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">135</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
@@ -3536,7 +3548,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">215</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -3560,15 +3572,15 @@
         <target state="new">This action cannot be undone.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">963</context>
+          <context context-type="linenumber">965</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4733690367258997247" datatype="html">
         <source>just now</source>
         <target state="translated">방금 전</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="sourcefile">apps/client/src/app/util/date.util.ts</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4739818603756173797" datatype="html">
@@ -4160,7 +4172,7 @@
         <target state="new">Do you really want to merge this asset profile into it?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">967</context>
+          <context context-type="linenumber">969</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4275978599610634089" datatype="html">
@@ -4168,7 +4180,7 @@
         <target state="translated">대학 이메일 주소로</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">348</context>
+          <context context-type="linenumber">356</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4808791512433987109" datatype="html">
@@ -4264,11 +4276,11 @@
         <target state="translated">거래 내역</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -4284,7 +4296,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">121</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -4296,7 +4308,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/activities-page.html</context>
@@ -4496,7 +4508,7 @@
         <target state="new">Dividend Performance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4164773401836100336" datatype="html">
@@ -4556,7 +4568,7 @@
         <target state="translated">가격</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8897501932747984560" datatype="html">
@@ -4564,7 +4576,7 @@
         <target state="new">Do you really want to convert this asset profile to <x id="PH" equiv-text="newAssetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="newAssetProfileIdentifier.dataSource"/>)?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">811</context>
+          <context context-type="linenumber">813</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2666668717343771434" datatype="html">
@@ -4664,7 +4676,7 @@
         <target state="translated">체험판</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="79310201207169632" datatype="html">
@@ -4760,7 +4772,7 @@
         <target state="translated">학생 할인을 찾고 계십니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">350</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7765499580020598783" datatype="html">
@@ -4768,7 +4780,7 @@
         <target state="translated">배당금</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -4776,7 +4788,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">492</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
+          <context context-type="linenumber">511</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -4808,7 +4824,7 @@
         <target state="translated">보증금</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.ts</context>
-          <context context-type="linenumber">423</context>
+          <context context-type="linenumber">444</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6762743264882388498" datatype="html">
@@ -4832,7 +4848,7 @@
         <target state="translated">상위</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">332</context>
+          <context context-type="linenumber">329</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3568940932272598597" datatype="html">
@@ -4840,7 +4856,7 @@
         <target state="translated">하위</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">383</context>
+          <context context-type="linenumber">380</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5242468862715363747" datatype="html">
@@ -4848,7 +4864,7 @@
         <target state="translated">포트폴리오 진화</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">438</context>
+          <context context-type="linenumber">435</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6766448922039123937" datatype="html">
@@ -4856,7 +4872,7 @@
         <target state="translated">투자 일정</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">465</context>
+          <context context-type="linenumber">463</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1440519383036502539" datatype="html">
@@ -4864,7 +4880,7 @@
         <target state="translated">현재 연속</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">486</context>
+          <context context-type="linenumber">484</context>
         </context-group>
       </trans-unit>
       <trans-unit id="457461496511383061" datatype="html">
@@ -4872,7 +4888,7 @@
         <target state="translated">최장 연속</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">495</context>
+          <context context-type="linenumber">493</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6854252543786630145" datatype="html">
@@ -4880,7 +4896,7 @@
         <target state="translated">배당 일정</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">522</context>
+          <context context-type="linenumber">521</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5857197365507636437" datatype="html">
@@ -4976,7 +4992,7 @@
         <target state="translated">매시간</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">251</context>
+          <context context-type="linenumber">253</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2640837868763558546" datatype="html">
@@ -4988,7 +5004,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">131</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5488101610658427424" datatype="html">
@@ -5000,7 +5016,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5490568627775279769" datatype="html">
@@ -5012,7 +5028,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1735670443414513780" datatype="html">
@@ -5020,11 +5036,11 @@
         <target state="translated">데이터 가져오기 및 내보내기</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4097514565360345307" datatype="html">
@@ -5032,7 +5048,7 @@
         <target state="translated">커뮤니티 지원</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8635198392077595702" datatype="html">
@@ -5040,7 +5056,7 @@
         <target state="translated">자체 호스팅, 수동으로 업데이트합니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5891064527381218201" datatype="html">
@@ -5048,11 +5064,11 @@
         <target state="translated">무료</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">156</context>
         </context-group>
       </trans-unit>
       <trans-unit id="420388803578883766" datatype="html">
@@ -5060,7 +5076,7 @@
         <target state="translated">이제 막 거래를 시작한 신규 투자자를 위한 제품입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4362270378699380187" datatype="html">
@@ -5068,11 +5084,11 @@
         <target state="translated">완전 관리형 Ghostfolio 클라우드 제품.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">260</context>
         </context-group>
       </trans-unit>
       <trans-unit id="332047587746771816" datatype="html">
@@ -5080,7 +5096,7 @@
         <target state="translated">자신의 금융 자산에 대한 전체 그림이 필요한 야심찬 투자자를 위한 제품입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">193</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3323137014509063489" datatype="html">
@@ -5092,7 +5108,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">245</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6463889888921382396" datatype="html">
@@ -5100,7 +5116,7 @@
         <target state="translated">이메일 및 채팅 지원</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">248</context>
+          <context context-type="linenumber">256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2030314101752312029" datatype="html">
@@ -5116,7 +5132,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">287</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7478722592449005806" datatype="html">
@@ -5124,7 +5140,7 @@
         <target state="translated">일회성 결제, 자동 갱신 없음.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">293</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7498591289549626867" datatype="html">
@@ -5132,11 +5148,11 @@
         <target state="translated">자산 정보를 저장할 수 없습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">764</context>
+          <context context-type="linenumber">766</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">767</context>
+          <context context-type="linenumber">769</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8289257900569435140" datatype="html">
@@ -5144,7 +5160,7 @@
         <target state="translated">무료입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">362</context>
+          <context context-type="linenumber">370</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5342721262799645301" datatype="html">
@@ -5184,7 +5200,7 @@
         <target state="translated">등록</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -5353,7 +5369,7 @@
         <target state="new">Coupon <x id="PH" equiv-text="newCoupon.code"/> has been created</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6809703125566042287" datatype="html">
@@ -5533,7 +5549,7 @@
         <target state="new">Data gathering has been started.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
-          <context context-type="linenumber">386</context>
+          <context context-type="linenumber">387</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3437679369074503203" datatype="html">
@@ -5577,7 +5593,7 @@
         <target state="translated">멤버십</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -5593,7 +5609,7 @@
         <target state="translated">요청하세요</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">344</context>
+          <context context-type="linenumber">352</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5278627882107105833" datatype="html">
@@ -5769,7 +5785,7 @@
         <target state="translated">저희에게 연락주세요</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">336</context>
+          <context context-type="linenumber">344</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1533391340482659699" datatype="html">
@@ -5833,7 +5849,7 @@
         <target state="new">This asset profile cannot be merged into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">922</context>
+          <context context-type="linenumber">924</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2960138573974945411" datatype="html">
@@ -5849,15 +5865,15 @@
         <target state="translated">관심</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">478</context>
+          <context context-type="linenumber">496</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.ts</context>
-          <context context-type="linenumber">433</context>
+          <context context-type="linenumber">454</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -5869,7 +5885,7 @@
         <target state="translated">저금</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.ts</context>
-          <context context-type="linenumber">443</context>
+          <context context-type="linenumber">464</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8927080808898221200" datatype="html">
@@ -5881,11 +5897,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
@@ -5905,7 +5921,7 @@
         <target state="translated">모두 표시</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">248</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4086606389696938932" datatype="html">
@@ -5913,7 +5929,7 @@
         <target state="translated">계좌</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -6025,15 +6041,15 @@
         <target state="translated">비상자금</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">320</context>
+          <context context-type="linenumber">339</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">425</context>
+          <context context-type="linenumber">441</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -6105,7 +6121,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
-          <context context-type="linenumber">462</context>
+          <context context-type="linenumber">473</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6300009182465422833" datatype="html">
@@ -6129,7 +6145,7 @@
         <target state="translated">거래 내역 없음</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">139</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9219851060664514927" datatype="html">
@@ -6145,7 +6161,7 @@
         <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Basic<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>의 모든 기능에 더해</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">203</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8050244774979733855" datatype="html">
@@ -6185,8 +6201,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="1825717711340685842" datatype="html">
-        <source>Export <x id="INTERPOLATION" equiv-text="{{ totalItems &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/></source>
-        <target state="new">Export <x id="INTERPOLATION" equiv-text="{{ totalItems &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/></target>
+        <source>Export <x id="INTERPOLATION" equiv-text="{{ (totalItems ?? 0) &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/></source>
+        <target state="new">Export <x id="INTERPOLATION" equiv-text="{{ (totalItems ?? 0) &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">72</context>
@@ -6217,7 +6233,7 @@
         <target state="translated">세부정보 보기</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">220</context>
+          <context context-type="linenumber">232</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/accounts-table/accounts-table.component.html</context>
@@ -6309,7 +6325,7 @@
         <target state="translated">현금</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">274</context>
+          <context context-type="linenumber">293</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1983771552391474467" datatype="html">
@@ -6317,7 +6333,7 @@
         <target state="translated">주식</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8432027249343784512" datatype="html">
@@ -6333,7 +6349,7 @@
         <target state="translated">입증</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1400496117963702686" datatype="html">
@@ -6341,7 +6357,7 @@
         <target state="new">Absolute Dividend Performance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">288</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1413778527796351850" datatype="html">
@@ -6393,8 +6409,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="5552246967241337741" datatype="html">
-        <source>If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, based on your total assets of <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> and a safe withdrawal rate (SWR) of</source>
-        <target state="translated">오늘 퇴사하면 탈퇴 가능 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> 연간<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> 또는 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> 매월<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, 귀하의 총 자산을 기준으로 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> 안전 인출률(SWR)은 다음과 같습니다.</target>
+        <source>If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerYear?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerMonth?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, based on your total assets of <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> and a safe withdrawal rate (SWR) of</source>
+        <target state="new">오늘 퇴사하면 탈퇴 가능 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> 연간<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> 또는 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> 매월<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, 귀하의 총 자산을 기준으로 <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> 안전 인출률(SWR)은 다음과 같습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">69</context>
@@ -6485,11 +6501,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
-          <context context-type="linenumber">464</context>
+          <context context-type="linenumber">475</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
-          <context context-type="linenumber">478</context>
+          <context context-type="linenumber">489</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
@@ -6517,7 +6533,7 @@
         <target state="translated">현재 시장가격은</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">856</context>
+          <context context-type="linenumber">858</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6563391987554512024" datatype="html">
@@ -6589,7 +6605,7 @@
         <target state="translated">절대적인 통화 성과</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">233</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1600023202562292052" datatype="html">
@@ -6625,7 +6641,7 @@
         <target state="translated">여기</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">347</context>
+          <context context-type="linenumber">355</context>
         </context-group>
       </trans-unit>
       <trans-unit id="775717789032174431" datatype="html">
@@ -6641,7 +6657,7 @@
         <target state="translated">통화 성과</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">257</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2593751087640318641" datatype="html">
@@ -6673,7 +6689,7 @@
         <target state="translated">MTD</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">265</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
@@ -6681,8 +6697,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="3995811497329884593" datatype="html">
-        <source>Expires <x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> 만료 (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</target>
+        <source>Expires <x id="INTERPOLATION" equiv-text="{{ formatRelativeTime({ date: element.subscription.expiresAt, language: user?.settings?.language }) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</source>
+        <target state="new"><x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> 만료 (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">34</context>
@@ -6693,7 +6709,7 @@
         <target state="translated">WTD</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">261</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
@@ -6729,7 +6745,7 @@
         <target state="new">Fetch market price</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4312517319627808728" datatype="html">
@@ -6745,7 +6761,7 @@
         <target state="translated">년도</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">271</context>
+          <context context-type="linenumber">273</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
@@ -6765,7 +6781,7 @@
         <target state="translated">연령</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">275</context>
+          <context context-type="linenumber">277</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
@@ -6850,7 +6866,7 @@
         <target state="translated">매일</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">247</context>
+          <context context-type="linenumber">249</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2998033970178753887" datatype="html">
@@ -6890,7 +6906,7 @@
         <target state="translated">거래</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -7062,7 +7078,7 @@
         <target state="translated">벤치마크</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7798195225890418363" datatype="html">
@@ -7150,7 +7166,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">277</context>
+          <context context-type="linenumber">302</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
@@ -7314,15 +7330,15 @@
         <target state="translated">오류</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">846</context>
+          <context context-type="linenumber">848</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">923</context>
+          <context context-type="linenumber">925</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">945</context>
+          <context context-type="linenumber">947</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2159130950882492111" datatype="html">
@@ -7374,7 +7390,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -7386,7 +7402,7 @@
         <target state="translated">역할</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2807800733729323332" datatype="html">
@@ -7442,7 +7458,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">280</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -7526,7 +7542,7 @@
         <target state="translated">에서 계좌를 개설할 계획이라면</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">312</context>
+          <context context-type="linenumber">320</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6608617124920241143" datatype="html">
@@ -7590,7 +7606,7 @@
         <target state="new"><x id="PH" equiv-text="codeToCopy"/>가 클립보드에 복사되었습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">228</context>
+          <context context-type="linenumber">208</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/value/value.component.ts</context>
@@ -7650,7 +7666,7 @@
         <target state="translated">추천 링크를 사용하고 1년 동안 Ghostfolio 프리미엄 멤버십을 얻으려면</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">340</context>
+          <context context-type="linenumber">348</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7530176451725943586" datatype="html">
@@ -7936,11 +7952,11 @@
         <target state="translated">오늘의 API 요청</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">164</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">148</context>
+          <context context-type="linenumber">152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6461489707382666493" datatype="html">
@@ -8024,7 +8040,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
@@ -8104,7 +8120,7 @@
         <target state="translated">AI 프롬프트가 클립보드에 복사되었습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1616747898909934803" datatype="html">
@@ -8128,7 +8144,7 @@
         <target state="new">Do you really want to convert the data source to <x id="PH" equiv-text="DataSource.MANUAL"/>?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">531</context>
+          <context context-type="linenumber">533</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8214660894894142610" datatype="html">
@@ -8152,7 +8168,7 @@
         <target state="translated">즉각적인</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">300</context>
+          <context context-type="linenumber">302</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8540986733881734625" datatype="html">
@@ -8160,7 +8176,7 @@
         <target state="translated">게으른</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">296</context>
+          <context context-type="linenumber">298</context>
         </context-group>
       </trans-unit>
       <trans-unit id="645724892732039501" datatype="html">
@@ -8176,7 +8192,7 @@
         <target state="translated">실시간</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">300</context>
+          <context context-type="linenumber">302</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8635324470284879211" datatype="html">
@@ -8184,7 +8200,7 @@
         <target state="translated">하루의 끝</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">296</context>
+          <context context-type="linenumber">298</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7109040016560023658" datatype="html">
@@ -8192,7 +8208,7 @@
         <target state="translated">오픈 Duck.ai</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">238</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5674286808255988565" datatype="html">
@@ -8208,11 +8224,11 @@
         <target state="translated">변동</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/treemap-chart/treemap-chart.component.ts</context>
-          <context context-type="linenumber">414</context>
+          <context context-type="linenumber">423</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1237494164624005096" datatype="html">
@@ -8240,23 +8256,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.component.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">191</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/treemap-chart/treemap-chart.component.ts</context>
-          <context context-type="linenumber">414</context>
+          <context context-type="linenumber">423</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/treemap-chart/treemap-chart.component.ts</context>
-          <context context-type="linenumber">427</context>
+          <context context-type="linenumber">436</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1325095699053123251" datatype="html">
@@ -8344,7 +8360,7 @@
         <target state="translated">정말로 이 사용자에 대한 새 보안 토큰을 생성하시겠습니까?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
-          <context context-type="linenumber">278</context>
+          <context context-type="linenumber">258</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8944214829054650479" datatype="html">
@@ -8352,7 +8368,7 @@
         <target state="translated">보안 토큰</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">253</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
@@ -8364,7 +8380,7 @@
         <target state="translated">보안 토큰 생성</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">238</context>
+          <context context-type="linenumber">250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2029980907058777630" datatype="html">
@@ -8413,7 +8429,7 @@
         <target state="new"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>)은(는) 이미 사용 중입니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">965</context>
+          <context context-type="linenumber">967</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5612909502553004436" datatype="html">
@@ -8421,7 +8437,7 @@
         <target state="translated"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/>(<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>)로 업데이트하는 동안 오류가 발생했습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">809</context>
+          <context context-type="linenumber">811</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4391289919356861627" datatype="html">
@@ -8437,7 +8453,7 @@
         <target state="translated">다음에 대한 API 액세스 권한이 있는</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">235</context>
+          <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5201942929131534075" datatype="html">
@@ -8461,7 +8477,7 @@
         <target state="translated">누구</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1071146706139680655" datatype="html">
@@ -8558,7 +8574,7 @@
         <target state="translated">데모 사용자 계정이 동기화되었습니다.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">334</context>
+          <context context-type="linenumber">314</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage" datatype="html">
@@ -8776,7 +8792,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">302</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2415916442984615985" datatype="html">
@@ -8788,7 +8804,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">297</context>
+          <context context-type="linenumber">305</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5643561794785412000" datatype="html">
@@ -8812,7 +8828,15 @@
         <target state="translated">이번 달</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">265</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7387635272539030076" datatype="html">
+        <source>new</source>
+        <target state="new">new</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
+          <context context-type="linenumber">223</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment" datatype="html">
@@ -9437,7 +9461,7 @@
         <target state="translated">등록일</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5606994816647505945" datatype="html">

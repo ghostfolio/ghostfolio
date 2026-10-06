@@ -486,7 +486,9 @@
         [locale]="locale"
         [precision]="precision"
         [unit]="displayedCurrency"
-        [value]="summary?.emergencyFund?.total"
+        [value]="
+          summary?.emergencyFund === null ? null : summary?.emergencyFund?.total
+        "
       />
     </div>
   </div>

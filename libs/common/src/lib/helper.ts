@@ -42,7 +42,7 @@ import {
   uk,
   zhCN
 } from 'date-fns/locale';
-import { get, isNil, isString } from 'lodash';
+import { get, isNil, isString } from 'lodash-es';
 
 import {
   DEFAULT_CURRENCY,
@@ -367,12 +367,9 @@ export function getAssetProfileIdentifier({
   return `${dataSource}-${symbol}`;
 }
 
-export function getBackgroundColor(aColorScheme: ColorScheme) {
+export function getBackgroundColor(aColorScheme?: ColorScheme) {
   return getCssVariable(
-    aColorScheme === 'DARK' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? '--dark-background'
-      : '--light-background'
+    isDarkColorScheme(aColorScheme) ? '--dark-background' : '--light-background'
   );
 }
 
@@ -478,6 +475,22 @@ export function getEmojiFlag(aCountryCode: string) {
   });
 }
 
+export function getHoldingName({
+  assetSubClass,
+  assetSubClassLabel,
+  name,
+  symbol
+}: Pick<
+  PortfolioPosition['assetProfile'],
+  'assetSubClass' | 'assetSubClassLabel' | 'name' | 'symbol'
+>) {
+  if (isCashPosition({ assetSubClass }) && assetSubClassLabel) {
+    return `${assetSubClassLabel} (${symbol})`;
+  }
+
+  return name ?? symbol;
+}
+
 export function getLocale() {
   return navigator.language ?? DEFAULT_LOCALE;
 }
@@ -553,10 +566,9 @@ export function getSum(aArray: Big[]) {
   return new Big(0);
 }
 
-export function getTextColor(aColorScheme: ColorScheme) {
+export function getTextColor(aColorScheme?: ColorScheme) {
   const cssVariable = getCssVariable(
-    aColorScheme === 'DARK' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
+    isDarkColorScheme(aColorScheme)
       ? '--light-primary-text'
       : '--dark-primary-text'
   );
@@ -632,6 +644,14 @@ export function isCurrencySymbol(aSymbol: string) {
     ) &&
     isCurrency(aSymbol.substring(aSymbol.length - DEFAULT_CURRENCY.length))
   );
+}
+
+export function isDarkColorScheme(aColorScheme?: ColorScheme | null) {
+  if (aColorScheme) {
+    return aColorScheme === 'DARK';
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
 export function isDerivedCurrency(aCurrency: string) {

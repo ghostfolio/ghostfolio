@@ -5,12 +5,12 @@ import {
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { formatRelativeTime } from '@ghostfolio/client/util/date.util';
 import { DEFAULT_LOCALE, DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
   canDeleteUser,
   getCountryName,
-  getDateFnsLocale,
   getDateFormatString,
   getEmojiFlag
 } from '@ghostfolio/common/helper';
@@ -49,11 +49,6 @@ import {
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import {
-  differenceInSeconds,
-  formatDistanceToNowStrict,
-  parseISO
-} from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
   contractOutline,
@@ -93,6 +88,7 @@ export class GfAdminUsersComponent implements OnInit {
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
   protected readonly canDeleteUser = canDeleteUser;
+  protected readonly formatRelativeTime = formatRelativeTime;
   protected readonly getCountryName = getCountryName;
   protected readonly getEmojiFlag = getEmojiFlag;
   protected hasPermissionForSubscription: boolean;
@@ -209,22 +205,6 @@ export class GfAdminUsersComponent implements OnInit {
       });
   }
 
-  protected formatDistanceToNow(aDateString: string) {
-    if (aDateString) {
-      const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
-        addSuffix: true,
-        locale: getDateFnsLocale(this.user?.settings?.language)
-      });
-
-      return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
-        60
-        ? $localize`just now`
-        : distanceString;
-    }
-
-    return '';
-  }
-
   protected onChangePage(page: PageEvent) {
     this.fetchUsers({
       pageIndex: page.pageIndex
@@ -332,6 +312,7 @@ export class GfAdminUsersComponent implements OnInit {
         currentUserId: this.user?.id,
         deviceType: this.deviceType(),
         hasPermissionForSubscription: this.hasPermissionForSubscription,
+        language: this.user?.settings?.language,
         locale: this.user?.settings?.locale ?? DEFAULT_LOCALE,
         userId: aUserId
       } satisfies UserDetailDialogParams,

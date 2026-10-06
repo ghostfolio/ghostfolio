@@ -7,8 +7,8 @@ import {
 } from '@ghostfolio/common/config';
 import { canOpenHoldingDetail } from '@ghostfolio/common/helper';
 import {
-  HistoricalDataItem,
   InvestmentItem,
+  LineChartItem,
   PortfolioInvestmentsResponse,
   PortfolioPerformance,
   PortfolioPosition,
@@ -51,7 +51,7 @@ import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical } from 'ionicons/icons';
-import { isNumber, keyBy, sortBy, union } from 'lodash';
+import { isNumber, keyBy, sortBy, union } from 'lodash-es';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -79,7 +79,7 @@ import { forkJoin } from 'rxjs';
 })
 export class GfAnalysisPageComponent implements OnInit {
   protected benchmark?: Partial<SymbolProfile>;
-  protected benchmarkDataItems: HistoricalDataItem[] = [];
+  protected benchmarkDataItems: LineChartItem[] = [];
   protected readonly benchmarks: Partial<SymbolProfile>[];
   protected bottom3: PortfolioPosition[];
   protected dividendsByGroup: InvestmentItem[];
@@ -101,8 +101,8 @@ export class GfAnalysisPageComponent implements OnInit {
   ];
   protected performance: PortfolioPerformance;
   protected readonly PerformanceCalculationType = PerformanceCalculationType;
-  protected performanceDataItems: HistoricalDataItem[];
-  protected performanceDataItemsInPercentage: HistoricalDataItem[];
+  protected performanceDataItems: LineChartItem[];
+  protected performanceDataItemsInPercentage: LineChartItem[];
   protected readonly portfolioEvolutionDataLabel = $localize`Investment`;
   protected precision = 2;
   protected savingsRatePerMonth: number | undefined;
@@ -378,18 +378,24 @@ export class GfAnalysisPageComponent implements OnInit {
               });
             }
 
-            this.performanceDataItems.push({
-              date,
-              value: isNumber(valueWithCurrencyEffect)
-                ? valueWithCurrencyEffect
-                : valueInPercentage
-            });
+            const value = isNumber(valueWithCurrencyEffect)
+              ? valueWithCurrencyEffect
+              : valueInPercentage;
+
+            if (isNumber(value)) {
+              this.performanceDataItems.push({
+                date,
+                value
+              });
+            }
           }
 
-          this.performanceDataItemsInPercentage.push({
-            date,
-            value: netPerformanceInPercentageWithCurrencyEffect
-          });
+          if (isNumber(netPerformanceInPercentageWithCurrencyEffect)) {
+            this.performanceDataItemsInPercentage.push({
+              date,
+              value: netPerformanceInPercentageWithCurrencyEffect
+            });
+          }
         }
 
         if (

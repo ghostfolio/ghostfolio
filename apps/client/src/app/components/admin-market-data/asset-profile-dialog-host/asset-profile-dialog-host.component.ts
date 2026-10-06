@@ -1,8 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  DEFAULT_COLOR_SCHEME,
-  DEFAULT_LOCALE
-} from '@ghostfolio/common/config';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { DataSource } from '@ghostfolio/prisma/enums';
@@ -150,7 +147,7 @@ export class GfAssetProfileDialogHostComponent implements OnDestroy, OnInit {
       data: {
         dataSource,
         symbol,
-        colorScheme: user?.settings.colorScheme ?? DEFAULT_COLOR_SCHEME,
+        colorScheme: user?.settings?.colorScheme,
         deviceType: this.deviceType(),
         locale: user?.settings?.locale ?? DEFAULT_LOCALE
       } satisfies AssetProfileDialogParams,

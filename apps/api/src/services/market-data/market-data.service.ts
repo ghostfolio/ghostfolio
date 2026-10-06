@@ -248,7 +248,7 @@ export class MarketDataService {
             state: state as MarketDataState
           },
           where: {
-            dataSource_date_symbol: {
+            dataSource_symbol_date: {
               dataSource: dataSource as DataSource,
               date: date as Date,
               symbol: symbol as string

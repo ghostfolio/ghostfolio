@@ -3,7 +3,11 @@ import {
   activityDummyData,
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import { WHERE_ACTIVITY_NOT_DRAFT } from '@ghostfolio/api/helper/activity.helper';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
@@ -11,7 +15,11 @@ import {
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
 
-import { AssetProfileSplit, DataSource } from '@prisma/client';
+import {
+  AssetProfileSplit,
+  DataSource,
+  Type as ActivityType
+} from '@prisma/client';
 import { Big } from 'big.js';
 
 import { ActivitiesService } from './activities.service';
@@ -39,6 +47,85 @@ describe('ActivitiesService', () => {
       null,
       null
     );
+  });
+
+  describe('getActivities', () => {
+    it('returns the activities with the asset profile but without the relation to the symbol profile', async () => {
+      const assetProfile = {
+        ...assetProfileDummyData,
+        currency: 'USD',
+        dataSource: DataSource.YAHOO,
+        name: 'Apple Inc.',
+        symbol: 'AAPL'
+      };
+
+      const findMany = jest.fn().mockResolvedValue([
+        {
+          ...activityDummyData,
+          account: null,
+          currency: 'USD',
+          date: parseDate('2021-01-01'),
+          fee: 1,
+          id: 'activity-id',
+          quantity: 10,
+          SymbolProfile: {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            symbol: 'AAPL'
+          },
+          tags: [],
+          type: 'BUY',
+          unitPrice: 100
+        }
+      ]);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          toCurrencyAtDate: jest.fn().mockResolvedValue(0)
+        } as unknown as ExchangeRateDataService,
+        null,
+        {
+          order: {
+            findMany,
+            count: jest.fn().mockResolvedValue(1)
+          }
+        } as unknown as PrismaService,
+        {
+          getSymbolProfiles: jest
+            .fn()
+            .mockResolvedValue([
+              { ...assetProfile, dataSource: DataSource.MANUAL },
+              assetProfile
+            ])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      const { activities } = await service.getActivities({
+        userCurrency: 'USD',
+        userId: 'user-id'
+      });
+
+      expect(findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          include: expect.objectContaining({
+            SymbolProfile: {
+              select: { currency: true, dataSource: true, symbol: true }
+            }
+          })
+        })
+      );
+      expect(activities).toHaveLength(1);
+      expect(activities[0]).not.toHaveProperty('SymbolProfile');
+      expect(activities[0].assetProfile).toBe(assetProfile);
+    });
   });
 
   describe('getActivitiesForPortfolioCalculator', () => {
@@ -298,6 +385,43 @@ describe('ActivitiesService', () => {
 
       return result.activities[0];
     }
+  });
+
+  describe('getLatestActivity', () => {
+    it('filters by type and unit price and excludes draft activities', async () => {
+      const findFirst = jest.fn().mockResolvedValue(null);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        { order: { findFirst } } as unknown as PrismaService,
+        null,
+        null
+      );
+
+      await service.getLatestActivity({
+        dataSource: DataSource.YAHOO,
+        symbol: 'AAPL',
+        types: [ActivityType.BUY, ActivityType.SELL]
+      });
+
+      expect(findFirst).toHaveBeenCalledWith({
+        orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
+        where: {
+          ...WHERE_ACTIVITY_NOT_DRAFT,
+          SymbolProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+          type: { in: [ActivityType.BUY, ActivityType.SELL] },
+          unitPrice: { gt: 0 }
+        }
+      });
+    });
   });
 });
 

@@ -100,24 +100,24 @@ import { GfValueComponent } from '../value/value.component';
   templateUrl: './activities-table.component.html'
 })
 export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
-  @Input() baseCurrency: string;
-  @Input() deviceType: string;
-  @Input() hasActivities: boolean;
-  @Input() hasPermissionToCreateActivity: boolean;
-  @Input() hasPermissionToDeleteActivity: boolean;
-  @Input() hasPermissionToExportActivities: boolean;
-  @Input() hasPermissionToFilterByType: boolean;
-  @Input() hasPermissionToImportActivities: boolean;
-  @Input() hasPermissionToOpenDetails = true;
-  @Input() hasPermissionToUpdateActivity: boolean;
-  @Input() locale = getLocale();
-  @Input() pageIndex: number;
-  @Input() pageSize = DEFAULT_PAGE_SIZE;
-  @Input() showActions = true;
-  @Input() sortColumn: string;
-  @Input() sortDirection: SortDirection;
-  @Input() sortDisabled = false;
-  @Input() totalItems = Number.MAX_SAFE_INTEGER;
+  @Input() public baseCurrency?: string;
+  @Input() public deviceType: string;
+  @Input() public hasActivities: boolean;
+  @Input() public hasPermissionToCreateActivity: boolean;
+  @Input() public hasPermissionToDeleteActivity: boolean;
+  @Input() public hasPermissionToExportActivities: boolean;
+  @Input() public hasPermissionToFilterByType?: boolean = false;
+  @Input() public hasPermissionToImportActivities: boolean;
+  @Input() public hasPermissionToOpenDetails = true;
+  @Input() public hasPermissionToUpdateActivity: boolean;
+  @Input() public locale?: string = getLocale();
+  @Input() public pageIndex: number;
+  @Input() public pageSize = DEFAULT_PAGE_SIZE;
+  @Input() public showActions = true;
+  @Input() public sortColumn: string;
+  @Input() public sortDirection: SortDirection;
+  @Input() public sortDisabled = false;
+  @Input() public totalItems?: number = Number.MAX_SAFE_INTEGER;
 
   @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();

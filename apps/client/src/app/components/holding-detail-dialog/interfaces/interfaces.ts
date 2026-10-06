@@ -3,7 +3,7 @@ import { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface HoldingDetailDialogParams {
   baseCurrency: string;
-  colorScheme: ColorScheme;
+  colorScheme?: ColorScheme;
   dataSource: DataSource;
   deviceType: string;
   hasPermissionToAccessAdminControl: boolean;

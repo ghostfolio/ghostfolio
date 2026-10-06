@@ -36,6 +36,7 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
 import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-dialog/interfaces/interfaces';
@@ -51,6 +52,7 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
+    NgxSkeletonLoaderModule,
     RouterModule
   ],
   selector: 'gf-admin-platform',
@@ -61,6 +63,7 @@ export class GfAdminPlatformComponent implements OnInit {
   public readonly locale = input(getLocale());
 
   protected dataSource = new MatTableDataSource<Platform>();
+
   protected readonly displayedColumns = [
     'icon',
     'name',
@@ -68,12 +71,15 @@ export class GfAdminPlatformComponent implements OnInit {
     'accounts',
     'actions'
   ];
+
+  protected isLoading = false;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected platforms: Platform[];
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+
   private readonly paginator = viewChild.required(MatPaginator);
   private readonly sort = viewChild.required(MatSort);
 
@@ -149,6 +155,8 @@ export class GfAdminPlatformComponent implements OnInit {
   }
 
   private fetchPlatforms() {
+    this.isLoading = true;
+
     this.adminService
       .fetchPlatforms()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -161,6 +169,8 @@ export class GfAdminPlatformComponent implements OnInit {
         this.dataSource.sortingDataAccessor = getLowercase;
 
         this.dataService.updateInfo();
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

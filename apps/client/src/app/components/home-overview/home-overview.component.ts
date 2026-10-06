@@ -8,6 +8,7 @@ import {
   DEFAULT_LOCALE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
+import { isCashPosition } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   LineChartItem,
@@ -153,6 +154,8 @@ export class GfHomeOverviewComponent implements OnInit {
   }
 
   private update() {
+    const userSettings = this.user()?.settings;
+
     this.historicalDataItems.set(null);
     this.isLoadingPerformance.set(true);
 
@@ -162,17 +165,27 @@ export class GfHomeOverviewComponent implements OnInit {
       this.dataService
         .fetchPortfolioHoldings({
           filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }],
-          range: this.user()?.settings?.dateRange
+          range: userSettings?.dateRange
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ holdings }) => {
-          this.holdings.set(holdings);
+          const baseCurrency = userSettings?.baseCurrency ?? DEFAULT_CURRENCY;
+
+          this.holdings.set(
+            holdings.filter(({ assetProfile }) => {
+              return !(
+                isCashPosition(assetProfile) &&
+                assetProfile.currency === baseCurrency &&
+                assetProfile.symbol === baseCurrency
+              );
+            })
+          );
         });
     }
 
     this.dataService
       .fetchPortfolioPerformance({
-        range: this.user()?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+        range: userSettings?.dateRange ?? DEFAULT_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {

@@ -23,6 +23,7 @@
     <div class="chart-container mb-3">
       <gf-investment-chart
         class="h-100"
+        [colorScheme]="user?.settings?.colorScheme"
         [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
         [isInPercentage]="showValuesInPercentage()"

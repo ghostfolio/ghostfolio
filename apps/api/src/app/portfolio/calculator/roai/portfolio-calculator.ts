@@ -32,7 +32,7 @@ import {
   isBefore,
   isThisYear
 } from 'date-fns';
-import { sum } from 'lodash';
+import { sum } from 'lodash-es';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(

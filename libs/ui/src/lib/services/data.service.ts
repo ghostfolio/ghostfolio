@@ -34,6 +34,7 @@ import {
   AssetResponse,
   BenchmarkMarketDataDetailsResponse,
   BenchmarkResponse,
+  CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
   DataProviderHistoricalResponse,
@@ -82,7 +83,7 @@ import { inject, Service } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
 import { format, parseISO } from 'date-fns';
-import { cloneDeep, groupBy, isNumber } from 'lodash';
+import { cloneDeep, groupBy, isNumber } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -873,7 +874,7 @@ export class DataService {
   }
 
   public postActivity(aOrder: CreateOrderDto) {
-    return this.http.post<Order>('/api/v1/activities', aOrder);
+    return this.http.post<CreateActivityResponse>('/api/v1/activities', aOrder);
   }
 
   public postApiKey() {

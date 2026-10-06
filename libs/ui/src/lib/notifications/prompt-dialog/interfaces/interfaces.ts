@@ -4,4 +4,5 @@ export interface PromptDialogParams {
   discardLabel: string;
   title: string;
   valueLabel?: string;
+  valueSuffix?: string;
 }

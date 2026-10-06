@@ -17,6 +17,7 @@ import {
   IsArray,
   IsEnum,
   IsISO8601,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -24,7 +25,7 @@ import {
   Min,
   Validate
 } from 'class-validator';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 
 export class UpdateOrderDto {
   @IsOptional()
@@ -72,8 +73,12 @@ export class UpdateOrderDto {
   @Min(0)
   quantity: number;
 
+  @IsNotEmpty()
   @IsString()
   @MaxLength(SYMBOL_MAXIMUM_LENGTH)
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) ? value.trim() : value
+  )
   symbol: string;
 
   @ArrayUnique()
