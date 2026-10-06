@@ -334,37 +334,6 @@ export class AssetProfilesService {
     const symbolProfiles = symbolProfileResult[0];
     let count = symbolProfileResult[1];
 
-    const lastMarketPrices = await this.prismaService.marketData.findMany({
-      distinct: ['dataSource', 'symbol'],
-      orderBy: { date: 'desc' },
-      select: {
-        dataSource: true,
-        marketPrice: true,
-        symbol: true
-      },
-      where: {
-        dataSource: {
-          in: symbolProfiles.map(({ dataSource }) => {
-            return dataSource;
-          })
-        },
-        symbol: {
-          in: symbolProfiles.map(({ symbol }) => {
-            return symbol;
-          })
-        }
-      }
-    });
-
-    const lastMarketPriceMap = new Map<string, number>();
-
-    for (const { dataSource, marketPrice, symbol } of lastMarketPrices) {
-      lastMarketPriceMap.set(
-        getAssetProfileIdentifier({ dataSource, symbol }),
-        marketPrice
-      );
-    }
-
     const dataProviderInfoMap = new Map<DataSource, DataProviderInfo>(
       [
         ...new Set(
@@ -405,9 +374,9 @@ export class AssetProfilesService {
 
         const countriesCount = countries ? Object.keys(countries).length : 0;
 
-        const lastMarketPrice = lastMarketPriceMap.get(
-          getAssetProfileIdentifier({ dataSource, symbol })
-        );
+        const lastMarketPrice = (
+          await this.marketDataService.getLatest({ dataSource, symbol })
+        )?.marketPrice;
 
         const marketDataItemCount =
           marketDataItems.find((marketDataItem) => {
@@ -552,42 +521,10 @@ export class AssetProfilesService {
   private async getAssetProfilesForCurrencies(): Promise<AssetProfilesResponse> {
     const currencyPairs = this.exchangeRateDataService.getCurrencyPairs();
 
-    const [lastMarketPrices, marketDataItems] = await Promise.all([
-      this.prismaService.marketData.findMany({
-        distinct: ['dataSource', 'symbol'],
-        orderBy: { date: 'desc' },
-        select: {
-          dataSource: true,
-          marketPrice: true,
-          symbol: true
-        },
-        where: {
-          dataSource: {
-            in: currencyPairs.map(({ dataSource }) => {
-              return dataSource;
-            })
-          },
-          symbol: {
-            in: currencyPairs.map(({ symbol }) => {
-              return symbol;
-            })
-          }
-        }
-      }),
-      this.prismaService.marketData.groupBy({
-        _count: true,
-        by: ['dataSource', 'symbol']
-      })
-    ]);
-
-    const lastMarketPriceMap = new Map<string, number>();
-
-    for (const { dataSource, marketPrice, symbol } of lastMarketPrices) {
-      lastMarketPriceMap.set(
-        getAssetProfileIdentifier({ dataSource, symbol }),
-        marketPrice
-      );
-    }
+    const marketDataItems = await this.prismaService.marketData.groupBy({
+      _count: true,
+      by: ['dataSource', 'symbol']
+    });
 
     const assetProfilePromises: Promise<AssetProfileItem>[] = currencyPairs.map(
       async ({ dataSource, symbol }) => {
@@ -601,9 +538,9 @@ export class AssetProfilesService {
             await this.activitiesService.getStatisticsByCurrency(currency));
         }
 
-        const lastMarketPrice = lastMarketPriceMap.get(
-          getAssetProfileIdentifier({ dataSource, symbol })
-        );
+        const lastMarketPrice = (
+          await this.marketDataService.getLatest({ dataSource, symbol })
+        )?.marketPrice;
 
         const marketDataItemCount =
           marketDataItems.find((marketDataItem) => {
