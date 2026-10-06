@@ -22,7 +22,7 @@ import { close } from 'ionicons/icons';
 export class GfDialogHeaderComponent {
   @Input() deviceType: string;
   @Input() position: 'center' | 'left' = 'left';
-  @Input() title: string;
+  @Input() title?: string | null;
 
   @Output() closeButtonClicked = new EventEmitter<void>();
 
