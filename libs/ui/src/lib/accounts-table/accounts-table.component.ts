@@ -63,7 +63,9 @@ export class GfAccountsTableComponent {
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly hasPermissionToUpdateAccount = input<boolean>();
   public readonly locale = input(getLocale(), {
-    transform: (value?: string) => value ?? getLocale()
+    transform: (value?: string) => {
+      return value ?? getLocale();
+    }
   });
   public readonly showActions = input<boolean>();
   public readonly showActivitiesCount = input(true);
