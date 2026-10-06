@@ -909,6 +909,17 @@ export class ActivitiesService {
     ) {
       delete data.SymbolProfile.connect;
       delete data.SymbolProfile.update.name;
+
+      const activityToUpdate = await this.prismaService.order.findUnique({
+        select: { SymbolProfile: { select: { userId: true } } },
+        where
+      });
+
+      // Update the asset profile only if it is a custom asset profile of the
+      // user, but not one of the admin, of a data provider or of another user
+      if (activityToUpdate?.SymbolProfile.userId !== userId) {
+        delete data.SymbolProfile;
+      }
     } else {
       delete data.SymbolProfile.update;
 
