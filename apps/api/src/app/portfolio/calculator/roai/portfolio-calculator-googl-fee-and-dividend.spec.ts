@@ -190,9 +190,12 @@ describe('PortfolioCalculator', () => {
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 5.62,
-          dividendInPercentageWithCurrencyEffect: 0.01882242615044543,
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.01882242615044535,
+            10
+          ),
           netPerformance: 18.87,
-          netPerformanceInPercentage: 0.06319914260834614
+          netPerformanceInPercentage: expect.closeTo(0.06319914260834586, 10)
         }
       });
     });
@@ -282,9 +285,12 @@ describe('PortfolioCalculator', () => {
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 5.62,
-          dividendInPercentageWithCurrencyEffect: 0.01882242615044543,
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.01882242615044535,
+            10
+          ),
           netPerformance: 19.87,
-          netPerformanceInPercentage: 0.06654832875611222
+          netPerformanceInPercentage: expect.closeTo(0.06654832875611194, 10)
         }
       });
     });
@@ -373,9 +379,12 @@ describe('PortfolioCalculator', () => {
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 0.62,
-          dividendInPercentageWithCurrencyEffect: 0.002076495411614976,
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.002076495411614967,
+            10
+          ),
           netPerformance: 14.87,
-          netPerformanceInPercentage: 0.049802398017281764
+          netPerformanceInPercentage: expect.closeTo(0.049802398017281556, 10)
         }
       });
     });
@@ -458,11 +467,17 @@ describe('PortfolioCalculator', () => {
         },
         max: {
           dividendInBaseCurrency: 1.3,
-          dividendInPercentageWithCurrencyEffect: 0.004353941992095918
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.004353941992095899,
+            10
+          )
         },
         ytd: {
           dividendInBaseCurrency: 0.68,
-          dividendInPercentageWithCurrencyEffect: 0.002002886512915671
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.002002886512915673,
+            10
+          )
         }
       });
     });

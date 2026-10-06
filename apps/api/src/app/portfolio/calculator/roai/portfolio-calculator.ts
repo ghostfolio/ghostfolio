@@ -315,7 +315,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     symbol
   }: {
     chartDates: string[];
-    daysUntilNextChartDate: { [date: string]: number };
+    daysUntilNextChartDate: number[];
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
@@ -678,7 +678,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         // date of the range counts for this day only.
         const investmentDays = isLastChartDateOfRange
           ? 1
-          : daysUntilNextChartDate[date];
+          : daysUntilNextChartDate[i];
 
         if (
           investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big &&
