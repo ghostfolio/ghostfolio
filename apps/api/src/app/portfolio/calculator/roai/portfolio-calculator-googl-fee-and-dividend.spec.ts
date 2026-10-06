@@ -234,8 +234,8 @@ describe('PortfolioCalculator', () => {
           unitPriceInAssetProfileCurrency: 0.62
         },
         {
-          // The holding has a dividend, but no average investment. Thus the
-          // dividend percentage stays 0, like the dividend yield
+          // The holding has a dividend, but no average investment. Its dividend
+          // is part of the net performance, and thus of the dividend percentage
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -274,7 +274,7 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
         dividendInBaseCurrency: 5.62,
-        dividendInPercentageWithCurrencyEffect: 0,
+        dividendInPercentageWithCurrencyEffect: 0.01882242615044544,
         netPerformance: 19.87,
         netPerformanceInPercentage: 0.06654832875611226
       });
@@ -282,7 +282,7 @@ describe('PortfolioCalculator', () => {
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 5.62,
-          dividendInPercentageWithCurrencyEffect: 0,
+          dividendInPercentageWithCurrencyEffect: 0.01882242615044535,
           netPerformance: 19.87,
           netPerformanceInPercentage: 0.06654832875611194
         }
@@ -365,7 +365,7 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
         dividendInBaseCurrency: 0.62,
-        dividendInPercentageWithCurrencyEffect: 0,
+        dividendInPercentageWithCurrencyEffect: 0.0020764954116149776,
         netPerformance: 14.87,
         netPerformanceInPercentage: 0.0498023980172818
       });
@@ -373,7 +373,7 @@ describe('PortfolioCalculator', () => {
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 0.62,
-          dividendInPercentageWithCurrencyEffect: 0,
+          dividendInPercentageWithCurrencyEffect: 0.002076495411614967,
           netPerformance: 14.87,
           netPerformanceInPercentage: 0.049802398017281556
         }

@@ -223,19 +223,15 @@ export abstract class PortfolioCalculator {
   ): PortfolioSnapshot;
 
   protected abstract calculatePerformancePercentages({
-    accumulatedValuesByDate,
-    holdings
+    accumulatedValuesByDate
   }: {
     accumulatedValuesByDate: { [date: string]: AccumulatedValues };
-    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages };
 
   protected abstract calculatePerformancePercentagesForDateRange({
-    historicalDataItems,
-    holdings
+    historicalDataItems
   }: {
     historicalDataItems: HistoricalDataItem[];
-    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages };
 
   @LogPerformance
@@ -680,8 +676,7 @@ export abstract class PortfolioCalculator {
       });
 
     const performancePercentagesByDate = this.calculatePerformancePercentages({
-      accumulatedValuesByDate,
-      holdings: positionsIncludedInHoldings
+      accumulatedValuesByDate
     });
 
     const historicalData: HistoricalDataItem[] = Object.entries(
@@ -1443,8 +1438,7 @@ export abstract class PortfolioCalculator {
 
     const performancePercentagesByDate =
       this.calculatePerformancePercentagesForDateRange({
-        historicalDataItems: historicalDataItemsOfDateRange,
-        holdings: this.snapshot.positions
+        historicalDataItems: historicalDataItemsOfDateRange
       });
 
     const chart = historicalDataItemsOfDateRange.map((historicalDataItem) => {
