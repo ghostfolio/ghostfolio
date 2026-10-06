@@ -32,6 +32,7 @@ describe('ImportService', () => {
   let createActivity: jest.Mock;
   let gatherSymbols: jest.Mock;
   let importService: ImportService;
+  let updateManyMarketData: jest.Mock;
 
   beforeEach(() => {
     const configuration = {
@@ -43,6 +44,7 @@ describe('ImportService', () => {
     addSymbolProfile = jest.fn();
     createActivity = jest.fn();
     gatherSymbols = jest.fn();
+    updateManyMarketData = jest.fn();
 
     const validateActivities = jest.fn(
       ({ activitiesDto }: { activitiesDto: CreateOrderDto[] }) => {
@@ -85,7 +87,7 @@ describe('ImportService', () => {
       {
         toCurrencyAtDate: jest.fn().mockResolvedValue(0)
       } as unknown as ExchangeRateDataService,
-      { updateMany: jest.fn() } as unknown as MarketDataService,
+      { updateMany: updateManyMarketData } as unknown as MarketDataService,
       null,
       null,
       {
@@ -315,6 +317,79 @@ describe('ImportService', () => {
       const { symbol } = addSymbolProfile.mock.calls[0][0];
 
       expect(isUUID(symbol)).toBe(true);
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.create
+      ).toMatchObject({ symbol, dataSource: DataSource.MANUAL });
+    });
+
+    it('keeps the symbol with the prefix as the name of a custom asset profile without a name', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            symbol: 'GF_COPX'
+          }
+        ]
+      });
+
+      expect(addSymbolProfile.mock.calls[0][0].name).toBe('GF_COPX');
+    });
+
+    it('merges the market data of asset profiles with the same symbol with the prefix', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [{ date: '2024-01-01', marketPrice: 100 }],
+            name: 'Global X Copper Miners ETF',
+            symbol: 'GF_COPX'
+          },
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [{ date: '2024-01-02', marketPrice: 101 }],
+            name: 'Global X Copper Miners ETF',
+            symbol: 'GF_COPX'
+          }
+        ]
+      });
+
+      const { symbol } = addSymbolProfile.mock.calls[0][0];
+
+      expect(addSymbolProfile).toHaveBeenCalledTimes(1);
+
+      expect(updateManyMarketData.mock.calls[0][0].data).toMatchObject([
+        { symbol, date: '2024-01-01', marketPrice: 100 },
+        { symbol, date: '2024-01-02', marketPrice: 101 }
+      ]);
 
       expect(
         createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.create

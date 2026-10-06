@@ -61,35 +61,16 @@ describe('ActivitiesService', () => {
       expect(assetProfile.name).toBe('GF_COPX');
     });
 
-    it.each(['1ad7d4a2-6b2d-4e0f-9b1f-2c0f8d3e5a7b', 'GF_COPX'])(
-      'creates a custom asset profile with a new UUID if the asset profile of %s belongs to another user',
-      async (symbol) => {
-        const assetProfile = await getCreatedAssetProfile({
-          symbol,
-          existingAssetProfile: { userId: 'other-user-id' }
-        });
+    it('connects to the existing asset profile of a symbol with the prefix', async () => {
+      const assetProfile = await getCreatedAssetProfile({
+        existingAssetProfile: { id: 'asset-profile-id' },
+        symbol: 'GF_COPX'
+      });
 
-        expect(isUUID(assetProfile.symbol)).toBe(true);
-        expect(assetProfile.symbol).not.toBe(symbol);
-      }
-    );
+      expect(assetProfile.symbol).toBe('GF_COPX');
+    });
 
-    it.each([
-      { owner: 'the admin', userId: null },
-      { owner: 'the user', userId: 'user-id' }
-    ])(
-      'connects to the asset profile of $owner for a symbol with the prefix',
-      async ({ userId }) => {
-        const assetProfile = await getCreatedAssetProfile({
-          existingAssetProfile: { userId },
-          symbol: 'GF_COPX'
-        });
-
-        expect(assetProfile.symbol).toBe('GF_COPX');
-      }
-    );
-
-    it('connects to the custom asset profile of a UUID symbol', async () => {
+    it('creates a custom asset profile with the requested UUID if no asset profile exists', async () => {
       const symbol = '1ad7d4a2-6b2d-4e0f-9b1f-2c0f8d3e5a7b';
 
       const assetProfile = await getCreatedAssetProfile({ symbol });
@@ -101,7 +82,7 @@ describe('ActivitiesService', () => {
       existingAssetProfile,
       symbol
     }: {
-      existingAssetProfile?: { userId: string | null };
+      existingAssetProfile?: { id: string };
       symbol: string;
     }) {
       const create = jest.fn(({ data }: Prisma.OrderCreateArgs) => {
@@ -152,7 +133,15 @@ describe('ActivitiesService', () => {
         userId: 'user-id'
       });
 
-      return create.mock.calls[0][0].data.SymbolProfile.connectOrCreate.create;
+      const { create: assetProfile, where } =
+        create.mock.calls[0][0].data.SymbolProfile.connectOrCreate;
+
+      expect(where.dataSource_symbol).toEqual({
+        dataSource: DataSource.MANUAL,
+        symbol: assetProfile.symbol
+      });
+
+      return assetProfile;
     }
   });
 

@@ -238,29 +238,25 @@ export function canOpenHoldingDetail({
 }
 
 /**
- * Checks if a user can use the symbol of a custom asset profile, either to
- * connect to the existing asset profile or to create a new one
+ * Checks if the symbol of a custom asset profile can be used, either to connect
+ * to the existing asset profile or to create a new one. The prefix is reserved
+ * for the asset profiles of the admin, thus a new asset profile cannot use it.
  */
 export function canUseCustomAssetProfileSymbol({
   assetProfile,
-  symbol,
-  userId
+  symbol
 }: {
-  assetProfile?: Pick<SymbolProfile, 'userId'> | null;
+  assetProfile: Pick<SymbolProfile, 'id'> | null;
   symbol: string;
-  userId: string;
 }): boolean {
   if (!isValidCustomAssetProfileSymbol(symbol)) {
     return false;
   }
 
   if (assetProfile) {
-    // Same as in the search: the custom asset profiles of the user and of the
-    // admin
-    return !assetProfile.userId || assetProfile.userId === userId;
+    return true;
   }
 
-  // The prefix is reserved for the asset profiles of the admin
   return !hasGhostfolioPrefix(symbol);
 }
 

@@ -41,59 +41,46 @@ describe('Helper', () => {
   });
 
   describe('Can use custom asset profile symbol', () => {
+    const assetProfile = { id: 'asset-profile-id' };
     const symbol = '7e91b7d4-1430-4212-8380-289a06c9bbc1';
-    const userId = 'user-id';
 
     it('Free-text symbol', () => {
       expect(
         canUseCustomAssetProfileSymbol({
-          userId,
+          assetProfile: null,
           symbol: 'Penthouse Apartment'
         })
       ).toEqual(false);
     });
 
     it('New asset profile with UUID', () => {
-      expect(canUseCustomAssetProfileSymbol({ symbol, userId })).toEqual(true);
+      expect(
+        canUseCustomAssetProfileSymbol({ symbol, assetProfile: null })
+      ).toEqual(true);
     });
 
     it('New asset profile with Ghostfolio prefix', () => {
       expect(
         canUseCustomAssetProfileSymbol({
-          userId,
+          assetProfile: null,
           symbol: 'GF_PENTHOUSE_APARTMENT'
         })
       ).toEqual(false);
     });
 
-    it('Asset profile of the admin', () => {
+    it('Existing asset profile with UUID', () => {
+      expect(canUseCustomAssetProfileSymbol({ assetProfile, symbol })).toEqual(
+        true
+      );
+    });
+
+    it('Existing asset profile with Ghostfolio prefix', () => {
       expect(
         canUseCustomAssetProfileSymbol({
-          userId,
-          assetProfile: { userId: null },
+          assetProfile,
           symbol: 'GF_PENTHOUSE_APARTMENT'
         })
       ).toEqual(true);
-    });
-
-    it('Asset profile of the user', () => {
-      expect(
-        canUseCustomAssetProfileSymbol({
-          symbol,
-          userId,
-          assetProfile: { userId }
-        })
-      ).toEqual(true);
-    });
-
-    it('Asset profile of another user', () => {
-      expect(
-        canUseCustomAssetProfileSymbol({
-          symbol,
-          userId,
-          assetProfile: { userId: 'other-user-id' }
-        })
-      ).toEqual(false);
     });
   });
 

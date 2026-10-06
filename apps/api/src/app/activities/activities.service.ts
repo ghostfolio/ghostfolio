@@ -226,13 +226,11 @@ export class ActivitiesService {
       let name = data.SymbolProfile.connectOrCreate.create.name;
       let symbol: string;
 
-      // Look up valid custom asset profile symbols only, since a free text is
-      // never the symbol of a custom asset profile
       const existingAssetProfile = isValidCustomAssetProfileSymbol(
         requestedSymbol
       )
         ? await this.prismaService.symbolProfile.findUnique({
-            select: { userId: true },
+            select: { id: true },
             where: {
               dataSource_symbol: { dataSource, symbol: requestedSymbol }
             }
@@ -241,7 +239,6 @@ export class ActivitiesService {
 
       if (
         canUseCustomAssetProfileSymbol({
-          userId,
           assetProfile: existingAssetProfile,
           symbol: requestedSymbol
         })
