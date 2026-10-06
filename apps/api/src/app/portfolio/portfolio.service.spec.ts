@@ -996,6 +996,9 @@ describe('PortfolioService', () => {
       // The closed holding (MSFT) does not need a market price
       expect(getValues).toHaveBeenCalledWith(
         expect.objectContaining({
+          assetProfileIdentifiersWithQuotes: [
+            { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+          ],
           dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AAPL' }]
         })
       );

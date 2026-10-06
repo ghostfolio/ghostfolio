@@ -170,7 +170,8 @@ export class GfAdminOverviewComponent implements OnInit {
       this.activitiesCount / this.userCount
     ).toLocaleString(this.user?.settings?.locale, {
       maximumFractionDigits: 2,
-      minimumFractionDigits: 2
+      minimumFractionDigits: 2,
+      useGrouping: true
     });
 
     return `(${formattedActivitiesCountPerUser} ${$localize`per User`})`;

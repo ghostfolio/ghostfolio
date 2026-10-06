@@ -581,14 +581,16 @@ export class ActivitiesService {
 
   public async getLatestActivity({
     dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
+    symbol,
+    types
+  }: AssetProfileIdentifier & { types: ActivityType[] }) {
     return this.prismaService.order.findFirst({
-      orderBy: {
-        date: 'desc'
-      },
+      orderBy: [{ date: 'desc' }, { createdAt: 'desc' }],
       where: {
-        SymbolProfile: { dataSource, symbol }
+        ...WHERE_ACTIVITY_NOT_DRAFT,
+        SymbolProfile: { dataSource, symbol },
+        type: { in: types },
+        unitPrice: { gt: 0 }
       }
     });
   }
