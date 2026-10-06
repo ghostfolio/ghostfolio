@@ -26,6 +26,7 @@ import {
 } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
+  canUseCustomAssetProfileSymbol,
   getAssetProfileIdentifier,
   isValidCustomAssetProfileSymbol,
   parseDate
@@ -649,8 +650,15 @@ export class ImportService {
               'marketData'
             );
 
-            // Asset profile belongs to a different user, generate a new symbol
-            if (existingAssetProfile && !isDryRun) {
+            // Generate a new symbol if the user cannot use the symbol for a new
+            // asset profile, or if the asset profile exists. Unlike in
+            // createActivity(), this applies to an asset profile of the admin
+            // as well, since the asset profile of the import has its own data.
+            if (
+              (existingAssetProfile ||
+                !canUseCustomAssetProfileSymbol({ symbol, userId: user.id })) &&
+              !isDryRun
+            ) {
               symbol = randomUUID();
             }
 

@@ -34,6 +34,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   canDeleteAssetProfile,
+  canUseCustomAssetProfileSymbol,
   getAssetProfileIdentifier,
   getStartOfUtcDateOfTomorrow,
   isDraftActivity,
@@ -220,19 +221,36 @@ export class ActivitiesService {
       const assetSubClass = data.assetSubClass;
       const dataSource: DataSource = 'MANUAL';
 
+      const requestedSymbol = data.SymbolProfile.connectOrCreate.create.symbol;
+
       let name = data.SymbolProfile.connectOrCreate.create.name;
       let symbol: string;
 
+      // Look up valid custom asset profile symbols only, since a free text is
+      // never the symbol of a custom asset profile
+      const existingAssetProfile = isValidCustomAssetProfileSymbol(
+        requestedSymbol
+      )
+        ? await this.prismaService.symbolProfile.findUnique({
+            select: { userId: true },
+            where: {
+              dataSource_symbol: { dataSource, symbol: requestedSymbol }
+            }
+          })
+        : null;
+
       if (
-        isValidCustomAssetProfileSymbol(
-          data.SymbolProfile.connectOrCreate.create.symbol
-        )
+        canUseCustomAssetProfileSymbol({
+          userId,
+          assetProfile: existingAssetProfile,
+          symbol: requestedSymbol
+        })
       ) {
         // Connect custom asset profile (clone)
-        symbol = data.SymbolProfile.connectOrCreate.create.symbol;
+        symbol = requestedSymbol;
       } else {
         // Create custom asset profile
-        name = name ?? data.SymbolProfile.connectOrCreate.create.symbol;
+        name = name ?? requestedSymbol;
         symbol = randomUUID();
       }
 
