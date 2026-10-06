@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the visibility of the asset class, asset sub class, fee and quantity fields of a valuable in the create activity dialog
+- Fixed the missing mapping for Aland Islands in the country weightings of the _Financial Modeling Prep_ service
 - Fixed the alignment of the average price in the chart of the holding detail dialog for custom asset profiles
 
-## 3.80.1 - 2026-10-05
+## 3.80.2 - 2026-10-06
 
 ### Added
 
