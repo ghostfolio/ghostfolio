@@ -72,11 +72,13 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   public readonly benchmarks = input<Partial<SymbolProfile>[]>();
   public readonly colorScheme = input<ColorScheme>();
   public readonly isLoading = input<boolean>();
+
   public readonly locale = input(getLocale(), {
     transform: (value?: string) => {
       return value ?? getLocale();
     }
   });
+
   public readonly performanceDataItems = input.required<LineChartItem[]>();
   public readonly user = input<User>();
 

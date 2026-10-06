@@ -29,7 +29,7 @@ export class GfDialogHeaderComponent {
     addIcons({ close });
   }
 
-  public onClickCloseButton() {
+  protected onClickCloseButton() {
     this.closeButtonClicked.emit();
   }
 }
