@@ -105,8 +105,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       ? differenceInDays(new Date(), dateOfFirstActivity)
       : 0;
 
-    // Take the dividend from the same source as the portfolio summary, so
-    // that the response shows one dividend only
     const totalDividendInBaseCurrency =
       this.getDividendInBaseCurrencyOfHoldings(positions);
 
