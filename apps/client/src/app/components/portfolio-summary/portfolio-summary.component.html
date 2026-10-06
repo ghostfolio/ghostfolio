@@ -173,6 +173,21 @@
       />
     </div>
   </div>
+  <div class="flex-nowrap px-3 py-1 row text-muted">
+    <div class="flex-grow-1 indent-2 text-truncate">
+      <ng-container i18n>thereof Dividend Performance</ng-container>
+    </div>
+    <div class="flex-column flex-wrap justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        position="end"
+        [isLoading]="isLoading"
+        [isPercent]="true"
+        [locale]="locale"
+        [value]="summary?.dividendPercentageWithCurrencyEffect"
+      />
+    </div>
+  </div>
   <div class="row">
     <div class="col"><hr /></div>
   </div>
