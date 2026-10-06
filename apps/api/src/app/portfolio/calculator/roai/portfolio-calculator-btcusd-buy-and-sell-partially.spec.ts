@@ -264,7 +264,7 @@ describe('PortfolioCalculator', () => {
         '2017': {
           date: '2017-12-31',
           netPerformance: 26957.033439,
-          netPerformanceInPercentage: 44.10965416175681,
+          netPerformanceInPercentage: 44.10965416175668,
           netPerformanceInPercentageWithCurrencyEffect: 43.148434302822835,
           netPerformanceWithCurrencyEffect: 27081.23736,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
@@ -273,8 +273,8 @@ describe('PortfolioCalculator', () => {
         max: {
           date: '2018-01-01',
           netPerformance: 26458.9121202,
-          netPerformanceInPercentage: 42.43911719562077,
-          netPerformanceInPercentageWithCurrencyEffect: 41.65910103572173,
+          netPerformanceInPercentage: 42.439117195620575,
+          netPerformanceInPercentageWithCurrencyEffect: 41.65910103572163,
           netPerformanceWithCurrencyEffect: 26516.2087014,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
           valueWithCurrencyEffect: 13298.425356
@@ -346,7 +346,7 @@ describe('PortfolioCalculator', () => {
       // Other weights give another rounding of the floating point numbers
       expect(
         performanceByDateRange['2017'].netPerformanceInPercentage
-      ).toBeCloseTo(44.10965416175681, 10);
+      ).toBeCloseTo(44.10965416175668, 10);
 
       expect(
         performanceByDateRange['2017']
@@ -354,13 +354,13 @@ describe('PortfolioCalculator', () => {
       ).toBeCloseTo(43.148434302822835, 10);
 
       expect(performanceByDateRange.max.netPerformanceInPercentage).toBeCloseTo(
-        42.43911719562077,
+        42.439117195620575,
         10
       );
 
       expect(
         performanceByDateRange.max.netPerformanceInPercentageWithCurrencyEffect
-      ).toBeCloseTo(41.65910103572173, 10);
+      ).toBeCloseTo(41.65910103572163, 10);
     });
   });
 });
