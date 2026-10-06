@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue where a user could create a custom asset profile with a symbol of the prefix `GF_`, which is reserved for the admin
+- Fixed the missing mapping for Aland Islands in the country weightings of the _Financial Modeling Prep_ service
+- Fixed an issue where a user could create a custom asset profile with a symbol of the prefix `GF_`
 - Fixed an issue where an activity could be connected to the custom asset profile of a different user
 
 ## 3.80.2 - 2026-10-06
