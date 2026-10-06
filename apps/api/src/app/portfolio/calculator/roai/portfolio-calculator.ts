@@ -29,7 +29,6 @@ import {
   isBefore,
   isThisYear
 } from 'date-fns';
-import { sum } from 'lodash-es';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(
@@ -210,16 +209,21 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
   }: {
     historicalDataItems: HistoricalDataItem[];
   }): { [date: string]: PerformancePercentages } {
-    const averageInvestmentValues: number[] = [];
-    const averageInvestmentValuesWithCurrencyEffect: number[] = [];
     let grossPerformanceAtStartDate: number;
     let grossPerformanceWithCurrencyEffectAtStartDate: number;
+    let previousDate: Date;
+    let sumOfWeightedInvestments = 0;
+    let sumOfWeightedInvestmentsWithCurrencyEffect = 0;
+    let totalInvestmentDays = 0;
+    let totalInvestmentDaysWithCurrencyEffect = 0;
 
     const performancePercentagesByDate: {
       [date: string]: PerformancePercentages;
     } = {};
 
     for (const [index, historicalDataItem] of historicalDataItems.entries()) {
+      const date = parseDate(historicalDataItem.date);
+
       // Take the values at the start date from the first day of the date
       // range
       if (index === 0) {
@@ -229,34 +233,53 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         grossPerformanceWithCurrencyEffectAtStartDate =
           historicalDataItem.valueWithCurrencyEffect -
           historicalDataItem.totalInvestmentValueWithCurrencyEffect;
+      } else {
+        // The chart dates are not evenly spaced, and the investment changes on
+        // a chart date only. Thus the investment of the previous chart date
+        // applies to each day until this chart date.
+        const previousHistoricalDataItem = historicalDataItems[index - 1];
+
+        const daysSincePreviousChartDate = differenceInDays(date, previousDate);
+
+        if (previousHistoricalDataItem.totalInvestment > 0) {
+          sumOfWeightedInvestments +=
+            (previousHistoricalDataItem.totalInvestment +
+              grossPerformanceAtStartDate) *
+            daysSincePreviousChartDate;
+
+          totalInvestmentDays += daysSincePreviousChartDate;
+        }
+
+        if (
+          previousHistoricalDataItem.totalInvestmentValueWithCurrencyEffect > 0
+        ) {
+          sumOfWeightedInvestmentsWithCurrencyEffect +=
+            (previousHistoricalDataItem.totalInvestmentValueWithCurrencyEffect +
+              grossPerformanceWithCurrencyEffectAtStartDate) *
+            daysSincePreviousChartDate;
+
+          totalInvestmentDaysWithCurrencyEffect += daysSincePreviousChartDate;
+        }
       }
 
       // Add the gross performance at the start date of the range to the
       // investment of each day. Thus the range starts with the value of its
       // first day, and subsequent buy and sell activities stay included.
-      if (historicalDataItem.totalInvestment > 0) {
-        averageInvestmentValues.push(
-          historicalDataItem.totalInvestment + grossPerformanceAtStartDate
-        );
-      }
-
-      if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
-        averageInvestmentValuesWithCurrencyEffect.push(
-          historicalDataItem.totalInvestmentValueWithCurrencyEffect +
-            grossPerformanceWithCurrencyEffectAtStartDate
-        );
-      }
-
-      const averageInvestmentValue =
-        averageInvestmentValues.length > 0
-          ? sum(averageInvestmentValues) / averageInvestmentValues.length
-          : 0;
+      const averageInvestmentValue = this.getAverageInvestment({
+        grossPerformanceAtStartDate,
+        sumOfWeightedInvestments,
+        totalInvestmentDays,
+        investment: historicalDataItem.totalInvestment
+      });
 
       const averageInvestmentValueWithCurrencyEffect =
-        averageInvestmentValuesWithCurrencyEffect.length > 0
-          ? sum(averageInvestmentValuesWithCurrencyEffect) /
-            averageInvestmentValuesWithCurrencyEffect.length
-          : 0;
+        this.getAverageInvestment({
+          grossPerformanceAtStartDate:
+            grossPerformanceWithCurrencyEffectAtStartDate,
+          investment: historicalDataItem.totalInvestmentValueWithCurrencyEffect,
+          sumOfWeightedInvestments: sumOfWeightedInvestmentsWithCurrencyEffect,
+          totalInvestmentDays: totalInvestmentDaysWithCurrencyEffect
+        });
 
       performancePercentagesByDate[historicalDataItem.date] = {
         dividendInPercentageWithCurrencyEffect:
@@ -274,6 +297,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
               averageInvestmentValueWithCurrencyEffect
             : 0
       };
+
+      previousDate = date;
     }
 
     return performancePercentagesByDate;
@@ -282,6 +307,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
   protected getHoldingPerformance({
     chartDates,
     dataSource,
+    daysUntilNextChartDate,
     end,
     exchangeRates,
     marketSymbolMap,
@@ -289,6 +315,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     symbol
   }: {
     chartDates: string[];
+    daysUntilNextChartDate: number[];
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
@@ -642,17 +669,28 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           break;
         }
 
+        const isLastChartDateOfRange =
+          i === chartDates.length - 1 || chartDates[i + 1] > rangeEndDateString;
+
+        // The chart dates are not evenly spaced, and the investment changes
+        // on a chart date only. Thus the investment of a chart date applies to
+        // each day until the next chart date. The investment of the last chart
+        // date of the range counts for this day only.
+        const investmentDays = isLastChartDateOfRange
+          ? 1
+          : daysUntilNextChartDate[i];
+
         if (
           investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big &&
           investmentValuesAccumulatedWithCurrencyEffect[date].gt(0)
         ) {
           average = average.add(
-            investmentValuesAccumulatedWithCurrencyEffect[date].add(
-              grossPerformanceAtDateRangeStartWithCurrencyEffect
-            )
+            investmentValuesAccumulatedWithCurrencyEffect[date]
+              .add(grossPerformanceAtDateRangeStartWithCurrencyEffect)
+              .mul(investmentDays)
           );
 
-          dayCount++;
+          dayCount += investmentDays;
         }
       }
 
@@ -752,5 +790,30 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
   protected getPerformanceCalculationType() {
     return PerformanceCalculationType.ROAI;
+  }
+
+  private getAverageInvestment({
+    grossPerformanceAtStartDate,
+    investment,
+    sumOfWeightedInvestments,
+    totalInvestmentDays
+  }: {
+    grossPerformanceAtStartDate: number;
+    investment: number;
+    sumOfWeightedInvestments: number;
+    totalInvestmentDays: number;
+  }) {
+    // The investment of the current chart date counts for this day only
+    if (investment > 0) {
+      return (
+        (sumOfWeightedInvestments +
+          (investment + grossPerformanceAtStartDate)) /
+        (totalInvestmentDays + 1)
+      );
+    }
+
+    return totalInvestmentDays > 0
+      ? sumOfWeightedInvestments / totalInvestmentDays
+      : 0;
   }
 }

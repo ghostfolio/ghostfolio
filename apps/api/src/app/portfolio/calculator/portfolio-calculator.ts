@@ -362,6 +362,18 @@ export abstract class PortfolioCalculator {
       return chartDate;
     });
 
+    // The chart dates are the same for each holding and each date range. Thus
+    // calculate the number of days until the next chart date one time only.
+    const parsedChartDates = chartDates.map((chartDate) => {
+      return parseDate(chartDate);
+    });
+
+    const daysUntilNextChartDate = parsedChartDates
+      .slice(1)
+      .map((nextChartDate, index) => {
+        return differenceInDays(nextChartDate, parsedChartDates[index]);
+      });
+
     const errors: ResponseError['errors'] = [];
     let hasAnyHoldingPerformanceErrors = false;
 
@@ -438,6 +450,7 @@ export abstract class PortfolioCalculator {
         totalLiabilitiesInBaseCurrency
       } = this.getHoldingPerformance({
         chartDates,
+        daysUntilNextChartDate,
         marketSymbolMap,
         dataSource: item.dataSource,
         end: this.endDate,
@@ -935,6 +948,7 @@ export abstract class PortfolioCalculator {
   protected abstract getHoldingPerformance({
     chartDates,
     dataSource,
+    daysUntilNextChartDate,
     end,
     exchangeRates,
     marketSymbolMap,
@@ -942,6 +956,7 @@ export abstract class PortfolioCalculator {
     symbol
   }: {
     chartDates: string[];
+    daysUntilNextChartDate: number[];
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
