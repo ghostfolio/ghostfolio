@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Moved the performance calculation including dividends (total return) from experimental to general availability
+
 ### Fixed
 
 - Fixed the visibility of the asset class, asset sub class, fee and quantity fields of a valuable in the create activity dialog

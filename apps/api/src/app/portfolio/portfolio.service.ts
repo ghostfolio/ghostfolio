@@ -2140,6 +2140,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      dividendInBaseCurrency,
       dividendPercentageWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
@@ -2153,9 +2154,6 @@ export class PortfolioService {
     });
 
     const dateOfFirstActivity = portfolioCalculator.getStartDate();
-
-    const dividendInBaseCurrency =
-      await portfolioCalculator.getDividendInBaseCurrency();
 
     const fees = await portfolioCalculator.getFeesInBaseCurrency();
     const interest = await portfolioCalculator.getInterestInBaseCurrency();
@@ -2237,6 +2235,7 @@ export class PortfolioService {
       cash,
       currentValueInBaseCurrency,
       dateOfFirstActivity,
+      dividendInBaseCurrency,
       dividendPercentageWithCurrencyEffect,
       excludedAccountsAndActivities,
       netPerformance,
@@ -2248,7 +2247,6 @@ export class PortfolioService {
       activityCount: activities.filter(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       }).length,
-      dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       // TODO: Remove the fallback to 0 with the next release, when each
       // cached portfolio snapshot contains the dividend yield
       dividendYieldPercent: dividendYieldPercent?.toNumber() ?? 0,
