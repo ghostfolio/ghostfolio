@@ -24,6 +24,7 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
 
   protected getHoldingPerformance({}: {
     chartDates: string[];
+    daysUntilNextChartDate: { [date: string]: number };
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
