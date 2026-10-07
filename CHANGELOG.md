@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Return on Investment_ (ROI) performance calculation type (experimental)
+
 ### Changed
 
 - Hardened the validation of the date in the endpoint to create an account balance
@@ -119,10 +123,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the missing mapping for Korea in the country weightings of the _Financial Modeling Prep_ service
 
 ## 3.81.0 - 2026-10-07
-
-### Added
-
-- Added the _Return on Investment_ (ROI) performance calculation type (experimental)
 
 ### Changed
 
