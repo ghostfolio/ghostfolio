@@ -17,10 +17,7 @@ import {
   AssetProfileIdentifier,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import {
-  PortfolioSnapshot,
-  PortfolioSnapshotHolding
-} from '@ghostfolio/common/models';
+import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -116,13 +113,21 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
       ? differenceInDays(new Date(), dateOfFirstActivity)
       : 0;
 
-    // Take the dividend from the same source as the portfolio summary, so
-    // that the response shows one dividend only
     const totalDividendInBaseCurrency =
       this.getDividendInBaseCurrencyOfHoldings(positions);
 
-    const hasDividendWithoutInvestedCapital =
-      this.hasDividendWithoutInvestedCapital(positions);
+    // A holding without a market price, and a holding which is excluded from
+    // the performance, gives a dividend but no invested capital. Such a
+    // holding makes the dividend yield too high. Therefore the dividend yield
+    // stays 0 in this case.
+    const hasDividendWithoutInvestedCapital = positions.some(
+      ({ averageInvestment, dividendInBaseCurrency, includeInPerformance }) => {
+        return (
+          !dividendInBaseCurrency.eq(0) &&
+          (!includeInPerformance || averageInvestment.eq(0))
+        );
+      }
+    );
 
     const dividendYieldPercent = getAnnualizedPerformancePercent({
       daysInMarket,
@@ -166,15 +171,10 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
   }
 
   protected calculatePerformancePercentages({
-    accumulatedValuesByDate,
-    holdings
+    accumulatedValuesByDate
   }: {
     accumulatedValuesByDate: { [date: string]: AccumulatedValues };
-    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages } {
-    const hasDividendWithoutInvestedCapital =
-      this.hasDividendWithoutInvestedCapital(holdings);
-
     const performancePercentagesByDate: {
       [date: string]: PerformancePercentages;
     } = {};
@@ -192,7 +192,6 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
     ] of Object.entries(accumulatedValuesByDate)) {
       performancePercentagesByDate[date] = {
         dividendInPercentageWithCurrencyEffect:
-          hasDividendWithoutInvestedCapital ||
           totalInvestedCapitalWithCurrencyEffect.eq(0)
             ? 0
             : totalDividendValueWithCurrencyEffect
@@ -214,15 +213,10 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
   }
 
   protected calculatePerformancePercentagesForDateRange({
-    historicalDataItems,
-    holdings
+    historicalDataItems
   }: {
     historicalDataItems: HistoricalDataItem[];
-    holdings: PortfolioSnapshotHolding[];
   }): { [date: string]: PerformancePercentages } {
-    const hasDividendWithoutInvestedCapital =
-      this.hasDividendWithoutInvestedCapital(holdings);
-
     let investedCapital = 0;
     let investedCapitalWithCurrencyEffect = 0;
 
@@ -257,7 +251,6 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
 
       performancePercentagesByDate[historicalDataItem.date] = {
         dividendInPercentageWithCurrencyEffect:
-          !hasDividendWithoutInvestedCapital &&
           investedCapitalWithCurrencyEffect > 0
             ? historicalDataItem.dividendInBaseCurrency /
               investedCapitalWithCurrencyEffect
@@ -376,6 +369,7 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
     const {
       currentValues,
       currentValuesWithCurrencyEffect,
+      dividendValuesWithCurrencyEffect,
       initialValue,
       investmentValuesAccumulated,
       investmentValuesAccumulatedWithCurrencyEffect,
@@ -557,6 +551,7 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
     return {
       currentValues,
       currentValuesWithCurrencyEffect,
+      dividendValuesWithCurrencyEffect,
       dividendYieldPercent,
       dividendYieldPercentWithCurrencyEffect,
       grossPerformancePercentage,
@@ -590,22 +585,5 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
 
   protected getPerformanceCalculationType() {
     return PerformanceCalculationType.ROI;
-  }
-
-  private hasDividendWithoutInvestedCapital(
-    holdings: PortfolioSnapshotHolding[]
-  ) {
-    // A holding with a dividend only (without a buy activity), and a holding
-    // without a market price, gives a dividend but no invested capital. Such a
-    // holding makes the dividend percentage too high. Therefore the dividend
-    // percentage stays 0 in this case, like the dividend yield.
-    return holdings.some(
-      ({ averageInvestmentWithCurrencyEffect, dividendInBaseCurrency }) => {
-        return (
-          !dividendInBaseCurrency.eq(0) &&
-          averageInvestmentWithCurrencyEffect.eq(0)
-        );
-      }
-    );
   }
 }
