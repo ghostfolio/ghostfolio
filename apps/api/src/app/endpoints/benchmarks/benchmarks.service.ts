@@ -13,7 +13,7 @@ import {
 import { DateRange } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { format, isSameDay } from 'date-fns';
+import { format, isSameDay, min } from 'date-fns';
 import { isNumber } from 'lodash-es';
 
 @Injectable()
@@ -96,8 +96,8 @@ export class BenchmarksService {
 
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
-        startDate,
         currencies: [currentSymbolItem.currency],
+        startDate: min([baselineDate, startDate]),
         targetCurrency: userCurrency
       });
 

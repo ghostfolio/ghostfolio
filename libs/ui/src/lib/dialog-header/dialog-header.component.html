@@ -1,10 +1,10 @@
 <div class="d-flex" mat-dialog-title>
   <span
     class="flex-grow-1 text-truncate"
-    [class.text-center]="position === 'center'"
-    >{{ title }}</span
+    [class.text-center]="position() === 'center'"
+    >{{ title() }}</span
   >
-  @if (deviceType !== 'mobile') {
+  @if (deviceType() !== 'mobile') {
     <button class="no-min-width px-0" mat-button (click)="onClickCloseButton()">
       <ion-icon name="close" size="large" />
     </button>
