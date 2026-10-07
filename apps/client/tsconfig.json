@@ -21,7 +21,7 @@
     "strictDomEventTypes": true,
     "strictDomLocalRefTypes": true,
     "strictInputAccessModifiers": true,
-    "strictInputTypes": false,
+    "strictInputTypes": true,
     "strictLiteralTypes": true,
     "strictNullInputTypes": true,
     "strictOutputEventTypes": true,
