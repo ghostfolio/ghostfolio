@@ -283,7 +283,7 @@ export class GfActivitiesTableComponent<
     return numSelectedRows === numTotalRows;
   }
 
-  public canClickActivity(activity: ActivitiesTableItem) {
+  public canClickActivity(activity: T) {
     return (
       this.hasPermissionToOpenDetails &&
       isDraftActivity(activity) === false &&
@@ -362,7 +362,9 @@ export class GfActivitiesTableComponent<
         .map((activity) => {
           return activity.id;
         })
-        .filter((id): id is string => !!id)
+        .filter((id): id is string => {
+          return !!id;
+        })
     );
   }
 

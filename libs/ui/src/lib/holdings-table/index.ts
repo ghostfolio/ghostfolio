@@ -1,2 +1,2 @@
-export * from './interfaces/interfaces';
 export * from './holdings-table.component';
+export * from './interfaces/interfaces';
