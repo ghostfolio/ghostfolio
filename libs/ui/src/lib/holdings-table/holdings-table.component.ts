@@ -54,7 +54,13 @@ export class GfHoldingsTableComponent {
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
   public readonly holdings = input.required<PortfolioPosition[] | undefined>();
-  public readonly locale = input(getLocale());
+
+  public readonly locale = input(getLocale(), {
+    transform: (value?: string) => {
+      return value ?? getLocale();
+    }
+  });
+
   public readonly mode = input<'default' | 'simple'>('default');
   public readonly pageSize = model(Number.MAX_SAFE_INTEGER);
 
