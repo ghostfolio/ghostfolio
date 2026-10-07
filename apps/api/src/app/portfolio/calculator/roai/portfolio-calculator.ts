@@ -4,6 +4,7 @@ import { AverageInvestmentItem } from '@ghostfolio/api/app/portfolio/interfaces/
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
 import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
+import { WeightedInvestment } from '@ghostfolio/api/app/portfolio/interfaces/weighted-investment.interface';
 import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
 import {
   getAnnualizedPerformancePercent,
@@ -769,12 +770,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     investment,
     sumOfWeightedInvestments,
     totalInvestmentDays
-  }: {
-    grossPerformanceAtStartDate: Big;
-    investment: Big;
-    sumOfWeightedInvestments: Big;
-    totalInvestmentDays: number;
-  }) {
+  }: WeightedInvestment) {
     // The investment of the current item counts for this day only
     if (investment.gt(0)) {
       return sumOfWeightedInvestments
@@ -804,12 +800,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     grossPerformanceAtStartDate: Big;
     items: AverageInvestmentItem[];
   }) {
-    const weightedInvestments: {
-      grossPerformanceAtStartDate: Big;
-      investment: Big;
-      sumOfWeightedInvestments: Big;
-      totalInvestmentDays: number;
-    }[] = [];
+    const weightedInvestments: WeightedInvestment[] = [];
 
     let sumOfWeightedInvestments = new Big(0);
     let totalInvestmentDays = 0;
