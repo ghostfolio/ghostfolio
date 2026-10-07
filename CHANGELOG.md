@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
+### Fixed
 
 - Fixed an issue where a user could create a custom asset profile with a symbol of the prefix `GF_`
 
