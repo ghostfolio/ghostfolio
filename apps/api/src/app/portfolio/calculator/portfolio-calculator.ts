@@ -64,6 +64,7 @@ import {
   format,
   isAfter,
   isBefore,
+  isEqual,
   isFuture,
   isPast,
   isWithinInterval,
@@ -1417,10 +1418,14 @@ export abstract class PortfolioCalculator {
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
 
+    const startDate = isEqual(start, endOfDay(start))
+      ? resetHours(start)
+      : start;
+
     for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
 
-      if (!isBefore(date, start) && !isAfter(date, end)) {
+      if (!isBefore(date, startDate) && !isAfter(date, end)) {
         // Take the values at the start date from the first day of the date
         // range
         if (historicalDataItemsOfDateRange.length === 0) {
