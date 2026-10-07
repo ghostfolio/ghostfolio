@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the missing mapping for Aland Islands in the country weightings of the _Financial Modeling Prep_ service
 - Fixed the net performance percentage of date ranges in the portfolio performance calculation by weighting the average investment by the number of days between the chart dates
 - Fixed the start date of calendar year date ranges in the portfolio performance calculation
+- Fixed an issue where the Content Security Policy in HTTP security headers blocked the status check of the Ghostfolio data provider when `ENABLE_FEATURE_SECURITY_HEADERS` was enabled (experimental)
 
 ## 3.80.2 - 2026-10-06
 
