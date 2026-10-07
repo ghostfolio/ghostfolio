@@ -13,6 +13,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { parseDate } from '@ghostfolio/common/helper';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -168,6 +169,7 @@ describe('PortfolioCalculator', () => {
             },
             netPerformanceWithCurrencyEffectMap: {
               '1d': new Big('-556.443324'),
+              '2017': new Big('27081.23736'),
               max: new Big('26516.208701400000064086'),
               ytd: new Big('-556.443324')
             },
@@ -262,8 +264,8 @@ describe('PortfolioCalculator', () => {
         '2017': {
           date: '2017-12-31',
           netPerformance: 26957.033439,
-          netPerformanceInPercentage: 44.109822737327406,
-          netPerformanceInPercentageWithCurrencyEffect: 43.14859823223876,
+          netPerformanceInPercentage: 44.10965416175681,
+          netPerformanceInPercentageWithCurrencyEffect: 43.148434302822835,
           netPerformanceWithCurrencyEffect: 27081.23736,
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
           valueWithCurrencyEffect: 13854.86868
@@ -287,6 +289,17 @@ describe('PortfolioCalculator', () => {
           valueWithCurrencyEffect: 13298.425356
         }
       });
+
+      const { endDate, startDate } = getIntervalFromDateRange({
+        dateRange: '2017'
+      });
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: endDate,
+        start: startDate
+      });
+
+      expect(chart[0].date).toBe('2016-12-31');
     });
 
     it.only('with BTCUSD buy and sell partially and fewer chart items', async () => {
@@ -333,12 +346,12 @@ describe('PortfolioCalculator', () => {
       // Other weights give another rounding of the floating point numbers
       expect(
         performanceByDateRange['2017'].netPerformanceInPercentage
-      ).toBeCloseTo(44.109822737327406, 10);
+      ).toBeCloseTo(44.10965416175681, 10);
 
       expect(
         performanceByDateRange['2017']
           .netPerformanceInPercentageWithCurrencyEffect
-      ).toBeCloseTo(43.14859823223876, 10);
+      ).toBeCloseTo(43.148434302822835, 10);
 
       expect(performanceByDateRange.max.netPerformanceInPercentage).toBeCloseTo(
         42.43911719562077,
