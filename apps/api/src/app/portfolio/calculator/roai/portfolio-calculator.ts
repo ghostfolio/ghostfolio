@@ -30,6 +30,7 @@ import {
   isBefore,
   isThisYear
 } from 'date-fns';
+import { sortedIndex } from 'lodash-es';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(
@@ -229,7 +230,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     // Take the values at the start date from the first day of the date range
     const [firstHistoricalDataItem] = historicalDataItems;
 
-    const averageInvestments = this.getAverageInvestments({
+    const weightedInvestments = this.getWeightedInvestments({
       grossPerformanceAtStartDate: new Big(firstHistoricalDataItem.value).minus(
         firstHistoricalDataItem.totalInvestment
       ),
@@ -241,7 +242,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       })
     });
 
-    const averageInvestmentsWithCurrencyEffect = this.getAverageInvestments({
+    const weightedInvestmentsWithCurrencyEffect = this.getWeightedInvestments({
       grossPerformanceAtStartDate: new Big(
         firstHistoricalDataItem.valueWithCurrencyEffect
       ).minus(firstHistoricalDataItem.totalInvestmentValueWithCurrencyEffect),
@@ -256,10 +257,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     });
 
     for (const [index, historicalDataItem] of historicalDataItems.entries()) {
-      const averageInvestmentValue = averageInvestments[index].toNumber();
+      const averageInvestmentValue = this.getAverageInvestment(
+        weightedInvestments[index]
+      ).toNumber();
 
       const averageInvestmentValueWithCurrencyEffect =
-        averageInvestmentsWithCurrencyEffect[index].toNumber();
+        this.getAverageInvestment(
+          weightedInvestmentsWithCurrencyEffect[index]
+        ).toNumber();
 
       performancePercentagesByDate[historicalDataItem.date] = {
         dividendInPercentageWithCurrencyEffect:
@@ -637,26 +642,33 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
       const averageInvestmentItems: AverageInvestmentItem[] = [];
 
-      for (const [index, date] of chartDates.entries()) {
-        if (date < rangeStartDateString) {
-          continue;
-        } else if (date > rangeEndDateString) {
+      for (
+        let i = sortedIndex(chartDates, rangeStartDateString);
+        i < chartDates.length;
+        i += 1
+      ) {
+        const date = chartDates[i];
+
+        if (date > rangeEndDateString) {
           break;
         }
 
         averageInvestmentItems.push({
-          daysUntilNextItem: daysUntilNextChartDate[index],
+          daysUntilNextItem: daysUntilNextChartDate[i],
           investment:
             investmentValuesAccumulatedWithCurrencyEffect[date] ?? new Big(0)
         });
       }
 
-      const average =
-        this.getAverageInvestments({
-          grossPerformanceAtStartDate:
-            grossPerformanceAtDateRangeStartWithCurrencyEffect,
-          items: averageInvestmentItems
-        }).at(-1) ?? new Big(0);
+      const weightedInvestment = this.getWeightedInvestments({
+        grossPerformanceAtStartDate:
+          grossPerformanceAtDateRangeStartWithCurrencyEffect,
+        items: averageInvestmentItems
+      }).at(-1);
+
+      const average = weightedInvestment
+        ? this.getAverageInvestment(weightedInvestment)
+        : new Big(0);
 
       netPerformanceWithCurrencyEffectMap[dateRange] =
         netPerformanceValuesWithCurrencyEffect[rangeEndDateString]?.minus(
@@ -752,24 +764,53 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     return PerformanceCalculationType.ROAI;
   }
 
+  private getAverageInvestment({
+    grossPerformanceAtStartDate,
+    investment,
+    sumOfWeightedInvestments,
+    totalInvestmentDays
+  }: {
+    grossPerformanceAtStartDate: Big;
+    investment: Big;
+    sumOfWeightedInvestments: Big;
+    totalInvestmentDays: number;
+  }) {
+    // The investment of the current item counts for this day only
+    if (investment.gt(0)) {
+      return sumOfWeightedInvestments
+        .add(investment.add(grossPerformanceAtStartDate))
+        .div(totalInvestmentDays + 1);
+    }
+
+    return totalInvestmentDays > 0
+      ? sumOfWeightedInvestments.div(totalInvestmentDays)
+      : new Big(0);
+  }
+
   /**
-   * Returns the average investment at each item of a date range. The chart
-   * dates are not evenly spaced, and the investment changes on a chart date
-   * only. Thus the investment of an item applies to each day until the next
-   * item. The investment of the current item counts for this day only.
+   * Returns the sum of the weighted investments and the number of investment
+   * days before each item of a date range. The chart dates are not evenly
+   * spaced, and the investment changes on a chart date only. Thus the
+   * investment of an item applies to each day until the next item.
    *
    * The gross performance at the start date of the range is added to each
    * investment. Thus the range starts with the value of its first day, and
    * subsequent buy and sell activities stay included.
    */
-  private getAverageInvestments({
+  private getWeightedInvestments({
     grossPerformanceAtStartDate,
     items
   }: {
     grossPerformanceAtStartDate: Big;
     items: AverageInvestmentItem[];
   }) {
-    const averageInvestments: Big[] = [];
+    const weightedInvestments: {
+      grossPerformanceAtStartDate: Big;
+      investment: Big;
+      sumOfWeightedInvestments: Big;
+      totalInvestmentDays: number;
+    }[] = [];
+
     let sumOfWeightedInvestments = new Big(0);
     let totalInvestmentDays = 0;
 
@@ -788,21 +829,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         }
       }
 
-      if (investment.gt(0)) {
-        averageInvestments.push(
-          sumOfWeightedInvestments
-            .add(investment.add(grossPerformanceAtStartDate))
-            .div(totalInvestmentDays + 1)
-        );
-      } else {
-        averageInvestments.push(
-          totalInvestmentDays > 0
-            ? sumOfWeightedInvestments.div(totalInvestmentDays)
-            : new Big(0)
-        );
-      }
+      weightedInvestments.push({
+        grossPerformanceAtStartDate,
+        investment,
+        sumOfWeightedInvestments,
+        totalInvestmentDays
+      });
     }
 
-    return averageInvestments;
+    return weightedInvestments;
   }
 }
