@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the performance of the historical market data gathering by removing an unnecessary index from the market data table
+- Removed an unnecessary index from the market data database table
 
 ## 3.81.0 - 2026-10-07
 
