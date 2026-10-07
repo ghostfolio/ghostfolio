@@ -37,8 +37,8 @@ import {
   canUseCustomAssetProfileSymbol,
   getAssetProfileIdentifier,
   getStartOfUtcDateOfTomorrow,
-  isDraftActivity,
-  isValidCustomAssetProfileSymbol
+  hasGhostfolioPrefix,
+  isDraftActivity
 } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
@@ -226,9 +226,7 @@ export class ActivitiesService {
       let name = data.SymbolProfile.connectOrCreate.create.name;
       let symbol: string;
 
-      const existingAssetProfile = isValidCustomAssetProfileSymbol(
-        requestedSymbol
-      )
+      const existingAssetProfile = hasGhostfolioPrefix(requestedSymbol)
         ? await this.prismaService.symbolProfile.findUnique({
             select: { id: true },
             where: {

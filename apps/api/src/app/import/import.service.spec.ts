@@ -396,6 +396,39 @@ describe('ImportService', () => {
       ).toMatchObject({ symbol, dataSource: DataSource.MANUAL });
     });
 
+    it('refers the next activities with a symbol with the prefix to the custom asset profile which createActivity() has created', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          }),
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ]
+      });
+
+      expect(
+        createActivity.mock.calls.map(([activity]) => {
+          return activity.SymbolProfile.connectOrCreate.create;
+        })
+      ).toMatchObject([
+        { dataSource: DataSource.MANUAL, symbol: 'GF_COPX' },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+    });
+
     it('keeps the asset profiles of the activities in a dry run', async () => {
       const activities = await importActivities({
         activitiesDto: [

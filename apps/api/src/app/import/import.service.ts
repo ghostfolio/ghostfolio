@@ -660,7 +660,9 @@ export class ImportService {
                 }
               );
 
-              assetProfile.name ??= symbol;
+              if (hasGhostfolioPrefix(symbol)) {
+                assetProfile.name ??= symbol;
+              }
 
               symbol = isSymbolOfAssetProfileToCreate
                 ? assetProfileSymbolMapping[symbol]
