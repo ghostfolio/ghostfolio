@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the content of the _General_ section by information about the import of activities from _Interactive Brokers_ on the Frequently Asked Questions (FAQ) page
+
 ### Fixed
 
 - Fixed the end date of calendar year date ranges in the portfolio performance calculation for instances in time zones with a negative UTC offset
