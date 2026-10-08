@@ -16,7 +16,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import { parseDate } from '@ghostfolio/common/helper';
+import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   Activity,
   AssetProfileIdentifier,
@@ -946,8 +946,7 @@ describe('PortfolioService', () => {
       });
 
       // A year runs from the end of 31 December of the previous year, like
-      // the date range of the year. The first year is clipped to the date
-      // range, and the current year ends today.
+      // the date range of the year, and the current year ends today
       expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(4);
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(2, {
         end: endOfDay(parseDate('2023-12-31')),
@@ -1003,6 +1002,52 @@ describe('PortfolioService', () => {
       );
       expect(chart).toEqual([{ date: '2024-01-01', netPerformance: 200 }]);
       expect(performance.netPerformance).toBe(200);
+    });
+
+    it('should clip the first calendar year to the date range when grouped by year', async () => {
+      getPerformanceOfCalculator
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2024-06-15', netPerformance: 0 },
+            { date: '2024-12-31', netPerformance: 100 },
+            { date: '2025-06-15', netPerformance: 300 }
+          ]
+        })
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2024-06-15', netPerformance: 0 },
+            { date: '2024-12-31', netPerformance: 100 }
+          ]
+        })
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2024-12-31', netPerformance: 0 },
+            { date: '2025-06-15', netPerformance: 200 }
+          ]
+        });
+
+      const { chart, performance } = await portfolioService.getPerformance({
+        dateRange: '1y',
+        groupBy: 'year',
+        userId: userDummyData.id
+      });
+
+      // The first year starts at the start date of the date range, not at the
+      // end of 31 December of the previous year
+      expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(3);
+      expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(2, {
+        end: endOfDay(parseDate('2024-12-31')),
+        start: resetHours(parseDate('2024-06-15'))
+      });
+      expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(3, {
+        end: endOfDay(parseDate('2025-06-15')),
+        start: endOfDay(parseDate('2024-12-31'))
+      });
+      expect(chart).toEqual([
+        { date: '2024-01-01', netPerformance: 100 },
+        { date: '2025-01-01', netPerformance: 200 }
+      ]);
+      expect(performance.netPerformance).toBe(300);
     });
   });
 

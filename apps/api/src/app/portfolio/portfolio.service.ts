@@ -2097,10 +2097,12 @@ export class PortfolioService {
 
     for (const year of years) {
       const { endDate: endDateOfYear, startDate: startDateOfYear } =
-        getIntervalFromDateRange({ dateRange: year, startDate });
+        getIntervalFromDateRange({ startDate, dateRange: year });
+
+      const end = min([endDate, endDateOfYear]);
 
       const { chart: chartOfYear } = await portfolioCalculator.getPerformance({
-        end: min([endDate, endDateOfYear]),
+        end,
         start: startDateOfYear
       });
 
