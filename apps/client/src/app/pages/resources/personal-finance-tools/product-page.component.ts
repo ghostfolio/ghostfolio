@@ -1,4 +1,4 @@
-import { getCountryName } from '@ghostfolio/common/helper';
+import { getCountryName, getEmojiFlag } from '@ghostfolio/common/helper';
 import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -14,7 +14,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
-import { ResolvedProduct } from './interfaces/interfaces';
+import { ResolvedProduct, ResolvedRegion } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,9 +58,9 @@ export class GfProductPageComponent {
       // 'Ukrainian (Українська)'
     ],
     name: 'Ghostfolio',
-    origin: getCountryName({ code: 'CH' }),
+    origin: this.getResolvedCountry('CH'),
     platforms: this.getSortedTranslations(['ANDROID', 'WEB']),
-    regions: [$localize`Global`],
+    regions: [{ name: $localize`Global` }],
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
   }));
@@ -75,20 +75,16 @@ export class GfProductPageComponent {
       name: product?.name ?? '',
       ...product,
       categories: this.getSortedTranslations(product?.categories),
-      platforms: this.getSortedTranslations(product?.platforms)
-    };
-
-    if (mappedProduct.origin) {
-      mappedProduct.origin = getCountryName({ code: mappedProduct.origin });
-    }
-
-    if (mappedProduct.regions) {
-      mappedProduct.regions = mappedProduct.regions.map((region) => {
+      origin: product?.origin
+        ? this.getResolvedCountry(product.origin)
+        : undefined,
+      platforms: this.getSortedTranslations(product?.platforms),
+      regions: product?.regions?.map((region) => {
         return region === 'Global'
-          ? translate(region)
-          : getCountryName({ code: region });
-      });
-    }
+          ? { name: translate(region) }
+          : this.getResolvedCountry(region);
+      })
+    };
 
     return mappedProduct;
   });
@@ -122,7 +118,7 @@ export class GfProductPageComponent {
                 ...(categories ?? []),
                 ...(platforms ?? []),
                 name,
-                origin
+                origin?.name
               ];
             }
           ),
@@ -173,6 +169,13 @@ export class GfProductPageComponent {
     return personalFinanceTools.findIndex(({ key }) => {
       return key === this.product2().key;
     });
+  }
+
+  private getResolvedCountry(code: string): ResolvedRegion {
+    return {
+      emojiFlag: getEmojiFlag(code),
+      name: getCountryName({ code })
+    };
   }
 
   private getSortedTranslations(values?: string[]) {
