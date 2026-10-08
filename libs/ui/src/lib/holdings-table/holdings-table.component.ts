@@ -6,10 +6,7 @@ import {
   getLowercase,
   isCashPosition
 } from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  PortfolioPosition
-} from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -31,6 +28,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { GfValueComponent } from '../value/value.component';
+import { HoldingsTableItem } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +51,7 @@ export class GfHoldingsTableComponent {
   public readonly hasPermissionToOpenDetails = input(true);
   public readonly hasPermissionToShowQuantities = input(true);
   public readonly hasPermissionToShowValues = input(true);
-  public readonly holdings = input.required<PortfolioPosition[] | undefined>();
+  public readonly holdings = input.required<HoldingsTableItem[] | undefined>();
 
   public readonly locale = input(getLocale(), {
     transform: (value?: string) => {
@@ -69,7 +67,7 @@ export class GfHoldingsTableComponent {
   protected readonly paginator = viewChild.required(MatPaginator);
   protected readonly sort = viewChild.required(MatSort);
 
-  protected readonly dataSource = new MatTableDataSource<PortfolioPosition>([]);
+  protected readonly dataSource = new MatTableDataSource<HoldingsTableItem>([]);
 
   protected readonly displayedColumns = computed(() => {
     if (this.mode() === 'simple') {
@@ -134,13 +132,13 @@ export class GfHoldingsTableComponent {
     });
   }
 
-  protected canShowDetails(holding: PortfolioPosition): boolean {
+  protected canShowDetails(holding: HoldingsTableItem): boolean {
     return this.hasPermissionToOpenDetails() && canOpenHoldingDetail(holding);
   }
 
   protected getCountryCodeForCashPosition({
     assetProfile
-  }: PortfolioPosition): string {
+  }: HoldingsTableItem): string {
     return isCashPosition(assetProfile)
       ? getCountryCodeFromCurrency(assetProfile.currency)
       : '';

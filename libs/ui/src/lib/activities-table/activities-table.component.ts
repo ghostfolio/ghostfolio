@@ -71,6 +71,7 @@ import { GfActivityTypeComponent } from '../activity-type/activity-type.componen
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { GfNoActivitiesInfoComponent } from '../no-activities-info/no-activities-info.component';
 import { GfValueComponent } from '../value/value.component';
+import { ActivitiesTableItem } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -99,7 +100,11 @@ import { GfValueComponent } from '../value/value.component';
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })
-export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
+export class GfActivitiesTableComponent<
+  T extends ActivitiesTableItem = Activity
+>
+  implements AfterViewInit, OnInit
+{
   @Input() public baseCurrency?: string;
   @Input() public deviceType: string;
   @Input() public hasActivities: boolean;
@@ -127,7 +132,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   @Output() import = new EventEmitter<void>();
   @Output() importDividends = new EventEmitter<AssetProfileIdentifier>();
   @Output() pageChanged = new EventEmitter<PageEvent>();
-  @Output() selectedActivities = new EventEmitter<Activity[]>();
+  @Output() selectedActivities = new EventEmitter<T[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
   @Output() typesFilterChanged = new EventEmitter<string[]>();
 
@@ -138,12 +143,12 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
   public hasErrors = false;
   public isDraftActivity = isDraftActivity;
   public isUUID = isUUID;
-  public selectedRows = new SelectionModel<Activity>(true, []);
+  public selectedRows = new SelectionModel<T>(true, []);
   public typesFilter = new FormControl<string[]>([]);
 
   public readonly activityTypes = input<ActivityType[]>([]);
   public readonly dataSource = input.required<
-    MatTableDataSource<Activity> | undefined
+    MatTableDataSource<T> | undefined
   >();
   public readonly showAccountColumn = input(true);
   public readonly showCheckbox = input(false);
@@ -158,11 +163,13 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
       { clone: string[]; update: string[] }
     >();
 
-    for (const { id } of this.dataSource()?.data ?? []) {
-      routerLinks.set(id, {
-        clone: clone.routerLink(id),
-        update: update.routerLink(id)
-      });
+    for (const activity of this.dataSource()?.data ?? []) {
+      if (activity.id) {
+        routerLinks.set(activity.id, {
+          clone: clone.routerLink(activity.id),
+          update: update.routerLink(activity.id)
+        });
+      }
     }
 
     return routerLinks;
@@ -276,7 +283,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     return numSelectedRows === numTotalRows;
   }
 
-  public canClickActivity(activity: Activity) {
+  public canClickActivity(activity: T) {
     return (
       this.hasPermissionToOpenDetails &&
       isDraftActivity(activity) === false &&
@@ -302,7 +309,7 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
     this.pageChanged.emit(page);
   }
 
-  public onClickActivity(activity: Activity) {
+  public onClickActivity(activity: T) {
     if (this.showCheckbox()) {
       if (!activity.error) {
         this.selectedRows.toggle(activity);
@@ -354,6 +361,9 @@ export class GfActivitiesTableComponent implements AfterViewInit, OnInit {
         })
         .map((activity) => {
           return activity.id;
+        })
+        .filter((id): id is string => {
+          return !!id;
         })
     );
   }
