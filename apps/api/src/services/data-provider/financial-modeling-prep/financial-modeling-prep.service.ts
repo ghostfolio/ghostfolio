@@ -58,6 +58,7 @@ export class FinancialModelingPrepService
     'Congo (Dem. Rep. of the)': 'CD',
     'Congo (Rep. of)': 'CG',
     'Czech Republic': 'CZ',
+    Korea: 'KR',
     'Korea (the Republic of)': 'KR',
     Macau: 'MO',
     'Russian Federation': 'RU',
