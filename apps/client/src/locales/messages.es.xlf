@@ -5926,7 +5926,7 @@
       </trans-unit>
       <trans-unit id="4272904080612853299" datatype="html">
         <source>Do you really want to merge this asset profile into it?</source>
-        <target state="translated">¿Realmente deseas fusionar este perfil de activo en él?</target>
+        <target state="translated">¿Seguro que quieres fusionar este perfil de activo en él?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">969</context>
