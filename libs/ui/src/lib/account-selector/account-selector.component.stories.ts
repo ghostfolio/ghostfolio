@@ -24,7 +24,7 @@ const ACCOUNTS: AccountWithPlatform[] = [
     platform: {
       id: '9da3a8a7-4795-43e3-a6db-ccb914189737',
       name: 'Coinbase',
-      url: 'https://coinbase.com'
+      url: 'https://www.coinbase.com'
     },
     platformId: '9da3a8a7-4795-43e3-a6db-ccb914189737',
     updatedAt: new Date('2024-01-01'),
@@ -33,25 +33,30 @@ const ACCOUNTS: AccountWithPlatform[] = [
   {
     comment: null,
     createdAt: new Date('2024-01-01'),
-    currency: 'CHF',
-    id: '9da3a8a7-4795-43e3-a6db-ccb914189737',
-    name: 'Ghostfolio Account',
+    currency: 'USD',
+    id: 'd191b2d5-9d5a-4c5f-9d55-6f0e5f6a7b8c',
+    name: 'Private Banking Account',
     platform: {
-      id: 'f3e9d0e5-1e0f-4a3c-8b12-1f2a3b4c5d6e',
-      name: 'Ghostfolio',
-      url: 'https://ghostfol.io'
+      id: '43e8fcd1-5b79-4100-b678-d2229bd1660d',
+      name: 'J.P. Morgan',
+      url: 'https://www.jpmorgan.com'
     },
-    platformId: 'f3e9d0e5-1e0f-4a3c-8b12-1f2a3b4c5d6e',
+    platformId: '43e8fcd1-5b79-4100-b678-d2229bd1660d',
     updatedAt: new Date('2024-01-01'),
     userId: '081aa387-487d-4438-83a4-3060eb2a016e'
   },
   {
     comment: null,
     createdAt: new Date('2024-01-01'),
-    currency: 'EUR',
-    id: 'd191b2d5-9d5a-4c5f-9d55-6f0e5f6a7b8c',
-    name: 'Savings Account',
-    platformId: null,
+    currency: 'USD',
+    id: '9da3a8a7-4795-43e3-a6db-ccb914189737',
+    name: 'Trading Account',
+    platform: {
+      id: 'f3e9d0e5-1e0f-4a3c-8b12-1f2a3b4c5d6e',
+      name: 'Interactive Brokers',
+      url: 'https://interactivebrokers.com'
+    },
+    platformId: 'f3e9d0e5-1e0f-4a3c-8b12-1f2a3b4c5d6e',
     updatedAt: new Date('2024-01-01'),
     userId: '081aa387-487d-4438-83a4-3060eb2a016e'
   }

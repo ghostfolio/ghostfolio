@@ -2,8 +2,8 @@ import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Service } from '@angular/core';
 
-// Must stay auto-provided: several table stories render gf-entity-logo
-// without providing an override and resolve this from the root injector
+// Must stay auto-provided: the currency selector story renders gf-entity-logo
+// without providing an override and resolves this from the root injector
 @Service()
 export class EntityLogoImageSourceService {
   public getLogoUrlByAssetProfileIdentifier({
