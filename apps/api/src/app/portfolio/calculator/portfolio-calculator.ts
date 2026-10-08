@@ -1407,7 +1407,7 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
-  public async getPerformance({ end, start }) {
+  public async getPerformance({ end, start }: { end: Date; start: Date }) {
     await this.snapshotPromise;
 
     const { historicalData } = this.snapshot;
@@ -1418,6 +1418,11 @@ export abstract class PortfolioCalculator {
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
 
+    // The historical data items are dated at midnight in UTC, hence a start
+    // or an end at the end of a day in the time zone of the instance is
+    // changed to this date
+    const endDate = isEqual(end, endOfDay(end)) ? resetHours(end) : end;
+
     const startDate = isEqual(start, endOfDay(start))
       ? resetHours(start)
       : start;
@@ -1425,7 +1430,7 @@ export abstract class PortfolioCalculator {
     for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
 
-      if (!isBefore(date, startDate) && !isAfter(date, end)) {
+      if (!isBefore(date, startDate) && !isAfter(date, endDate)) {
         // Take the values at the start date from the first day of the date
         // range
         if (historicalDataItemsOfDateRange.length === 0) {

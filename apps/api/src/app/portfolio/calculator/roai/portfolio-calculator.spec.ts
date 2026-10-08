@@ -9,6 +9,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -181,6 +182,49 @@ describe('PortfolioCalculator', () => {
         performancePercentagesByDate['2017-01-23']
           .netPerformanceInPercentageWithCurrencyEffect
       ).toBeCloseTo(0.23, 10);
+    });
+  });
+
+  describe('get performance', () => {
+    // The chart items are dated at midnight in UTC, but a calendar year date
+    // range ends at the end of 31 December in the time zone of the instance.
+    // Hence this test must give the same result with the instance in any time
+    // zone. Set TEST_TZ to run it with the instance in another time zone.
+    it('with a calendar year date range', async () => {
+      const snapshot = await portfolioCalculator.getSnapshot();
+
+      snapshot.historicalData = [
+        getHistoricalDataItem({
+          date: '2016-12-31',
+          investment: 100,
+          netPerformance: 0
+        }),
+        getHistoricalDataItem({
+          date: '2017-12-31',
+          investment: 100,
+          netPerformance: 10
+        }),
+        getHistoricalDataItem({
+          date: '2018-01-01',
+          investment: 100,
+          netPerformance: 20
+        })
+      ];
+
+      const { endDate, startDate } = getIntervalFromDateRange({
+        dateRange: '2017'
+      });
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: endDate,
+        start: startDate
+      });
+
+      expect(
+        chart.map(({ date }) => {
+          return date;
+        })
+      ).toEqual(['2016-12-31', '2017-12-31']);
     });
   });
 });
