@@ -75,10 +75,11 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    const user = await this.validateAccessToken(
-      data.accessToken,
-      this.request.user.id
-    );
+    // Only users of the anonymous provider have a security token
+    const user =
+      this.request.user.provider === 'ANONYMOUS'
+        ? await this.validateAccessToken(data.accessToken, this.request.user.id)
+        : this.request.user;
 
     return this.userService.deleteUser({
       id: user.id
@@ -260,6 +261,13 @@ export class UserController {
     accessToken: string,
     userId: string
   ): Promise<UserModel> {
+    if (!accessToken) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     const hashedAccessToken = this.userService.createAccessToken({
       password: accessToken,
       salt: this.configurationService.get('ACCESS_TOKEN_SALT')

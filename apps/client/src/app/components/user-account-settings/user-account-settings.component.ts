@@ -94,6 +94,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected hasImpersonationId: boolean;
   protected hasPermissionToDeleteOwnUser: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
+  protected hasPermissionToUpdateOwnAccessToken: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
@@ -192,6 +193,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
           this.hasPermissionToRequestOwnUserDeletion = hasPermission(
             this.user.permissions,
             permissions.requestOwnUserDeletion
+          );
+
+          this.hasPermissionToUpdateOwnAccessToken = hasPermission(
+            this.user.permissions,
+            permissions.updateOwnAccessToken
           );
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
