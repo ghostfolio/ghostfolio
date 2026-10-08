@@ -100,11 +100,12 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
+  min,
   parseISO,
   set,
   startOfDay
 } from 'date-fns';
-import { groupBy } from 'lodash-es';
+import { groupBy, uniq } from 'lodash-es';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
@@ -1194,10 +1195,12 @@ export class PortfolioService {
   public async getPerformance({
     dateRange = DEFAULT_DATE_RANGE,
     filters,
+    groupBy,
     userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
+    groupBy?: Extract<GroupBy, 'year'>;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
@@ -1252,10 +1255,11 @@ export class PortfolioService {
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
-    const { chart } = await portfolioCalculator.getPerformance({
-      end: endDate,
-      start: startDate
-    });
+    const { chart: chartOfDateRange } =
+      await portfolioCalculator.getPerformance({
+        end: endDate,
+        start: startDate
+      });
 
     const {
       dividendInBaseCurrency,
@@ -1268,7 +1272,7 @@ export class PortfolioService {
       totalInvestment,
       totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
-    } = chart?.at(-1) ?? {
+    } = chartOfDateRange?.at(-1) ?? {
       dividendInBaseCurrency: 0,
       dividendInPercentageWithCurrencyEffect: 0,
       netPerformance: 0,
@@ -1279,6 +1283,16 @@ export class PortfolioService {
       totalInvestment: 0,
       valueWithCurrencyEffect: 0
     };
+
+    const chart =
+      groupBy === 'year'
+        ? await this.getPerformanceByYear({
+            chartOfDateRange,
+            endDate,
+            portfolioCalculator,
+            startDate
+          })
+        : chartOfDateRange;
 
     return {
       chart,
@@ -2048,6 +2062,52 @@ export class PortfolioService {
       .toNumber();
 
     return { markets, marketsAdvanced };
+  }
+
+  /**
+   * Returns one chart item per calendar year of the date range, like the
+   * dividends and the investments grouped by year. The chart item of a year is
+   * the last chart item of the performance of this year, dated on 1 January.
+   * Each year stands alone and is not accumulated, so its values are the same
+   * as for the date range of the year (e.g. '2024'), clipped to the requested
+   * date range.
+   */
+  private async getPerformanceByYear({
+    chartOfDateRange,
+    endDate,
+    portfolioCalculator,
+    startDate
+  }: {
+    chartOfDateRange: HistoricalDataItem[];
+    endDate: Date;
+    portfolioCalculator: PortfolioCalculator;
+    startDate: Date;
+  }): Promise<HistoricalDataItem[]> {
+    const chart: HistoricalDataItem[] = [];
+
+    // The first chart item carries the values at the start date of the date
+    // range and belongs to the previous period, like 31 December for a
+    // calendar year. The years come from the other chart items, so the years
+    // before the first activity have no chart item.
+    const years = uniq(
+      chartOfDateRange.slice(1).map(({ date }) => {
+        return date.substring(0, 4);
+      })
+    );
+
+    for (const year of years) {
+      const { endDate: endDateOfYear, startDate: startDateOfYear } =
+        getIntervalFromDateRange({ dateRange: year, startDate });
+
+      const { chart: chartOfYear } = await portfolioCalculator.getPerformance({
+        end: min([endDate, endDateOfYear]),
+        start: startDateOfYear
+      });
+
+      chart.push({ ...chartOfYear.at(-1), date: `${year}-01-01` });
+    }
+
+    return chart;
   }
 
   private getReportStatistics(
