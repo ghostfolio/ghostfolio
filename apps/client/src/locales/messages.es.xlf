@@ -100,7 +100,7 @@
       </trans-unit>
       <trans-unit id="8264632476919693099" datatype="html">
         <source>Any person who has the link can view the data.</source>
-        <target state="new">Any person who has the link can view the data.</target>
+        <target state="translated">Cualquier persona que tenga el enlace puede ver los datos.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">42</context>
@@ -388,7 +388,7 @@
       </trans-unit>
       <trans-unit id="4472298507300372923" datatype="html">
         <source>View and manage</source>
-        <target state="new">View and manage</target>
+        <target state="translated">Ver y administrar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/access-level-icon/access-level-icon.component.html</context>
           <context context-type="linenumber">9</context>
@@ -648,7 +648,7 @@
       </trans-unit>
       <trans-unit id="6249687295240367729" datatype="html">
         <source>Explore our guides to help you get started with investing and managing your finances.</source>
-        <target state="new">Explore our guides to help you get started with investing and managing your finances.</target>
+        <target state="translated">Explora nuestras guías para ayudarte a empezar a invertir y gestionar tus finanzas.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">21</context>
@@ -892,7 +892,7 @@
       </trans-unit>
       <trans-unit id="1022809987579838138" datatype="html">
         <source>Last Used</source>
-        <target state="new">Last Used</target>
+        <target state="translated">Último uso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">31</context>
@@ -900,7 +900,7 @@
       </trans-unit>
       <trans-unit id="1029620928611278483" datatype="html">
         <source>An error occurred while merging this asset profile into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</source>
-        <target state="new">An error occurred while merging this asset profile into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
+        <target state="translated">Se produjo un error al fusionar este perfil de activo en <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">946</context>
@@ -944,7 +944,7 @@
       </trans-unit>
       <trans-unit id="6623155069376115284" datatype="html">
         <source>Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Encuentra respuestas rápidas a las preguntas más frecuentes sobre Ghostfolio en nuestra sección de preguntas frecuentes (FAQ).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">16</context>
@@ -2188,7 +2188,7 @@
       </trans-unit>
       <trans-unit id="4882027922359285902" datatype="html">
         <source>Restricted view and manage</source>
-        <target state="new">Restricted view and manage</target>
+        <target state="translated">Vista restringida y administración</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/access-level-icon/access-level-icon.component.html</context>
           <context context-type="linenumber">5</context>
@@ -2744,7 +2744,7 @@
       </trans-unit>
       <trans-unit id="5298486223740169185" datatype="html">
         <source>By <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="INTERPOLATION" equiv-text="{{ retirementDateLabel }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, this is projected to increase to <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerYearProjected?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerMonthProjected?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, assuming a <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> annual interest rate.</source>
-        <target state="new">Para <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="INTERPOLATION" equiv-text="{{ retirementDateLabel }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, se prevé que esto aumente a <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYearProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> por año<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> o <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonthProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> por mes<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, asumiendo una tasa de interés anual del <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>.</target>
+        <target state="translated">Para <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="INTERPOLATION" equiv-text="{{ retirementDateLabel }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, se prevé que esto aumente a <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYearProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> por año<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> o <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonthProjected?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/> por mes<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, asumiendo una tasa de interés anual del <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isPercent]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [precision]=&quot;2&quot; [value]=&quot;user?.settings?.annualInterestRate / 100&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">144</context>
@@ -3032,7 +3032,7 @@
       </trans-unit>
       <trans-unit id="3885497195825665706" datatype="html">
         <source>Next</source>
-        <target state="new">Next</target>
+        <target state="translated">Siguiente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">406</context>
@@ -3160,7 +3160,7 @@
       </trans-unit>
       <trans-unit id="1825717711340685842" datatype="html">
         <source>Export <x id="INTERPOLATION" equiv-text="{{ (totalItems ?? 0) &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Activity} other {Activities}}"/></source>
-        <target state="new">Exportar <x id="INTERPOLATION" equiv-text="{{ totalItems &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Actividad} other {Actividades}}"/></target>
+        <target state="translated">Exportar <x id="INTERPOLATION" equiv-text="{{ totalItems &gt; 1 ? totalItems : &apos;&apos; }}"/> <x id="ICU" equiv-text="{totalItems, plural, =1 {Actividad} other {Actividades}}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">72</context>
@@ -3304,7 +3304,7 @@
       </trans-unit>
       <trans-unit id="3358797625330883274" datatype="html">
         <source>Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Encuentra respuestas rápidas a las preguntas más frecuentes sobre el autohospedaje de Ghostfolio en nuestra sección de preguntas frecuentes (FAQ).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/self-hosting/self-hosting-page.html</context>
           <context context-type="linenumber">8</context>
@@ -3328,7 +3328,7 @@
       </trans-unit>
       <trans-unit id="5552246967241337741" datatype="html">
         <source>If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerYear?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? withdrawalRatePerMonth?.toNumber() : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, based on your total assets of <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot; hasPermissionToShowValues ? fireWealth?.today.valueInBaseCurrency : null &quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> and a safe withdrawal rate (SWR) of</source>
-        <target state="new">Si te jubilas hoy, podrías retirar <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> por año<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> o <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> por mes<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, basado en tus activos totales de <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> y una tasa de retiro segura (SWR) de</target>
+        <target state="translated">Si te jubilas hoy, podrías retirar <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> por año<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> o <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/> por mes<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, basado en tus activos totales de <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.today.valueInBaseCurrency&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> y una tasa de retiro segura (SWR) de</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">69</context>
@@ -3404,7 +3404,7 @@
       </trans-unit>
       <trans-unit id="641154803270226443" datatype="html">
         <source>Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Encuentra respuestas rápidas a las preguntas más frecuentes sobre la oferta de Ghostfolio en la nube totalmente gestionada en nuestra sección de preguntas frecuentes (FAQ).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/saas/saas-page.html</context>
           <context context-type="linenumber">8</context>
@@ -3484,7 +3484,7 @@
       </trans-unit>
       <trans-unit id="7771702342975481710" datatype="html">
         <source>Add your first activity</source>
-        <target state="new">Add your first activity</target>
+        <target state="translated">Añade tu primera actividad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/no-activities-info/no-activities-info.component.html</context>
           <context context-type="linenumber">12</context>
@@ -3584,7 +3584,7 @@
       </trans-unit>
       <trans-unit id="472895619516205802" datatype="html">
         <source>This action cannot be undone.</source>
-        <target state="new">This action cannot be undone.</target>
+        <target state="translated">Esta acción no se puede deshacer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">965</context>
@@ -4108,7 +4108,7 @@
       </trans-unit>
       <trans-unit id="5521091503920831865" datatype="html">
         <source>Add to Watchlist</source>
-        <target state="new">Add to Watchlist</target>
+        <target state="translated">Añadir a la lista de seguimiento</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">163</context>
@@ -4132,7 +4132,7 @@
       </trans-unit>
       <trans-unit id="9099220454364126737" datatype="html">
         <source>This asset profile cannot be merged into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</source>
-        <target state="new">This asset profile cannot be merged into <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
+        <target state="translated">Este perfil de activo no se puede fusionar en <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">924</context>
@@ -4184,7 +4184,7 @@
       </trans-unit>
       <trans-unit id="6962264495000055621" datatype="html">
         <source>Do you really want to remove this received access?</source>
-        <target state="new">Do you really want to remove this received access?</target>
+        <target state="translated">¿Realmente deseas eliminar este acceso?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
           <context context-type="linenumber">152</context>
@@ -4216,7 +4216,7 @@
       </trans-unit>
       <trans-unit id="7719274775614264692" datatype="html">
         <source>The data of this asset profile is moved to <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) and this asset profile is deleted.</source>
-        <target state="new">The data of this asset profile is moved to <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) and this asset profile is deleted.</target>
+        <target state="translated">Los datos de este perfil de activo se trasladan a <x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) y este perfil de activo se elimina.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">963</context>
@@ -4308,7 +4308,7 @@
       </trans-unit>
       <trans-unit id="5176578390795646240" datatype="html">
         <source>thereof Dividend Performance</source>
-        <target state="new">thereof Dividend Performance</target>
+        <target state="translated">de los cuales, rentabilidad por dividendos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">178</context>
@@ -4696,7 +4696,7 @@
       </trans-unit>
       <trans-unit id="5918319622596548216" datatype="html">
         <source>Financial Advisor</source>
-        <target state="new">Financial Advisor</target>
+        <target state="translated">Asesor financiero</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">110</context>
@@ -5384,7 +5384,7 @@
       </trans-unit>
       <trans-unit id="6952711292901447467" datatype="html">
         <source>Learn key financial terms and concepts in our comprehensive glossary.</source>
-        <target state="new">Learn key financial terms and concepts in our comprehensive glossary.</target>
+        <target state="translated">Aprende términos y conceptos financieros clave en nuestro glosario.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -5829,7 +5829,7 @@
       </trans-unit>
       <trans-unit id="5106905229162288681" datatype="html">
         <source>Expiration Date</source>
-        <target state="new">Expiration Date</target>
+        <target state="translated">Fecha de caducidad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">54</context>
@@ -5926,7 +5926,7 @@
       </trans-unit>
       <trans-unit id="4272904080612853299" datatype="html">
         <source>Do you really want to merge this asset profile into it?</source>
-        <target state="new">Do you really want to merge this asset profile into it?</target>
+        <target state="translated">¿Realmente deseas fusionar este perfil de activo en él?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">969</context>
@@ -6194,7 +6194,7 @@
       </trans-unit>
       <trans-unit id="assetClass.ALTERNATIVE_INVESTMENT" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">Inversión alternativa</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">52</context>
@@ -6202,7 +6202,7 @@
       </trans-unit>
       <trans-unit id="assetClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">Materia prima</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">53</context>
@@ -6210,7 +6210,7 @@
       </trans-unit>
       <trans-unit id="assetClass.EQUITY" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">Renta variable</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
@@ -6218,7 +6218,7 @@
       </trans-unit>
       <trans-unit id="assetClass.FIXED_INCOME" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">Renta fija</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">55</context>
@@ -6226,7 +6226,7 @@
       </trans-unit>
       <trans-unit id="assetClass.LIQUIDITY" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">Liquidez</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">56</context>
@@ -6234,7 +6234,7 @@
       </trans-unit>
       <trans-unit id="assetClass.REAL_ESTATE" datatype="html">
         <source>Real Estate</source>
-        <target state="new">Real Estate</target>
+        <target state="translated">Inmobiliario</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">57</context>
@@ -6242,7 +6242,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.BOND" datatype="html">
         <source>Bond</source>
-        <target state="new">Bond</target>
+        <target state="translated">Bono</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">60</context>
@@ -6250,7 +6250,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CASH" datatype="html">
         <source>Cash</source>
-        <target state="new">Cash</target>
+        <target state="translated">Efectivo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">61</context>
@@ -6258,7 +6258,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COLLECTIBLE" datatype="html">
         <source>Collectible</source>
-        <target state="new">Collectible</target>
+        <target state="translated">Objeto de colección</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">62</context>
@@ -6266,7 +6266,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">Materia prima</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">5</context>
@@ -6274,7 +6274,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CRYPTOCURRENCY" datatype="html">
         <source>Cryptocurrency</source>
-        <target state="new">Cryptocurrency</target>
+        <target state="translated">Criptomoneda</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">63</context>
@@ -6282,7 +6282,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.ETF" datatype="html">
         <source>ETF</source>
-        <target state="new">ETF</target>
+        <target state="translated">ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">64</context>
@@ -6290,7 +6290,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.LOAN" datatype="html">
         <source>Loan</source>
-        <target state="new">Loan</target>
+        <target state="translated">Préstamo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">65</context>
@@ -6298,7 +6298,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.MUTUALFUND" datatype="html">
         <source>Mutual Fund</source>
-        <target state="new">Mutual Fund</target>
+        <target state="translated">Fondo de inversión</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">66</context>
@@ -6306,7 +6306,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRECIOUS_METAL" datatype="html">
         <source>Precious Metal</source>
-        <target state="new">Precious Metal</target>
+        <target state="translated">Metal precioso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">67</context>
@@ -6314,7 +6314,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRIVATE_EQUITY" datatype="html">
         <source>Private Equity</source>
-        <target state="new">Private Equity</target>
+        <target state="translated">Capital privado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">68</context>
@@ -6322,7 +6322,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.STOCK" datatype="html">
         <source>Stock</source>
-        <target state="new">Stock</target>
+        <target state="translated">Acción</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">69</context>
@@ -6666,7 +6666,7 @@
       </trans-unit>
       <trans-unit id="3995811497329884593" datatype="html">
         <source>Expires <x id="INTERPOLATION" equiv-text="{{ formatRelativeTime({ date: element.subscription.expiresAt, language: user?.settings?.language }) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</source>
-        <target state="new">Caduca <x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</target>
+        <target state="translated">Caduca <x id="INTERPOLATION" equiv-text="{{ formatDistanceToNow(element.subscription.expiresAt) }}"/> (<x id="INTERPOLATION_1" equiv-text="{{ element.subscription.expiresAt | date: defaultDateFormat }}"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">34</context>
@@ -6690,7 +6690,7 @@
       </trans-unit>
       <trans-unit id="251113330629316982" datatype="html">
         <source>Date must be in the future.</source>
-        <target state="new">Date must be in the future.</target>
+        <target state="translated">La fecha debe estar en el futuro.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">70</context>
@@ -7071,7 +7071,7 @@
       </trans-unit>
       <trans-unit id="4452427314943113135" datatype="html">
         <source>Previous</source>
-        <target state="new">Previous</target>
+        <target state="translated">Anterior</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">396</context>
@@ -7243,7 +7243,7 @@
       </trans-unit>
       <trans-unit id="2655368253225791055" datatype="html">
         <source>Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is, explore its features, and learn about our privacy practices. Get all the information you need in one place.</source>
-        <target state="new">Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is, explore its features, and learn about our privacy practices. Get all the information you need in one place.</target>
+        <target state="translated">Encuentra respuestas rápidas a las preguntas más frecuentes sobre Ghostfolio en nuestra sección de preguntas frecuentes (FAQ). Descubre qué es Ghostfolio, explora sus funciones y conoce nuestras prácticas de privacidad. Obtén toda la información que necesitas en un solo lugar.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/overview/faq-overview-page.html</context>
           <context context-type="linenumber">8</context>
@@ -7395,7 +7395,7 @@
       </trans-unit>
       <trans-unit id="7803225195017107428" datatype="html">
         <source>thereof Dividend</source>
-        <target state="new">thereof Dividend</target>
+        <target state="translated">de los cuales, dividendos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">102</context>
@@ -7937,7 +7937,7 @@
       </trans-unit>
       <trans-unit id="9179002757707456211" datatype="html">
         <source>Access various market resources and tools to stay informed about financial markets.</source>
-        <target state="new">Access various market resources and tools to stay informed about financial markets.</target>
+        <target state="translated">Accede a diversos recursos y herramientas del mercado para mantenerte informado sobre los mercados financieros.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">26</context>
@@ -8217,7 +8217,7 @@
       </trans-unit>
       <trans-unit id="1308755238280799396" datatype="html">
         <source>Oops! Could not remove the received access.</source>
-        <target state="new">Oops! Could not remove the received access.</target>
+        <target state="translated">¡Vaya! No se pudo eliminar el acceso.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">156</context>
@@ -8301,7 +8301,7 @@
       </trans-unit>
       <trans-unit id="8816331549575943119" datatype="html">
         <source>Additional requests are granted while you are setting up your instance</source>
-        <target state="new">Additional requests are granted while you are setting up your instance</target>
+        <target state="translated">Se conceden solicitudes adicionales mientras configuras tu instancia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
           <context context-type="linenumber">88</context>
@@ -8402,7 +8402,7 @@
       </trans-unit>
       <trans-unit id="3606972039333274390" datatype="html">
         <source><x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) is already in use.</source>
-        <target state="new"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>) ya está en uso.</target>
+        <target state="translated"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>) ya está en uso.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">967</context>
@@ -8833,7 +8833,7 @@
       </trans-unit>
       <trans-unit id="7387635272539030076" datatype="html">
         <source>new</source>
-        <target state="new">new</target>
+        <target state="translated">nuevo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">223</context>
@@ -9154,7 +9154,7 @@
       </trans-unit>
       <trans-unit id="5814001514445505929" datatype="html">
         <source>Return on Average Investment (total return with dividends)</source>
-        <target state="new">Return on Average Investment (total return with dividends)</target>
+        <target state="translated">Rentabilidad sobre la inversión media (rentabilidad total con dividendos)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">159</context>
@@ -9466,7 +9466,7 @@
       </trans-unit>
       <trans-unit id="3394346142616268152" datatype="html">
         <source>Oops! Could not revoke the granted access.</source>
-        <target state="new">Oops! Could not revoke the granted access.</target>
+        <target state="translated">¡Vaya! No se pudo revocar el acceso concedido.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">135</context>
