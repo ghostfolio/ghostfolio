@@ -8217,7 +8217,7 @@
       </trans-unit>
       <trans-unit id="1308755238280799396" datatype="html">
         <source>Oops! Could not remove the received access.</source>
-        <target state="translated">¡Vaya! No se pudo eliminar el acceso.</target>
+        <target state="translated">¡Vaya! No se pudo eliminar el acceso recibido.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
           <context context-type="linenumber">156</context>
