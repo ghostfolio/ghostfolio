@@ -100,27 +100,35 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Origin</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1().origin }}</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product2().origin }}</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  {{ product1().origin?.emojiFlag }}
+                  {{ product1().origin?.name }}
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  {{ product2().origin?.emojiFlag }}
+                  {{ product2().origin?.name }}
+                </td>
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Region</td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @for (
                     region of product1().regions;
-                    track region;
+                    track region.name;
                     let isLast = $last
                   ) {
-                    {{ region }}{{ isLast ? '' : ', ' }}
+                    {{ region.emojiFlag }} {{ region.name
+                    }}{{ isLast ? '' : ', ' }}
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @for (
                     region of product2().regions;
-                    track region;
+                    track region.name;
                     let isLast = $last
                   ) {
-                    {{ region }}{{ isLast ? '' : ', ' }}
+                    {{ region.emojiFlag }} {{ region.name
+                    }}{{ isLast ? '' : ', ' }}
                   }
                 </td>
               </tr>
