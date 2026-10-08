@@ -75,10 +75,11 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    const user =
-      this.request.user.provider === 'ANONYMOUS'
-        ? await this.validateAccessToken(data.accessToken, this.request.user.id)
-        : this.request.user;
+    const user = this.request.user;
+
+    if (user.provider === 'ANONYMOUS') {
+      await this.validateAccessToken(data.accessToken, user.id);
+    }
 
     return this.userService.deleteUser({
       id: user.id
