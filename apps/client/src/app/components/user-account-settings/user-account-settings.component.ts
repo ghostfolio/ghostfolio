@@ -277,14 +277,20 @@ export class GfUserAccountSettingsComponent implements OnInit {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
-          .deleteOwnUser({
-            accessToken: this.deleteOwnUserForm.controls.accessToken.value
-          })
+          .deleteOwnUser(
+            this.hasPermissionToUpdateOwnAccessToken
+              ? {
+                  accessToken: this.deleteOwnUserForm.controls.accessToken.value
+                }
+              : {}
+          )
           .pipe(
             catchError(() => {
-              this.notificationService.alert({
-                title: $localize`Oops! Incorrect Security Token.`
-              });
+              if (this.hasPermissionToUpdateOwnAccessToken) {
+                this.notificationService.alert({
+                  title: $localize`Oops! Incorrect Security Token.`
+                });
+              }
 
               return EMPTY;
             }),

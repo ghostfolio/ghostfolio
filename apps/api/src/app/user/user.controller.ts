@@ -75,7 +75,6 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    // Only users of the anonymous provider have a security token
     const user =
       this.request.user.provider === 'ANONYMOUS'
         ? await this.validateAccessToken(data.accessToken, this.request.user.id)

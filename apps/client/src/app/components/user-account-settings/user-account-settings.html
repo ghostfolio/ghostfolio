@@ -366,7 +366,7 @@
                   Close Account
                 </button>
               </form>
-            } @else if (hasPermissionToDeleteOwnUser) {
+            } @else if (hasPermissionToDeleteOwnUser && !hasImpersonationId) {
               <button
                 color="warn"
                 i18n

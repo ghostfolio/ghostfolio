@@ -439,9 +439,8 @@ export class UserService {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
 
-        // Users without a security token (e.g. Google) can close their user
-        // account themselves only within a period after the registration
         if (
+          !hasRole(user, Role.DEMO) &&
           user.provider !== 'ANONYMOUS' &&
           isBefore(
             new Date(),
