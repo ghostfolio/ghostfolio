@@ -101,12 +101,20 @@
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Origin</td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  {{ product1().origin?.emojiFlag }}
-                  {{ product1().origin?.name }}
+                  <span class="text-nowrap"
+                    ><span aria-hidden="true">{{
+                      product1().origin?.emojiFlag
+                    }}</span>
+                    {{ product1().origin?.name }}</span
+                  >
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  {{ product2().origin?.emojiFlag }}
-                  {{ product2().origin?.name }}
+                  <span class="text-nowrap"
+                    ><span aria-hidden="true">{{
+                      product2().origin?.emojiFlag
+                    }}</span>
+                    {{ product2().origin?.name }}</span
+                  >
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -117,8 +125,10 @@
                     track region.name;
                     let isLast = $last
                   ) {
-                    {{ region.emojiFlag }} {{ region.name
-                    }}{{ isLast ? '' : ', ' }}
+                    <span class="text-nowrap"
+                      ><span aria-hidden="true">{{ region.emojiFlag }}</span>
+                      {{ region.name }}</span
+                    >{{ isLast ? '' : ', ' }}
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
@@ -127,8 +137,10 @@
                     track region.name;
                     let isLast = $last
                   ) {
-                    {{ region.emojiFlag }} {{ region.name
-                    }}{{ isLast ? '' : ', ' }}
+                    <span class="text-nowrap"
+                      ><span aria-hidden="true">{{ region.emojiFlag }}</span>
+                      {{ region.name }}</span
+                    >{{ isLast ? '' : ', ' }}
                   }
                 </td>
               </tr>
