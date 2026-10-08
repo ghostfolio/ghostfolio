@@ -57,7 +57,7 @@
       </trans-unit>
       <trans-unit id="routes.features" datatype="html">
         <source>features</source>
-        <target state="translated">oezellikler</target>
+        <target state="translated">ozellikler</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -608,7 +608,7 @@
       </trans-unit>
       <trans-unit id="4467323362722952678" datatype="html">
         <source>Unknown</source>
-        <target state="new">Unknown</target>
+        <target state="translated">Bilinmiyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">89</context>
@@ -660,7 +660,7 @@
       </trans-unit>
       <trans-unit id="5611965261696422586" datatype="html">
         <source>and is driven by the efforts of its <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/graphs/contributors&quot; i18n-title title=&quot;Contributors to Ghostfolio&quot; &gt;"/>contributors<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></source>
-        <target state="new">and is driven by the efforts of its <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/graphs/contributors&quot; i18n-title title=&quot;Contributors to Ghostfolio&quot; &gt;"/>contributors<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
+        <target state="translated">tarafından başlatıldı ve <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/graphs/contributors&quot; i18n-title title=&quot;Contributors to Ghostfolio&quot; &gt;"/>katkıda bulunanların<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> emeğiyle geliştiriliyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">50</context>
@@ -863,7 +863,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">235</context>
+          <context context-type="linenumber">233</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
@@ -979,7 +979,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">283</context>
         </context-group>
       </trans-unit>
       <trans-unit id="516176798986294299" datatype="html">
@@ -995,7 +995,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">299</context>
+          <context context-type="linenumber">297</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
@@ -1015,7 +1015,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="linenumber">303</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -1035,7 +1035,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">317</context>
+          <context context-type="linenumber">315</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8749037557473547440" datatype="html">
@@ -1056,7 +1056,7 @@
       </trans-unit>
       <trans-unit id="5765523585863707029" datatype="html">
         <source>Technology</source>
-        <target state="new">Technology</target>
+        <target state="translated">Teknoloji</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">102</context>
@@ -1064,7 +1064,7 @@
       </trans-unit>
       <trans-unit id="577204259483334667" datatype="html">
         <source>and we share aggregated <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>key metrics<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> of the platform’s performance</source>
-        <target state="new">and we share aggregated <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>key metrics<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> of the platform’s performance</target>
+        <target state="translated">ve platformun performansına ilişkin <x id="START_LINK" ctype="x-a" equiv-text="&lt;a title=&quot;Open Startup&quot; [routerLink]=&quot;routerLinkOpenStartup&quot; &gt;"/>temel metrikleri<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> toplu olarak paylaşıyoruz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">33</context>
@@ -1080,7 +1080,7 @@
       </trans-unit>
       <trans-unit id="5918319622596548216" datatype="html">
         <source>Financial Advisor</source>
-        <target state="new">Financial Advisor</target>
+        <target state="translated">Finansal Danışman</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">110</context>
@@ -1152,7 +1152,7 @@
       </trans-unit>
       <trans-unit id="2691624743109891676" datatype="html">
         <source>Consumer Cyclical</source>
-        <target state="new">Consumer Cyclical</target>
+        <target state="translated">Döngüsel Tüketim</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">94</context>
@@ -1163,7 +1163,7 @@
         <target state="translated">Bu kuponu gerçekten silmek istiyor musunuz?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">228</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6470890277760887814" datatype="html">
@@ -1171,7 +1171,7 @@
         <target state="translated">Önbelleği temizlemeyi gerçekten istiyor musunuz?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">270</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2712770700065625080" datatype="html">
@@ -1179,7 +1179,7 @@
         <target state="translated">Lütfen sistem mesajınızı belirleyin:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">291</context>
         </context-group>
       </trans-unit>
       <trans-unit id="378542251607647500" datatype="html">
@@ -1187,7 +1187,7 @@
         <target state="translated">Kullanıcı başına</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">177</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8455870515256854977" datatype="html">
@@ -1399,7 +1399,7 @@
         <target state="new">Cache has been flushed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">261</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7966917302907632321" datatype="html">
@@ -1676,7 +1676,7 @@
       </trans-unit>
       <trans-unit id="5289957034780335504" datatype="html">
         <source>The source code is fully available as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; i18n-title title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></source>
-        <target state="new">The source code is fully available as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; i18n-title title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
+        <target state="translated">Kaynak kodunun tamamı <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 lisansı<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> altında <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; i18n-title title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>açık kaynaklı yazılım<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) olarak erişime açıktır</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">16</context>
@@ -1868,7 +1868,7 @@
       </trans-unit>
       <trans-unit id="273949409065292025" datatype="html">
         <source>Energy</source>
-        <target state="new">Energy</target>
+        <target state="translated">Enerji</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">96</context>
@@ -1903,11 +1903,11 @@
         <target state="translated">Toplam Net Performans</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">240</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3118565567530464051" datatype="html">
@@ -1915,11 +1915,11 @@
         <target state="translated">Net Performans</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4980697492087090765" datatype="html">
@@ -1927,7 +1927,7 @@
         <target state="translated">Toplam Varlıklar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4993097165849036956" datatype="html">
@@ -1935,7 +1935,7 @@
         <target state="translated">Alım Limiti</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">324</context>
+          <context context-type="linenumber">335</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2105957921933737059" datatype="html">
@@ -1943,7 +1943,7 @@
         <target state="translated">Analize Dahil Edilmemiştir.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">356</context>
+          <context context-type="linenumber">367</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5003799027167349722" datatype="html">
@@ -1951,7 +1951,7 @@
         <target state="translated">Yükümlülükler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">387</context>
+          <context context-type="linenumber">398</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -1963,7 +1963,7 @@
         <target state="translated">Toplam Varlık</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">407</context>
+          <context context-type="linenumber">418</context>
         </context-group>
       </trans-unit>
       <trans-unit id="293512063893966488" datatype="html">
@@ -1971,7 +1971,7 @@
         <target state="translated">Yıllıklandırılmış Performans</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">422</context>
+          <context context-type="linenumber">433</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5403336912114537863" datatype="html">
@@ -1979,7 +1979,7 @@
         <target state="translated">Lütfen acil durum yedeği meblağını giriniz:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
-          <context context-type="linenumber">204</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2067863610333602482" datatype="html">
@@ -2027,11 +2027,11 @@
         <target state="translated">Komisyon</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">221</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5376727317218692773" datatype="html">
@@ -2039,7 +2039,7 @@
         <target state="translated">Rapor Veri Sorunu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">480</context>
+          <context context-type="linenumber">478</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5451369123952965511" datatype="html">
@@ -2463,7 +2463,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">411</context>
+          <context context-type="linenumber">409</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
@@ -2508,7 +2508,7 @@
       </trans-unit>
       <trans-unit id="8643034887919513109" datatype="html">
         <source>Financial Planning</source>
-        <target state="new">Financial Planning</target>
+        <target state="translated">Finansal Planlama</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">111</context>
@@ -2535,7 +2535,7 @@
         <target state="translated">Piyasa Verileri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">431</context>
+          <context context-type="linenumber">429</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -2999,7 +2999,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">215</context>
+          <context context-type="linenumber">226</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -3156,7 +3156,7 @@
       </trans-unit>
       <trans-unit id="6522760526959463029" datatype="html">
         <source>Protect your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>assets<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. Refine your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>personal investment strategy<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>.</source>
-        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>varlıklarınızı koruyun<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Kişisel yatırım stratejinizi geliştirin<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>.</target>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Varlıklarınızı koruyun<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Kişisel yatırım stratejinizi geliştirin<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">128</context>
@@ -3196,7 +3196,7 @@
       </trans-unit>
       <trans-unit id="6945194064393203435" datatype="html">
         <source>Basic Materials</source>
-        <target state="new">Basic Materials</target>
+        <target state="translated">Temel Malzemeler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">92</context>
@@ -3523,11 +3523,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">248</context>
+          <context context-type="linenumber">246</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">376</context>
+          <context context-type="linenumber">374</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
@@ -3580,6 +3580,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5176578390795646240" datatype="html">
+        <source>thereof Dividend Performance</source>
+        <target state="new">thereof Dividend Performance</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">306</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5180854365496977862" datatype="html">
@@ -3652,7 +3664,7 @@
       </trans-unit>
       <trans-unit id="7500665368930738879" datatype="html">
         <source>or start a discussion at</source>
-        <target state="new">or start a discussion at</target>
+        <target state="translated">ya da bir tartışma başlatmak için şu adresi ziyaret edin:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">98</context>
@@ -3700,14 +3712,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8717427042493194723" datatype="html">
-        <source>Dividend Performance</source>
-        <target state="new">Dividend Performance</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5747722179752261472" datatype="html">
@@ -3888,7 +3892,7 @@
       </trans-unit>
       <trans-unit id="79310201207169632" datatype="html">
         <source>Exclude from Analysis</source>
-        <target state="new">Exclude from Analysis</target>
+        <target state="translated">Analiz Dışında Bırak</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">23</context>
@@ -3991,15 +3995,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">199</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">103</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">511</context>
+          <context context-type="linenumber">197</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -4031,7 +4027,7 @@
         <target state="translated">Para Yatırma</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.ts</context>
-          <context context-type="linenumber">444</context>
+          <context context-type="linenumber">446</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6762743264882388498" datatype="html">
@@ -4553,7 +4549,7 @@
       </trans-unit>
       <trans-unit id="5271053765919315173" datatype="html">
         <source>Website of Thomas Kaul</source>
-        <target state="new">Website of Thomas Kaul</target>
+        <target state="translated">Thomas Kaul’un web sitesi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">45</context>
@@ -4588,7 +4584,7 @@
         <target state="new">Coupon <x id="PH" equiv-text="newCoupon.code"/> has been created</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">209</context>
+          <context context-type="linenumber">210</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6809703125566042287" datatype="html">
@@ -4713,7 +4709,7 @@
       </trans-unit>
       <trans-unit id="2191562378582791940" datatype="html">
         <source>Stock Tracking</source>
-        <target state="new">Stock Tracking</target>
+        <target state="translated">Hisse Senedi Takibi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">114</context>
@@ -4737,7 +4733,7 @@
       </trans-unit>
       <trans-unit id="9167786874272926575" datatype="html">
         <source>Web</source>
-        <target state="new">Web</target>
+        <target state="translated">Web</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">123</context>
@@ -4881,7 +4877,7 @@
       </trans-unit>
       <trans-unit id="4432485267082955422" datatype="html">
         <source>Consumer Defensive</source>
-        <target state="new">Consumer Defensive</target>
+        <target state="translated">Temel Tüketim</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">95</context>
@@ -4945,7 +4941,7 @@
       </trans-unit>
       <trans-unit id="3848479214898655176" datatype="html">
         <source>Utilities</source>
-        <target state="new">Utilities</target>
+        <target state="translated">Kamu Hizmetleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">103</context>
@@ -5033,7 +5029,7 @@
       </trans-unit>
       <trans-unit id="4102764207131986196" datatype="html">
         <source>Contributors to Ghostfolio</source>
-        <target state="new">Contributors to Ghostfolio</target>
+        <target state="translated">Ghostfolio’ya katkıda bulunanlar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">54</context>
@@ -5076,7 +5072,7 @@
         <target state="new">Investments</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">257</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3014406080070038652" datatype="html">
@@ -5328,11 +5324,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">496</context>
+          <context context-type="linenumber">507</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.ts</context>
-          <context context-type="linenumber">454</context>
+          <context context-type="linenumber">456</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -5344,7 +5340,7 @@
         <target state="translated">Tasarruflar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.ts</context>
-          <context context-type="linenumber">464</context>
+          <context context-type="linenumber">466</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8927080808898221200" datatype="html">
@@ -5428,7 +5424,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">259</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
@@ -5460,7 +5456,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">268</context>
+          <context context-type="linenumber">266</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
@@ -5500,15 +5496,15 @@
         <target state="translated">Acil Durum Fonu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">261</context>
+          <context context-type="linenumber">272</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">339</context>
+          <context context-type="linenumber">350</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">441</context>
+          <context context-type="linenumber">452</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
@@ -5652,7 +5648,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">337</context>
+          <context context-type="linenumber">335</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
@@ -5768,7 +5764,7 @@
         <target state="translated">Nakit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">304</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1983771552391474467" datatype="html">
@@ -5793,14 +5789,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-detail-dialog/user-detail-dialog.html</context>
           <context context-type="linenumber">78</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1400496117963702686" datatype="html">
-        <source>Absolute Dividend Performance</source>
-        <target state="new">Absolute Dividend Performance</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">195</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1413778527796351850" datatype="html">
@@ -5829,7 +5817,7 @@
       </trans-unit>
       <trans-unit id="8340410730497371637" datatype="html">
         <source>Communication Services</source>
-        <target state="new">Communication Services</target>
+        <target state="translated">İletişim Hizmetleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">93</context>
@@ -5937,7 +5925,7 @@
       </trans-unit>
       <trans-unit id="4257439615478050183" datatype="html">
         <source>Ghostfolio Status</source>
-        <target state="new">Ghostfolio Status</target>
+        <target state="translated">Ghostfolio Durumu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">64</context>
@@ -6189,7 +6177,7 @@
       </trans-unit>
       <trans-unit id="4581276194280068721" datatype="html">
         <source>Industrials</source>
-        <target state="new">Industrials</target>
+        <target state="translated">Sanayi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">99</context>
@@ -6205,7 +6193,7 @@
       </trans-unit>
       <trans-unit id="assetClass.ALTERNATIVE_INVESTMENT" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">Alternatif Yatırım</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">52</context>
@@ -6213,7 +6201,7 @@
       </trans-unit>
       <trans-unit id="assetClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">Emtia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">53</context>
@@ -6221,7 +6209,7 @@
       </trans-unit>
       <trans-unit id="assetClass.EQUITY" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">Hisse Senedi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
@@ -6229,7 +6217,7 @@
       </trans-unit>
       <trans-unit id="assetClass.FIXED_INCOME" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">Sabit Getirili</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">55</context>
@@ -6237,7 +6225,7 @@
       </trans-unit>
       <trans-unit id="assetClass.LIQUIDITY" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">Likidite</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">56</context>
@@ -6245,7 +6233,7 @@
       </trans-unit>
       <trans-unit id="assetClass.REAL_ESTATE" datatype="html">
         <source>Real Estate</source>
-        <target state="new">Real Estate</target>
+        <target state="translated">Gayrimenkul</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">57</context>
@@ -6253,7 +6241,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.BOND" datatype="html">
         <source>Bond</source>
-        <target state="new">Bond</target>
+        <target state="translated">Tahvil</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">60</context>
@@ -6261,7 +6249,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CASH" datatype="html">
         <source>Cash</source>
-        <target state="new">Cash</target>
+        <target state="translated">Nakit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">61</context>
@@ -6269,7 +6257,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COLLECTIBLE" datatype="html">
         <source>Collectible</source>
-        <target state="new">Collectible</target>
+        <target state="translated">Koleksiyon Ürünü</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">62</context>
@@ -6277,7 +6265,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">Emtia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">5</context>
@@ -6285,7 +6273,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CRYPTOCURRENCY" datatype="html">
         <source>Cryptocurrency</source>
-        <target state="new">Cryptocurrency</target>
+        <target state="translated">Kripto Para</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">63</context>
@@ -6293,7 +6281,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.ETF" datatype="html">
         <source>ETF</source>
-        <target state="new">ETF</target>
+        <target state="translated">ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">64</context>
@@ -6301,7 +6289,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.LOAN" datatype="html">
         <source>Loan</source>
-        <target state="new">Loan</target>
+        <target state="translated">Kredi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">65</context>
@@ -6309,7 +6297,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.MUTUALFUND" datatype="html">
         <source>Mutual Fund</source>
-        <target state="new">Mutual Fund</target>
+        <target state="translated">Yatırım Fonu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">66</context>
@@ -6317,7 +6305,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRECIOUS_METAL" datatype="html">
         <source>Precious Metal</source>
-        <target state="new">Precious Metal</target>
+        <target state="translated">Değerli Maden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">67</context>
@@ -6325,7 +6313,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRIVATE_EQUITY" datatype="html">
         <source>Private Equity</source>
-        <target state="new">Private Equity</target>
+        <target state="translated">Özel Sermaye</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">68</context>
@@ -6333,7 +6321,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.STOCK" datatype="html">
         <source>Stock</source>
-        <target state="new">Stock</target>
+        <target state="translated">Hisse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">69</context>
@@ -6421,7 +6409,7 @@
       </trans-unit>
       <trans-unit id="7194017842579795231" datatype="html">
         <source>Healthcare</source>
-        <target state="new">Healthcare</target>
+        <target state="translated">Sağlık</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">98</context>
@@ -6432,7 +6420,7 @@
         <target state="translated">Bu sistem mesajını silmeyi gerçekten istiyor musunuz?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">241</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9028573429495160158" datatype="html">
@@ -6484,7 +6472,7 @@
         <target state="translated">Bu nakit bakiyesini silmeyi gerçekten istiyor musunuz?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/account-balances/account-balances.component.ts</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3401045354658415524" datatype="html">
@@ -6600,7 +6588,7 @@
         <target state="new">Close Holding</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">467</context>
+          <context context-type="linenumber">465</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1605678350626749943" datatype="html">
@@ -6624,7 +6612,7 @@
         <target state="translated">Mutlak Para Performansı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">233</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="104509087727626192" datatype="html">
@@ -6632,7 +6620,7 @@
         <target state="translated">Para Performansı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
-          <context context-type="linenumber">257</context>
+          <context context-type="linenumber">218</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3105754554141014845" datatype="html">
@@ -6885,7 +6873,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">244</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1999364180941264642" datatype="html">
@@ -6893,7 +6881,7 @@
         <target state="translated">Temettü Getiri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8871342657187208008" datatype="html">
@@ -7404,6 +7392,18 @@
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="7803225195017107428" datatype="html">
+        <source>thereof Dividend</source>
+        <target state="new">thereof Dividend</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">287</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="7819314041543176992" datatype="html">
         <source>Close</source>
         <target state="translated">Kapat</target>
@@ -7482,7 +7482,7 @@
       </trans-unit>
       <trans-unit id="6586833258036069278" datatype="html">
         <source>Tax Reporting</source>
-        <target state="new">Tax Reporting</target>
+        <target state="translated">Vergi Raporlama</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">115</context>
@@ -7538,7 +7538,7 @@
       </trans-unit>
       <trans-unit id="6664504469290651320" datatype="html">
         <source>send an e-mail to</source>
-        <target state="new">send an e-mail to</target>
+        <target state="translated">şu adrese e-posta gönderin:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">91</context>
@@ -7565,11 +7565,11 @@
         <target state="new"><x id="PH" equiv-text="newCoupon.code"/> has been copied to the clipboard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">208</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/value/value.component.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6351408992301482473" datatype="html">
@@ -7630,7 +7630,7 @@
       </trans-unit>
       <trans-unit id="7521745345796915891" datatype="html">
         <source>Financial Services</source>
-        <target state="new">Financial Services</target>
+        <target state="translated">Finansal Hizmetler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">97</context>
@@ -7726,7 +7726,7 @@
       </trans-unit>
       <trans-unit id="3527222903865200876" datatype="html">
         <source>Dividend Tracking</source>
-        <target state="new">Dividend Tracking</target>
+        <target state="translated">Temettü Takibi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">107</context>
@@ -7746,7 +7746,7 @@
       </trans-unit>
       <trans-unit id="3528767106831563012" datatype="html">
         <source>Ghostfolio is a lightweight wealth management application for individuals to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.</source>
-        <target state="new">Ghostfolio is a lightweight wealth management application for individuals to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.</target>
+        <target state="translated">Ghostfolio, bireylerin hisse senetlerini, ETF’lerini veya kripto paralarını takip etmesini ve verilere dayalı sağlam yatırım kararları almasını sağlayan hafif bir varlık yönetimi uygulamasıdır.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">10</context>
@@ -7786,7 +7786,7 @@
       </trans-unit>
       <trans-unit id="1550367033316836764" datatype="html">
         <source>Investment Research</source>
-        <target state="new">Investment Research</target>
+        <target state="translated">Yatırım Araştırması</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">112</context>
@@ -8015,7 +8015,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">172</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
@@ -8060,7 +8060,7 @@
       </trans-unit>
       <trans-unit id="1789421195684815451" datatype="html">
         <source>Check the system status at</source>
-        <target state="new">Check the system status at</target>
+        <target state="translated">Sistem durumunu şu adresten kontrol edebilirsiniz:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">59</context>
@@ -8068,7 +8068,7 @@
       </trans-unit>
       <trans-unit id="4060547242431613838" datatype="html">
         <source>Net Worth Tracking</source>
-        <target state="new">Net Worth Tracking</target>
+        <target state="translated">Toplam Varlık Takibi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">113</context>
@@ -8095,7 +8095,7 @@
         <target state="translated">Yapay zeka istemi panoya kopyalandı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">207</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1616747898909934803" datatype="html">
@@ -8183,7 +8183,7 @@
         <target state="translated">Duck.ai’yi aç</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
-          <context context-type="linenumber">238</context>
+          <context context-type="linenumber">208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5674286808255988565" datatype="html">
@@ -8203,7 +8203,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/treemap-chart/treemap-chart.component.ts</context>
-          <context context-type="linenumber">423</context>
+          <context context-type="linenumber">430</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1237494164624005096" datatype="html">
@@ -8243,16 +8243,16 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/treemap-chart/treemap-chart.component.ts</context>
-          <context context-type="linenumber">423</context>
+          <context context-type="linenumber">430</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/treemap-chart/treemap-chart.component.ts</context>
-          <context context-type="linenumber">436</context>
+          <context context-type="linenumber">445</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1325095699053123251" datatype="html">
         <source>The project has been initiated by</source>
-        <target state="new">The project has been initiated by</target>
+        <target state="translated">Proje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">41</context>
@@ -8554,7 +8554,7 @@
       </trans-unit>
       <trans-unit id="3910789128199500333" datatype="html">
         <source>ETF Tracking</source>
-        <target state="new">ETF Tracking</target>
+        <target state="translated">ETF Takibi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">108</context>
@@ -8565,7 +8565,7 @@
         <target state="translated">Demo kullanıcı hesabı senkronize edildi.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
-          <context context-type="linenumber">314</context>
+          <context context-type="linenumber">315</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5342678948449903412" datatype="html">
@@ -8578,7 +8578,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage" datatype="html">
         <source>Coverage</source>
-        <target state="new">Coverage</target>
+        <target state="translated">Karşılanma</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">147</context>
@@ -8586,7 +8586,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.over" datatype="html">
         <source>The assets tagged as emergency fund exceed the emergency fund of ${emergencyFund} ${baseCurrency}</source>
-        <target state="new">The assets tagged as emergency fund exceed the emergency fund of ${emergencyFund} ${baseCurrency}</target>
+        <target state="translated">Acil durum fonu olarak etiketlenen varlıklar ${emergencyFund} ${baseCurrency} tutarındaki acil durum fonunu aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">149</context>
@@ -8594,7 +8594,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.under" datatype="html">
         <source>The emergency fund of ${emergencyFund} ${baseCurrency} is not covered</source>
-        <target state="new">The emergency fund of ${emergencyFund} ${baseCurrency} is not covered</target>
+        <target state="translated">${emergencyFund} ${baseCurrency} tutarındaki acil durum fonu karşılanmıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">153</context>
@@ -8602,7 +8602,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.false.unset" datatype="html">
         <source>No emergency fund amount has been set to determine the coverage</source>
-        <target state="new">No emergency fund amount has been set to determine the coverage</target>
+        <target state="translated">Karşılanma durumunu hesaplamak için bir acil durum fonu tutarı girilmedi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">157</context>
@@ -8610,7 +8610,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundCoverage.true" datatype="html">
         <source>The emergency fund of ${emergencyFund} ${baseCurrency} is covered</source>
-        <target state="new">The emergency fund of ${emergencyFund} ${baseCurrency} is covered</target>
+        <target state="translated">${emergencyFund} ${baseCurrency} tutarındaki acil durum fonu karşılanıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">160</context>
@@ -8618,7 +8618,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
         <source>Setup</source>
-        <target state="new">Acil Durum Fonu: Kurulum</target>
+        <target state="translated">Kurulum</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">163</context>
@@ -8642,7 +8642,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume" datatype="html">
         <source>Fee Ratio</source>
-        <target state="new">Fee Ratio</target>
+        <target state="translated">Komisyon Oranı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">170</context>
@@ -8650,7 +8650,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.false" datatype="html">
         <source>The fees do exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</source>
-        <target state="new">The fees do exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</target>
+        <target state="translated">Komisyonlar toplam yatırım hacminin %${thresholdMax} değerini aşıyor (%${feeRatio})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">172</context>
@@ -8658,7 +8658,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioTotalInvestmentVolume.true" datatype="html">
         <source>The fees do not exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</source>
-        <target state="new">The fees do not exceed ${thresholdMax}% of the total investment volume (${feeRatio}%)</target>
+        <target state="translated">Komisyonlar toplam yatırım hacminin %${thresholdMax} değerini aşmıyor (%${feeRatio})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">176</context>
@@ -8706,7 +8706,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source>The net worth is managed by a single account</source>
-        <target state="new">Net değeriniz tek bir hesap tarafından yönetiliyor</target>
+        <target state="translated">Toplam varlık tek bir hesapta yönetiliyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">32</context>
@@ -8714,7 +8714,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source>The net worth is managed by ${accountsLength} accounts</source>
-        <target state="new">Net değeriniz ${accountsLength} hesaplar tarafından yönetiliyor</target>
+        <target state="translated">Toplam varlık ${accountsLength} hesapta yönetiliyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">38</context>
@@ -8760,7 +8760,7 @@
       </trans-unit>
       <trans-unit id="2813837590488774096" datatype="html">
         <source>Post to Ghostfolio on X (formerly Twitter)</source>
-        <target state="new">Post to Ghostfolio on X (formerly Twitter)</target>
+        <target state="translated">X (eski adıyla Twitter) üzerinden Ghostfolio’ya yazın</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">85</context>
@@ -8832,7 +8832,7 @@
       </trans-unit>
       <trans-unit id="7387635272539030076" datatype="html">
         <source>new</source>
-        <target state="new">new</target>
+        <target state="translated">yeni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">223</context>
@@ -8848,7 +8848,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false" datatype="html">
         <source>Over ${thresholdMax}% of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%)</source>
-        <target state="new">Over ${thresholdMax}% of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%)</target>
+        <target state="translated">Mevcut yatırımın %${thresholdMax} değerinden fazlası ${maxAccountName} hesabında (%${maxInvestmentRatio})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">19</context>
@@ -8856,7 +8856,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.true" datatype="html">
         <source>The major part of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}%</source>
-        <target state="new">The major part of the current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımın büyük kısmı ${maxAccountName} hesabında (%${maxInvestmentRatio}) ve %${thresholdMax} değerini aşmıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">26</context>
@@ -8864,7 +8864,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity" datatype="html">
         <source>Equity</source>
-        <target state="translated">özsermaye</target>
+        <target state="translated">Hisse Senedi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">43</context>
@@ -8872,7 +8872,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
         <source>The equity contribution of the current investment (${equityValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The equity contribution of the current investment (${equityValueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki hisse senedi payı (%${equityValueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">45</context>
@@ -8880,7 +8880,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
         <source>The equity contribution of the current investment (${equityValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The equity contribution of the current investment (${equityValueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki hisse senedi payı (%${equityValueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">49</context>
@@ -8888,7 +8888,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
         <source>The equity contribution of the current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The equity contribution of the current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki hisse senedi payı (%${equityValueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">53</context>
@@ -8896,7 +8896,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome" datatype="html">
         <source>Fixed Income</source>
-        <target state="translated">Sabit Gelir</target>
+        <target state="translated">Sabit Getirili</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">57</context>
@@ -8904,7 +8904,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
         <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki sabit getirili varlık payı (%${fixedIncomeValueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">59</context>
@@ -8912,7 +8912,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
         <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki sabit getirili varlık payı (%${fixedIncomeValueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">63</context>
@@ -8920,7 +8920,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
         <source>The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The fixed income contribution of the current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki sabit getirili varlık payı (%${fixedIncomeValueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">68</context>
@@ -8928,7 +8928,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment" datatype="html">
         <source>Investment: Base Currency</source>
-        <target state="translated">Yatırım: Baz Para Birimi</target>
+        <target state="translated">Yatırım: Temel Para Birimi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">87</context>
@@ -8936,7 +8936,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false" datatype="html">
         <source>The major part of the current investment is not in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
-        <target state="new">The major part of the current investment is not in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</target>
+        <target state="translated">Mevcut yatırımın büyük kısmı temel para biriminde değil (${baseCurrency} cinsinden %${baseCurrencyValueRatio})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">90</context>
@@ -8944,7 +8944,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true" datatype="html">
         <source>The major part of the current investment is in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</source>
-        <target state="new">The major part of the current investment is in the base currency (${baseCurrencyValueRatio}% in ${baseCurrency})</target>
+        <target state="translated">Mevcut yatırımın büyük kısmı temel para biriminde (${baseCurrency} cinsinden %${baseCurrencyValueRatio})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">94</context>
@@ -8960,7 +8960,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.false" datatype="html">
         <source>Over ${thresholdMax}% of the current investment is in ${currency} (${maxValueRatio}%)</source>
-        <target state="new">Over ${thresholdMax}% of the current investment is in ${currency} (${maxValueRatio}%)</target>
+        <target state="translated">Mevcut yatırımın %${thresholdMax} değerinden fazlası ${currency} cinsinden (%${maxValueRatio})</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">99</context>
@@ -8968,7 +8968,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskCurrentInvestment.true" datatype="html">
         <source>The major part of the current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}%</source>
-        <target state="new">The major part of the current investment is in ${currency} (${maxValueRatio}%) and does not exceed ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımın büyük kısmı ${currency} cinsinden (%${maxValueRatio}) ve %${thresholdMax} değerini aşmıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">103</context>
@@ -9005,7 +9005,7 @@
       </trans-unit>
       <trans-unit id="5199695670214400859" datatype="html">
         <source>If you encounter a bug, would like to suggest an improvement or a new <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot;&gt;"/>feature<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, please join the Ghostfolio <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; i18n-title title=&quot;Join the Ghostfolio Slack community&quot; &gt;"/>Slack<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> community, post to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://x.com/ghostfolio_&quot; i18n-title title=&quot;Post to Ghostfolio on X (formerly Twitter)&quot; &gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></source>
-        <target state="new">If you encounter a bug, would like to suggest an improvement or a new <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot;&gt;"/>feature<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, please join the Ghostfolio <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; i18n-title title=&quot;Join the Ghostfolio Slack community&quot; &gt;"/>Slack<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> community, post to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://x.com/ghostfolio_&quot; i18n-title title=&quot;Post to Ghostfolio on X (formerly Twitter)&quot; &gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/></target>
+        <target state="translated">Bir hatayla karşılaşırsanız ya da bir iyileştirme veya yeni bir <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot;&gt;"/>özellik<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> önermek isterseniz Ghostfolio <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; i18n-title title=&quot;Join the Ghostfolio Slack community&quot; &gt;"/>Slack<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> topluluğuna katılın, <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://x.com/ghostfolio_&quot; i18n-title title=&quot;Post to Ghostfolio on X (formerly Twitter)&quot; &gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> hesabına yazın</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">71</context>
@@ -9013,7 +9013,7 @@
       </trans-unit>
       <trans-unit id="2732382861635368484" datatype="html">
         <source>Stocks</source>
-        <target state="new">Stocks</target>
+        <target state="translated">Hisse Senetleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">57</context>
@@ -9025,7 +9025,7 @@
       </trans-unit>
       <trans-unit id="1419479195323304896" datatype="html">
         <source>Cryptocurrencies</source>
-        <target state="new">Cryptocurrencies</target>
+        <target state="translated">Kripto Paralar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">58</context>
@@ -9040,7 +9040,7 @@
         <target state="new">Manage Asset Profile</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">495</context>
+          <context context-type="linenumber">493</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5053948923184155554" datatype="html">
@@ -9057,7 +9057,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRisk.category" datatype="html">
         <source>Account Cluster Risks</source>
-        <target state="new">Account Cluster Risks</target>
+        <target state="translated">Hesap Yoğunlaşma Riskleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">16</context>
@@ -9065,7 +9065,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRisk.category" datatype="html">
         <source>Asset Class Cluster Risks</source>
-        <target state="new">Asset Class Cluster Risks</target>
+        <target state="translated">Varlık Sınıfı Yoğunlaşma Riskleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">41</context>
@@ -9073,7 +9073,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRisk.category" datatype="html">
         <source>Currency Cluster Risks</source>
-        <target state="new">Currency Cluster Risks</target>
+        <target state="translated">Para Birimi Yoğunlaşma Riskleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">85</context>
@@ -9081,7 +9081,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRisk.category" datatype="html">
         <source>Economic Market Cluster Risks</source>
-        <target state="new">Economic Market Cluster Risks</target>
+        <target state="translated">Ekonomik Piyasa Yoğunlaşma Riskleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">108</context>
@@ -9089,7 +9089,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFund.category" datatype="html">
         <source>Emergency Fund</source>
-        <target state="new">Emergency Fund</target>
+        <target state="translated">Acil Durum Fonu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">146</context>
@@ -9097,7 +9097,7 @@
       </trans-unit>
       <trans-unit id="rule.fees.category" datatype="html">
         <source>Fees</source>
-        <target state="new">Fees</target>
+        <target state="translated">Komisyon</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">179</context>
@@ -9105,7 +9105,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidity.category" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">Likidite</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">72</context>
@@ -9113,7 +9113,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower" datatype="html">
         <source>Buying Power</source>
-        <target state="new">Buying Power</target>
+        <target state="translated">Alım Gücü</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">73</context>
@@ -9121,7 +9121,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.min" datatype="html">
         <source>The buying power is below ${thresholdMin} ${baseCurrency}</source>
-        <target state="new">The buying power is below ${thresholdMin} ${baseCurrency}</target>
+        <target state="translated">Alım gücü ${thresholdMin} ${baseCurrency} tutarının altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">75</context>
@@ -9129,7 +9129,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.false.zero" datatype="html">
         <source>The buying power is 0 ${baseCurrency}</source>
-        <target state="new">The buying power is 0 ${baseCurrency}</target>
+        <target state="translated">Alım gücü 0 ${baseCurrency}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">79</context>
@@ -9137,7 +9137,7 @@
       </trans-unit>
       <trans-unit id="rule.liquidityBuyingPower.true" datatype="html">
         <source>The buying power exceeds ${thresholdMin} ${baseCurrency}</source>
-        <target state="new">The buying power exceeds ${thresholdMin} ${baseCurrency}</target>
+        <target state="translated">Alım gücü ${thresholdMin} ${baseCurrency} tutarını aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">82</context>
@@ -9145,10 +9145,22 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRisk.category" datatype="html">
         <source>Regional Market Cluster Risks</source>
-        <target state="new">Regional Market Cluster Risks</target>
+        <target state="translated">Bölgesel Piyasa Yoğunlaşma Riskleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">181</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5814001514445505929" datatype="html">
+        <source>Return on Average Investment (total return with dividends)</source>
+        <target state="new">Return on Average Investment (total return with dividends)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">264</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5815936665222001383" datatype="html">
@@ -9161,7 +9173,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets" datatype="html">
         <source>Developed Markets</source>
-        <target state="new">Developed Markets</target>
+        <target state="translated">Gelişmiş Piyasalar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">111</context>
@@ -9169,7 +9181,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.max" datatype="html">
         <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The developed markets contribution of the current investment (${developedMarketsValueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki gelişmiş piyasalar payı (%${developedMarketsValueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">114</context>
@@ -9177,7 +9189,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.false.min" datatype="html">
         <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki gelişmiş piyasalar payı (%${developedMarketsValueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">119</context>
@@ -9185,7 +9197,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskDevelopedMarkets.true" datatype="html">
         <source>The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The developed markets contribution of the current investment (${developedMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki gelişmiş piyasalar payı (%${developedMarketsValueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">124</context>
@@ -9193,7 +9205,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets" datatype="html">
         <source>Emerging Markets</source>
-        <target state="new">Emerging Markets</target>
+        <target state="translated">Gelişmekte Olan Piyasalar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">129</context>
@@ -9201,7 +9213,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki gelişmekte olan piyasalar payı (%${emergingMarketsValueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">132</context>
@@ -9209,7 +9221,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki gelişmekte olan piyasalar payı (%${emergingMarketsValueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">137</context>
@@ -9217,7 +9229,7 @@
       </trans-unit>
       <trans-unit id="rule.economicMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source>The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The emerging markets contribution of the current investment (${emergingMarketsValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki gelişmekte olan piyasalar payı (%${emergingMarketsValueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">142</context>
@@ -9225,7 +9237,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false.invalid" datatype="html">
         <source>No accounts have been set up</source>
-        <target state="new">No accounts have been set up</target>
+        <target state="translated">Henüz hesap oluşturulmadı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">23</context>
@@ -9233,7 +9245,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false.invalid" datatype="html">
         <source>The net worth is managed by 0 accounts</source>
-        <target state="new">Net değeriniz 0 hesap tarafından yönetiliyor</target>
+        <target state="translated">Toplam varlık hiçbir hesapta yönetilmiyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">35</context>
@@ -9241,7 +9253,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific" datatype="html">
         <source>Asia-Pacific</source>
-        <target state="translated">Asya-Pasifik</target>
+        <target state="translated">Asya Pasifik</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">183</context>
@@ -9249,7 +9261,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.max" datatype="html">
         <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Asia-Pacific market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Asya Pasifik piyasası payı (%${valueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">185</context>
@@ -9257,7 +9269,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.false.min" datatype="html">
         <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Asia-Pacific market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki Asya Pasifik piyasası payı (%${valueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">189</context>
@@ -9265,7 +9277,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskAsiaPacific.true" datatype="html">
         <source>The Asia-Pacific market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Asia-Pacific market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Asya Pasifik piyasası payı (%${valueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">193</context>
@@ -9281,7 +9293,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.max" datatype="html">
         <source>The Emerging Markets contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Emerging Markets contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Gelişmekte Olan Piyasalar payı (%${valueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">201</context>
@@ -9289,7 +9301,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.false.min" datatype="html">
         <source>The Emerging Markets contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Emerging Markets contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki Gelişmekte Olan Piyasalar payı (%${valueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">205</context>
@@ -9297,7 +9309,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEmergingMarkets.true" datatype="html">
         <source>The Emerging Markets contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Emerging Markets contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Gelişmekte Olan Piyasalar payı (%${valueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">209</context>
@@ -9313,7 +9325,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.max" datatype="html">
         <source>The Europe market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Europe market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Avrupa piyasası payı (%${valueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">215</context>
@@ -9321,7 +9333,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.false.min" datatype="html">
         <source>The Europe market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Europe market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki Avrupa piyasası payı (%${valueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">219</context>
@@ -9329,7 +9341,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskEurope.true" datatype="html">
         <source>The Europe market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Europe market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Avrupa piyasası payı (%${valueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">223</context>
@@ -9345,7 +9357,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.max" datatype="html">
         <source>The Japan market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The Japan market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Japonya piyasası payı (%${valueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">229</context>
@@ -9353,7 +9365,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.false.min" datatype="html">
         <source>The Japan market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The Japan market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki Japonya piyasası payı (%${valueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">233</context>
@@ -9361,7 +9373,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskJapan.true" datatype="html">
         <source>The Japan market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The Japan market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Japonya piyasası payı (%${valueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">237</context>
@@ -9377,7 +9389,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.max" datatype="html">
         <source>The North America market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</source>
-        <target state="new">The North America market contribution of the current investment (${valueRatio}%) exceeds ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Kuzey Amerika piyasası payı (%${valueRatio}) %${thresholdMax} değerini aşıyor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">243</context>
@@ -9385,7 +9397,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.false.min" datatype="html">
         <source>The North America market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</source>
-        <target state="new">The North America market contribution of the current investment (${valueRatio}%) is below ${thresholdMin}%</target>
+        <target state="translated">Mevcut yatırımdaki Kuzey Amerika piyasası payı (%${valueRatio}) %${thresholdMin} değerinin altında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">247</context>
@@ -9393,7 +9405,7 @@
       </trans-unit>
       <trans-unit id="rule.regionalMarketClusterRiskNorthAmerica.true" datatype="html">
         <source>The North America market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</source>
-        <target state="new">The North America market contribution of the current investment (${valueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}%</target>
+        <target state="translated">Mevcut yatırımdaki Kuzey Amerika piyasası payı (%${valueRatio}) %${thresholdMin} ile %${thresholdMax} aralığında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">251</context>
@@ -9477,7 +9489,7 @@
       </trans-unit>
       <trans-unit id="4170353658096790081" datatype="html">
         <source>Ghostfolio is an independent &amp; bootstrapped business</source>
-        <target state="new">Ghostfolio is an independent &amp; bootstrapped business</target>
+        <target state="translated">Ghostfolio, dış yatırım almadan kendi kaynaklarıyla büyüyen bağımsız bir işletmedir</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">161</context>

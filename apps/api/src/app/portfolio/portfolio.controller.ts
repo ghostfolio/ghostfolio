@@ -524,6 +524,7 @@ export class PortfolioController {
       performanceInformation.chart = performanceInformation.chart.map(
         ({
           date,
+          dividendInPercentageWithCurrencyEffect,
           netPerformanceInPercentage,
           netPerformanceInPercentageWithCurrencyEffect,
           netWorth,
@@ -532,6 +533,7 @@ export class PortfolioController {
         }) => {
           return {
             date,
+            dividendInPercentageWithCurrencyEffect,
             netPerformanceInPercentage,
             netPerformanceInPercentageWithCurrencyEffect,
             netWorthInPercentage:
