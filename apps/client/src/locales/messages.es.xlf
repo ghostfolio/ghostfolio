@@ -5384,7 +5384,7 @@
       </trans-unit>
       <trans-unit id="6952711292901447467" datatype="html">
         <source>Learn key financial terms and concepts in our comprehensive glossary.</source>
-        <target state="translated">Aprende términos y conceptos financieros clave en nuestro glosario.</target>
+        <target state="translated">Aprende términos y conceptos financieros clave en nuestro completo glosario.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">31</context>
