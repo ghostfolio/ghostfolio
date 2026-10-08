@@ -1,9 +1,11 @@
+import { formatRelativeTime } from '@ghostfolio/client/util/date.util';
 import {
   canDeleteUser,
   getCountryName,
   getSum
 } from '@ghostfolio/common/helper';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
+import type { Subscription } from '@ghostfolio/prisma/browser';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -23,7 +25,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Subscription } from '@prisma/client';
 import { Big } from 'big.js';
 import { differenceInDays } from 'date-fns';
 import { addIcons } from 'ionicons';
@@ -55,6 +56,7 @@ import {
 export class GfUserDetailDialogComponent implements OnInit {
   protected readonly baseCurrency: string;
   protected readonly canDeleteUser = canDeleteUser;
+  protected readonly formatRelativeTime = formatRelativeTime;
   protected readonly getCountryName = getCountryName;
   protected isLoading = true;
 
@@ -91,25 +93,7 @@ export class GfUserDetailDialogComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.adminService
-      .fetchUserById(this.data.userId)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        catchError(() => {
-          this.dialogRef.close();
-
-          return EMPTY;
-        })
-      )
-      .subscribe((user) => {
-        this.user = user;
-
-        this.subscriptionsDataSource.data = this.user.subscriptions ?? [];
-
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.initialize();
   }
 
   protected deleteUser() {
@@ -139,6 +123,30 @@ export class GfUserDetailDialogComponent implements OnInit {
     return differenceInDays(expiresAt, createdAt) <= 90
       ? $localize`Trial`
       : $localize`Coupon`;
+  }
+
+  protected initialize() {
+    this.isLoading = true;
+
+    this.adminService
+      .fetchUserById(this.data.userId)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError(() => {
+          this.dialogRef.close();
+
+          return EMPTY;
+        })
+      )
+      .subscribe((user) => {
+        this.user = user;
+
+        this.subscriptionsDataSource.data = this.user.subscriptions ?? [];
+
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   protected onClose() {

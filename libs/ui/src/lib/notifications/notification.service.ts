@@ -3,7 +3,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 
 import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { isFunction } from 'lodash';
+import { isFunction } from 'lodash-es';
 
 import { GfAlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { GfConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
@@ -87,7 +87,8 @@ export class NotificationService {
       defaultValue: aParams.defaultValue,
       discardLabel: aParams.discardLabel,
       title: aParams.title,
-      valueLabel: aParams.valueLabel
+      valueLabel: aParams.valueLabel,
+      valueSuffix: aParams.valueSuffix
     });
 
     return dialog.afterClosed().subscribe((result: string) => {

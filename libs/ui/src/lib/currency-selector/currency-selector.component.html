@@ -1,5 +1,8 @@
-@if (emojiFlagOfSelectedCurrency) {
-  <span class="flex-shrink-0 mr-1">{{ emojiFlagOfSelectedCurrency }}</span>
+@if (countryCodeOfSelectedCurrency) {
+  <gf-entity-logo
+    class="flex-shrink-0 mr-1"
+    [countryCode]="countryCodeOfSelectedCurrency"
+  />
 }
 
 <input
@@ -19,7 +22,11 @@
   @for (currency of filteredCurrencies; track currency) {
     <mat-option class="line-height-1" [value]="currency">
       <span class="align-items-center d-flex">
-        <span class="mr-1">{{ getEmojiFlagFromCurrency(currency) }}</span>
+        <gf-entity-logo
+          class="mr-1"
+          [countryCode]="getCountryCodeFromCurrency(currency)"
+          [hasPlaceholder]="true"
+        />
         <span>{{ currency }}</span>
       </span>
     </mat-option>

@@ -21,7 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { checkmarkOutline, copyOutline } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -42,12 +42,12 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() locale: string;
+  @Input() locale?: string;
   @Input() position = '';
   @Input() size: 'large' | 'medium' | 'small' = 'small';
-  @Input() subLabel = '';
-  @Input() unit = '';
-  @Input() value: number | string = '';
+  @Input() subLabel?: string = '';
+  @Input() unit?: string | null = '';
+  @Input() value?: Date | number | string | null = '';
 
   @ViewChild('labelContent', { static: false })
   labelContent!: ElementRef<HTMLSpanElement>;
@@ -83,7 +83,8 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     return {
       maximumFractionDigits: digits,
-      minimumFractionDigits: digits
+      minimumFractionDigits: digits,
+      useGrouping: true
     };
   });
 
@@ -150,7 +151,9 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
             );
           } catch {}
         } else {
-          this.formattedValue = this.value?.toLocaleString(this.locale);
+          this.formattedValue = this.value?.toLocaleString(this.locale, {
+            useGrouping: true
+          });
         }
 
         if (this.isAbsolute) {
@@ -171,7 +174,7 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
             }
           );
         } else {
-          this.formattedValue = this.value;
+          this.formattedValue = String(this.value);
         }
       }
     }
@@ -219,11 +222,14 @@ export class GfValueComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.isCopied = false;
     this.isNumber = false;
     this.isString = false;
-    this.locale = this.locale || getLocale();
     this.useAbsoluteValue = false;
 
     if (this.copyToClipboardTimeout) {
       clearTimeout(this.copyToClipboardTimeout);
+    }
+
+    if (this.locale === undefined || this.locale === '') {
+      this.locale = getLocale();
     }
   }
 }

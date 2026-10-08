@@ -1,4 +1,4 @@
-import { AssetProfileSplit, MarketData } from '@prisma/client';
+import type { AssetProfileSplit, MarketData } from '@ghostfolio/prisma/browser';
 
 import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 

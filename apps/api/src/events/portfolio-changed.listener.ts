@@ -80,7 +80,8 @@ export class PortfolioChangedListener {
           ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
           jobId: this.redisCacheService.getPortfolioSnapshotKey({
             filters,
-            userId
+            userId,
+            calculationType: userSettings.performanceCalculationType
           }),
           priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
         }

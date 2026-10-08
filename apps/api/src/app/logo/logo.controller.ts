@@ -11,12 +11,15 @@ import {
 } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { Response } from 'express';
+import ms from 'ms';
 
 import { GetLogoDto } from './get-logo.dto';
 import { LogoService } from './logo.service';
 
 @Controller('logo')
 export class LogoController {
+  private static readonly CACHE_MAX_AGE_IN_SECONDS = ms('7 days') / 1000;
+
   public constructor(private readonly logoService: LogoService) {}
 
   @Get(':dataSource/:symbol')
@@ -34,6 +37,12 @@ export class LogoController {
         });
 
       response.contentType(type);
+
+      response.setHeader(
+        'Cache-Control',
+        `public, max-age=${LogoController.CACHE_MAX_AGE_IN_SECONDS}`
+      );
+
       response.send(buffer);
     } catch {
       response.status(HttpStatus.NOT_FOUND).send();
@@ -49,6 +58,12 @@ export class LogoController {
       const { buffer, type } = await this.logoService.getLogoByUrl(url);
 
       response.contentType(type);
+
+      response.setHeader(
+        'Cache-Control',
+        `public, max-age=${LogoController.CACHE_MAX_AGE_IN_SECONDS}`
+      );
+
       response.send(buffer);
     } catch {
       response.status(HttpStatus.NOT_FOUND).send();

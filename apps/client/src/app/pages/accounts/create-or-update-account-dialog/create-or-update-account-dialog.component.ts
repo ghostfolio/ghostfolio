@@ -8,6 +8,7 @@ import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
 import { getStringOrNull } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import type { Platform, Tag } from '@ghostfolio/prisma/browser';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -39,7 +40,6 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Platform, Tag } from '@prisma/client';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 

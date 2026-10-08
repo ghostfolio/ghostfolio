@@ -1,9 +1,17 @@
+import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
-import { DataSource, MarketData } from '@prisma/client';
+import {
+  DataSource,
+  MarketData,
+  Order,
+  Type as ActivityType
+} from '@prisma/client';
+import { addDays, subDays } from 'date-fns';
 
 import { CurrentRateService } from './current-rate.service';
 import { DateQuery } from './interfaces/date-query.interface';
@@ -24,6 +32,9 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
             marketPrice: 1847.839966,
             state: 'CLOSE'
           });
+        },
+        getLatest: () => {
+          return Promise.resolve<MarketData>(null);
         },
         getRange: ({
           assetProfileIdentifiers,
@@ -97,12 +108,19 @@ jest.mock('@ghostfolio/api/services/property/property.service', () => {
 });
 
 describe('CurrentRateService', () => {
+  let activitiesService: ActivitiesService;
   let currentRateService: CurrentRateService;
   let dataProviderService: DataProviderService;
   let marketDataService: MarketDataService;
   let propertyService: PropertyService;
 
   beforeAll(async () => {
+    activitiesService = {
+      getLatestActivity: () => {
+        return Promise.resolve<Order>(null);
+      }
+    } as unknown as ActivitiesService;
+
     propertyService = new PropertyService(null);
 
     dataProviderService = new DataProviderService(
@@ -117,16 +135,18 @@ describe('CurrentRateService', () => {
     marketDataService = new MarketDataService(null);
 
     currentRateService = new CurrentRateService(
-      null,
+      activitiesService,
       dataProviderService,
-      marketDataService,
-      null
+      marketDataService
     );
   });
 
   it('getValues', async () => {
     expect(
       await currentRateService.getValues({
+        assetProfileIdentifiersWithQuotes: [
+          { dataSource: DataSource.YAHOO, symbol: 'AMZN' }
+        ],
         dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
         dateQuery: {
           lt: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
@@ -150,6 +170,136 @@ describe('CurrentRateService', () => {
           symbol: 'AMZN'
         }
       ]
+    });
+  });
+
+  describe('getValues without a quote', () => {
+    const today = resetHours(new Date());
+    const yesterday = subDays(today, 1);
+
+    const dataGatheringItems: AssetProfileIdentifier[] = [
+      { dataSource: DataSource.YAHOO, symbol: 'AMZN' }
+    ];
+
+    const dateQuery: DateQuery = {
+      gte: yesterday,
+      lt: addDays(today, 1)
+    };
+
+    beforeEach(() => {
+      jest.spyOn(dataProviderService, 'getQuotes').mockResolvedValue({});
+      jest.spyOn(marketDataService, 'getRangeCount').mockResolvedValue(0);
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should fall back to the latest market price', async () => {
+      const getLatestActivity = jest
+        .spyOn(activitiesService, 'getLatestActivity')
+        .mockResolvedValue({ unitPrice: 1000 } as Order);
+
+      jest.spyOn(marketDataService, 'getLatest').mockResolvedValue({
+        createdAt: yesterday,
+        dataSource: DataSource.YAHOO,
+        date: yesterday,
+        id: '4f2b8a1e-7c3d-4e5f-9a6b-1c2d3e4f5a6b',
+        isCarriedForward: false,
+        marketPrice: 1847.839966,
+        state: 'CLOSE',
+        symbol: 'AMZN'
+      });
+
+      const { errors, values } = await currentRateService.getValues({
+        dataGatheringItems,
+        dateQuery,
+        assetProfileIdentifiersWithQuotes: dataGatheringItems
+      });
+
+      expect(getLatestActivity).not.toHaveBeenCalled();
+      expect(errors).toEqual(dataGatheringItems);
+      expect(values).toEqual([
+        {
+          dataSource: DataSource.YAHOO,
+          date: today,
+          marketPrice: 1847.839966,
+          symbol: 'AMZN'
+        }
+      ]);
+    });
+
+    it('should fall back to the unit price of the latest buy or sell activity without market data', async () => {
+      const getLatestActivity = jest
+        .spyOn(activitiesService, 'getLatestActivity')
+        .mockResolvedValue({ unitPrice: 1000 } as Order);
+
+      jest.spyOn(marketDataService, 'getLatest').mockResolvedValue(null);
+
+      const { errors, values } = await currentRateService.getValues({
+        dataGatheringItems,
+        dateQuery,
+        assetProfileIdentifiersWithQuotes: dataGatheringItems
+      });
+
+      expect(getLatestActivity).toHaveBeenCalledWith({
+        dataSource: DataSource.YAHOO,
+        symbol: 'AMZN',
+        types: [ActivityType.BUY, ActivityType.SELL]
+      });
+      expect(errors).toEqual(dataGatheringItems);
+      expect(values).toEqual([
+        {
+          dataSource: DataSource.YAHOO,
+          date: today,
+          marketPrice: 1000,
+          symbol: 'AMZN'
+        }
+      ]);
+    });
+
+    it('should carry the latest market price forward without a quote request', async () => {
+      const getQuotes = jest.spyOn(dataProviderService, 'getQuotes');
+
+      jest.spyOn(marketDataService, 'getRangeCount').mockResolvedValue(1);
+
+      jest.spyOn(marketDataService, 'getRange').mockResolvedValue([
+        {
+          createdAt: yesterday,
+          dataSource: DataSource.YAHOO,
+          date: yesterday,
+          id: 'd51d4e0b-9d1f-4d2e-8a0c-9a0f5c6b1d22',
+          isCarriedForward: false,
+          marketPrice: 1841.823902,
+          state: 'CLOSE',
+          symbol: 'AMZN'
+        }
+      ]);
+
+      const { errors, values } = await currentRateService.getValues({
+        dataGatheringItems,
+        dateQuery,
+        assetProfileIdentifiersWithQuotes: []
+      });
+
+      expect(getQuotes).toHaveBeenCalledWith(
+        expect.objectContaining({ items: [] })
+      );
+      expect(errors).toEqual([]);
+      expect(values).toEqual([
+        {
+          dataSource: DataSource.YAHOO,
+          date: yesterday,
+          marketPrice: 1841.823902,
+          symbol: 'AMZN'
+        },
+        {
+          dataSource: DataSource.YAHOO,
+          date: today,
+          marketPrice: 1841.823902,
+          symbol: 'AMZN'
+        }
+      ]);
     });
   });
 });

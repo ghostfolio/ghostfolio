@@ -29,6 +29,18 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { jsonValidator, validateObjectForForm } from '@ghostfolio/common/utils';
+import type {
+  AssetProfileSplit,
+  MarketData,
+  Prisma,
+  SymbolProfile
+} from '@ghostfolio/prisma/browser';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataGatheringFrequency,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
@@ -80,16 +92,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { IonIcon } from '@ionic/angular/standalone';
-import {
-  AssetClass,
-  AssetProfileSplit,
-  AssetSubClass,
-  DataGatheringFrequency,
-  DataSource,
-  MarketData,
-  Prisma,
-  SymbolProfile
-} from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
@@ -104,7 +106,7 @@ import {
   serverOutline,
   trashOutline
 } from 'ionicons/icons';
-import { isBoolean } from 'lodash';
+import { isBoolean } from 'lodash-es';
 import ms from 'ms';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';

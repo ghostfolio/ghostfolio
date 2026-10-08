@@ -21,7 +21,8 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
-  Logger
+  Logger,
+  NotFoundException
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -170,7 +171,7 @@ export class WebAuthService {
     const device = await this.deviceService.authDevice({ id: deviceId });
 
     if (!device) {
-      throw new Error('Device not found');
+      throw new NotFoundException('Device not found');
     }
 
     // Compute in the background during the biometric authentication
@@ -282,7 +283,11 @@ export class WebAuthService {
       });
 
       const portfolioSnapshotKey =
-        this.redisCacheService.getPortfolioSnapshotKey({ filters, userId });
+        this.redisCacheService.getPortfolioSnapshotKey({
+          filters,
+          userId,
+          calculationType: userSettings.performanceCalculationType
+        });
 
       if (await this.isPortfolioSnapshotExpired(portfolioSnapshotKey)) {
         await this.portfolioSnapshotService.addJobToQueue({

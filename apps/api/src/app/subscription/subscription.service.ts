@@ -17,7 +17,7 @@ import {
   UserWithSettings
 } from '@ghostfolio/common/types';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Prisma, Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
 import ms, { StringValue } from 'ms';
@@ -38,7 +38,7 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2026-07-29.dahlia'
+          apiVersion: '2026-08-26.dahlia'
         }
       );
     }
@@ -58,11 +58,25 @@ export class SubscriptionService {
     } =
       (await this.propertyService.getByKey<any>(PROPERTY_STRIPE_CONFIG)) ?? {};
 
-    const subscriptionOffer = Object.values(subscriptionOffers).find(
+    const subscriptionOffersForPrice = Object.values(subscriptionOffers).filter(
       (subscriptionOffer) => {
         return subscriptionOffer.priceId === priceId;
       }
     );
+
+    if (subscriptionOffersForPrice.length === 0) {
+      throw new BadRequestException('Invalid priceId');
+    }
+
+    const subscriptionOffer = subscriptionOffersForPrice.find(
+      (subscriptionOffer) => {
+        return subscriptionOffer.couponId === couponId;
+      }
+    );
+
+    if (!subscriptionOffer) {
+      throw new BadRequestException('Invalid couponId');
+    }
 
     const stripeCheckoutSessionCreateParams: Stripe.Checkout.SessionCreateParams =
       {
@@ -77,9 +91,7 @@ export class SubscriptionService {
           }
         ],
         locale: this.getStripeLocale(user.settings?.settings?.language),
-        metadata: subscriptionOffer
-          ? { subscriptionOffer: JSON.stringify(subscriptionOffer) }
-          : {},
+        metadata: { subscriptionOffer: JSON.stringify(subscriptionOffer) },
         mode: 'payment',
         payment_method_types: ['card'],
         success_url: `${this.configurationService.get(

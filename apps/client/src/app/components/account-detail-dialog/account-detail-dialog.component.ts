@@ -10,12 +10,13 @@ import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
   Activity,
-  HistoricalDataItem,
+  LineChartItem,
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import type { Tag } from '@ghostfolio/prisma/browser';
 import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
@@ -45,7 +46,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NavigationStart, Router } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
@@ -55,7 +55,7 @@ import {
   readerOutline,
   swapVerticalOutline
 } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { filter, forkJoin } from 'rxjs';
 
@@ -99,7 +99,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected equity: number | null;
   protected equityPrecision = 2;
   protected hasPermissionToDeleteAccountBalance: boolean;
-  protected historicalDataItems: HistoricalDataItem[];
+  protected historicalDataItems: LineChartItem[];
   protected holdings: PortfolioPosition[];
   protected interestInBaseCurrency: number;
   protected interestInBaseCurrencyPrecision = 2;
@@ -364,12 +364,16 @@ export class GfAccountDetailDialogComponent implements OnInit {
           portfolioPerformance.chart &&
           portfolioPerformance.chart.length > 0
         ) {
-          this.historicalDataItems = portfolioPerformance.chart.map(
-            ({ date, netWorth, netWorthInPercentage }) => ({
-              date,
-              value: isNumber(netWorth) ? netWorth : netWorthInPercentage
+          this.historicalDataItems = portfolioPerformance.chart
+            .map(({ date, netWorth, netWorthInPercentage }) => {
+              return {
+                date,
+                value: isNumber(netWorth) ? netWorth : netWorthInPercentage
+              };
             })
-          );
+            .filter((item): item is LineChartItem => {
+              return isNumber(item.value);
+            });
         } else {
           this.historicalDataItems = this.accountBalances.map(
             ({ date, valueInBaseCurrency }) => {
@@ -393,8 +397,12 @@ export class GfAccountDetailDialogComponent implements OnInit {
       .fetchPortfolioHoldings({
         filters: [
           {
-            type: 'ACCOUNT',
-            id: this.data.accountId
+            id: this.data.accountId,
+            type: 'ACCOUNT'
+          },
+          {
+            id: 'ACTIVE',
+            type: 'HOLDING_TYPE'
           }
         ]
       })

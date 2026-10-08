@@ -1,17 +1,22 @@
-import { utc } from '@date-fns/utc';
-import { NumberParser } from '@internationalized/number';
-import {
-  AccessType,
-  Type as ActivityType,
+import type {
   AssetProfileOverrides,
-  AssetSubClass,
   MarketData,
   Prisma,
   SymbolProfile
-} from '@prisma/client';
+} from '@ghostfolio/prisma/browser';
+import {
+  AccessType,
+  Type as ActivityType,
+  AssetSubClass
+} from '@ghostfolio/prisma/enums';
+
+import { utc } from '@date-fns/utc';
+import { NumberParser } from '@internationalized/number';
 import { Big } from 'big.js';
 import { isISO4217CurrencyCode, isUUID } from 'class-validator';
+import { countries } from 'countries-list';
 import {
+  addDays,
   getDate,
   getMonth,
   getYear,
@@ -37,7 +42,7 @@ import {
   uk,
   zhCN
 } from 'date-fns/locale';
-import { get, isNil, isString } from 'lodash';
+import { get, isNil, isString } from 'lodash-es';
 
 import {
   DEFAULT_CURRENCY,
@@ -86,6 +91,8 @@ const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
   'locale',
   'viewMode'
 ];
+
+const VALID_COUNTRY_CODES = new Set([...Object.keys(countries), 'EU']);
 
 export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
   assetProfile: T,
@@ -338,12 +345,9 @@ export function getAssetProfileIdentifier({
   return `${dataSource}-${symbol}`;
 }
 
-export function getBackgroundColor(aColorScheme: ColorScheme) {
+export function getBackgroundColor(aColorScheme?: ColorScheme) {
   return getCssVariable(
-    aColorScheme === 'DARK' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? '--dark-background'
-      : '--light-background'
+    isDarkColorScheme(aColorScheme) ? '--dark-background' : '--light-background'
   );
 }
 
@@ -438,15 +442,31 @@ export function getDateWithTimeFormatString(aLocale?: string) {
 }
 
 export function getEmojiFlag(aCountryCode: string) {
-  if (!aCountryCode) {
-    return aCountryCode;
+  const countryCode = aCountryCode?.toUpperCase();
+
+  if (!countryCode || !VALID_COUNTRY_CODES.has(countryCode)) {
+    return undefined;
   }
 
-  return aCountryCode
-    .toUpperCase()
-    .replace(/./g, (character) =>
-      String.fromCodePoint(127397 + character.charCodeAt(0))
-    );
+  return countryCode.replace(/./g, (character) => {
+    return String.fromCodePoint(127397 + character.charCodeAt(0));
+  });
+}
+
+export function getHoldingName({
+  assetSubClass,
+  assetSubClassLabel,
+  name,
+  symbol
+}: Pick<
+  PortfolioPosition['assetProfile'],
+  'assetSubClass' | 'assetSubClassLabel' | 'name' | 'symbol'
+>) {
+  if (isCashPosition({ assetSubClass }) && assetSubClassLabel) {
+    return `${assetSubClassLabel} (${symbol})`;
+  }
+
+  return name ?? symbol;
 }
 
 export function getLocale() {
@@ -488,6 +508,10 @@ export function getStartOfUtcDate(aDate: Date) {
   return date;
 }
 
+export function getStartOfUtcDateOfTomorrow() {
+  return addDays(getStartOfUtcDate(new Date()), 1, { in: utc });
+}
+
 export function getStartOfUtcDateOfYesterday() {
   return subDays(getStartOfUtcDate(new Date()), 1, { in: utc });
 }
@@ -520,10 +544,9 @@ export function getSum(aArray: Big[]) {
   return new Big(0);
 }
 
-export function getTextColor(aColorScheme: ColorScheme) {
+export function getTextColor(aColorScheme?: ColorScheme) {
   const cssVariable = getCssVariable(
-    aColorScheme === 'DARK' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
+    isDarkColorScheme(aColorScheme)
       ? '--light-primary-text'
       : '--dark-primary-text'
   );
@@ -599,6 +622,14 @@ export function isCurrencySymbol(aSymbol: string) {
     ) &&
     isCurrency(aSymbol.substring(aSymbol.length - DEFAULT_CURRENCY.length))
   );
+}
+
+export function isDarkColorScheme(aColorScheme?: ColorScheme | null) {
+  if (aColorScheme) {
+    return aColorScheme === 'DARK';
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
 export function isDerivedCurrency(aCurrency: string) {

@@ -24,7 +24,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { uniqBy } from 'lodash';
+import { uniqBy } from 'lodash-es';
 import YahooFinance from 'yahoo-finance2';
 import type { ChartResultArray } from 'yahoo-finance2/modules/chart';
 import type {

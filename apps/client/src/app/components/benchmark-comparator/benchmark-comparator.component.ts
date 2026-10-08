@@ -12,8 +12,10 @@ import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
+import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 import {
   getTimeSeriesTooltipOptions,
+  onPrefersColorSchemeChange,
   registerChartConfiguration
 } from '@ghostfolio/ui/chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -26,13 +28,13 @@ import {
   OnChanges,
   OnDestroy,
   output,
+  SimpleChanges,
   viewChild
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
   ChartData,
@@ -68,15 +70,21 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   public readonly benchmark = input<Partial<SymbolProfile>>();
   public readonly benchmarkDataItems = input<LineChartItem[]>([]);
   public readonly benchmarks = input<Partial<SymbolProfile>[]>();
-  public readonly colorScheme = input.required<ColorScheme>();
+  public readonly colorScheme = input<ColorScheme>();
   public readonly isLoading = input<boolean>();
-  public readonly locale = input(getLocale());
+
+  public readonly locale = input(getLocale(), {
+    transform: (value?: string) => {
+      return value ?? getLocale();
+    }
+  });
+
   public readonly performanceDataItems = input.required<LineChartItem[]>();
   public readonly user = input<User>();
 
   public readonly benchmarkChanged = output<string>();
 
-  protected chart: Chart<'line'>;
+  protected chart?: Chart<'line'>;
   protected hasPermissionToAccessAdminControl: boolean;
   protected readonly routerLinkAdminControlMarketData =
     internalRoutes.adminControl.subRoutes.marketData.routerLink;
@@ -96,10 +104,24 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
     registerChartConfiguration();
 
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme()) {
+        this.chart.destroy();
+        this.chart = undefined;
+
+        this.initialize();
+      }
+    });
+
     addIcons({ arrowForwardOutline });
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.colorScheme && this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+    }
+
     this.hasPermissionToAccessAdminControl = hasPermission(
       this.user()?.permissions,
       permissions.accessAdminControl

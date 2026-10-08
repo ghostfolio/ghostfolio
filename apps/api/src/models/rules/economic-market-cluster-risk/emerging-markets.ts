@@ -1,28 +1,36 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@ghostfolio/common/config';
-import { RuleSettings, UserSettings } from '@ghostfolio/common/interfaces';
+import { RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class EconomicMarketClusterRiskEmergingMarkets extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
   private emergingMarketsValueInBaseCurrency: number;
+  private i18nService: I18nService;
 
-  public constructor(
-    exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    currentValueInBaseCurrency: number,
-    emergingMarketsValueInBaseCurrency: number,
-    languageCode: string
-  ) {
-    super(exchangeRateDataService, {
+  public constructor({
+    currentValueInBaseCurrency,
+    emergingMarketsValueInBaseCurrency,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    currentValueInBaseCurrency: number;
+    emergingMarketsValueInBaseCurrency: number;
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
-      key: EconomicMarketClusterRiskEmergingMarkets.name
+      key: 'EconomicMarketClusterRiskEmergingMarkets'
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
     this.emergingMarketsValueInBaseCurrency =
       emergingMarketsValueInBaseCurrency;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {
@@ -95,20 +103,6 @@ export class EconomicMarketClusterRiskEmergingMarkets extends Rule<Settings> {
       id: 'rule.economicMarketClusterRiskEmergingMarkets',
       languageCode: this.getLanguageCode()
     });
-  }
-
-  public getSettings({
-    baseCurrency = DEFAULT_CURRENCY,
-    locale = DEFAULT_LOCALE,
-    xRayRules
-  }: UserSettings): Settings {
-    return {
-      baseCurrency,
-      locale,
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
-      thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.32,
-      thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0.28
-    };
   }
 }
 

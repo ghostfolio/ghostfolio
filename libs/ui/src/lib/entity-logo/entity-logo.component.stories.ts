@@ -28,6 +28,14 @@ export default {
 
 type Story = StoryObj<GfEntityLogoComponent>;
 
+export const FlagByCountryCode: Story = {
+  args: {
+    countryCode: 'US',
+    size: 'large',
+    tooltip: 'United States'
+  }
+};
+
 export const LogoByAssetProfileIdentifier: Story = {
   args: {
     dataSource: 'YAHOO',

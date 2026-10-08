@@ -11,12 +11,12 @@ import {
   DataProviderInfo,
   ResponseError
 } from '@ghostfolio/common/interfaces';
-import type { RequestWithUser } from '@ghostfolio/common/types';
 
-import { Inject, Injectable } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { isBefore, isToday } from 'date-fns';
-import { isEmpty, uniqBy } from 'lodash';
+import { utc } from '@date-fns/utc';
+import { Injectable } from '@nestjs/common';
+import { Type as ActivityType } from '@prisma/client';
+import { isBefore, isSameDay } from 'date-fns';
+import { uniqBy } from 'lodash-es';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
@@ -29,34 +29,34 @@ export class CurrentRateService {
   public constructor(
     private readonly activitiesService: ActivitiesService,
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly marketDataService: MarketDataService
   ) {}
 
   @LogPerformance
-  // TODO: Pass user instead of using this.request.user
   public async getValues({
+    assetProfileIdentifiersWithQuotes,
     dataGatheringItems,
-    dateQuery
+    dateQuery,
+    subscriptionType
   }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
+    const today = resetHours(new Date());
 
     const includesToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
-      (!dateQuery.in || this.containsToday(dateQuery.in));
+      (!dateQuery.in || this.containsToday({ today, dates: dateQuery.in }));
 
     const quoteErrors: ResponseError['errors'] = [];
-    const today = resetHours(new Date());
     const values: GetValueObject[] = [];
 
     if (includesToday) {
       const quotes = await this.dataProviderService.getQuotes({
-        items: dataGatheringItems,
-        user: this.request?.user
+        subscriptionType,
+        items: assetProfileIdentifiersWithQuotes
       });
 
-      for (const { dataSource, symbol } of dataGatheringItems) {
+      for (const { dataSource, symbol } of assetProfileIdentifiersWithQuotes) {
         const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
 
         if (quote?.dataProviderInfo) {
@@ -122,31 +122,60 @@ export class CurrentRateService {
       })
     };
 
-    if (!isEmpty(quoteErrors)) {
-      for (const { dataSource, symbol } of quoteErrors) {
+    if (includesToday) {
+      const assetProfileIdentifiersWithoutQuotes = [
+        ...quoteErrors,
+        ...dataGatheringItems.filter(({ dataSource, symbol }) => {
+          return !assetProfileIdentifiersWithQuotes.some(
+            (assetProfileIdentifier) => {
+              return (
+                assetProfileIdentifier.dataSource === dataSource &&
+                assetProfileIdentifier.symbol === symbol
+              );
+            }
+          );
+        })
+      ];
+
+      for (const {
+        dataSource,
+        symbol
+      } of assetProfileIdentifiersWithoutQuotes) {
         try {
           // If missing quote, fallback to the latest available historical market price
           let value: GetValueObject = response.values.find((currentValue) => {
             return (
               currentValue.dataSource === dataSource &&
               currentValue.symbol === symbol &&
-              isToday(currentValue.date)
+              isSameDay(currentValue.date, today, { in: utc })
             );
           });
 
           if (!value) {
-            // Fallback to unit price of latest activity
-            const latestActivity =
-              await this.activitiesService.getLatestActivity({
-                dataSource,
-                symbol
-              });
+            const latestMarketData = await this.marketDataService.getLatest({
+              dataSource,
+              symbol
+            });
+
+            let marketPrice = latestMarketData?.marketPrice;
+
+            if (!marketPrice) {
+              // Fallback to unit price of latest buy or sell activity
+              const latestActivity =
+                await this.activitiesService.getLatestActivity({
+                  dataSource,
+                  symbol,
+                  types: [ActivityType.BUY, ActivityType.SELL]
+                });
+
+              marketPrice = latestActivity?.unitPrice ?? 0;
+            }
 
             value = {
               dataSource,
+              marketPrice,
               symbol,
-              date: today,
-              marketPrice: latestActivity?.unitPrice ?? 0
+              date: today
             };
 
             response.values.push(value);
@@ -180,12 +209,15 @@ export class CurrentRateService {
     return response;
   }
 
-  private containsToday(dates: Date[]): boolean {
-    for (const date of dates) {
-      if (isToday(date)) {
-        return true;
-      }
-    }
-    return false;
+  private containsToday({
+    dates,
+    today
+  }: {
+    dates: Date[];
+    today: Date;
+  }): boolean {
+    return dates.some((date) => {
+      return isSameDay(date, today, { in: utc });
+    });
   }
 }

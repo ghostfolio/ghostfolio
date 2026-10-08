@@ -42,7 +42,7 @@ import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
-import { groupBy, isEmpty, isNumber, omit, uniqWith } from 'lodash';
+import { groupBy, isEmpty, isNumber, omit, uniqWith } from 'lodash-es';
 import ms from 'ms';
 
 import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
@@ -594,13 +594,13 @@ export class DataProviderService implements OnModuleInit {
   public async getQuotes({
     items,
     requestTimeout,
-    useCache = true,
-    user
+    subscriptionType,
+    useCache = true
   }: {
     items: AssetProfileIdentifier[];
     requestTimeout?: number;
+    subscriptionType?: SubscriptionType;
     useCache?: boolean;
-    user?: UserWithSettings;
   }): Promise<{
     [assetProfileIdentifier: string]: DataProviderResponse;
   }> {
@@ -687,7 +687,7 @@ export class DataProviderService implements OnModuleInit {
           } else if (
             dataProvider.getDataProviderInfo().isPremium &&
             this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-            user?.subscription?.type === SubscriptionType.Basic
+            subscriptionType === SubscriptionType.Basic
           ) {
             // Skip symbols of Premium data providers for users without subscription
             return false;

@@ -3,7 +3,11 @@ import {
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { canOpenHoldingDetail, getLocale } from '@ghostfolio/common/helper';
+import {
+  canOpenHoldingDetail,
+  getHoldingName,
+  getLocale
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -32,10 +36,11 @@ import { Chart, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { isUUID } from 'class-validator';
 import { differenceInDays, max } from 'date-fns';
-import { orderBy, round } from 'lodash';
+import { orderBy, round } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
+import { onPrefersColorSchemeChange } from '../chart';
 import type {
   GetColorParams,
   GfTreemapDataPoint,
@@ -55,7 +60,7 @@ export class GfTreemapChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   public readonly baseCurrency = input.required<string>();
-  public readonly colorScheme = input.required<ColorScheme>();
+  public readonly colorScheme = input<ColorScheme>();
   public readonly cursor = input.required<string>();
   public readonly dateRange = input.required<DateRange>();
   public readonly holdings = input<PortfolioPosition[]>();
@@ -71,6 +76,12 @@ export class GfTreemapChartComponent
 
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme()) {
+        this.initialize();
+      }
+    });
   }
 
   public ngAfterViewInit() {
@@ -303,23 +314,19 @@ export class GfTreemapChartComponent
             formatter: (context: GfTreemapScriptableContext) => {
               const raw = context.raw as GfTreemapDataPoint;
 
-              let netPerformancePercentWithCurrencyEffect = round(
-                raw._data.netPerformancePercentWithCurrencyEffect,
-                4
-              );
-
-              if (Math.abs(netPerformancePercentWithCurrencyEffect) === 0) {
-                netPerformancePercentWithCurrencyEffect = Math.abs(
-                  netPerformancePercentWithCurrencyEffect
-                );
-              }
-
               const name = raw._data.assetProfile.name;
               const symbol = raw._data.assetProfile.symbol;
 
               return [
                 isUUID(symbol) ? (name ?? symbol) : symbol,
-                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
+                `${(
+                  raw._data.netPerformancePercentWithCurrencyEffect * 100
+                ).toLocaleString(this.locale(), {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2,
+                  signDisplay: 'exceptZero',
+                  useGrouping: true
+                })}%`
               ];
             },
             hoverColor: undefined,
@@ -391,38 +398,49 @@ export class GfTreemapChartComponent
         label: (context: TooltipItem<'treemap'>) => {
           const raw = context.raw as GfTreemapDataPoint;
 
-          const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
-          const name = raw._data.assetProfile.name;
+          const allocationInPercentage = `${(
+            raw._data.allocationInPercentage * 100
+          ).toLocaleString(this.locale(), {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+            useGrouping: true
+          })}%`;
+          const name = getHoldingName(raw._data.assetProfile);
 
-          const sign =
-            raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
-
-          const symbol = raw._data.assetProfile.symbol;
-
-          const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
+          const netPerformanceInPercentageWithSign = `${(
+            raw._data.netPerformancePercentWithCurrencyEffect * 100
+          ).toLocaleString(this.locale(), {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+            signDisplay: 'exceptZero',
+            useGrouping: true
+          })}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
             const value = raw._data.valueInBaseCurrency;
 
             return [
-              `${name ?? symbol} (${allocationInPercentage})`,
+              `${name} (${allocationInPercentage})`,
               `${value?.toLocaleString(this.locale(), {
                 maximumFractionDigits: 2,
-                minimumFractionDigits: 2
+                minimumFractionDigits: 2,
+                useGrouping: true
               })} ${this.baseCurrency()}`,
               '',
               $localize`Change` + ' (' + $localize`Performance` + ')',
-              `${sign}${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
+              `${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
                 this.locale(),
                 {
                   maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
+                  minimumFractionDigits: 2,
+                  signDisplay: 'exceptZero',
+                  useGrouping: true
                 }
               )} ${this.baseCurrency()} (${netPerformanceInPercentageWithSign})`
             ];
           } else {
             return [
-              `${name ?? symbol} (${allocationInPercentage})`,
+              `${name} (${allocationInPercentage})`,
               '',
               $localize`Performance`,
               netPerformanceInPercentageWithSign

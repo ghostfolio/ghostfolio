@@ -1,5 +1,6 @@
 import { GfAdminJobsComponent } from '@ghostfolio/client/components/admin-jobs/admin-jobs.component';
 import { GfAdminMarketDataComponent } from '@ghostfolio/client/components/admin-market-data/admin-market-data.component';
+import { GfAssetProfileDialogHostComponent } from '@ghostfolio/client/components/admin-market-data/asset-profile-dialog-host/asset-profile-dialog-host.component';
 import { GfAdminOverviewComponent } from '@ghostfolio/client/components/admin-overview/admin-overview.component';
 import { GfAdminSettingsComponent } from '@ghostfolio/client/components/admin-settings/admin-settings.component';
 import { GfAdminUsersComponent } from '@ghostfolio/client/components/admin-users/admin-users.component';
@@ -9,6 +10,9 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { Routes, UrlMatcher, UrlSegment } from '@angular/router';
 
 import { AdminPageComponent } from './admin-page.component';
+
+const { create, update } =
+  internalRoutes.adminControl.subRoutes.marketData.subRoutes;
 
 // Matches both the users list and the user detail dialog route within a single
 // route configuration so that the component is reused (and not re-created) when
@@ -46,8 +50,27 @@ export const routes: Routes = [
         title: internalRoutes.adminControl.subRoutes.jobs.title
       },
       {
-        path: internalRoutes.adminControl.subRoutes.marketData.path,
+        children: [
+          {
+            component: GfAssetProfileDialogHostComponent,
+            data: { mode: 'create' },
+            path: create.path,
+            title: create.title
+          },
+          {
+            children: [
+              {
+                component: GfAssetProfileDialogHostComponent,
+                data: { mode: 'update' },
+                path: update.path,
+                title: update.title
+              }
+            ],
+            path: ':dataSource/:symbol'
+          }
+        ],
         component: GfAdminMarketDataComponent,
+        path: internalRoutes.adminControl.subRoutes.marketData.path,
         title: internalRoutes.adminControl.subRoutes.marketData.title
       },
       {

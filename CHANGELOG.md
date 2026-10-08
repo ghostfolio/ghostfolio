@@ -5,11 +5,286 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.67.0 - 2026-09-05
+## Unreleased
 
 ### Added
 
 - Added support for grouping portfolio performance by year
+
+## 3.81.0 - 2026-10-07
+
+### Changed
+
+- Moved the performance calculation including dividends (total return) from experimental to general availability
+- Improved the language localization for German (`de`)
+- Improved the language localization for Turkish (`tr`)
+
+### Fixed
+
+- Fixed the visibility of the asset class, asset sub class, fee and quantity fields of a valuable in the create activity dialog
+- Fixed the missing mapping for Aland Islands in the country weightings of the _Financial Modeling Prep_ service
+- Fixed the net performance percentage of date ranges in the portfolio performance calculation by weighting the average investment by the number of days between the chart dates
+- Fixed the start date of calendar year date ranges in the portfolio performance calculation
+- Fixed an issue where the Content Security Policy in HTTP security headers blocked the status check of the Ghostfolio data provider when `ENABLE_FEATURE_SECURITY_HEADERS` was enabled (experimental)
+
+## 3.80.2 - 2026-10-06
+
+### Added
+
+- Exposed the `ENABLE_FEATURE_SECURITY_HEADERS` environment variable to enable HTTP security headers (experimental)
+
+### Changed
+
+- Improved the portfolio snapshot calculation to get the quotes of active holdings only
+- Improved the performance of getting the latest market data by optimizing the indexes of the market data table
+- Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `POST api/v1/activities`
+- Upgraded `Nx` from version `23.1.1` to `23.2.1`
+
+### Fixed
+
+- Fixed a layout issue in the top and bottom holdings of the analysis page by truncating long names
+- Fixed the missing thousands separator of 4-digit numbers in certain locales
+- Fixed an issue where holdings without a market price have been valued at the unit price of a dividend, a fee, an interest or a liability
+- Fixed the check for today in the current rate service for instances running in a time zone behind UTC
+
+## 3.79.0 - 2026-10-04
+
+### Added
+
+- Extended the _Public API_ with the liveness probe endpoint (`GET api/v1/health/liveness`) (experimental)
+- Added the graceful shutdown of the server on `SIGINT` and `SIGTERM`
+- Added `stop_grace_period` to the _Ghostfolio_ service in the `docker-compose` file (`docker-compose.yml`)
+
+### Changed
+
+- Localized the number formatting in the chart of the holdings tab on the home page
+- Moved the dividend and the dividend yield in the holding detail dialog from experimental to general availability
+- Changed the installation of the dependencies from `npm install` to `npm ci` in the `Dockerfile`
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `13.3` to `14.0`
+- Upgraded `nestjs` from version `11.2.3` to `11.2.6`
+
+### Fixed
+
+- Fixed an issue with the algebraic sign in the tooltip of the chart of the holdings tab on the home page
+- Fixed the asset profile of the activities after a fee, an interest or a liability with the same symbol in the activities import
+
+### Todo
+
+- Add `stop_grace_period: 1m` to the _Ghostfolio_ service in your `docker-compose` file (see `docker-compose.yml`)
+
+## 3.78.0 - 2026-10-03
+
+### Added
+
+- Added the server of the Model Context Protocol (MCP) to the features page (experimental)
+
+### Changed
+
+- Improved the label of the cash positions in the holdings charts and table
+- Excluded the cash position in the base currency from the holdings table on the overview tab of the home page (experimental)
+- Extended the tools to get the activities, the portfolio and the watchlist in the server of the Model Context Protocol (MCP) to include the data source (experimental)
+- Removed the deprecated `SymbolProfile` field from the endpoints `GET api/v1/activities`, `GET api/v1/activities/:id` and `POST api/v1/import`
+- Improved the language localization for German (`de`)
+- Upgraded `@openrouter/ai-sdk-provider` from version `3.0.0` to `3.1.0`
+- Upgraded `ai` from version `7.0.37` to `7.0.114`
+- Upgraded `dotenv` from version `17.4.2` to `18.0.3`
+
+### Fixed
+
+- Fixed the calculation of the interest in the account detail dialog for activities with a quantity other than one
+- Fixed the positive performance from the all time high in the watchlist
+- Fixed the portfolio calculation for holdings with historical market prices between the chart dates
+- Fixed the asset profile identifier in the historical market data gathering of the `POST api/v1/activities` endpoint
+
+## 3.77.0 - 2026-10-02
+
+### Added
+
+- Added a tool to get the performance to the server of the Model Context Protocol (MCP) (experimental)
+
+### Changed
+
+- Upgraded `prettier` from version `3.9.6` to `3.9.9`
+- Upgraded `undici` from version `8.10.0` to `8.11.2`
+
+### Fixed
+
+- Fixed the filtering by holding in the server of the Model Context Protocol (MCP) (experimental)
+
+## 3.76.0 - 2026-09-30
+
+### Added
+
+- Added a loading indicator to the platform management of the admin control panel
+- Added a loading indicator to the tag management of the admin control panel
+- Added a _Refresh_ action to the user detail dialog menu in the admin control panel
+- Added the total column to the table of the tag management in the admin control panel
+
+### Changed
+
+- Improved the charts to update their colors if the appearance is set to auto and the operating system switches between light and dark mode
+- Extended the emergency fund dialog in the portfolio summary to include the currency suffix
+- Extended the user detail dialog in the users section of the admin control panel to include the last request
+- Migrated the client to the code generated by the new `prisma-client` generator of _Prisma_
+- Improved the language localization for German (`de`)
+- Migrated from `lodash` to `lodash-es`
+
+### Fixed
+
+- Fixed the colors of the investment chart component (dark mode)
+- Fixed the colors of the charts if the appearance is set to light and the operating system uses dark mode
+- Fixed the allocation column of the top holdings of ETFs on the allocations page after a change of the user settings
+- Fixed the allocation column of the top holdings of funds other than ETFs on the allocations page
+- Fixed the value column of the top holdings of ETFs on the allocations page in the _Presenter View_
+- Fixed the projected sustainable retirement income on the _FIRE_ page for a projected total amount of zero (experimental)
+- Fixed the sustainable retirement income on the _FIRE_ page for redacted values
+- Fixed the emergency fund in the portfolio summary for redacted values
+- Fixed the redaction of `valueInBaseCurrency` in the holdings of ETFs in a restricted view
+- Fixed the redaction of `comment`, `scraperConfiguration` and `symbolMapping` in the asset profile relation of the activities in a restricted view
+- Resolved the data source transformation in the asset profile relation of the activities
+
+## 3.75.0 - 2026-09-28
+
+### Changed
+
+- Extended the net performance on the analysis page to include the dividends (experimental)
+- Extended the net performance in the portfolio summary to include the dividends (experimental)
+- Improved the get quotes functionality of the _Manual_ service
+- Migrated the historical market data editor dialog from `ngModel` to form control
+- Migrated the _ESLint_ configuration to the flat config format without `FlatCompat`
+- Upgraded `chartjs-chart-treemap` from version `4.2.0` to `4.2.2`
+
+### Fixed
+
+- Fixed an issue where holdings without a quote have been valued at the unit price of the latest activity instead of the latest market price
+- Fixed the discovery of the _OpenID Connect_ (`OIDC`) configuration for issuer URLs with a trailing slash (experimental)
+
+## 3.74.0 - 2026-09-27
+
+### Added
+
+- Added the dividend performance to the analysis page (experimental)
+
+### Changed
+
+- Simplified the portfolio summary by hiding the currency on mobile
+- Improved the performance of the logo endpoints by enabling the browser cache
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the wrapping of the name column in the accounts table component on mobile
+- Fixed the sorting of the watchlist for asset profiles without a name
+
+## 3.73.0 - 2026-09-26
+
+### Changed
+
+- Improved the server of the Model Context Protocol (MCP) to list only the tools covered by the scopes of the access (experimental)
+- Refreshed the cryptocurrencies list
+- Improved the language localization for Catalan (`ca`)
+- Upgraded `@rekog/mcp-nest` from version `2.0.2` to `2.0.7`
+- Upgraded `bull-board` from version `9.9.0` to `9.10.1`
+- Upgraded `zod` from version `4.5.4` to `4.6.5`
+
+### Fixed
+
+- Fixed the value of the holdings excluded from analysis in the portfolio summary
+
+## 3.72.0 - 2026-09-20
+
+### Added
+
+- Added a tool to get the watchlist to the server of the Model Context Protocol (MCP) (experimental)
+
+### Changed
+
+- Extended the cache key of the portfolio snapshot by the performance calculation type
+- Hardened the validation of the device id in the biometric authentication
+- Upgraded `stripe` from version `22.5.0` to `22.6.2`
+
+### Fixed
+
+- Fixed the net performance percentage of date ranges in the portfolio performance calculation by including the gross performance at the start date
+
+## 3.71.0 - 2026-09-19
+
+### Added
+
+- Added a hint for the performance calculation type to the analysis page
+- Added support for country codes to the entity logo component and used it for cash holdings and currency selectors
+
+### Changed
+
+- Localized the default account name created during user registration
+- Improved the performance of the watchlist by removing an unnecessary index from the market data table
+- Improved the performance of deleting a watchlist item
+- Extended the `POST api/v1/user` endpoint by the language code
+- Improved the language localization for German (`de`)
+- Upgraded `@internationalized/number` from version `3.6.7` to `3.6.8`
+- Upgraded `bull-board` from version `9.8.0` to `9.9.0`
+- Upgraded `marked` from version `17.0.2` to `18.0.12`
+- Upgraded `ngx-markdown` from version `22.0.0` to `22.0.2`
+
+### Fixed
+
+- Fixed the missing account balance of the current day for users in a time zone ahead of the instance
+
+## 3.70.1 - 2026-09-14
+
+### Added
+
+- Added the holdings table to the overview tab of the home page on desktop (experimental)
+- Added a tool to search for asset profiles to the server of the Model Context Protocol (MCP) (experimental)
+
+### Changed
+
+- Improved the style of the activity type filter on the activities page (experimental)
+- Improved the style of the no activities info component
+- Improved the style of the selector in the benchmark comparator
+- Improved the responsive layout of the holdings table in simplified mode
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for German (`de`)
+- Upgraded `@codewithdan/observable-store` from version `2.2.15` to `3.0.0`
+- Upgraded `bull-board` from version `9.5.0` to `9.8.0`
+- Upgraded `papaparse` from version `5.5.3` to `5.7.0`
+- Upgraded `zone.js` from version `0.16.2` to `0.16.3`
+
+### Fixed
+
+- Hardened the authentication with _OpenID Connect_ (`OIDC`) (experimental)
+
+## 3.69.0 - 2026-09-07
+
+### Changed
+
+- Improved the loading state of the activity count in the portfolio summary
+- Migrated the create dialog of the watchlist to a dedicated route
+- Changed the holdings endpoint to return active and closed holdings by default and reuse a single snapshot for both types
+- Upgraded `countries-and-timezones` from version `3.9.0` to `3.10.0`
+- Upgraded `bull-board` from version `9.0.1` to `9.5.0`
+- Upgraded `zod` from version `4.4.3` to `4.5.4`
+
+### Fixed
+
+- Resolved an issue when opening an asset profile from the watchlist
+
+## 3.68.0 - 2026-09-06
+
+### Added
+
+- Added a simplified mode to the holdings table component
+
+### Changed
+
+- Made the details of holdings excluded from analysis accessible via the activities table
+- Migrated the asset profile dialogs of the market data management in the admin control panel to dedicated routes
+
+## 3.67.1 - 2026-09-05
+
+### Added
+
 - Introduced a DTO for the query parameters of the asset profiles endpoint
 - Introduced a DTO for the query parameters of the symbol lookup endpoints
 

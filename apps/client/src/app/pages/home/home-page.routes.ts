@@ -2,6 +2,7 @@ import { GfHomeHoldingsComponent } from '@ghostfolio/client/components/home-hold
 import { GfHomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { GfHomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { GfHomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
+import { GfWatchlistDialogHostComponent } from '@ghostfolio/client/components/home-watchlist/watchlist-dialog-host/watchlist-dialog-host.component';
 import { GfMarketsComponent } from '@ghostfolio/client/components/markets/markets.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
@@ -34,6 +35,14 @@ export const routes: Routes = [
         title: internalRoutes.home.subRoutes.markets.title
       },
       {
+        children: [
+          {
+            component: GfWatchlistDialogHostComponent,
+            path: internalRoutes.home.subRoutes.watchlist.subRoutes.create.path,
+            title:
+              internalRoutes.home.subRoutes.watchlist.subRoutes.create.title
+          }
+        ],
         path: internalRoutes.home.subRoutes.watchlist.path,
         component: GfHomeWatchlistComponent,
         title: internalRoutes.home.subRoutes.watchlist.title

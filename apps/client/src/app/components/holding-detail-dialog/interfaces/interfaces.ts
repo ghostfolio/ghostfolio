@@ -1,10 +1,9 @@
 import { ColorScheme } from '@ghostfolio/common/types';
-
-import { DataSource } from '@prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface HoldingDetailDialogParams {
   baseCurrency: string;
-  colorScheme: ColorScheme;
+  colorScheme?: ColorScheme;
   dataSource: DataSource;
   deviceType: string;
   hasPermissionToAccessAdminControl: boolean;

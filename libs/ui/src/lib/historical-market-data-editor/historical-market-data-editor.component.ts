@@ -5,6 +5,8 @@ import {
   getLocale
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import type { MarketData } from '@ghostfolio/prisma/browser';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
@@ -28,7 +30,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,
   addMonths,
@@ -65,9 +66,9 @@ export class GfHistoricalMarketDataEditorComponent
     DATE_FORMAT
   )};123.45`;
 
-  @Input() currency: string;
+  @Input() currency?: string;
   @Input() dataSource: DataSource;
-  @Input() dateOfFirstActivity: Date;
+  @Input() dateOfFirstActivity?: Date;
   @Input() symbol: string;
   @Input() user: User;
 

@@ -23,7 +23,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { addHours, isPast, subDays } from 'date-fns';
-import { round, uniqBy } from 'lodash';
+import { round, uniqBy } from 'lodash-es';
 import ms from 'ms';
 
 import { BenchmarkValue } from './interfaces/benchmark-value.interface';
@@ -138,7 +138,7 @@ export class BenchmarkService {
         };
       })
       .sort((a, b) => {
-        return a.name?.localeCompare(b?.name) ?? 0;
+        return (a.name ?? '').localeCompare(b.name ?? '');
       });
   }
 
@@ -216,6 +216,12 @@ export class BenchmarkService {
     }
   }
 
+  public getPerformancePercentFromAllTimeHigh(performancePercent: number) {
+    const isAtAllTimeHigh = performancePercent >= 0;
+
+    return isAtAllTimeHigh ? 0 : performancePercent;
+  }
+
   public async isBenchmark(symbolProfileId: string): Promise<boolean> {
     const benchmarks = await this.getBenchmarksProperty();
 
@@ -288,10 +294,9 @@ export class BenchmarkService {
         performances: {
           allTimeHigh: {
             date: allTimeHigh?.date,
-            performancePercent:
-              performancePercentFromAllTimeHigh >= 0
-                ? 0
-                : performancePercentFromAllTimeHigh
+            performancePercent: this.getPerformancePercentFromAllTimeHigh(
+              performancePercentFromAllTimeHigh
+            )
           }
         },
         symbol: benchmarkAssetProfiles[index].symbol,

@@ -7,7 +7,8 @@ export interface PortfolioSummary extends PortfolioPerformance {
   annualizedPerformancePercentWithCurrencyEffect: number;
   cash: number;
   dateOfFirstActivity?: Date;
-  dividendInBaseCurrency: number;
+  dividendYieldPercent: number;
+  dividendYieldPercentWithCurrencyEffect: number;
   emergencyFund: {
     assets: number;
     cash: number;

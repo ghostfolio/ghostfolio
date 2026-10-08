@@ -1,6 +1,9 @@
 import { Activity } from '@ghostfolio/common/interfaces';
 
-export interface PortfolioOrder extends Pick<Activity, 'tags' | 'type'> {
+export interface PortfolioCalculatorActivity extends Pick<
+  Activity,
+  'tags' | 'type'
+> {
   assetProfile: Pick<
     Activity['assetProfile'],
     'assetSubClass' | 'currency' | 'dataSource' | 'name' | 'symbol' | 'userId'

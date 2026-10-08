@@ -1,6 +1,7 @@
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
 import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -22,31 +23,40 @@ import {
   ellipsisHorizontalCircleOutline,
   informationCircleOutline
 } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GfValueComponent, IonIcon, MatTooltipModule],
+  imports: [
+    GfValueComponent,
+    IonIcon,
+    MatTooltipModule,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-portfolio-summary',
   styleUrls: ['./portfolio-summary.component.scss'],
   templateUrl: './portfolio-summary.component.html'
 })
 export class GfPortfolioSummaryComponent implements OnChanges {
-  @Input() baseCurrency: string;
-  @Input() deviceType: string;
-  @Input() hasImpersonationId: boolean;
-  @Input() hasPermissionToUpdateUserSettings: boolean;
-  @Input() isLoading: boolean;
-  @Input() language: string;
-  @Input() locale = getLocale();
-  @Input() summary: PortfolioSummary;
-  @Input() user: User;
+  @Input() public baseCurrency?: string;
+  @Input() public deviceType: string;
+  @Input() public hasImpersonationId: boolean;
+  @Input() public hasPermissionToUpdateUserSettings: boolean;
+  @Input() public isLoading: boolean;
+  @Input() public language?: string;
+  @Input() public locale?: string = getLocale();
+  @Input() public summary?: PortfolioSummary;
+  @Input() public user?: User;
 
   public emergencyFundChanged = output<number>();
 
   protected readonly buyAndSellActivitiesTooltip = translate(
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
   );
+
+  protected readonly isNumber = isNumber;
+  protected readonly PerformanceCalculationType = PerformanceCalculationType;
 
   protected isCashExpanded = false;
   protected isHoldingsExpanded = false;
@@ -70,6 +80,10 @@ export class GfPortfolioSummaryComponent implements OnChanges {
       : 0;
   }
 
+  protected get displayedCurrency() {
+    return this.deviceType === 'mobile' ? undefined : this.baseCurrency;
+  }
+
   protected get emergencyFundPercentage() {
     return this.summary?.totalValueInBaseCurrency
       ? (this.summary.emergencyFund?.total || 0) /
@@ -85,11 +99,11 @@ export class GfPortfolioSummaryComponent implements OnChanges {
   }
 
   protected get hasCashBreakdown() {
-    return !this.isLoading && this.summary?.emergencyFund?.cash > 0;
+    return !this.isLoading && (this.summary?.emergencyFund?.cash ?? 0) > 0;
   }
 
   protected get hasHoldingsBreakdown() {
-    return !this.isLoading && this.summary?.emergencyFund?.assets > 0;
+    return !this.isLoading && (this.summary?.emergencyFund?.assets ?? 0) > 0;
   }
 
   protected get holdingsInBaseCurrency() {
@@ -119,7 +133,7 @@ export class GfPortfolioSummaryComponent implements OnChanges {
     }
 
     return (
-      this.holdingsInBaseCurrency - (this.summary.emergencyFund?.assets ?? 0)
+      this.holdingsInBaseCurrency - (this.summary?.emergencyFund?.assets ?? 0)
     );
   }
 
@@ -156,8 +170,9 @@ export class GfPortfolioSummaryComponent implements OnChanges {
         this.emergencyFundChanged.emit(emergencyFund);
       },
       confirmLabel: $localize`Save`,
-      defaultValue: this.summary.emergencyFund?.total?.toString() ?? '0',
-      title: $localize`Please set the amount of your emergency fund.`
+      defaultValue: this.summary?.emergencyFund?.total?.toString() ?? '0',
+      title: $localize`Please set the amount of your emergency fund.`,
+      valueSuffix: this.baseCurrency
     });
   }
 

@@ -87,6 +87,7 @@ export class PortfolioSnapshotProcessor {
 
       await this.redisCacheService.set(
         this.redisCacheService.getPortfolioSnapshotKey({
+          calculationType: job.data.calculationType,
           filters: job.data.filters,
           userId: job.data.userId
         }),

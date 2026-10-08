@@ -1,7 +1,5 @@
 import {
-  activityDummyData,
-  assetProfileDummyData,
-  loadExportFile,
+  loadActivitiesFromExportFile,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -14,11 +12,9 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity, ExportResponse } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
-import { join } from 'node:path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -48,8 +44,6 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
-  let exportResponse: ExportResponse;
-
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
@@ -57,22 +51,13 @@ describe('PortfolioCalculator', () => {
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
 
-  beforeAll(() => {
-    exportResponse = loadExportFile(
-      join(
-        __dirname,
-        '../../../../../../../test/import/ok/novn-buy-and-sell-partially.json'
-      )
-    );
-  });
-
   beforeEach(() => {
     PortfolioSnapshotServiceMock.reset();
     RedisCacheServiceMock.reset();
 
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -98,28 +83,14 @@ describe('PortfolioCalculator', () => {
     it.only('with NOVN.SW buy and sell partially', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
-      const activities: Activity[] = exportResponse.activities.map(
-        (activity) => ({
-          ...activityDummyData,
-          ...activity,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: activity.currency,
-            dataSource: activity.dataSource,
-            name: 'Novartis AG',
-            symbol: activity.symbol
-          },
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: activity.fee,
-          feeInBaseCurrency: activity.fee,
-          unitPriceInAssetProfileCurrency: activity.unitPrice
-        })
+      const { activities, userCurrency } = loadActivitiesFromExportFile(
+        'novn-buy-and-sell-partially.json'
       );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: exportResponse.user.settings.currency,
+        currency: userCurrency,
         userId: userDummyData.id
       });
 
@@ -144,6 +115,10 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 2,
+            averageInvestment: new Big('145.10285714285714285714'),
+            averageInvestmentWithCurrencyEffect: new Big(
+              '145.10285714285714285714'
+            ),
             averagePrice: new Big('75.80'),
             currency: 'CHF',
             dataSource: 'YAHOO',
@@ -173,10 +148,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'NOVN.SW',
             tags: [],
-            timeWeightedInvestment: new Big('145.10285714285714285714'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '145.10285714285714285714'
-            ),
             valueInBaseCurrency: new Big('87.8')
           }
         ],

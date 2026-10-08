@@ -56,7 +56,8 @@ describe('PortfolioCalculator', () => {
     RedisCacheServiceMock.reset();
 
     configurationService = new ConfigurationService();
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
+
     exchangeRateDataService = new ExchangeRateDataService(
       null,
       null,
@@ -74,7 +75,7 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  describe('get transaction point', () => {
+  describe('get holding balances by date', () => {
     it('with MSFT buy and sell with fractional quantities (multiples of 1/3)', () => {
       jest.useFakeTimers().setSystemTime(parseDate('2024-04-01').getTime());
 
@@ -136,15 +137,19 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const transactionPoints = portfolioCalculator.getTransactionPoints();
-      const lastTransactionPoint =
-        transactionPoints[transactionPoints.length - 1];
-      const position = lastTransactionPoint.items.find(
-        (item) => item.symbol === 'MSFT'
+      const holdingBalancesByDate =
+        portfolioCalculator.getHoldingBalancesByDate();
+
+      const latestHoldingBalances = holdingBalancesByDate.at(-1);
+
+      const { investment, quantity } = latestHoldingBalances.holdings.find(
+        ({ symbol }) => {
+          return symbol === 'MSFT';
+        }
       );
 
-      expect(position.investment.toNumber()).toBe(0);
-      expect(position.quantity.toNumber()).toBe(0);
+      expect(investment.toNumber()).toBe(0);
+      expect(quantity.toNumber()).toBe(0);
     });
   });
 });

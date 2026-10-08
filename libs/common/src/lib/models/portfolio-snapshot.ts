@@ -3,7 +3,7 @@ import {
   AssetProfileIdentifier,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshotHolding } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
@@ -17,14 +17,22 @@ export class PortfolioSnapshot {
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
 
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
+  dividendYieldPercent: Big;
+
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
+  dividendYieldPercentWithCurrencyEffect: Big;
+
   errors: AssetProfileIdentifier[];
 
   hasErrors: boolean;
 
   historicalData: HistoricalDataItem[];
 
-  @Type(() => TimelinePosition)
-  positions: TimelinePosition[];
+  @Type(() => PortfolioSnapshotHolding)
+  positions: PortfolioSnapshotHolding[];
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

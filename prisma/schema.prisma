@@ -1,7 +1,12 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = []
   binaryTargets   = ["debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x", "native"]
+  previewFeatures = []
+  provider        = "prisma-client-js"
+}
+
+generator workspaceClient {
+  output   = "./generated"
+  provider = "prisma-client"
 }
 
 datasource db {
@@ -168,11 +173,9 @@ model MarketData {
   state            MarketDataState @default(CLOSE)
   symbol           String
 
-  @@unique([dataSource, date, symbol])
+  @@unique([dataSource, symbol, date])
   @@index([dataSource])
-  @@index([dataSource, symbol])
   @@index([date])
-  @@index([marketPrice])
   @@index([state])
   @@index([symbol])
 }

@@ -3,7 +3,7 @@ import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-durin
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Controller,

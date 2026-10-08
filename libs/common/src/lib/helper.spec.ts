@@ -6,12 +6,15 @@ import {
   canApplyFiltersToAccess,
   extractNumberFromString,
   getCountryCodeFromCurrency,
+  getEmojiFlag,
+  getHoldingName,
   getNumberFormatGroup,
   getStringOrNull,
   getStringOrUndefined,
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol,
+  isDarkColorScheme,
   isSplitRatio,
   isValidCurrencyCode,
   isValidCustomAssetProfileSymbol,
@@ -119,6 +122,71 @@ describe('Helper', () => {
 
     it('Empty currency', () => {
       expect(getCountryCodeFromCurrency('')).toEqual('');
+    });
+  });
+
+  describe('Get emoji flag', () => {
+    it('Country code', () => {
+      expect(getEmojiFlag('US')).toEqual('🇺🇸');
+      expect(getEmojiFlag('us')).toEqual('🇺🇸');
+    });
+
+    it('European Union code', () => {
+      expect(getEmojiFlag('EU')).toEqual('🇪🇺');
+    });
+
+    it('Invalid country code', () => {
+      expect(getEmojiFlag('XX')).toEqual(undefined);
+    });
+
+    it('Empty country code', () => {
+      expect(getEmojiFlag('')).toEqual(undefined);
+    });
+  });
+
+  describe('Get holding name', () => {
+    it('Cash position', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'CASH',
+          assetSubClassLabel: 'Cash',
+          name: 'CHF',
+          symbol: 'CHF'
+        })
+      ).toEqual('Cash (CHF)');
+    });
+
+    it('Cash position without asset sub class label', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'CASH',
+          assetSubClassLabel: undefined,
+          name: 'CHF',
+          symbol: 'CHF'
+        })
+      ).toEqual('CHF');
+    });
+
+    it('Holding with name', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'STOCK',
+          assetSubClassLabel: 'Stock',
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        })
+      ).toEqual('Apple Inc.');
+    });
+
+    it('Holding without name', () => {
+      expect(
+        getHoldingName({
+          assetSubClass: 'STOCK',
+          assetSubClassLabel: 'Stock',
+          name: undefined,
+          symbol: 'AAPL'
+        })
+      ).toEqual('AAPL');
     });
   });
 
@@ -325,6 +393,40 @@ describe('Helper', () => {
 
     it('Empty symbol', () => {
       expect(isCurrencySymbol('')).toEqual(false);
+    });
+  });
+
+  describe('Is dark color scheme', () => {
+    const mockPrefersColorSchemeDark = (matches: boolean) => {
+      window.matchMedia = jest.fn(() => {
+        return { matches } as MediaQueryList;
+      });
+    };
+
+    afterEach(() => {
+      Reflect.deleteProperty(window, 'matchMedia');
+    });
+
+    it('Dark color scheme with operating system in light mode', () => {
+      mockPrefersColorSchemeDark(false);
+      expect(isDarkColorScheme('DARK')).toEqual(true);
+    });
+
+    it('Light color scheme with operating system in dark mode', () => {
+      mockPrefersColorSchemeDark(true);
+      expect(isDarkColorScheme('LIGHT')).toEqual(false);
+    });
+
+    it('Auto color scheme with operating system in dark mode', () => {
+      mockPrefersColorSchemeDark(true);
+      expect(isDarkColorScheme()).toEqual(true);
+      expect(isDarkColorScheme(null)).toEqual(true);
+    });
+
+    it('Auto color scheme with operating system in light mode', () => {
+      mockPrefersColorSchemeDark(false);
+      expect(isDarkColorScheme()).toEqual(false);
+      expect(isDarkColorScheme(null)).toEqual(false);
     });
   });
 

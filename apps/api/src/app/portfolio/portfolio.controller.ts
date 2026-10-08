@@ -357,7 +357,8 @@ export class PortfolioController {
     const holding = await this.portfolioService.getHolding({
       dataSource,
       symbol,
-      userId
+      userId,
+      withExcludedActivities: true
     });
 
     if (!holding) {
@@ -525,6 +526,7 @@ export class PortfolioController {
       performanceInformation.chart = performanceInformation.chart.map(
         ({
           date,
+          dividendInPercentageWithCurrencyEffect,
           netPerformanceInPercentage,
           netPerformanceInPercentageWithCurrencyEffect,
           netWorth,
@@ -533,6 +535,7 @@ export class PortfolioController {
         }) => {
           return {
             date,
+            dividendInPercentageWithCurrencyEffect,
             netPerformanceInPercentage,
             netPerformanceInPercentageWithCurrencyEffect,
             netWorthInPercentage:
@@ -566,6 +569,7 @@ export class PortfolioController {
         [
           'currentNetWorth',
           'currentValueInBaseCurrency',
+          'dividendInBaseCurrency',
           'grossPerformance',
           'grossPerformanceWithCurrencyEffect',
           'netPerformance',
@@ -581,12 +585,16 @@ export class PortfolioController {
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         (item) => {
-          return nullifyValuesInObject(item, ['totalInvestment', 'value']);
+          return nullifyValuesInObject(item, [
+            'dividendInBaseCurrency',
+            'totalInvestment',
+            'value'
+          ]);
         }
       );
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
-        ['netPerformance']
+        ['dividendInBaseCurrency', 'netPerformance']
       );
     }
 
@@ -633,7 +641,8 @@ export class PortfolioController {
     const holding = await this.portfolioService.getHolding({
       dataSource,
       symbol,
-      userId
+      userId,
+      withExcludedActivities: true
     });
 
     if (!holding) {

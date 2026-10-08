@@ -1,3 +1,4 @@
+import { getHelmetOptions } from '@ghostfolio/api/helper/security-headers.helper';
 import { languageRedirectMiddleware } from '@ghostfolio/api/middlewares/language-redirect.middleware';
 import { createMcpAuthorizationMiddleware } from '@ghostfolio/api/middlewares/mcp-authorization.middleware';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -14,6 +15,7 @@ import {
 import {
   Logger,
   LogLevel,
+  ShutdownSignal,
   ValidationPipe,
   VersioningType
 } from '@nestjs/common';
@@ -65,6 +67,14 @@ async function bootstrap() {
   });
 
   app.enableCors();
+
+  // Let the open requests and the active queue jobs finish on SIGINT and
+  // SIGTERM before the process stops. Exit explicitly because Linux ignores
+  // the re-raised signal if the process runs as PID 1
+  app.enableShutdownHooks([ShutdownSignal.SIGINT, ShutdownSignal.SIGTERM], {
+    useProcessExit: true
+  });
+
   app.enableVersioning({
     defaultVersion: '1',
     type: VersioningType.URI
@@ -93,30 +103,29 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  if (configService.get<string>('ENABLE_FEATURE_SUBSCRIPTION') === 'true') {
+  const configurationService = app.get(ConfigurationService);
+
+  const isSubscriptionEnabled =
+    configService.get<string>('ENABLE_FEATURE_SUBSCRIPTION') === 'true';
+
+  if (
+    isSubscriptionEnabled ||
+    configurationService.get('ENABLE_FEATURE_SECURITY_HEADERS')
+  ) {
+    const helmetMiddleware = helmet(
+      getHelmetOptions({ isSubscriptionEnabled })
+    );
+
     app.use((req: Request, res: Response, next: NextFunction) => {
       if (req.path.startsWith(STORYBOOK_PATH)) {
         next();
       } else {
-        helmet({
-          contentSecurityPolicy: {
-            directives: {
-              connectSrc: ["'self'", 'https://js.stripe.com'], // Allow connections to Stripe
-              frameSrc: ["'self'", 'https://js.stripe.com'], // Allow loading frames from Stripe
-              scriptSrc: ["'self'", "'unsafe-inline'", 'https://js.stripe.com'], // Allow inline scripts and scripts from Stripe
-              scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
-              styleSrc: ["'self'", "'unsafe-inline'"] // Allow inline styles
-            }
-          },
-          crossOriginOpenerPolicy: false // Disable Cross-Origin-Opener-Policy header (for Internet Identity)
-        })(req, res, next);
+        helmetMiddleware(req, res, next);
       }
     });
   }
 
   app.use(languageRedirectMiddleware);
-
-  const configurationService = app.get(ConfigurationService);
 
   const trustProxy = configurationService.get('TRUST_PROXY');
 

@@ -157,8 +157,8 @@
       [class.d-none]="
         activityForm.get('type')?.value === 'FEE' ||
         activityForm.get('type')?.value === 'INTEREST' ||
-        activityForm.get('type')?.value === 'ITEM' ||
-        activityForm.get('type')?.value === 'LIABILITY'
+        activityForm.get('type')?.value === 'LIABILITY' ||
+        activityForm.get('type')?.value === 'VALUABLE'
       "
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -180,10 +180,10 @@
               @case ('INTEREST') {
                 <ng-container i18n>Value</ng-container>
               }
-              @case ('ITEM') {
+              @case ('LIABILITY') {
                 <ng-container i18n>Value</ng-container>
               }
-              @case ('LIABILITY') {
+              @case ('VALUABLE') {
                 <ng-container i18n>Value</ng-container>
               }
               @default {
@@ -231,8 +231,8 @@
       class="mb-3"
       [class.d-none]="
         activityForm.get('type')?.value === 'INTEREST' ||
-        activityForm.get('type')?.value === 'ITEM' ||
-        activityForm.get('type')?.value === 'LIABILITY'
+        activityForm.get('type')?.value === 'LIABILITY' ||
+        activityForm.get('type')?.value === 'VALUABLE'
       "
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -262,7 +262,7 @@
     </div>
     <div
       class="mb-3"
-      [class.d-none]="activityForm.get('type')?.value !== 'ITEM'"
+      [class.d-none]="activityForm.get('type')?.value !== 'VALUABLE'"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Class</mat-label>
@@ -281,7 +281,7 @@
     </div>
     <div
       class="mb-3"
-      [class.d-none]="activityForm.get('type')?.value !== 'ITEM'"
+      [class.d-none]="activityForm.get('type')?.value !== 'VALUABLE'"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Sub Class</mat-label>

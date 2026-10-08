@@ -16,6 +16,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import type { Tag } from '@ghostfolio/prisma/browser';
+import { AssetClass, Type } from '@ghostfolio/prisma/enums';
 import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
@@ -50,7 +52,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AssetClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
@@ -153,7 +154,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
     this.defaultDateFormat = getDateFormatString(this.locale);
 
     this.dataService
-      .fetchPortfolioHoldings()
+      .fetchPortfolioHoldings({
+        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.defaultLookupItems = holdings
@@ -485,10 +488,18 @@ export class GfCreateOrUpdateActivityDialogComponent {
   }
 
   protected async onSubmit() {
+    const isAssetClassApplicable =
+      this.activityForm.get('type')?.value === 'VALUABLE' ||
+      this.mode === 'update';
+
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.get('accountId')?.value,
-      assetClass: this.activityForm.get('assetClass')?.value,
-      assetSubClass: this.activityForm.get('assetSubClass')?.value,
+      assetClass: isAssetClassApplicable
+        ? this.activityForm.get('assetClass')?.value
+        : undefined,
+      assetSubClass: isAssetClassApplicable
+        ? this.activityForm.get('assetSubClass')?.value
+        : undefined,
       comment: getStringOrNull(this.activityForm.get('comment')?.value),
       currency: this.activityForm.get('currency')?.value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice')?.value,

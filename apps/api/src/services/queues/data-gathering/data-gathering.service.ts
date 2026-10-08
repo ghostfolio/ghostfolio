@@ -1,3 +1,4 @@
+import { isDataGatheringSupported } from '@ghostfolio/api/helper/data-source.helper';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -33,7 +34,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job, JobOptions, Queue } from 'bull';
 import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
-import { isEmpty } from 'lodash';
 import ms, { StringValue } from 'ms';
 
 @Injectable()
@@ -348,7 +348,7 @@ export class DataGatheringService {
           },
           update: { marketPrice, isCarriedForward: false },
           where: {
-            dataSource_date_symbol: {
+            dataSource_symbol_date: {
               dataSource,
               symbol,
               date: startOfUtcDate
@@ -506,12 +506,7 @@ export class DataGatheringService {
 
     return symbolProfiles
       .filter(({ dataSource, scraperConfiguration }) => {
-        const manualDataSourceWithScraperConfiguration =
-          dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
-
-        return (
-          dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration
-        );
+        return isDataGatheringSupported({ dataSource, scraperConfiguration });
       })
       .map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
@@ -534,14 +529,10 @@ export class DataGatheringService {
 
     return symbolProfiles
       .filter(({ dataSource, scraperConfiguration, symbol }) => {
-        const manualDataSourceWithScraperConfiguration =
-          dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
-
         return (
           !assetProfileIdentifiersWithRecentMarketData.some((item) => {
             return item.dataSource === dataSource && item.symbol === symbol;
-          }) &&
-          (dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration)
+          }) && isDataGatheringSupported({ dataSource, scraperConfiguration })
         );
       })
       .map((symbolProfile) => {
@@ -598,12 +589,7 @@ export class DataGatheringService {
       })
     )
       .filter(({ dataSource, scraperConfiguration }) => {
-        const manualDataSourceWithScraperConfiguration =
-          dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
-
-        return (
-          dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration
-        );
+        return isDataGatheringSupported({ dataSource, scraperConfiguration });
       })
       .map((symbolProfile) => {
         let date = symbolProfile.activities?.[0]?.date ?? startDate;

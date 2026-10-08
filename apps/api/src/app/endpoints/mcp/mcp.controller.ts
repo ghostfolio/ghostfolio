@@ -10,11 +10,14 @@ import { UseFilters } from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import { McpController, Tool } from '@rekog/mcp-nest';
 import { z } from 'zod';
+import 'zod/compile';
 
 import {
   GET_ACCOUNTS_PARAMETERS,
   GET_ACTIVITIES_PARAMETERS,
-  IMPORT_ACTIVITIES_PARAMETERS
+  GET_PERFORMANCE_PARAMETERS,
+  IMPORT_ACTIVITIES_PARAMETERS,
+  SEARCH_ASSET_PROFILES_PARAMETERS
 } from './mcp.schemas';
 import { McpService } from './mcp.service';
 
@@ -72,6 +75,26 @@ export class GhostfolioMcpController {
     annotations: {
       openWorldHint: false,
       readOnlyHint: true,
+      title: 'Get performance'
+    },
+    description: `Gives the performance of the portfolio in the date range with these columns: ${PortfolioTableService.getPerformanceTableColumnNames().join(
+      ', '
+    )}. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and includes the dividends (total return). The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
+    name: 'get-performance',
+    parameters: GET_PERFORMANCE_PARAMETERS
+  })
+  public async getPerformance(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload() parameters: z.infer<typeof GET_PERFORMANCE_PARAMETERS>
+  ) {
+    return this.mcpService.getPerformance({ ...parameters, userId });
+  }
+
+  @RequiresScopeOfAccess(scopes.portfolioRead)
+  @Tool({
+    annotations: {
+      openWorldHint: false,
+      readOnlyHint: true,
       title: 'Get portfolio'
     },
     description: `Gives the holdings of the portfolio with these columns: ${PortfolioTableService.getHoldingsTableColumnNames().join(
@@ -83,12 +106,22 @@ export class GhostfolioMcpController {
     return this.mcpService.getPortfolio({ userId });
   }
 
-  /**
-   * The transport gives the tool to every client, because it filters the list
-   * of the tools by the scopes of request.user, which a request of an access
-   * never has. The guard refuses the call itself, hence the description names
-   * the permission which the access needs.
-   */
+  @RequiresScopeOfAccess(scopes.watchlistRead)
+  @Tool({
+    annotations: {
+      openWorldHint: false,
+      readOnlyHint: true,
+      title: 'Get watchlist'
+    },
+    description: `Gives the watchlist of the user, sorted by name, with these columns: ${PortfolioTableService.getWatchlistTableColumnNames().join(
+      ', '
+    )}. A trend compares the average market price of the last 50 or 200 days with the average of the 50 or 200 days before. A trend is UNKNOWN if there is not sufficient market data. The change from the all time high is the difference between the current market price and the all time high in percentage.`,
+    name: 'get-watchlist'
+  })
+  public async getWatchlist(@Impersonation() { userId }: ImpersonationContext) {
+    return this.mcpService.getWatchlist({ userId });
+  }
+
   @RequiresScopeOfAccess(scopes.activityCreate)
   @Tool({
     annotations: {
@@ -97,7 +130,7 @@ export class GhostfolioMcpController {
       readOnlyHint: false,
       title: 'Import activities'
     },
-    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. The access needs the permission "Restricted view and manage". At most ${MCP_MAX_ACTIVITIES} activities are imported per call, while the instance can have a lower limit, which an error names. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
+    description: `Imports activities into the portfolio and gives the number of the imported activities and the number of the skipped activities. Use search-asset-profiles first unless the exact symbol and data source are already known. An activity is skipped if an equal activity is in the portfolio already, hence send each activity one time only: two equal activities of the same call are both imported. At most ${MCP_MAX_ACTIVITIES} activities are imported per call, while the instance can have a lower limit, which an error names. An error does not remove the activities of the same call which are imported already, hence get the activities after an error before you import them again.`,
     name: 'import-activities',
     parameters: IMPORT_ACTIVITIES_PARAMETERS
   })
@@ -106,5 +139,24 @@ export class GhostfolioMcpController {
     @Payload() parameters: z.infer<typeof IMPORT_ACTIVITIES_PARAMETERS>
   ) {
     return this.mcpService.importActivities({ ...parameters, userId });
+  }
+
+  @RequiresScopeOfAccess(scopes.activityCreate)
+  @Tool({
+    annotations: {
+      openWorldHint: true,
+      readOnlyHint: true,
+      title: 'Search asset profiles'
+    },
+    description:
+      'Searches for financial assets, such as stocks, ETFs, cryptocurrencies, mutual funds and commodities, which are available to the user. Each result is an asset profile that can be used to import an activity. Use this before importing an activity unless the exact symbol and data source are already known. Select the candidate that matches the intended asset and pass its symbol, dataSource and currency unchanged to import-activities.',
+    name: 'search-asset-profiles',
+    parameters: SEARCH_ASSET_PROFILES_PARAMETERS
+  })
+  public async searchAssetProfiles(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload() parameters: z.infer<typeof SEARCH_ASSET_PROFILES_PARAMETERS>
+  ) {
+    return this.mcpService.searchAssetProfiles({ ...parameters, userId });
   }
 }

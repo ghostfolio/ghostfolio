@@ -3,6 +3,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import type { Platform } from '@ghostfolio/prisma/browser';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -28,7 +29,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Platform } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
   createOutline,
@@ -36,6 +36,7 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfCreateOrUpdatePlatformDialogComponent } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
 import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-dialog/interfaces/interfaces';
@@ -51,6 +52,7 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
+    NgxSkeletonLoaderModule,
     RouterModule
   ],
   selector: 'gf-admin-platform',
@@ -61,6 +63,7 @@ export class GfAdminPlatformComponent implements OnInit {
   public readonly locale = input(getLocale());
 
   protected dataSource = new MatTableDataSource<Platform>();
+
   protected readonly displayedColumns = [
     'icon',
     'name',
@@ -68,12 +71,15 @@ export class GfAdminPlatformComponent implements OnInit {
     'accounts',
     'actions'
   ];
+
+  protected isLoading = false;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected platforms: Platform[];
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+
   private readonly paginator = viewChild.required(MatPaginator);
   private readonly sort = viewChild.required(MatSort);
 
@@ -149,6 +155,8 @@ export class GfAdminPlatformComponent implements OnInit {
   }
 
   private fetchPlatforms() {
+    this.isLoading = true;
+
     this.adminService
       .fetchPlatforms()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -161,6 +169,8 @@ export class GfAdminPlatformComponent implements OnInit {
         this.dataSource.sortingDataAccessor = getLowercase;
 
         this.dataService.updateInfo();
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

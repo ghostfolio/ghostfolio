@@ -10,6 +10,14 @@
       color: rgba(var(--palette-primary-300), 1);
     }
   }
+
+  gf-premium-indicator {
+    vertical-align: -0.125em;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+  }
 }
 
 :host-context(.theme-dark) {

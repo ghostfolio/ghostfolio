@@ -2,10 +2,10 @@
   "version": 1,
   "skills": {
     "angular-developer": {
-      "source": "angular/skills",
+      "source": "angular/angular",
       "sourceType": "github",
-      "skillPath": "angular-developer/SKILL.md",
-      "computedHash": "ded1e95fb8d75d60901201665c6ab7e348eec3b79a6c53824c4a30a487d99f58"
+      "skillPath": "skills/dev-skills/angular-developer/SKILL.md",
+      "computedHash": "0850aa966b6a7da1151daa9d0ef2081bf397f052573a35c1643fb92b948f0f00"
     },
     "karpathy-guidelines": {
       "source": "multica-ai/andrej-karpathy-skills",

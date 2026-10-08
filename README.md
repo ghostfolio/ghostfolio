@@ -47,7 +47,7 @@ Ghostfolio is for you if you are...
 
 - ✅ Create, update and delete transactions
 - ✅ Multi account management
-- ✅ Portfolio performance: Return on Average Investment (ROAI) for `Today`, `WTD`, `MTD`, `YTD`, `1Y`, `5Y`, `Max`
+- ✅ Portfolio performance: Return on Average Investment (ROAI) including dividends (total return) for `Today`, `WTD`, `MTD`, `YTD`, `1Y`, `5Y`, `Max`
 - ✅ Various charts
 - ✅ Static analysis to identify potential risks in your portfolio
 - ✅ Import and export transactions
@@ -87,29 +87,30 @@ Find answers to commonly asked questions about self-hosting Ghostfolio in our [F
 
 ### Supported Environment Variables
 
-| Name                        | Type                  | Default Value         | Description                                                                                                                                                                                                                   |
-| --------------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ACCESS_TOKEN_SALT`         | `string`              |                       | A random string used as salt for access tokens                                                                                                                                                                                |
-| `API_KEY_COINGECKO_DEMO`    | `string` (optional)   |                       | The _CoinGecko_ Demo API key                                                                                                                                                                                                  |
-| `API_KEY_COINGECKO_PRO`     | `string` (optional)   |                       | The _CoinGecko_ Pro API key                                                                                                                                                                                                   |
-| `DATABASE_URL`              | `string`              |                       | The database connection URL. If using a connection pooler, use the pooled connection URL here. e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}`                                        |
-| `DIRECT_URL`                | `string` (optional)   |                       | The direct database connection URL used by the _Prisma CLI_ (e.g. for schema migrations) and seeding, bypassing any connection poolers (falls back to `DATABASE_URL`)                                                         |
-| `ENABLE_FEATURE_AUTH_TOKEN` | `boolean` (optional)  | `true`                | Enables authentication via security token                                                                                                                                                                                     |
-| `ENABLE_FEATURE_MCP`        | `boolean` (optional)  | `false`               | Enables the server of the _Model Context Protocol_ (MCP) at `/mcp` (experimental)                                                                                                                                             |
-| `HOST`                      | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                                                                                                                         |
-| `JWT_SECRET_KEY`            | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                                                                                                              |
-| `LOG_LEVELS`                | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                                                                                                                      |
-| `PORT`                      | `number` (optional)   | `3333`                | The port where the Ghostfolio application will run on                                                                                                                                                                         |
-| `POSTGRES_DB`               | `string`              |                       | The name of the _PostgreSQL_ database                                                                                                                                                                                         |
-| `POSTGRES_PASSWORD`         | `string`              |                       | The password of the _PostgreSQL_ database                                                                                                                                                                                     |
-| `POSTGRES_USER`             | `string`              |                       | The user of the _PostgreSQL_ database                                                                                                                                                                                         |
-| `REDIS_DB`                  | `number` (optional)   | `0`                   | The database index of _Redis_                                                                                                                                                                                                 |
-| `REDIS_HOST`                | `string`              |                       | The host where _Redis_ is running                                                                                                                                                                                             |
-| `REDIS_PASSWORD`            | `string`              |                       | The password of _Redis_                                                                                                                                                                                                       |
-| `REDIS_PORT`                | `number`              |                       | The port where _Redis_ is running                                                                                                                                                                                             |
-| `REQUEST_TIMEOUT`           | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                                                                                                             |
-| `ROOT_URL`                  | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                                                                                                             |
-| `TRUST_PROXY`               | `string` (optional)   |                       | The [trust proxy](https://expressjs.com/en/guide/behind-proxies.html) setting of _Express.js_ to determine the client IP address for rate limiting, e.g. `1` if the Ghostfolio application runs behind a single reverse proxy |
+| Name                              | Type                  | Default Value         | Description                                                                                                                                                                                                                                                                         |
+| --------------------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ACCESS_TOKEN_SALT`               | `string`              |                       | A random string used as salt for access tokens                                                                                                                                                                                                                                      |
+| `API_KEY_COINGECKO_DEMO`          | `string` (optional)   |                       | The _CoinGecko_ Demo API key                                                                                                                                                                                                                                                        |
+| `API_KEY_COINGECKO_PRO`           | `string` (optional)   |                       | The _CoinGecko_ Pro API key                                                                                                                                                                                                                                                         |
+| `DATABASE_URL`                    | `string`              |                       | The database connection URL. If using a connection pooler, use the pooled connection URL here. e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}`                                                                                              |
+| `DIRECT_URL`                      | `string` (optional)   |                       | The direct database connection URL used by the _Prisma CLI_ (e.g. for schema migrations) and seeding, bypassing any connection poolers (falls back to `DATABASE_URL`)                                                                                                               |
+| `ENABLE_FEATURE_AUTH_TOKEN`       | `boolean` (optional)  | `true`                | Enables authentication via security token                                                                                                                                                                                                                                           |
+| `ENABLE_FEATURE_MCP`              | `boolean` (optional)  | `false`               | Enables the server of the _Model Context Protocol_ (MCP) at `/mcp` (experimental)                                                                                                                                                                                                   |
+| `ENABLE_FEATURE_SECURITY_HEADERS` | `boolean` (optional)  | `false`               | Enables HTTP security headers, e.g. `Content-Security-Policy` and `X-Frame-Options` (experimental). Other origins cannot embed pages (e.g. via `iframe`) or resources of Ghostfolio. `Strict-Transport-Security` is not set, because it requires HTTPS: set it in the reverse proxy |
+| `HOST`                            | `string` (optional)   | `0.0.0.0`             | The host where the Ghostfolio application will run on                                                                                                                                                                                                                               |
+| `JWT_SECRET_KEY`                  | `string`              |                       | A random string used for _JSON Web Tokens_ (JWT)                                                                                                                                                                                                                                    |
+| `LOG_LEVELS`                      | `string[]` (optional) |                       | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                                                                                                                                                                            |
+| `PORT`                            | `number` (optional)   | `3333`                | The port where the Ghostfolio application will run on                                                                                                                                                                                                                               |
+| `POSTGRES_DB`                     | `string`              |                       | The name of the _PostgreSQL_ database                                                                                                                                                                                                                                               |
+| `POSTGRES_PASSWORD`               | `string`              |                       | The password of the _PostgreSQL_ database                                                                                                                                                                                                                                           |
+| `POSTGRES_USER`                   | `string`              |                       | The user of the _PostgreSQL_ database                                                                                                                                                                                                                                               |
+| `REDIS_DB`                        | `number` (optional)   | `0`                   | The database index of _Redis_                                                                                                                                                                                                                                                       |
+| `REDIS_HOST`                      | `string`              |                       | The host where _Redis_ is running                                                                                                                                                                                                                                                   |
+| `REDIS_PASSWORD`                  | `string`              |                       | The password of _Redis_                                                                                                                                                                                                                                                             |
+| `REDIS_PORT`                      | `number`              |                       | The port where _Redis_ is running                                                                                                                                                                                                                                                   |
+| `REQUEST_TIMEOUT`                 | `number` (optional)   | `2000`                | The timeout of network requests to data providers in milliseconds                                                                                                                                                                                                                   |
+| `ROOT_URL`                        | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                                                                                                                                                                   |
+| `TRUST_PROXY`                     | `string` (optional)   |                       | The [trust proxy](https://expressjs.com/en/guide/behind-proxies.html) setting of _Express.js_ to determine the client IP address for rate limiting, e.g. `1` if the Ghostfolio application runs behind a single reverse proxy                                                       |
 
 #### OpenID Connect OIDC (experimental)
 
@@ -173,7 +174,7 @@ docker compose -f docker/docker-compose.build.yml up -d
 
 ### Home Server Systems (Community)
 
-Ghostfolio is available for various home server systems, including [CasaOS](https://github.com/bigbeartechworld/big-bear-casaos), [Home Assistant](https://github.com/lildude/ha-addon-ghostfolio), [Runtipi](https://www.runtipi.io/docs/apps-available), [TrueCharts](https://truecharts.org/charts/stable/ghostfolio), [Umbrel](https://apps.umbrel.com/app/ghostfolio), and [Unraid](https://unraid.net/community/apps?q=ghostfolio).
+Ghostfolio is available for various home server systems, including [CasaOS](https://github.com/bigbeartechworld/big-bear-casaos), [Easypanel](https://easypanel.io/templates/ghostfolio), [Home Assistant](https://github.com/lildude/ha-addon-ghostfolio), [Runtipi](https://www.runtipi.io/docs/apps-available), [TrueCharts](https://truecharts.org/charts/stable/ghostfolio), [Umbrel](https://apps.umbrel.com/app/ghostfolio), and [Unraid](https://unraid.net/community/apps?q=ghostfolio).
 
 ## Development
 
@@ -193,6 +194,8 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
 
 ### Health Check (experimental)
 
+The endpoint checks the connection to the database and to _Redis_. It is suitable as the readiness probe of an orchestrator (e.g. `readinessProbe` in _Kubernetes_) and as the `healthcheck` in _Docker Compose_. The check of _Redis_ can take up to 5 seconds. Thus, set the timeout of the probe to at least 5 seconds (e.g. `timeoutSeconds: 5` in _Kubernetes_).
+
 #### Request
 
 `GET http://localhost:3333/api/v1/health`
@@ -211,7 +214,29 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
 }
 ```
 
-### Import Activities
+### Liveness Probe (experimental)
+
+The endpoint answers without a check of the database or _Redis_. It is suitable as the liveness probe of an orchestrator (e.g. `livenessProbe` in _Kubernetes_), so that an outage of a dependency after the start does not restart the container. The database migrations run before the server starts. Thus, also use the endpoint as the startup probe (e.g. `startupProbe` in _Kubernetes_), so that a long migration does not restart the container.
+
+#### Request
+
+`GET http://localhost:3333/api/v1/health/liveness`
+
+**Info:** No Bearer Token is required for liveness probe
+
+#### Response
+
+##### Success
+
+`200 OK`
+
+```
+{
+  "status": "OK"
+}
+```
+
+### Import Portfolio Data
 
 #### Prerequisites
 
@@ -271,6 +296,22 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
   ]
 }
 ```
+
+### Export Portfolio Data
+
+#### Prerequisites
+
+[Bearer Token](#authorization-bearer-token) for authorization
+
+#### Request
+
+`GET http://localhost:3333/api/v1/export`
+
+#### Response
+
+##### Success
+
+`200 OK`
 
 ### Portfolio (experimental)
 
@@ -364,17 +405,17 @@ The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio 
 
 - Set `ENABLE_FEATURE_MCP` to `true`
 - Set `ROOT_URL` to the public URL of your instance if a client calls the endpoint from a browser page. The host name of `ROOT_URL` is the only accepted origin.
-- Grant an access of the type _MCP_ in _My Ghostfolio_ under _Access_ and copy its identifier
+- Grant an access of the type _MCP_ in _My Ghostfolio_ under _Access_ and copy its token
 
 An _MCP_ access has (restricted) read scopes and never reads the monetary values. Grant the _Restricted view and manage_ permission to let the client also import activities.
 
 ### Connect a client
 
-Point the client to the endpoint below and set the identifier of the access as the _Bearer Token_.
+Point the client to the endpoint below and set the MCP access token as the _Bearer Token_.
 
 ```
 POST http://localhost:3333/mcp
-"Authorization": "Bearer <INSERT_IDENTIFIER_OF_ACCESS>"
+"Authorization": "Bearer <INSERT_MCP_ACCESS_TOKEN>"
 ```
 
 ## Community Projects

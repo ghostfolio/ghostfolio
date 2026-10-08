@@ -28,6 +28,7 @@ import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
+import { GenerateAuthenticationOptionsDto } from './generate-authentication-options.dto';
 
 @AllowDuringImpersonation()
 @Controller('auth')
@@ -122,7 +123,7 @@ export class AuthController {
   @Post('webauthn/generate-authentication-options')
   @UseGuards(CustomThrottlerGuard)
   public async generateAuthenticationOptions(
-    @Body() body: { deviceId: string }
+    @Body() body: GenerateAuthenticationOptionsDto
   ) {
     return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
