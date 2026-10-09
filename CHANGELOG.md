@@ -11,9 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the content of the _General_ section by information about the import of activities from _Interactive Brokers_ on the Frequently Asked Questions (FAQ) page
 
+### Changed
+
+- Improved the _Storybook_ stories of the account selector, accounts table, activities table and holdings table components
+- Improved the language localization for Spanish (`es`)
+
 ### Fixed
 
-- Fixed the missing list numbers in the top and bottom holdings of the analysis page in Safari
+- Fixed the missing list numbers in the top and bottom holdings on the analysis page in Safari
+- Fixed the missing first data point in the portfolio evolution chart on the analysis page
+- Fixed the missing mapping for Korea in the country weightings of the _Financial Modeling Prep_ service
 
 ## 3.81.0 - 2026-10-07
 
