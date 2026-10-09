@@ -59,6 +59,16 @@ const ACCOUNTS: AccountWithPlatform[] = [
     platformId: 'f3e9d0e5-1e0f-4a3c-8b12-1f2a3b4c5d6e',
     updatedAt: new Date('2024-01-01'),
     userId: '081aa387-487d-4438-83a4-3060eb2a016e'
+  },
+  {
+    comment: null,
+    createdAt: new Date('2024-01-01'),
+    currency: 'EUR',
+    id: '267ec888-cb57-45d0-8085-938017417a2e',
+    name: 'Savings Account',
+    platformId: null,
+    updatedAt: new Date('2024-01-01'),
+    userId: '081aa387-487d-4438-83a4-3060eb2a016e'
   }
 ];
 
