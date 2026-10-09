@@ -85,6 +85,15 @@ export class PortfolioSnapshotProcessor {
         this.configurationService.get('CACHE_QUOTES_TTL')
       );
 
+      const tags = [
+        `portfolio:${job.data.userId}`,
+        ...new Set(
+          snapshot.positions
+            .filter((p) => p.symbol)
+            .map((p) => `symbol:${p.symbol}`)
+        )
+      ];
+
       await this.redisCacheService.set(
         this.redisCacheService.getPortfolioSnapshotKey({
           calculationType: job.data.calculationType,
@@ -95,7 +104,7 @@ export class PortfolioSnapshotProcessor {
           expiration: expiration.getTime(),
           portfolioSnapshot: snapshot
         } as unknown as PortfolioSnapshotValue),
-        CACHE_TTL_INFINITE
+        { ttl: CACHE_TTL_INFINITE, tags }
       );
 
       return snapshot;
