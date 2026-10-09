@@ -9,7 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+
+### Added
+
+- Extended the content of the _General_ section by information about the import of activities from _Interactive Brokers_ on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Extended the user account deletion flow in the user settings of the user account page to users without a _Security Token_ within 14 days after the registration
 - Removed an unnecessary index from the market data database table
+- Improved the _Storybook_ stories of the account selector, accounts table, activities table and holdings table components
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Fixed the missing list numbers in the top and bottom holdings on the analysis page in Safari
+- Fixed the missing first data point in the portfolio evolution chart on the analysis page
+- Fixed the end date of calendar year date ranges in the portfolio performance calculation for instances in time zones with a negative UTC offset
+- Fixed the missing mapping for Korea in the country weightings of the _Financial Modeling Prep_ service
 
 ## 3.81.0 - 2026-10-07
 
