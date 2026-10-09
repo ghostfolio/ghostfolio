@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the content of the _General_ section by information about the import of activities from _Interactive Brokers_ on the Frequently Asked Questions (FAQ) page
 
+### Changed
+
+- Improved the language localization for Spanish (`es`)
+
 ## 3.81.0 - 2026-10-07
 
 ### Changed
