@@ -16,6 +16,8 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfActivityTypeComponent } from '../activity-type/activity-type.component';
 import { GfEntityLogoComponent } from '../entity-logo';
+import { EntityLogoImageSourceService } from '../entity-logo/entity-logo-image-source.service';
+import { EntityLogoImageSourceServiceMock } from '../mocks/entity-logo-image-source.service.mock';
 import { GfNoActivitiesInfoComponent } from '../no-activities-info/no-activities-info.component';
 import { NotificationService } from '../notifications';
 import { GfValueComponent } from '../value';
@@ -371,7 +373,13 @@ export default {
         NgxSkeletonLoaderModule,
         RouterModule.forChild([])
       ],
-      providers: [NotificationService]
+      providers: [
+        NotificationService,
+        {
+          provide: EntityLogoImageSourceService,
+          useValue: new EntityLogoImageSourceServiceMock()
+        }
+      ]
     })
   ]
 } as Meta<GfActivitiesTableComponent>;
