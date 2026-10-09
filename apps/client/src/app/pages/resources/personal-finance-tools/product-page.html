@@ -101,20 +101,16 @@
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Origin</td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <span class="text-nowrap"
-                    ><span aria-hidden="true">{{
-                      product1().origin?.emojiFlag
-                    }}</span>
-                    {{ product1().origin?.name }}</span
-                  >
+                  @if (product1().origin; as origin) {
+                    <span aria-hidden="true">{{ origin.emojiFlag }}</span
+                    >&nbsp;{{ origin.name }}
+                  }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <span class="text-nowrap"
-                    ><span aria-hidden="true">{{
-                      product2().origin?.emojiFlag
-                    }}</span>
-                    {{ product2().origin?.name }}</span
-                  >
+                  @if (product2().origin; as origin) {
+                    <span aria-hidden="true">{{ origin.emojiFlag }}</span
+                    >&nbsp;{{ origin.name }}
+                  }
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -125,10 +121,12 @@
                     track region.name;
                     let isLast = $last
                   ) {
-                    <span class="text-nowrap"
-                      ><span aria-hidden="true">{{ region.emojiFlag }}</span>
-                      {{ region.name }}</span
-                    >{{ isLast ? '' : ', ' }}
+                    @if (region.emojiFlag) {
+                      <span aria-hidden="true">{{ region.emojiFlag }}</span
+                      >&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
+                    } @else {
+                      {{ region.name }}{{ isLast ? '' : ', ' }}
+                    }
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
@@ -137,10 +135,12 @@
                     track region.name;
                     let isLast = $last
                   ) {
-                    <span class="text-nowrap"
-                      ><span aria-hidden="true">{{ region.emojiFlag }}</span>
-                      {{ region.name }}</span
-                    >{{ isLast ? '' : ', ' }}
+                    @if (region.emojiFlag) {
+                      <span aria-hidden="true">{{ region.emojiFlag }}</span
+                      >&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
+                    } @else {
+                      {{ region.name }}{{ isLast ? '' : ', ' }}
+                    }
                   }
                 </td>
               </tr>
