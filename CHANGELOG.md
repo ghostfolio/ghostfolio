@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the user account deletion flow in the user settings of the user account page to users without a _Security Token_ within 14 days after the registration
 - Improved the _Storybook_ stories of the account selector, accounts table, activities table and holdings table components
 - Improved the language localization for Spanish (`es`)
 

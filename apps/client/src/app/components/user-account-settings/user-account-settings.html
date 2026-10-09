@@ -318,7 +318,10 @@
         <div class="d-flex py-1">
           <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
           <div class="pl-1 w-50">
-            @if (hasPermissionToDeleteOwnUser) {
+            @if (
+              hasPermissionToDeleteOwnUser &&
+              hasPermissionToUpdateOwnAccessToken
+            ) {
               <form
                 class="w-100"
                 [formGroup]="deleteOwnUserForm"
@@ -363,6 +366,15 @@
                   Close Account
                 </button>
               </form>
+            } @else if (hasPermissionToDeleteOwnUser && !hasImpersonationId) {
+              <button
+                color="warn"
+                i18n
+                mat-flat-button
+                (click)="onCloseAccount()"
+              >
+                Close Account
+              </button>
             } @else if (
               hasPermissionToRequestOwnUserDeletion &&
               (user?.accounts?.length > 0 || user?.activitiesCount > 0)
