@@ -18,6 +18,10 @@
 1. Open https://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 
+### Start Server and Client
+
+Run `npm run dev` to start the server and the client in the same terminal.
+
 ### Start Server
 
 #### Debug
