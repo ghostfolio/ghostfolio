@@ -14,6 +14,7 @@ import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
   DEFAULT_LOCALE,
+  DELETE_OWN_USER_PERIOD,
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_MAX_DAILY_REQUESTS,
@@ -45,7 +46,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
 import { Prisma, Role, User } from '@prisma/client';
-import { differenceInDays, subDays } from 'date-fns';
+import { addMilliseconds, differenceInDays, isBefore, subDays } from 'date-fns';
 import { isNil, without } from 'lodash-es';
 import { createHmac } from 'node:crypto';
 
@@ -436,6 +437,17 @@ export class UserService {
 
         if (analytics?.activityCount % frequency === 1) {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
+        }
+
+        if (
+          !hasRole(user, Role.DEMO) &&
+          user.provider !== 'ANONYMOUS' &&
+          isBefore(
+            new Date(),
+            addMilliseconds(user.createdAt, DELETE_OWN_USER_PERIOD)
+          )
+        ) {
+          currentPermissions.push(permissions.deleteOwnUser);
         }
 
         currentPermissions = without(

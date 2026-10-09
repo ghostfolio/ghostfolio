@@ -94,6 +94,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   protected hasImpersonationId: boolean;
   protected hasPermissionToDeleteOwnUser: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
+  protected hasPermissionToUpdateOwnAccessToken: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
@@ -194,6 +195,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
             permissions.requestOwnUserDeletion
           );
 
+          this.hasPermissionToUpdateOwnAccessToken = hasPermission(
+            this.user.permissions,
+            permissions.updateOwnAccessToken
+          );
+
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
             permissions.updateUserSettings
@@ -271,13 +277,19 @@ export class GfUserAccountSettingsComponent implements OnInit {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
-          .deleteOwnUser({
-            accessToken: this.deleteOwnUserForm.controls.accessToken.value
-          })
+          .deleteOwnUser(
+            this.hasPermissionToUpdateOwnAccessToken
+              ? {
+                  accessToken: this.deleteOwnUserForm.controls.accessToken.value
+                }
+              : {}
+          )
           .pipe(
             catchError(() => {
               this.notificationService.alert({
-                title: $localize`Oops! Incorrect Security Token.`
+                title: this.hasPermissionToUpdateOwnAccessToken
+                  ? $localize`Oops! Incorrect Security Token.`
+                  : $localize`Oops! Something went wrong.`
               });
 
               return EMPTY;

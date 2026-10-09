@@ -4,4 +4,12 @@
   .chart-container {
     aspect-ratio: 16 / 9;
   }
+
+  .holdings {
+    .name {
+      // Safari puts the list marker into this element, so the truncation is
+      // on the inner element (a hidden overflow here hides the marker)
+      min-width: 0;
+    }
+  }
 }

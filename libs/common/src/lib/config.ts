@@ -198,6 +198,8 @@ export const DEFAULT_REDACTED_PATHS = [
   'valueInBaseCurrency'
 ];
 
+export const DELETE_OWN_USER_PERIOD = ms('2 weeks');
+
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
   {
