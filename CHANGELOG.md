@@ -13,12 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the _Storybook_ stories of the account selector, accounts table, activities table and holdings table components
 - Refreshed the cryptocurrencies list
 - Improved the language localization for Spanish (`es`)
 
 ### Fixed
 
 - Fixed the missing first data point in the portfolio evolution chart on the analysis page
+- Fixed the missing mapping for Korea in the country weightings of the _Financial Modeling Prep_ service
 
 ## 3.81.0 - 2026-10-07
 
