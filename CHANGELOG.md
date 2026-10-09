@@ -7,9 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
-
-
 ### Added
 
 - Extended the content of the _General_ section by information about the import of activities from _Interactive Brokers_ on the Frequently Asked Questions (FAQ) page
@@ -17,8 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the user account deletion flow in the user settings of the user account page to users without a _Security Token_ within 14 days after the registration
-- Removed an unnecessary index from the market data database table
 - Improved the _Storybook_ stories of the account selector, accounts table, activities table and holdings table components
+- Removed an unnecessary index from the market data database table
 - Improved the language localization for Spanish (`es`)
 
 ### Fixed
