@@ -11,8 +11,8 @@ import {
   scopes
 } from '@ghostfolio/common/scopes';
 import type { UserWithSettings } from '@ghostfolio/common/types';
+import type { Access } from '@ghostfolio/prisma/client';
 
-import { Access } from '@prisma/client';
 import { addDays, subDays } from 'date-fns';
 
 import { ImpersonationService } from './impersonation.service';

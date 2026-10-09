@@ -27,11 +27,11 @@ import {
   AssetProfileIdentifier,
   BenchmarkProperty
 } from '@ghostfolio/common/interfaces';
+import type { Prisma } from '@ghostfolio/prisma/client';
 
 import { utc } from '@date-fns/utc';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { Job, JobOptions, Queue } from 'bull';
 import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
 import ms, { StringValue } from 'ms';

@@ -4,14 +4,10 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { MarketData, Prisma } from '@ghostfolio/prisma/client';
+import { DataSource, MarketDataState } from '@ghostfolio/prisma/enums';
 
 import { Injectable } from '@nestjs/common';
-import {
-  DataSource,
-  MarketData,
-  MarketDataState,
-  Prisma
-} from '@prisma/client';
 
 @Injectable()
 export class MarketDataService {

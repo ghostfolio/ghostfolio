@@ -41,9 +41,10 @@ import {
   OrderWithAccount,
   UserWithSettings
 } from '@ghostfolio/common/types';
+import type { Account, Prisma } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Injectable } from '@nestjs/common';
-import { Account, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISIN } from 'class-validator';
 import { isSameSecond, parseISO } from 'date-fns';

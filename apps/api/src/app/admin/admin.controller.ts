@@ -36,6 +36,12 @@ import type {
   PropertyKey,
   RequestWithUser
 } from '@ghostfolio/common/types';
+import type {
+  MarketData,
+  Prisma,
+  SymbolProfile
+} from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { utc } from '@date-fns/utc';
 import {
@@ -57,7 +63,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 

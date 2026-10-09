@@ -1,4 +1,4 @@
-import { SymbolProfile } from '@prisma/client';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
 
 export interface DataEnhancerInterface {
   enhance({

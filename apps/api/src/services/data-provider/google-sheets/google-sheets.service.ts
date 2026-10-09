@@ -16,9 +16,10 @@ import {
   DataProviderResponse,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 

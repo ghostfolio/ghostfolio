@@ -20,6 +20,7 @@
       "@ghostfolio/client/*": ["./apps/client/src/app/*"],
       "@ghostfolio/common/*": ["./libs/common/src/lib/*"],
       "@ghostfolio/prisma/browser": ["./prisma/generated/browser"],
+      "@ghostfolio/prisma/client": ["./prisma/generated/client"],
       "@ghostfolio/prisma/enums": ["./prisma/generated/enums"],
       "@ghostfolio/ui/*": ["./libs/ui/src/lib/*"]
     },

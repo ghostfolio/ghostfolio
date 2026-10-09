@@ -16,6 +16,7 @@ import type {
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   Body,
@@ -30,7 +31,6 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarksService } from './benchmarks.service';

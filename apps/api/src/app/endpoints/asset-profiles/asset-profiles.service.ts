@@ -25,10 +25,15 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
+import { Prisma } from '@ghostfolio/prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import { groupBy } from 'lodash-es';
 
 @Injectable()

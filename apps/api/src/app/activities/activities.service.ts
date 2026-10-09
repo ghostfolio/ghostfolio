@@ -47,18 +47,16 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-
-import { Injectable } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import type { Order, Prisma, Tag } from '@ghostfolio/prisma/client';
 import {
   AssetClass,
   AssetSubClass,
   DataSource,
-  Order,
-  Prisma,
-  Tag,
   Type as ActivityType
-} from '@prisma/client';
+} from '@ghostfolio/prisma/enums';
+
+import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Big } from 'big.js';
 import { groupBy, omit, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';

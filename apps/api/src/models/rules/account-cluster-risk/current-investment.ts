@@ -2,8 +2,7 @@ import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PortfolioDetails, RuleSettings } from '@ghostfolio/common/interfaces';
-
-import { Account } from '@prisma/client';
+import type { Account } from '@ghostfolio/prisma/client';
 
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   private accounts: PortfolioDetails['accounts'];

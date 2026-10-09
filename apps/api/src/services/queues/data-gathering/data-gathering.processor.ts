@@ -16,11 +16,11 @@ import {
   getStartOfUtcDate
 } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { Prisma } from '@ghostfolio/prisma/client';
 
 import { utc } from '@date-fns/utc';
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { Job } from 'bull';
 import { addDays, format, isBefore, parseISO } from 'date-fns';
 

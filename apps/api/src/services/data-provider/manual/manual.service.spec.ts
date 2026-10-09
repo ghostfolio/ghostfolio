@@ -1,8 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { EnhancedAssetProfile } from '@ghostfolio/common/interfaces';
-
-import { DataSource } from '@prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import { ManualService } from './manual.service';
 

@@ -1,6 +1,7 @@
+import { Provider } from '@ghostfolio/prisma/enums';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Provider } from '@prisma/client';
 import { Request } from 'express';
 import { Strategy, type StrategyOptions } from 'passport-openidconnect';
 

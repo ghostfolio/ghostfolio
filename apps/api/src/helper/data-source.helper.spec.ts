@@ -1,6 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-
-import { DataSource } from '@prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   encodeDataSource,

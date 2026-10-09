@@ -9,15 +9,14 @@ import {
 } from '@ghostfolio/common/config';
 import { isCurrencySymbol } from '@ghostfolio/common/helper';
 import { SectorName } from '@ghostfolio/common/types';
-
-import { Injectable, Logger } from '@nestjs/common';
+import type { Prisma, SymbolProfile } from '@ghostfolio/prisma/client';
 import {
   AssetClass,
   AssetSubClass,
-  DataSource,
-  Prisma,
-  SymbolProfile
-} from '@prisma/client';
+  DataSource
+} from '@ghostfolio/prisma/enums';
+
+import { Injectable, Logger } from '@nestjs/common';
 import { isISIN } from 'class-validator';
 import YahooFinance from 'yahoo-finance2';
 import type { Price } from 'yahoo-finance2/modules/quoteSummary-iface';

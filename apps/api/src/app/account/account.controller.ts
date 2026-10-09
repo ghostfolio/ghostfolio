@@ -19,6 +19,7 @@ import {
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
+import type { Account as AccountModel } from '@ghostfolio/prisma/client';
 
 import {
   Body,
@@ -32,7 +33,6 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';

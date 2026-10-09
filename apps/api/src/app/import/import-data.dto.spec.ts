@@ -1,5 +1,6 @@
+import { DataSource, Type } from '@ghostfolio/prisma/enums';
+
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { DataSource, Type } from '@prisma/client';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 

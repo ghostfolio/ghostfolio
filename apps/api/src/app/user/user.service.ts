@@ -40,11 +40,12 @@ import {
 import { getScopesOfAccess } from '@ghostfolio/common/scopes';
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+import type { Prisma, User } from '@ghostfolio/prisma/client';
+import { Role } from '@ghostfolio/prisma/enums';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
-import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays, subDays } from 'date-fns';
 import { isNil, without } from 'lodash-es';
 import { createHmac } from 'node:crypto';

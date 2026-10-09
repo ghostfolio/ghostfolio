@@ -1,6 +1,6 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
-import { DataSource } from '@prisma/client';
 import {
   addDays,
   eachDayOfInterval,

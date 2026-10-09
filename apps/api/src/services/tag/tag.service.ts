@@ -1,8 +1,8 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { TAG_ID_DRAFT } from '@ghostfolio/common/config';
+import { Prisma, type Tag } from '@ghostfolio/prisma/client';
 
 import { HttpException, Injectable } from '@nestjs/common';
-import { Prisma, Tag } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()

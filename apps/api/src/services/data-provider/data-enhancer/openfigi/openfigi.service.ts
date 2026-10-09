@@ -2,9 +2,9 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
 import { parseSymbol } from '@ghostfolio/common/helper';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
 
 import { Injectable } from '@nestjs/common';
-import { SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
@@ -24,12 +24,10 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    if (
-      !(
-        response.assetClass === 'EQUITY' &&
-        (response.assetSubClass === 'ETF' || response.assetSubClass === 'STOCK')
-      )
-    ) {
+    if (!(
+      response.assetClass === 'EQUITY' &&
+      (response.assetSubClass === 'ETF' || response.assetSubClass === 'STOCK')
+    )) {
       return response;
     }
 

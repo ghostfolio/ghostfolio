@@ -18,9 +18,9 @@ import {
   BenchmarkProperty,
   BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { addHours, isPast, subDays } from 'date-fns';
 import { round, uniqBy } from 'lodash-es';

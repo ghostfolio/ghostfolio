@@ -1,8 +1,8 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { Provider } from '@ghostfolio/prisma/enums';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Provider } from '@prisma/client';
 import { DoneCallback } from 'passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
 

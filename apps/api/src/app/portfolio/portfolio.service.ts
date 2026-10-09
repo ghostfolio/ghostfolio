@@ -77,20 +77,17 @@ import {
   UserWithSettings
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
-
-import { utc } from '@date-fns/utc';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import type { Order, Platform, Prisma, Tag } from '@ghostfolio/prisma/client';
 import {
   Type as ActivityType,
   AssetClass,
   AssetSubClass,
-  DataSource,
-  Order,
-  Platform,
-  Prisma,
-  Tag
-} from '@prisma/client';
+  DataSource
+} from '@ghostfolio/prisma/enums';
+
+import { utc } from '@date-fns/utc';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { Big } from 'big.js';
 import {
   differenceInDays,

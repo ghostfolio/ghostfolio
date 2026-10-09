@@ -1,4 +1,5 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@ghostfolio/prisma/client';
+
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, Min } from 'class-validator';
 

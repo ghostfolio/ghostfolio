@@ -16,9 +16,9 @@ import {
   SubscriptionOfferKey,
   UserWithSettings
 } from '@ghostfolio/common/types';
+import { Prisma, type Subscription } from '@ghostfolio/prisma/client';
 
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
-import { Prisma, Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
 import ms, { StringValue } from 'ms';
 import Stripe from 'stripe';

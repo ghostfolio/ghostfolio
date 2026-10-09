@@ -29,6 +29,16 @@ import {
   EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 import { PropertyKey } from '@ghostfolio/common/types';
+import {
+  Prisma,
+  type Property,
+  type SymbolProfile
+} from '@ghostfolio/prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 
 import {
   BadRequestException,
@@ -39,14 +49,6 @@ import {
   Logger,
   NotFoundException
 } from '@nestjs/common';
-import {
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  Prisma,
-  Property,
-  SymbolProfile
-} from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { randomUUID } from 'node:crypto';

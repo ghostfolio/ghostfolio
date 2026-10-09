@@ -2,8 +2,9 @@ import {
   NON_INVESTMENT_ACTIVITY_TYPES,
   TAG_ID_DRAFT
 } from '@ghostfolio/common/config';
+import type { Prisma } from '@ghostfolio/prisma/client';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
-import { Prisma, Type as ActivityType } from '@prisma/client';
 import { endOfToday, isAfter } from 'date-fns';
 import { uniqBy } from 'lodash-es';
 

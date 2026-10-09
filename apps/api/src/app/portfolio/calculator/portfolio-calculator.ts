@@ -49,9 +49,9 @@ import {
 } from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+import { AssetSubClass, DataSource } from '@ghostfolio/prisma/enums';
 
 import { Logger } from '@nestjs/common';
-import { AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {

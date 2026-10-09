@@ -14,12 +14,9 @@ import {
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
+import type { AssetProfileSplit } from '@ghostfolio/prisma/client';
+import { DataSource, Type as ActivityType } from '@ghostfolio/prisma/enums';
 
-import {
-  AssetProfileSplit,
-  DataSource,
-  Type as ActivityType
-} from '@prisma/client';
 import { Big } from 'big.js';
 
 import { ActivitiesService } from './activities.service';

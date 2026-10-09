@@ -1,7 +1,7 @@
 import { SEARCH_QUERY_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 import { MarketDataPreset } from '@ghostfolio/common/types';
+import type { Prisma } from '@ghostfolio/prisma/client';
 
-import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsIn,

@@ -6,6 +6,7 @@ import {
   DataProviderHealthResponse,
   LivenessHealthResponse
 } from '@ghostfolio/common/interfaces';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   Controller,
@@ -17,7 +18,6 @@ import {
   Res,
   UseInterceptors
 } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 

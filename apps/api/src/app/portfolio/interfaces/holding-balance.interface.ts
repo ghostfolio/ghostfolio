@@ -1,4 +1,6 @@
-import { AssetSubClass, DataSource, Tag } from '@prisma/client';
+import type { Tag } from '@ghostfolio/prisma/client';
+import type { AssetSubClass, DataSource } from '@ghostfolio/prisma/enums';
+
 import { Big } from 'big.js';
 
 export interface HoldingBalance {

@@ -21,8 +21,8 @@ import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/po
 import { parseDate } from '@ghostfolio/common/helper';
 import { PortfolioSnapshotHolding } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval } from 'date-fns';
 import { randomUUID } from 'node:crypto';

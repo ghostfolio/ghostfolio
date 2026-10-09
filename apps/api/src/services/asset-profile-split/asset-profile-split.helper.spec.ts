@@ -5,8 +5,9 @@ import {
 import * as commonHelper from '@ghostfolio/common/helper';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
+import type { AssetProfileSplit } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
-import { AssetProfileSplit, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 
 import { adjustActivityBySplits } from './asset-profile-split.helper';

@@ -7,9 +7,9 @@ import { Holding } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { SectorName } from '@ghostfolio/common/types';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {

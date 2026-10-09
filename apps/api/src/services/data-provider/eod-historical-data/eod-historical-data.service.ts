@@ -22,14 +22,14 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
-
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
 import {
   AssetClass,
   AssetSubClass,
-  DataSource,
-  SymbolProfile
-} from '@prisma/client';
+  DataSource
+} from '@ghostfolio/prisma/enums';
+
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { addDays, format, isSameDay, isToday } from 'date-fns';
 import { isNumber } from 'lodash-es';
 

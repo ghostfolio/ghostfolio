@@ -12,6 +12,7 @@ import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { getScopesOfAccess } from '@ghostfolio/common/scopes';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { Access as AccessModel } from '@ghostfolio/prisma/client';
 
 import {
   Body,
@@ -27,7 +28,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Access as AccessModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccessService } from './access.service';

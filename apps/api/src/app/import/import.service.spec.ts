@@ -13,8 +13,9 @@ import {
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
+import type { SymbolProfile } from '@ghostfolio/prisma/client';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
-import { DataSource, SymbolProfile } from '@prisma/client';
 import { parseISO } from 'date-fns';
 
 import { ImportService } from './import.service';

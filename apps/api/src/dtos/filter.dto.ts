@@ -1,6 +1,6 @@
 import { SYMBOL_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
+import { AssetClass, DataSource } from '@ghostfolio/prisma/enums';
 
-import { AssetClass, DataSource } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsEnum,
