@@ -5,6 +5,7 @@ import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alph
 import { CoinGeckoService } from '@ghostfolio/api/services/data-provider/coingecko/coingecko.service';
 import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider/eod-historical-data/eod-historical-data.service';
 import { FinancialModelingPrepService } from '@ghostfolio/api/services/data-provider/financial-modeling-prep/financial-modeling-prep.service';
+import { FXMacroDataService } from '@ghostfolio/api/services/data-provider/fxmacrodata/fxmacrodata.service';
 import { GhostfolioService } from '@ghostfolio/api/services/data-provider/ghostfolio/ghostfolio.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
@@ -40,6 +41,7 @@ import { DataProviderService } from './data-provider.service';
     DataProviderService,
     EodHistoricalDataService,
     FinancialModelingPrepService,
+    FXMacroDataService,
     GhostfolioService,
     GoogleSheetsService,
     ManualService,
@@ -51,6 +53,7 @@ import { DataProviderService } from './data-provider.service';
         CoinGeckoService,
         EodHistoricalDataService,
         FinancialModelingPrepService,
+        FXMacroDataService,
         GhostfolioService,
         GoogleSheetsService,
         ManualService,
@@ -63,6 +66,7 @@ import { DataProviderService } from './data-provider.service';
         coinGeckoService,
         eodHistoricalDataService,
         financialModelingPrepService,
+        fxMacroDataService,
         ghostfolioService,
         googleSheetsService,
         manualService,
@@ -73,6 +77,7 @@ import { DataProviderService } from './data-provider.service';
         coinGeckoService,
         eodHistoricalDataService,
         financialModelingPrepService,
+        fxMacroDataService,
         ghostfolioService,
         googleSheetsService,
         manualService,
