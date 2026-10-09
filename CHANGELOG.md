@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the content of the _General_ section by information about the import of activities from _Interactive Brokers_ on the Frequently Asked Questions (FAQ) page
 
+### Changed
+
+- Improved the language localization for Spanish (`es`)
+
 ### Fixed
 
 - Fixed the missing mapping for Korea in the country weightings of the _Financial Modeling Prep_ service
