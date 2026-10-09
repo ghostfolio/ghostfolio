@@ -76,6 +76,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add `stop_grace_period: 1m` to the _Ghostfolio_ service in your `docker-compose` file (see `docker-compose.yml`)
 
+### Fixed
+
+- Fixed the source map paths in the build of the API when debugging via _Visual Studio Code_
+
 ## 3.78.0 - 2026-10-03
 
 ### Added
