@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the _Storybook_ stories of the account selector, accounts table, activities table and holdings table components
+- Improved the language localization for Spanish (`es`)
 
 ## 3.81.0 - 2026-10-07
 
