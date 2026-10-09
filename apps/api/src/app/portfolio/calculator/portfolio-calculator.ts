@@ -1418,14 +1418,8 @@ export abstract class PortfolioCalculator {
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
 
-    // The historical data items are dated at midnight in UTC, hence a start
-    // or an end at the end of a day in the time zone of the instance is
-    // changed to this date
-    const endDate = isEqual(end, endOfDay(end)) ? resetHours(end) : end;
-
-    const startDate = isEqual(start, endOfDay(start))
-      ? resetHours(start)
-      : start;
+    const endDate = this.toChartDate(end);
+    const startDate = this.toChartDate(start);
 
     for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
@@ -1919,5 +1913,9 @@ export abstract class PortfolioCalculator {
 
       await this.initialize(attempt + 1);
     }
+  }
+
+  private toChartDate(aDate: Date) {
+    return isEqual(aDate, endOfDay(aDate)) ? resetHours(aDate) : aDate;
   }
 }

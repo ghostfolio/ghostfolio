@@ -1,3 +1,7 @@
+/**
+ * @jest-environment <rootDir>/jest-environment-tz.js
+ * @jest-environment-options {"timeZone": "America/New_York"}
+ */
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -186,10 +190,6 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get performance', () => {
-    // The chart items are dated at midnight in UTC, but a calendar year date
-    // range ends at the end of 31 December in the time zone of the instance.
-    // Hence this test must give the same result with the instance in any time
-    // zone. Set TEST_TZ to run it with the instance in another time zone.
     it('with a calendar year date range', async () => {
       const snapshot = await portfolioCalculator.getSnapshot();
 
