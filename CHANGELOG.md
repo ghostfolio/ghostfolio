@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Spanish (`es`)
 
+### Fixed
+
+- Fixed the missing first data point in the portfolio evolution chart on the analysis page
+
 ## 3.81.0 - 2026-10-07
 
 ### Changed

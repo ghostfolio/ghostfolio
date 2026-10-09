@@ -329,36 +329,30 @@ export class GfAnalysisPageComponent implements OnInit {
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
 
-        for (const [
-          index,
-          {
-            date,
-            dividendInPercentageWithCurrencyEffect,
-            netPerformanceInPercentageWithCurrencyEffect,
-            totalInvestmentValueWithCurrencyEffect,
-            valueInPercentage,
-            valueWithCurrencyEffect
+        for (const {
+          date,
+          dividendInPercentageWithCurrencyEffect,
+          netPerformanceInPercentageWithCurrencyEffect,
+          totalInvestmentValueWithCurrencyEffect,
+          valueInPercentage,
+          valueWithCurrencyEffect
+        } of chart ?? []) {
+          if (totalInvestmentValueWithCurrencyEffect !== undefined) {
+            this.investments.push({
+              date,
+              investment: totalInvestmentValueWithCurrencyEffect
+            });
           }
-        ] of (chart ?? []).entries()) {
-          // Ignore first item where value is 0
-          if (index > 0 || this.user?.settings?.dateRange === 'max') {
-            if (totalInvestmentValueWithCurrencyEffect !== undefined) {
-              this.investments.push({
-                date,
-                investment: totalInvestmentValueWithCurrencyEffect
-              });
-            }
 
-            const value = isNumber(valueWithCurrencyEffect)
-              ? valueWithCurrencyEffect
-              : valueInPercentage;
+          const value = isNumber(valueWithCurrencyEffect)
+            ? valueWithCurrencyEffect
+            : valueInPercentage;
 
-            if (isNumber(value)) {
-              this.performanceDataItems.push({
-                date,
-                value
-              });
-            }
+          if (isNumber(value)) {
+            this.performanceDataItems.push({
+              date,
+              value
+            });
           }
 
           if (isNumber(netPerformanceInPercentageWithCurrencyEffect)) {
