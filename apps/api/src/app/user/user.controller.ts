@@ -71,14 +71,20 @@ export class UserController {
 
   @Delete()
   @HasPermission(permissions.deleteOwnUser)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, ImpersonationGuard)
   public async deleteOwnUser(
-    @Body() data: DeleteOwnUserDto
+    @Body() data: DeleteOwnUserDto,
+    @Impersonation() { isActive }: ImpersonationContext
   ): Promise<UserModel> {
     const user = this.request.user;
 
     if (user.provider === 'ANONYMOUS') {
       await this.validateAccessToken(data.accessToken, user.id);
+    } else if (isActive) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
     }
 
     return this.userService.deleteUser({

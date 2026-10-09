@@ -286,11 +286,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
           )
           .pipe(
             catchError(() => {
-              if (this.hasPermissionToUpdateOwnAccessToken) {
-                this.notificationService.alert({
-                  title: $localize`Oops! Incorrect Security Token.`
-                });
-              }
+              this.notificationService.alert({
+                title: this.hasPermissionToUpdateOwnAccessToken
+                  ? $localize`Oops! Incorrect Security Token.`
+                  : $localize`Oops! Something went wrong.`
+              });
 
               return EMPTY;
             }),
