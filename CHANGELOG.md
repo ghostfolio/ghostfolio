@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the missing list numbers in the top and bottom holdings on the analysis page in Safari
 - Fixed the missing first data point in the portfolio evolution chart on the analysis page
+- Fixed the end date of calendar year date ranges in the portfolio performance calculation for instances in time zones with a negative UTC offset
 - Fixed the missing mapping for Korea in the country weightings of the _Financial Modeling Prep_ service
 
 ## 3.81.0 - 2026-10-07

@@ -1407,7 +1407,7 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
-  public async getPerformance({ end, start }) {
+  public async getPerformance({ end, start }: { end: Date; start: Date }) {
     await this.snapshotPromise;
 
     const { historicalData } = this.snapshot;
@@ -1418,14 +1418,13 @@ export abstract class PortfolioCalculator {
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
 
-    const startDate = isEqual(start, endOfDay(start))
-      ? resetHours(start)
-      : start;
+    const endDate = this.toChartDate(end);
+    const startDate = this.toChartDate(start);
 
     for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
 
-      if (!isBefore(date, startDate) && !isAfter(date, end)) {
+      if (!isBefore(date, startDate) && !isAfter(date, endDate)) {
         // Take the values at the start date from the first day of the date
         // range
         if (historicalDataItemsOfDateRange.length === 0) {
@@ -1914,5 +1913,9 @@ export abstract class PortfolioCalculator {
 
       await this.initialize(attempt + 1);
     }
+  }
+
+  private toChartDate(aDate: Date) {
+    return isEqual(aDate, endOfDay(aDate)) ? resetHours(aDate) : aDate;
   }
 }
