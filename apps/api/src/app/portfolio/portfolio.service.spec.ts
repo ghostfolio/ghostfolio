@@ -945,12 +945,10 @@ describe('PortfolioService', () => {
         userId: userDummyData.id
       });
 
-      // A year runs from the end of 31 December of the previous year, like
-      // the date range of the year, and the current year ends today
       expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(4);
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(2, {
         end: endOfDay(parseDate('2023-12-31')),
-        start: endOfDay(parseDate('2022-12-31'))
+        start: new Date(0)
       });
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(3, {
         end: endOfDay(parseDate('2024-12-31')),
@@ -960,15 +958,23 @@ describe('PortfolioService', () => {
         end: endOfDay(parseDate('2025-06-15')),
         start: endOfDay(parseDate('2024-12-31'))
       });
-
-      // Each year stands alone and is dated on 1 January
       expect(chart).toEqual([
-        { date: '2023-01-01', netPerformance: 100 },
-        { date: '2024-01-01', netPerformance: 200 },
-        { date: '2025-01-01', netPerformance: 300 }
+        {
+          date: '2023-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 100
+        },
+        {
+          date: '2024-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 200
+        },
+        {
+          date: '2025-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 300
+        }
       ]);
-
-      // The performance is the one of the whole date range
       expect(performance.netPerformance).toBe(600);
     });
 
@@ -993,14 +999,18 @@ describe('PortfolioService', () => {
         userId: userDummyData.id
       });
 
-      // The chart item at the start date of the date range belongs to the
-      // previous year and gets no chart item of its own
       expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(2);
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(
         2,
         getPerformanceOfCalculator.mock.calls[0][0]
       );
-      expect(chart).toEqual([{ date: '2024-01-01', netPerformance: 200 }]);
+      expect(chart).toEqual([
+        {
+          date: '2024-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 200
+        }
+      ]);
       expect(performance.netPerformance).toBe(200);
     });
 
@@ -1032,8 +1042,6 @@ describe('PortfolioService', () => {
         userId: userDummyData.id
       });
 
-      // The first year starts at the start date of the date range, not at the
-      // end of 31 December of the previous year
       expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(3);
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(2, {
         end: endOfDay(parseDate('2024-12-31')),
@@ -1044,10 +1052,143 @@ describe('PortfolioService', () => {
         start: endOfDay(parseDate('2024-12-31'))
       });
       expect(chart).toEqual([
-        { date: '2024-01-01', netPerformance: 100 },
-        { date: '2025-01-01', netPerformance: 200 }
+        {
+          date: '2024-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 100
+        },
+        {
+          date: '2025-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 200
+        }
       ]);
       expect(performance.netPerformance).toBe(300);
+    });
+
+    it('should start the first calendar year at the start date of the date range on 1 January when grouped by year', async () => {
+      jest.setSystemTime(parseDate('2026-01-01').getTime());
+
+      getPerformanceOfCalculator
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2025-01-01', netPerformance: 0 },
+            { date: '2025-12-31', netPerformance: 100 },
+            { date: '2026-01-01', netPerformance: 150 }
+          ]
+        })
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2025-01-01', netPerformance: 0 },
+            { date: '2025-12-31', netPerformance: 100 }
+          ]
+        })
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2025-12-31', netPerformance: 0 },
+            { date: '2026-01-01', netPerformance: 50 }
+          ]
+        });
+
+      const { chart } = await portfolioService.getPerformance({
+        dateRange: '1y',
+        groupBy: 'year',
+        userId: userDummyData.id
+      });
+
+      expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(3);
+      expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(1, {
+        end: endOfDay(parseDate('2026-01-01')),
+        start: resetHours(parseDate('2025-01-01'))
+      });
+      expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(2, {
+        end: endOfDay(parseDate('2025-12-31')),
+        start: resetHours(parseDate('2025-01-01'))
+      });
+      expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(3, {
+        end: endOfDay(parseDate('2026-01-01')),
+        start: endOfDay(parseDate('2025-12-31'))
+      });
+      expect(chart).toEqual([
+        {
+          date: '2025-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 100
+        },
+        {
+          date: '2026-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 50
+        }
+      ]);
+    });
+
+    it('should add up the investment of each calendar year when grouped by year', async () => {
+      getPerformanceOfCalculator
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2023-12-31', investmentValueWithCurrencyEffect: 0 },
+            { date: '2024-03-01', investmentValueWithCurrencyEffect: 1000 },
+            { date: '2024-12-31', investmentValueWithCurrencyEffect: 300 },
+            { date: '2025-06-15', investmentValueWithCurrencyEffect: 200 }
+          ]
+        })
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2023-12-31', investmentValueWithCurrencyEffect: 0 },
+            { date: '2024-03-01', investmentValueWithCurrencyEffect: 1000 },
+            { date: '2024-12-31', investmentValueWithCurrencyEffect: 300 }
+          ]
+        })
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2024-12-31', investmentValueWithCurrencyEffect: 300 },
+            { date: '2025-06-15', investmentValueWithCurrencyEffect: 200 }
+          ]
+        });
+
+      const { chart } = await portfolioService.getPerformance({
+        dateRange: 'max',
+        groupBy: 'year',
+        userId: userDummyData.id
+      });
+
+      expect(chart).toEqual([
+        { date: '2024-01-01', investmentValueWithCurrencyEffect: 1300 },
+        { date: '2025-01-01', investmentValueWithCurrencyEffect: 200 }
+      ]);
+    });
+
+    it('should skip a calendar year without a chart when grouped by year', async () => {
+      getPerformanceOfCalculator
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2023-12-31', netPerformance: 0 },
+            { date: '2024-12-31', netPerformance: 200 },
+            { date: '2025-06-15', netPerformance: 300 }
+          ]
+        })
+        .mockResolvedValueOnce({ chart: [] })
+        .mockResolvedValueOnce({
+          chart: [
+            { date: '2024-12-31', netPerformance: 0 },
+            { date: '2025-06-15', netPerformance: 100 }
+          ]
+        });
+
+      const { chart } = await portfolioService.getPerformance({
+        dateRange: 'max',
+        groupBy: 'year',
+        userId: userDummyData.id
+      });
+
+      expect(chart).toEqual([
+        {
+          date: '2025-01-01',
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 100
+        }
+      ]);
     });
   });
 

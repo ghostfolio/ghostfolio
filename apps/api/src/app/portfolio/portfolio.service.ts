@@ -2066,11 +2066,14 @@ export class PortfolioService {
 
   /**
    * Returns one chart item per calendar year of the date range, like the
-   * dividends and the investments grouped by year. The chart item of a year is
-   * the last chart item of the performance of this year, dated on 1 January.
-   * Each year stands alone and is not accumulated, so its values are the same
-   * as for the date range of the year (e.g. '2024'), clipped to the requested
-   * date range.
+   * dividends and the investments grouped by year, dated on 1 January. Each
+   * year stands alone and is not accumulated, so its values are the same as
+   * for the date range of the year (e.g. '2024'), clipped to the requested
+   * date range. The investment is the sum of the year, the other values are
+   * the ones at the end of the year. The first chart item of the date range
+   * carries the values at its start date and belongs to the previous period,
+   * like 31 December for a calendar year, so the years before the first
+   * activity have no chart item.
    */
   private async getPerformanceByYear({
     chartOfDateRange,
@@ -2085,28 +2088,40 @@ export class PortfolioService {
   }): Promise<HistoricalDataItem[]> {
     const chart: HistoricalDataItem[] = [];
 
-    // The first chart item carries the values at the start date of the date
-    // range and belongs to the previous period, like 31 December for a
-    // calendar year. The years come from the other chart items, so the years
-    // before the first activity have no chart item.
     const years = uniq(
-      chartOfDateRange.slice(1).map(({ date }) => {
+      chartOfDateRange?.slice(1).map(({ date }) => {
         return date.substring(0, 4);
       })
     );
 
-    for (const year of years) {
+    for (const [index, year] of years.entries()) {
       const { endDate: endDateOfYear, startDate: startDateOfYear } =
-        getIntervalFromDateRange({ startDate, dateRange: year });
-
-      const end = min([endDate, endDateOfYear]);
+        getIntervalFromDateRange({ dateRange: year });
 
       const { chart: chartOfYear } = await portfolioCalculator.getPerformance({
-        end,
-        start: startDateOfYear
+        end: min([endDate, endDateOfYear]),
+        start: index === 0 ? startDate : startDateOfYear
       });
 
-      chart.push({ ...chartOfYear.at(-1), date: `${year}-01-01` });
+      if (!chartOfYear?.length) {
+        continue;
+      }
+
+      let investmentValueWithCurrencyEffect = new Big(0);
+
+      for (const historicalDataItem of chartOfYear.slice(1)) {
+        investmentValueWithCurrencyEffect =
+          investmentValueWithCurrencyEffect.plus(
+            historicalDataItem.investmentValueWithCurrencyEffect ?? 0
+          );
+      }
+
+      chart.push({
+        ...chartOfYear.at(-1),
+        date: `${year}-01-01`,
+        investmentValueWithCurrencyEffect:
+          investmentValueWithCurrencyEffect.toNumber()
+      });
     }
 
     return chart;
