@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the colors in the investment chart component
 - Improved the language localization for Chinese (`zh`)
 
 ## 3.82.0 - 2026-10-09
