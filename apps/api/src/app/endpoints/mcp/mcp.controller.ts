@@ -38,7 +38,7 @@ export class GhostfolioMcpController {
       ', '
     )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getAccountsTableValueColumnNames().join(
       ', '
-    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it. The parameters change the value in base currency as well. With the holding parameter, it is the value of the holding in the account without the cash balance. Without the holding parameter, it includes the full cash balance of the account, also with the assetClasses parameter. The balance is always the full cash balance of the account in the currency of the account.`,
+    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it. The parameters change the value in base currency as well. With the holding parameter or with asset classes which do not include LIQUIDITY, it is the value of the matching holdings in the account without the cash balance. Otherwise, it includes the full cash balance of the account. The balance is always the full cash balance of the account in the currency of the account.`,
     name: 'get-accounts',
     parameters: GET_ACCOUNTS_PARAMETERS
   })
