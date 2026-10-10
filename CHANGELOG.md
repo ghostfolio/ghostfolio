@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue where a user could create a custom asset profile with a symbol of the prefix `GF_`
+- Fixed the horizontal overflow on the overview tab of the home page on mobile
 
 ## 3.82.0 - 2026-10-09
 
