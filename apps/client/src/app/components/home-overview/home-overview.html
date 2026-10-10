@@ -83,18 +83,16 @@
             [showYAxis]="false"
           />
         </div>
-        <div class="overview-container row mt-1">
-          <div class="col">
-            <gf-portfolio-performance
-              [errors]="errors()"
-              [isLoading]="isLoadingPerformance()"
-              [locale]="locale()"
-              [performance]="performance()"
-              [precision]="precision()"
-              [showDetails]="showDetails()"
-              [unit]="unit()"
-            />
-          </div>
+        <div class="mt-1">
+          <gf-portfolio-performance
+            [errors]="errors()"
+            [isLoading]="isLoadingPerformance()"
+            [locale]="locale()"
+            [performance]="performance()"
+            [precision]="precision()"
+            [showDetails]="showDetails()"
+            [unit]="unit()"
+          />
         </div>
       </div>
       @if (showExperimentalHoldings()) {
