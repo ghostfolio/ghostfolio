@@ -14,7 +14,7 @@ describe('BenchmarksService', () => {
   let get: jest.Mock;
   let getExchangeRatesByCurrency: jest.Mock;
   let getPerformance: jest.Mock;
-  let getRangeCount: jest.Mock;
+  let getRange: jest.Mock;
   let marketDataItems: jest.Mock;
 
   beforeEach(() => {
@@ -28,13 +28,13 @@ describe('BenchmarksService', () => {
         { date: '2010-07-19' }
       ]
     });
-    getRangeCount = jest.fn().mockResolvedValue(0);
+    getRange = jest.fn().mockResolvedValue([]);
     marketDataItems = jest.fn();
 
     benchmarksService = new BenchmarksService(
       new BenchmarkService(null, null, null, null, null, null),
       { getExchangeRatesByCurrency } as unknown as ExchangeRateDataService,
-      { getRangeCount, marketDataItems } as unknown as MarketDataService,
+      { getRange, marketDataItems } as unknown as MarketDataService,
       { getPerformance } as unknown as PortfolioService,
       { get } as unknown as SymbolService
     );
@@ -72,7 +72,7 @@ describe('BenchmarksService', () => {
         ]
       });
 
-      expect(getRangeCount).not.toHaveBeenCalled();
+      expect(getRange).not.toHaveBeenCalled();
     });
 
     it('returns no values before the market data of the benchmark starts', async () => {
@@ -88,12 +88,17 @@ describe('BenchmarksService', () => {
         ]
       });
 
-      expect(getRangeCount).toHaveBeenCalledWith({
+      expect(getRange).toHaveBeenCalledWith({
         assetProfileIdentifiers: [
           { dataSource: DataSource.COINGECKO, symbol: 'bitcoin' }
         ],
-        dateQuery: { lt: new Date('2009-01-01') }
+        dateQuery: { lt: new Date('2009-01-01') },
+        take: 1
       });
+
+      expect(marketDataItems).toHaveBeenCalledWith(
+        expect.objectContaining({ orderBy: { date: 'asc' } })
+      );
     });
 
     it('uses the exchange rate at the start of the market data', async () => {
@@ -146,7 +151,9 @@ describe('BenchmarksService', () => {
     });
 
     it('returns no market data if the market data at the baseline date is missing', async () => {
-      getRangeCount.mockResolvedValue(1);
+      getRange.mockResolvedValue([
+        { date: new Date('2008-12-31'), marketPrice: 40 }
+      ]);
 
       marketDataItems.mockResolvedValue([
         { date: new Date('2010-07-18'), marketPrice: 50 },
@@ -156,6 +163,8 @@ describe('BenchmarksService', () => {
       await expect(getMarketDataForUser()).resolves.toEqual({
         marketData: []
       });
+
+      expect(getExchangeRatesByCurrency).not.toHaveBeenCalled();
     });
 
     it('returns no market data if the benchmark has none', async () => {

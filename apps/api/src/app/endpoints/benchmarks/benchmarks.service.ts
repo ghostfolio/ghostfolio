@@ -114,13 +114,14 @@ export class BenchmarksService {
     if (!isSameDay(firstMarketDataItem.date, baselineDate)) {
       // If market data exists before the baseline date, the market data at
       // the baseline date is missing and the benchmark does not start later
-      const marketDataCountBeforeBaselineDate =
-        await this.marketDataService.getRangeCount({
+      const [marketDataItemBeforeBaselineDate] =
+        await this.marketDataService.getRange({
           assetProfileIdentifiers: [{ dataSource, symbol }],
-          dateQuery: { lt: baselineDate }
+          dateQuery: { lt: baselineDate },
+          take: 1
         });
 
-      if (marketDataCountBeforeBaselineDate > 0) {
+      if (marketDataItemBeforeBaselineDate) {
         this.logger.error(
           `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
             baselineDate,
@@ -130,6 +131,13 @@ export class BenchmarksService {
 
         return { marketData };
       }
+
+      this.logger.warn(
+        `The market data of ${symbol} (${dataSource}) starts at ${format(
+          firstMarketDataItem.date,
+          DATE_FORMAT
+        )}, after the baseline date ${format(baselineDate, DATE_FORMAT)}`
+      );
     }
 
     const exchangeRates =
