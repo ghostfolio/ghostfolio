@@ -1158,38 +1158,6 @@ describe('PortfolioService', () => {
         { date: '2025-01-01', investmentValueWithCurrencyEffect: 200 }
       ]);
     });
-
-    it('should skip a calendar year without a chart when grouped by year', async () => {
-      getPerformanceOfCalculator
-        .mockResolvedValueOnce({
-          chart: [
-            { date: '2023-12-31', netPerformance: 0 },
-            { date: '2024-12-31', netPerformance: 200 },
-            { date: '2025-06-15', netPerformance: 300 }
-          ]
-        })
-        .mockResolvedValueOnce({ chart: [] })
-        .mockResolvedValueOnce({
-          chart: [
-            { date: '2024-12-31', netPerformance: 0 },
-            { date: '2025-06-15', netPerformance: 100 }
-          ]
-        });
-
-      const { chart } = await portfolioService.getPerformance({
-        dateRange: 'max',
-        groupBy: 'year',
-        userId: userDummyData.id
-      });
-
-      expect(chart).toEqual([
-        {
-          date: '2025-01-01',
-          investmentValueWithCurrencyEffect: 0,
-          netPerformance: 100
-        }
-      ]);
-    });
   });
 
   describe('getSummary', () => {

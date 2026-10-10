@@ -2065,15 +2065,14 @@ export class PortfolioService {
   }
 
   /**
-   * Returns one chart item per calendar year of the date range, like the
-   * dividends and the investments grouped by year, dated on 1 January. Each
-   * year stands alone and is not accumulated, so its values are the same as
-   * for the date range of the year (e.g. '2024'), clipped to the requested
-   * date range. The investment is the sum of the year, the other values are
-   * the ones at the end of the year. The first chart item of the date range
-   * carries the values at its start date and belongs to the previous period,
-   * like 31 December for a calendar year, so the years before the first
-   * activity have no chart item.
+   * Returns one chart item per calendar year of the date range, dated on
+   * 1 January. Each year stands alone and is not accumulated, so its values
+   * are the same as for the date range of the year (e.g. '2024'), clipped to
+   * the requested date range. The investment is the sum of the year, the other
+   * values are the ones at the end of the year. The first chart item of the
+   * date range carries the values at its start date and belongs to the
+   * previous period, like 31 December for a calendar year, so the years before
+   * the first activity have no chart item.
    */
   private async getPerformanceByYear({
     chartOfDateRange,
@@ -2089,7 +2088,7 @@ export class PortfolioService {
     const chart: HistoricalDataItem[] = [];
 
     const years = uniq(
-      chartOfDateRange?.slice(1).map(({ date }) => {
+      chartOfDateRange.slice(1).map(({ date }) => {
         return date.substring(0, 4);
       })
     );
@@ -2102,10 +2101,6 @@ export class PortfolioService {
         end: min([endDate, endDateOfYear]),
         start: index === 0 ? startDate : startDateOfYear
       });
-
-      if (!chartOfYear?.length) {
-        continue;
-      }
 
       let investmentValueWithCurrencyEffect = new Big(0);
 
