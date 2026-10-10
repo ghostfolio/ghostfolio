@@ -175,7 +175,6 @@ export class ExchangeRateDataService {
 
     const historicalData = await this.dataProviderService.getHistorical(
       this.currencyPairs,
-      'day',
       startOfUtcDateOfYesterday,
       startOfUtcDateOfYesterday
     );
