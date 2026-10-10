@@ -13,7 +13,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import type {
-  ColorScheme,
   DateRange,
   HoldingType,
   HoldingsViewMode,
@@ -59,11 +58,11 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 export class GfHomeHoldingsComponent implements OnInit {
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
 
-  protected readonly baseCurrency = computed<string>(() => {
+  protected readonly baseCurrency = computed(() => {
     return this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY;
   });
 
-  protected readonly colorScheme = computed<ColorScheme | undefined>(() => {
+  protected readonly colorScheme = computed(() => {
     return this.user()?.settings?.colorScheme;
   });
 
@@ -100,7 +99,7 @@ export class GfHomeHoldingsComponent implements OnInit {
   ];
   protected isHoldingsViewModeToggleDisabled = true;
 
-  protected readonly locale = computed<string>(() => {
+  protected readonly locale = computed(() => {
     return this.user()?.settings?.locale ?? DEFAULT_LOCALE;
   });
 
