@@ -48,15 +48,21 @@ function getDataSourceColumnDefinition<T>(
   };
 }
 
+function getAmount(value: number) {
+  const amount = value.toFixed(2);
+
+  return Number.parseFloat(amount) === 0 ? (0).toFixed(2) : amount;
+}
+
 function getPercentage(value: number) {
   return `${(value * 100).toFixed(3)}%`;
 }
 
 /**
  * Renders the accounts, the activities, the holdings and the performance of a
- * portfolio and the watchlist of its user as a markdown table. No table has a
- * column with a quantity or with a monetary value, except the unit price of an
- * activity.
+ * portfolio and the watchlist of its user as a markdown table. A column with a
+ * quantity or with a monetary value, except the unit price of an activity, is
+ * given only with the values.
  */
 @Injectable()
 export class PortfolioTableService {
@@ -105,6 +111,24 @@ export class PortfolioTableService {
           return isAccountExcluded({ tags }).toString();
         },
         name: 'Excluded from Analysis'
+      }
+    ];
+
+  private static readonly ACCOUNTS_TABLE_VALUE_COLUMN_DEFINITIONS: TableColumnDefinition<AccountWithValue>[] =
+    [
+      {
+        align: 'right',
+        getValue: ({ balance }) => {
+          return balance.toString();
+        },
+        name: 'Balance'
+      },
+      {
+        align: 'right',
+        getValue: ({ valueInBaseCurrency }) => {
+          return getAmount(valueInBaseCurrency);
+        },
+        name: 'Value in Base Currency'
       }
     ];
 
@@ -157,6 +181,33 @@ export class PortfolioTableService {
         return account?.name ?? '';
       },
       name: 'Account'
+    }
+  ];
+
+  private static readonly ACTIVITIES_TABLE_VALUE_COLUMN_DEFINITIONS: TableColumnDefinition<
+    Activity,
+    DataSourceTableContext
+  >[] = [
+    {
+      align: 'right',
+      getValue: ({ quantity }) => {
+        return quantity.toString();
+      },
+      name: 'Quantity'
+    },
+    {
+      align: 'right',
+      getValue: ({ fee }) => {
+        return fee.toString();
+      },
+      name: 'Fee'
+    },
+    {
+      align: 'right',
+      getValue: ({ valueInBaseCurrency }) => {
+        return getAmount(valueInBaseCurrency);
+      },
+      name: 'Value in Base Currency'
     }
   ];
 
@@ -221,6 +272,33 @@ export class PortfolioTableService {
       }
     ];
 
+  private static readonly HOLDINGS_TABLE_VALUE_COLUMN_DEFINITIONS: HoldingsTableColumnDefinition[] =
+    [
+      {
+        align: 'right',
+        getValue: ({ quantity }) => {
+          return quantity.toString();
+        },
+        name: 'Quantity'
+      },
+      {
+        align: 'right',
+        getValue: ({ marketPrice }) => {
+          return marketPrice.toString();
+        },
+        name: 'Market Price'
+      },
+      {
+        align: 'right',
+        getValue: ({ valueInBaseCurrency }) => {
+          return valueInBaseCurrency === undefined
+            ? ''
+            : getAmount(valueInBaseCurrency);
+        },
+        name: 'Value in Base Currency'
+      }
+    ];
+
   private static readonly PERFORMANCE_TABLE_COLUMN_DEFINITIONS: TableColumnDefinition<PortfolioPerformance>[] =
     [
       {
@@ -253,6 +331,38 @@ export class PortfolioTableService {
           return getPercentage(netPerformancePercentageWithCurrencyEffect);
         },
         name: 'Net Performance in Percentage'
+      }
+    ];
+
+  private static readonly PERFORMANCE_TABLE_VALUE_COLUMN_DEFINITIONS: TableColumnDefinition<PortfolioPerformance>[] =
+    [
+      {
+        align: 'right',
+        getValue: ({ currentValueInBaseCurrency }) => {
+          return getAmount(currentValueInBaseCurrency);
+        },
+        name: 'Current Value in Base Currency'
+      },
+      {
+        align: 'right',
+        getValue: ({ netPerformance }) => {
+          return getAmount(netPerformance);
+        },
+        name: 'Asset Performance in Base Currency'
+      },
+      {
+        align: 'right',
+        getValue: ({ netPerformance, netPerformanceWithCurrencyEffect }) => {
+          return getAmount(netPerformanceWithCurrencyEffect - netPerformance);
+        },
+        name: 'Currency Performance in Base Currency'
+      },
+      {
+        align: 'right',
+        getValue: ({ netPerformanceWithCurrencyEffect }) => {
+          return getAmount(netPerformanceWithCurrencyEffect);
+        },
+        name: 'Net Performance in Base Currency'
       }
     ];
 
@@ -326,8 +436,24 @@ export class PortfolioTableService {
     );
   }
 
+  public static getAccountsTableValueColumnNames() {
+    return PortfolioTableService.ACCOUNTS_TABLE_VALUE_COLUMN_DEFINITIONS.map(
+      ({ name }) => {
+        return name;
+      }
+    );
+  }
+
   public static getActivitiesTableColumnNames() {
     return PortfolioTableService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS.map(
+      ({ name }) => {
+        return name;
+      }
+    );
+  }
+
+  public static getActivitiesTableValueColumnNames() {
+    return PortfolioTableService.ACTIVITIES_TABLE_VALUE_COLUMN_DEFINITIONS.map(
       ({ name }) => {
         return name;
       }
@@ -342,8 +468,24 @@ export class PortfolioTableService {
     );
   }
 
+  public static getHoldingsTableValueColumnNames() {
+    return PortfolioTableService.HOLDINGS_TABLE_VALUE_COLUMN_DEFINITIONS.map(
+      ({ name }) => {
+        return name;
+      }
+    );
+  }
+
   public static getPerformanceTableColumnNames() {
     return PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS.map(
+      ({ name }) => {
+        return name;
+      }
+    );
+  }
+
+  public static getPerformanceTableValueColumnNames() {
+    return PortfolioTableService.PERFORMANCE_TABLE_VALUE_COLUMN_DEFINITIONS.map(
       ({ name }) => {
         return name;
       }
@@ -360,10 +502,12 @@ export class PortfolioTableService {
 
   public async getAccountsTable({
     filters,
-    userId
+    userId,
+    withValues = false
   }: {
     filters?: Filter[];
     userId: string;
+    withValues?: boolean;
   }) {
     const { accounts } =
       await this.portfolioService.getAccountsWithAggregations({
@@ -377,8 +521,13 @@ export class PortfolioTableService {
     if (accounts.length > 0) {
       accountsSection.push(
         await getMarkdownTable({
-          columnDefinitions:
-            PortfolioTableService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS,
+          columnDefinitions: this.getColumnDefinitions({
+            withValues,
+            columnDefinitions:
+              PortfolioTableService.ACCOUNTS_TABLE_COLUMN_DEFINITIONS,
+            valueColumnDefinitions:
+              PortfolioTableService.ACCOUNTS_TABLE_VALUE_COLUMN_DEFINITIONS
+          }),
           rows: accounts
         })
       );
@@ -397,7 +546,8 @@ export class PortfolioTableService {
     take,
     types,
     userCurrency,
-    userId
+    userId,
+    withValues = false
   }: {
     endDate?: Date;
     filters?: Filter[];
@@ -407,6 +557,7 @@ export class PortfolioTableService {
     types?: ActivityType[];
     userCurrency: string;
     userId: string;
+    withValues?: boolean;
   }) {
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
@@ -437,8 +588,13 @@ export class PortfolioTableService {
       activitiesSection.push(
         '',
         await getMarkdownTable({
-          columnDefinitions:
-            PortfolioTableService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS,
+          columnDefinitions: this.getColumnDefinitions({
+            withValues,
+            columnDefinitions:
+              PortfolioTableService.ACTIVITIES_TABLE_COLUMN_DEFINITIONS,
+            valueColumnDefinitions:
+              PortfolioTableService.ACTIVITIES_TABLE_VALUE_COLUMN_DEFINITIONS
+          }),
           context: { configurationService: this.configurationService },
           rows: activities
         })
@@ -452,12 +608,14 @@ export class PortfolioTableService {
     filters,
     languageCode,
     userId,
-    withDataSource = false
+    withDataSource = false,
+    withValues = false
   }: {
     filters?: Filter[];
     languageCode: string;
     userId: string;
     withDataSource?: boolean;
+    withValues?: boolean;
   }) {
     const { holdings } = await this.portfolioService.getDetails({
       filters,
@@ -484,12 +642,15 @@ export class PortfolioTableService {
       '## Holdings',
       '',
       await getMarkdownTable({
-        columnDefinitions:
-          PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS.filter(
-            ({ name }) => {
-              return withDataSource || name !== DATA_SOURCE_COLUMN_NAME;
-            }
-          ),
+        columnDefinitions: this.getColumnDefinitions({
+          withValues,
+          columnDefinitions:
+            PortfolioTableService.HOLDINGS_TABLE_COLUMN_DEFINITIONS,
+          valueColumnDefinitions:
+            PortfolioTableService.HOLDINGS_TABLE_VALUE_COLUMN_DEFINITIONS
+        }).filter(({ name }) => {
+          return withDataSource || name !== DATA_SOURCE_COLUMN_NAME;
+        }),
         context: {
           assetClassTranslations,
           assetSubClassTranslations,
@@ -503,11 +664,13 @@ export class PortfolioTableService {
   public async getPerformanceTable({
     dateRange,
     filters,
-    userId
+    userId,
+    withValues = false
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     userId: string;
+    withValues?: boolean;
   }) {
     const { chart, performance } = await this.portfolioService.getPerformance({
       dateRange,
@@ -520,8 +683,13 @@ export class PortfolioTableService {
     if (chart?.length > 0) {
       performanceSection.push(
         await getMarkdownTable({
-          columnDefinitions:
-            PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS,
+          columnDefinitions: this.getColumnDefinitions({
+            withValues,
+            columnDefinitions:
+              PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS,
+            valueColumnDefinitions:
+              PortfolioTableService.PERFORMANCE_TABLE_VALUE_COLUMN_DEFINITIONS
+          }),
           rows: [performance]
         })
       );
@@ -585,6 +753,20 @@ export class PortfolioTableService {
     }
 
     return `${summary} Get the further activities by raising the skip parameter or narrow the result with the other parameters.`;
+  }
+
+  private getColumnDefinitions<T>({
+    columnDefinitions,
+    valueColumnDefinitions,
+    withValues
+  }: {
+    columnDefinitions: T[];
+    valueColumnDefinitions: T[];
+    withValues: boolean;
+  }) {
+    return withValues
+      ? [...columnDefinitions, ...valueColumnDefinitions]
+      : columnDefinitions;
   }
 
   private getEnumTranslations<T extends string>({

@@ -169,6 +169,14 @@ describe('McpService', () => {
         userId
       });
     });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getAccounts({ userId, withValues: true });
+
+      expect(portfolioTableService.getAccountsTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
   });
 
   describe('getActivities', () => {
@@ -272,6 +280,14 @@ describe('McpService', () => {
         types: [ActivityType.BUY]
       });
     });
+
+    it('Gives the values if the access reads them', async () => {
+      await getActivities({ withValues: true });
+
+      expect(portfolioTableService.getActivitiesTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
   });
 
   describe('getPerformance', () => {
@@ -350,6 +366,18 @@ describe('McpService', () => {
         dateRange: '2024'
       });
     });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getPerformance({
+        userId,
+        range: '2024',
+        withValues: true
+      });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
   });
 
   describe('getPortfolio', () => {
@@ -363,6 +391,14 @@ describe('McpService', () => {
         languageCode: DEFAULT_LANGUAGE_CODE,
         withDataSource: true
       });
+    });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getPortfolio({ userId, withValues: true });
+
+      expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
     });
   });
 
