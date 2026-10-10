@@ -596,6 +596,19 @@ export class PortfolioController {
         performanceInformation.performance,
         ['dividendInBaseCurrency', 'netPerformance']
       );
+
+      if (groupBy === 'year') {
+        performanceInformation.chart = performanceInformation.chart.map(
+          (item) => {
+            return nullifyValuesInObject(item, [
+              'netPerformance',
+              'netPerformanceInPercentage',
+              'netPerformanceInPercentageWithCurrencyEffect',
+              'netPerformanceWithCurrencyEffect'
+            ]);
+          }
+        );
+      }
     }
 
     return performanceInformation;

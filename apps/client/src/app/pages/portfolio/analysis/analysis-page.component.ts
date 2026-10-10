@@ -93,6 +93,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingDividendTimelineChart: boolean;
   protected isLoadingInvestmentChart: boolean;
   protected isLoadingInvestmentTimelineChart: boolean;
+  protected isLoadingPerformanceTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
   protected readonly mode = signal<GroupBy>('month');
   protected readonly modeOptions: ToggleOption<GroupBy>[] = [
@@ -103,6 +104,8 @@ export class GfAnalysisPageComponent implements OnInit {
   protected readonly PerformanceCalculationType = PerformanceCalculationType;
   protected performanceDataItems: LineChartItem[];
   protected performanceDataItemsInPercentage: LineChartItem[];
+  protected performancePercentagesByYear: InvestmentItem[];
+  protected readonly performanceTimelineDataLabel = $localize`Net Performance`;
   protected readonly portfolioEvolutionDataLabel = $localize`Invested Capital`;
   protected precision = 2;
   protected savingsRatePerMonth: number | undefined;
@@ -312,6 +315,37 @@ export class GfAnalysisPageComponent implements OnInit {
       );
   }
 
+  private fetchPerformanceByYear() {
+    this.isLoadingPerformanceTimelineChart = true;
+
+    this.dataService
+      .fetchPortfolioPerformance({
+        filters: this.userService.getFilters(),
+        groupBy: 'year',
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ chart }) => {
+        this.performancePercentagesByYear = [];
+
+        for (const {
+          date,
+          netPerformanceInPercentageWithCurrencyEffect
+        } of chart ?? []) {
+          if (isNumber(netPerformanceInPercentageWithCurrencyEffect)) {
+            this.performancePercentagesByYear.push({
+              date,
+              investment: netPerformanceInPercentageWithCurrencyEffect
+            });
+          }
+        }
+
+        this.isLoadingPerformanceTimelineChart = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private update() {
     this.isLoadingInvestmentChart = true;
 
@@ -419,6 +453,10 @@ export class GfAnalysisPageComponent implements OnInit {
       });
 
     this.fetchDividendsAndInvestments();
+
+    if (this.user?.settings?.isExperimentalFeatures) {
+      this.fetchPerformanceByYear();
+    }
 
     this.changeDetectorRef.markForCheck();
   }
