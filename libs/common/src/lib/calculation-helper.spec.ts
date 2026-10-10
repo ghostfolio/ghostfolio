@@ -10,6 +10,10 @@ import { DateRange } from './types';
 
 describe('CalculationHelper', () => {
   describe('interval from date range', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('Get interval of a calendar year', async () => {
       const { endDate, startDate } = getIntervalFromDateRange({
         dateRange: '2024'
@@ -42,8 +46,6 @@ describe('CalculationHelper', () => {
         new Date(2023, 9, 10),
         new Date(2019, 9, 10)
       ]);
-
-      jest.useRealTimers();
     });
   });
 

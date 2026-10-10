@@ -47,6 +47,7 @@ import {
   isAccountExcluded,
   isDraftActivity,
   parseDate,
+  resetHours,
   resolveUserSettings
 } from '@ghostfolio/common/helper';
 import {
@@ -559,8 +560,13 @@ export class PortfolioService {
 
     const { historicalData } = await portfolioCalculator.getSnapshot();
 
-    const items = historicalData.filter(({ date }) => {
-      return !isBefore(date, startDate) && !isAfter(date, endDate);
+    const items = historicalData.filter((historicalDataItem) => {
+      const date = resetHours(parseDate(historicalDataItem.date));
+
+      return (
+        !isBefore(date, resetHours(startDate)) &&
+        !isAfter(date, resetHours(endDate))
+      );
     });
 
     let investments: InvestmentItem[];

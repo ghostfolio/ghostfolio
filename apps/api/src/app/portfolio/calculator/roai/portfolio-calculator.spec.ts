@@ -190,6 +190,10 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get performance', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('with a calendar year date range', async () => {
       const snapshot = await portfolioCalculator.getSnapshot();
 
@@ -242,13 +246,14 @@ describe('PortfolioCalculator', () => {
           netPerformance: 10
         }),
         getHistoricalDataItem({
-          date: '2017-01-03',
+          date: '2017-01-01',
           investment: 100,
           netPerformance: 20
         })
       ];
 
-      jest.useFakeTimers().setSystemTime(new Date('2017-01-04T02:30:00.000Z'));
+      // 1 January 2017, 10:00 in New York
+      jest.useFakeTimers().setSystemTime(new Date('2017-01-01T15:00:00.000Z'));
 
       const { endDate, startDate } = getIntervalFromDateRange({
         dateRange: 'ytd'
@@ -259,13 +264,11 @@ describe('PortfolioCalculator', () => {
         start: startDate
       });
 
-      jest.useRealTimers();
-
       expect(
         chart.map(({ date }) => {
           return date;
         })
-      ).toEqual(['2016-12-31', '2017-01-03']);
+      ).toEqual(['2016-12-31', '2017-01-01']);
     });
   });
 });
