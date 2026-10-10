@@ -13,7 +13,7 @@ import {
 import { DateRange } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { format, isBefore, isSameDay, min } from 'date-fns';
+import { format, isSameDay, min } from 'date-fns';
 import { isNumber } from 'lodash-es';
 
 @Injectable()
@@ -95,8 +95,8 @@ export class BenchmarksService {
     const baselineDate = resetHours(parseDate(chart[0].date));
 
     // The market data of the benchmark can start after the baseline date.
-    // In this case, the first market data item is the start and the value
-    // before it is 0%.
+    // In this case, the first market data item is the start and there is no
+    // value before it.
     const [firstMarketDataItem] = marketDataItems;
     const marketPriceAtStartDate = firstMarketDataItem?.marketPrice;
 
@@ -111,6 +111,27 @@ export class BenchmarksService {
       return { marketData };
     }
 
+    if (!isSameDay(firstMarketDataItem.date, baselineDate)) {
+      // If market data exists before the baseline date, the market data at
+      // the baseline date is missing and the benchmark does not start later
+      const marketDataCountBeforeBaselineDate =
+        await this.marketDataService.getRangeCount({
+          assetProfileIdentifiers: [{ dataSource, symbol }],
+          dateQuery: { lt: baselineDate }
+        });
+
+      if (marketDataCountBeforeBaselineDate > 0) {
+        this.logger.error(
+          `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
+            baselineDate,
+            DATE_FORMAT
+          )}`
+        );
+
+        return { marketData };
+      }
+    }
+
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: [currentSymbolItem.currency],
@@ -122,14 +143,6 @@ export class BenchmarksService {
       exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
         format(firstMarketDataItem.date, DATE_FORMAT)
       ];
-
-    for (const { date } of chart) {
-      if (!isBefore(resetHours(parseDate(date)), firstMarketDataItem.date)) {
-        break;
-      }
-
-      marketData.push({ date, value: 0 });
-    }
 
     for (const marketDataItem of marketDataItems) {
       const exchangeRate =
