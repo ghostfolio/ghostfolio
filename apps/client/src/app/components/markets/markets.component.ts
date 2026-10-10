@@ -28,6 +28,7 @@ import {
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
@@ -158,18 +159,20 @@ export class GfMarketsComponent implements OnInit {
     this.fearAndGreedIndex =
       this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.marketPrice;
 
-    this.historicalDataItems = [
-      ...(
-        this.fearAndGreedIndexData[this.fearAndGreedIndexMode]
-          ?.historicalData ?? []
-      ).map(({ date, value }) => ({
-        date,
-        value: value ?? 0
-      })),
-      {
+    const historicalDataItems = (
+      this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.historicalData ??
+      []
+    ).filter((item): item is LineChartItem => {
+      return isNumber(item.value);
+    });
+
+    if (isNumber(this.fearAndGreedIndex)) {
+      historicalDataItems.push({
         date: resetHours(new Date()).toISOString(),
-        value: this.fearAndGreedIndex ?? 0
-      }
-    ];
+        value: this.fearAndGreedIndex
+      });
+    }
+
+    this.historicalDataItems = historicalDataItems;
   }
 }
