@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the access to share the portfolio with the Model Context Protocol (MCP) to support the _View_ and the _View and manage_ permissions (experimental)
 
+### Fixed
+
+- Fixed the _Copy AI prompt to clipboard_ actions on the analysis page in impersonation mode to be based on the impersonated user (experimental)
+
 ## 3.83.0 - 2026-10-10
 
 ### Added
