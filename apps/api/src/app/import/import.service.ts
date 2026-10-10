@@ -47,7 +47,7 @@ import { Injectable } from '@nestjs/common';
 import { Account, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISIN } from 'class-validator';
-import { isSameSecond, parseISO } from 'date-fns';
+import { isSameSecond, parseISO, subDays } from 'date-fns';
 import { omit, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
@@ -111,7 +111,7 @@ export class ImportService {
             userCurrency,
             userId,
             includeDrafts: true,
-            startDate: parseDate(dateOfFirstActivity),
+            startDate: subDays(parseDate(dateOfFirstActivity), 1),
             withExcludedAccountsAndActivities: true
           }),
           this.symbolProfileService.getSymbolProfiles([

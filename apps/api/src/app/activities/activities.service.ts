@@ -61,6 +61,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
+import { endOfDay } from 'date-fns';
 import { groupBy, omit, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
@@ -1037,12 +1038,15 @@ export class ActivitiesService {
     const andConditions: Prisma.OrderWhereInput[] = [];
     const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
 
+    // The day of an activity is its calendar date in the time zone of the
+    // server, as in the portfolio calculator. The start date is excluded and
+    // the end date is included.
     if (endDate) {
-      andConditions.push({ date: { lte: endDate } });
+      andConditions.push({ date: { lte: endOfDay(endDate) } });
     }
 
     if (startDate) {
-      andConditions.push({ date: { gt: startDate } });
+      andConditions.push({ date: { gt: endOfDay(startDate) } });
     }
 
     const {

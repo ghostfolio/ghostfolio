@@ -9,6 +9,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
@@ -27,6 +28,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
+import { endOfDay } from 'date-fns';
 
 import { ActivitiesService } from './activities.service';
 
@@ -519,6 +521,36 @@ describe('ActivitiesService', () => {
           unitPrice: { gt: 0 }
         }
       });
+    });
+  });
+
+  describe('getWhereClause', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('excludes the activities of the start date of a date range', () => {
+      jest.useFakeTimers().setSystemTime(new Date(2024, 5, 15));
+
+      const { endDate, startDate } = getIntervalFromDateRange({
+        dateRange: 'ytd'
+      });
+
+      const { AND } = activitiesService['getWhereClause']({
+        endDate,
+        startDate,
+        includeDrafts: false,
+        userId: 'user-id',
+        withExcludedAccountsAndActivities: false
+      });
+
+      // The same limits as for the calendar year 2024
+      expect(AND).toEqual(
+        expect.arrayContaining([
+          { date: { gt: endOfDay(new Date(2023, 11, 31)) } },
+          { date: { lte: endOfDay(new Date(2024, 5, 15)) } }
+        ])
+      );
     });
   });
 
