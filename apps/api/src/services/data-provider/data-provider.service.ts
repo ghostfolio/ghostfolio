@@ -408,9 +408,11 @@ export class DataProviderService implements OnModuleInit {
     });
 
     try {
-      const marketDataByGranularity: MarketData[] = await this.prismaService
-        .$queryRaw`
-          SELECT *
+      const marketDataByGranularity: Pick<
+        MarketData,
+        'dataSource' | 'date' | 'marketPrice' | 'symbol'
+      >[] = await this.prismaService.$queryRaw`
+          SELECT "dataSource", "date", "marketPrice", "symbol"
           FROM "MarketData"
           WHERE ("dataSource", "symbol") IN (${Prisma.join(assetProfileIdentifiers)})
             ${granularityQuery}
