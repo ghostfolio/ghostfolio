@@ -1,11 +1,17 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { FilterDto } from '@ghostfolio/api/dtos/filter.dto';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { AiPromptResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { AiPromptMode, RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type {
+  AiPromptMode,
+  ImpersonationContext,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
   Controller,
@@ -13,11 +19,9 @@ import {
   Inject,
   Param,
   Query,
-  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 
 import { AiService } from './ai.service';
 
@@ -31,9 +35,10 @@ export class AiController {
 
   @Get('prompt/:mode')
   @HasPermission(permissions.readAiPrompt)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getPrompt(
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Param('mode') mode: AiPromptMode,
     @Query()
     { accounts, assetClasses, dataSource, symbol, tags }: FilterDto
@@ -49,9 +54,9 @@ export class AiController {
     const prompt = await this.aiService.getPrompt({
       filters,
       mode,
+      userId,
       languageCode: this.request.user.settings.settings.language,
-      userCurrency: this.request.user.settings.settings.baseCurrency,
-      userId: this.request.user.id
+      userCurrency: userSettings.baseCurrency
     });
 
     return { prompt };
