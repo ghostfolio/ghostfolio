@@ -3,7 +3,8 @@ import { RequiresScopeOfAccess } from '@ghostfolio/api/decorators/requires-scope
 import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
-import { scopes } from '@ghostfolio/common/scopes';
+import { SubscriptionType } from '@ghostfolio/common/enums';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import { UseFilters } from '@nestjs/common';
@@ -35,15 +36,22 @@ export class GhostfolioMcpController {
     },
     description: `Gives the accounts of the portfolio with these columns: ${PortfolioTableService.getAccountsTableColumnNames().join(
       ', '
-    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it.`,
+    )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getAccountsTableValueColumnNames().join(
+      ', '
+    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it. The parameters change the value in base currency as well. With the holding parameter, it is the value of the holding in the account without the cash balance. Without the holding parameter, it includes the full cash balance of the account, also with the assetClasses parameter. The balance is always the full cash balance of the account in the currency of the account.`,
     name: 'get-accounts',
     parameters: GET_ACCOUNTS_PARAMETERS
   })
   public async getAccounts(
-    @Impersonation() { userId }: ImpersonationContext,
+    @Impersonation()
+    { scopes: impersonationScopes, userId }: ImpersonationContext,
     @Payload() parameters: z.infer<typeof GET_ACCOUNTS_PARAMETERS>
   ) {
-    return this.mcpService.getAccounts({ ...parameters, userId });
+    return this.mcpService.getAccounts({
+      ...parameters,
+      userId,
+      withValues: this.hasScopeToReadValues(impersonationScopes)
+    });
   }
 
   @RequiresScopeOfAccess(scopes.activityRead)
@@ -55,18 +63,22 @@ export class GhostfolioMcpController {
     },
     description: `Gives the activities of the portfolio, the most recent first, with these columns: ${PortfolioTableService.getActivitiesTableColumnNames().join(
       ', '
-    )}. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
+    )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getActivitiesTableValueColumnNames().join(
+      ', '
+    )}. The unit price and the fee are in the currency of the activity. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
     name: 'get-activities',
     parameters: GET_ACTIVITIES_PARAMETERS
   })
   public async getActivities(
-    @Impersonation() { userId, userSettings }: ImpersonationContext,
+    @Impersonation()
+    { scopes: impersonationScopes, userId, userSettings }: ImpersonationContext,
     @Payload() parameters: z.infer<typeof GET_ACTIVITIES_PARAMETERS>
   ) {
     return this.mcpService.getActivities({
       ...parameters,
       userId,
-      userCurrency: userSettings.baseCurrency
+      userCurrency: userSettings.baseCurrency,
+      withValues: this.hasScopeToReadValues(impersonationScopes)
     });
   }
 
@@ -79,15 +91,28 @@ export class GhostfolioMcpController {
     },
     description: `Gives the performance of the portfolio in the date range with these columns: ${PortfolioTableService.getPerformanceTableColumnNames().join(
       ', '
-    )}. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and includes the dividends (total return). The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
+    )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getPerformanceTableValueColumnNames().join(
+      ', '
+    )}. The value in base currency is the value at the end of the date range. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and includes the dividends (total return). The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
     name: 'get-performance',
     parameters: GET_PERFORMANCE_PARAMETERS
   })
   public async getPerformance(
-    @Impersonation() { userId }: ImpersonationContext,
+    @Impersonation()
+    {
+      scopes: impersonationScopes,
+      userId,
+      userSubscription
+    }: ImpersonationContext,
     @Payload() parameters: z.infer<typeof GET_PERFORMANCE_PARAMETERS>
   ) {
-    return this.mcpService.getPerformance({ ...parameters, userId });
+    return this.mcpService.getPerformance({
+      ...parameters,
+      userId,
+      withAssetPerformanceInBaseCurrency:
+        userSubscription?.type !== SubscriptionType.Basic,
+      withValues: this.hasScopeToReadValues(impersonationScopes)
+    });
   }
 
   @RequiresScopeOfAccess(scopes.portfolioRead)
@@ -99,11 +124,19 @@ export class GhostfolioMcpController {
     },
     description: `Gives the holdings of the portfolio with these columns: ${PortfolioTableService.getHoldingsTableColumnNames().join(
       ', '
+    )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getHoldingsTableValueColumnNames().join(
+      ', '
     )}.`,
     name: 'get-portfolio'
   })
-  public async getPortfolio(@Impersonation() { userId }: ImpersonationContext) {
-    return this.mcpService.getPortfolio({ userId });
+  public async getPortfolio(
+    @Impersonation()
+    { scopes: impersonationScopes, userId }: ImpersonationContext
+  ) {
+    return this.mcpService.getPortfolio({
+      userId,
+      withValues: this.hasScopeToReadValues(impersonationScopes)
+    });
   }
 
   @RequiresScopeOfAccess(scopes.watchlistRead)
@@ -158,5 +191,9 @@ export class GhostfolioMcpController {
     @Payload() parameters: z.infer<typeof SEARCH_ASSET_PROFILES_PARAMETERS>
   ) {
     return this.mcpService.searchAssetProfiles({ ...parameters, userId });
+  }
+
+  private hasScopeToReadValues(impersonationScopes: string[]) {
+    return hasScope(impersonationScopes, scopes.portfolioReadValues);
   }
 }
