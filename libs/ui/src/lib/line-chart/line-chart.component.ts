@@ -60,7 +60,7 @@ export class GfLineChartComponent
   @Input() benchmarkLabel = '';
   @Input() colorScheme?: ColorScheme;
   @Input() currency?: string;
-  @Input() historicalDataItems: LineChartItem[];
+  @Input() historicalDataItems: LineChartItem[] | null;
   @Input() isAnimated = false;
   @Input() label: string;
   @Input() locale = getLocale();

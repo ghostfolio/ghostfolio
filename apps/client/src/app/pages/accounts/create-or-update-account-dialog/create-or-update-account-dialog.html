@@ -43,7 +43,7 @@
         }}</span>
       </mat-form-field>
     </div>
-    <div [class.d-none]="platforms?.length < 1">
+    <div [class.d-none]="platforms.length < 1">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
         @if (selectedPlatform) {
@@ -51,8 +51,8 @@
             class="ml-3"
             matPrefix
             [hasPlaceholder]="true"
-            [tooltip]="selectedPlatform?.name"
-            [url]="selectedPlatform?.url"
+            [tooltip]="selectedPlatform.name ?? ''"
+            [url]="selectedPlatform.url"
           />
         }
         <input
@@ -73,7 +73,7 @@
                 <gf-entity-logo
                   class="mr-1"
                   [hasPlaceholder]="true"
-                  [tooltip]="platformEntry.name"
+                  [tooltip]="platformEntry.name ?? ''"
                   [url]="platformEntry.url"
                 />
                 <span>{{ platformEntry.name }}</span>

@@ -53,7 +53,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './home-overview.html'
 })
 export class GfHomeOverviewComponent implements OnInit {
-  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
   protected readonly hasImpersonationId = signal(false);
   protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
@@ -61,6 +60,11 @@ export class GfHomeOverviewComponent implements OnInit {
     undefined
   );
   protected readonly isLoadingPerformance = signal(true);
+
+  protected readonly locale = computed(() => {
+    return this.user()?.settings?.locale ?? DEFAULT_LOCALE;
+  });
+
   protected readonly performance = signal<PortfolioPerformance | null>(null);
   protected readonly performanceLabel = $localize`Performance`;
   protected readonly precision = signal(2);
@@ -147,7 +151,7 @@ export class GfHomeOverviewComponent implements OnInit {
 
   protected onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
-      this.router.navigate([], {
+      void this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }

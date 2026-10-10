@@ -35,9 +35,9 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 })
 export class GfPortfolioPerformanceComponent {
   public readonly errors = input<ResponseError['errors']>();
-  public readonly isLoading = input<boolean>();
+  public readonly isLoading = input<boolean>(false);
   public readonly locale = input<string>(getLocale());
-  public readonly performance = input.required<PortfolioPerformance>();
+  public readonly performance = input.required<PortfolioPerformance | null>();
   public readonly precision = input.required<number, number>({
     transform: (value) => {
       return value >= 0 ? value : 2;
@@ -60,17 +60,19 @@ export class GfPortfolioPerformanceComponent {
           this.value().nativeElement.innerHTML = '';
         }
       } else {
-        if (isNumber(this.performance().currentValueInBaseCurrency)) {
-          new CountUp('value', this.performance().currentValueInBaseCurrency, {
+        const performance = this.performance();
+
+        if (isNumber(performance?.currentValueInBaseCurrency)) {
+          new CountUp('value', performance.currentValueInBaseCurrency, {
             decimal: getNumberFormatDecimal(this.locale()),
             decimalPlaces: this.precision(),
             duration: 1,
             separator: getNumberFormatGroup(this.locale())
           }).start();
-        } else if (this.showDetails() === false) {
+        } else if (this.showDetails() === false && performance) {
           new CountUp(
             'value',
-            this.performance().netPerformancePercentageWithCurrencyEffect * 100,
+            performance.netPerformancePercentageWithCurrencyEffect * 100,
             {
               decimal: getNumberFormatDecimal(this.locale()),
               decimalPlaces: 2,

@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the performance timeline grouped by year to the analysis page (experimental)
 - Extended the `GET api/v2/portfolio/performance` endpoint by the `groupBy` query parameter (`year`)
 
 ### Changed
 
 - Extended the benchmark comparator to support benchmarks whose market data starts later than the portfolio
+- Harmonized the colors in the investment chart component
 - Improved the language localization for Chinese (`zh`)
 
 ## 3.82.0 - 2026-10-09
