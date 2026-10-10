@@ -2429,18 +2429,12 @@ export class PortfolioService {
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};
 
-    const {
-      ASSET_CLASS: filtersByAssetClass = [],
-      SYMBOL: [filterBySymbol] = []
-    } = groupBy(filters, ({ type }) => {
+    const { SYMBOL: [filterBySymbol] = [] } = groupBy(filters, ({ type }) => {
       return type;
     });
 
     const isFilteredByAssetClassOtherThanLiquidity =
-      filtersByAssetClass.length > 0 &&
-      !filtersByAssetClass.some(({ id }) => {
-        return id === AssetClass.LIQUIDITY;
-      });
+      this.activitiesService.isFilteredByAssetClassOtherThanLiquidity(filters);
 
     let currentAccounts: (AccountWithBalance & {
       Order?: Order[];
