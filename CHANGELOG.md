@@ -80,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the missing thousands separator of 4-digit numbers in certain locales
 - Fixed an issue where holdings without a market price have been valued at the unit price of a dividend, a fee, an interest or a liability
 - Fixed the check for today in the current rate service for instances running in a time zone behind UTC
+- Fixed the state of the market data in the historical market data gathering endpoint for a specific date
 
 ## 3.79.0 - 2026-10-04
 
