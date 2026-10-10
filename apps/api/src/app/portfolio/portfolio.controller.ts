@@ -4,7 +4,8 @@ import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorato
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import {
   hasNotDefinedValuesInObject,
-  nullifyValuesInObject
+  nullifyValuesInObject,
+  nullifyValuesInObjects
 } from '@ghostfolio/api/helper/object.helper';
 import { convertValuesToPercentages } from '@ghostfolio/api/helper/portfolio.helper';
 import { PerformanceLoggingInterceptor } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
@@ -583,32 +584,27 @@ export class PortfolioController {
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription?.type === SubscriptionType.Basic
     ) {
-      performanceInformation.chart = performanceInformation.chart.map(
-        (item) => {
-          return nullifyValuesInObject(item, [
-            'dividendInBaseCurrency',
-            'totalInvestment',
-            'value'
-          ]);
-        }
+      performanceInformation.chart = nullifyValuesInObjects(
+        performanceInformation.chart,
+        [
+          'dividendInBaseCurrency',
+          'totalInvestment',
+          'value',
+          ...(groupBy === 'year'
+            ? [
+                'investmentValueWithCurrencyEffect',
+                'netPerformance',
+                'netPerformanceInPercentage',
+                'netPerformanceInPercentageWithCurrencyEffect',
+                'netPerformanceWithCurrencyEffect'
+              ]
+            : [])
+        ]
       );
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
         ['dividendInBaseCurrency', 'netPerformance']
       );
-
-      if (groupBy === 'year') {
-        performanceInformation.chart = performanceInformation.chart.map(
-          (item) => {
-            return nullifyValuesInObject(item, [
-              'netPerformance',
-              'netPerformanceInPercentage',
-              'netPerformanceInPercentageWithCurrencyEffect',
-              'netPerformanceWithCurrencyEffect'
-            ]);
-          }
-        );
-      }
     }
 
     return performanceInformation;

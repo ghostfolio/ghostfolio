@@ -5,6 +5,7 @@ import {
   DEFAULT_DATE_RANGE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { canOpenHoldingDetail } from '@ghostfolio/common/helper';
 import {
   InvestmentItem,
@@ -454,7 +455,10 @@ export class GfAnalysisPageComponent implements OnInit {
 
     this.fetchDividendsAndInvestments();
 
-    if (this.user?.settings?.isExperimentalFeatures) {
+    if (
+      this.user?.settings?.isExperimentalFeatures &&
+      this.user?.subscription?.type !== SubscriptionType.Basic
+    ) {
       this.fetchPerformanceByYear();
     }
 
