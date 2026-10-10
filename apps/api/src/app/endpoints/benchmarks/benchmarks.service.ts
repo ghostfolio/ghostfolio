@@ -94,6 +94,52 @@ export class BenchmarksService {
 
     const baselineDate = resetHours(parseDate(chart[0].date));
 
+    // The market data of the benchmark can start after the baseline date.
+    // In this case, the first market data item is the start and there is no
+    // value before it.
+    const [firstMarketDataItem] = marketDataItems;
+    const marketPriceAtStartDate = firstMarketDataItem?.marketPrice;
+
+    if (!marketPriceAtStartDate) {
+      this.logger.error(
+        `No historical market data has been found for ${symbol} (${dataSource}) since ${format(
+          baselineDate,
+          DATE_FORMAT
+        )}`
+      );
+
+      return { marketData };
+    }
+
+    if (!isSameDay(firstMarketDataItem.date, baselineDate)) {
+      // If market data exists before the baseline date, the market data at
+      // the baseline date is missing and the benchmark does not start later
+      const [marketDataItemBeforeBaselineDate] =
+        await this.marketDataService.getRange({
+          assetProfileIdentifiers: [{ dataSource, symbol }],
+          dateQuery: { lt: baselineDate },
+          take: 1
+        });
+
+      if (marketDataItemBeforeBaselineDate) {
+        this.logger.error(
+          `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
+            baselineDate,
+            DATE_FORMAT
+          )}`
+        );
+
+        return { marketData };
+      }
+
+      this.logger.warn(
+        `The market data of ${symbol} (${dataSource}) starts at ${format(
+          firstMarketDataItem.date,
+          DATE_FORMAT
+        )}, after the baseline date ${format(baselineDate, DATE_FORMAT)}`
+      );
+    }
+
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: [currentSymbolItem.currency],
@@ -103,23 +149,8 @@ export class BenchmarksService {
 
     const exchangeRateAtStartDate =
       exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-        format(baselineDate, DATE_FORMAT)
+        format(firstMarketDataItem.date, DATE_FORMAT)
       ];
-
-    const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
-      return isSameDay(date, baselineDate);
-    })?.marketPrice;
-
-    if (!marketPriceAtStartDate) {
-      this.logger.error(
-        `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
-          baselineDate,
-          DATE_FORMAT
-        )}`
-      );
-
-      return { marketData };
-    }
 
     for (const marketDataItem of marketDataItems) {
       const exchangeRate =
