@@ -14,20 +14,16 @@
     }
   ],
   "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        // TODO: Remove once the fields are typed as optional
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
     "strictInjectionParameters": true,
-    // TODO: Remove these subsets once strictTemplates is enabled
-    "strictAttributeTypes": true,
-    "strictContextGenerics": true,
-    "strictDomEventTypes": true,
-    "strictDomLocalRefTypes": true,
     "strictInputAccessModifiers": true,
-    "strictInputTypes": true,
-    "strictLiteralTypes": true,
-    "strictNullInputTypes": true,
-    "strictOutputEventTypes": true,
-    "strictSafeNavigationTypes": true,
-    // TODO: Enable stricter rules for this project
-    "strictTemplates": false
+    "strictTemplates": true
   },
   "compilerOptions": {
     "module": "preserve",

@@ -3,8 +3,8 @@ import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
   Benchmark,
-  HistoricalDataItem,
   InfoItem,
+  LineChartItem,
   MarketDataOfMarketsResponse,
   User
 } from '@ghostfolio/common/interfaces';
@@ -28,6 +28,7 @@ import {
   signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
@@ -66,7 +67,7 @@ export class GfMarketsComponent implements OnInit {
   protected fearAndGreedIndexMode: FearAndGreedIndexMode = 'STOCKS';
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
   protected hasPermissionToReadMarketDataOfMarkets: boolean;
-  protected historicalDataItems: HistoricalDataItem[];
+  protected historicalDataItems: LineChartItem[];
   protected isLoadingFearAndGreedIndex = true;
   protected user: User;
 
@@ -158,13 +159,20 @@ export class GfMarketsComponent implements OnInit {
     this.fearAndGreedIndex =
       this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.marketPrice;
 
-    this.historicalDataItems = [
-      ...(this.fearAndGreedIndexData[this.fearAndGreedIndexMode]
-        ?.historicalData ?? []),
-      {
+    const historicalDataItems = (
+      this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.historicalData ??
+      []
+    ).filter((item): item is LineChartItem => {
+      return isNumber(item.value);
+    });
+
+    if (isNumber(this.fearAndGreedIndex)) {
+      historicalDataItems.push({
         date: resetHours(new Date()).toISOString(),
         value: this.fearAndGreedIndex
-      }
-    ];
+      });
+    }
+
+    this.historicalDataItems = historicalDataItems;
   }
 }

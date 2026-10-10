@@ -5,7 +5,7 @@ import {
 
 export interface RuleSettingsDialogParams {
   categoryName: string;
-  locale: string;
+  locale?: string;
   rule: PortfolioReportRule;
   settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 }
