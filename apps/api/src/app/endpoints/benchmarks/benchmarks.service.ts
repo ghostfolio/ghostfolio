@@ -13,7 +13,7 @@ import {
 import { DateRange } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { format, isSameDay, min } from 'date-fns';
+import { format, isBefore, isSameDay, min } from 'date-fns';
 import { isNumber } from 'lodash-es';
 
 @Injectable()
@@ -94,6 +94,23 @@ export class BenchmarksService {
 
     const baselineDate = resetHours(parseDate(chart[0].date));
 
+    // The market data of the benchmark can start after the baseline date.
+    // In this case, the first market data item is the start and the value
+    // before it is 0%.
+    const [firstMarketDataItem] = marketDataItems;
+    const marketPriceAtStartDate = firstMarketDataItem?.marketPrice;
+
+    if (!marketPriceAtStartDate) {
+      this.logger.error(
+        `No historical market data has been found for ${symbol} (${dataSource}) since ${format(
+          baselineDate,
+          DATE_FORMAT
+        )}`
+      );
+
+      return { marketData };
+    }
+
     const exchangeRates =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: [currentSymbolItem.currency],
@@ -103,22 +120,15 @@ export class BenchmarksService {
 
     const exchangeRateAtStartDate =
       exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-        format(baselineDate, DATE_FORMAT)
+        format(firstMarketDataItem.date, DATE_FORMAT)
       ];
 
-    const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
-      return isSameDay(date, baselineDate);
-    })?.marketPrice;
+    for (const { date } of chart) {
+      if (!isBefore(resetHours(parseDate(date)), firstMarketDataItem.date)) {
+        break;
+      }
 
-    if (!marketPriceAtStartDate) {
-      this.logger.error(
-        `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
-          baselineDate,
-          DATE_FORMAT
-        )}`
-      );
-
-      return { marketData };
+      marketData.push({ date, value: 0 });
     }
 
     for (const marketDataItem of marketDataItems) {
