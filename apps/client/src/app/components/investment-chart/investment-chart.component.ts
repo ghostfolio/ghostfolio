@@ -113,9 +113,9 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    const benchmarkColorRgb = this.groupBy
-      ? primaryColorRgb
-      : secondaryColorRgb;
+    const isBarChart = !!this.groupBy;
+
+    const benchmarkColorRgb = isBarChart ? primaryColorRgb : secondaryColorRgb;
 
     // Create clones of the input data
     this.investments = this.benchmarkDataItems.map((item) =>
@@ -134,7 +134,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
         {
           backgroundColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
           borderColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
-          borderWidth: this.groupBy ? 0 : 1,
+          borderWidth: isBarChart ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {
             return {
               x: parseDate(date)?.getTime() ?? null,
@@ -239,7 +239,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
               responsive: true,
               scales: {
                 x: getTimeAxisOptions({
-                  borderWidth: this.groupBy ? 0 : 1,
+                  borderWidth: isBarChart ? 0 : 1,
                   colorScheme: this.colorScheme,
                   locale: this.locale
                 }),
@@ -255,7 +255,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
             plugins: [
               getVerticalHoverLinePlugin(this.chartCanvas(), this.colorScheme)
             ],
-            type: this.groupBy ? 'bar' : 'line'
+            type: isBarChart ? 'bar' : 'line'
           }
         );
       }
