@@ -31,8 +31,6 @@ import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
-process.env.TZ = 'UTC';
-
 const logger = new Logger('Bootstrap');
 const processWarningLogger = new Logger('ProcessWarning');
 

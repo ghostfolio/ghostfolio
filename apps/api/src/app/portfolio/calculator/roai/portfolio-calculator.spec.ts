@@ -226,5 +226,46 @@ describe('PortfolioCalculator', () => {
         })
       ).toEqual(['2016-12-31', '2017-12-31']);
     });
+
+    it('with a year to date date range', async () => {
+      const snapshot = await portfolioCalculator.getSnapshot();
+
+      snapshot.historicalData = [
+        getHistoricalDataItem({
+          date: '2016-12-30',
+          investment: 100,
+          netPerformance: 0
+        }),
+        getHistoricalDataItem({
+          date: '2016-12-31',
+          investment: 100,
+          netPerformance: 10
+        }),
+        getHistoricalDataItem({
+          date: '2017-01-03',
+          investment: 100,
+          netPerformance: 20
+        })
+      ];
+
+      jest.useFakeTimers().setSystemTime(new Date('2017-01-04T02:30:00.000Z'));
+
+      const { endDate, startDate } = getIntervalFromDateRange({
+        dateRange: 'ytd'
+      });
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: endDate,
+        start: startDate
+      });
+
+      jest.useRealTimers();
+
+      expect(
+        chart.map(({ date }) => {
+          return date;
+        })
+      ).toEqual(['2016-12-31', '2017-01-03']);
+    });
   });
 });
