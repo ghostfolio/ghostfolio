@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Set the time zone of the server to UTC
+- Improved the language localization for Chinese (`zh`)
 
 ### Fixed
 
