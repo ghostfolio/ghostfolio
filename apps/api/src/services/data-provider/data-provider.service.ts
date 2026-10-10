@@ -403,12 +403,8 @@ export class DataProviderService implements OnModuleInit {
           })}::timestamp`
         : Prisma.empty;
 
-    const dataSources = aItems.map(({ dataSource }) => {
-      return dataSource;
-    });
-
-    const symbols = aItems.map(({ symbol }) => {
-      return symbol;
+    const assetProfileIdentifiers = aItems.map(({ dataSource, symbol }) => {
+      return Prisma.sql`(${dataSource}::"DataSource", ${symbol})`;
     });
 
     try {
@@ -416,8 +412,7 @@ export class DataProviderService implements OnModuleInit {
         .$queryRaw`
           SELECT *
           FROM "MarketData"
-          WHERE "dataSource"::text IN (${Prisma.join(dataSources)})
-            AND "symbol" IN (${Prisma.join(symbols)})
+          WHERE ("dataSource", "symbol") IN (${Prisma.join(assetProfileIdentifiers)})
             ${granularityQuery}
             ${rangeQuery}
           ORDER BY date;`;
