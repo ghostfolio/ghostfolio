@@ -11,7 +11,10 @@
         <h4 i18n>Welcome to Ghostfolio</h4>
         <p i18n>Ready to take control of your personal finances?</p>
         <ol class="font-weight-bold">
-          <li class="mb-2" [class.text-muted]="user()?.accounts?.length > 1">
+          <li
+            class="mb-2"
+            [class.text-muted]="(user()?.accounts?.length ?? 0) > 1"
+          >
             <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
               <span class="font-weight-normal" i18n
@@ -48,7 +51,7 @@
             >
               <ng-container i18n>Setup accounts</ng-container>
             </a>
-          } @else if (user()?.accounts?.length > 1) {
+          } @else if ((user()?.accounts?.length ?? 0) > 1) {
             <a
               color="primary"
               mat-flat-button
@@ -70,10 +73,10 @@
             [class.pr-3]="deviceType() === 'mobile'"
             [colorScheme]="user()?.settings?.colorScheme"
             [hidden]="historicalDataItems()?.length === 0"
-            [historicalDataItems]="historicalDataItems()"
+            [historicalDataItems]="historicalDataItems() ?? []"
             [isAnimated]="user()?.settings?.dateRange === '1d' ? false : true"
             [label]="performanceLabel"
-            [locale]="user()?.settings?.locale"
+            [locale]="locale()"
             [showGradient]="true"
             [showLoader]="false"
             [showXAxis]="false"
@@ -85,7 +88,7 @@
             <gf-portfolio-performance
               [errors]="errors()"
               [isLoading]="isLoadingPerformance()"
-              [locale]="user()?.settings?.locale"
+              [locale]="locale()"
               [performance]="performance()"
               [precision]="precision()"
               [showDetails]="showDetails()"
@@ -107,7 +110,7 @@
               <gf-holdings-table
                 mode="simple"
                 [holdings]="holdings()"
-                [locale]="user()?.settings?.locale ?? DEFAULT_LOCALE"
+                [locale]="locale()"
                 (holdingClicked)="onHoldingClicked($event)"
               />
             </mat-card-content>
