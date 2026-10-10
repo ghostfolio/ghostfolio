@@ -10,7 +10,7 @@ export function formatRelativeTime({
   date,
   language
 }: {
-  date: Date | string;
+  date: Date | string | null | undefined;
   language?: string;
 }) {
   if (date) {

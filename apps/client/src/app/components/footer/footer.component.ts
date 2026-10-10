@@ -24,27 +24,27 @@ import { openOutline } from 'ionicons/icons';
   templateUrl: './footer.component.html'
 })
 export class GfFooterComponent {
-  public readonly info = input.required<InfoItem>();
+  public readonly info = input.required<InfoItem | undefined>();
 
   protected readonly currentYear = new Date().getFullYear();
 
   protected readonly hasPermissionForStatistics = computed(() => {
     return hasPermission(
-      this.info().globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableStatistics
     );
   });
 
   protected readonly hasPermissionForSubscription = computed(() => {
     return hasPermission(
-      this.info().globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableSubscription
     );
   });
 
   protected readonly hasPermissionToAccessFearAndGreedIndex = computed(() => {
     return hasPermission(
-      this.info().globalPermissions,
+      this.info()?.globalPermissions,
       permissions.enableFearAndGreedIndex
     );
   });
