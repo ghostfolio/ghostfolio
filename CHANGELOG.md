@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the start date of the date ranges in the portfolio performance calculation for instances in time zones with a negative UTC offset
+- Fixed the start date of the date ranges for instances in time zones with a negative UTC offset
 
 ## 3.83.0 - 2026-10-10
 
