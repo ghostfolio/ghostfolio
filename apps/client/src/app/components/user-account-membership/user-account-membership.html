@@ -3,7 +3,9 @@
     <div class="col">
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
-          [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
+          [expiresAt]="
+            (user?.subscription?.expiresAt | date: defaultDateFormat) ?? ''
+          "
           [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
           [hover3d]="true"
           [name]="user?.subscription?.type"
@@ -15,7 +17,7 @@
               hasPermissionForSubscription && hasPermissionToUpdateUserSettings
             ) {
               <button color="primary" mat-flat-button (click)="onCheckout()">
-                @if (user.subscription.offer.isRenewal) {
+                @if (user?.subscription?.offer?.isRenewal) {
                   <ng-container i18n>Renew Plan</ng-container>
                 } @else {
                   <ng-container i18n>Upgrade Plan</ng-container>

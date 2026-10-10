@@ -124,7 +124,7 @@
           >About</a
         >
       </li>
-      @if (hasPermissionToAccessAssistant) {
+      @if (hasPermissionToAccessAssistant && user(); as user) {
         <li class="d-inline-flex list-inline-item">
           <button
             #assistantTrigger="matMenuTrigger"
@@ -156,7 +156,7 @@
                 hasPermissionToChangeDateRange()
               "
               [hasPermissionToChangeFilters]="hasPermissionToChangeFilters()"
-              [user]="user()"
+              [user]="user"
               (closed)="closeAssistant()"
               (dateRangeChanged)="onDateRangeChange($event)"
               (filtersChanged)="onFiltersChanged($event)"
@@ -191,7 +191,7 @@
             <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
               ><span class="align-items-center d-flex"
                 ><span>
-                  @if (user().subscription.offer.isRenewal) {
+                  @if (user()?.subscription?.offer?.isRenewal) {
                     <ng-container i18n>Renew Plan</ng-container>
                   } @else {
                     <ng-container i18n>Upgrade Plan</ng-container>
@@ -203,7 +203,7 @@
             ></a>
             <hr class="m-0" />
           }
-          @if (user()?.access?.length > 0) {
+          @if ((user()?.access?.length ?? 0) > 0) {
             <button mat-menu-item (click)="impersonateAccount(null)">
               <span class="align-items-center d-flex">
                 <ion-icon
