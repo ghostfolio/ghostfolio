@@ -173,11 +173,11 @@ export class ExchangeRateDataService {
       { in: utc }
     );
 
-    const historicalData = await this.dataProviderService.getHistorical(
-      this.currencyPairs,
-      startOfUtcDateOfYesterday,
-      startOfUtcDateOfYesterday
-    );
+    const historicalData = await this.dataProviderService.getHistorical({
+      assetProfileIdentifiers: this.currencyPairs,
+      from: startOfUtcDateOfYesterday,
+      to: startOfUtcDateOfYesterday
+    });
 
     const quotes = await this.dataProviderService.getQuotes({
       items: this.currencyPairs.map(({ dataSource, symbol }) => {

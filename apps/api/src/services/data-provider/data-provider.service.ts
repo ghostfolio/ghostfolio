@@ -369,11 +369,15 @@ export class DataProviderService implements OnModuleInit {
     });
   }
 
-  public async getHistorical(
-    aItems: AssetProfileIdentifier[],
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistorical({
+    assetProfileIdentifiers,
+    from,
+    to
+  }: {
+    assetProfileIdentifiers: AssetProfileIdentifier[];
+    from: Date;
+    to: Date;
+  }): Promise<{
     [assetProfileIdentifier: string]: {
       [date: string]: DataProviderHistoricalResponse;
     };
@@ -384,35 +388,29 @@ export class DataProviderService implements OnModuleInit {
       };
     } = {};
 
-    if (isEmpty(aItems) || !isValid(from) || !isValid(to)) {
+    if (isEmpty(assetProfileIdentifiers) || !isValid(from) || !isValid(to)) {
       return response;
     }
 
-    const rangeQuery =
-      from && to
-        ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT, {
-            in: utc
-          })}::timestamp AND date <= ${format(to, DATE_FORMAT, {
-            in: utc
-          })}::timestamp`
-        : Prisma.empty;
-
-    const assetProfileIdentifiers = aItems.map(({ dataSource, symbol }) => {
-      return Prisma.sql`(${dataSource}::"DataSource", ${symbol})`;
-    });
+    const assetProfileIdentifierTuples = assetProfileIdentifiers.map(
+      ({ dataSource, symbol }) => {
+        return Prisma.sql`(${dataSource}::"DataSource", ${symbol})`;
+      }
+    );
 
     try {
-      const marketDataByGranularity: Pick<
+      const marketDataItems: Pick<
         MarketData,
         'dataSource' | 'date' | 'marketPrice' | 'symbol'
       >[] = await this.prismaService.$queryRaw`
           SELECT "dataSource", "date", "marketPrice", "symbol"
           FROM "MarketData"
-          WHERE ("dataSource", "symbol") IN (${Prisma.join(assetProfileIdentifiers)})
-            ${rangeQuery}
+          WHERE ("dataSource", "symbol") IN (${Prisma.join(assetProfileIdentifierTuples)})
+            AND date >= ${format(from, DATE_FORMAT, { in: utc })}::timestamp
+            AND date <= ${format(to, DATE_FORMAT, { in: utc })}::timestamp
           ORDER BY date;`;
 
-      response = marketDataByGranularity.reduce((r, marketData) => {
+      response = marketDataItems.reduce((r, marketData) => {
         const { dataSource, date, marketPrice, symbol } = marketData;
 
         const assetProfileIdentifier = getAssetProfileIdentifier({

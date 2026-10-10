@@ -1050,11 +1050,11 @@ export class PortfolioService {
       );
     });
 
-    const historicalData = await this.dataProviderService.getHistorical(
-      [{ dataSource, symbol }],
-      parseISO(dateOfFirstActivity, { in: utc }),
-      new Date()
-    );
+    const historicalData = await this.dataProviderService.getHistorical({
+      assetProfileIdentifiers: [{ dataSource, symbol }],
+      from: parseISO(dateOfFirstActivity, { in: utc }),
+      to: new Date()
+    });
 
     const [firstActivity] = activitiesOfHolding;
     const referenceUnitPrice =
