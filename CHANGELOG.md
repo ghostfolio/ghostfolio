@@ -13,12 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Set the time zone of the server to UTC
 - Improved the language localization for Chinese (`zh`)
 
 ### Fixed
 
-- Fixed the start date of the date ranges in the portfolio performance calculation for instances in time zones other than UTC
+- Fixed the start date of the date ranges in the portfolio performance calculation for instances in time zones with a negative UTC offset
 
 ## 3.82.0 - 2026-10-09
 
