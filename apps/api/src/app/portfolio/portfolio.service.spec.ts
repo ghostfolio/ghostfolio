@@ -16,7 +16,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import { parseDate, resetHours } from '@ghostfolio/common/helper';
+import { parseDate } from '@ghostfolio/common/helper';
 import {
   Activity,
   AssetProfileIdentifier,
@@ -1045,7 +1045,7 @@ describe('PortfolioService', () => {
       expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(3);
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(2, {
         end: endOfDay(parseDate('2024-12-31')),
-        start: resetHours(parseDate('2024-06-15'))
+        start: parseDate('2024-06-15')
       });
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(3, {
         end: endOfDay(parseDate('2025-06-15')),
@@ -1099,11 +1099,11 @@ describe('PortfolioService', () => {
       expect(getPerformanceOfCalculator).toHaveBeenCalledTimes(3);
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(1, {
         end: endOfDay(parseDate('2026-01-01')),
-        start: resetHours(parseDate('2025-01-01'))
+        start: parseDate('2025-01-01')
       });
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(2, {
         end: endOfDay(parseDate('2025-12-31')),
-        start: resetHours(parseDate('2025-01-01'))
+        start: parseDate('2025-01-01')
       });
       expect(getPerformanceOfCalculator).toHaveBeenNthCalledWith(3, {
         end: endOfDay(parseDate('2026-01-01')),

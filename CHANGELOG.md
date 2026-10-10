@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the _Copy AI prompt to clipboard_ actions on the analysis page in impersonation mode to be based on the impersonated user (experimental)
+- Fixed the start date of the date ranges for instances in time zones with a negative UTC offset
 
 ## 3.83.0 - 2026-10-10
 

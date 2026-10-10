@@ -6,9 +6,14 @@ import {
   getIntervalFromDateRange
 } from './calculation-helper';
 import { DATE_FORMAT } from './helper';
+import { DateRange } from './types';
 
 describe('CalculationHelper', () => {
   describe('interval from date range', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('Get interval of a calendar year', async () => {
       const { endDate, startDate } = getIntervalFromDateRange({
         dateRange: '2024'
@@ -22,6 +27,25 @@ describe('CalculationHelper', () => {
       // The start date is exclusive, hence the first instant of the year is
       // part of the interval
       expect(startDate.getTime()).toEqual(new Date(2024, 0, 1).getTime() - 1);
+    });
+
+    it('Get interval of a date range relative to today', () => {
+      jest.useFakeTimers().setSystemTime(new Date(2024, 9, 10, 22, 0));
+
+      expect(
+        (['1d', 'mtd', 'wtd', 'ytd', '1y', '5y'] as DateRange[]).map(
+          (dateRange) => {
+            return getIntervalFromDateRange({ dateRange }).startDate;
+          }
+        )
+      ).toEqual([
+        new Date(2024, 9, 9),
+        new Date(2024, 8, 30),
+        new Date(2024, 9, 6),
+        new Date(2023, 11, 31),
+        new Date(2023, 9, 10),
+        new Date(2019, 9, 10)
+      ]);
     });
   });
 
