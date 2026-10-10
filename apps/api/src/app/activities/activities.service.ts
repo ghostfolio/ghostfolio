@@ -83,7 +83,6 @@ export class ActivitiesService {
 
   public areCashActivitiesExcludedByFilters(filters: Filter[] = []) {
     const {
-      ASSET_CLASS: filtersByAssetClass = [],
       DATA_SOURCE: [filterByDataSource] = [],
       SYMBOL: [filterBySymbol] = [],
       TAG: filtersByTag = []
@@ -92,10 +91,7 @@ export class ActivitiesService {
     });
 
     const isFilteredByAssetClassOtherThanLiquidity =
-      filtersByAssetClass.length > 0 &&
-      !filtersByAssetClass.some(({ id }) => {
-        return id === AssetClass.LIQUIDITY;
-      });
+      this.isFilteredByAssetClassOtherThanLiquidity(filters);
 
     const isFilteredByAssetProfile = !!(filterByDataSource || filterBySymbol);
     const isFilteredByTag = filtersByTag.length > 0;
@@ -873,6 +869,22 @@ export class ActivitiesService {
     return activitiesByUser.map(({ userId }) => {
       return userId;
     });
+  }
+
+  public isFilteredByAssetClassOtherThanLiquidity(filters: Filter[] = []) {
+    const { ASSET_CLASS: filtersByAssetClass = [] } = groupBy(
+      filters,
+      ({ type }) => {
+        return type;
+      }
+    );
+
+    return (
+      filtersByAssetClass.length > 0 &&
+      !filtersByAssetClass.some(({ id }) => {
+        return id === AssetClass.LIQUIDITY;
+      })
+    );
   }
 
   public async order(

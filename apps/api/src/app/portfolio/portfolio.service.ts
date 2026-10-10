@@ -2432,6 +2432,9 @@ export class PortfolioService {
       return type;
     });
 
+    const isFilteredByAssetClassOtherThanLiquidity =
+      this.activitiesService.isFilteredByAssetClassOtherThanLiquidity(filters);
+
     let currentAccounts: (AccountWithBalance & {
       Order?: Order[];
       platform?: Platform;
@@ -2479,15 +2482,17 @@ export class PortfolioService {
       });
 
       if (account) {
-        // The cash balance is not part of a holding and would distort the value
-        // and thus the allocation per account and platform
-        const balanceInBaseCurrency = filterBySymbol
-          ? 0
-          : this.exchangeRateDataService.toCurrency(
-              account.balance,
-              account.currency,
-              userCurrency
-            );
+        // The cash balance is not part of a holding or of an asset class other
+        // than liquidity and would distort the value and thus the allocation
+        // per account and platform
+        const balanceInBaseCurrency =
+          filterBySymbol || isFilteredByAssetClassOtherThanLiquidity
+            ? 0
+            : this.exchangeRateDataService.toCurrency(
+                account.balance,
+                account.currency,
+                userCurrency
+              );
 
         accounts[currentAccountId] = {
           balance: account.balance,
