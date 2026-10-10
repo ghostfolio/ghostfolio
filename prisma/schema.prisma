@@ -174,7 +174,6 @@ model MarketData {
   symbol           String
 
   @@unique([dataSource, symbol, date])
-  @@index([dataSource])
   @@index([date])
   @@index([state])
   @@index([symbol])
