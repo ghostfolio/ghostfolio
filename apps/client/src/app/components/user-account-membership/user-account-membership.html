@@ -3,7 +3,9 @@
     <div class="col">
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
-          [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
+          [expiresAt]="
+            (user?.subscription?.expiresAt | date: defaultDateFormat) ?? ''
+          "
           [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
           [hover3d]="true"
           [name]="user?.subscription?.type"
