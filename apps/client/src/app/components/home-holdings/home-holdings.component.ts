@@ -12,8 +12,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
-import type {
-  DateRange,
+import {
   HoldingType,
   HoldingsViewMode,
   ToggleOption
@@ -66,7 +65,7 @@ export class GfHomeHoldingsComponent implements OnInit {
     return this.user()?.settings?.colorScheme;
   });
 
-  protected readonly dateRange = computed<DateRange>(() => {
+  protected readonly dateRange = computed(() => {
     return this.user()?.settings?.dateRange ?? DEFAULT_DATE_RANGE;
   });
 
