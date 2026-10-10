@@ -110,9 +110,11 @@ export class McpService {
     holding,
     range,
     userId,
+    withAssetPerformanceInBaseCurrency,
     withValues
   }: z.infer<typeof GET_PERFORMANCE_PARAMETERS> & {
     userId: string;
+    withAssetPerformanceInBaseCurrency?: boolean;
     withValues?: boolean;
   }) {
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -124,6 +126,7 @@ export class McpService {
     const table = await this.portfolioTableService.getPerformanceTable({
       filters,
       userId,
+      withAssetPerformanceInBaseCurrency,
       withValues,
       dateRange: range
     });

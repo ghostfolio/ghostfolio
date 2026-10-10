@@ -2,6 +2,7 @@ import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.de
 import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
 import { AccessGuard } from '@ghostfolio/api/guards/access.guard';
 import { getMcpUserOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   getScopesOfAccess,
   getScopesOfAccessLevel,
@@ -128,6 +129,44 @@ async function getWithValuesOfReadTools(accessLevel: AccessLevel) {
   return Object.values(mcpService).map((method) => {
     return (method.mock.calls[0][0] as { withValues: boolean }).withValues;
   });
+}
+
+/**
+ * Gives whether the controller asks the service for the asset performance in
+ * base currency of an access with the permission "View"
+ */
+async function getWithAssetPerformanceInBaseCurrency(
+  subscriptionType?: SubscriptionType
+) {
+  const mcpService = { getPerformance: jest.fn() };
+
+  const controller = new GhostfolioMcpController(
+    mcpService as unknown as McpService
+  );
+
+  await controller.getPerformance(
+    {
+      isActive: true,
+      scopes: getScopesOfAccess({
+        scopes: getScopesOfAccessLevel('READ'),
+        type: 'MCP'
+      }),
+      userId: 'user-id',
+      userSettings: { baseCurrency: 'CHF' },
+      userSubscription: subscriptionType
+        ? ({
+            type: subscriptionType
+          } as ImpersonationContext['userSubscription'])
+        : undefined
+    },
+    {} as Parameters<GhostfolioMcpController['getPerformance']>[1]
+  );
+
+  return (
+    mcpService.getPerformance.mock.calls[0][0] as {
+      withAssetPerformanceInBaseCurrency: boolean;
+    }
+  ).withAssetPerformanceInBaseCurrency;
 }
 
 describe('GhostfolioMcpController', () => {
@@ -268,6 +307,22 @@ describe('GhostfolioMcpController', () => {
       false,
       false
     ]);
+  });
+
+  it('Gives the asset performance in base currency for a Premium subscription', async () => {
+    expect(
+      await getWithAssetPerformanceInBaseCurrency(SubscriptionType.Premium)
+    ).toBe(true);
+  });
+
+  it('Gives the asset performance in base currency if the subscription is disabled', async () => {
+    expect(await getWithAssetPerformanceInBaseCurrency()).toBe(true);
+  });
+
+  it('Gives no asset performance in base currency for a Basic subscription', async () => {
+    expect(
+      await getWithAssetPerformanceInBaseCurrency(SubscriptionType.Basic)
+    ).toBe(false);
   });
 
   it('Lists no tool for an inactive access', () => {

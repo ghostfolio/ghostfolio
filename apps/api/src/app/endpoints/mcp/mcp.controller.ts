@@ -3,6 +3,7 @@ import { RequiresScopeOfAccess } from '@ghostfolio/api/decorators/requires-scope
 import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-exception.filter';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
@@ -37,7 +38,7 @@ export class GhostfolioMcpController {
       ', '
     )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getAccountsTableValueColumnNames().join(
       ', '
-    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it.`,
+    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it. The parameters change the value in base currency as well, with the holding parameter it is the value of the holding in the account without the cash balance. The balance is always the full cash balance of the account.`,
     name: 'get-accounts',
     parameters: GET_ACCOUNTS_PARAMETERS
   })
@@ -98,12 +99,18 @@ export class GhostfolioMcpController {
   })
   public async getPerformance(
     @Impersonation()
-    { scopes: impersonationScopes, userId }: ImpersonationContext,
+    {
+      scopes: impersonationScopes,
+      userId,
+      userSubscription
+    }: ImpersonationContext,
     @Payload() parameters: z.infer<typeof GET_PERFORMANCE_PARAMETERS>
   ) {
     return this.mcpService.getPerformance({
       ...parameters,
       userId,
+      withAssetPerformanceInBaseCurrency:
+        userSubscription?.type !== SubscriptionType.Basic,
       withValues: hasScope(impersonationScopes, scopes.portfolioReadValues)
     });
   }

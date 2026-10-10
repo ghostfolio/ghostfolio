@@ -378,6 +378,18 @@ describe('McpService', () => {
         expect.objectContaining({ withValues: true })
       );
     });
+
+    it('Gives the asset performance in base currency if the subscription permits it', async () => {
+      await mcpService.getPerformance({
+        userId,
+        range: '2024',
+        withAssetPerformanceInBaseCurrency: true
+      });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withAssetPerformanceInBaseCurrency: true })
+      );
+    });
   });
 
   describe('getPortfolio', () => {

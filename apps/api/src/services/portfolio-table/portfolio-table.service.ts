@@ -31,6 +31,12 @@ import { format } from 'date-fns';
 import { DataSourceTableContext } from './interfaces/data-source-table-context.interface';
 import { HoldingsTableColumnDefinition } from './types/holdings-table-column-definition.type';
 
+const ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME =
+  'Asset Performance in Base Currency';
+
+const CURRENCY_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME =
+  'Currency Performance in Base Currency';
+
 const DATA_SOURCE_COLUMN_NAME = 'Data Source';
 
 function getDataSourceColumnDefinition<T>(
@@ -283,13 +289,6 @@ export class PortfolioTableService {
       },
       {
         align: 'right',
-        getValue: ({ marketPrice }) => {
-          return marketPrice.toString();
-        },
-        name: 'Market Price'
-      },
-      {
-        align: 'right',
         getValue: ({ valueInBaseCurrency }) => {
           return valueInBaseCurrency === undefined
             ? ''
@@ -348,14 +347,14 @@ export class PortfolioTableService {
         getValue: ({ netPerformance }) => {
           return getAmount(netPerformance);
         },
-        name: 'Asset Performance in Base Currency'
+        name: ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME
       },
       {
         align: 'right',
         getValue: ({ netPerformance, netPerformanceWithCurrencyEffect }) => {
           return getAmount(netPerformanceWithCurrencyEffect - netPerformance);
         },
-        name: 'Currency Performance in Base Currency'
+        name: CURRENCY_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME
       },
       {
         align: 'right',
@@ -665,11 +664,13 @@ export class PortfolioTableService {
     dateRange,
     filters,
     userId,
+    withAssetPerformanceInBaseCurrency = false,
     withValues = false
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     userId: string;
+    withAssetPerformanceInBaseCurrency?: boolean;
     withValues?: boolean;
   }) {
     const { chart, performance } = await this.portfolioService.getPerformance({
@@ -689,6 +690,14 @@ export class PortfolioTableService {
               PortfolioTableService.PERFORMANCE_TABLE_COLUMN_DEFINITIONS,
             valueColumnDefinitions:
               PortfolioTableService.PERFORMANCE_TABLE_VALUE_COLUMN_DEFINITIONS
+          }).filter(({ name }) => {
+            return (
+              withAssetPerformanceInBaseCurrency ||
+              ![
+                ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME,
+                CURRENCY_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME
+              ].includes(name)
+            );
           }),
           rows: [performance]
         })

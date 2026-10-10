@@ -74,8 +74,8 @@ const SCOPES_OF_TYPE: Record<AccessType, readonly Scope[]> = {
 };
 
 /**
- * Access types which combine a write scope with the restricted read access,
- * because their tools change data without exposing the monetary values
+ * Access types which can combine a write scope with the restricted read access,
+ * because their tools which change data do not expose the monetary values
  */
 export function canGrantRestrictedWriteAccess({ type }: { type: AccessType }) {
   return type === 'MCP';

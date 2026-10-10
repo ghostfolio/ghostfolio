@@ -39,7 +39,7 @@ import { McpService } from './mcp.service';
 
         return new McpStrategy({
           instructions:
-            'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access and import activities into the portfolio. They give no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities, the access needs the permission "Restricted view and manage".',
+            'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access and import activities into the portfolio. They give the quantities and the monetary values only if the access has the permission "View" or "View and manage", otherwise no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities, the access needs the permission "Restricted view and manage" or "View and manage".',
           name: 'ghostfolio',
           resolveUser: getMcpUserOfBearerToken,
           title: 'Ghostfolio',

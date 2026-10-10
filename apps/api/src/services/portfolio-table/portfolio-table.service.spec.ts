@@ -323,7 +323,6 @@ describe('PortfolioTableService', () => {
     it('gives the columns with a quantity or with a monetary value', () => {
       expect(PortfolioTableService.getHoldingsTableValueColumnNames()).toEqual([
         'Quantity',
-        'Market Price',
         'Value in Base Currency'
       ]);
     });
@@ -631,7 +630,7 @@ describe('PortfolioTableService', () => {
       expect(row).toMatch(/\| 75\.000% \|$/);
     });
 
-    it('gives the quantity, the market price and the value with the values', async () => {
+    it('gives the quantity and the value with the values', async () => {
       const result = await getHoldingsTable([createHolding()], {
         withValues: true
       });
@@ -640,16 +639,23 @@ describe('PortfolioTableService', () => {
         return line.startsWith('| Name of AAPL');
       });
 
-      expect(row).toMatch(/\| 75\.000% \| 5 \| 400 \| 2000\.00 \|$/);
+      expect(row).toMatch(/\| 75\.000% \| 5 \| 2000\.00 \|$/);
     });
   });
 
   describe('getPerformanceTable', () => {
     function getPerformanceTable(
       parameters: Parameters<typeof createPortfolioTableService>[0] = {},
-      withValues?: boolean
+      {
+        withAssetPerformanceInBaseCurrency,
+        withValues
+      }: {
+        withAssetPerformanceInBaseCurrency?: boolean;
+        withValues?: boolean;
+      } = {}
     ) {
       return createPortfolioTableService(parameters).getPerformanceTable({
+        withAssetPerformanceInBaseCurrency,
         withValues,
         dateRange: 'ytd',
         userId: 'user-id'
@@ -694,7 +700,10 @@ describe('PortfolioTableService', () => {
     });
 
     it('gives the current value and the performance in base currency with the values', async () => {
-      const result = await getPerformanceTable({}, true);
+      const result = await getPerformanceTable(
+        {},
+        { withAssetPerformanceInBaseCurrency: true, withValues: true }
+      );
 
       const [row] = result.split('\n').filter((line) => {
         return line.startsWith('| 10.000%');
@@ -705,6 +714,18 @@ describe('PortfolioTableService', () => {
       );
     });
 
+    it('gives no asset performance and no currency performance in base currency without the asset performance in base currency', async () => {
+      const result = await getPerformanceTable({}, { withValues: true });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 10.000%');
+      });
+
+      expect(result).not.toContain('Asset Performance in Base Currency');
+      expect(result).not.toContain('Currency Performance in Base Currency');
+      expect(row).toBe('| 10.000% | 5.000% | 15.000% | 2000.00 | 300.00 |');
+    });
+
     it('gives a currency performance in base currency of zero without a sign', async () => {
       const result = await getPerformanceTable(
         {
@@ -713,7 +734,7 @@ describe('PortfolioTableService', () => {
             netPerformanceWithCurrencyEffect: 200
           })
         },
-        true
+        { withAssetPerformanceInBaseCurrency: true, withValues: true }
       );
 
       const [row] = result.split('\n').filter((line) => {
