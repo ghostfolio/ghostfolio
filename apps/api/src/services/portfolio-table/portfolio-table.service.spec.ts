@@ -140,7 +140,6 @@ function createHolding({
     },
     dateOfFirstActivity: new Date('2024-01-01'),
     grossPerformance: 100,
-    marketPrice: 400,
     netPerformance: 90,
     quantity: 5,
     valueInBaseCurrency: 2000
@@ -303,6 +302,17 @@ describe('PortfolioTableService', () => {
     });
   });
 
+  describe('getAssetPerformanceInBaseCurrencyColumnNames', () => {
+    it('gives the value columns of the performance which give the asset performance', () => {
+      expect(
+        PortfolioTableService.getAssetPerformanceInBaseCurrencyColumnNames()
+      ).toEqual([
+        'Asset Performance in Base Currency',
+        'Currency Performance in Base Currency'
+      ]);
+    });
+  });
+
   describe('getHoldingsTableColumnNames', () => {
     it('gives no column with a monetary value', () => {
       expect(PortfolioTableService.getHoldingsTableColumnNames()).toEqual([
@@ -343,7 +353,7 @@ describe('PortfolioTableService', () => {
       expect(
         PortfolioTableService.getPerformanceTableValueColumnNames()
       ).toEqual([
-        'Current Value in Base Currency',
+        'Value in Base Currency',
         'Asset Performance in Base Currency',
         'Currency Performance in Base Currency',
         'Net Performance in Base Currency'
@@ -699,7 +709,7 @@ describe('PortfolioTableService', () => {
       }
     });
 
-    it('gives the current value and the performance in base currency with the values', async () => {
+    it('gives the value and the performance in base currency with the values', async () => {
       const result = await getPerformanceTable(
         {},
         { withAssetPerformanceInBaseCurrency: true, withValues: true }

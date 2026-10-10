@@ -38,7 +38,7 @@ export class GhostfolioMcpController {
       ', '
     )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getAccountsTableValueColumnNames().join(
       ', '
-    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it. The parameters change the value in base currency as well, with the holding parameter it is the value of the holding in the account without the cash balance. The balance is always the full cash balance of the account.`,
+    )}. The allocation in percentage is relative to the accounts of the result, hence the parameters change it. The parameters change the value in base currency as well. With the holding parameter, it is the value of the holding in the account without the cash balance. Without the holding parameter, it includes the full cash balance of the account, also with the assetClasses parameter. The balance is always the full cash balance of the account in the currency of the account.`,
     name: 'get-accounts',
     parameters: GET_ACCOUNTS_PARAMETERS
   })
@@ -50,7 +50,7 @@ export class GhostfolioMcpController {
     return this.mcpService.getAccounts({
       ...parameters,
       userId,
-      withValues: hasScope(impersonationScopes, scopes.portfolioReadValues)
+      withValues: this.hasScopeToReadValues(impersonationScopes)
     });
   }
 
@@ -65,7 +65,7 @@ export class GhostfolioMcpController {
       ', '
     )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getActivitiesTableValueColumnNames().join(
       ', '
-    )}. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
+    )}. The unit price and the fee are in the currency of the activity. At most ${MCP_MAX_ACTIVITIES} activities are given per call, hence narrow the result with the parameters or get the further activities with the skip parameter.`,
     name: 'get-activities',
     parameters: GET_ACTIVITIES_PARAMETERS
   })
@@ -78,7 +78,7 @@ export class GhostfolioMcpController {
       ...parameters,
       userId,
       userCurrency: userSettings.baseCurrency,
-      withValues: hasScope(impersonationScopes, scopes.portfolioReadValues)
+      withValues: this.hasScopeToReadValues(impersonationScopes)
     });
   }
 
@@ -93,7 +93,7 @@ export class GhostfolioMcpController {
       ', '
     )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getPerformanceTableValueColumnNames().join(
       ', '
-    )}. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and includes the dividends (total return). The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
+    )}. The value in base currency is the value at the end of the date range. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and includes the dividends (total return). The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
     name: 'get-performance',
     parameters: GET_PERFORMANCE_PARAMETERS
   })
@@ -111,7 +111,7 @@ export class GhostfolioMcpController {
       userId,
       withAssetPerformanceInBaseCurrency:
         userSubscription?.type !== SubscriptionType.Basic,
-      withValues: hasScope(impersonationScopes, scopes.portfolioReadValues)
+      withValues: this.hasScopeToReadValues(impersonationScopes)
     });
   }
 
@@ -135,7 +135,7 @@ export class GhostfolioMcpController {
   ) {
     return this.mcpService.getPortfolio({
       userId,
-      withValues: hasScope(impersonationScopes, scopes.portfolioReadValues)
+      withValues: this.hasScopeToReadValues(impersonationScopes)
     });
   }
 
@@ -191,5 +191,9 @@ export class GhostfolioMcpController {
     @Payload() parameters: z.infer<typeof SEARCH_ASSET_PROFILES_PARAMETERS>
   ) {
     return this.mcpService.searchAssetProfiles({ ...parameters, userId });
+  }
+
+  private hasScopeToReadValues(impersonationScopes: string[]) {
+    return hasScope(impersonationScopes, scopes.portfolioReadValues);
   }
 }

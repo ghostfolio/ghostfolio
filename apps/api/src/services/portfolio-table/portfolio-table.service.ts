@@ -37,6 +37,11 @@ const ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME =
 const CURRENCY_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME =
   'Currency Performance in Base Currency';
 
+const ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAMES = [
+  ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME,
+  CURRENCY_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME
+];
+
 const DATA_SOURCE_COLUMN_NAME = 'Data Source';
 
 function getDataSourceColumnDefinition<T>(
@@ -340,7 +345,7 @@ export class PortfolioTableService {
         getValue: ({ currentValueInBaseCurrency }) => {
           return getAmount(currentValueInBaseCurrency);
         },
-        name: 'Current Value in Base Currency'
+        name: 'Value in Base Currency'
       },
       {
         align: 'right',
@@ -457,6 +462,10 @@ export class PortfolioTableService {
         return name;
       }
     );
+  }
+
+  public static getAssetPerformanceInBaseCurrencyColumnNames() {
+    return [...ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAMES];
   }
 
   public static getHoldingsTableColumnNames() {
@@ -693,10 +702,7 @@ export class PortfolioTableService {
           }).filter(({ name }) => {
             return (
               withAssetPerformanceInBaseCurrency ||
-              ![
-                ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME,
-                CURRENCY_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAME
-              ].includes(name)
+              !ASSET_PERFORMANCE_IN_BASE_CURRENCY_COLUMN_NAMES.includes(name)
             );
           }),
           rows: [performance]
