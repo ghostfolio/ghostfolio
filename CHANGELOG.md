@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the performance calculation including dividends (total return) from experimental to general availability
+- Localized the content of the features page
 - Improved the language localization for German (`de`)
 - Improved the language localization for Turkish (`tr`)
 
