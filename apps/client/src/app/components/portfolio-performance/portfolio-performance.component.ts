@@ -44,7 +44,7 @@ export class GfPortfolioPerformanceComponent {
     }
   });
   public readonly showDetails = input<boolean>(false);
-  public readonly unit = input.required<string>();
+  public readonly unit = input<string>();
 
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
