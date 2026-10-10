@@ -371,7 +371,6 @@ export class DataProviderService implements OnModuleInit {
 
   public async getHistorical(
     aItems: AssetProfileIdentifier[],
-    aGranularity: Granularity = 'month',
     from: Date,
     to: Date
   ): Promise<{
@@ -389,11 +388,6 @@ export class DataProviderService implements OnModuleInit {
       return response;
     }
 
-    const granularityQuery =
-      aGranularity === 'month'
-        ? Prisma.sql`AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
-        : Prisma.empty;
-
     const rangeQuery =
       from && to
         ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT, {
@@ -408,12 +402,13 @@ export class DataProviderService implements OnModuleInit {
     });
 
     try {
-      const marketDataByGranularity: MarketData[] = await this.prismaService
-        .$queryRaw`
-          SELECT *
+      const marketDataByGranularity: Pick<
+        MarketData,
+        'dataSource' | 'date' | 'marketPrice' | 'symbol'
+      >[] = await this.prismaService.$queryRaw`
+          SELECT "dataSource", "date", "marketPrice", "symbol"
           FROM "MarketData"
           WHERE ("dataSource", "symbol") IN (${Prisma.join(assetProfileIdentifiers)})
-            ${granularityQuery}
             ${rangeQuery}
           ORDER BY date;`;
 
