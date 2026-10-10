@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the `GET api/v2/portfolio/performance` endpoint by the `groupBy` query parameter (`year`)
+
 ### Changed
 
 - Improved the language localization for Chinese (`zh`)
