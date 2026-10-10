@@ -1049,6 +1049,9 @@ export class ImportService {
         withExcludedAccountsAndActivities: true
       });
 
+    const processedActivities: (Partial<Activity> &
+      Pick<Activity, 'assetProfile'>)[] = [];
+
     return activitiesDto.map(
       ({
         accountId,
@@ -1065,26 +1068,42 @@ export class ImportService {
       }) => {
         const date = parseISO(dateString);
 
-        const isDuplicate = existingActivities.some((activity) => {
-          return (
-            (activity.comment || null) === (comment || null) &&
-            (activity.currency === currency ||
-              activity.assetProfile.currency === currency) &&
-            activity.assetProfile.dataSource === dataSource &&
-            isSameSecond(activity.date, date) &&
-            activity.fee === fee &&
-            activity.quantity === quantity &&
-            activity.assetProfile.symbol === symbol &&
-            activity.type === type &&
-            activity.unitPrice === unitPrice
-          );
-        });
+        const isDuplicate =
+          existingActivities.some((activity) => {
+            return (
+              (!accountId || activity.accountId === accountId) &&
+              (activity.comment || null) === (comment || null) &&
+              ((activity.currency || null) === (currency || null) ||
+                activity.assetProfile.currency === currency) &&
+              activity.assetProfile.dataSource === dataSource &&
+              isSameSecond(activity.date, date) &&
+              activity.fee === fee &&
+              activity.quantity === quantity &&
+              activity.assetProfile.symbol === symbol &&
+              activity.type === type &&
+              activity.unitPrice === unitPrice
+            );
+          }) ||
+          processedActivities.some((activity) => {
+            return (
+              (!accountId || activity.accountId === accountId) &&
+              (activity.comment || null) === (comment || null) &&
+              (activity.currency || null) === (currency || null) &&
+              activity.assetProfile.dataSource === dataSource &&
+              isSameSecond(activity.date, date) &&
+              activity.fee === fee &&
+              activity.quantity === quantity &&
+              activity.assetProfile.symbol === symbol &&
+              activity.type === type &&
+              activity.unitPrice === unitPrice
+            );
+          });
 
         const error: ActivityError = isDuplicate
           ? { code: 'IS_DUPLICATE' }
           : undefined;
 
-        return {
+        const activityExtended = {
           accountId,
           comment,
           currency,
@@ -1111,6 +1130,12 @@ export class ImportService {
           },
           tagIds: tags
         };
+
+        if (!error) {
+          processedActivities.push(activityExtended);
+        }
+
+        return activityExtended;
       }
     );
   }

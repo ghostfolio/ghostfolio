@@ -508,6 +508,58 @@ describe('ImportService', () => {
         { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
       ]);
     });
+
+    it('detects duplicate activities within the same import payload', async () => {
+      const activities = await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          }),
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          })
+        ],
+        isDryRun: true
+      });
+
+      expect(activities[0].error).toBeUndefined();
+      expect(activities[1].error).toEqual({ code: 'IS_DUPLICATE' });
+    });
+
+    it('does not flag identical activities across different accounts as duplicates', async () => {
+      const activities = await importActivities({
+        activitiesDto: [
+          {
+            ...createActivityDto({
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL',
+              type: 'BUY'
+            }),
+            accountId: 'account-1'
+          },
+          {
+            ...createActivityDto({
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL',
+              type: 'BUY'
+            }),
+            accountId: 'account-2'
+          }
+        ],
+        isDryRun: true
+      });
+
+      expect(activities[0].error).toBeUndefined();
+      expect(activities[1].error).toBeUndefined();
+    });
   });
 
   function importActivities({
