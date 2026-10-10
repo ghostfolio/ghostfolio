@@ -371,7 +371,6 @@ export class DataProviderService implements OnModuleInit {
 
   public async getHistorical(
     aItems: AssetProfileIdentifier[],
-    aGranularity: Granularity = 'month',
     from: Date,
     to: Date
   ): Promise<{
@@ -389,11 +388,6 @@ export class DataProviderService implements OnModuleInit {
       return response;
     }
 
-    const granularityQuery =
-      aGranularity === 'month'
-        ? Prisma.sql`AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
-        : Prisma.empty;
-
     const rangeQuery =
       from && to
         ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT, {
@@ -403,22 +397,18 @@ export class DataProviderService implements OnModuleInit {
           })}::timestamp`
         : Prisma.empty;
 
-    const dataSources = aItems.map(({ dataSource }) => {
-      return dataSource;
-    });
-
-    const symbols = aItems.map(({ symbol }) => {
-      return symbol;
+    const assetProfileIdentifiers = aItems.map(({ dataSource, symbol }) => {
+      return Prisma.sql`(${dataSource}::"DataSource", ${symbol})`;
     });
 
     try {
-      const marketDataByGranularity: MarketData[] = await this.prismaService
-        .$queryRaw`
-          SELECT *
+      const marketDataByGranularity: Pick<
+        MarketData,
+        'dataSource' | 'date' | 'marketPrice' | 'symbol'
+      >[] = await this.prismaService.$queryRaw`
+          SELECT "dataSource", "date", "marketPrice", "symbol"
           FROM "MarketData"
-          WHERE "dataSource"::text IN (${Prisma.join(dataSources)})
-            AND "symbol" IN (${Prisma.join(symbols)})
-            ${granularityQuery}
+          WHERE ("dataSource", "symbol") IN (${Prisma.join(assetProfileIdentifiers)})
             ${rangeQuery}
           ORDER BY date;`;
 

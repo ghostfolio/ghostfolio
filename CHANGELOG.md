@@ -7,17 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
-
-- Extended the `GET api/v2/portfolio/performance` endpoint by the `groupBy` query parameter (`year`)
-
 ### Changed
 
-- Improved the language localization for Chinese (`zh`)
+- Extended the access to share the portfolio with the Model Context Protocol (MCP) to support the _View_ and the _View and manage_ permissions (experimental)
+- Improved the performance of getting the historical market data by selecting only the required columns
 
 ### Fixed
 
 - Fixed the start date of the date ranges in the portfolio performance calculation for instances in time zones with a negative UTC offset
+
+## 3.83.0 - 2026-10-10
+
+### Added
+
+- Added the performance timeline grouped by year to the analysis page (experimental)
+- Extended the `GET api/v2/portfolio/performance` endpoint by the `groupBy` query parameter (`year`)
+
+### Changed
+
+- Extended the benchmark comparator to support benchmarks whose market data starts later than the portfolio
+- Harmonized the colors in the investment chart component
+- Improved the performance of getting the historical market data by loading only the requested asset profiles
+- Improved the language localization for Chinese (`zh`)
+
+### Fixed
+
+- Fixed an issue where a user could create a custom asset profile with a symbol of the prefix `GF_`
+- Fixed the horizontal overflow on the overview tab of the home page on mobile
 
 ## 3.82.0 - 2026-10-09
 

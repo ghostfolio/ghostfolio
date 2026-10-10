@@ -7,6 +7,7 @@ import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
+import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 
 import { Module } from '@nestjs/common';
@@ -37,9 +38,20 @@ import { McpService } from './mcp.service';
       useFactory: (configurationService: ConfigurationService) => {
         const { hostname } = new URL(configurationService.get('ROOT_URL'));
 
+        const instructions = [
+          'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access and import activities into the portfolio. They give the quantities and the monetary values only if the access has the permission "View" or "View and manage", otherwise no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities, the access needs the permission "Restricted view and manage" or "View and manage".'
+        ];
+
+        if (configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+          instructions.push(
+            `With the Basic subscription, the tool get-performance does not give these columns: ${PortfolioTableService.getAssetPerformanceInBaseCurrencyColumnNames().join(
+              ', '
+            )}.`
+          );
+        }
+
         return new McpStrategy({
-          instructions:
-            'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access and import activities into the portfolio. They give no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities, the access needs the permission "Restricted view and manage".',
+          instructions: instructions.join(' '),
           name: 'ghostfolio',
           resolveUser: getMcpUserOfBearerToken,
           title: 'Ghostfolio',

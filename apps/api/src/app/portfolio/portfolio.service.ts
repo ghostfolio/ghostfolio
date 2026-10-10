@@ -1052,7 +1052,6 @@ export class PortfolioService {
 
     const historicalData = await this.dataProviderService.getHistorical(
       [{ dataSource, symbol }],
-      'day',
       parseISO(dateOfFirstActivity, { in: utc }),
       new Date()
     );

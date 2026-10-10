@@ -29,7 +29,7 @@
             [colorScheme]="user?.settings?.colorScheme"
             [historicalDataItems]="historicalDataItems"
             [isAnimated]="true"
-            [locale]="user?.settings?.locale || undefined"
+            [locale]="user?.settings?.locale ?? DEFAULT_LOCALE"
             [showXAxis]="true"
             [showYAxis]="true"
             [yMax]="100"
