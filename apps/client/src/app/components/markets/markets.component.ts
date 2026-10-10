@@ -3,8 +3,8 @@ import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
   Benchmark,
-  HistoricalDataItem,
   InfoItem,
+  LineChartItem,
   MarketDataOfMarketsResponse,
   User
 } from '@ghostfolio/common/interfaces';
@@ -66,7 +66,7 @@ export class GfMarketsComponent implements OnInit {
   protected fearAndGreedIndexMode: FearAndGreedIndexMode = 'STOCKS';
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
   protected hasPermissionToReadMarketDataOfMarkets: boolean;
-  protected historicalDataItems: HistoricalDataItem[];
+  protected historicalDataItems: LineChartItem[];
   protected isLoadingFearAndGreedIndex = true;
   protected user: User;
 
@@ -159,11 +159,16 @@ export class GfMarketsComponent implements OnInit {
       this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.marketPrice;
 
     this.historicalDataItems = [
-      ...(this.fearAndGreedIndexData[this.fearAndGreedIndexMode]
-        ?.historicalData ?? []),
+      ...(
+        this.fearAndGreedIndexData[this.fearAndGreedIndexMode]
+          ?.historicalData ?? []
+      ).map(({ date, value }) => ({
+        date,
+        value: value ?? 0
+      })),
       {
         date: resetHours(new Date()).toISOString(),
-        value: this.fearAndGreedIndex
+        value: this.fearAndGreedIndex ?? 0
       }
     ];
   }

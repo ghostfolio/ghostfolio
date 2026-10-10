@@ -178,7 +178,7 @@
                   [isPercent]="true"
                   [locale]="user?.settings?.locale"
                   [precision]="2"
-                  [value]="user?.settings?.annualInterestRate / 100"
+                  [value]="(user?.settings?.annualInterestRate ?? 0) / 100"
               /></span>
               annual interest rate.</ng-container
             >

@@ -8,11 +8,10 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
-  EventEmitter,
   Input,
-  OnInit,
-  Output
+  output
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,17 +40,20 @@ import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-setti
   styleUrls: ['./rule.component.scss'],
   templateUrl: './rule.component.html'
 })
-export class GfRuleComponent implements OnInit {
+export class GfRuleComponent {
   @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale?: string;
   @Input() rule: PortfolioReportRule;
   @Input() settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 
-  @Output() ruleUpdated = new EventEmitter<UpdateUserSettingDto>();
+  public readonly ruleUpdated = output<UpdateUserSettingDto>();
 
-  private deviceType: string;
+  private readonly deviceType = computed(() => {
+    return this.deviceDetectorService.deviceInfo().deviceType;
+  });
+
   public constructor(
     private destroyRef: DestroyRef,
     private deviceDetectorService: DeviceDetectorService,
@@ -67,11 +69,7 @@ export class GfRuleComponent implements OnInit {
     });
   }
 
-  public ngOnInit() {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
-  }
-
-  public onCustomizeRule(rule: PortfolioReportRule) {
+  protected onCustomizeRule(rule: PortfolioReportRule) {
     const dialogRef = this.dialog.open<
       GfRuleSettingsDialogComponent,
       RuleSettingsDialogParams
@@ -82,7 +80,7 @@ export class GfRuleComponent implements OnInit {
         locale: this.locale,
         settings: this.settings
       },
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
@@ -99,7 +97,7 @@ export class GfRuleComponent implements OnInit {
       });
   }
 
-  public onUpdateRule(rule: PortfolioReportRule) {
+  protected onUpdateRule(rule: PortfolioReportRule) {
     const settings: UpdateUserSettingDto = {
       xRayRules: {
         [rule.key]: { isActive: !rule.isActive }
