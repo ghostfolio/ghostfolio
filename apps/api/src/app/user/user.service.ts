@@ -475,6 +475,10 @@ export class UserService {
           currentPermissions.push(permissions.enableDataProviderGhostfolio);
           currentPermissions.push(permissions.readMarketDataOfMarkets);
           currentPermissions.push(permissions.reportDataGlitch);
+
+          if ((user.settings.settings as UserSettings).isExperimentalFeatures) {
+            currentPermissions.push(permissions.importActivitiesWithAi);
+          }
         }
 
         currentPermissions = without(

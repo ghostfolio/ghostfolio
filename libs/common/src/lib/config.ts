@@ -38,6 +38,9 @@ export const warnColorRgb = {
   b: 69
 };
 
+export const AI_ACTIVITIES_FILE_MAXIMUM_SIZE = 10 * 1024 * 1024;
+export const AI_ACTIVITIES_TIMEOUT = ms('2 minutes');
+
 export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],
   [AssetClass.COMMODITY, [AssetSubClass.PRECIOUS_METAL]],
@@ -415,6 +418,7 @@ export const TAG_IDS_SYSTEM = [
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 ];
 
+export const THROTTLE_AI_ACTIVITIES_LIMIT = 25;
 export const THROTTLE_DAILY_KEY = 'daily';
 export const THROTTLE_DAILY_TTL = ms('1 day');
 export const THROTTLE_DEFAULT_LIMIT = 10;

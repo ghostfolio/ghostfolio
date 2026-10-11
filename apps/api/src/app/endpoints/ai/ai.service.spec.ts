@@ -3,12 +3,15 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  DEFAULT_LOCALE,
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL,
   PROPERTY_OPENROUTER_MODEL_AGENT,
   PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
+import type { UserWithSettings } from '@ghostfolio/common/types';
 
+import { Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { Type as ActivityType } from '@prisma/client';
 import { generateText, isStepCount, ToolSet } from 'ai';
@@ -57,6 +60,8 @@ describe('AiService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
+    jest.spyOn(Logger.prototype, 'log').mockImplementation();
+
     chat = jest.fn().mockReturnValue(model);
 
     jest
@@ -66,7 +71,9 @@ describe('AiService', () => {
       >);
 
     jest.mocked(generateText).mockResolvedValue({
-      output: { rows }
+      output: { rows },
+      steps: [{}],
+      totalUsage: { totalTokens: 1000 }
     } as unknown as Awaited<ReturnType<typeof generateText>>);
 
     properties = {
@@ -187,6 +194,78 @@ describe('AiService', () => {
     });
   });
 
+  describe('getActivitiesFromFile', () => {
+    const file = {
+      buffer: Buffer.from('%PDF-1.7'),
+      mediaType: 'application/pdf'
+    };
+
+    const user = {
+      accounts: [{ currency: 'CHF', id: 'account-id', name: 'Brokerage' }],
+      id: 'user-id',
+      settings: { settings: { baseCurrency: 'EUR', locale: 'de-CH' } }
+    } as unknown as UserWithSettings;
+
+    it('Reads the rows of the file and matches them with the accounts, the base currency and the id of the user', async () => {
+      const activities = [
+        {
+          currency: 'USD',
+          dataSource: 'YAHOO',
+          date: '2026-01-15',
+          fee: 1,
+          quantity: 10,
+          symbol: 'AAPL',
+          type: ActivityType.BUY,
+          unitPrice: 230
+        }
+      ];
+
+      jest.spyOn(aiService, 'getActivityRowsFromFile').mockResolvedValue(rows);
+
+      jest
+        .spyOn(aiService, 'getActivitiesFromRows')
+        .mockResolvedValue({ activities, rowsWithoutMatch: [] });
+
+      await expect(
+        aiService.getActivitiesFromFile({ abortSignal, file, user })
+      ).resolves.toEqual({ activities, rowsWithoutMatch: [] });
+
+      expect(aiService.getActivityRowsFromFile).toHaveBeenCalledWith({
+        abortSignal,
+        file,
+        locale: 'de-CH'
+      });
+
+      expect(aiService.getActivitiesFromRows).toHaveBeenCalledWith({
+        abortSignal,
+        rows,
+        accounts: user.accounts,
+        userCurrency: 'EUR',
+        userId: 'user-id'
+      });
+    });
+
+    it('Reads the file in the default locale if the user has no locale', async () => {
+      jest.spyOn(aiService, 'getActivityRowsFromFile').mockResolvedValue([]);
+
+      jest
+        .spyOn(aiService, 'getActivitiesFromRows')
+        .mockResolvedValue({ activities: [], rowsWithoutMatch: [] });
+
+      await aiService.getActivitiesFromFile({
+        file,
+        user: {
+          ...user,
+          settings: { settings: { baseCurrency: 'EUR' } }
+        } as unknown as UserWithSettings
+      });
+
+      expect(aiService.getActivityRowsFromFile).toHaveBeenCalledWith(
+        expect.objectContaining({ locale: DEFAULT_LOCALE })
+      );
+    });
+  });
+
   describe('getActivitiesFromRows', () => {
     const accounts: AccountToMatch[] = [
       { currency: 'CHF', id: 'account-id', name: 'Brokerage' }
@@ -200,7 +279,9 @@ describe('AiService', () => {
       assets: assetMatches = []
     }: Partial<z.infer<typeof ROW_MATCHES_OUTPUT>>) {
       jest.mocked(generateText).mockResolvedValueOnce({
-        output: { accounts: accountMatches, assets: assetMatches }
+        output: { accounts: accountMatches, assets: assetMatches },
+        steps: [{}, {}],
+        totalUsage: { totalTokens: 2000 }
       } as unknown as Awaited<ReturnType<typeof generateText>>);
     }
 

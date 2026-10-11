@@ -8,6 +8,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  DEFAULT_LOCALE,
   MCP_MAX_ACTIVITIES,
   NON_INVESTMENT_ACTIVITY_TYPES,
   PROPERTY_API_KEY_OPENROUTER,
@@ -16,14 +17,19 @@ import {
   PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { Filter } from '@ghostfolio/common/interfaces';
-import type { AiPromptMode, PropertyKey } from '@ghostfolio/common/types';
+import { AiActivitiesResponse, Filter } from '@ghostfolio/common/interfaces';
+import type {
+  AiPromptMode,
+  PropertyKey,
+  UserWithSettings
+} from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   createOpenRouter,
   OpenRouterChatSettings
 } from '@openrouter/ai-sdk-provider';
+import { DataSource } from '@prisma/client';
 import {
   FilePart,
   generateText,
@@ -44,6 +50,8 @@ import { AssetToMatch } from './types/asset-to-match.type';
 @Injectable()
 export class AiService {
   private static readonly AGENT_MAXIMUM_STEP_COUNT = 10;
+
+  private readonly logger = new Logger(AiService.name);
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -76,6 +84,43 @@ export class AiService {
       model: openRouterService.chat(openRouterModel),
       timeout: requestTimeout
     });
+  }
+
+  /**
+   * Reads the activities of a file and matches them to the asset profiles and
+   * to the accounts of the user, without saving anything
+   */
+  public async getActivitiesFromFile({
+    abortSignal,
+    file,
+    user
+  }: {
+    abortSignal?: AbortSignal;
+    file: { buffer: Buffer; mediaType: string };
+    user: UserWithSettings;
+  }): Promise<AiActivitiesResponse> {
+    const rows = await this.getActivityRowsFromFile({
+      abortSignal,
+      file,
+      locale: user.settings.settings.locale ?? DEFAULT_LOCALE
+    });
+
+    const { activities, rowsWithoutMatch } = await this.getActivitiesFromRows({
+      abortSignal,
+      rows,
+      accounts: user.accounts,
+      userCurrency: user.settings.settings.baseCurrency,
+      userId: user.id
+    });
+
+    return {
+      rowsWithoutMatch,
+      activities: activities.map(({ dataSource, ...activity }) => {
+        // The data source is given as search-asset-profiles gives it, which
+        // POST api/v1/import transforms back
+        return { ...activity, dataSource: dataSource as DataSource };
+      })
+    };
   }
 
   /**
@@ -219,13 +264,15 @@ export class AiService {
     file: { buffer: Buffer; mediaType: string };
     locale: string;
   }): Promise<ActivityRow[]> {
+    const startTime = performance.now();
+
     // A CSV file is passed as text, every other file as a file part
     const content: (FilePart | TextPart)[] =
       file.mediaType === 'text/csv'
         ? [{ text: file.buffer.toString('utf8'), type: 'text' }]
         : [{ data: file.buffer, mediaType: file.mediaType, type: 'file' }];
 
-    const { output } = await generateText({
+    const { output, totalUsage } = await generateText({
       abortSignal,
       instructions: [
         'You read the activities of a portfolio from a file, for example a CSV export or a statement of a broker, a confirmation of a trade or a screenshot.',
@@ -253,6 +300,10 @@ export class AiService {
       }),
       output: Output.object({ schema: ACTIVITY_ROWS_OUTPUT })
     });
+
+    this.logger.log(
+      `Read ${output.rows.length} rows from a file in ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens`
+    );
 
     return output.rows;
   }
@@ -339,7 +390,9 @@ export class AiService {
     assets: AssetToMatch[];
     userId: string;
   }) {
-    const { output } = await generateText({
+    const startTime = performance.now();
+
+    const { output, steps, totalUsage } = await generateText({
       abortSignal,
       instructions: [
         'You match the assets and the account names of a file to the asset profiles of Ghostfolio and to the accounts of the user.',
@@ -381,6 +434,14 @@ export class AiService {
       }
     });
 
+    this.logger.log(
+      `Matched ${assets.length} assets and ${accountNames.length} account names in ${steps.length} steps and ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens`
+    );
+
     return output;
+  }
+
+  private getSecondsSince(startTime: number) {
+    return ((performance.now() - startTime) / 1000).toFixed(3);
   }
 }
