@@ -120,7 +120,7 @@ export class ImportService {
               symbol
             }
           ]),
-          await this.dataProviderService.getDividends({
+          this.dataProviderService.getDividends({
             dataSource,
             symbol,
             from: parseDate(dateOfFirstActivity),

@@ -22,6 +22,7 @@ import { McpService } from './mcp.service';
 
 @Module({
   controllers: [GhostfolioMcpController],
+  exports: [McpService],
   imports: [
     ApiModule,
     ConfigurationModule,
