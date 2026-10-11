@@ -1,4 +1,5 @@
 import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
@@ -18,6 +19,7 @@ import {
   THROTTLER_TTL
 } from '@nestjs/throttler/dist/throttler.constants';
 import type { Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { EventEmitter } from 'node:events';
 
 import { AiController } from './ai.controller';
@@ -206,6 +208,31 @@ describe('AiController', () => {
       response.emit('close');
 
       expect(abortSignal.aborted).toBe(false);
+    });
+
+    it('Gives the status 400 with the message of an error for the caller', async () => {
+      jest
+        .mocked(aiService.getActivitiesFromFile)
+        .mockRejectedValueOnce(
+          new CallerFacingError('The file has too many activities')
+        );
+
+      await expect(
+        aiController.getActivitiesFromFile(createResponse(), pdfFile)
+      ).rejects.toMatchObject({
+        response: { message: ['The file has too many activities'] },
+        status: StatusCodes.BAD_REQUEST
+      });
+    });
+
+    it('Passes on every other error', async () => {
+      const error = new Error('Model error');
+
+      jest.mocked(aiService.getActivitiesFromFile).mockRejectedValueOnce(error);
+
+      await expect(
+        aiController.getActivitiesFromFile(createResponse(), pdfFile)
+      ).rejects.toBe(error);
     });
   });
 });

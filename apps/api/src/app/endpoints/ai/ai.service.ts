@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/api/app/endpoints/mcp/mcp.schemas';
 import { McpService } from '@ghostfolio/api/app/endpoints/mcp/mcp.service';
 import { ActivityToImport } from '@ghostfolio/api/app/endpoints/mcp/types/activity-to-import.type';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -43,6 +44,7 @@ import {
   FilePart,
   generateText,
   isStepCount,
+  NoObjectGeneratedError,
   Output,
   ProviderMetadata,
   TextPart,
@@ -137,7 +139,9 @@ export class AiService {
    * the tool search-asset-profiles, and to the accounts of the user. A row
    * which does not give a valid activity, for example because its asset has
    * no match, is a row without a match. An account id which is not the id of
-   * an account of the user is ignored.
+   * an account of the user is ignored. The fee, the quantity and the unit
+   * price are taken as absolute values, as a broker can give a sell or a fee
+   * as a negative number.
    */
   public async getActivitiesFromRows({
     abortSignal,
@@ -202,16 +206,11 @@ export class AiService {
     const rowsWithoutMatch: ActivityRow[] = [];
 
     for (const row of rows) {
-      const {
-        accountName,
-        currency,
-        date,
-        fee,
-        name,
-        quantity,
-        type,
-        unitPrice
-      } = row;
+      const { accountName, currency, date, name, type } = row;
+
+      const fee = Math.abs(row.fee);
+      const quantity = Math.abs(row.quantity);
+      const unitPrice = Math.abs(row.unitPrice);
 
       const account = accounts.find(({ id }) => {
         return id === accountIdByName.get(accountName);
@@ -265,7 +264,10 @@ export class AiService {
    * OpenRouter is not covered by the zero data retention. The model gets no
    * tools and copies the asset and the account as printed, hence the rows
    * still have to be matched to asset profiles and accounts. A row above the
-   * maximum number of activities is left out.
+   * maximum number of activities is left out. An output which reaches the
+   * maximum number of output tokens is cut, hence it gives an error for the
+   * caller. A cut output without any text is not parsed at all, hence the
+   * finish reason is checked as well.
    */
   public async getActivityRowsFromFile({
     abortSignal,
@@ -283,7 +285,7 @@ export class AiService {
         ? [{ text: file.buffer.toString('utf8'), type: 'text' }]
         : [{ data: file.buffer, mediaType: file.mediaType, type: 'file' }];
 
-    const { output, steps, totalUsage } = await generateText({
+    const result = await generateText({
       abortSignal,
       instructions: [
         'You read the activities of a portfolio from a file, for example a CSV export or a statement of a broker, a confirmation of a trade or a screenshot.',
@@ -310,7 +312,22 @@ export class AiService {
         }
       }),
       output: Output.object({ schema: ACTIVITY_ROWS_OUTPUT })
+    }).catch((error: unknown) => {
+      if (
+        NoObjectGeneratedError.isInstance(error) &&
+        error.finishReason === 'length'
+      ) {
+        throw this.getOutputTokenLimitError();
+      }
+
+      throw error;
     });
+
+    if (result.finishReason === 'length') {
+      throw this.getOutputTokenLimitError();
+    }
+
+    const { output, steps, totalUsage } = result;
 
     this.logger.log(
       `Read ${output.rows.length} rows from a file in ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens for ${this.getCost(steps)} USD`
@@ -442,6 +459,20 @@ export class AiService {
     return openRouterService.chat(
       dedicatedOpenRouterModel || openRouterModel,
       settings
+    );
+  }
+
+  /**
+   * Logs and gives the error of an output of the vision model which reaches
+   * the maximum number of output tokens
+   */
+  private getOutputTokenLimitError() {
+    this.logger.warn(
+      `Stopped reading a file at the maximum of ${AiService.VISION_MAXIMUM_OUTPUT_TOKEN_COUNT} output tokens`
+    );
+
+    return new CallerFacingError(
+      'The file has too many activities for Ghostfolio AI. Split it into smaller files.'
     );
   }
 

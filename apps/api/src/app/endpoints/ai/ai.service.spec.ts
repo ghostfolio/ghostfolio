@@ -1,4 +1,5 @@
 import { McpService } from '@ghostfolio/api/app/endpoints/mcp/mcp.service';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -15,7 +16,7 @@ import type { UserWithSettings } from '@ghostfolio/common/types';
 import { Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { DataSource, Type as ActivityType } from '@prisma/client';
-import { generateText, isStepCount, ToolSet } from 'ai';
+import { generateText, isStepCount, NoObjectGeneratedError, ToolSet } from 'ai';
 import { z } from 'zod';
 
 import { ACTIVITY_ROWS_OUTPUT, ROW_MATCHES_OUTPUT } from './ai.schemas';
@@ -34,6 +35,19 @@ jest.mock('ai', () => {
     isStepCount: jest.fn((stepCount: number) => {
       return { stepCount };
     }),
+    NoObjectGeneratedError: class MockNoObjectGeneratedError extends Error {
+      public readonly finishReason: string;
+
+      public constructor({ finishReason }: { finishReason: string }) {
+        super('No object generated');
+
+        this.finishReason = finishReason;
+      }
+
+      public static isInstance(error: unknown) {
+        return error instanceof MockNoObjectGeneratedError;
+      }
+    },
     Output: {
       object: jest.fn((options: unknown) => {
         return options;
@@ -193,6 +207,69 @@ describe('AiService', () => {
 
       expect(instructions).toContain('the locale de-CH');
       expect(instructions).toContain('Today is 2026-10-11');
+    });
+
+    it('Gives an error for the caller if a cut output reaches the maximum number of output tokens', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockRejectedValueOnce(
+        new NoObjectGeneratedError({
+          finishReason: 'length'
+        } as ConstructorParameters<typeof NoObjectGeneratedError>[0])
+      );
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).rejects.toThrow(CallerFacingError);
+
+      expect(Logger.prototype.warn).toHaveBeenCalled();
+    });
+
+    it('Gives an error for the caller if an output without any text reaches the maximum number of output tokens', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockResolvedValueOnce({
+        finishReason: 'length',
+        get output() {
+          throw new Error('No output generated');
+        }
+      } as unknown as Awaited<ReturnType<typeof generateText>>);
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).rejects.toThrow(CallerFacingError);
+
+      expect(Logger.prototype.warn).toHaveBeenCalled();
+    });
+
+    it('Passes on every other error of the vision model', async () => {
+      const error = new NoObjectGeneratedError({
+        finishReason: 'stop'
+      } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
+
+      jest.mocked(generateText).mockRejectedValueOnce(error);
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).rejects.toBe(error);
     });
   });
 
@@ -402,6 +479,35 @@ describe('AiService', () => {
       });
 
       expect(activities[0].currency).toBe('CHF');
+    });
+
+    it('Gives the absolute values of a negative fee, quantity and unit price', async () => {
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [
+          createActivityRow({
+            accountName: null,
+            fee: -1,
+            quantity: -10,
+            type: ActivityType.SELL,
+            unitPrice: -230
+          })
+        ]
+      });
+
+      expect(activities[0]).toMatchObject({
+        fee: 1,
+        quantity: 10,
+        unitPrice: 230
+      });
     });
 
     it('Gives a row whose asset has no match as a row without a match', async () => {

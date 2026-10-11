@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { FilterDto } from '@ghostfolio/api/dtos/filter.dto';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
@@ -68,7 +69,8 @@ export class AiController {
    * without saving anything. The client imports the activities which the user
    * selects with POST api/v1/import. The daily limit applies to each user
    * instead of each IP address. The models stop if the client closes the
-   * request before the response.
+   * request before the response. An error whose message is written for the
+   * caller gives the status 400 with this message.
    */
   @HasPermission(permissions.importActivitiesWithAi)
   @HttpCode(StatusCodes.OK)
@@ -137,14 +139,28 @@ export class AiController {
       }
     });
 
-    return this.aiService.getActivitiesFromFile({
-      abortSignal: AbortSignal.any([
-        abortController.signal,
-        AbortSignal.timeout(AI_ACTIVITIES_TIMEOUT)
-      ]),
-      file: { mediaType, buffer: file.buffer },
-      user: this.request.user
-    });
+    try {
+      return await this.aiService.getActivitiesFromFile({
+        abortSignal: AbortSignal.any([
+          abortController.signal,
+          AbortSignal.timeout(AI_ACTIVITIES_TIMEOUT)
+        ]),
+        file: { mediaType, buffer: file.buffer },
+        user: this.request.user
+      });
+    } catch (error) {
+      if (error instanceof CallerFacingError) {
+        throw new HttpException(
+          {
+            error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+            message: [error.message]
+          },
+          StatusCodes.BAD_REQUEST
+        );
+      }
+
+      throw error;
+    }
   }
 
   @Get('prompt/:mode')
