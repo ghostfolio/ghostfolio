@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the start date of the date range filter of the activities
+- Fixed the start date of the date range filter on the activities page
 
 ## 3.85.0 - 2026-10-12
 
