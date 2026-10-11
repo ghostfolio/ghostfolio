@@ -305,7 +305,7 @@ export class AiService {
         modelPropertyKey: PROPERTY_OPENROUTER_MODEL_VISION,
         settings: {
           plugins: [{ id: 'file-parser', pdf: { engine: 'native' } }],
-          provider: { zdr: true },
+          provider: { require_parameters: true, zdr: true },
           usage: { include: true }
         }
       }),
@@ -479,7 +479,10 @@ export class AiService {
       ].join('\n'),
       model: await this.getOpenRouterChatModel({
         modelPropertyKey: PROPERTY_OPENROUTER_MODEL_AGENT,
-        settings: { provider: { zdr: true }, usage: { include: true } }
+        settings: {
+          provider: { require_parameters: true, zdr: true },
+          usage: { include: true }
+        }
       }),
       output: Output.object({ schema: ROW_MATCHES_OUTPUT }),
       prepareStep: ({ stepNumber }) => {

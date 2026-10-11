@@ -158,7 +158,7 @@ describe('AiService', () => {
 
       expect(chat).toHaveBeenCalledWith('vision-model', {
         plugins: [{ id: 'file-parser', pdf: { engine: 'native' } }],
-        provider: { zdr: true },
+        provider: { require_parameters: true, zdr: true },
         usage: { include: true }
       });
     });
@@ -646,7 +646,7 @@ describe('AiService', () => {
       });
 
       expect(chat).toHaveBeenCalledWith('agent-model', {
-        provider: { zdr: true },
+        provider: { require_parameters: true, zdr: true },
         usage: { include: true }
       });
 

@@ -529,6 +529,7 @@ export class UserService {
           return !(
             permission.startsWith('create') ||
             permission.startsWith('delete') ||
+            permission.startsWith('import') ||
             permission.startsWith('update')
           );
         });

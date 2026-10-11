@@ -34,16 +34,7 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
     expect(ACTIVITY_ROWS_OUTPUT.safeParse({ rows: [row] }).success).toBe(false);
   });
 
-  it('Refuses a negative fee, quantity or unit price', () => {
-    for (const row of [{ fee: -1 }, { quantity: -1 }, { unitPrice: -1 }]) {
-      expect(
-        ACTIVITY_ROWS_OUTPUT.safeParse({ rows: [createActivityRow(row)] })
-          .success
-      ).toBe(false);
-    }
-  });
-
-  it('Accepts a currency, a date, a printed text and a number of rows which the join checks, so that one value does not refuse all rows', () => {
+  it('Accepts a currency, a date, a number, a printed text and a number of rows which the join checks, so that one value does not refuse all rows', () => {
     expect(
       ACTIVITY_ROWS_OUTPUT.safeParse({
         rows: [
@@ -52,6 +43,7 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
             date: '15.01.2026',
             name: 'A'.repeat(SEARCH_QUERY_MAXIMUM_LENGTH + 1)
           }),
+          createActivityRow({ fee: -1, quantity: -1, unitPrice: -1 }),
           ...Array.from({ length: MCP_MAX_ACTIVITIES }, () => {
             return createActivityRow();
           })

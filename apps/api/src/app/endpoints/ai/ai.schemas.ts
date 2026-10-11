@@ -26,17 +26,17 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
         date: z
           .string()
           .describe('The date of the activity, as an ISO 8601 date'),
-        fee: z.number().min(0).describe('The fee of the activity'),
+        fee: z.number().describe('The fee of the activity'),
         isin: PRINTED_TEXT.describe('The ISIN of the asset, as printed'),
         name: PRINTED_TEXT.describe(
           'The name of the asset, or the description of a fee, an interest or a liability, as printed'
         ),
-        quantity: z.number().min(0).describe('The quantity of the activity'),
+        quantity: z.number().describe('The quantity of the activity'),
         symbol: PRINTED_TEXT.describe(
           'The ticker symbol of the asset, as printed'
         ),
         type: z.enum(ActivityType).describe('The type of the activity'),
-        unitPrice: z.number().min(0).describe('The unit price of the activity')
+        unitPrice: z.number().describe('The unit price of the activity')
       })
     )
     .describe(`The activities of the file, at most ${MCP_MAX_ACTIVITIES}`)

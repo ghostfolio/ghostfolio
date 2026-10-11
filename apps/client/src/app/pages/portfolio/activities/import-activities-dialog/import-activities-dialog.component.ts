@@ -352,6 +352,26 @@ export class GfImportActivitiesDialogComponent {
   }
 
   /**
+   * Gives the activities of a CSV file in the format of Ghostfolio, which is
+   * imported without Ghostfolio AI, or undefined for any other CSV file
+   */
+  private async getActivitiesOfCsvInGhostfolioFormat(file: File) {
+    this.snackBar.open('⏳ ' + $localize`Validating data...`);
+
+    try {
+      return await this.importActivitiesService.importCsv({
+        fileContent: await file.text(),
+        isDryRun: true,
+        userAccounts: this.data.user.accounts
+      });
+    } catch {
+      return undefined;
+    } finally {
+      this.snackBar.dismiss();
+    }
+  }
+
+  /**
    * Gives the error message of a file which the server rejects, as a rejected
    * file counts towards the daily limit of Ghostfolio AI
    */
@@ -379,6 +399,11 @@ export class GfImportActivitiesDialogComponent {
 
   private handleFile({ file, stepper }: { file: File; stepper: MatStepper }) {
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+    this.details = [];
+    this.errorMessages = [];
+    this.isMaxActivitiesOfGhostfolioAiReached = false;
+    this.rowsWithoutMatch = [];
 
     if (
       this.isGhostfolioAiEnabled &&
@@ -498,8 +523,9 @@ export class GfImportActivitiesDialogComponent {
   }
 
   /**
-   * Reads the file with Ghostfolio AI. The request is canceled if the dialog
-   * is closed, which stops the models on the server.
+   * Reads the file with Ghostfolio AI, except a CSV file in the format of
+   * Ghostfolio. The request is canceled if the dialog is closed, which stops
+   * the models on the server.
    */
   private async handleFileWithGhostfolioAi({
     file,
@@ -513,9 +539,27 @@ export class GfImportActivitiesDialogComponent {
     this.accounts = [];
     this.activities = [];
     this.assetProfiles = [];
-    this.isMaxActivitiesOfGhostfolioAiReached = false;
     this.platforms = [];
     this.tags = [];
+
+    if (fileExtension === 'csv') {
+      const csvInGhostfolioFormat =
+        await this.getActivitiesOfCsvInGhostfolioFormat(file);
+
+      if (csvInGhostfolioFormat) {
+        const { activities, assetProfiles } = csvInGhostfolioFormat;
+
+        this.activities = activities;
+        this.assetProfiles = assetProfiles;
+        this.dataSource = new MatTableDataSource(activities.reverse());
+        this.pageIndex = 0;
+        this.totalItems = activities.length;
+
+        this.showSelectActivitiesStep(stepper);
+
+        return;
+      }
+    }
 
     const errorMessage = await this.getErrorMessageOfFileForGhostfolioAi({
       file,
