@@ -52,28 +52,16 @@ export function createMcpAuthorizationMiddleware({
     });
 
     if (!impersonation.isActive) {
-      const parameters = [`realm="${MCP_REALM}"`];
-
-      if (accessId) {
-        parameters.push(
-          'error="invalid_token"',
-          'error_description="The access cannot be resolved"'
-        );
-      }
-
-      response.setHeader('WWW-Authenticate', `Bearer ${parameters.join(', ')}`);
-
-      return response.status(StatusCodes.UNAUTHORIZED).json({
-        error: getReasonPhrase(StatusCodes.UNAUTHORIZED),
-        message: 'A valid access is required as a bearer token'
-      });
+      return sendUnauthorizedResponse({ accessId, response });
     }
 
     if (configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       const user = await userService.user({ id: impersonation.userId });
 
-      // The daily requests of an inactive user are not counted, as in the
-      // strategies
+      if (!user) {
+        return sendUnauthorizedResponse({ accessId, response });
+      }
+
       const isRequestLimitExceeded =
         hasRole(user, 'INACTIVE') ||
         (await userService.isDailyRequestLimitExceeded({ user }));
@@ -98,4 +86,28 @@ export function createMcpAuthorizationMiddleware({
 
     return next();
   };
+}
+
+function sendUnauthorizedResponse({
+  accessId,
+  response
+}: {
+  accessId: string;
+  response: Response;
+}) {
+  const parameters = [`realm="${MCP_REALM}"`];
+
+  if (accessId) {
+    parameters.push(
+      'error="invalid_token"',
+      'error_description="The access cannot be resolved"'
+    );
+  }
+
+  response.setHeader('WWW-Authenticate', `Bearer ${parameters.join(', ')}`);
+
+  return response.status(StatusCodes.UNAUTHORIZED).json({
+    error: getReasonPhrase(StatusCodes.UNAUTHORIZED),
+    message: 'A valid access is required as a bearer token'
+  });
 }
