@@ -28,7 +28,6 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
-import { endOfDay } from 'date-fns';
 
 import { ActivitiesService } from './activities.service';
 
@@ -150,6 +149,10 @@ describe('ActivitiesService', () => {
   });
 
   describe('getActivities', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('returns the activities with the asset profile but without the relation to the symbol profile', async () => {
       const assetProfile = {
         ...assetProfileDummyData,
@@ -225,6 +228,56 @@ describe('ActivitiesService', () => {
       expect(activities).toHaveLength(1);
       expect(activities[0]).not.toHaveProperty('SymbolProfile');
       expect(activities[0].assetProfile).toBe(assetProfile);
+    });
+
+    it('excludes the activities of the start date of a date range', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2024-06-15').getTime());
+
+      const findMany = jest.fn().mockResolvedValue([]);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          order: {
+            findMany,
+            count: jest.fn().mockResolvedValue(0)
+          }
+        } as unknown as PrismaService,
+        {
+          getSymbolProfiles: jest.fn().mockResolvedValue([])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      const { endDate, startDate } = getIntervalFromDateRange({
+        dateRange: 'ytd'
+      });
+
+      await service.getActivities({
+        endDate,
+        startDate,
+        userCurrency: 'USD',
+        userId: 'user-id'
+      });
+
+      expect(findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            AND: expect.arrayContaining([
+              { date: { gt: new Date('2023-12-31T23:59:59.999Z') } },
+              { date: { lte: new Date('2024-06-15T23:59:59.999Z') } }
+            ])
+          })
+        })
+      );
     });
   });
 
@@ -521,36 +574,6 @@ describe('ActivitiesService', () => {
           unitPrice: { gt: 0 }
         }
       });
-    });
-  });
-
-  describe('getWhereClause', () => {
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
-    it('excludes the activities of the start date of a date range', () => {
-      jest.useFakeTimers().setSystemTime(new Date(2024, 5, 15));
-
-      const { endDate, startDate } = getIntervalFromDateRange({
-        dateRange: 'ytd'
-      });
-
-      const { AND } = activitiesService['getWhereClause']({
-        endDate,
-        startDate,
-        includeDrafts: false,
-        userId: 'user-id',
-        withExcludedAccountsAndActivities: false
-      });
-
-      // The same limits as for the calendar year 2024
-      expect(AND).toEqual(
-        expect.arrayContaining([
-          { date: { gt: endOfDay(new Date(2023, 11, 31)) } },
-          { date: { lte: endOfDay(new Date(2024, 5, 15)) } }
-        ])
-      );
     });
   });
 

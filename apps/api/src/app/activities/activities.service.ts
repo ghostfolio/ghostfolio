@@ -1038,11 +1038,8 @@ export class ActivitiesService {
     const andConditions: Prisma.OrderWhereInput[] = [];
     const where: Prisma.OrderWhereInput = { userId, AND: andConditions };
 
-    // The day of an activity is its calendar date in the time zone of the
-    // server, as in the portfolio calculator. The start date is excluded and
-    // the end date is included.
     if (endDate) {
-      andConditions.push({ date: { lte: endOfDay(endDate) } });
+      andConditions.push({ date: { lte: endDate } });
     }
 
     if (startDate) {
