@@ -7,7 +7,7 @@ import {
   AI_ACTIVITIES_TIMEOUT,
   AI_MAX_ACTIVITIES,
   THROTTLE_AI_ACTIVITIES_LIMIT,
-  THROTTLE_DAILY_TTL
+  THROTTLE_AI_ACTIVITIES_TTL
 } from '@ghostfolio/common/config';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -93,7 +93,7 @@ describe('AiController', () => {
   });
 
   describe('getActivitiesFromFile', () => {
-    it('Requires the permission and limits the requests of each user per day', () => {
+    it('Requires the permission and limits the requests of each user per week', () => {
       expect(getMetadataOfMethod<string>(HAS_PERMISSION_KEY)).toBe(
         permissions.importActivitiesWithAi
       );
@@ -110,7 +110,7 @@ describe('AiController', () => {
       );
 
       expect(getMetadataOfMethod<number>(`${THROTTLER_TTL}default`)).toBe(
-        THROTTLE_DAILY_TTL
+        THROTTLE_AI_ACTIVITIES_TTL
       );
 
       expect(

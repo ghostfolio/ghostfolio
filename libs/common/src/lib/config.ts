@@ -420,6 +420,7 @@ export const TAG_IDS_SYSTEM = [
 ];
 
 export const THROTTLE_AI_ACTIVITIES_LIMIT = 25;
+export const THROTTLE_AI_ACTIVITIES_TTL = ms('1 week');
 export const THROTTLE_DAILY_KEY = 'daily';
 export const THROTTLE_DAILY_TTL = ms('1 day');
 export const THROTTLE_DEFAULT_LIMIT = 10;

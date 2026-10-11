@@ -371,7 +371,7 @@ export class GfImportActivitiesDialogComponent {
 
   /**
    * Gives the error message of a file which the server rejects, as a rejected
-   * file counts towards the daily limit of Ghostfolio AI
+   * file counts towards the weekly limit of Ghostfolio AI
    */
   private async getErrorMessageOfFileForGhostfolioAi({
     file,

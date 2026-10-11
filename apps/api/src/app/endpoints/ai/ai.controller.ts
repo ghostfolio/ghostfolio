@@ -12,7 +12,7 @@ import {
   AI_ACTIVITIES_TIMEOUT,
   AI_MAX_ACTIVITIES,
   THROTTLE_AI_ACTIVITIES_LIMIT,
-  THROTTLE_DAILY_TTL
+  THROTTLE_AI_ACTIVITIES_TTL
 } from '@ghostfolio/common/config';
 import {
   AiActivitiesResponse,
@@ -67,7 +67,7 @@ export class AiController {
   /**
    * Reads the activities of a CSV, JPEG, PDF or PNG file with Ghostfolio AI,
    * without saving anything. The client imports the activities which the user
-   * selects with POST api/v1/import. The daily limit applies to each user
+   * selects with POST api/v1/import. The weekly limit applies to each user
    * instead of each IP address. The models stop if the client closes the
    * request before the response or at the timeout. An error whose message is
    * written for the caller gives the status 400 with this message, the
@@ -82,7 +82,7 @@ export class AiController {
         return user.id;
       },
       limit: THROTTLE_AI_ACTIVITIES_LIMIT,
-      ttl: THROTTLE_DAILY_TTL
+      ttl: THROTTLE_AI_ACTIVITIES_TTL
     }
   })
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard, CustomThrottlerGuard)
