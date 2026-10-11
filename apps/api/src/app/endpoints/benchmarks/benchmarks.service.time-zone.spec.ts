@@ -41,22 +41,40 @@ describe('BenchmarksService in a time zone behind UTC', () => {
     );
   });
 
-  it('returns the dates of the market data without a shift', async () => {
-    await expect(
-      benchmarksService.getMarketDataForUser({
+  describe('getMarketDataForUser', () => {
+    const getMarketDataForUser = ({
+      endDate = parseDate('2010-07-19')
+    }: { endDate?: Date } = {}) => {
+      return benchmarksService.getMarketDataForUser({
+        endDate,
         dataSource: DataSource.COINGECKO,
         dateRange: 'max',
-        endDate: parseDate('2010-07-19'),
         startDate: parseDate('2010-07-18'),
         symbol: 'bitcoin',
         userId: 'user-id',
         userSettings: { baseCurrency: 'USD' }
-      })
-    ).resolves.toEqual({
-      marketData: [
-        { date: '2010-07-18', value: 0 },
-        { date: '2010-07-19', value: 100 }
-      ]
+      });
+    };
+
+    it('returns the dates of the market data without a shift', async () => {
+      await expect(getMarketDataForUser()).resolves.toEqual({
+        marketData: [
+          { date: '2010-07-18', value: 0 },
+          { date: '2010-07-19', value: 100 }
+        ]
+      });
+    });
+
+    it('returns the end date after the market data without a shift', async () => {
+      await expect(
+        getMarketDataForUser({ endDate: parseDate('2010-07-20') })
+      ).resolves.toEqual({
+        marketData: [
+          { date: '2010-07-18', value: 0 },
+          { date: '2010-07-19', value: 100 },
+          { date: '2010-07-20', value: 300 }
+        ]
+      });
     });
   });
 });
