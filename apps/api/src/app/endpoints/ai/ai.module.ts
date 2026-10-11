@@ -1,3 +1,4 @@
+import { McpModule } from '@ghostfolio/api/app/endpoints/mcp/mcp.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -17,6 +18,7 @@ import { AiService } from './ai.service';
     ApiModule,
     ConfigurationModule,
     ImpersonationModule,
+    McpModule,
     PortfolioTableModule,
     PropertyModule,
     TransformDataSourceInRequestModule

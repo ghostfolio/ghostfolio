@@ -59,3 +59,46 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
     .max(MCP_MAX_ACTIVITIES)
     .describe(`The activities of the file, at most ${MCP_MAX_ACTIVITIES}`)
 });
+
+// The values are checked when the rows and the matches are joined to the
+// activities to import, so that a wrong match skips its rows only
+export const ROW_MATCHES_OUTPUT = z.object({
+  accounts: z
+    .array(
+      z.object({
+        accountId: z
+          .string()
+          .nullable()
+          .describe(
+            'The id of the account of the user which matches, or null if no account matches'
+          ),
+        name: z.string().describe('The account name of the file, as given')
+      })
+    )
+    .describe('One entry for each account name of the file'),
+  assets: z
+    .array(
+      z.object({
+        currency: z
+          .string()
+          .nullable()
+          .describe(
+            'The currency of the asset profile, as given by search-asset-profiles'
+          ),
+        dataSource: z
+          .string()
+          .nullable()
+          .describe(
+            'The data source of the asset profile, as given by search-asset-profiles'
+          ),
+        id: z.number().int().describe('The id of the asset, as given'),
+        symbol: z
+          .string()
+          .nullable()
+          .describe(
+            'The symbol of the asset profile, as given by search-asset-profiles, or null if no asset profile matches'
+          )
+      })
+    )
+    .describe('One entry for each asset of the file')
+});
