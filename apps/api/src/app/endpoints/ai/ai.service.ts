@@ -289,11 +289,12 @@ export class AiService {
    * OpenRouter is not covered by the zero data retention. The model gets no
    * tools and copies the asset, the account and the broker as printed, hence
    * the rows still have to be matched to asset profiles and accounts. The
-   * name of the file is passed as well, as it can name the broker. A row above the
-   * maximum number of activities is left out. An output which reaches the
-   * maximum number of output tokens is cut, hence it gives an error for the
-   * caller. A cut output without any text is not parsed at all, hence the
-   * finish reason is checked as well.
+   * name of the file is passed as well, as it can name the broker. The
+   * reasoning is disabled, as it can add thousands of output tokens even for a
+   * single row. A row above the maximum number of activities is left out. An
+   * output which reaches the maximum number of output tokens is cut, hence it
+   * gives an error for the caller. A cut output without any text is not parsed
+   * at all, hence the finish reason is checked as well.
    */
   public async getActivityRowsFromFile({
     abortSignal,
@@ -341,6 +342,7 @@ export class AiService {
         settings: {
           plugins: [{ id: 'file-parser', pdf: { engine: 'native' } }],
           provider: { require_parameters: true, zdr: true },
+          reasoning: { effort: 'none' },
           usage: { include: true }
         }
       }),
