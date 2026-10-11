@@ -892,7 +892,7 @@ describe('AiService', () => {
       });
     });
 
-    it('Restricts the routing to endpoints with zero data retention, limits the number of steps, requires a tool call in the first step and allows no tool call in the last step', async () => {
+    it('Restricts the routing to endpoints with zero data retention, disables the reasoning, limits the number of steps, requires a tool call in the first step and allows no tool call in the last step', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
@@ -905,6 +905,7 @@ describe('AiService', () => {
 
       expect(chat).toHaveBeenCalledWith('agent-model', {
         provider: { require_parameters: true, zdr: true },
+        reasoning: { effort: 'none' },
         usage: { include: true }
       });
 
