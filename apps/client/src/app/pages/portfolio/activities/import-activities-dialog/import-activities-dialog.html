@@ -74,19 +74,58 @@
           </form>
         } @else {
           <div class="d-flex flex-column justify-content-center">
-            <button
-              class="drop-area p-4 text-center text-muted"
-              gfFileDrop
-              (click)="onSelectFile(stepper)"
-              (filesDropped)="onFilesDropped({ stepper, files: $event })"
-            >
-              <div
-                class="align-items-center d-flex flex-column justify-content-center"
-              >
-                <ion-icon class="cloud-icon" name="cloud-upload-outline" />
-                <span i18n>Choose or drop a file here</span>
+            @if (isLoading) {
+              <div class="drop-area p-4 text-center text-muted">
+                <span i18n>Ghostfolio AI is reading the file...</span>
+                <mat-progress-bar class="mt-3" mode="indeterminate" />
               </div>
-            </button>
+            } @else {
+              <button
+                class="drop-area p-4 text-center text-muted"
+                gfFileDrop
+                (click)="onSelectFile(stepper)"
+                (filesDropped)="onFilesDropped({ stepper, files: $event })"
+              >
+                <div
+                  class="align-items-center d-flex flex-column justify-content-center"
+                >
+                  <ion-icon class="cloud-icon" name="cloud-upload-outline" />
+                  <span i18n>Choose or drop a file here</span>
+                </div>
+              </button>
+            }
+            @if (hasPermissionToImportActivitiesWithAi) {
+              <div class="mt-3 text-center">
+                <div class="align-items-center d-flex justify-content-center">
+                  <mat-checkbox
+                    color="primary"
+                    [checked]="isGhostfolioAiEnabled"
+                    [disabled]="isLoading"
+                    (change)="onGhostfolioAiChange($event)"
+                  >
+                    <ng-container i18n
+                      >Smart import with Ghostfolio AI</ng-container
+                    >
+                  </mat-checkbox>
+                  <span
+                    class="align-items-center d-flex"
+                    matTooltipPosition="above"
+                    [matTooltip]="ghostfolioAiTooltip"
+                  >
+                    <ion-icon name="information-circle-outline" />
+                  </span>
+                </div>
+                @if (isGhostfolioAiEnabled) {
+                  <p class="mb-0 mt-1">
+                    <small i18n
+                      >Ghostfolio AI also reads CSV files of other brokers and
+                      JPG, PDF and PNG files with up to
+                      {{ maxActivitiesOfGhostfolioAi }} activities.</small
+                    >
+                  </p>
+                }
+              </div>
+            }
             <p class="mb-0 mt-3 text-center">
               <small>
                 <span class="mr-1" i18n
@@ -121,6 +160,31 @@
       <div>
         @if (errorMessages?.length === 0) {
           @if (importStep === 1) {
+            @if (rowsWithoutMatch.length > 0) {
+              <mat-accordion class="d-block mb-3" displayMode="flat">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header class="pl-1">
+                    <mat-panel-title>
+                      <div class="align-items-center d-flex mr-2">
+                        <ion-icon name="warning-outline" />
+                      </div>
+                      <ng-container i18n>{rowsWithoutMatch.length, plural,
+                        =1 {
+                          Ghostfolio AI could not match 1 activity of the file
+                        }
+                        other {
+                          Ghostfolio AI could not match {{
+                          rowsWithoutMatch.length }} activities of the file
+                        }
+                      }</ng-container>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <pre
+                    class="m-0"
+                  ><code>{{ rowsWithoutMatch | json }}</code></pre>
+                </mat-expansion-panel>
+              </mat-accordion>
+            }
             <gf-activities-table
               [baseCurrency]="data?.user?.settings?.baseCurrency"
               [dataSource]="dataSource"
