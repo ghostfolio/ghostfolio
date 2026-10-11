@@ -22,6 +22,7 @@ import { z } from 'zod';
 import { ACTIVITY_ROWS_OUTPUT, ROW_MATCHES_OUTPUT } from './ai.schemas';
 import { AiService } from './ai.service';
 import { createActivityRow } from './ai.test-utils';
+import { AccountHint } from './types/account-hint.type';
 import { AccountToMatch } from './types/account-to-match.type';
 import { ActivityRow } from './types/activity-row.type';
 
@@ -86,7 +87,7 @@ describe('AiService', () => {
       >);
 
     jest.mocked(generateText).mockResolvedValue({
-      output: { rows },
+      output: { broker: 'Swissquote', rows },
       steps: [{}],
       totalUsage: { totalTokens: 1000 }
     } as unknown as Awaited<ReturnType<typeof generateText>>);
@@ -99,6 +100,9 @@ describe('AiService', () => {
     };
 
     mcpService = {
+      getAccounts: jest.fn().mockResolvedValue({
+        content: [{ text: '## Accounts', type: 'text' }]
+      }),
       searchAssetProfiles: jest.fn().mockResolvedValue({
         content: [{ text: '{ "assetProfiles": [] }', type: 'text' }]
       })
@@ -128,7 +132,7 @@ describe('AiService', () => {
           file: { buffer, mediaType: 'application/pdf' },
           locale: 'de-CH'
         })
-      ).resolves.toEqual(rows);
+      ).resolves.toEqual({ broker: 'Swissquote', rows });
 
       expect(createOpenRouter).toHaveBeenCalledWith({ apiKey: 'api-key' });
 
@@ -145,6 +149,35 @@ describe('AiService', () => {
           ],
           model,
           output: { schema: ACTIVITY_ROWS_OUTPUT }
+        })
+      );
+    });
+
+    it('Passes the name of the file as text before the file and gives the broker', async () => {
+      const buffer = Buffer.from('%PDF-1.7');
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer,
+            mediaType: 'application/pdf',
+            name: 'swissquote-2022.pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).resolves.toEqual({ broker: 'Swissquote', rows });
+
+      expect(generateText).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: [
+            {
+              content: [
+                { text: 'File name: swissquote-2022.pdf', type: 'text' },
+                { data: buffer, mediaType: 'application/pdf', type: 'file' }
+              ],
+              role: 'user'
+            }
+          ]
         })
       );
     });
@@ -207,6 +240,38 @@ describe('AiService', () => {
 
       expect(instructions).toContain('the locale de-CH');
       expect(instructions).toContain('Today is 2026-10-11');
+    });
+
+    it('Tells the vision model that a national number of a security is not a ticker symbol', async () => {
+      await aiService.getActivityRowsFromFile({
+        file: {
+          buffer: Buffer.from('%PDF-1.7'),
+          mediaType: 'application/pdf'
+        },
+        locale: 'de-CH'
+      });
+
+      const { instructions } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(instructions).toContain(
+        'A national number of a security, for example a valor (NKN), a WKN or a CUSIP, is not a ticker symbol.'
+      );
+    });
+
+    it('Tells the vision model to add the fees of a buy or a sell to its row', async () => {
+      await aiService.getActivityRowsFromFile({
+        file: {
+          buffer: Buffer.from('%PDF-1.7'),
+          mediaType: 'application/pdf'
+        },
+        locale: 'de-CH'
+      });
+
+      const { instructions } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(instructions).toContain(
+        'Add every fee, commission and tax of a buy or a sell, for example a commission, a stamp duty or an exchange fee, to the fee of its row.'
+      );
     });
 
     it('Gives an error for the caller if a cut output reaches the maximum number of output tokens', async () => {
@@ -299,7 +364,9 @@ describe('AiService', () => {
         }
       ];
 
-      jest.spyOn(aiService, 'getActivityRowsFromFile').mockResolvedValue(rows);
+      jest
+        .spyOn(aiService, 'getActivityRowsFromFile')
+        .mockResolvedValue({ broker: 'Swissquote', rows });
 
       jest
         .spyOn(aiService, 'getActivitiesFromRows')
@@ -323,6 +390,7 @@ describe('AiService', () => {
         abortSignal,
         rows,
         accounts: user.accounts,
+        broker: 'Swissquote',
         userCurrency: 'EUR',
         userId: 'user-id'
       });
@@ -339,7 +407,9 @@ describe('AiService', () => {
         unitPrice: 0
       };
 
-      jest.spyOn(aiService, 'getActivityRowsFromFile').mockResolvedValue(rows);
+      jest
+        .spyOn(aiService, 'getActivityRowsFromFile')
+        .mockResolvedValue({ broker: 'Swissquote', rows });
 
       jest.spyOn(aiService, 'getActivitiesFromRows').mockResolvedValue({
         activities: [fee, { ...fee, date: '2026-02-15' }],
@@ -369,7 +439,9 @@ describe('AiService', () => {
     });
 
     it('Reads the file in the default locale if the user has no locale', async () => {
-      jest.spyOn(aiService, 'getActivityRowsFromFile').mockResolvedValue([]);
+      jest
+        .spyOn(aiService, 'getActivityRowsFromFile')
+        .mockResolvedValue({ broker: null, rows: [] });
 
       jest
         .spyOn(aiService, 'getActivitiesFromRows')
@@ -433,7 +505,7 @@ describe('AiService', () => {
       const row = createActivityRow({ currency: null });
 
       mockRowMatches({
-        accounts: [{ accountId: 'account-id', name: 'Brokerage' }],
+        accounts: [{ accountId: 'account-id', id: 0 }],
         assets: [
           { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
         ]
@@ -462,6 +534,12 @@ describe('AiService', () => {
         ],
         rowsWithoutMatch: []
       });
+
+      expect(Logger.prototype.log).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Matched 1 of 1 assets and 1 of 1 account hints with 1 results of 1 searches'
+        )
+      );
     });
 
     it('Gives the currency of the row before the currency of the asset profile', async () => {
@@ -546,7 +624,9 @@ describe('AiService', () => {
       ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
     });
 
-    it('Gives a row whose asset profile no search gave as a row without a match', async () => {
+    it('Gives a row whose asset profile no search gave as a row without a match and logs the left out match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
       const row = createActivityRow({ accountName: null });
 
       mockRowMatches({
@@ -564,11 +644,56 @@ describe('AiService', () => {
           rows: [row]
         })
       ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+
+      expect(Logger.prototype.log).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'Matched 0 of 1 assets and 0 of 0 account hints with 1 results of 1 searches'
+        )
+      );
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Left out 1 asset matches which no search gave'
+      );
+    });
+
+    it('Matches a row without an account name by the broker of the file', async () => {
+      mockRowMatches({
+        accounts: [{ accountId: 'account-id', id: 0 }],
+        assets: [
+          { currency: 'CHF', dataSource: 'YAHOO', id: 0, symbol: 'ROG.SW' }
+        ]
+      });
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        broker: 'Swissquote',
+        rows: [
+          createActivityRow({ accountName: null }),
+          createActivityRow({ accountName: null, type: ActivityType.SELL })
+        ]
+      });
+
+      expect(activities.map(({ accountId }) => accountId)).toEqual([
+        'account-id',
+        'account-id'
+      ]);
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      const { accountHints } = JSON.parse(prompt as string) as {
+        accountHints: AccountHint[];
+      };
+
+      expect(accountHints).toEqual([
+        { accountName: null, broker: 'Swissquote', id: 0 }
+      ]);
     });
 
     it('Ignores an account id which is not the id of an account of the user', async () => {
       mockRowMatches({
-        accounts: [{ accountId: 'unknown-account-id', name: 'Brokerage' }],
+        accounts: [{ accountId: 'unknown-account-id', id: 0 }],
         assets: [
           { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
         ]
@@ -630,7 +755,7 @@ describe('AiService', () => {
 
     it('Gives a fee without a currency the currency of its account', async () => {
       mockRowMatches({
-        accounts: [{ accountId: 'account-id', name: 'Brokerage' }]
+        accounts: [{ accountId: 'account-id', id: 0 }]
       });
 
       const { activities } = await aiService.getActivitiesFromRows({
@@ -673,7 +798,7 @@ describe('AiService', () => {
       ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
     });
 
-    it('Passes each asset one time and only the id and the name of each account to the model', async () => {
+    it('Passes each asset and each account hint one time and no account to the model', async () => {
       mockRowMatches({
         assets: [
           { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
@@ -684,6 +809,7 @@ describe('AiService', () => {
         accounts,
         userCurrency,
         userId,
+        broker: 'Swissquote',
         rows: [
           createActivityRow(),
           createActivityRow({ type: ActivityType.SELL }),
@@ -699,8 +825,10 @@ describe('AiService', () => {
       const { prompt } = jest.mocked(generateText).mock.calls[0][0];
 
       expect(JSON.parse(prompt as string)).toEqual({
-        accountNames: ['Brokerage', 'Depot 1'],
-        accounts: [{ id: 'account-id', name: 'Brokerage' }],
+        accountHints: [
+          { accountName: 'Brokerage', broker: 'Swissquote', id: 0 },
+          { accountName: 'Depot 1', broker: 'Swissquote', id: 1 }
+        ],
         assets: [
           {
             currency: 'USD',
@@ -740,7 +868,31 @@ describe('AiService', () => {
       });
     });
 
-    it('Restricts the routing to endpoints with zero data retention, limits the number of steps and allows no tool call in the last step', async () => {
+    it('Gets the accounts with the tool of the server of the Model Context Protocol without values', async () => {
+      mockRowMatches({});
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow()]
+      });
+
+      const { tools } = jest.mocked(generateText).mock.calls[0][0] as {
+        tools: ToolSet;
+      };
+
+      await expect(tools['get-accounts'].execute({}, undefined)).resolves.toBe(
+        '## Accounts'
+      );
+
+      expect(mcpService.getAccounts).toHaveBeenCalledWith({
+        userId,
+        withValues: false
+      });
+    });
+
+    it('Restricts the routing to endpoints with zero data retention, limits the number of steps, requires a tool call in the first step and allows no tool call in the last step', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
@@ -776,6 +928,9 @@ describe('AiService', () => {
 
       const [stepCount] = jest.mocked(isStepCount).mock.calls[0];
 
+      expect(prepareStep({ stepNumber: 0 })).toEqual({
+        toolChoice: 'required'
+      });
       expect(prepareStep({ stepNumber: stepCount - 2 })).toBeUndefined();
       expect(prepareStep({ stepNumber: stepCount - 1 })).toEqual({
         toolChoice: 'none'

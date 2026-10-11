@@ -154,12 +154,16 @@ describe('AiController', () => {
 
       expect(aiService.getActivitiesFromFile).toHaveBeenCalledWith(
         expect.objectContaining({
-          file: { buffer: file.buffer, mediaType: 'text/csv' }
+          file: {
+            buffer: file.buffer,
+            mediaType: 'text/csv',
+            name: 'statement.csv'
+          }
         })
       );
     });
 
-    it('Passes the file with its media type and the user of the request', async () => {
+    it('Passes the file with its media type and its name and the user of the request', async () => {
       await expect(
         aiController.getActivitiesFromFile(createResponse(), pdfFile)
       ).resolves.toEqual({
@@ -171,7 +175,11 @@ describe('AiController', () => {
       expect(aiService.getActivitiesFromFile).toHaveBeenCalledWith(
         expect.objectContaining({
           user,
-          file: { buffer: pdfFile.buffer, mediaType: 'application/pdf' }
+          file: {
+            buffer: pdfFile.buffer,
+            mediaType: 'application/pdf',
+            name: 'statement.pdf'
+          }
         })
       );
 

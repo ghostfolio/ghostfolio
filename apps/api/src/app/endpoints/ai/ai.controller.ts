@@ -145,7 +145,7 @@ export class AiController {
           abortController.signal,
           AbortSignal.timeout(AI_ACTIVITIES_TIMEOUT)
         ]),
-        file: { mediaType, buffer: file.buffer },
+        file: { mediaType, buffer: file.buffer, name: file.originalname },
         user: this.request.user
       });
     } catch (error) {

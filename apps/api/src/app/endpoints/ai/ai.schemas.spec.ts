@@ -14,6 +14,7 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
   it('Accepts a row with null for the values which the file does not show', () => {
     expect(
       ACTIVITY_ROWS_OUTPUT.safeParse({
+        broker: null,
         rows: [
           createActivityRow({
             accountName: null,
@@ -31,12 +32,15 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
 
     delete row.isin;
 
-    expect(ACTIVITY_ROWS_OUTPUT.safeParse({ rows: [row] }).success).toBe(false);
+    expect(
+      ACTIVITY_ROWS_OUTPUT.safeParse({ broker: null, rows: [row] }).success
+    ).toBe(false);
   });
 
   it('Accepts a currency, a date, a number, a printed text and a number of rows which the join checks, so that one value does not refuse all rows', () => {
     expect(
       ACTIVITY_ROWS_OUTPUT.safeParse({
+        broker: null,
         rows: [
           createActivityRow({
             currency: 'GBX',
@@ -54,9 +58,11 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
 
   it('Trims a printed text', () => {
     const { data } = ACTIVITY_ROWS_OUTPUT.safeParse({
+      broker: ' Swissquote ',
       rows: [createActivityRow({ name: '  Apple Inc. ' })]
     });
 
+    expect(data.broker).toBe('Swissquote');
     expect(data.rows[0].name).toBe('Apple Inc.');
   });
 });

@@ -11,6 +11,9 @@ import { z } from 'zod';
 const PRINTED_TEXT = z.string().trim().nullable();
 
 export const ACTIVITY_ROWS_OUTPUT = z.object({
+  broker: PRINTED_TEXT.describe(
+    'The name of the broker or of the bank which issued the file'
+  ),
   rows: z
     .array(
       z.object({
@@ -33,7 +36,7 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
         ),
         quantity: z.number().describe('The quantity of the activity'),
         symbol: PRINTED_TEXT.describe(
-          'The ticker symbol of the asset, as printed'
+          'The ticker symbol of the asset, as printed, not a national number such as a valor, a WKN or a CUSIP'
         ),
         type: z.enum(ActivityType).describe('The type of the activity'),
         unitPrice: z.number().describe('The unit price of the activity')
@@ -50,12 +53,12 @@ export const ROW_MATCHES_OUTPUT = z.object({
           .string()
           .nullable()
           .describe(
-            'The id of the account of the user which matches, or null if no account matches'
+            'The id of the account of the user which matches, as given by get-accounts, or null if no account matches'
           ),
-        name: z.string().describe('The account name of the file, as given')
+        id: z.number().describe('The id of the account hint, as given')
       })
     )
-    .describe('One entry for each account name of the file'),
+    .describe('One entry for each account hint of the file'),
   assets: z
     .array(
       z.object({
