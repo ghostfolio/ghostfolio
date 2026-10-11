@@ -10,7 +10,7 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import {
   AI_ACTIVITIES_FILE_MAXIMUM_SIZE,
   AI_ACTIVITIES_TIMEOUT,
-  MCP_MAX_ACTIVITIES,
+  AI_MAX_ACTIVITIES,
   THROTTLE_AI_ACTIVITIES_LIMIT,
   THROTTLE_DAILY_TTL
 } from '@ghostfolio/common/config';
@@ -116,14 +116,14 @@ export class AiController {
     if (mediaType === 'text/csv') {
       const dataRowCount = getDataRowCountOfCsvFile(file.buffer);
 
-      if (dataRowCount > MCP_MAX_ACTIVITIES) {
+      if (dataRowCount > AI_MAX_ACTIVITIES) {
         this.logger.warn(`Rejected a CSV file with ${dataRowCount} rows`);
 
         throw new HttpException(
           {
             error: getReasonPhrase(StatusCodes.BAD_REQUEST),
             message: [
-              `The CSV file has more than ${MCP_MAX_ACTIVITIES} rows of activities`
+              `The CSV file has more than ${AI_MAX_ACTIVITIES} rows of activities`
             ]
           },
           StatusCodes.BAD_REQUEST

@@ -9,8 +9,8 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  AI_MAX_ACTIVITIES,
   DEFAULT_LOCALE,
-  MCP_MAX_ACTIVITIES,
   NON_INVESTMENT_ACTIVITY_TYPES,
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL,
@@ -299,7 +299,7 @@ export class AiService {
         'For an interest or a liability, give 1 as quantity and the amount as unit price.',
         'For a fee which is not part of a buy or a sell, give 0 as quantity, 0 as unit price and the amount as fee.',
         `If the format of a date or of a number is ambiguous and the file gives no other hint, read it as in the locale ${locale}.`,
-        `Give at most ${MCP_MAX_ACTIVITIES} rows.`
+        `Give at most ${AI_MAX_ACTIVITIES} rows.`
       ].join('\n'),
       maxOutputTokens: AiService.VISION_MAXIMUM_OUTPUT_TOKEN_COUNT,
       messages: [{ content, role: 'user' }],
@@ -333,7 +333,7 @@ export class AiService {
       `Read ${output.rows.length} rows from a file in ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens for ${this.getCost(steps)} USD`
     );
 
-    return output.rows.slice(0, MCP_MAX_ACTIVITIES);
+    return output.rows.slice(0, AI_MAX_ACTIVITIES);
   }
 
   public async getPrompt({

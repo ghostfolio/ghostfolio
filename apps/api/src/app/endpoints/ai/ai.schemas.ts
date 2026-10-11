@@ -1,4 +1,4 @@
-import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
+import { AI_MAX_ACTIVITIES } from '@ghostfolio/common/config';
 
 import { Type as ActivityType } from '@prisma/client';
 import { z } from 'zod';
@@ -39,7 +39,7 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
         unitPrice: z.number().describe('The unit price of the activity')
       })
     )
-    .describe(`The activities of the file, at most ${MCP_MAX_ACTIVITIES}`)
+    .describe(`The activities of the file, at most ${AI_MAX_ACTIVITIES}`)
 });
 
 export const ROW_MATCHES_OUTPUT = z.object({

@@ -4,7 +4,7 @@ import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.gu
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import {
-  MCP_MAX_ACTIVITIES,
+  AI_MAX_ACTIVITIES,
   THROTTLE_AI_ACTIVITIES_LIMIT,
   THROTTLE_DAILY_TTL
 } from '@ghostfolio/common/config';
@@ -132,23 +132,23 @@ describe('AiController', () => {
       expect(aiService.getActivitiesFromFile).not.toHaveBeenCalled();
     });
 
-    it(`Refuses a CSV file with more than ${MCP_MAX_ACTIVITIES} rows before a model call`, async () => {
+    it(`Refuses a CSV file with more than ${AI_MAX_ACTIVITIES} rows before a model call`, async () => {
       await expect(
         aiController.getActivitiesFromFile(
           createResponse(),
-          createCsvFile(MCP_MAX_ACTIVITIES + 1)
+          createCsvFile(AI_MAX_ACTIVITIES + 1)
         )
       ).rejects.toThrow(HttpException);
 
       expect(aiService.getActivitiesFromFile).not.toHaveBeenCalled();
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        `Rejected a CSV file with ${MCP_MAX_ACTIVITIES + 1} rows`
+        `Rejected a CSV file with ${AI_MAX_ACTIVITIES + 1} rows`
       );
     });
 
-    it(`Accepts a CSV file with ${MCP_MAX_ACTIVITIES} rows`, async () => {
-      const file = createCsvFile(MCP_MAX_ACTIVITIES);
+    it(`Accepts a CSV file with ${AI_MAX_ACTIVITIES} rows`, async () => {
+      const file = createCsvFile(AI_MAX_ACTIVITIES);
 
       await aiController.getActivitiesFromFile(createResponse(), file);
 

@@ -40,6 +40,7 @@ export const warnColorRgb = {
 
 export const AI_ACTIVITIES_FILE_MAXIMUM_SIZE = 10 * 1024 * 1024;
 export const AI_ACTIVITIES_TIMEOUT = ms('2 minutes');
+export const AI_MAX_ACTIVITIES = 25;
 
 export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],

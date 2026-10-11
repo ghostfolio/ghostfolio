@@ -2,8 +2,8 @@ import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/fil
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import {
   AI_ACTIVITIES_FILE_MAXIMUM_SIZE,
-  DEFAULT_DATE_RANGE,
-  MCP_MAX_ACTIVITIES
+  AI_MAX_ACTIVITIES,
+  DEFAULT_DATE_RANGE
 } from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
@@ -133,7 +133,7 @@ export class GfImportActivitiesDialogComponent {
   protected isGhostfolioAiEnabled = false;
   protected isLoading = false;
   protected isMaxActivitiesOfGhostfolioAiReached = false;
-  protected readonly maxActivitiesOfGhostfolioAi = MCP_MAX_ACTIVITIES;
+  protected readonly maxActivitiesOfGhostfolioAi = AI_MAX_ACTIVITIES;
   protected mode: 'DIVIDEND';
   protected pageIndex = 0;
   protected readonly pageSize = 8;
@@ -387,9 +387,9 @@ export class GfImportActivitiesDialogComponent {
     if (
       fileExtension === 'csv' &&
       this.importActivitiesService.getDataRowCountOfCsv(await file.text()) >
-        MCP_MAX_ACTIVITIES
+        AI_MAX_ACTIVITIES
     ) {
-      return $localize`The CSV file has more than ${MCP_MAX_ACTIVITIES}:maxActivities: rows of activities`;
+      return $localize`The CSV file has more than ${AI_MAX_ACTIVITIES}:maxActivities: rows of activities`;
     }
 
     return undefined;
@@ -587,7 +587,7 @@ export class GfImportActivitiesDialogComponent {
           activitiesOfFile = activities;
           this.assetProfiles = assetProfiles;
           this.isMaxActivitiesOfGhostfolioAiReached =
-            activities.length + rowsWithoutMatch.length >= MCP_MAX_ACTIVITIES;
+            activities.length + rowsWithoutMatch.length >= AI_MAX_ACTIVITIES;
           this.rowsWithoutMatch = rowsWithoutMatch;
 
           return from(

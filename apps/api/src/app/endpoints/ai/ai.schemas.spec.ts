@@ -1,5 +1,5 @@
 import {
-  MCP_MAX_ACTIVITIES,
+  AI_MAX_ACTIVITIES,
   SEARCH_QUERY_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 
@@ -44,7 +44,7 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
             name: 'A'.repeat(SEARCH_QUERY_MAXIMUM_LENGTH + 1)
           }),
           createActivityRow({ fee: -1, quantity: -1, unitPrice: -1 }),
-          ...Array.from({ length: MCP_MAX_ACTIVITIES }, () => {
+          ...Array.from({ length: AI_MAX_ACTIVITIES }, () => {
             return createActivityRow();
           })
         ]
