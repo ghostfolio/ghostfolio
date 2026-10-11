@@ -64,7 +64,6 @@ import {
   format,
   isAfter,
   isBefore,
-  isEqual,
   isFuture,
   isPast,
   isWithinInterval,
@@ -1418,8 +1417,8 @@ export abstract class PortfolioCalculator {
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
 
-    const endDate = this.toChartDate(end);
-    const startDate = this.toChartDate(start);
+    const endDate = resetHours(end);
+    const startDate = resetHours(start);
 
     for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
@@ -1913,9 +1912,5 @@ export abstract class PortfolioCalculator {
 
       await this.initialize(attempt + 1);
     }
-  }
-
-  private toChartDate(aDate: Date) {
-    return isEqual(aDate, endOfDay(aDate)) ? resetHours(aDate) : aDate;
   }
 }
