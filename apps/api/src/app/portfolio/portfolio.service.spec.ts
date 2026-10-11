@@ -1454,7 +1454,11 @@ describe('PortfolioService', () => {
           getValueOfAccountsAndPlatforms: (aArgs: object) => Promise<{
             accounts: Record<
               string,
-              { quantity?: number; valueInBaseCurrency: number }
+              {
+                balance: number;
+                quantity?: number;
+                valueInBaseCurrency: number;
+              }
             >;
             platforms: Record<string, { valueInBaseCurrency: number }>;
           }>;
@@ -1673,6 +1677,83 @@ describe('PortfolioService', () => {
       // 1 * 10 (activity), without the balance of 100
       expect(accounts[account.id].valueInBaseCurrency).toBe(10);
       expect(platforms[account.platformId].valueInBaseCurrency).toBe(10);
+    });
+
+    it('should exclude the cash balance if the activities are filtered by an asset class other than liquidity', async () => {
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [{ id: AssetClass.EQUITY, type: 'ASSET_CLASS' }],
+        portfolioItemsNow: {
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accounts[account.id].balance).toBe(100);
+
+      // 1 * 10 (activity), without the balance of 100
+      expect(accounts[account.id].valueInBaseCurrency).toBe(10);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(10);
+    });
+
+    it('should include the cash balance if the activities are filtered by asset classes including liquidity', async () => {
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [
+          { id: AssetClass.EQUITY, type: 'ASSET_CLASS' },
+          { id: AssetClass.LIQUIDITY, type: 'ASSET_CLASS' }
+        ],
+        portfolioItemsNow: {
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 100 (balance) + 1 * 10 (activity)
+      expect(accounts[account.id].valueInBaseCurrency).toBe(110);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(110);
+    });
+
+    it('should include the cash balance if the activities are filtered by a tag', async () => {
+      const { accounts, platforms } = await getValueOfAccountsAndPlatforms({
+        activities: [
+          {
+            account,
+            accountId: account.id,
+            assetProfile: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+            quantity: 1,
+            type: 'BUY'
+          }
+        ],
+        filters: [{ id: randomUUID(), type: 'TAG' }],
+        portfolioItemsNow: {
+          'YAHOO-AAPL': { marketPriceInBaseCurrency: 10 }
+        },
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      // 100 (balance) + 1 * 10 (activity)
+      expect(accounts[account.id].valueInBaseCurrency).toBe(110);
+      expect(platforms[account.platformId].valueInBaseCurrency).toBe(110);
     });
 
     it('should not accumulate rounding errors of the balances of accounts sharing a platform', async () => {
