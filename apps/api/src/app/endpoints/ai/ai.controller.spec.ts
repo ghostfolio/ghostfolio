@@ -73,9 +73,11 @@ describe('AiController', () => {
     jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
     aiService = {
-      getActivitiesFromFile: jest
-        .fn()
-        .mockResolvedValue({ activities: [], rowsWithoutMatch: [] })
+      getActivitiesFromFile: jest.fn().mockResolvedValue({
+        activities: [],
+        assetProfiles: [],
+        rowsWithoutMatch: []
+      })
     } as unknown as AiService;
 
     aiController = new AiController(
@@ -158,7 +160,11 @@ describe('AiController', () => {
     it('Passes the file with its media type and the user of the request', async () => {
       await expect(
         aiController.getActivitiesFromFile(createResponse(), pdfFile)
-      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [] });
+      ).resolves.toEqual({
+        activities: [],
+        assetProfiles: [],
+        rowsWithoutMatch: []
+      });
 
       expect(aiService.getActivitiesFromFile).toHaveBeenCalledWith(
         expect.objectContaining({

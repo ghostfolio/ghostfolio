@@ -34,25 +34,6 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
     expect(ACTIVITY_ROWS_OUTPUT.safeParse({ rows: [row] }).success).toBe(false);
   });
 
-  it('Refuses a currency which is not an ISO 4217 code in upper case', () => {
-    for (const currency of ['usd', 'USDOLLAR', '$']) {
-      expect(
-        ACTIVITY_ROWS_OUTPUT.safeParse({
-          rows: [createActivityRow({ currency })]
-        }).success
-      ).toBe(false);
-    }
-  });
-
-  it('Refuses a date which is not an ISO 8601 date after 1970', () => {
-    for (const date of ['15.01.2026', '1969-12-31']) {
-      expect(
-        ACTIVITY_ROWS_OUTPUT.safeParse({ rows: [createActivityRow({ date })] })
-          .success
-      ).toBe(false);
-    }
-  });
-
   it('Refuses a negative fee, quantity or unit price', () => {
     for (const row of [{ fee: -1 }, { quantity: -1 }, { unitPrice: -1 }]) {
       expect(
@@ -62,24 +43,21 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
     }
   });
 
-  it('Refuses a printed text which is longer than the maximum length', () => {
-    expect(
-      ACTIVITY_ROWS_OUTPUT.safeParse({
-        rows: [
-          createActivityRow({ name: 'A'.repeat(SEARCH_QUERY_MAXIMUM_LENGTH) })
-        ]
-      }).success
-    ).toBe(true);
-
+  it('Accepts a currency, a date, a printed text and a number of rows which the join checks, so that one value does not refuse all rows', () => {
     expect(
       ACTIVITY_ROWS_OUTPUT.safeParse({
         rows: [
           createActivityRow({
+            currency: 'GBX',
+            date: '15.01.2026',
             name: 'A'.repeat(SEARCH_QUERY_MAXIMUM_LENGTH + 1)
+          }),
+          ...Array.from({ length: MCP_MAX_ACTIVITIES }, () => {
+            return createActivityRow();
           })
         ]
       }).success
-    ).toBe(false);
+    ).toBe(true);
   });
 
   it('Trims a printed text', () => {
@@ -88,24 +66,6 @@ describe('ACTIVITY_ROWS_OUTPUT', () => {
     });
 
     expect(data.rows[0].name).toBe('Apple Inc.');
-  });
-
-  it(`Refuses more than ${MCP_MAX_ACTIVITIES} rows`, () => {
-    expect(
-      ACTIVITY_ROWS_OUTPUT.safeParse({
-        rows: Array.from({ length: MCP_MAX_ACTIVITIES }, () => {
-          return createActivityRow();
-        })
-      }).success
-    ).toBe(true);
-
-    expect(
-      ACTIVITY_ROWS_OUTPUT.safeParse({
-        rows: Array.from({ length: MCP_MAX_ACTIVITIES + 1 }, () => {
-          return createActivityRow();
-        })
-      }).success
-    ).toBe(false);
   });
 });
 

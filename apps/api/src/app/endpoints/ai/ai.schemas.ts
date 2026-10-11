@@ -1,29 +1,14 @@
-import {
-  MCP_MAX_ACTIVITIES,
-  SEARCH_QUERY_MAXIMUM_LENGTH
-} from '@ghostfolio/common/config';
-import {
-  isValidCurrencyCode,
-  isValidDateAfter1970
-} from '@ghostfolio/common/helper';
+import { MCP_MAX_ACTIVITIES } from '@ghostfolio/common/config';
 
 import { Type as ActivityType } from '@prisma/client';
 import { z } from 'zod';
 
 // The strict mode of the structured outputs requires every property, hence a
 // value which the file does not show is null instead of being left out. The
-// maximum length is checked by a refinement, because the strict mode does not
-// support every keyword of JSON Schema
-const PRINTED_TEXT = z
-  .string()
-  .trim()
-  .refine(
-    (value) => {
-      return value.length <= SEARCH_QUERY_MAXIMUM_LENGTH;
-    },
-    { error: `Too long: expected at most ${SEARCH_QUERY_MAXIMUM_LENGTH}` }
-  )
-  .nullable();
+// values are checked when the rows and the matches are joined to the
+// activities to import, so that a wrong value or a wrong match skips its rows
+// only
+const PRINTED_TEXT = z.string().trim().nullable();
 
 export const ACTIVITY_ROWS_OUTPUT = z.object({
   rows: z
@@ -34,14 +19,12 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
         ),
         currency: z
           .string()
-          .refine(isValidCurrencyCode)
           .nullable()
           .describe(
             'The currency of the fee and of the unit price, as an ISO 4217 code in upper case'
           ),
         date: z
           .string()
-          .refine(isValidDateAfter1970)
           .describe('The date of the activity, as an ISO 8601 date'),
         fee: z.number().min(0).describe('The fee of the activity'),
         isin: PRINTED_TEXT.describe('The ISIN of the asset, as printed'),
@@ -56,12 +39,9 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
         unitPrice: z.number().min(0).describe('The unit price of the activity')
       })
     )
-    .max(MCP_MAX_ACTIVITIES)
     .describe(`The activities of the file, at most ${MCP_MAX_ACTIVITIES}`)
 });
 
-// The values are checked when the rows and the matches are joined to the
-// activities to import, so that a wrong match skips its rows only
 export const ROW_MATCHES_OUTPUT = z.object({
   accounts: z
     .array(

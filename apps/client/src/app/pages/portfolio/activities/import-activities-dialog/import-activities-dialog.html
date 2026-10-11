@@ -185,6 +185,16 @@
                 </mat-expansion-panel>
               </mat-accordion>
             }
+            @if (isMaxActivitiesOfGhostfolioAiReached) {
+              <div class="align-items-center d-flex mb-3 pl-1">
+                <ion-icon class="mr-2" name="warning-outline" />
+                <span i18n
+                  >Ghostfolio AI has read the maximum of
+                  {{ maxActivitiesOfGhostfolioAi }} activities. The file can
+                  have more activities.</span
+                >
+              </div>
+            }
             <gf-activities-table
               [baseCurrency]="data?.user?.settings?.baseCurrency"
               [dataSource]="dataSource"

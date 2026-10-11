@@ -9,11 +9,12 @@ import {
   PROPERTY_OPENROUTER_MODEL_AGENT,
   PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
+import { isValidCustomAssetProfileSymbol } from '@ghostfolio/common/helper';
 import type { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { Type as ActivityType } from '@prisma/client';
+import { DataSource, Type as ActivityType } from '@prisma/client';
 import { generateText, isStepCount, ToolSet } from 'ai';
 import { z } from 'zod';
 
@@ -157,7 +158,8 @@ describe('AiService', () => {
 
       expect(chat).toHaveBeenCalledWith('vision-model', {
         plugins: [{ id: 'file-parser', pdf: { engine: 'native' } }],
-        provider: { zdr: true }
+        provider: { zdr: true },
+        usage: { include: true }
       });
     });
 
@@ -228,7 +230,11 @@ describe('AiService', () => {
 
       await expect(
         aiService.getActivitiesFromFile({ abortSignal, file, user })
-      ).resolves.toEqual({ activities, rowsWithoutMatch: [] });
+      ).resolves.toEqual({
+        activities,
+        assetProfiles: [],
+        rowsWithoutMatch: []
+      });
 
       expect(aiService.getActivityRowsFromFile).toHaveBeenCalledWith({
         abortSignal,
@@ -243,6 +249,46 @@ describe('AiService', () => {
         userCurrency: 'EUR',
         userId: 'user-id'
       });
+    });
+
+    it('Gives a fee, an interest or a liability a custom asset profile with its description as name', async () => {
+      const fee = {
+        currency: 'CHF',
+        date: '2026-01-15',
+        fee: 5,
+        quantity: 0,
+        symbol: 'Custody fee',
+        type: ActivityType.FEE,
+        unitPrice: 0
+      };
+
+      jest.spyOn(aiService, 'getActivityRowsFromFile').mockResolvedValue(rows);
+
+      jest.spyOn(aiService, 'getActivitiesFromRows').mockResolvedValue({
+        activities: [fee, { ...fee, date: '2026-02-15' }],
+        rowsWithoutMatch: []
+      });
+
+      const { activities, assetProfiles } =
+        await aiService.getActivitiesFromFile({ file, user });
+
+      const [{ symbol }] = assetProfiles;
+
+      expect(isValidCustomAssetProfileSymbol(symbol)).toBe(true);
+
+      expect(assetProfiles).toEqual([
+        {
+          symbol,
+          currency: 'CHF',
+          dataSource: DataSource.MANUAL,
+          name: 'Custody fee'
+        }
+      ]);
+
+      expect(activities).toEqual([
+        { ...fee, symbol, dataSource: DataSource.MANUAL },
+        { ...fee, symbol, dataSource: DataSource.MANUAL, date: '2026-02-15' }
+      ]);
     });
 
     it('Reads the file in the default locale if the user has no locale', async () => {
@@ -276,13 +322,34 @@ describe('AiService', () => {
 
     function mockRowMatches({
       accounts: accountMatches = [],
+      assetProfilesOfSearch,
       assets: assetMatches = []
-    }: Partial<z.infer<typeof ROW_MATCHES_OUTPUT>>) {
-      jest.mocked(generateText).mockResolvedValueOnce({
-        output: { accounts: accountMatches, assets: assetMatches },
-        steps: [{}, {}],
-        totalUsage: { totalTokens: 2000 }
-      } as unknown as Awaited<ReturnType<typeof generateText>>);
+    }: Partial<z.infer<typeof ROW_MATCHES_OUTPUT>> & {
+      assetProfilesOfSearch?: { dataSource: string; symbol: string }[];
+    }) {
+      jest.mocked(mcpService.searchAssetProfiles).mockResolvedValueOnce({
+        content: [
+          {
+            text: JSON.stringify({
+              assetProfiles: assetProfilesOfSearch ?? assetMatches
+            }),
+            type: 'text'
+          }
+        ]
+      });
+
+      jest.mocked(generateText).mockImplementationOnce(async ({ tools }) => {
+        await tools['search-asset-profiles'].execute(
+          { query: 'US0378331005' },
+          undefined
+        );
+
+        return {
+          output: { accounts: accountMatches, assets: assetMatches },
+          steps: [{}, {}],
+          totalUsage: { totalTokens: 2000 }
+        } as unknown as Awaited<ReturnType<typeof generateText>>;
+      });
     }
 
     it('Gives an activity for each row whose asset matches an asset profile', async () => {
@@ -360,6 +427,26 @@ describe('AiService', () => {
       mockRowMatches({
         assets: [
           { currency: 'USD', dataSource: 'yahoo', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+    });
+
+    it('Gives a row whose asset profile no search gave as a row without a match', async () => {
+      const row = createActivityRow({ accountName: null });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [{ dataSource: 'YAHOO', symbol: 'AAPL' }],
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL.XX' }
         ]
       });
 
@@ -547,7 +634,7 @@ describe('AiService', () => {
       });
     });
 
-    it('Restricts the routing to endpoints with zero data retention and limits the number of steps', async () => {
+    it('Restricts the routing to endpoints with zero data retention, limits the number of steps and allows no tool call in the last step', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
@@ -559,7 +646,8 @@ describe('AiService', () => {
       });
 
       expect(chat).toHaveBeenCalledWith('agent-model', {
-        provider: { zdr: true }
+        provider: { zdr: true },
+        usage: { include: true }
       });
 
       expect(isStepCount).toHaveBeenCalled();
@@ -572,9 +660,20 @@ describe('AiService', () => {
         })
       );
 
-      const { stopWhen } = jest.mocked(generateText).mock.calls[0][0];
+      const { prepareStep, stopWhen } = jest.mocked(generateText).mock
+        .calls[0][0] as {
+        prepareStep: (options: { stepNumber: number }) => unknown;
+        stopWhen: unknown;
+      };
 
       expect(stopWhen).toBe(jest.mocked(isStepCount).mock.results[0].value);
+
+      const [stepCount] = jest.mocked(isStepCount).mock.calls[0];
+
+      expect(prepareStep({ stepNumber: stepCount - 2 })).toBeUndefined();
+      expect(prepareStep({ stepNumber: stepCount - 1 })).toEqual({
+        toolChoice: 'none'
+      });
     });
 
     it('Falls back to the general model if no agent model is set', async () => {

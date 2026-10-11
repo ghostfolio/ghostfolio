@@ -66,14 +66,15 @@ export class AiController {
   /**
    * Reads the activities of a CSV, JPEG, PDF or PNG file with Ghostfolio AI,
    * without saving anything. The client imports the activities which the user
-   * selects with POST api/v1/import.
+   * selects with POST api/v1/import. The daily limit applies to each user
+   * instead of each IP address. The models stop if the client closes the
+   * request before the response.
    */
   @HasPermission(permissions.importActivitiesWithAi)
   @HttpCode(StatusCodes.OK)
   @Post('activities')
   @Throttle({
     default: {
-      // The limit applies to each user instead of each IP address
       getTracker: ({ user }: RequestWithUser) => {
         return user.id;
       },
@@ -128,7 +129,6 @@ export class AiController {
       }
     }
 
-    // Stops the models if the client closes the request before the response
     const abortController = new AbortController();
 
     response.on('close', () => {

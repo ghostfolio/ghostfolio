@@ -16,8 +16,16 @@ import {
   PROPERTY_OPENROUTER_MODEL_AGENT,
   PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { AiActivitiesResponse, Filter } from '@ghostfolio/common/interfaces';
+import { CreateAssetProfileWithMarketDataDto } from '@ghostfolio/common/dtos';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier
+} from '@ghostfolio/common/helper';
+import {
+  AiActivitiesResponse,
+  AssetProfileIdentifier,
+  Filter
+} from '@ghostfolio/common/interfaces';
 import type {
   AiPromptMode,
   PropertyKey,
@@ -27,7 +35,8 @@ import type {
 import { Injectable, Logger } from '@nestjs/common';
 import {
   createOpenRouter,
-  OpenRouterChatSettings
+  OpenRouterChatSettings,
+  OpenRouterUsageAccounting
 } from '@openrouter/ai-sdk-provider';
 import { DataSource } from '@prisma/client';
 import {
@@ -35,11 +44,14 @@ import {
   generateText,
   isStepCount,
   Output,
+  ProviderMetadata,
   TextPart,
   tool
 } from 'ai';
+import { Big } from 'big.js';
 import { format } from 'date-fns';
 import { keyBy, uniq } from 'lodash-es';
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 
 import { ACTIVITY_ROWS_OUTPUT, ROW_MATCHES_OUTPUT } from './ai.schemas';
@@ -50,6 +62,7 @@ import { AssetToMatch } from './types/asset-to-match.type';
 @Injectable()
 export class AiService {
   private static readonly AGENT_MAXIMUM_STEP_COUNT = 10;
+  private static readonly VISION_MAXIMUM_OUTPUT_TOKEN_COUNT = 16384;
 
   private readonly logger = new Logger(AiService.name);
 
@@ -114,12 +127,8 @@ export class AiService {
     });
 
     return {
-      rowsWithoutMatch,
-      activities: activities.map(({ dataSource, ...activity }) => {
-        // The data source is given as search-asset-profiles gives it, which
-        // POST api/v1/import transforms back
-        return { ...activity, dataSource: dataSource as DataSource };
-      })
+      ...this.getActivitiesWithCustomAssetProfiles(activities),
+      rowsWithoutMatch
     };
   }
 
@@ -127,7 +136,8 @@ export class AiService {
    * Matches the rows of a file to the asset profiles with the agent model and
    * the tool search-asset-profiles, and to the accounts of the user. A row
    * which does not give a valid activity, for example because its asset has
-   * no match, is a row without a match.
+   * no match, is a row without a match. An account id which is not the id of
+   * an account of the user is ignored.
    */
   public async getActivitiesFromRows({
     abortSignal,
@@ -203,7 +213,6 @@ export class AiService {
         unitPrice
       } = row;
 
-      // An id which is not the id of an account of the user is ignored
       const account = accounts.find(({ id }) => {
         return id === accountIdByName.get(accountName);
       });
@@ -251,9 +260,12 @@ export class AiService {
 
   /**
    * Reads the activities of a file (CSV, JPEG, PNG or PDF) with the vision
-   * model. The model gets no tools and copies the asset and the account as
-   * printed, hence the rows still have to be matched to asset profiles and
-   * accounts.
+   * model. A CSV file is passed as text, every other file as a file part. The
+   * native engine passes a PDF file to the model itself, as a parser plugin of
+   * OpenRouter is not covered by the zero data retention. The model gets no
+   * tools and copies the asset and the account as printed, hence the rows
+   * still have to be matched to asset profiles and accounts. A row above the
+   * maximum number of activities is left out.
    */
   public async getActivityRowsFromFile({
     abortSignal,
@@ -266,13 +278,12 @@ export class AiService {
   }): Promise<ActivityRow[]> {
     const startTime = performance.now();
 
-    // A CSV file is passed as text, every other file as a file part
     const content: (FilePart | TextPart)[] =
       file.mediaType === 'text/csv'
         ? [{ text: file.buffer.toString('utf8'), type: 'text' }]
         : [{ data: file.buffer, mediaType: file.mediaType, type: 'file' }];
 
-    const { output, totalUsage } = await generateText({
+    const { output, steps, totalUsage } = await generateText({
       abortSignal,
       instructions: [
         'You read the activities of a portfolio from a file, for example a CSV export or a statement of a broker, a confirmation of a trade or a screenshot.',
@@ -288,24 +299,24 @@ export class AiService {
         `If the format of a date or of a number is ambiguous and the file gives no other hint, read it as in the locale ${locale}.`,
         `Give at most ${MCP_MAX_ACTIVITIES} rows.`
       ].join('\n'),
+      maxOutputTokens: AiService.VISION_MAXIMUM_OUTPUT_TOKEN_COUNT,
       messages: [{ content, role: 'user' }],
       model: await this.getOpenRouterChatModel({
         modelPropertyKey: PROPERTY_OPENROUTER_MODEL_VISION,
         settings: {
-          // The native engine passes a PDF file to the model itself. A parser
-          // plugin of OpenRouter is not covered by the zero data retention.
           plugins: [{ id: 'file-parser', pdf: { engine: 'native' } }],
-          provider: { zdr: true }
+          provider: { zdr: true },
+          usage: { include: true }
         }
       }),
       output: Output.object({ schema: ACTIVITY_ROWS_OUTPUT })
     });
 
     this.logger.log(
-      `Read ${output.rows.length} rows from a file in ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens`
+      `Read ${output.rows.length} rows from a file in ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens for ${this.getCost(steps)} USD`
     );
 
-    return output.rows;
+    return output.rows.slice(0, MCP_MAX_ACTIVITIES);
   }
 
   public async getPrompt({
@@ -346,8 +357,65 @@ export class AiService {
     ].join('\n');
   }
 
+  /**
+   * Gives each fee, interest and liability a custom asset profile with its
+   * description as name, as the import after the dry run requires a valid
+   * symbol for the data source MANUAL. The data source of every other activity
+   * is given as search-asset-profiles gives it, which POST api/v1/import
+   * transforms back.
+   */
+  private getActivitiesWithCustomAssetProfiles(
+    activities: ActivityToImport[]
+  ): Omit<AiActivitiesResponse, 'rowsWithoutMatch'> {
+    const assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+
+    const activitiesWithCustomAssetProfiles = activities.map((activity) => {
+      if (activity.dataSource) {
+        return { ...activity, dataSource: activity.dataSource as DataSource };
+      }
+
+      let assetProfile = assetProfiles.find(({ name }) => {
+        return name === activity.symbol;
+      });
+
+      if (!assetProfile) {
+        assetProfile = {
+          currency: activity.currency,
+          dataSource: DataSource.MANUAL,
+          name: activity.symbol,
+          symbol: randomUUID()
+        };
+
+        assetProfiles.push(assetProfile);
+      }
+
+      return {
+        ...activity,
+        dataSource: DataSource.MANUAL,
+        symbol: assetProfile.symbol
+      };
+    });
+
+    return { assetProfiles, activities: activitiesWithCustomAssetProfiles };
+  }
+
   private getAssetKey({ currency, isin, name, symbol }: ActivityRow) {
     return JSON.stringify([currency, isin, name, symbol]);
+  }
+
+  /**
+   * Gives the cost in USD of the steps, as OpenRouter gives it
+   */
+  private getCost(steps: { providerMetadata: ProviderMetadata | undefined }[]) {
+    return steps
+      .reduce((cost, { providerMetadata }) => {
+        const { usage } = (providerMetadata?.openrouter ?? {}) as {
+          usage?: OpenRouterUsageAccounting;
+        };
+
+        return cost.plus(usage?.cost ?? 0);
+      }, new Big(0))
+      .toNumber();
   }
 
   /**
@@ -377,6 +445,12 @@ export class AiService {
     );
   }
 
+  /**
+   * Matches the assets and the account names with the agent model. The last
+   * step allows no tool call, so that the model always gives the matches. An
+   * asset match whose asset profile no search gave is left out, as the import
+   * refuses a symbol which the data source cannot resolve.
+   */
   private async getRowMatches({
     abortSignal,
     accountNames,
@@ -390,6 +464,7 @@ export class AiService {
     assets: AssetToMatch[];
     userId: string;
   }) {
+    const assetProfileIdentifiersOfSearches = new Set<string>();
     const startTime = performance.now();
 
     const { output, steps, totalUsage } = await generateText({
@@ -404,9 +479,14 @@ export class AiService {
       ].join('\n'),
       model: await this.getOpenRouterChatModel({
         modelPropertyKey: PROPERTY_OPENROUTER_MODEL_AGENT,
-        settings: { provider: { zdr: true } }
+        settings: { provider: { zdr: true }, usage: { include: true } }
       }),
       output: Output.object({ schema: ROW_MATCHES_OUTPUT }),
+      prepareStep: ({ stepNumber }) => {
+        return stepNumber === AiService.AGENT_MAXIMUM_STEP_COUNT - 1
+          ? { toolChoice: 'none' }
+          : undefined;
+      },
       prompt: JSON.stringify({
         accountNames,
         assets,
@@ -427,6 +507,16 @@ export class AiService {
               userId
             });
 
+            const { assetProfiles } = JSON.parse(content[0].text) as {
+              assetProfiles: AssetProfileIdentifier[];
+            };
+
+            for (const assetProfile of assetProfiles) {
+              assetProfileIdentifiersOfSearches.add(
+                getAssetProfileIdentifier(assetProfile)
+              );
+            }
+
             return content[0].text;
           },
           inputSchema: SEARCH_ASSET_PROFILES_PARAMETERS
@@ -435,10 +525,20 @@ export class AiService {
     });
 
     this.logger.log(
-      `Matched ${assets.length} assets and ${accountNames.length} account names in ${steps.length} steps and ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens`
+      `Matched ${assets.length} assets and ${accountNames.length} account names in ${steps.length} steps and ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens for ${this.getCost(steps)} USD`
     );
 
-    return output;
+    return {
+      accounts: output.accounts,
+      assets: output.assets.filter(({ dataSource, symbol }) => {
+        return assetProfileIdentifiersOfSearches.has(
+          getAssetProfileIdentifier({
+            symbol,
+            dataSource: dataSource as DataSource
+          })
+        );
+      })
+    };
   }
 
   private getSecondsSince(startTime: number) {

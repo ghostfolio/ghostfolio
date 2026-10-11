@@ -1,6 +1,7 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import {
+  AI_ACTIVITIES_FILE_MAXIMUM_SIZE,
   DEFAULT_DATE_RANGE,
   MCP_MAX_ACTIVITIES
 } from '@ghostfolio/common/config';
@@ -133,6 +134,7 @@ export class GfImportActivitiesDialogComponent {
   protected importStep: ImportStep = ImportStep.UPLOAD_FILE;
   protected isGhostfolioAiEnabled = false;
   protected isLoading = false;
+  protected isMaxActivitiesOfGhostfolioAiReached = false;
   protected readonly maxActivitiesOfGhostfolioAi = MCP_MAX_ACTIVITIES;
   protected mode: 'DIVIDEND';
   protected pageIndex = 0;
@@ -308,6 +310,7 @@ export class GfImportActivitiesDialogComponent {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
+    this.isMaxActivitiesOfGhostfolioAiReached = false;
     this.pageIndex = 0;
     this.rowsWithoutMatch = [];
     this.assetProfileForm.controls.assetProfileIdentifier.enable();
@@ -346,6 +349,32 @@ export class GfImportActivitiesDialogComponent {
     this.selectedActivities = activities.filter(({ error }) => {
       return !error;
     });
+  }
+
+  /**
+   * Gives the error message of a file which the server rejects, as a rejected
+   * file counts towards the daily limit of Ghostfolio AI
+   */
+  private async getErrorMessageOfFileForGhostfolioAi({
+    file,
+    fileExtension
+  }: {
+    file: File;
+    fileExtension?: string;
+  }) {
+    if (file.size > AI_ACTIVITIES_FILE_MAXIMUM_SIZE) {
+      return $localize`The file is larger than ${AI_ACTIVITIES_FILE_MAXIMUM_SIZE / 1024 / 1024}:maxFileSize: MB`;
+    }
+
+    if (
+      fileExtension === 'csv' &&
+      this.importActivitiesService.getDataRowCountOfCsv(await file.text()) >
+        MCP_MAX_ACTIVITIES
+    ) {
+      return $localize`The CSV file has more than ${MCP_MAX_ACTIVITIES}:maxActivities: rows of activities`;
+    }
+
+    return undefined;
   }
 
   private handleFile({ file, stepper }: { file: File; stepper: MatStepper }) {
@@ -468,6 +497,10 @@ export class GfImportActivitiesDialogComponent {
     };
   }
 
+  /**
+   * Reads the file with Ghostfolio AI. The request is canceled if the dialog
+   * is closed, which stops the models on the server.
+   */
   private async handleFileWithGhostfolioAi({
     file,
     fileExtension,
@@ -480,25 +513,19 @@ export class GfImportActivitiesDialogComponent {
     this.accounts = [];
     this.activities = [];
     this.assetProfiles = [];
+    this.isMaxActivitiesOfGhostfolioAiReached = false;
     this.platforms = [];
     this.tags = [];
 
-    // A CSV file is checked before the upload, because a file which the
-    // server rejects counts towards the daily limit of Ghostfolio AI
-    if (
-      fileExtension === 'csv' &&
-      this.importActivitiesService.getDataRowCountOfCsv(await file.text()) >
-        MCP_MAX_ACTIVITIES
-    ) {
+    const errorMessage = await this.getErrorMessageOfFileForGhostfolioAi({
+      file,
+      fileExtension
+    });
+
+    if (errorMessage) {
       this.handleImportError({
         activities: [],
-        error: {
-          error: {
-            message: [
-              $localize`The CSV file has more than ${MCP_MAX_ACTIVITIES}:maxActivities: rows of activities`
-            ]
-          }
-        }
+        error: { error: { message: [errorMessage] } }
       });
 
       this.showSelectActivitiesStep(stepper);
@@ -511,17 +538,20 @@ export class GfImportActivitiesDialogComponent {
 
     let activitiesOfFile: CreateOrderDto[] = [];
 
-    // The request is canceled if the dialog is closed
     this.dataService
       .postAiActivities(file)
       .pipe(
-        switchMap(({ activities, rowsWithoutMatch }) => {
+        switchMap(({ activities, assetProfiles, rowsWithoutMatch }) => {
           activitiesOfFile = activities;
+          this.assetProfiles = assetProfiles;
+          this.isMaxActivitiesOfGhostfolioAiReached =
+            activities.length + rowsWithoutMatch.length >= MCP_MAX_ACTIVITIES;
           this.rowsWithoutMatch = rowsWithoutMatch;
 
           return from(
             this.importActivitiesService.importJson({
               activities,
+              assetProfiles,
               isDryRun: true
             })
           );
