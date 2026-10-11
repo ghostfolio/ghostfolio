@@ -45,7 +45,9 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
           .describe('The date of the activity, as an ISO 8601 date'),
         fee: z.number().min(0).describe('The fee of the activity'),
         isin: PRINTED_TEXT.describe('The ISIN of the asset, as printed'),
-        name: PRINTED_TEXT.describe('The name of the asset, as printed'),
+        name: PRINTED_TEXT.describe(
+          'The name of the asset, or the description of a fee, an interest or a liability, as printed'
+        ),
         quantity: z.number().min(0).describe('The quantity of the activity'),
         symbol: PRINTED_TEXT.describe(
           'The ticker symbol of the asset, as printed'
