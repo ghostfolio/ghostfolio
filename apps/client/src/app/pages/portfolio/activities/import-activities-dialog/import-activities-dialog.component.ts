@@ -125,7 +125,7 @@ export class GfImportActivitiesDialogComponent {
   protected details: any[] = [];
   protected dialogTitle = $localize`Import Activities`;
   protected errorMessages: string[] = [];
-  protected readonly ghostfolioAiTooltip = $localize`Only upload anonymized or redacted data, as it will be sent to third parties.`;
+  protected readonly ghostfolioAiTooltip = $localize`The content of your file will be processed by a third-party AI provider. Please remove any personal data before uploading.`;
   protected readonly hasPermissionToImportActivitiesWithAi = hasPermission(
     this.data.user?.permissions,
     permissions.importActivitiesWithAi
