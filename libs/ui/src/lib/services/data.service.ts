@@ -728,14 +728,21 @@ export class DataService {
 
   public fetchPortfolioPerformance({
     filters,
+    groupBy,
     range,
     withExcludedAccounts = false
   }: {
     filters?: Filter[];
+    groupBy?: Extract<GroupBy, 'year'>;
     range: DateRange;
     withExcludedAccounts?: boolean;
   }): Observable<PortfolioPerformanceResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (groupBy) {
+      params = params.append('groupBy', groupBy);
+    }
+
     params = params.append('range', range);
 
     if (withExcludedAccounts) {

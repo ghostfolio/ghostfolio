@@ -113,10 +113,15 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    // Create a clone
+    const isBarChart = !!this.groupBy;
+
+    const benchmarkColorRgb = isBarChart ? primaryColorRgb : secondaryColorRgb;
+
+    // Create clones of the input data
     this.investments = this.benchmarkDataItems.map((item) =>
       Object.assign({}, item)
     );
+
     this.values = this.historicalDataItems.map((item) =>
       Object.assign({}, item)
     );
@@ -127,9 +132,9 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       }),
       datasets: [
         {
-          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderWidth: this.groupBy ? 0 : 1,
+          backgroundColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
+          borderColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
+          borderWidth: isBarChart ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {
             return {
               x: parseDate(date)?.getTime() ?? null,
@@ -141,7 +146,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
             borderColor: (context) =>
               this.isInFuture(
                 context,
-                `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.67)`
+                `rgba(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b}, 0.67)`
               ),
             borderDash: (context) => this.isInFuture(context, [2, 2])
           },
@@ -200,10 +205,10 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                   annotations: {
                     savingsRate: this.savingsRate
                       ? {
-                          borderColor: `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.75)`,
+                          borderColor: `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.75)`,
                           borderWidth: 1,
                           label: {
-                            backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+                            backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
                             borderRadius: 2,
                             color: 'white',
                             content: $localize`Savings Rate`,
@@ -234,7 +239,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
               responsive: true,
               scales: {
                 x: getTimeAxisOptions({
-                  borderWidth: this.groupBy ? 0 : 1,
+                  borderWidth: isBarChart ? 0 : 1,
                   colorScheme: this.colorScheme,
                   locale: this.locale
                 }),
@@ -250,7 +255,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
             plugins: [
               getVerticalHoverLinePlugin(this.chartCanvas(), this.colorScheme)
             ],
-            type: this.groupBy ? 'bar' : 'line'
+            type: isBarChart ? 'bar' : 'line'
           }
         );
       }

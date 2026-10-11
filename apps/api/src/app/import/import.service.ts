@@ -27,6 +27,7 @@ import {
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   getAssetProfileIdentifier,
+  hasGhostfolioPrefix,
   isValidCustomAssetProfileSymbol,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -649,9 +650,23 @@ export class ImportService {
               'marketData'
             );
 
-            // Asset profile belongs to a different user, generate a new symbol
-            if (existingAssetProfile && !isDryRun) {
-              symbol = randomUUID();
+            if (
+              (existingAssetProfile || hasGhostfolioPrefix(symbol)) &&
+              !isDryRun
+            ) {
+              const isSymbolOfAssetProfileToCreate = assetProfilesToCreate.some(
+                ({ assetProfile: { symbol: symbolToCreate } }) => {
+                  return symbolToCreate === assetProfileSymbolMapping[symbol];
+                }
+              );
+
+              if (hasGhostfolioPrefix(symbol)) {
+                assetProfile.name ??= symbol;
+              }
+
+              symbol = isSymbolOfAssetProfileToCreate
+                ? assetProfileSymbolMapping[symbol]
+                : randomUUID();
             }
 
             assetProfile.symbol = symbol;

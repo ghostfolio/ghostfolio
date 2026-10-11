@@ -430,6 +430,35 @@
     </div>
   </div>
 
+  @if (user?.settings?.isExperimentalFeatures) {
+    <div class="mb-5 row">
+      <div class="col-lg">
+        <div class="align-items-center d-flex mb-4">
+          <div
+            class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
+          >
+            <span i18n>Performance Timeline</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
+          </div>
+        </div>
+        <div class="chart-container">
+          <gf-investment-chart
+            class="h-100"
+            groupBy="year"
+            [benchmarkDataItems]="performancePercentagesByYear"
+            [benchmarkDataLabel]="performanceTimelineDataLabel"
+            [colorScheme]="user?.settings?.colorScheme"
+            [isInPercentage]="true"
+            [isLoading]="isLoadingPerformanceTimelineChart"
+            [locale]="user?.settings?.locale"
+          />
+        </div>
+      </div>
+    </div>
+  }
+
   <div class="mb-5 row">
     <div class="col-lg">
       <div class="align-items-center d-flex mb-4">

@@ -8,6 +8,7 @@ import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
@@ -15,12 +16,15 @@ import {
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
 
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetProfileSplit,
   DataSource,
+  Prisma,
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
+import { isUUID } from 'class-validator';
 
 import { ActivitiesService } from './activities.service';
 
@@ -47,6 +51,98 @@ describe('ActivitiesService', () => {
       null,
       null
     );
+  });
+
+  describe('createActivity', () => {
+    it('creates a custom asset profile with a UUID if no asset profile exists for a symbol with the prefix', async () => {
+      const assetProfile = await getCreatedAssetProfile({ symbol: 'GF_COPX' });
+
+      expect(isUUID(assetProfile.symbol)).toBe(true);
+      expect(assetProfile.name).toBe('GF_COPX');
+    });
+
+    it('connects to the existing asset profile of a symbol with the prefix', async () => {
+      const assetProfile = await getCreatedAssetProfile({
+        existingAssetProfile: { id: 'asset-profile-id' },
+        symbol: 'GF_COPX'
+      });
+
+      expect(assetProfile.symbol).toBe('GF_COPX');
+    });
+
+    it('creates a custom asset profile with the requested UUID if no asset profile exists', async () => {
+      const symbol = '1ad7d4a2-6b2d-4e0f-9b1f-2c0f8d3e5a7b';
+
+      const assetProfile = await getCreatedAssetProfile({ symbol });
+
+      expect(assetProfile.symbol).toBe(symbol);
+    });
+
+    async function getCreatedAssetProfile({
+      existingAssetProfile,
+      symbol
+    }: {
+      existingAssetProfile?: { id: string };
+      symbol: string;
+    }) {
+      const create = jest.fn(({ data }: Prisma.OrderCreateArgs) => {
+        return {
+          ...data,
+          SymbolProfile: data.SymbolProfile.connectOrCreate.create
+        };
+      });
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        { emit: jest.fn() } as unknown as EventEmitter2,
+        null,
+        null,
+        {
+          order: { create },
+          symbolProfile: {
+            findUnique: jest
+              .fn()
+              .mockResolvedValue(existingAssetProfile ?? null)
+          }
+        } as unknown as PrismaService,
+        null,
+        { validateTagIds: jest.fn() } as unknown as TagService
+      );
+
+      await service.createActivity({
+        currency: 'USD',
+        date: parseDate('2024-01-01'),
+        fee: 0,
+        quantity: 1,
+        SymbolProfile: {
+          connectOrCreate: {
+            create: { symbol, currency: 'USD', dataSource: DataSource.MANUAL },
+            where: {
+              dataSource_symbol: { symbol, dataSource: DataSource.MANUAL }
+            }
+          }
+        },
+        type: 'BUY',
+        unitPrice: 100,
+        user: { connect: { id: 'user-id' } },
+        userId: 'user-id'
+      });
+
+      const { create: assetProfile, where } =
+        create.mock.calls[0][0].data.SymbolProfile.connectOrCreate;
+
+      expect(where.dataSource_symbol).toEqual({
+        dataSource: DataSource.MANUAL,
+        symbol: assetProfile.symbol
+      });
+
+      return assetProfile;
+    }
   });
 
   describe('getActivities', () => {

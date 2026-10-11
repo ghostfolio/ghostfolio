@@ -237,6 +237,29 @@ export function canOpenHoldingDetail({
   return assetProfile?.assetSubClass !== AssetSubClass.CASH;
 }
 
+/**
+ * Checks if the symbol of a custom asset profile can be used, either to connect
+ * to the existing asset profile or to create a new one. The prefix is reserved
+ * for the asset profiles of the admin, thus a new asset profile cannot use it.
+ */
+export function canUseCustomAssetProfileSymbol({
+  assetProfile,
+  symbol
+}: {
+  assetProfile: Pick<SymbolProfile, 'id'> | null;
+  symbol: string;
+}): boolean {
+  if (!isValidCustomAssetProfileSymbol(symbol)) {
+    return false;
+  }
+
+  if (assetProfile) {
+    return true;
+  }
+
+  return !hasGhostfolioPrefix(symbol);
+}
+
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }

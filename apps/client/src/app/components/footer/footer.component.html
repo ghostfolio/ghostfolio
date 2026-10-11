@@ -6,7 +6,7 @@
     <div class="col-sm">
       <div class="h6 mt-2" i18n>Personal Finance</div>
       <ul class="list-unstyled">
-        @if (hasPermissionToAccessFearAndGreedIndex) {
+        @if (hasPermissionToAccessFearAndGreedIndex()) {
           <li>
             <a i18n [routerLink]="routerLinkMarkets">Markets</a>
           </li>
@@ -18,7 +18,7 @@
       <div class="h6 mt-2">Ghostfolio</div>
       <ul class="list-unstyled">
         <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
-        @if (hasPermissionForSubscription) {
+        @if (hasPermissionForSubscription()) {
           <li>
             <a i18n [routerLink]="routerLinkBlog">Blog</a>
           </li>
@@ -27,43 +27,43 @@
           <a i18n [routerLink]="routerLinkAboutChangelog">Changelog</a>
         </li>
         <li><a i18n [routerLink]="routerLinkFeatures">Features</a></li>
-        @if (hasPermissionForSubscription) {
+        @if (hasPermissionForSubscription()) {
           <li>
             <a i18n [routerLink]="routerLinkFaq"
               >Frequently Asked Questions (FAQ)</a
             >
           </li>
         }
-        @if (!hasPermissionForSubscription) {
+        @if (!hasPermissionForSubscription()) {
           <li>
             <a i18n [routerLink]="routerLinkAboutLicense">License</a>
           </li>
         }
-        @if (hasPermissionForStatistics) {
+        @if (hasPermissionForStatistics()) {
           <li>
             <a [routerLink]="routerLinkOpenStartup">Open Startup</a>
           </li>
         }
-        @if (hasPermissionForSubscription) {
+        @if (hasPermissionForSubscription()) {
           <li>
             <a i18n [routerLink]="routerLinkPricing">Pricing</a>
           </li>
         }
-        @if (hasPermissionForSubscription) {
+        @if (hasPermissionForSubscription()) {
           <li>
             <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"
               >Privacy Policy</a
             >
           </li>
         }
-        @if (hasPermissionForSubscription) {
+        @if (hasPermissionForSubscription()) {
           <li>
             <a i18n [routerLink]="routerLinkAboutTermsOfService"
               >Terms of Service</a
             >
           </li>
         }
-        @if (hasPermissionForSubscription) {
+        @if (hasPermissionForSubscription()) {
           <li>
             <a
               class="align-items-baseline d-flex"

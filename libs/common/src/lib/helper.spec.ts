@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   canApplyFiltersToAccess,
+  canUseCustomAssetProfileSymbol,
   extractNumberFromString,
   getCountryCodeFromCurrency,
   getEmojiFlag,
@@ -36,6 +37,50 @@ describe('Helper', () => {
 
     it('A public access', () => {
       expect(canApplyFiltersToAccess({ type: 'PUBLIC' })).toEqual(true);
+    });
+  });
+
+  describe('Can use custom asset profile symbol', () => {
+    const assetProfile = { id: 'asset-profile-id' };
+    const symbol = '7e91b7d4-1430-4212-8380-289a06c9bbc1';
+
+    it('Free-text symbol', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({
+          assetProfile: null,
+          symbol: 'Penthouse Apartment'
+        })
+      ).toEqual(false);
+    });
+
+    it('New asset profile with UUID', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({ symbol, assetProfile: null })
+      ).toEqual(true);
+    });
+
+    it('New asset profile with Ghostfolio prefix', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({
+          assetProfile: null,
+          symbol: 'GF_PENTHOUSE_APARTMENT'
+        })
+      ).toEqual(false);
+    });
+
+    it('Existing asset profile with UUID', () => {
+      expect(canUseCustomAssetProfileSymbol({ assetProfile, symbol })).toEqual(
+        true
+      );
+    });
+
+    it('Existing asset profile with Ghostfolio prefix', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({
+          assetProfile,
+          symbol: 'GF_PENTHOUSE_APARTMENT'
+        })
+      ).toEqual(true);
     });
   });
 

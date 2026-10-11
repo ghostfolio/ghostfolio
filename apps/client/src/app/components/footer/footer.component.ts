@@ -1,4 +1,4 @@
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
@@ -6,9 +6,9 @@ import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
-  Input,
-  OnChanges
+  input
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -23,51 +23,53 @@ import { openOutline } from 'ionicons/icons';
   styleUrls: ['./footer.component.scss'],
   templateUrl: './footer.component.html'
 })
-export class GfFooterComponent implements OnChanges {
-  @Input() public info: InfoItem;
-  @Input() public user: User;
+export class GfFooterComponent {
+  public readonly info = input.required<InfoItem | undefined>();
 
-  public currentYear = new Date().getFullYear();
-  public hasPermissionForStatistics: boolean;
-  public hasPermissionForSubscription: boolean;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public routerLinkAbout = publicRoutes.about.routerLink;
-  public routerLinkAboutChangelog =
+  protected readonly currentYear = new Date().getFullYear();
+
+  protected readonly hasPermissionForStatistics = computed(() => {
+    return hasPermission(
+      this.info()?.globalPermissions,
+      permissions.enableStatistics
+    );
+  });
+
+  protected readonly hasPermissionForSubscription = computed(() => {
+    return hasPermission(
+      this.info()?.globalPermissions,
+      permissions.enableSubscription
+    );
+  });
+
+  protected readonly hasPermissionToAccessFearAndGreedIndex = computed(() => {
+    return hasPermission(
+      this.info()?.globalPermissions,
+      permissions.enableFearAndGreedIndex
+    );
+  });
+
+  protected readonly routerLinkAbout = publicRoutes.about.routerLink;
+  protected readonly routerLinkAboutChangelog =
     publicRoutes.about.subRoutes.changelog.routerLink;
-  public routerLinkAboutLicense =
+  protected readonly routerLinkAboutLicense =
     publicRoutes.about.subRoutes.license.routerLink;
-  public routerLinkAboutPrivacyPolicy =
+  protected readonly routerLinkAboutPrivacyPolicy =
     publicRoutes.about.subRoutes.privacyPolicy.routerLink;
-  public routerLinkAboutTermsOfService =
+  protected readonly routerLinkAboutTermsOfService =
     publicRoutes.about.subRoutes.termsOfService.routerLink;
-  public routerLinkBlog = publicRoutes.blog.routerLink;
-  public routerLinkFaq = publicRoutes.faq.routerLink;
-  public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkMarkets = publicRoutes.markets.routerLink;
-  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
-  public routerLinkPricing = publicRoutes.pricing.routerLink;
-  public routerLinkResources = publicRoutes.resources.routerLink;
+  protected readonly routerLinkBlog = publicRoutes.blog.routerLink;
+  protected readonly routerLinkFaq = publicRoutes.faq.routerLink;
+  protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
+  protected readonly routerLinkMarkets = publicRoutes.markets.routerLink;
+  protected readonly routerLinkOpenStartup =
+    publicRoutes.openStartup.routerLink;
+  protected readonly routerLinkPricing = publicRoutes.pricing.routerLink;
+  protected readonly routerLinkResources = publicRoutes.resources.routerLink;
 
   public constructor() {
     addIcons({
       openOutline
     });
-  }
-
-  public ngOnChanges() {
-    this.hasPermissionForStatistics = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableStatistics
-    );
-
-    this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSubscription
-    );
-
-    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableFearAndGreedIndex
-    );
   }
 }

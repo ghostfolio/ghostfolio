@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.83.0 - 2026-10-10
+
+### Added
+
+- Added the performance timeline grouped by year to the analysis page (experimental)
+- Extended the `GET api/v2/portfolio/performance` endpoint by the `groupBy` query parameter (`year`)
+
+### Changed
+
+- Extended the benchmark comparator to support benchmarks whose market data starts later than the portfolio
+- Harmonized the colors in the investment chart component
+- Improved the performance of getting the historical market data by loading only the requested asset profiles
+- Improved the language localization for Chinese (`zh`)
+
+### Fixed
+
+- Fixed an issue where a user could create a custom asset profile with a symbol of the prefix `GF_`
+- Fixed the horizontal overflow on the overview tab of the home page on mobile
+
 ## 3.82.0 - 2026-10-09
 
 ### Added
