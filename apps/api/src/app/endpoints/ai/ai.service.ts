@@ -517,10 +517,11 @@ export class AiService {
    * tools search-asset-profiles and get-accounts of the server of the Model
    * Context Protocol. The accounts are given without values. The first step
    * requires a tool call, as a model can give the matches without any tool
-   * call otherwise. The last step allows no tool call, so that the model
-   * always gives the matches. An asset match whose asset profile no search
-   * gave is left out, as the import refuses a symbol which the data source
-   * cannot resolve.
+   * call otherwise. The reasoning is disabled, as some models ignore a
+   * required tool call while they reason. The last step allows no tool call,
+   * so that the model always gives the matches. An asset match whose asset
+   * profile no search gave is left out, as the import refuses a symbol which
+   * the data source cannot resolve.
    */
   private async getRowMatches({
     abortSignal,
@@ -555,6 +556,7 @@ export class AiService {
         modelPropertyKey: PROPERTY_OPENROUTER_MODEL_AGENT,
         settings: {
           provider: { require_parameters: true, zdr: true },
+          reasoning: { effort: 'none' },
           usage: { include: true }
         }
       }),
