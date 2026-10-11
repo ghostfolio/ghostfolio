@@ -528,8 +528,11 @@ describe('ActivitiesService', () => {
 
       expect(data.SymbolProfile).toEqual({
         update: {
-          assetClass: AssetClass.COMMODITY,
-          assetSubClass: AssetSubClass.PRECIOUS_METAL
+          data: {
+            assetClass: AssetClass.COMMODITY,
+            assetSubClass: AssetSubClass.PRECIOUS_METAL
+          },
+          where: { userId: 'user-id' }
         }
       });
     });
