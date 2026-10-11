@@ -57,7 +57,6 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { PageEvent } from '@angular/material/paginator';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -94,7 +93,6 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
     MatDialogModule,
     MatExpansionModule,
     MatFormFieldModule,
-    MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatStepperModule,

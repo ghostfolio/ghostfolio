@@ -42,11 +42,23 @@
       .cloud-icon {
         font-size: 2.5rem;
       }
-    }
 
-    .mat-mdc-progress-spinner {
-      right: 1.5rem;
-      top: calc(50% - 10px);
+      .mat-mdc-form-field {
+        .mat-mdc-progress-spinner {
+          right: 1.5rem;
+          top: calc(50% - 10px);
+        }
+      }
+
+      .mat-mdc-progress-spinner {
+        @include mat.progress-spinner-overrides(
+          (
+            active-indicator-color: var(--gf-theme-primary-500)
+          )
+        );
+
+        margin: 0.625rem 0;
+      }
     }
 
     .mat-expansion-panel {
