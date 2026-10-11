@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the endpoint to read the activities of a CSV, JPEG, PDF or PNG file with _Ghostfolio AI_ (`POST api/v1/ai/activities`) (experimental)
+
 ### Changed
 
 - Simplified the portfolio performance on the overview tab of the home page by hiding the currency on mobile
