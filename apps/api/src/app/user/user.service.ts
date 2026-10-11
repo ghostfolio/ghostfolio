@@ -475,6 +475,10 @@ export class UserService {
           currentPermissions.push(permissions.enableDataProviderGhostfolio);
           currentPermissions.push(permissions.readMarketDataOfMarkets);
           currentPermissions.push(permissions.reportDataGlitch);
+
+          if ((user.settings.settings as UserSettings).isExperimentalFeatures) {
+            currentPermissions.push(permissions.importActivitiesWithAi);
+          }
         }
 
         currentPermissions = without(
@@ -525,6 +529,7 @@ export class UserService {
           return !(
             permission.startsWith('create') ||
             permission.startsWith('delete') ||
+            permission.startsWith('import') ||
             permission.startsWith('update')
           );
         });

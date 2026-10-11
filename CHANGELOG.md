@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the endpoint to read the activities of a CSV, JPEG, PDF or PNG file with _Ghostfolio AI_ (`POST api/v1/ai/activities`) (experimental)
+
 ### Changed
 
 - Simplified the portfolio performance on the overview tab of the home page by hiding the currency on mobile
 - Extended the user detail dialog in the users section of the admin control panel to include the client of the last request
+- Updated the _Privacy Policy_
+- Extended the import of activities to support CSV files of other brokers, images and PDF files with _Ghostfolio AI_ (experimental)
 - Extended the access to share the portfolio with the Model Context Protocol (MCP) to support the _View_ and the _View and manage_ permissions (experimental)
 - Improved the performance of getting the historical market data by selecting only the required columns
 
