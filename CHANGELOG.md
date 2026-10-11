@@ -5,13 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.84.2 - 2026-10-11
+
+### Added
+
+- Added the endpoint to read the activities of a CSV, JPEG, PDF or PNG file with _Ghostfolio AI_ (`POST api/v1/ai/activities`) (experimental)
 
 ### Changed
 
 - Simplified the portfolio performance on the overview tab of the home page by hiding the currency on mobile
+- Extended the user detail dialog in the users section of the admin control panel to include the client of the last request
+- Updated the _Privacy Policy_
+- Extended the import of activities to support CSV files of other brokers, images and PDF files with _Ghostfolio AI_ (experimental)
 - Extended the access to share the portfolio with the Model Context Protocol (MCP) to support the _View_ and the _View and manage_ permissions (experimental)
 - Improved the performance of getting the historical market data by selecting only the required columns
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
@@ -20,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the dates of the benchmark in the benchmark comparator on the analysis page for instances in time zones with a negative UTC offset
 - Fixed the value of the accounts by excluding the cash balance when filtering by an asset class other than liquidity on the accounts page and the allocations page
 - Fixed the value of the accounts by excluding the cash balance when filtering by an asset class other than liquidity in the server of the Model Context Protocol (MCP) (experimental)
+- Fixed the missing check of the inactive role and of the daily request limit in the server of the Model Context Protocol (MCP) (experimental)
 
 ## 3.83.0 - 2026-10-10
 

@@ -1,3 +1,4 @@
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getHelmetOptions } from '@ghostfolio/api/helper/security-headers.helper';
 import { languageRedirectMiddleware } from '@ghostfolio/api/middlewares/language-redirect.middleware';
 import { createMcpAuthorizationMiddleware } from '@ghostfolio/api/middlewares/mcp-authorization.middleware';
@@ -159,7 +160,11 @@ async function bootstrap() {
     // specification instead of an error of the protocol
     app.use(
       MCP_ENDPOINT,
-      createMcpAuthorizationMiddleware(app.get(ImpersonationService))
+      createMcpAuthorizationMiddleware({
+        configurationService,
+        impersonationService: app.get(ImpersonationService),
+        userService: app.get(UserService)
+      })
     );
 
     const mcpStrategy = app.get<McpStrategy>(MCP_STRATEGY);

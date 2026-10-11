@@ -47,6 +47,7 @@ export const permissions = {
   enableSubscriptionInterstitial: 'enableSubscriptionInterstitial',
   enableSystemMessage: 'enableSystemMessage',
   impersonateAllUsers: 'impersonateAllUsers',
+  importActivitiesWithAi: 'importActivitiesWithAi',
   readAiPrompt: 'readAiPrompt',
   readMarketData: 'readMarketData',
   readMarketDataOfMarkets: 'readMarketDataOfMarkets',
