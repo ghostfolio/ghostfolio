@@ -682,8 +682,9 @@ export class UserService {
   }
 
   /**
-   * Counts the request of the user and keeps its date and its client. The
-   * country is kept only if it is given.
+   * Keeps the date and the client of the request of the user. The request is
+   * counted only if the analytics of the user exist already. The country is
+   * kept only if it is given.
    */
   public async updateAnalytics({
     country,
