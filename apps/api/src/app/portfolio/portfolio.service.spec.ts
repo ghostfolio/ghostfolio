@@ -23,7 +23,7 @@ import {
   Filter,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
-import { AccountWithBalance } from '@ghostfolio/common/types';
+import { AccountWithBalance, DateRange } from '@ghostfolio/common/types';
 
 import { AssetClass, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
@@ -840,6 +840,50 @@ describe('PortfolioService', () => {
         portfolioCalculatorFactory.createCalculator
       ).not.toHaveBeenCalled();
     });
+  });
+
+  describe('getInvestments', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it.each(['2025', 'ytd'] as DateRange[])(
+      'should exclude the investment of the start date of the date range %s',
+      async (dateRange) => {
+        jest.useFakeTimers().setSystemTime(parseDate('2025-06-15').getTime());
+
+        jest
+          .spyOn(activitiesService, 'getActivitiesForPortfolioCalculator')
+          .mockResolvedValue({ activities: [{} as Activity], count: 1 });
+
+        jest
+          .spyOn(portfolioCalculatorFactory, 'createCalculator')
+          .mockReturnValue({
+            getSnapshot: jest.fn().mockResolvedValue({
+              historicalData: [
+                { date: '2024-12-31', investmentValueWithCurrencyEffect: 100 },
+                { date: '2025-01-01', investmentValueWithCurrencyEffect: 200 }
+              ]
+            })
+          } as unknown as PortfolioCalculator);
+
+        jest.spyOn(userService, 'user').mockResolvedValue({
+          id: userDummyData.id,
+          settings: {
+            settings: {
+              baseCurrency: 'CHF'
+            }
+          }
+        } as unknown as Awaited<ReturnType<typeof userService.user>>);
+
+        const { investments } = await portfolioService.getInvestments({
+          dateRange,
+          userId: userDummyData.id
+        });
+
+        expect(investments).toEqual([{ date: '2025-01-01', investment: 200 }]);
+      }
+    );
   });
 
   describe('getPerformance', () => {
