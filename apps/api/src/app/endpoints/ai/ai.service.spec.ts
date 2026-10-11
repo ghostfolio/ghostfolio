@@ -16,7 +16,7 @@ import type { UserWithSettings } from '@ghostfolio/common/types';
 import { Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { DataSource, Type as ActivityType } from '@prisma/client';
-import { generateText, isStepCount, NoObjectGeneratedError, ToolSet } from 'ai';
+import { generateText, NoObjectGeneratedError } from 'ai';
 import { z } from 'zod';
 
 import { ACTIVITY_ROWS_OUTPUT, ROW_MATCHES_OUTPUT } from './ai.schemas';
@@ -33,9 +33,6 @@ jest.mock('@openrouter/ai-sdk-provider', () => {
 jest.mock('ai', () => {
   return {
     generateText: jest.fn(),
-    isStepCount: jest.fn((stepCount: number) => {
-      return { stepCount };
-    }),
     NoObjectGeneratedError: class MockNoObjectGeneratedError extends Error {
       public readonly finishReason: string;
 
@@ -53,10 +50,7 @@ jest.mock('ai', () => {
       object: jest.fn((options: unknown) => {
         return options;
       })
-    },
-    tool: jest.fn((options: unknown) => {
-      return options;
-    })
+    }
   };
 });
 
@@ -477,7 +471,7 @@ describe('AiService', () => {
     }: Partial<z.infer<typeof ROW_MATCHES_OUTPUT>> & {
       assetProfilesOfSearch?: { dataSource: string; symbol: string }[];
     }) {
-      jest.mocked(mcpService.searchAssetProfiles).mockResolvedValueOnce({
+      jest.mocked(mcpService.searchAssetProfiles).mockResolvedValue({
         content: [
           {
             text: JSON.stringify({
@@ -488,18 +482,11 @@ describe('AiService', () => {
         ]
       });
 
-      jest.mocked(generateText).mockImplementationOnce(async ({ tools }) => {
-        await tools['search-asset-profiles'].execute(
-          { query: 'US0378331005' },
-          undefined
-        );
-
-        return {
-          output: { accounts: accountMatches, assets: assetMatches },
-          steps: [{}, {}],
-          totalUsage: { totalTokens: 2000 }
-        } as unknown as Awaited<ReturnType<typeof generateText>>;
-      });
+      jest.mocked(generateText).mockResolvedValueOnce({
+        output: { accounts: accountMatches, assets: assetMatches },
+        steps: [{}],
+        totalUsage: { totalTokens: 2000 }
+      } as unknown as Awaited<ReturnType<typeof generateText>>);
     }
 
     it('Gives an activity for each row whose asset matches an asset profile', async () => {
@@ -799,8 +786,9 @@ describe('AiService', () => {
       ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
     });
 
-    it('Passes each asset and each account hint one time and no account to the model', async () => {
+    it('Passes each asset with the asset profiles of its search, each account hint one time and the accounts to the model', async () => {
       mockRowMatches({
+        assetProfilesOfSearch: [{ dataSource: 'YAHOO', symbol: 'AAPL' }],
         assets: [
           { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
         ]
@@ -830,8 +818,10 @@ describe('AiService', () => {
           { accountName: 'Brokerage', broker: 'Swissquote', id: 0 },
           { accountName: 'Depot 1', broker: 'Swissquote', id: 1 }
         ],
+        accounts: '## Accounts',
         assets: [
           {
+            assetProfiles: [{ dataSource: 'YAHOO', symbol: 'AAPL' }],
             currency: 'USD',
             id: 0,
             isin: 'US0378331005',
@@ -842,31 +832,58 @@ describe('AiService', () => {
       });
     });
 
-    it('Searches the asset profiles with the tool of the server of the Model Context Protocol', async () => {
+    it('Searches each asset with the tool of the server of the Model Context Protocol by the ISIN, then by the ticker symbol, then by the name, until a search gives asset profiles', async () => {
+      mockRowMatches({});
+
+      jest
+        .mocked(mcpService.searchAssetProfiles)
+        .mockResolvedValueOnce({
+          content: [{ text: '{ "assetProfiles": [] }', type: 'text' }]
+        })
+        .mockResolvedValueOnce({
+          content: [
+            {
+              text: JSON.stringify({
+                assetProfiles: [{ dataSource: 'YAHOO', symbol: 'AAPL' }]
+              }),
+              type: 'text'
+            }
+          ]
+        });
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow({ accountName: null })]
+      });
+
+      expect(jest.mocked(mcpService.searchAssetProfiles).mock.calls).toEqual([
+        [{ userId, query: 'US0378331005' }],
+        [{ userId, query: 'AAPL' }]
+      ]);
+    });
+
+    it('Does not search a missing or too short value of an asset', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
         accounts,
         userCurrency,
         userId,
-        rows: [createActivityRow()]
+        rows: [
+          createActivityRow({
+            accountName: null,
+            isin: null,
+            name: 'Visa Inc.',
+            symbol: 'V'
+          })
+        ]
       });
 
-      const { tools } = jest.mocked(generateText).mock.calls[0][0] as {
-        tools: ToolSet;
-      };
-
-      await expect(
-        tools['search-asset-profiles'].execute(
-          { query: 'US0378331005' },
-          undefined
-        )
-      ).resolves.toBe('{ "assetProfiles": [] }');
-
-      expect(mcpService.searchAssetProfiles).toHaveBeenCalledWith({
-        userId,
-        query: 'US0378331005'
-      });
+      expect(jest.mocked(mcpService.searchAssetProfiles).mock.calls).toEqual([
+        [{ userId, query: 'Visa Inc.' }]
+      ]);
     });
 
     it('Gets the accounts with the tool of the server of the Model Context Protocol without values', async () => {
@@ -879,21 +896,30 @@ describe('AiService', () => {
         rows: [createActivityRow()]
       });
 
-      const { tools } = jest.mocked(generateText).mock.calls[0][0] as {
-        tools: ToolSet;
-      };
-
-      await expect(tools['get-accounts'].execute({}, undefined)).resolves.toBe(
-        '## Accounts'
-      );
-
       expect(mcpService.getAccounts).toHaveBeenCalledWith({
         userId,
         withValues: false
       });
     });
 
-    it('Restricts the routing to endpoints with zero data retention, disables the reasoning, limits the number of steps, requires a tool call in the first step and allows no tool call in the last step', async () => {
+    it('Does not get the accounts without an account hint', async () => {
+      mockRowMatches({});
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow({ accountName: null })]
+      });
+
+      expect(mcpService.getAccounts).not.toHaveBeenCalled();
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).not.toHaveProperty('accounts');
+    });
+
+    it('Restricts the routing to endpoints with zero data retention, disables the reasoning and gives the model no tools', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
@@ -910,8 +936,6 @@ describe('AiService', () => {
         usage: { include: true }
       });
 
-      expect(isStepCount).toHaveBeenCalled();
-
       expect(generateText).toHaveBeenCalledWith(
         expect.objectContaining({
           abortSignal,
@@ -920,23 +944,9 @@ describe('AiService', () => {
         })
       );
 
-      const { prepareStep, stopWhen } = jest.mocked(generateText).mock
-        .calls[0][0] as {
-        prepareStep: (options: { stepNumber: number }) => unknown;
-        stopWhen: unknown;
-      };
-
-      expect(stopWhen).toBe(jest.mocked(isStepCount).mock.results[0].value);
-
-      const [stepCount] = jest.mocked(isStepCount).mock.calls[0];
-
-      expect(prepareStep({ stepNumber: 0 })).toEqual({
-        toolChoice: 'required'
-      });
-      expect(prepareStep({ stepNumber: stepCount - 2 })).toBeUndefined();
-      expect(prepareStep({ stepNumber: stepCount - 1 })).toEqual({
-        toolChoice: 'none'
-      });
+      expect(jest.mocked(generateText).mock.calls[0][0]).not.toHaveProperty(
+        'tools'
+      );
     });
 
     it('Falls back to the general model if no agent model is set', async () => {
