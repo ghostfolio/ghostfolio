@@ -71,7 +71,7 @@ export const ROW_MATCHES_OUTPUT = z.object({
           .describe(
             'The data source of the asset profile, as given by search-asset-profiles'
           ),
-        id: z.number().int().describe('The id of the asset, as given'),
+        id: z.number().describe('The id of the asset, as given'),
         symbol: z
           .string()
           .nullable()

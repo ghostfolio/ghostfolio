@@ -90,6 +90,6 @@ describe.each([
       expect([...required].sort()).toEqual(Object.keys(properties).sort());
     }
 
-    expect(JSON.stringify(jsonSchema)).not.toMatch(/"(max|min)Length"/);
+    expect(JSON.stringify(jsonSchema)).not.toMatch(/"(max|min)(imum|Length)"/);
   });
 });
