@@ -12,12 +12,28 @@ describe('getDataRowCountOfCsvFile', () => {
     ).toBe(2);
   });
 
-  it('Counts a line with a line break in quotes as one line', () => {
+  it('Counts each line of a value with a line break in quotes', () => {
     expect(
       getDataRowCountOfCsvFile(
-        Buffer.from('Date,Comment\n2026-01-15,"First\nsecond"\n')
+        Buffer.from('Date,Comment\r\n2026-01-15,"First\r\nsecond"\r\n')
       )
-    ).toBe(1);
+    ).toBe(2);
+  });
+
+  it('Counts each line after a quote which is not closed', () => {
+    expect(
+      getDataRowCountOfCsvFile(
+        Buffer.from(
+          [
+            'Date,Symbol,Quantity',
+            '2026-01-15,"AAPL,1',
+            ...Array.from({ length: 200 }, () => {
+              return '2026-01-16,MSFT,1';
+            })
+          ].join('\n')
+        )
+      )
+    ).toBe(201);
   });
 
   it('Gives 0 for a file with a header only or without content', () => {

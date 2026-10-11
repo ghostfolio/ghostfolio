@@ -46,9 +46,11 @@ export class ImportActivitiesService {
    * the first line
    */
   public getDataRowCountOfCsv(fileContent: string) {
-    const { data } = csvToJson(fileContent, { skipEmptyLines: true });
+    const lineCount = fileContent.split(/\r\n|\r|\n/).filter((line) => {
+      return line.trim().length > 0;
+    }).length;
 
-    return Math.max(data.length - 1, 0);
+    return Math.max(lineCount - 1, 0);
   }
 
   public async importCsv({

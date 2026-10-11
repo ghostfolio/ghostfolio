@@ -4,6 +4,7 @@ import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.gu
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import {
+  AI_ACTIVITIES_TIMEOUT,
   AI_MAX_ACTIVITIES,
   THROTTLE_AI_ACTIVITIES_LIMIT,
   THROTTLE_DAILY_TTL
@@ -231,6 +232,38 @@ describe('AiController', () => {
         response: { message: ['The file has too many activities'] },
         status: StatusCodes.BAD_REQUEST
       });
+    });
+
+    it('Gives the status 400 with a message for the caller at the timeout', async () => {
+      const timeoutSignal = AbortSignal.abort(
+        new DOMException(
+          'The operation was aborted due to timeout',
+          'TimeoutError'
+        )
+      );
+
+      jest.spyOn(AbortSignal, 'timeout').mockReturnValueOnce(timeoutSignal);
+
+      jest
+        .mocked(aiService.getActivitiesFromFile)
+        .mockRejectedValueOnce(timeoutSignal.reason);
+
+      await expect(
+        aiController.getActivitiesFromFile(createResponse(), pdfFile)
+      ).rejects.toMatchObject({
+        response: {
+          message: [
+            'Ghostfolio AI needs too much time for the file. Split it into smaller files.'
+          ]
+        },
+        status: StatusCodes.BAD_REQUEST
+      });
+
+      expect(AbortSignal.timeout).toHaveBeenCalledWith(AI_ACTIVITIES_TIMEOUT);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        `Stopped reading a file of the type application/pdf at the timeout of ${AI_ACTIVITIES_TIMEOUT} ms`
+      );
     });
 
     it('Passes on every other error', async () => {

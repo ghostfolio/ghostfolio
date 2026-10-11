@@ -69,8 +69,9 @@ export class AiController {
    * without saving anything. The client imports the activities which the user
    * selects with POST api/v1/import. The daily limit applies to each user
    * instead of each IP address. The models stop if the client closes the
-   * request before the response. An error whose message is written for the
-   * caller gives the status 400 with this message.
+   * request before the response or at the timeout. An error whose message is
+   * written for the caller gives the status 400 with this message, the
+   * timeout gives the status 400 with a message for the caller as well.
    */
   @HasPermission(permissions.importActivitiesWithAi)
   @HttpCode(StatusCodes.OK)
@@ -87,6 +88,7 @@ export class AiController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard, CustomThrottlerGuard)
   @UseInterceptors(
     FileInterceptor('file', {
+      defParamCharset: 'utf8',
       limits: { fileSize: AI_ACTIVITIES_FILE_MAXIMUM_SIZE }
     })
   )
@@ -132,6 +134,7 @@ export class AiController {
     }
 
     const abortController = new AbortController();
+    const timeoutSignal = AbortSignal.timeout(AI_ACTIVITIES_TIMEOUT);
 
     response.on('close', () => {
       if (!response.writableFinished) {
@@ -141,10 +144,7 @@ export class AiController {
 
     try {
       return await this.aiService.getActivitiesFromFile({
-        abortSignal: AbortSignal.any([
-          abortController.signal,
-          AbortSignal.timeout(AI_ACTIVITIES_TIMEOUT)
-        ]),
+        abortSignal: AbortSignal.any([abortController.signal, timeoutSignal]),
         file: { mediaType, buffer: file.buffer, name: file.originalname },
         user: this.request.user
       });
@@ -154,6 +154,20 @@ export class AiController {
           {
             error: getReasonPhrase(StatusCodes.BAD_REQUEST),
             message: [error.message]
+          },
+          StatusCodes.BAD_REQUEST
+        );
+      } else if (timeoutSignal.aborted) {
+        this.logger.warn(
+          `Stopped reading a file of the type ${mediaType} at the timeout of ${AI_ACTIVITIES_TIMEOUT} ms`
+        );
+
+        throw new HttpException(
+          {
+            error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+            message: [
+              'Ghostfolio AI needs too much time for the file. Split it into smaller files.'
+            ]
           },
           StatusCodes.BAD_REQUEST
         );
