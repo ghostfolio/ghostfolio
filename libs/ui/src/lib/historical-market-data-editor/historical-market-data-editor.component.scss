@@ -17,11 +17,11 @@
     }
 
     &.valid {
-      background-color: var(--danger);
+      background-color: var(--bs-danger);
     }
 
     &.available {
-      background-color: var(--success);
+      background-color: var(--bs-success);
     }
 
     &.today {
