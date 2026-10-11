@@ -16,6 +16,7 @@ import {
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
@@ -233,6 +234,21 @@ describe('ActivitiesService', () => {
     it('excludes the activities of the start date of a date range', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2024-06-15').getTime());
 
+      expect(await getDateConditions('ytd')).toEqual(
+        expect.arrayContaining([
+          { date: { gt: new Date('2023-12-31T23:59:59.999Z') } },
+          { date: { lte: new Date('2024-06-15T23:59:59.999Z') } }
+        ])
+      );
+    });
+
+    it('includes the activities of 1970-01-01 in the date range max', async () => {
+      expect(await getDateConditions('max')).toEqual(
+        expect.arrayContaining([{ date: { gt: new Date(0) } }])
+      );
+    });
+
+    async function getDateConditions(dateRange: DateRange) {
       const findMany = jest.fn().mockResolvedValue([]);
 
       const service = new ActivitiesService(
@@ -257,9 +273,7 @@ describe('ActivitiesService', () => {
         null
       );
 
-      const { endDate, startDate } = getIntervalFromDateRange({
-        dateRange: 'ytd'
-      });
+      const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
       await service.getActivities({
         endDate,
@@ -268,17 +282,8 @@ describe('ActivitiesService', () => {
         userId: 'user-id'
       });
 
-      expect(findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          where: expect.objectContaining({
-            AND: expect.arrayContaining([
-              { date: { gt: new Date('2023-12-31T23:59:59.999Z') } },
-              { date: { lte: new Date('2024-06-15T23:59:59.999Z') } }
-            ])
-          })
-        })
-      );
-    });
+      return findMany.mock.calls[0][0].where.AND;
+    }
   });
 
   describe('getActivitiesForPortfolioCalculator', () => {
