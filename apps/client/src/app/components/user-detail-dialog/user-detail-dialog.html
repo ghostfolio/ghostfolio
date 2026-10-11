@@ -169,6 +169,15 @@
             >Last Request</gf-value
           >
         </div>
+        <div class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [isLoading]="isLoading"
+            [value]="user?.lastRequestClient || '-'"
+            >Client</gf-value
+          >
+        </div>
       </div>
 
       @if (subscriptionsDataSource.data.length > 0) {
