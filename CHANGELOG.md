@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.85.0 - 2026-10-12
 
 ### Added
 
@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the border color of the drop area in the import activities dialog (dark mode)
+- Fixed the start date of the investment timeline chart on the analysis page
 - Fixed the matching of assets and accounts in the import of activities with _Ghostfolio AI_ (experimental)
 - Fixed an issue where the update of an activity could change the asset class and asset sub class of an asset profile which does not belong to the user
 
