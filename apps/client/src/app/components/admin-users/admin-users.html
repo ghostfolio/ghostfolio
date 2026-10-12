@@ -199,6 +199,8 @@
                       [name]="requestClientIcons[element.lastRequestClient]"
                       [title]="element.lastRequestClient"
                     />
+                  } @else {
+                    <ion-icon class="hidden mr-1" />
                   }
                   {{
                     formatRelativeTime({
