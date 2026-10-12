@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added an option to enable _Ghostfolio AI_ in the user settings of the user account page (experimental)
 - Added an icon to indicate the client of the last request in the users table of the admin control panel
 
 ### Changed

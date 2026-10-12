@@ -73,7 +73,7 @@ export class AiController {
    * written for the caller gives the status 400 with this message, the
    * timeout gives the status 400 with a message for the caller as well.
    */
-  @HasPermission(permissions.importActivitiesWithAi)
+  @HasPermission(permissions.enableGhostfolioAi)
   @HttpCode(StatusCodes.OK)
   @Post('activities')
   @Throttle({

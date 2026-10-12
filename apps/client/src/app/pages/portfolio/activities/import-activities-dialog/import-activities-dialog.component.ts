@@ -124,13 +124,20 @@ export class GfImportActivitiesDialogComponent {
   protected dialogTitle = $localize`Import Activities`;
   protected errorMessages: string[] = [];
   protected readonly ghostfolioAiTooltip = $localize`The content of your file will be processed by a third-party AI provider. Please remove any personal data before uploading.`;
-  protected readonly hasPermissionToImportActivitiesWithAi = hasPermission(
+
+  protected readonly hasPermissionToEnableGhostfolioAi = hasPermission(
     this.data.user?.permissions,
-    permissions.importActivitiesWithAi
+    permissions.enableGhostfolioAi
   );
+
   protected holdings: PortfolioPosition[] = [];
   protected importStep: ImportStep = ImportStep.UPLOAD_FILE;
-  protected isGhostfolioAiEnabled = false;
+
+  protected isGhostfolioAiEnabled =
+    this.data.deviceType !== 'mobile' &&
+    this.hasPermissionToEnableGhostfolioAi &&
+    this.data.user?.settings?.isGhostfolioAiEnabled === true;
+
   protected isLoading = false;
   protected isMaxActivitiesOfGhostfolioAiReached = false;
   protected readonly maxActivitiesOfGhostfolioAi = AI_MAX_ACTIVITIES;
@@ -261,6 +268,11 @@ export class GfImportActivitiesDialogComponent {
 
   protected onGhostfolioAiChange({ checked }: MatCheckboxChange) {
     this.isGhostfolioAiEnabled = checked;
+
+    this.dataService
+      .putUserSetting({ isGhostfolioAiEnabled: checked })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   protected onImportStepChange(event: StepperSelectionEvent) {
