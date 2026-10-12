@@ -530,9 +530,9 @@ export class UserService {
       if (isReadOnlyMode) {
         currentPermissions = currentPermissions.filter((permission) => {
           return !(
+            permission === permissions.enableGhostfolioAi ||
             permission.startsWith('create') ||
             permission.startsWith('delete') ||
-            permission.startsWith('import') ||
             permission.startsWith('update')
           );
         });
