@@ -546,9 +546,26 @@ describe('ActivitiesService', () => {
       expect(data).not.toHaveProperty('SymbolProfile');
     });
 
+    it('does not update the asset profile of a data provider', async () => {
+      const data = await getUpdatedActivityData({
+        dataSource: DataSource.YAHOO,
+        symbol: 'AAPL',
+        type: ActivityType.FEE,
+        userId: null
+      });
+
+      expect(data).not.toHaveProperty('SymbolProfile');
+    });
+
     async function getUpdatedActivityData({
+      dataSource = DataSource.MANUAL,
+      symbol = 'GF_GOLD',
+      type = ActivityType.BUY,
       userId
     }: {
+      dataSource?: DataSource;
+      symbol?: string;
+      type?: ActivityType;
       userId: string | null;
     }) {
       const update = jest.fn().mockResolvedValue({ userId: 'user-id' });
@@ -577,23 +594,23 @@ describe('ActivitiesService', () => {
 
       await service.updateActivity({
         data: {
+          type,
           assetClass: AssetClass.COMMODITY,
           assetSubClass: AssetSubClass.PRECIOUS_METAL,
           date: parseDate('2024-01-01'),
           SymbolProfile: {
             connect: {
               dataSource_symbol: {
-                dataSource: DataSource.MANUAL,
-                symbol: 'GF_GOLD'
+                dataSource,
+                symbol
               }
             },
             update: {
               assetClass: AssetClass.COMMODITY,
               assetSubClass: AssetSubClass.PRECIOUS_METAL,
-              name: 'GF_GOLD'
+              name: symbol
             }
-          },
-          type: 'BUY'
+          }
         },
         originalDate: parseDate('2024-01-01'),
         userId: 'user-id',

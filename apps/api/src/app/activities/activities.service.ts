@@ -939,17 +939,12 @@ export class ActivitiesService {
         where
       });
 
-      // Update the asset profile only if it is a custom asset profile of the
-      // user, but not one of the admin, of a data provider or of another user
       if (activityToUpdate?.SymbolProfile.userId === userId) {
         data.SymbolProfile.update = {
           data: {
             assetClass: data.assetClass,
             assetSubClass: data.assetSubClass
           },
-          // Filter by the user again, so that a concurrent request which
-          // links the activity to a different asset profile cannot bypass
-          // the check
           where: { userId }
         };
       } else {
