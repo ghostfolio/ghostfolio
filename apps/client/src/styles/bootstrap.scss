@@ -9,9 +9,18 @@
 // Configuration
 @import 'bootstrap/scss/functions';
 
-// Restore Bootstrap 4 link defaults (no underline by default)
+// Restore Bootstrap 4 defaults
+$badge-padding-x: 0.4em;
+$badge-padding-y: 0.25em;
+$blue: #007bff;
+$cyan: #17a2b8;
+$enable-rfs: false;
+$green: #28a745;
+$grid-gutter-width: 30px;
+$hr-opacity: 1;
 $link-decoration: none;
 $link-hover-decoration: underline;
+$small-font-size: 80%;
 
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/variables-dark';
