@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an option to enable _Ghostfolio AI_ in the user settings of the user account page (experimental)
 
-
 ### Changed
 
 - Upgraded `ai` from version `7.0.114` to `7.0.127`
