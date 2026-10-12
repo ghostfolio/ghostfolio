@@ -86,6 +86,7 @@ const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
   'filters.tags',
   'holdingsViewMode',
   'isExperimentalFeatures',
+  'isGhostfolioAiEnabled',
   'isRestrictedView',
   'language',
   'locale',

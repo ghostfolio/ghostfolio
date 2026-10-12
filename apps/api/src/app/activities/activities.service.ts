@@ -933,7 +933,23 @@ export class ActivitiesService {
         data.type === 'BUY')
     ) {
       delete data.SymbolProfile.connect;
-      delete data.SymbolProfile.update.name;
+
+      const activityToUpdate = await this.prismaService.order.findUnique({
+        select: { SymbolProfile: { select: { userId: true } } },
+        where
+      });
+
+      if (activityToUpdate?.SymbolProfile.userId === userId) {
+        data.SymbolProfile.update = {
+          data: {
+            assetClass: data.assetClass,
+            assetSubClass: data.assetSubClass
+          },
+          where: { userId }
+        };
+      } else {
+        delete data.SymbolProfile;
+      }
     } else {
       delete data.SymbolProfile.update;
 

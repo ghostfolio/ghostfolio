@@ -18,7 +18,9 @@ import { Activity, Filter } from '@ghostfolio/common/interfaces';
 
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
+  AssetClass,
   AssetProfileSplit,
+  AssetSubClass,
   DataSource,
   Prisma,
   Type as ActivityType
@@ -518,6 +520,105 @@ describe('ActivitiesService', () => {
         }
       });
     });
+  });
+
+  describe('updateActivity', () => {
+    it('updates the custom asset profile of the user', async () => {
+      const data = await getUpdatedActivityData({ userId: 'user-id' });
+
+      expect(data.SymbolProfile).toEqual({
+        update: {
+          data: {
+            assetClass: AssetClass.COMMODITY,
+            assetSubClass: AssetSubClass.PRECIOUS_METAL
+          },
+          where: { userId: 'user-id' }
+        }
+      });
+    });
+
+    it.each([
+      { owner: 'the admin', userId: null },
+      { owner: 'another user', userId: 'other-user-id' }
+    ])('does not update the asset profile of $owner', async ({ userId }) => {
+      const data = await getUpdatedActivityData({ userId });
+
+      expect(data).not.toHaveProperty('SymbolProfile');
+    });
+
+    it('does not update the asset profile of a data provider', async () => {
+      const data = await getUpdatedActivityData({
+        dataSource: DataSource.YAHOO,
+        symbol: 'AAPL',
+        type: ActivityType.FEE,
+        userId: null
+      });
+
+      expect(data).not.toHaveProperty('SymbolProfile');
+    });
+
+    async function getUpdatedActivityData({
+      dataSource = DataSource.MANUAL,
+      symbol = 'GF_GOLD',
+      type = ActivityType.BUY,
+      userId
+    }: {
+      dataSource?: DataSource;
+      symbol?: string;
+      type?: ActivityType;
+      userId: string | null;
+    }) {
+      const update = jest.fn().mockResolvedValue({ userId: 'user-id' });
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        { emit: jest.fn() } as unknown as EventEmitter2,
+        null,
+        null,
+        {
+          order: {
+            update,
+            findUnique: jest
+              .fn()
+              .mockResolvedValue({ SymbolProfile: { userId } })
+          }
+        } as unknown as PrismaService,
+        null,
+        { validateTagIds: jest.fn() } as unknown as TagService
+      );
+
+      await service.updateActivity({
+        data: {
+          type,
+          assetClass: AssetClass.COMMODITY,
+          assetSubClass: AssetSubClass.PRECIOUS_METAL,
+          date: parseDate('2024-01-01'),
+          SymbolProfile: {
+            connect: {
+              dataSource_symbol: {
+                dataSource,
+                symbol
+              }
+            },
+            update: {
+              assetClass: AssetClass.COMMODITY,
+              assetSubClass: AssetSubClass.PRECIOUS_METAL,
+              name: symbol
+            }
+          }
+        },
+        originalDate: parseDate('2024-01-01'),
+        userId: 'user-id',
+        where: { id: 'activity-id' }
+      });
+
+      return (update.mock.calls[0] as [Prisma.OrderUpdateArgs])[0].data;
+    }
   });
 });
 

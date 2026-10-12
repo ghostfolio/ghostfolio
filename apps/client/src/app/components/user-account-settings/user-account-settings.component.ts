@@ -93,6 +93,7 @@ export class GfUserAccountSettingsComponent implements OnInit {
   });
   protected hasImpersonationId: boolean;
   protected hasPermissionToDeleteOwnUser: boolean;
+  protected hasPermissionToEnableGhostfolioAi: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
   protected hasPermissionToUpdateOwnAccessToken: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
@@ -188,6 +189,11 @@ export class GfUserAccountSettingsComponent implements OnInit {
           this.hasPermissionToDeleteOwnUser = hasPermission(
             this.user.permissions,
             permissions.deleteOwnUser
+          );
+
+          this.hasPermissionToEnableGhostfolioAi = hasPermission(
+            this.user.permissions,
+            permissions.enableGhostfolioAi
           );
 
           this.hasPermissionToRequestOwnUserDeletion = hasPermission(
@@ -336,6 +342,22 @@ export class GfUserAccountSettingsComponent implements OnInit {
           )}.json`,
           format: 'json'
         });
+      });
+  }
+
+  protected onGhostfolioAiChange(aEvent: MatSlideToggleChange) {
+    this.dataService
+      .putUserSetting({ isGhostfolioAiEnabled: aEvent.checked })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
       });
   }
 

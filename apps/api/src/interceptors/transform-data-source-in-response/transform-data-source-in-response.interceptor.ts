@@ -94,10 +94,6 @@ export class TransformDataSourceInResponseInterceptor<
               'items[*].dataSource',
               'latestActivities[*].assetProfile.dataSource',
               'settings["filters.dataSource"]',
-
-              /* @deprecated */
-              'SymbolProfile.dataSource',
-
               'watchlist[*].dataSource'
             ]
           });

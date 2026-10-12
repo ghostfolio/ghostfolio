@@ -96,7 +96,7 @@
     "@rekog/mcp-nest": "2.0.7",
     "@simplewebauthn/browser": "14.0.0",
     "@simplewebauthn/server": "14.0.3",
-    "ai": "7.0.114",
+    "ai": "7.0.127",
     "alphavantage": "2.2.0",
     "big.js": "7.0.1",
     "bootstrap": "5.3.8",
