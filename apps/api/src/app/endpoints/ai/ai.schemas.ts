@@ -53,7 +53,7 @@ export const ROW_MATCHES_OUTPUT = z.object({
           .string()
           .nullable()
           .describe(
-            'The id of the account of the user which matches, as given by get-accounts, or null if no account matches'
+            'The id of the account of the user which matches, as given in the accounts, or null if no account matches'
           ),
         id: z.number().describe('The id of the account hint, as given')
       })
@@ -66,20 +66,20 @@ export const ROW_MATCHES_OUTPUT = z.object({
           .string()
           .nullable()
           .describe(
-            'The currency of the asset profile, as given by search-asset-profiles'
+            'The currency of the asset profile, as given in the asset profiles of the asset'
           ),
         dataSource: z
           .string()
           .nullable()
           .describe(
-            'The data source of the asset profile, as given by search-asset-profiles'
+            'The data source of the asset profile, as given in the asset profiles of the asset'
           ),
         id: z.number().describe('The id of the asset, as given'),
         symbol: z
           .string()
           .nullable()
           .describe(
-            'The symbol of the asset profile, as given by search-asset-profiles, or null if no asset profile matches'
+            'The symbol of the asset profile, as given in the asset profiles of the asset, or null if no asset profile matches'
           )
       })
     )
