@@ -82,10 +82,12 @@
 }
 
 :host-context(.theme-dark) {
-  .drop-area {
-    border-color: rgba(
-      var(--palette-foreground-divider-dark),
-      var(--palette-foreground-divider-alpha-dark)
-    );
+  .mat-mdc-dialog-content {
+    .drop-area {
+      border-color: rgba(
+        var(--palette-foreground-divider-dark),
+        var(--palette-foreground-divider-dark-alpha)
+      );
+    }
   }
 }
