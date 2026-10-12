@@ -7,9 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an icon to indicate the client of the last request in the users table of the admin control panel
+
+### Changed
+
+- Upgraded `ai` from version `7.0.114` to `7.0.127`
+
 ### Fixed
 
+- Fixed the border color of the drop area in the import activities dialog (dark mode)
 - Fixed the start date of the investment timeline chart on the analysis page
+- Fixed the matching of assets and accounts in the import of activities with _Ghostfolio AI_ (experimental)
 
 ## 3.84.2 - 2026-10-11
 
