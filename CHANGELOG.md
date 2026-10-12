@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the border color of the drop area in the import activities dialog (dark mode)
 
-## 3.84.0 - 2026-10-11
+## 3.84.2 - 2026-10-11
 
 ### Added
 
