@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an icon to indicate the client of the last request in the users table of the admin control panel
 
+### Fixed
+
+- Fixed the matching of assets and accounts in the import of activities with _Ghostfolio AI_ (experimental)
+
 ## 3.84.2 - 2026-10-11
 
 ### Added
