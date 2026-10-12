@@ -3121,8 +3121,8 @@ describe('redactAttributes', () => {
   });
 
   // The endpoint POST api/v1/activities returns a row of the database with the
-  // asset profile and the deprecated relation to the symbol profile
-  it('should redact an activity with the asset profile and the relation to the symbol profile', () => {
+  // asset profile
+  it('should redact an activity with the asset profile', () => {
     expect(
       redactPaths({
         object: {
@@ -3144,18 +3144,6 @@ describe('redactAttributes', () => {
           fee: 19.9,
           id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
           quantity: 50,
-          SymbolProfile: {
-            comment: 'Reviewed by the administrator',
-            name: 'Apple Inc',
-            scraperConfiguration: {
-              headers: { Authorization: 'Bearer TOKEN' },
-              mode: 'lazy',
-              selector: '.price',
-              url: 'https://example.org/get_price'
-            },
-            symbol: 'AAPL',
-            symbolMapping: { YAHOO: 'AAPL' }
-          },
           type: 'BUY',
           unitPrice: 220.79
         },
@@ -3175,13 +3163,6 @@ describe('redactAttributes', () => {
       fee: null,
       id: '8c623328-6035-4b5f-b6d5-702cc1c9c56b',
       quantity: null,
-      SymbolProfile: {
-        comment: null,
-        name: 'Apple Inc',
-        scraperConfiguration: null,
-        symbol: 'AAPL',
-        symbolMapping: null
-      },
       type: 'BUY',
       unitPrice: 220.79
     });

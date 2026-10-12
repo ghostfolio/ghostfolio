@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the deprecated `SymbolProfile` field from the endpoint `POST api/v1/activities`
 - Upgraded `ai` from version `7.0.114` to `7.0.127`
 
 ### Fixed
