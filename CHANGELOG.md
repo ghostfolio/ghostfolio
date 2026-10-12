@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the access to share the portfolio with the Model Context Protocol (MCP) to support the _View_ and the _View and manage_ permissions (experimental)
 - Improved the performance of getting the historical market data by selecting only the required columns
 - Improved the language localization for German (`de`)
+- Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
 
 ### Fixed
 
