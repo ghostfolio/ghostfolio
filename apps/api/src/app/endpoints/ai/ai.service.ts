@@ -513,10 +513,13 @@ export class AiService {
    * and not the model calls the tools search-asset-profiles and get-accounts
    * of the server of the Model Context Protocol and passes their results to
    * the model, as some providers ignore a required tool call, for example if
-   * the output has a schema. The accounts are given without values. The
-   * reasoning is disabled, as it can add thousands of output tokens. An asset
-   * match whose asset profile no search gave is left out, as the import
-   * refuses a symbol which the data source cannot resolve.
+   * the output has a schema. The accounts are given without values. If
+   * get-accounts fails, the model gets no accounts, so that only the account
+   * hints have no match. The reasoning is disabled, as it can add thousands
+   * of output tokens. An asset match whose asset profile the search of its
+   * own asset did not give is left out, as the import refuses a symbol which
+   * the data source cannot resolve and as the model can mix up the ids of the
+   * assets.
    */
   private async getRowMatches({
     abortSignal,
@@ -538,6 +541,11 @@ export class AiService {
             .then(({ content }) => {
               return content[0].text;
             })
+            .catch((error: Error): undefined => {
+              this.logger.warn(`Could not get the accounts: ${error.message}`);
+
+              return undefined;
+            })
         : undefined,
       Promise.all(
         assets.map((asset) => {
@@ -549,12 +557,6 @@ export class AiService {
     const assetProfilesOfSearches = searches.flatMap(({ assetProfiles }) => {
       return assetProfiles;
     });
-
-    const assetProfileIdentifiersOfSearches = new Set(
-      assetProfilesOfSearches.map((assetProfile) => {
-        return getAssetProfileIdentifier(assetProfile);
-      })
-    );
 
     const { output, steps, totalUsage } = await generateText({
       abortSignal,
@@ -585,20 +587,24 @@ export class AiService {
       })
     });
 
-    const assetMatches = output.assets.filter(({ dataSource, symbol }) => {
-      return assetProfileIdentifiersOfSearches.has(
-        getAssetProfileIdentifier({
-          symbol,
-          dataSource: dataSource as DataSource
-        })
-      );
+    const assetMatches = output.assets.filter(({ dataSource, id, symbol }) => {
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        symbol,
+        dataSource: dataSource as DataSource
+      });
+
+      return (searches[id]?.assetProfiles ?? []).some((assetProfile) => {
+        return (
+          getAssetProfileIdentifier(assetProfile) === assetProfileIdentifier
+        );
+      });
     });
 
     const accountMatchCount = output.accounts.filter(({ accountId }) => {
       return accountId;
     }).length;
 
-    const assetMatchOfNoSearchCount =
+    const leftOutAssetMatchCount =
       output.assets.filter(({ symbol }) => {
         return symbol;
       }).length - assetMatches.length;
@@ -607,9 +613,9 @@ export class AiService {
       `Matched ${assetMatches.length} of ${assets.length} assets and ${accountMatchCount} of ${accountHints.length} account hints with ${assetProfilesOfSearches.length} results of ${sumBy(searches, 'searchCount')} searches in ${this.getSecondsSince(startTime)} seconds with ${totalUsage.totalTokens} tokens for ${this.getCost(steps)} USD`
     );
 
-    if (assetMatchOfNoSearchCount > 0) {
+    if (leftOutAssetMatchCount > 0) {
       this.logger.warn(
-        `Left out ${assetMatchOfNoSearchCount} asset matches which no search gave`
+        `Left out ${leftOutAssetMatchCount} asset matches which the search of their asset did not give`
       );
     }
 
@@ -624,7 +630,9 @@ export class AiService {
    * Searches the asset profiles of an asset with the tool
    * search-asset-profiles of the server of the Model Context Protocol: by the
    * ISIN first, then by the ticker symbol, then by the name, until a search
-   * gives asset profiles. A missing or too short value is not searched.
+   * gives asset profiles. A missing or too short value is not searched. A
+   * search which fails is logged and the next value is searched, so that the
+   * import continues.
    */
   private async searchAssetProfilesOfAsset({
     asset: { isin, name, symbol },
@@ -640,19 +648,27 @@ export class AiService {
         continue;
       }
 
-      const { content } = await this.mcpService.searchAssetProfiles({
-        query,
-        userId
-      });
+      try {
+        const { content } = await this.mcpService.searchAssetProfiles({
+          query,
+          userId
+        });
 
-      const { assetProfiles } = JSON.parse(content[0].text) as {
-        assetProfiles: AssetProfileIdentifier[];
-      };
+        const { assetProfiles } = JSON.parse(content[0].text) as {
+          assetProfiles: AssetProfileIdentifier[];
+        };
 
-      searchCount += 1;
+        searchCount += 1;
 
-      if (assetProfiles.length > 0) {
-        return { assetProfiles, searchCount };
+        if (assetProfiles.length > 0) {
+          return { assetProfiles, searchCount };
+        }
+      } catch (error) {
+        this.logger.warn(
+          `Could not search the asset profiles: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        );
       }
     }
 

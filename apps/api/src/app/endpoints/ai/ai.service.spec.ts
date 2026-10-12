@@ -461,6 +461,13 @@ describe('AiService', () => {
       { currency: 'CHF', id: 'account-id', name: 'Brokerage' }
     ];
 
+    const rowOfMicrosoft = createActivityRow({
+      accountName: null,
+      isin: 'US5949181045',
+      name: 'Microsoft Corporation',
+      symbol: 'MSFT'
+    });
+
     const userCurrency = 'EUR';
     const userId = 'user-id';
 
@@ -487,6 +494,32 @@ describe('AiService', () => {
         steps: [{}],
         totalUsage: { totalTokens: 2000 }
       } as unknown as Awaited<ReturnType<typeof generateText>>);
+    }
+
+    function mockSearches(
+      searchResultByQuery: Record<
+        string,
+        { dataSource: string; symbol: string }[] | Error
+      >
+    ) {
+      jest
+        .mocked(mcpService.searchAssetProfiles)
+        .mockImplementation(({ query }) => {
+          const searchResult = searchResultByQuery[query] ?? [];
+
+          if (searchResult instanceof Error) {
+            return Promise.reject(searchResult);
+          }
+
+          return Promise.resolve({
+            content: [
+              {
+                text: JSON.stringify({ assetProfiles: searchResult }),
+                type: 'text' as const
+              }
+            ]
+          });
+        });
     }
 
     it('Gives an activity for each row whose asset matches an asset profile', async () => {
@@ -640,7 +673,41 @@ describe('AiService', () => {
       );
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        'Left out 1 asset matches which no search gave'
+        'Left out 1 asset matches which the search of their asset did not give'
+      );
+    });
+
+    it('Gives a row whose asset match only the search of another asset gave as a row without a match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      const rowOfApple = createActivityRow({ accountName: null });
+
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'MSFT' },
+          { currency: 'USD', dataSource: 'YAHOO', id: 1, symbol: 'MSFT' }
+        ]
+      });
+
+      mockSearches({
+        US0378331005: [{ dataSource: 'YAHOO', symbol: 'AAPL' }],
+        US5949181045: [{ dataSource: 'YAHOO', symbol: 'MSFT' }]
+      });
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [rowOfApple, rowOfMicrosoft]
+        })
+      ).resolves.toEqual({
+        activities: [expect.objectContaining({ symbol: 'MSFT' })],
+        rowsWithoutMatch: [rowOfApple]
+      });
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Left out 1 asset matches which the search of their asset did not give'
       );
     });
 
@@ -832,6 +899,37 @@ describe('AiService', () => {
       });
     });
 
+    it('Passes each asset with the asset profiles of its own search to the model', async () => {
+      mockRowMatches({});
+
+      mockSearches({
+        US0378331005: [{ dataSource: 'YAHOO', symbol: 'AAPL' }],
+        US5949181045: [{ dataSource: 'YAHOO', symbol: 'MSFT' }]
+      });
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow({ accountName: null }), rowOfMicrosoft]
+      });
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      const { assets } = JSON.parse(prompt as string) as {
+        assets: { assetProfiles: unknown[]; id: number }[];
+      };
+
+      expect(
+        assets.map(({ assetProfiles, id }) => {
+          return { assetProfiles, id };
+        })
+      ).toEqual([
+        { assetProfiles: [{ dataSource: 'YAHOO', symbol: 'AAPL' }], id: 0 },
+        { assetProfiles: [{ dataSource: 'YAHOO', symbol: 'MSFT' }], id: 1 }
+      ]);
+    });
+
     it('Searches each asset with the tool of the server of the Model Context Protocol by the ISIN, then by the ticker symbol, then by the name, until a search gives asset profiles', async () => {
       mockRowMatches({});
 
@@ -886,6 +984,73 @@ describe('AiService', () => {
       ]);
     });
 
+    it('Searches the next value of an asset if a search fails and logs the failure', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      jest
+        .mocked(mcpService.searchAssetProfiles)
+        .mockRejectedValueOnce(new Error('Search failed'));
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow({ accountName: null })]
+      });
+
+      expect(activities).toEqual([expect.objectContaining({ symbol: 'AAPL' })]);
+
+      expect(jest.mocked(mcpService.searchAssetProfiles).mock.calls).toEqual([
+        [{ userId, query: 'US0378331005' }],
+        [{ userId, query: 'AAPL' }]
+      ]);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Could not search the asset profiles: Search failed'
+      );
+    });
+
+    it('Gives the rows of an asset whose searches all fail as rows without a match and matches the other assets', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      const rowOfApple = createActivityRow({ accountName: null });
+      const searchError = new Error('Search failed');
+
+      mockRowMatches({
+        assets: [
+          { currency: null, dataSource: null, id: 0, symbol: null },
+          { currency: 'USD', dataSource: 'YAHOO', id: 1, symbol: 'MSFT' }
+        ]
+      });
+
+      mockSearches({
+        AAPL: searchError,
+        'Apple Inc.': searchError,
+        US0378331005: searchError,
+        US5949181045: [{ dataSource: 'YAHOO', symbol: 'MSFT' }]
+      });
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [rowOfApple, rowOfMicrosoft]
+        })
+      ).resolves.toEqual({
+        activities: [expect.objectContaining({ symbol: 'MSFT' })],
+        rowsWithoutMatch: [rowOfApple]
+      });
+
+      expect(Logger.prototype.warn).toHaveBeenCalledTimes(3);
+    });
+
     it('Gets the accounts with the tool of the server of the Model Context Protocol without values', async () => {
       mockRowMatches({});
 
@@ -917,6 +1082,39 @@ describe('AiService', () => {
       const { prompt } = jest.mocked(generateText).mock.calls[0][0];
 
       expect(JSON.parse(prompt as string)).not.toHaveProperty('accounts');
+    });
+
+    it('Passes no accounts to the model and continues if the accounts cannot be got', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      jest
+        .mocked(mcpService.getAccounts)
+        .mockRejectedValueOnce(new Error('Database failed'));
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow()]
+      });
+
+      expect(activities).toEqual([
+        expect.objectContaining({ accountId: undefined, symbol: 'AAPL' })
+      ]);
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).not.toHaveProperty('accounts');
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Could not get the accounts: Database failed'
+      );
     });
 
     it('Restricts the routing to endpoints with zero data retention, disables the reasoning and gives the model no tools', async () => {
