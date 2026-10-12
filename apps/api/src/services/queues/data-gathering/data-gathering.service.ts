@@ -346,7 +346,7 @@ export class DataGatheringService {
             date: startOfUtcDate,
             isCarriedForward: false
           },
-          update: { marketPrice, isCarriedForward: false },
+          update: { marketPrice, isCarriedForward: false, state: 'CLOSE' },
           where: {
             dataSource_symbol_date: {
               dataSource,

@@ -222,7 +222,27 @@ describe('DataGatheringService', () => {
       expect(prismaService.marketData.upsert).toHaveBeenCalledWith(
         expect.objectContaining({
           create: expect.objectContaining({ isCarriedForward: false }),
-          update: { marketPrice: 100, isCarriedForward: false }
+          update: { marketPrice: 100, isCarriedForward: false, state: 'CLOSE' }
+        })
+      );
+    });
+
+    it('sets the state to CLOSE on a previously intraday market price', async () => {
+      dataProviderService.getHistoricalRaw.mockResolvedValue({
+        'YAHOO-AAPL': {
+          '2026-08-22': { marketPrice: 100 }
+        }
+      });
+
+      await dataGatheringService.gatherSymbolForDate({
+        dataSource: 'YAHOO',
+        date: parseDate('2026-08-22'),
+        symbol: 'AAPL'
+      });
+
+      expect(prismaService.marketData.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({ state: 'CLOSE' })
         })
       );
     });
