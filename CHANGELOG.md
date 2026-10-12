@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an icon to indicate the client of the last request in the users table of the admin control panel
+
 ### Changed
 
 - Upgraded `ai` from version `7.0.114` to `7.0.127`
