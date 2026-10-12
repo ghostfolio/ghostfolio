@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `ai` from version `7.0.114` to `7.0.127`
+
 ### Fixed
 
 - Fixed the matching of assets and accounts in the import of activities with _Ghostfolio AI_ (experimental)
