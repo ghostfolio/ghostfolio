@@ -98,6 +98,21 @@ $utilities: map.merge(
       values: (
         italic: italic
       )
+    ),
+    'float-compat': (
+      responsive: true,
+      property: float,
+      values: (
+        left: left,
+        right: right
+      )
+    ),
+    'font-family-compat': (
+      property: font-family,
+      class: text,
+      values: (
+        monospace: var(--bs-font-monospace)
+      )
     )
   )
 );
