@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the matching of assets and accounts in the import of activities with _Ghostfolio AI_ for providers which ignore a required tool call (experimental)
+- Fixed the matching of assets and accounts in the import of activities with _Ghostfolio AI_ (experimental)
 
 ## 3.84.2 - 2026-10-11
 
