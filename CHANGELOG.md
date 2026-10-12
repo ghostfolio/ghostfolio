@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added an option to enable _Ghostfolio AI_ in the user settings (experimental)
+- Added an option to enable _Ghostfolio AI_ in the user settings of the user account page (experimental)
 
 ### Fixed
 
