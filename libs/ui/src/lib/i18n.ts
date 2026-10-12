@@ -3,6 +3,7 @@ import type {
   ProductPlatform,
   SectorName
 } from '@ghostfolio/common/types';
+import { RequestClient } from '@ghostfolio/prisma/enums';
 
 import '@angular/localize/init';
 
@@ -121,9 +122,16 @@ const locales = {
   LINUX: 'Linux',
   MACOS: 'macOS',
   WEB: $localize`Web`,
-  WINDOWS: 'Windows'
+  WINDOWS: 'Windows',
+
+  // Request clients
+  API: 'API',
+  MCP: 'MCP',
+  SELF_HOSTING: $localize`Self-Hosting`
+  // WEB is defined above under Product platforms
 } satisfies Record<ProductCategory, string> &
   Record<ProductPlatform, string> &
+  Record<RequestClient, string> &
   Record<SectorName, string> &
   Record<string, string>;
 
