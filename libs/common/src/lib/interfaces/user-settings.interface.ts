@@ -22,6 +22,7 @@ export interface UserSettings {
   'filters.tags'?: string[];
   holdingsViewMode?: HoldingsViewMode;
   isExperimentalFeatures?: boolean;
+  isGhostfolioAiEnabled?: boolean;
   isRestrictedView?: boolean;
   language?: string;
   locale?: string;

@@ -240,6 +240,10 @@ export class UserController {
       }
     }
 
+    if (!userSettings.isExperimentalFeatures) {
+      delete userSettings.isGhostfolioAiEnabled;
+    }
+
     return this.userService.updateUserSetting({
       emitPortfolioChangedEvent,
       userSettings,

@@ -38,6 +38,7 @@ import {
 import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { omit } from 'lodash-es';
 
 import { ActivitiesFilterDto } from './activities-filter.dto';
 import { ActivitiesService } from './activities.service';
@@ -314,7 +315,7 @@ export class ActivitiesController {
       }
     ]);
 
-    return { ...activity, assetProfile };
+    return { ...omit(activity, ['SymbolProfile']), assetProfile };
   }
 
   @HasPermission(permissions.updateActivity)

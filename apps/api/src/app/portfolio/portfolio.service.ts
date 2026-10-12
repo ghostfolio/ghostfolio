@@ -98,7 +98,6 @@ import {
   endOfDay,
   format,
   isAfter,
-  isBefore,
   isSameMonth,
   isSameYear,
   min,
@@ -564,7 +563,7 @@ export class PortfolioService {
       const date = resetHours(parseDate(historicalDataItem.date));
 
       return (
-        !isBefore(date, resetHours(startDate)) &&
+        isAfter(date, resetHours(startDate)) &&
         !isAfter(date, resetHours(endDate))
       );
     });
