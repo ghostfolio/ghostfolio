@@ -41,6 +41,18 @@ export class ImportActivitiesService {
 
   private readonly http = inject(HttpClient);
 
+  /**
+   * Gives the number of the lines of a CSV file which are not empty, without
+   * the first line
+   */
+  public getDataRowCountOfCsv(fileContent: string) {
+    const lineCount = fileContent.split(/\r\n|\r|\n/).filter((line) => {
+      return line.trim().length > 0;
+    }).length;
+
+    return Math.max(lineCount - 1, 0);
+  }
+
   public async importCsv({
     fileContent,
     isDryRun = false,

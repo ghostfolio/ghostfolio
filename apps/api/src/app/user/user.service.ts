@@ -45,7 +45,7 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
-import { Prisma, Role, User } from '@prisma/client';
+import { Prisma, RequestClient, Role, User } from '@prisma/client';
 import { addMilliseconds, differenceInDays, isBefore, subDays } from 'date-fns';
 import { isNil, without } from 'lodash-es';
 import { createHmac } from 'node:crypto';
@@ -475,6 +475,10 @@ export class UserService {
           currentPermissions.push(permissions.enableDataProviderGhostfolio);
           currentPermissions.push(permissions.readMarketDataOfMarkets);
           currentPermissions.push(permissions.reportDataGlitch);
+
+          if ((user.settings.settings as UserSettings).isExperimentalFeatures) {
+            currentPermissions.push(permissions.importActivitiesWithAi);
+          }
         }
 
         currentPermissions = without(
@@ -525,6 +529,7 @@ export class UserService {
           return !(
             permission.startsWith('create') ||
             permission.startsWith('delete') ||
+            permission.startsWith('import') ||
             permission.startsWith('update')
           );
         });
@@ -678,6 +683,36 @@ export class UserService {
           gte: subDays(new Date(), 1)
         }
       }
+    });
+  }
+
+  /**
+   * Keeps the date and the client of the request of the user. The request is
+   * counted only if the analytics of the user exist already. The country is
+   * kept only if it is given.
+   */
+  public async updateAnalytics({
+    country,
+    requestClient,
+    userId
+  }: {
+    country?: string;
+    requestClient: RequestClient;
+    userId: string;
+  }) {
+    return this.prismaService.analytics.upsert({
+      create: {
+        country,
+        lastRequestClient: requestClient,
+        user: { connect: { id: userId } }
+      },
+      update: {
+        country,
+        activityCount: { increment: 1 },
+        lastRequestAt: new Date(),
+        lastRequestClient: requestClient
+      },
+      where: { userId }
     });
   }
 

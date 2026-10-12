@@ -258,21 +258,23 @@
                 </ul>
               </div>
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
-              <p class="h5 text-right" [hidden]="!price">
-                <span class="font-weight-normal">
-                  @if (coupon) {
-                    <del class="text-muted"
-                      >{{ baseCurrency }}&nbsp;{{ price }}</del
-                    >&nbsp;{{ baseCurrency }}&nbsp;<strong>{{
-                      price - coupon
-                    }}</strong>
-                  } @else {
-                    {{ baseCurrency }}&nbsp;<strong>{{ price }}</strong>
-                  }
-                  <span>&nbsp;</span>
-                  <span i18n>per year</span></span
-                >
-              </p>
+              @if (price) {
+                <p class="h5 text-right">
+                  <span class="font-weight-normal">
+                    @if (coupon) {
+                      <del class="text-muted"
+                        >{{ baseCurrency }}&nbsp;{{ price }}</del
+                      >&nbsp;{{ baseCurrency }}&nbsp;<strong>{{
+                        price - coupon
+                      }}</strong>
+                    } @else {
+                      {{ baseCurrency }}&nbsp;<strong>{{ price }}</strong>
+                    }
+                    <span>&nbsp;</span>
+                    <span i18n>per year</span></span
+                  >
+                </p>
+              }
               @if (
                 hasPermissionToUpdateUserSettings &&
                 user?.subscription?.type === 'Basic'

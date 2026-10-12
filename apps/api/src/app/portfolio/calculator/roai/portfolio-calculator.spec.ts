@@ -190,6 +190,10 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get performance', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('with a calendar year date range', async () => {
       const snapshot = await portfolioCalculator.getSnapshot();
 
@@ -225,6 +229,46 @@ describe('PortfolioCalculator', () => {
           return date;
         })
       ).toEqual(['2016-12-31', '2017-12-31']);
+    });
+
+    it('with a year to date date range', async () => {
+      const snapshot = await portfolioCalculator.getSnapshot();
+
+      snapshot.historicalData = [
+        getHistoricalDataItem({
+          date: '2016-12-30',
+          investment: 100,
+          netPerformance: 0
+        }),
+        getHistoricalDataItem({
+          date: '2016-12-31',
+          investment: 100,
+          netPerformance: 10
+        }),
+        getHistoricalDataItem({
+          date: '2017-01-01',
+          investment: 100,
+          netPerformance: 20
+        })
+      ];
+
+      // 1 January 2017, 10:00 in New York
+      jest.useFakeTimers().setSystemTime(new Date('2017-01-01T15:00:00.000Z'));
+
+      const { endDate, startDate } = getIntervalFromDateRange({
+        dateRange: 'ytd'
+      });
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: endDate,
+        start: startDate
+      });
+
+      expect(
+        chart.map(({ date }) => {
+          return date;
+        })
+      ).toEqual(['2016-12-31', '2017-01-01']);
     });
   });
 });

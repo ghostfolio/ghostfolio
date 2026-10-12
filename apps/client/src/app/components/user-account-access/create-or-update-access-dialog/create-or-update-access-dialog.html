@@ -92,7 +92,7 @@
               />
             </mat-option>
           }
-          @if (accessForm.get('type')?.value === 'PRIVATE') {
+          @if (canGrantUnrestrictedReadAccess) {
             <mat-option value="READ">
               <gf-access-level-icon accessLevel="READ" />
             </mat-option>

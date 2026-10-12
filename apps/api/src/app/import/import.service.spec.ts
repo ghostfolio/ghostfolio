@@ -1,5 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -99,6 +101,56 @@ describe('ImportService', () => {
         getTagsForUser: jest.fn().mockResolvedValue([])
       } as unknown as TagService
     );
+  });
+
+  describe('getDividends', () => {
+    it('returns no dividends if another request fails while the dividends are loading', async () => {
+      const service = new ImportService(
+        null,
+        {
+          getActivities: jest.fn().mockRejectedValue(new Error())
+        } as unknown as ActivitiesService,
+        {
+          buildFiltersFromQueryParams: jest.fn().mockReturnValue([])
+        } as unknown as ApiService,
+        null,
+        null,
+        {
+          getDividends: jest.fn(() => {
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve({});
+              }, 10);
+            });
+          })
+        } as unknown as DataProviderService,
+        null,
+        null,
+        null,
+        {
+          getAccountsWithAggregations: jest
+            .fn()
+            .mockResolvedValue({ accounts: [] }),
+          getHolding: jest.fn().mockResolvedValue({
+            dateOfFirstActivity: '2024-01-01',
+            historicalData: []
+          })
+        } as unknown as PortfolioService,
+        {
+          getSymbolProfiles: jest.fn().mockResolvedValue([])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      await expect(
+        service.getDividends({
+          dataSource: DataSource.YAHOO,
+          symbol: 'AAPL',
+          userCurrency: 'USD',
+          userId: 'user-id'
+        })
+      ).resolves.toEqual([]);
+    });
   });
 
   describe('import', () => {

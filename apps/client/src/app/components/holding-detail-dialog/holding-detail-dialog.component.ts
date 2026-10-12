@@ -41,7 +41,6 @@ import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -116,7 +115,6 @@ import {
     ReactiveFormsModule,
     RouterModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holding-detail-dialog',
   styleUrls: ['./holding-detail-dialog.component.scss'],
   templateUrl: 'holding-detail-dialog.html'

@@ -26,6 +26,7 @@ import {
   AccountsResponse,
   ActivitiesResponse,
   ActivityResponse,
+  AiActivitiesResponse,
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
@@ -882,6 +883,17 @@ export class DataService {
 
   public postActivity(aOrder: CreateOrderDto) {
     return this.http.post<CreateActivityResponse>('/api/v1/activities', aOrder);
+  }
+
+  public postAiActivities(file: File) {
+    const formData = new FormData();
+
+    formData.append('file', file);
+
+    return this.http.post<AiActivitiesResponse>(
+      '/api/v1/ai/activities',
+      formData
+    );
   }
 
   public postApiKey() {

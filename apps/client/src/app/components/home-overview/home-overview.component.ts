@@ -106,11 +106,13 @@ export class GfHomeOverviewComponent implements OnInit {
   });
 
   protected readonly unit = computed(() => {
-    const user = this.user();
+    if (!this.showDetails()) {
+      return '%';
+    }
 
-    return this.showDetails()
-      ? (user?.settings?.baseCurrency ?? DEFAULT_CURRENCY)
-      : '%';
+    return this.deviceType() === 'mobile'
+      ? undefined
+      : (this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY);
   });
 
   private readonly dataService = inject(DataService);
