@@ -162,12 +162,6 @@ $utilities: map.merge(
   --bs-gutter-y: 0;
 }
 
-// Preserve BS4 flex behavior for non-col direct children of rows
-.row.flex-nowrap > :not([class*='col']) {
-  flex-shrink: 1;
-  width: auto;
-}
-
 // Maintain 1140px container max-width at >=1400px (avoiding BS5 1320px stretch)
 @media (min-width: 1400px) {
   .container-xxl,
