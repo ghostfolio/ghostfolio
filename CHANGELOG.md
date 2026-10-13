@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to paste a file in the import activities dialog
+
 ### Changed
 
 - Improved the labels of the client of the last request in the users section of the admin control panel
