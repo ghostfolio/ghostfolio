@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to paste a file in the import activities dialog
 
+### Fixed
+
+- Fixed the link of the _Manage Asset Profile_ button in the holding detail dialog before the holding has loaded
+
 ## 3.85.0 - 2026-10-12
 
 ### Added
