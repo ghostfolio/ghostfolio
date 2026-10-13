@@ -124,11 +124,10 @@ const locales = {
   WEB: $localize`Web`,
   WINDOWS: 'Windows',
 
-  // Request clients
+  // Request clients (WEB is defined above under Product platforms)
   API: 'API',
   MCP: 'MCP',
   SELF_HOSTING: $localize`Self-Hosting`
-  // WEB is defined above under Product platforms
 } satisfies Record<ProductCategory, string> &
   Record<ProductPlatform, string> &
   Record<RequestClient, string> &
