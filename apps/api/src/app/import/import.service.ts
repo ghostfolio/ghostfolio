@@ -38,6 +38,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
+  AccountWithPlatform,
   AccountWithValue,
   OrderWithAccount,
   UserWithSettings
@@ -769,11 +770,14 @@ export class ImportService {
       userId: user.id
     });
 
-    const accounts = (await this.accountService.getAccounts(user.id)).map(
-      ({ id, name }) => {
-        return { id, name };
-      }
-    );
+    const accounts: Pick<AccountWithPlatform, 'id' | 'name' | 'platform'>[] = (
+      await this.accountService.accounts({
+        include: { platform: true },
+        where: { userId: user.id }
+      })
+    ).map(({ id, name, platform }) => {
+      return { id, name, platform };
+    });
 
     if (isDryRun) {
       accountsWithBalancesDto
@@ -888,7 +892,7 @@ export class ImportService {
       let order:
         | OrderWithAccount
         | (Omit<OrderWithAccount, 'account' | 'SymbolProfile' | 'tags'> & {
-            account?: { id: string; name: string };
+            account?: Pick<AccountWithPlatform, 'id' | 'name' | 'platform'>;
             tags?: { id: string; name: string }[];
           });
 

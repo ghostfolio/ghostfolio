@@ -11,9 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to paste a file in the import activities dialog
 
+### Changed
+
+- Improved the labels of the client of the last request in the users section of the admin control panel
+
 ### Fixed
 
+- Fixed the missing platform icon in the preview step of the activities import
 - Fixed the start date of the date range filter on the activities page and in the dividend timeline chart on the analysis page
+- Fixed the link of the _Manage Asset Profile_ button in the holding detail dialog before the holding has loaded
 
 ## 3.85.0 - 2026-10-12
 
