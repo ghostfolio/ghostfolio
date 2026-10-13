@@ -80,33 +80,6 @@ $table-cell-padding-y: 0.75rem;
 // Utilities
 @import 'bootstrap/scss/utilities/api';
 
-// Grid & layout compatibility
-.no-gutters {
-  --bs-gutter-x: 0;
-  --bs-gutter-y: 0;
-}
-
-// Badge compatibility
-.badge-pill {
-  border-radius: var(--bs-border-radius-pill, 50rem);
-  padding-left: 0.6em;
-  padding-right: 0.6em;
-}
-
-.badge-secondary {
-  background-color: var(--bs-secondary);
-}
-
-.badge-light {
-  background-color: var(--bs-light);
-  color: var(--bs-dark);
-}
-
-.badge-warning {
-  background-color: var(--bs-warning);
-  color: var(--bs-dark);
-}
-
 // Typography compatibility
 small,
 .small {
