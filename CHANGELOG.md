@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style of the stepper in the user account registration dialog
 - Improved the labels of the client of the last request in the users section of the admin control panel
 
 ### Fixed
