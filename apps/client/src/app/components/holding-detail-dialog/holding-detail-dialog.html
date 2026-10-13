@@ -483,8 +483,8 @@
                 mat-stroked-button
                 [routerLink]="
                   routerLinkAdminControlMarketDataUpdate(
-                    data.dataSource,
-                    data.symbol
+                    assetProfile?.dataSource ?? data.dataSource,
+                    assetProfile?.symbol ?? data.symbol
                   )
                 "
                 (click)="onClose()"
