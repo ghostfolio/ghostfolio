@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the labels of the client of the last request in the users section of the admin control panel
 
+### Fixed
+
+- Fixed the link of the _Manage Asset Profile_ button in the holding detail dialog before the holding has loaded
+
 ## 3.85.0 - 2026-10-12
 
 ### Added
