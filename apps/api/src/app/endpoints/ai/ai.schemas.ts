@@ -32,7 +32,7 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
         fee: z.number().describe('The fee of the activity'),
         isin: PRINTED_TEXT.describe('The ISIN of the asset, as printed'),
         name: PRINTED_TEXT.describe(
-          'The name of the asset, or the description of a fee, an interest or a liability, as printed'
+          'The name of the asset, or the description of a fee, an interest, a liability, a deposit or a withdrawal, as printed'
         ),
         quantity: z.number().describe('The quantity of the activity'),
         symbol: PRINTED_TEXT.describe(

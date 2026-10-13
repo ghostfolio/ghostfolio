@@ -13,6 +13,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
+  CASH_FLOW_ACTIVITY_TYPES,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   ghostfolioPrefix,
   NON_INVESTMENT_ACTIVITY_TYPES,
@@ -29,7 +30,8 @@ import {
   getAssetProfileIdentifier,
   hasGhostfolioPrefix,
   isValidCustomAssetProfileSymbol,
-  parseDate
+  parseDate,
+  resetHours
 } from '@ghostfolio/common/helper';
 import {
   Activity,
@@ -217,6 +219,16 @@ export class ImportService {
     tagsDto: ImportDataDto['tags'];
     user: UserWithSettings;
   }): Promise<Activity[]> {
+    if (!isDryRun) {
+      for (const [index, activity] of activitiesDto.entries()) {
+        if (activity.updateAccountBalance === true && !activity.accountId) {
+          throw new ImportValidationError(
+            `activities.${index}.accountId is required to update the cash balance`
+          );
+        }
+      }
+    }
+
     const accountIdMapping: { [oldAccountId: string]: string } = {};
     const assetProfileSymbolMapping: { [oldSymbol: string]: string } = {};
     const ghostfolioDataSources = this.configurationService.get(
@@ -763,11 +775,32 @@ export class ImportService {
       subscription: user.subscription
     });
 
-    const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
+    const { activities: existingActivities } =
+      await this.activitiesService.getActivities({
+        userCurrency,
+        userId: user.id,
+        includeDrafts: true,
+        withExcludedAccountsAndActivities: true
+      });
+
+    const activitiesExtendedWithErrors = this.extendActivitiesWithErrors({
       activitiesDto,
-      userCurrency,
-      userId: user.id
+      existingActivities
     });
+    const cashTrackingAccountIds = new Set(
+      [
+        ...activitiesDto,
+        ...existingActivities.filter(({ updateAccountBalance }) => {
+          return updateAccountBalance === true;
+        })
+      ]
+        .filter(({ accountId, type }) => {
+          return accountId && CASH_FLOW_ACTIVITY_TYPES.includes(type);
+        })
+        .map(({ accountId }) => {
+          return accountId;
+        })
+    );
 
     const accounts = (await this.accountService.getAccounts(user.id)).map(
       ({ id, name }) => {
@@ -879,6 +912,33 @@ export class ImportService {
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
+      const canInferBalanceUpdate = [
+        ...CASH_FLOW_ACTIVITY_TYPES,
+        'BUY',
+        'DIVIDEND',
+        'FEE',
+        'INTEREST',
+        'SELL'
+      ].includes(type);
+      const activityBalanceDate = resetHours(date);
+      const hasAccountBalanceSnapshot =
+        canInferBalanceUpdate &&
+        accountsWithBalancesDto?.some(({ balance, balances, id }) => {
+          return (
+            (accountIdMapping[id] ?? id) === accountId &&
+            ((typeof balance === 'number' &&
+              activityBalanceDate <= resetHours(new Date())) ||
+              balances?.some(({ date: balanceDate }) => {
+                return resetHours(parseISO(balanceDate)) >= activityBalanceDate;
+              }))
+          );
+        });
+      const updateAccountBalance =
+        activity.updateAccountBalance ??
+        (canInferBalanceUpdate &&
+          Boolean(validatedAccount) &&
+          cashTrackingAccountIds.has(accountId) &&
+          !hasAccountBalanceSnapshot);
       const validatedTags = tags.filter(({ id: tagId }) => {
         return tagIds.some((activityTagId) => {
           return activityTagId === tagId;
@@ -917,7 +977,7 @@ export class ImportService {
           symbolProfileId: undefined,
           tags: previewTags,
           updatedAt: new Date(),
-          updateAccountBalance: false,
+          updateAccountBalance,
           userId: user.id
         };
       } else {
@@ -963,7 +1023,7 @@ export class ImportService {
           tags: validatedTags.map(({ id }) => {
             return { id };
           }),
-          updateAccountBalance: false,
+          updateAccountBalance,
           user: { connect: { id: user.id } },
           userId: user.id
         });
@@ -1030,23 +1090,13 @@ export class ImportService {
     return activities;
   }
 
-  private async extendActivitiesWithErrors({
+  private extendActivitiesWithErrors({
     activitiesDto,
-    userCurrency,
-    userId
+    existingActivities
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
-    userCurrency: string;
-    userId: string;
-  }): Promise<(Partial<Activity> & Pick<Activity, 'assetProfile'>)[]> {
-    const { activities: existingActivities } =
-      await this.activitiesService.getActivities({
-        userCurrency,
-        userId,
-        includeDrafts: true,
-        withExcludedAccountsAndActivities: true
-      });
-
+    existingActivities: Activity[];
+  }): (Partial<Activity> & Pick<Activity, 'assetProfile'>)[] {
     return activitiesDto.map(
       ({
         accountId,
@@ -1059,20 +1109,32 @@ export class ImportService {
         symbol,
         tags,
         type,
-        unitPrice
+        unitPrice,
+        updateAccountBalance
       }) => {
         const date = parseISO(dateString);
+        const isCashFlow = CASH_FLOW_ACTIVITY_TYPES.includes(type);
 
         const isDuplicate = existingActivities.some((activity) => {
+          const hasSameCurrency = isCashFlow
+            ? (activity.currency ?? activity.assetProfile.currency) === currency
+            : activity.currency === currency ||
+              activity.assetProfile.currency === currency;
+          const hasSameSymbol =
+            activity.assetProfile.symbol === symbol ||
+            (isCashFlow &&
+              !isValidCustomAssetProfileSymbol(symbol) &&
+              activity.assetProfile.name === symbol);
+
           return (
+            (!isCashFlow || activity.accountId === accountId) &&
             (activity.comment || null) === (comment || null) &&
-            (activity.currency === currency ||
-              activity.assetProfile.currency === currency) &&
+            hasSameCurrency &&
             activity.assetProfile.dataSource === dataSource &&
             isSameSecond(activity.date, date) &&
             activity.fee === fee &&
             activity.quantity === quantity &&
-            activity.assetProfile.symbol === symbol &&
+            hasSameSymbol &&
             activity.type === type &&
             activity.unitPrice === unitPrice
           );
@@ -1092,6 +1154,7 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
+          updateAccountBalance,
           assetProfile: {
             dataSource,
             symbol,

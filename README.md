@@ -397,6 +397,42 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 }
 ```
 
+## Ghostfolio AI (experimental)
+
+Ghostfolio AI reads activities from broker CSV files, PDFs and images for smart import. Configure the OpenRouter API key and models in _Admin Control_ → _Settings_ under _Ghostfolio AI_.
+
+### Prerequisites
+
+- Set the `API_KEY_OPENROUTER` property to your OpenRouter API key
+- Set the `OPENROUTER_MODEL` property to an OpenRouter model identifier which supports tool calling and structured output. To read PDFs and images, use a model which also supports those inputs, or set `OPENROUTER_MODEL_VISION` to a suitable model.
+- Optionally set `OPENROUTER_MODEL_AGENT` for matching assets and accounts. Both dedicated models fall back to `OPENROUTER_MODEL` if unset.
+
+The API key is entered in a password field and is not shown after saving. You can replace or remove it from the same section. Leave the optional model fields empty to use the default model.
+
+These settings are stored in the database's `Property` table, rather than environment variables. Administrators can also set them with `PUT /api/v1/admin/settings/<PROPERTY_KEY>` and the JSON body `{ "value": "<PROPERTY_VALUE>" }`.
+
+### Enable smart import
+
+In a desktop browser, enable _Experimental Features_ and then _Ghostfolio AI_ in _My Ghostfolio_ under _Settings_. Open _Portfolio_ → _Activities_ → _Import Activities_ and select _Smart import with Ghostfolio AI_. Review the extracted activities before importing them.
+
+The content of your file and the account details needed for matching are processed by a third-party AI provider. Remove personal data from files before uploading them.
+
+## Bank activities
+
+Use _Deposit_ for incoming money and _Withdrawal_ for outgoing money. In _Portfolio_ → _Activities_, create an activity, select your bank account and enter a positive amount. The activity type determines whether the amount is added to or subtracted from the account's cash balance.
+
+Cash balance updates are enabled by default for these activities. Editing or deleting a tracked activity reconciles the balance history. Disable _Update Cash Balance_ if the movement is already reflected in balances you have entered separately.
+
+Smart import with Ghostfolio AI classifies credits and debits in bank statements as deposits and withdrawals. CSV imports also accept the types `DEPOSIT`, `WITHDRAWAL` and `withdraw`, with an `amount` column for cash movements. Bank transfer types such as `TRANSFER_INSTANT_INBOUND` and `TRANSFER_INSTANT_OUTBOUND` are mapped to deposits and withdrawals. For other bank rows marked `category=CASH`, the signed amount determines the direction.
+
+Include an `account` column with the Ghostfolio account name or ID to assign CSV movements. If it is missing, a cash movement is assigned automatically only when there is one account and its currency matches. Buys, sells, fees, dividends and interest in the same statement can use that account when their currency also matches. Review the account and amount before importing.
+
+For accounts with deposits or withdrawals in the import, cash balances also include buys, sells, fees, dividends and interest. Buys subtract the purchase value and fee; sales and income add the value minus the fee. Later imports continue updating accounts that already have tracked deposits or withdrawals. An explicit `updateAccountBalance: false` in a JSON activity, or an `UpdateAccountBalance` CSV column set to `false`, disables its cash update.
+
+Deposits and withdrawals are cash movements, separate from investment returns. Full JSON backups containing account balances retain those balances without applying the same movements again by default.
+
+The database migration for these activity types must be applied before using them: run `npm run database:migrate` and rebuild/restart the application.
+
 ## Model Context Protocol (experimental)
 
 The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio and import activities into it.

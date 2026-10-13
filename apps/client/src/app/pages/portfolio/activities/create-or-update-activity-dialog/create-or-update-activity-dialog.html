@@ -25,6 +25,14 @@
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
+          <mat-option value="DEPOSIT">
+            <span
+              ><b>{{ typesTranslationMap['DEPOSIT'] }}</b></span
+            >
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Money paid into a bank account</small
+            >
+          </mat-option>
           <mat-option value="FEE">
             <span
               ><b>{{ typesTranslationMap['FEE'] }}</b></span
@@ -73,6 +81,14 @@
               >Luxury items, real estate, private companies</small
             >
           </mat-option>
+          <mat-option value="WITHDRAWAL">
+            <span
+              ><b>{{ typesTranslationMap['WITHDRAWAL'] }}</b></span
+            >
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Money paid out of a bank account</small
+            >
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -82,7 +98,9 @@
         [accounts]="data.accounts"
         [class.mb-1]="mode === 'create'"
         [hasHint]="mode !== 'create'"
-        [hasNullOption]="true"
+        [hasNullOption]="
+          !CASH_FLOW_ACTIVITY_TYPES.includes(activityForm.get('type')?.value)
+        "
         [label]="labelAccount"
       />
     </div>
@@ -109,7 +127,8 @@
     <div
       class="mb-3"
       [class.d-none]="
-        !activityForm.get('name')?.hasValidator(Validators.required)
+        !activityForm.get('name')?.hasValidator(Validators.required) &&
+        !CASH_FLOW_ACTIVITY_TYPES.includes(activityForm.get('type')?.value)
       "
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -155,6 +174,7 @@
     <div
       class="mb-3"
       [class.d-none]="
+        CASH_FLOW_ACTIVITY_TYPES.includes(activityForm.get('type')?.value) ||
         activityForm.get('type')?.value === 'FEE' ||
         activityForm.get('type')?.value === 'INTEREST' ||
         activityForm.get('type')?.value === 'LIABILITY' ||
@@ -174,6 +194,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>
             @switch (activityForm.get('type')?.value) {
+              @case ('DEPOSIT') {
+                <ng-container i18n>Amount</ng-container>
+              }
               @case ('DIVIDEND') {
                 <ng-container i18n>Dividend</ng-container>
               }
@@ -185,6 +208,9 @@
               }
               @case ('VALUABLE') {
                 <ng-container i18n>Value</ng-container>
+              }
+              @case ('WITHDRAWAL') {
+                <ng-container i18n>Amount</ng-container>
               }
               @default {
                 <ng-container i18n>Unit Price</ng-container>
@@ -230,6 +256,7 @@
     <div
       class="mb-3"
       [class.d-none]="
+        CASH_FLOW_ACTIVITY_TYPES.includes(activityForm.get('type')?.value) ||
         activityForm.get('type')?.value === 'INTEREST' ||
         activityForm.get('type')?.value === 'LIABILITY' ||
         activityForm.get('type')?.value === 'VALUABLE'

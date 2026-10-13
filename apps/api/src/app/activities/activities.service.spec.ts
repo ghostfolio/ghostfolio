@@ -643,6 +643,23 @@ describe('ActivitiesService', () => {
       expect(data).not.toHaveProperty('SymbolProfile');
     });
 
+    it.each([ActivityType.DEPOSIT, ActivityType.WITHDRAWAL])(
+      'updates the custom bank activity profile for %s',
+      async (type) => {
+        const data = await getUpdatedActivityData({ type, userId: 'user-id' });
+
+        expect(data.SymbolProfile).toEqual({
+          update: {
+            data: {
+              assetClass: AssetClass.COMMODITY,
+              assetSubClass: AssetSubClass.PRECIOUS_METAL
+            },
+            where: { userId: 'user-id' }
+          }
+        });
+      }
+    );
+
     async function getUpdatedActivityData({
       dataSource = DataSource.MANUAL,
       symbol = 'GF_GOLD',
@@ -654,7 +671,23 @@ describe('ActivitiesService', () => {
       type?: ActivityType;
       userId: string | null;
     }) {
-      const update = jest.fn().mockResolvedValue({ userId: 'user-id' });
+      const activity = {
+        date: parseDate('2024-01-01'),
+        fee: 0,
+        quantity: 0,
+        SymbolProfile: { currency: 'USD', userId },
+        type,
+        unitPrice: 0,
+        updateAccountBalance: false,
+        userId: 'user-id'
+      };
+      const update = jest.fn(async ({ data }) => {
+        return { ...activity, ...data };
+      });
+      const order = {
+        update,
+        findUnique: jest.fn().mockResolvedValue(activity)
+      };
 
       const service = new ActivitiesService(
         null,
@@ -667,12 +700,8 @@ describe('ActivitiesService', () => {
         null,
         null,
         {
-          order: {
-            update,
-            findUnique: jest
-              .fn()
-              .mockResolvedValue({ SymbolProfile: { userId } })
-          }
+          order,
+          $transaction: jest.fn(async (operation) => operation({ order }))
         } as unknown as PrismaService,
         null,
         { validateTagIds: jest.fn() } as unknown as TagService

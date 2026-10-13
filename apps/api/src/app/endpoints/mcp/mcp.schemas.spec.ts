@@ -8,7 +8,7 @@ import {
   SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 
-import { DataSource } from '@prisma/client';
+import { DataSource, Type as ActivityType } from '@prisma/client';
 
 import {
   GET_ACCOUNTS_PARAMETERS,
@@ -74,6 +74,14 @@ describe('GET_ACCOUNTS_PARAMETERS', () => {
 });
 
 describe('GET_ACTIVITIES_PARAMETERS', () => {
+  it('Accepts filtering deposits and withdrawals', () => {
+    expect(
+      GET_ACTIVITIES_PARAMETERS.safeParse({
+        activityTypes: [ActivityType.DEPOSIT, ActivityType.WITHDRAWAL]
+      }).success
+    ).toBe(true);
+  });
+
   it('Refuses an empty symbol of the holding', () => {
     expect(
       GET_ACTIVITIES_PARAMETERS.safeParse({
@@ -167,6 +175,32 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
   function parse(activities: unknown[]) {
     return IMPORT_ACTIVITIES_PARAMETERS.safeParse({ activities }).success;
   }
+
+  it.each([ActivityType.DEPOSIT, ActivityType.WITHDRAWAL])(
+    'Accepts %s with a description, account and positive amount without a security data source',
+    (type) => {
+      const activity = createActivity({
+        type,
+        accountId: 'bank-account',
+        symbol: 'Bank transfer',
+        unitPrice: 250,
+        updateAccountBalance: false
+      });
+
+      expect(
+        IMPORT_ACTIVITIES_PARAMETERS.parse({ activities: [activity] })
+          .activities
+      ).toEqual([activity]);
+    }
+  );
+
+  it('Refuses a signed negative cash amount', () => {
+    expect(
+      parse([
+        createActivity({ type: ActivityType.WITHDRAWAL, unitPrice: -250 })
+      ])
+    ).toBe(false);
+  });
 
   it(`Accepts a comment of ${COMMENT_MAXIMUM_LENGTH} characters with spaces at the start and the end`, () => {
     expect(

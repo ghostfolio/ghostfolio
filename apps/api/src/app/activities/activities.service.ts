@@ -25,6 +25,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
+  CASH_FLOW_ACTIVITY_TYPES,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
@@ -50,7 +51,11 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
@@ -206,8 +211,20 @@ export class ActivitiesService {
     }
 
     const accountId = data.accountId;
-    const updateAccountBalance = data.updateAccountBalance ?? false;
+    const updateAccountBalance =
+      data.updateAccountBalance ??
+      (CASH_FLOW_ACTIVITY_TYPES.includes(data.type) && !!accountId);
     const userId = data.userId;
+
+    if (
+      CASH_FLOW_ACTIVITY_TYPES.includes(data.type) &&
+      updateAccountBalance &&
+      !accountId
+    ) {
+      throw new BadRequestException(
+        'Select an account to update its balance with a deposit or withdrawal'
+      );
+    }
 
     if (
       NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
@@ -1083,6 +1100,16 @@ export class ActivitiesService {
           include: { SymbolProfile: true }
         });
 
+        if (
+          CASH_FLOW_ACTIVITY_TYPES.includes(updatedActivity.type) &&
+          shouldUpdateAccountBalance &&
+          !updatedActivity.accountId
+        ) {
+          throw new BadRequestException(
+            'Select an account to update its balance with a deposit or withdrawal'
+          );
+        }
+
         const hasCashEffectChanged =
           originalActivity.accountId !== updatedActivity.accountId ||
           resetHours(originalActivity.date).getTime() !==
@@ -1136,7 +1163,7 @@ export class ActivitiesService {
   ) {
     let amount = new Big(activity.unitPrice).mul(activity.quantity);
 
-    if (['BUY', 'FEE'].includes(activity.type)) {
+    if (['BUY', 'FEE', 'WITHDRAWAL'].includes(activity.type)) {
       amount = amount.mul(-1);
     }
 

@@ -41,12 +41,14 @@ const locales = {
 
   // Activity types
   BUY: $localize`Buy`,
+  DEPOSIT: $localize`Deposit`,
   DIVIDEND: $localize`Dividend`,
   FEE: $localize`Fee`,
   INTEREST: $localize`Interest`,
   LIABILITY: $localize`Liability`,
   SELL: $localize`Sell`,
   VALUABLE: $localize`Valuable`,
+  WITHDRAWAL: $localize`Withdrawal`,
 
   // AssetClass (enum)
   ALTERNATIVE_INVESTMENT: $localize`:@@assetClass.ALTERNATIVE_INVESTMENT:Alternative Investment`,

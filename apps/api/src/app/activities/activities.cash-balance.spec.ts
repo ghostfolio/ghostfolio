@@ -196,13 +196,78 @@ describe('ActivitiesService cash balance lifecycle', () => {
       { emit } as unknown as EventEmitter2,
       null,
       null,
-      { $transaction: transaction } as unknown as PrismaService,
+      {
+        $transaction: transaction,
+        order: transactionClient.order
+      } as unknown as PrismaService,
       { getSymbolProfilesByIds } as unknown as SymbolProfileService,
       { validateTagIds: jest.fn() } as unknown as TagService
     );
   });
 
   describe('create', () => {
+    it.each([
+      { type: Type.DEPOSIT, amount: 298 },
+      { type: Type.WITHDRAWAL, amount: -302 }
+    ])(
+      'updates historical cash balances by default for $type',
+      async ({ amount, type }) => {
+        await create(undefined, true, type);
+
+        expect(orders[0].updateAccountBalance).toBe(true);
+        expect(orders[0].accountBalanceChange).toBe(amount);
+        expect(accountValues()).toEqual([
+          1000,
+          698 + amount,
+          898 + amount,
+          1198 + amount
+        ]);
+        expect(updateAccountBalance).toHaveBeenCalledWith(
+          expect.objectContaining({ amount, currency: 'USD', date })
+        );
+      }
+    );
+
+    it.each([Type.DEPOSIT, Type.WITHDRAWAL])(
+      'honors opting out of cash updates for %s',
+      async (type) => {
+        await create(false, true, type);
+
+        expect(orders[0].updateAccountBalance).toBe(false);
+        expect(orders[0].accountBalanceChange).toBeNull();
+        expect(accountValues()).toEqual([1000, 698, 898, 1198]);
+        expect(updateAccountBalance).not.toHaveBeenCalled();
+      }
+    );
+
+    it('keeps cash updates disabled by default for other activity types', async () => {
+      await create(undefined);
+
+      expect(orders[0].updateAccountBalance).toBe(false);
+      expect(updateAccountBalance).not.toHaveBeenCalled();
+    });
+
+    it.each([Type.DEPOSIT, Type.WITHDRAWAL])(
+      'requires an account when cash updates are enabled for %s',
+      async (type) => {
+        await expect(create(true, false, type)).rejects.toThrow(
+          'Select an account'
+        );
+
+        expect(orders).toEqual([]);
+        expect(updateAccountBalance).not.toHaveBeenCalled();
+        expect(emit).not.toHaveBeenCalled();
+      }
+    );
+
+    it('stores an untracked cash activity when no account is selected', async () => {
+      await create(undefined, false, Type.DEPOSIT);
+
+      expect(orders[0].updateAccountBalance).toBe(false);
+      expect(orders[0].accountBalanceChange).toBeNull();
+      expect(updateAccountBalance).not.toHaveBeenCalled();
+    });
+
     it('persists the cash balance preference and exact change together with the balance chain', async () => {
       await create(true);
 
@@ -262,7 +327,157 @@ describe('ActivitiesService cash balance lifecycle', () => {
     });
   });
 
+  describe('mixed bank statement', () => {
+    it('includes purchases, their fees and interest in historical cash balances even when rows arrive out of date order', async () => {
+      orders = [];
+      balances = [];
+      const statement = [
+        {
+          date: '2024-09-21',
+          fee: 1,
+          type: Type.BUY,
+          unitPrice: 2890.4
+        },
+        {
+          date: '2024-09-30',
+          fee: 0,
+          type: Type.INTEREST,
+          unitPrice: 4.5
+        },
+        {
+          date: '2024-09-17',
+          fee: 0,
+          type: Type.DEPOSIT,
+          unitPrice: 5000
+        },
+        {
+          date: '2024-09-18',
+          fee: 1,
+          type: Type.BUY,
+          unitPrice: 201.89
+        }
+      ];
+
+      for (const { date: dateString, fee, type, unitPrice } of statement) {
+        await service.createActivity({
+          accountId,
+          fee,
+          type,
+          unitPrice,
+          currency: 'USD',
+          date: parseDate(dateString),
+          id: `${type}-${dateString}`,
+          quantity: 1,
+          SymbolProfile: {
+            connectOrCreate: {
+              create: {
+                currency: 'USD',
+                dataSource: DataSource.MANUAL,
+                symbol: 'Bank activity'
+              },
+              where: {
+                dataSource_symbol: {
+                  dataSource: DataSource.MANUAL,
+                  symbol: 'Bank activity'
+                }
+              }
+            }
+          },
+          updateAccountBalance: true,
+          user: { connect: { id: userId } },
+          userId
+        });
+      }
+
+      expect(accountValues()).toEqual([5000, 4797.11, 1905.71, 1910.21]);
+      expect(
+        orders.map(({ accountBalanceChange }) => accountBalanceChange)
+      ).toEqual([-2891.4, 4.5, 5000, -202.89]);
+      expect(
+        orders.every(({ updateAccountBalance }) => updateAccountBalance)
+      ).toBe(true);
+    });
+  });
+
   describe('edit', () => {
+    it('reverses a deposit before changing it to a withdrawal', async () => {
+      await create(undefined, true, Type.DEPOSIT);
+      updateAccountBalance.mockClear();
+
+      await update({ type: Type.WITHDRAWAL });
+
+      expect(orders[0].accountBalanceChange).toBe(-302);
+      expect(accountValues()).toEqual([1000, 396, 596, 896]);
+      expect(transactionClient.accountBalance.updateMany).toHaveBeenCalledWith({
+        data: { value: { increment: -298 } },
+        where: { accountId, userId, date: { gte: resetHours(date) } }
+      });
+      expect(updateAccountBalance).toHaveBeenCalledWith(
+        expect.objectContaining({ amount: -302 })
+      );
+    });
+
+    it('moves a deposit to another account and backdated balance chain', async () => {
+      await create(undefined, true, Type.DEPOSIT);
+
+      await update({
+        account: { connect: { id_userId: { id: 'other-account', userId } } },
+        date: parseDate('2024-02-01'),
+        quantity: 1,
+        unitPrice: 400
+      });
+
+      expect(accountValues()).toEqual([1000, 698, 898, 1198]);
+      expect(accountValues('other-account')).toEqual([2000, 2598, 2898]);
+      expect(orders[0].accountBalanceChange).toBe(398);
+    });
+
+    it('keeps the converted cash change when editing a withdrawal note and reverses it exactly on deletion', async () => {
+      await create(undefined, true, Type.WITHDRAWAL);
+      orders[0].accountBalanceChange = -271.8;
+      updateAccountBalance.mockClear();
+
+      await update({ comment: 'Bank transfer' });
+
+      expect(orders[0].accountBalanceChange).toBe(-271.8);
+      expect(updateAccountBalance).not.toHaveBeenCalled();
+
+      await service.deleteActivity(where);
+
+      expect(transactionClient.accountBalance.updateMany).toHaveBeenCalledWith({
+        data: { value: { increment: 271.8 } },
+        where: { accountId, userId, date: { gte: resetHours(date) } }
+      });
+      expect(updateAccountBalance).not.toHaveBeenCalled();
+    });
+
+    it('rolls back detaching a tracked cash activity without disabling cash updates', async () => {
+      await create(undefined, true, Type.DEPOSIT);
+      emit.mockClear();
+
+      await expect(update({ account: { disconnect: true } })).rejects.toThrow(
+        'Select an account'
+      );
+
+      expect(orders[0].accountId).toBe(accountId);
+      expect(orders[0].accountBalanceChange).toBe(298);
+      expect(accountValues()).toEqual([1000, 996, 1196, 1496]);
+      expect(emit).not.toHaveBeenCalled();
+    });
+
+    it('can detach a deposit while explicitly disabling cash updates', async () => {
+      await create(undefined, true, Type.DEPOSIT);
+
+      await update({
+        account: { disconnect: true },
+        updateAccountBalance: false
+      });
+
+      expect(orders[0].accountId).toBeNull();
+      expect(orders[0].accountBalanceChange).toBeNull();
+      expect(accountValues()).toEqual([1000, 698, 898, 1198]);
+    });
+
     it('reverses the original cash change and applies the new amount to every later balance', async () => {
       await update({ quantity: 4 });
 
@@ -581,7 +796,11 @@ describe('ActivitiesService cash balance lifecycle', () => {
     });
   }
 
-  function create(updateAccountBalance: boolean, withAccount = true) {
+  function create(
+    updateAccountBalance: boolean | undefined,
+    withAccount = true,
+    type: Type = Type.BUY
+  ) {
     orders = [];
 
     return service.createActivity({
@@ -605,7 +824,7 @@ describe('ActivitiesService cash balance lifecycle', () => {
           }
         }
       },
-      type: Type.BUY,
+      type,
       unitPrice: 100,
       updateAccountBalance,
       user: { connect: { id: userId } },
@@ -664,6 +883,7 @@ describe('ActivitiesService cash balance lifecycle', () => {
         dataSource: DataSource.MANUAL,
         id: 'asset-profile-id',
         symbol: 'Asset',
+        userId,
         watchedByCount: 0
       }
     };

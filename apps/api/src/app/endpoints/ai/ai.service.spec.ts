@@ -269,6 +269,30 @@ describe('AiService', () => {
       );
     });
 
+    it('Classifies bank credits as deposits and debits as withdrawals while retaining investment activity types', async () => {
+      await aiService.getActivityRowsFromFile({
+        file: { buffer: Buffer.from('Date,Amount'), mediaType: 'text/csv' },
+        locale: 'en-US'
+      });
+
+      const { instructions } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(instructions).toContain(
+        'classify every incoming amount, credit or positive signed amount as DEPOSIT and every outgoing amount, debit or negative signed amount as WITHDRAWAL'
+      );
+      expect(instructions).toContain('Use the debit and credit columns');
+      expect(instructions).toContain(
+        'For an ordinary bank statement row, give 0 as fee and use the complete amount credited or debited to the account as unit price'
+      );
+      expect(instructions).toContain(
+        'retain explicit buy, sell, dividend, fee, interest and liability activity types'
+      );
+      expect(instructions).toContain('Leave out balances, totals');
+      expect(instructions).toContain(
+        'Do not give the cash settlement of a trade, a dividend or a fee as an additional deposit or withdrawal'
+      );
+    });
+
     it('Gives an error for the caller if a cut output reaches the maximum number of output tokens', async () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
@@ -764,11 +788,13 @@ describe('AiService', () => {
       expect(activities[0].accountId).toBeUndefined();
     });
 
-    it('Gives a fee, an interest or a liability its description as symbol without a model call', async () => {
+    it('Gives a non-investment activity its description as symbol without an asset search', async () => {
       const rowsOfNonInvestments = [
+        ActivityType.DEPOSIT,
         ActivityType.FEE,
         ActivityType.INTEREST,
-        ActivityType.LIABILITY
+        ActivityType.LIABILITY,
+        ActivityType.WITHDRAWAL
       ].map((type) => {
         return createActivityRow({
           type,
@@ -807,6 +833,84 @@ describe('AiService', () => {
 
       expect(rowsWithoutMatch).toEqual([]);
     });
+
+    it.each([
+      [ActivityType.DEPOSIT, 'Deposit', 250],
+      [ActivityType.WITHDRAWAL, 'Withdrawal', -250]
+    ])(
+      'Gives a %s without a security or description a positive cash amount and a default name',
+      async (type, symbol, unitPrice) => {
+        const { activities, rowsWithoutMatch } =
+          await aiService.getActivitiesFromRows({
+            accounts,
+            userCurrency,
+            userId,
+            rows: [
+              createActivityRow({
+                type,
+                unitPrice,
+                accountName: null,
+                currency: null,
+                fee: 0,
+                isin: null,
+                name: null,
+                quantity: 2,
+                symbol: null
+              })
+            ]
+          });
+
+        expect(activities).toEqual([
+          {
+            symbol,
+            type,
+            currency: userCurrency,
+            date: '2026-01-15',
+            fee: 0,
+            quantity: 1,
+            unitPrice: 500
+          }
+        ]);
+        expect(rowsWithoutMatch).toEqual([]);
+        expect(mcpService.searchAssetProfiles).not.toHaveBeenCalled();
+        expect(generateText).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each([ActivityType.DEPOSIT, ActivityType.WITHDRAWAL])(
+      'Matches a %s to its account and uses the account currency without searching for a security',
+      async (type) => {
+        mockRowMatches({ accounts: [{ accountId: 'account-id', id: 0 }] });
+
+        const { activities } = await aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [
+            createActivityRow({
+              type,
+              currency: null,
+              fee: 0,
+              isin: null,
+              name: 'Bank transfer',
+              quantity: 1,
+              symbol: null,
+              unitPrice: 150
+            })
+          ]
+        });
+
+        expect(activities[0]).toMatchObject({
+          type,
+          accountId: 'account-id',
+          currency: 'CHF',
+          quantity: 1,
+          symbol: 'Bank transfer',
+          unitPrice: 150
+        });
+        expect(mcpService.searchAssetProfiles).not.toHaveBeenCalled();
+      }
+    );
 
     it('Gives a fee without a currency the currency of its account', async () => {
       mockRowMatches({

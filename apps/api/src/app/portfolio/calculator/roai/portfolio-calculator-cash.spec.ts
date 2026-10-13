@@ -22,7 +22,7 @@ import { parseDate } from '@ghostfolio/common/helper';
 import { PortfolioSnapshotHolding } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-import { DataSource } from '@prisma/client';
+import { DataSource, Type } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval } from 'date-fns';
 import { randomUUID } from 'node:crypto';
@@ -150,6 +150,131 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('Cash Performance', () => {
+    it('counts deposit and withdrawal balances once without reporting the transfers as investments or income', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());
+
+      const accountId = randomUUID();
+      const movements = [
+        { date: '2023-12-31', type: Type.DEPOSIT, value: 1000 },
+        { date: '2024-12-31', type: Type.WITHDRAWAL, value: 200 }
+      ];
+
+      jest
+        .spyOn(accountBalanceService, 'getAccountBalances')
+        .mockResolvedValue({
+          balances: movements.map(({ date }, index) => {
+            const value = index === 0 ? 1000 : 800;
+
+            return {
+              accountId,
+              value,
+              date: parseDate(date),
+              id: randomUUID(),
+              valueInBaseCurrency: value
+            };
+          })
+        });
+
+      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+        accounts: [
+          {
+            balance: 800,
+            comment: null,
+            createdAt: parseDate('2023-12-31'),
+            currency: 'CHF',
+            id: accountId,
+            name: 'Bank',
+            platformId: null,
+            updatedAt: parseDate('2024-12-31'),
+            userId: userDummyData.id
+          }
+        ],
+        balanceInBaseCurrency: 800
+      });
+
+      jest
+        .spyOn(dataProviderService, 'getDataSourceForExchangeRates')
+        .mockReturnValue(DataSource.YAHOO);
+
+      jest.spyOn(activitiesService, 'getActivities').mockResolvedValue({
+        activities: movements.map(({ date, type, value }) => {
+          return {
+            ...activityDummyData,
+            accountId,
+            type,
+            value,
+            assetProfile: {
+              ...assetProfileDummyData,
+              currency: 'CHF',
+              dataSource: DataSource.MANUAL,
+              name: 'Bank transfer',
+              symbol: 'BankTransfer',
+              userId: userDummyData.id
+            },
+            currency: 'CHF',
+            date: parseDate(date),
+            fee: 0,
+            feeInAssetProfileCurrency: 0,
+            feeInBaseCurrency: 0,
+            quantity: 1,
+            tags: [],
+            unitPrice: value,
+            unitPriceInAssetProfileCurrency: value,
+            valueInBaseCurrency: value
+          };
+        }),
+        count: movements.length
+      });
+
+      jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
+        dataProviderInfos: [],
+        errors: [],
+        values: []
+      });
+
+      const { activities } =
+        await activitiesService.getActivitiesForPortfolioCalculator({
+          userCurrency: 'CHF',
+          userId: userDummyData.id,
+          withCash: true
+        });
+      const accountBalanceItems =
+        await accountBalanceService.getAccountBalanceItems({
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        accountBalanceItems,
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      const snapshot = await portfolioCalculator.computeSnapshot();
+
+      expect(snapshot).toMatchObject({
+        currentValueInBaseCurrency: new Big(800),
+        hasErrors: false,
+        totalCashInBaseCurrency: new Big(800),
+        totalFeesWithCurrencyEffect: new Big(0),
+        totalInterestWithCurrencyEffect: new Big(0),
+        totalInvestment: new Big(0),
+        totalLiabilitiesWithCurrencyEffect: new Big(0)
+      });
+      expect(snapshot.historicalData.at(-1)).toMatchObject({
+        dividendInBaseCurrency: 0,
+        netPerformance: 0,
+        netPerformanceWithCurrencyEffect: 0,
+        netWorth: 800,
+        totalInvestment: 0
+      });
+      expect(
+        snapshot.positions.find(({ symbol }) => symbol === 'BankTransfer')
+      ).toBeUndefined();
+    });
+
     it('should calculate performance for cash assets in CHF default currency', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());
 

@@ -63,17 +63,18 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
   public async getAssetProfile({
     symbol
   }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
+    const { currency, id } = this.parseSymbol(symbol);
     const response: Partial<SymbolProfile> = {
+      currency,
       symbol,
       assetClass: AssetClass.LIQUIDITY,
       assetSubClass: AssetSubClass.CRYPTOCURRENCY,
-      currency: DEFAULT_CURRENCY,
       dataSource: this.getName()
     };
 
     try {
       const { name } = await this.fetchService
-        .fetch(`${this.apiUrl}/coins/${symbol}`, {
+        .fetch(`${this.apiUrl}/coins/${id}`, {
           headers: this.headers,
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
@@ -119,15 +120,16 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
+      const { currency, id } = this.parseSymbol(symbol);
       const queryParams = new URLSearchParams({
         from: getUnixTime(from).toString(),
         to: getUnixTime(to).toString(),
-        vs_currency: DEFAULT_CURRENCY.toLowerCase()
+        vs_currency: currency.toLowerCase()
       });
 
       const { error, prices, status } = await this.fetchService
         .fetch(
-          `${this.apiUrl}/coins/${symbol}/market_chart/range?${queryParams.toString()}`,
+          `${this.apiUrl}/coins/${id}/market_chart/range?${queryParams.toString()}`,
           {
             headers: this.headers,
             signal: AbortSignal.timeout(requestTimeout)
@@ -185,9 +187,14 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     }
 
     try {
+      const assets = symbols.map((symbol) => {
+        return { symbol, ...this.parseSymbol(symbol) };
+      });
       const queryParams = new URLSearchParams({
-        ids: symbols.join(','),
-        vs_currencies: DEFAULT_CURRENCY.toLowerCase()
+        ids: Array.from(new Set(assets.map(({ id }) => id))).join(','),
+        vs_currencies: Array.from(
+          new Set(assets.map(({ currency }) => currency.toLowerCase()))
+        ).join(',')
       });
 
       const quotes = await this.fetchService
@@ -197,12 +204,18 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         })
         .then((res) => res.json());
 
-      for (const symbol in quotes) {
+      for (const { currency, id, symbol } of assets) {
+        const marketPrice = quotes[id]?.[currency.toLowerCase()];
+
+        if (typeof marketPrice !== 'number') {
+          continue;
+        }
+
         response[symbol] = {
-          currency: DEFAULT_CURRENCY,
+          currency,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.COINGECKO,
-          marketPrice: quotes[symbol][DEFAULT_CURRENCY.toLowerCase()],
+          marketPrice,
           marketState: 'open'
         };
       }
@@ -235,7 +248,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
 
     try {
       const queryParams = new URLSearchParams({
-        query
+        query: this.parseSymbol(query).id
       });
 
       const { coins } = await this.fetchService
@@ -245,16 +258,18 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
         })
         .then((res) => res.json());
 
-      items = coins.map(({ id: symbol, name }) => {
-        return {
-          name,
-          symbol,
-          assetClass: AssetClass.LIQUIDITY,
-          assetSubClass: AssetSubClass.CRYPTOCURRENCY,
-          currency: DEFAULT_CURRENCY,
-          dataProviderInfo: this.getDataProviderInfo(),
-          dataSource: this.getName()
-        };
+      items = coins.flatMap(({ id, name }) => {
+        return [DEFAULT_CURRENCY, 'EUR'].map((currency) => {
+          return {
+            currency,
+            name,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CRYPTOCURRENCY,
+            dataProviderInfo: this.getDataProviderInfo(),
+            dataSource: this.getName(),
+            symbol: currency === DEFAULT_CURRENCY ? id : `${id}-${currency}`
+          };
+        });
       });
     } catch (error) {
       let message = error;
@@ -269,5 +284,15 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     }
 
     return { items };
+  }
+
+  private parseSymbol(symbol: string): { currency: string; id: string } {
+    // Keep existing CoinGecko IDs in USD; suffix EUR assets so their profiles
+    // and market data have a distinct identity in the database and caches.
+    if (symbol.endsWith('-EUR')) {
+      return { currency: 'EUR', id: symbol.slice(0, -4) };
+    }
+
+    return { currency: DEFAULT_CURRENCY, id: symbol };
   }
 }

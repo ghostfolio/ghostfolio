@@ -5,7 +5,11 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_LOCALE,
   E_MAIL_LINE_BREAK,
-  PROPERTY_API_KEY_GHOSTFOLIO
+  PROPERTY_API_KEY_GHOSTFOLIO,
+  PROPERTY_API_KEY_OPENROUTER,
+  PROPERTY_OPENROUTER_MODEL,
+  PROPERTY_OPENROUTER_MODEL_AGENT,
+  PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
@@ -31,8 +35,11 @@ import {
   ViewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -44,7 +51,9 @@ import { addIcons } from 'ionicons';
 import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
 import { get } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { catchError, filter, of } from 'rxjs';
+import { catchError, EMPTY, filter, finalize, of } from 'rxjs';
+
+type OpenRouterModelControlName = 'model' | 'agentModel' | 'visionModel';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,12 +68,15 @@ import { catchError, filter, of } from 'rxjs';
     IonIcon,
     MatButtonModule,
     MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatMenuModule,
     MatProgressBarModule,
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
     NgxSkeletonLoaderModule,
+    ReactiveFormsModule,
     RouterModule
   ],
   selector: 'gf-admin-settings',
@@ -87,8 +99,50 @@ export class GfAdminSettingsComponent implements OnInit {
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public readonly ghostfolioApiStatusTooltip = $localize`Additional requests are granted while you are setting up your instance`;
   public hasGhostfolioApiKey: boolean;
+  public hasOpenRouterApiKey = false;
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;
+  public isOpenRouterSettingsLoaded = false;
+  public isSavingOpenRouterSetting = false;
+  public openRouterFeedback?: { isError: boolean; message: string };
+  public readonly openRouterForm = new FormGroup({
+    apiKey: new FormControl('', { nonNullable: true }),
+    model: new FormControl('', {
+      nonNullable: true,
+      validators: (control) => {
+        return typeof control.value === 'string' && control.value.trim()
+          ? null
+          : { required: true };
+      }
+    }),
+    agentModel: new FormControl('', { nonNullable: true }),
+    visionModel: new FormControl('', { nonNullable: true })
+  });
+  public readonly openRouterModelFields: {
+    controlName: OpenRouterModelControlName;
+    hint: string;
+    label: string;
+    saveLabel: string;
+  }[] = [
+    {
+      controlName: 'model',
+      hint: $localize`Enter an OpenRouter model identifier, such as provider/model.`,
+      label: $localize`Default model`,
+      saveLabel: $localize`Save default model`
+    },
+    {
+      controlName: 'agentModel',
+      hint: $localize`Optional. Leave blank to use the default model.`,
+      label: $localize`Asset and account matching model`,
+      saveLabel: $localize`Save asset and account matching model`
+    },
+    {
+      controlName: 'visionModel',
+      hint: $localize`Optional. Leave blank to use the default model. Choose a model that supports PDFs and images.`,
+      label: $localize`File reading model`,
+      saveLabel: $localize`Save file reading model`
+    }
+  ];
   public readonly premiumDataProviderMailHref = `mailto:hi@ghostfol.io?subject=Ghostfolio Premium Data Provider&body=${[
     'Hello,',
     '',
@@ -100,6 +154,15 @@ export class GfAdminSettingsComponent implements OnInit {
   public user: User;
 
   protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
+
+  private readonly openRouterModelProperties = {
+    model: PROPERTY_OPENROUTER_MODEL,
+    agentModel: PROPERTY_OPENROUTER_MODEL_AGENT,
+    visionModel: PROPERTY_OPENROUTER_MODEL_VISION
+  };
+  private savedOpenRouterModels: Partial<
+    Record<OpenRouterModelControlName, string>
+  > = {};
 
   public constructor(
     private adminService: AdminService,
@@ -138,6 +201,78 @@ export class GfAdminSettingsComponent implements OnInit {
     return provider.dataSource === 'GHOSTFOLIO';
   }
 
+  public canSaveOpenRouterModel(controlName: OpenRouterModelControlName) {
+    const control = this.openRouterForm.controls[controlName];
+    const value = control.value.trim();
+    const savedValue = this.savedOpenRouterModels[controlName];
+
+    return (
+      !this.isLoading &&
+      this.isOpenRouterSettingsLoaded &&
+      !this.isSavingOpenRouterSetting &&
+      control.valid &&
+      (value ? value !== savedValue : savedValue !== undefined)
+    );
+  }
+
+  public onRemoveOpenRouterApiKey() {
+    if (
+      this.isLoading ||
+      !this.isOpenRouterSettingsLoaded ||
+      this.isSavingOpenRouterSetting ||
+      !this.hasOpenRouterApiKey
+    ) {
+      return;
+    }
+
+    this.notificationService.confirm({
+      confirmFn: () => {
+        if (this.hasOpenRouterApiKey) {
+          this.saveOpenRouterSetting(
+            PROPERTY_API_KEY_OPENROUTER,
+            undefined,
+            () => {
+              this.hasOpenRouterApiKey = false;
+              this.openRouterForm.controls.apiKey.reset();
+            },
+            $localize`OpenRouter API key removed.`
+          );
+        }
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to remove the OpenRouter API key?`
+    });
+  }
+
+  public onSaveOpenRouterApiKey() {
+    const value = this.openRouterForm.controls.apiKey.value.trim();
+
+    if (value) {
+      this.saveOpenRouterSetting(PROPERTY_API_KEY_OPENROUTER, value, () => {
+        this.hasOpenRouterApiKey = true;
+        this.openRouterForm.controls.apiKey.reset();
+      });
+    }
+  }
+
+  public onSaveOpenRouterModel(controlName: OpenRouterModelControlName) {
+    if (!this.canSaveOpenRouterModel(controlName)) {
+      return;
+    }
+
+    const control = this.openRouterForm.controls[controlName];
+    const value = control.value.trim() || undefined;
+
+    this.saveOpenRouterSetting(
+      this.openRouterModelProperties[controlName],
+      value,
+      () => {
+        this.savedOpenRouterModels[controlName] = value;
+        control.reset(value ?? '');
+      }
+    );
+  }
+
   public onRemoveGhostfolioApiKey() {
     this.notificationService.confirm({
       confirmFn: () => {
@@ -173,12 +308,31 @@ export class GfAdminSettingsComponent implements OnInit {
 
   private initialize() {
     this.isLoading = true;
+    this.isOpenRouterSettingsLoaded = false;
+    this.openRouterFeedback = undefined;
+    this.openRouterForm.disable({ emitEvent: false });
 
     this.dataSource = new MatTableDataSource();
 
     this.adminService
       .fetchAdminData()
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        catchError(() => {
+          this.openRouterFeedback = {
+            isError: true,
+            message: $localize`Could not load Ghostfolio AI settings. Please reload to try again.`
+          };
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.isLoading = false;
+          if (this.isOpenRouterSettingsLoaded) {
+            this.openRouterForm.enable({ emitEvent: false });
+          }
+          this.changeDetectorRef.markForCheck();
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(({ dataProviders, settings }) => {
         const filteredProviders = dataProviders.filter(({ dataSource }) => {
           return dataSource !== 'MANUAL';
@@ -193,6 +347,18 @@ export class GfAdminSettingsComponent implements OnInit {
         ] as string;
 
         this.hasGhostfolioApiKey = !!ghostfolioApiKey;
+        this.hasOpenRouterApiKey = !!settings[PROPERTY_API_KEY_OPENROUTER];
+        this.isOpenRouterSettingsLoaded = true;
+
+        for (const { controlName } of this.openRouterModelFields) {
+          const value = settings[this.openRouterModelProperties[controlName]];
+
+          this.savedOpenRouterModels[controlName] =
+            typeof value === 'string' ? value : undefined;
+          this.openRouterForm.controls[controlName].reset(
+            this.savedOpenRouterModels[controlName] ?? ''
+          );
+        }
 
         if (ghostfolioApiKey) {
           this.adminService
@@ -220,9 +386,52 @@ export class GfAdminSettingsComponent implements OnInit {
           this.isGhostfolioApiKeyValid = false;
         }
 
-        this.isLoading = false;
-
         this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private saveOpenRouterSetting(
+    property: string,
+    value: string | undefined,
+    onSuccess: () => void,
+    successMessage = $localize`Ghostfolio AI setting saved.`
+  ) {
+    if (
+      this.isLoading ||
+      !this.isOpenRouterSettingsLoaded ||
+      this.isSavingOpenRouterSetting
+    ) {
+      return;
+    }
+
+    this.isSavingOpenRouterSetting = true;
+    this.openRouterFeedback = undefined;
+    this.openRouterForm.disable({ emitEvent: false });
+
+    this.dataService
+      .putAdminSetting(property, { value })
+      .pipe(
+        catchError(() => {
+          this.openRouterFeedback = {
+            isError: true,
+            message: $localize`Could not save the Ghostfolio AI setting. Please try again.`
+          };
+
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.isSavingOpenRouterSetting = false;
+          this.openRouterForm.enable({ emitEvent: false });
+          this.changeDetectorRef.markForCheck();
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        onSuccess();
+        this.openRouterFeedback = {
+          isError: false,
+          message: successMessage
+        };
       });
   }
 }

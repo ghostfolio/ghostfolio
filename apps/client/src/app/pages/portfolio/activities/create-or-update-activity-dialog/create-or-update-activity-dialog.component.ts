@@ -2,6 +2,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   ASSET_CLASS_MAPPING,
+  CASH_FLOW_ACTIVITY_TYPES,
   COMMENT_MAXIMUM_LENGTH,
   DEFAULT_LOCALE
 } from '@ghostfolio/common/config';
@@ -34,6 +35,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
@@ -84,6 +86,7 @@ import { ActivityType } from './types/activity-type.type';
   templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class GfCreateOrUpdateActivityDialogComponent {
+  protected readonly CASH_FLOW_ACTIVITY_TYPES = CASH_FLOW_ACTIVITY_TYPES;
   protected readonly COMMENT_MAXIMUM_LENGTH = COMMENT_MAXIMUM_LENGTH;
   protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
 
@@ -124,6 +127,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateActivityDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
+  private hasSetDefaultCashBalance = false;
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService
   );
@@ -246,8 +250,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
       ],
       type: [undefined, Validators.required], // Set after value changes subscription
       unitPrice: [this.data.activity?.unitPrice, Validators.required],
-      updateAccountBalance: [false]
+      updateAccountBalance: [this.data.activity?.updateAccountBalance ?? false]
     });
+
+    this.hasSetDefaultCashBalance =
+      typeof this.data.activity?.updateAccountBalance === 'boolean';
 
     this.activityForm.valueChanges
       .pipe(
@@ -279,7 +286,15 @@ export class GfCreateOrUpdateActivityDialogComponent {
     this.activityForm.get('accountId')?.valueChanges.subscribe((accountId) => {
       const type = this.activityForm.get('type')?.value;
 
-      if (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(type)) {
+      if (
+        [
+          ...CASH_FLOW_ACTIVITY_TYPES,
+          'FEE',
+          'INTEREST',
+          'LIABILITY',
+          'VALUABLE'
+        ].includes(type)
+      ) {
         const currency =
           this.data.accounts.find(({ id }) => {
             return id === accountId;
@@ -364,6 +379,25 @@ export class GfCreateOrUpdateActivityDialogComponent {
       .get('type')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((type: ActivityType) => {
+        const isCashFlow = CASH_FLOW_ACTIVITY_TYPES.includes(type as Type);
+
+        this.activityForm
+          .get('accountId')
+          ?.setValidators(isCashFlow ? Validators.required : []);
+        this.activityForm.get('accountId')?.updateValueAndValidity();
+        this.activityForm
+          .get('unitPrice')
+          ?.setValidators([
+            Validators.required,
+            ...(isCashFlow
+              ? [
+                  ({ value }: AbstractControl) =>
+                    value > 0 ? null : { min: true }
+                ]
+              : [])
+          ]);
+        this.activityForm.get('unitPrice')?.updateValueAndValidity();
+
         if (
           type === 'VALUABLE' ||
           (this.activityForm.get('dataSource')?.value === 'MANUAL' &&
@@ -393,7 +427,14 @@ export class GfCreateOrUpdateActivityDialogComponent {
             .get('searchSymbol')
             ?.removeValidators(Validators.required);
           this.activityForm.get('searchSymbol')?.updateValueAndValidity();
-        } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
+        } else if (
+          [
+            ...CASH_FLOW_ACTIVITY_TYPES,
+            'FEE',
+            'INTEREST',
+            'LIABILITY'
+          ].includes(type)
+        ) {
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === this.activityForm.get('accountId')?.value;
@@ -407,16 +448,18 @@ export class GfCreateOrUpdateActivityDialogComponent {
             ?.removeValidators(Validators.required);
           this.activityForm.get('dataSource')?.updateValueAndValidity();
 
-          if (['INTEREST', 'LIABILITY'].includes(type)) {
+          if (isCashFlow || ['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('fee')?.setValue(0);
           }
 
-          this.activityForm.get('name')?.setValidators(Validators.required);
+          this.activityForm
+            .get('name')
+            ?.setValidators(isCashFlow ? [] : Validators.required);
           this.activityForm.get('name')?.updateValueAndValidity();
 
           if (type === 'FEE') {
             this.activityForm.get('quantity')?.setValue(0);
-          } else if (['INTEREST', 'LIABILITY'].includes(type)) {
+          } else if (isCashFlow || ['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('quantity')?.setValue(1);
           }
 
@@ -453,7 +496,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
       this.activityForm.get('type')?.disable();
     }
 
-    if (this.data.activity?.assetProfile?.symbol) {
+    if (
+      this.data.activity?.assetProfile?.symbol &&
+      this.data.activity?.type &&
+      !CASH_FLOW_ACTIVITY_TYPES.includes(this.data.activity?.type)
+    ) {
       this.dataService
         .fetchSymbolItem({
           dataSource: this.data.activity?.assetProfile?.dataSource,
@@ -503,21 +550,32 @@ export class GfCreateOrUpdateActivityDialogComponent {
       comment: getStringOrNull(this.activityForm.get('comment')?.value),
       currency: this.activityForm.get('currency')?.value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice')?.value,
-      dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
-        this.activityForm.get('type')?.value
-      )
+      dataSource: [
+        ...CASH_FLOW_ACTIVITY_TYPES,
+        'FEE',
+        'INTEREST',
+        'LIABILITY',
+        'VALUABLE'
+      ].includes(this.activityForm.get('type')?.value)
         ? 'MANUAL'
         : this.activityForm.get('dataSource')?.value,
       date: this.activityForm.get('date')?.value,
       fee: this.activityForm.get('fee')?.value,
       quantity: this.activityForm.get('quantity')?.value,
       symbol:
-        (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
-          this.activityForm.get('type')?.value
-        )
+        ([
+          ...CASH_FLOW_ACTIVITY_TYPES,
+          'FEE',
+          'INTEREST',
+          'LIABILITY',
+          'VALUABLE'
+        ].includes(this.activityForm.get('type')?.value)
           ? undefined
           : this.activityForm.get('searchSymbol')?.value?.symbol) ??
-        this.activityForm.get('name')?.value,
+        getStringOrNull(this.activityForm.get('name')?.value) ??
+        (CASH_FLOW_ACTIVITY_TYPES.includes(this.activityForm.get('type')?.value)
+          ? translate(this.activityForm.get('type')?.value)
+          : this.activityForm.get('name')?.value),
       tags: this.activityForm.get('tags')?.value?.map(({ id }) => {
         return id;
       }),
@@ -530,9 +588,13 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
     try {
       if (this.mode === 'create') {
-        activity.updateAccountBalance = this.activityForm.get(
+        const accountBalanceControl = this.activityForm.get(
           'updateAccountBalance'
-        )?.value;
+        );
+
+        activity.updateAccountBalance = accountBalanceControl?.enabled
+          ? accountBalanceControl.value
+          : false;
 
         await validateObjectForForm({
           classDto: CreateOrderDto,
@@ -571,18 +633,31 @@ export class GfCreateOrUpdateActivityDialogComponent {
     const dataSource = this.activityForm.get('dataSource')?.value;
     const date = this.activityForm.get('date')?.value;
     const type = this.activityForm.get('type')?.value;
+    const isCashFlow = CASH_FLOW_ACTIVITY_TYPES.includes(type);
 
     const isEligible =
       !!accountId &&
-      isToday(date) &&
+      (isCashFlow ? !!date && !isAfter(date, new Date()) : isToday(date)) &&
       !['LIABILITY', 'VALUABLE'].includes(type) &&
       !(dataSource === 'MANUAL' && type === 'BUY');
 
     if (isEligible) {
       accountBalanceControl?.enable();
+
+      if (
+        isCashFlow &&
+        this.mode === 'create' &&
+        !this.hasSetDefaultCashBalance
+      ) {
+        accountBalanceControl?.setValue(true);
+        this.hasSetDefaultCashBalance = true;
+      }
     } else {
       accountBalanceControl?.disable();
-      accountBalanceControl?.setValue(false);
+
+      if (!isCashFlow) {
+        accountBalanceControl?.setValue(false);
+      }
     }
   }
 

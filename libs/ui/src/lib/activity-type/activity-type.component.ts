@@ -15,7 +15,8 @@ import {
   arrowUpCircleOutline,
   cubeOutline,
   flameOutline,
-  hammerOutline
+  hammerOutline,
+  removeCircleOutline
 } from 'ionicons/icons';
 
 import { translate } from '../i18n';
@@ -40,7 +41,8 @@ export class GfActivityTypeComponent implements OnChanges {
       arrowUpCircleOutline,
       cubeOutline,
       flameOutline,
-      hammerOutline
+      hammerOutline,
+      removeCircleOutline
     });
   }
 

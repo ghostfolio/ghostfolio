@@ -10,7 +10,8 @@
       font-size: 1rem;
     }
 
-    &.buy {
+    &.buy,
+    &.deposit {
       color: var(--green);
     }
 
@@ -30,7 +31,8 @@
       color: var(--red);
     }
 
-    &.sell {
+    &.sell,
+    &.withdrawal {
       color: var(--orange);
     }
   }

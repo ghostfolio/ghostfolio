@@ -9,7 +9,7 @@
     }
   }
 
-  .mat-mdc-card {
+  .mat-mdc-card.special {
     --gradient-opacity: 50%;
     --mat-card-outlined-outline-color: rgb(193, 219, 254);
 
@@ -57,7 +57,7 @@
 }
 
 :host-context(.theme-dark) {
-  .mat-mdc-card {
+  .mat-mdc-card.special {
     --mat-card-outlined-outline-color: white;
   }
 }

@@ -159,8 +159,20 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           ),
         fee: z.number().min(0).describe('The fee of the activity'),
         quantity: z.number().min(0).describe('The quantity of the activity'),
-        symbol: SYMBOL_PARAMETER,
-        type: z.enum(ActivityType).describe('The type of the activity'),
+        symbol: SYMBOL_PARAMETER.describe(
+          'The symbol of the asset profile, or the description of a non-investment activity when no data source is given'
+        ),
+        type: z
+          .enum(ActivityType)
+          .describe(
+            'The type of the activity; DEPOSIT is incoming cash and WITHDRAWAL is outgoing cash'
+          ),
+        updateAccountBalance: z
+          .boolean()
+          .optional()
+          .describe(
+            'Whether to update the account cash balance; deposits and withdrawals with an account update it by default, while other activity types do not'
+          ),
         unitPrice: z.number().min(0).describe('The unit price of the activity')
       })
     )

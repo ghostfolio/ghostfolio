@@ -414,11 +414,13 @@ enum Role {
 
 enum Type {
   BUY
+  DEPOSIT
   DIVIDEND
   FEE
   INTEREST
   LIABILITY
   SELL
+  WITHDRAWAL
 }
 
 enum ViewMode {

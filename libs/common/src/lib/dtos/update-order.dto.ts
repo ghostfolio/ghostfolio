@@ -88,7 +88,7 @@ export class UpdateOrderDto {
   @IsString({ each: true })
   tags?: string[];
 
-  @IsString()
+  @IsEnum(Type)
   type: Type;
 
   @IsNumber()

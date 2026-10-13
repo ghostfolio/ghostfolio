@@ -229,6 +229,130 @@
   </div>
   <div class="mb-5 row">
     <div class="col">
+      <h2 class="text-center" i18n>Ghostfolio AI</h2>
+      <mat-card appearance="outlined" class="my-3">
+        <mat-card-content class="pt-3">
+          <p class="text-muted" i18n>
+            Configure OpenRouter to use Ghostfolio AI for smart imports.
+          </p>
+          <div [formGroup]="openRouterForm">
+            <div class="mb-3 row">
+              <div class="col-md-8">
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  subscriptSizing="dynamic"
+                >
+                  <mat-label i18n>OpenRouter API key</mat-label>
+                  <input
+                    autocomplete="new-password"
+                    formControlName="apiKey"
+                    matInput
+                    type="password"
+                  />
+                  <mat-hint>
+                    @if (isOpenRouterSettingsLoaded) {
+                      @if (hasOpenRouterApiKey) {
+                        <ng-container i18n
+                          >An API key is configured. Leave blank to keep
+                          it.</ng-container
+                        >
+                      } @else {
+                        <ng-container i18n
+                          >No API key is configured.</ng-container
+                        >
+                      }
+                    }
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4 pt-2">
+                <button
+                  class="mr-2"
+                  mat-stroked-button
+                  type="button"
+                  [disabled]="
+                    isLoading ||
+                    !isOpenRouterSettingsLoaded ||
+                    isSavingOpenRouterSetting ||
+                    !openRouterForm.controls.apiKey.value.trim()
+                  "
+                  (click)="onSaveOpenRouterApiKey()"
+                >
+                  @if (hasOpenRouterApiKey) {
+                    <ng-container i18n>Replace API key</ng-container>
+                  } @else {
+                    <ng-container i18n>Save API key</ng-container>
+                  }
+                </button>
+                @if (isOpenRouterSettingsLoaded && hasOpenRouterApiKey) {
+                  <button
+                    class="mt-2"
+                    color="warn"
+                    mat-button
+                    type="button"
+                    [disabled]="isLoading || isSavingOpenRouterSetting"
+                    (click)="onRemoveOpenRouterApiKey()"
+                  >
+                    <ng-container i18n>Remove API key</ng-container>
+                  </button>
+                }
+              </div>
+            </div>
+            @for (field of openRouterModelFields; track field.controlName) {
+              <div class="mb-3 row">
+                <div class="col-md-8">
+                  <mat-form-field
+                    appearance="outline"
+                    class="w-100"
+                    subscriptSizing="dynamic"
+                  >
+                    <mat-label>{{ field.label }}</mat-label>
+                    <input
+                      autocomplete="off"
+                      matInput
+                      [formControlName]="field.controlName"
+                      [required]="field.controlName === 'model'"
+                    />
+                    <mat-hint>{{ field.hint }}</mat-hint>
+                    @if (
+                      openRouterForm.controls[field.controlName].hasError(
+                        'required'
+                      )
+                    ) {
+                      <mat-error i18n>A default model is required.</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4 pt-2">
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    [attr.aria-label]="field.saveLabel"
+                    [disabled]="!canSaveOpenRouterModel(field.controlName)"
+                    (click)="onSaveOpenRouterModel(field.controlName)"
+                  >
+                    <ng-container i18n>Save</ng-container>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+          @if (openRouterFeedback) {
+            <p
+              aria-live="polite"
+              role="status"
+              [class.text-danger]="openRouterFeedback.isError"
+            >
+              {{ openRouterFeedback.message }}
+            </p>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="mb-5 row">
+    <div class="col">
       <h2 class="text-center" i18n>Platforms</h2>
       <gf-admin-platform [locale]="user?.settings?.locale ?? DEFAULT_LOCALE" />
     </div>
