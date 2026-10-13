@@ -9,12 +9,14 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
@@ -27,6 +29,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
+import { endOfDay } from 'date-fns';
 
 import { ActivitiesService } from './activities.service';
 
@@ -148,6 +151,10 @@ describe('ActivitiesService', () => {
   });
 
   describe('getActivities', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('returns the activities with the asset profile but without the relation to the symbol profile', async () => {
       const assetProfile = {
         ...assetProfileDummyData,
@@ -224,6 +231,60 @@ describe('ActivitiesService', () => {
       expect(activities[0]).not.toHaveProperty('SymbolProfile');
       expect(activities[0].assetProfile).toBe(assetProfile);
     });
+
+    it('excludes the activities of the start date of a date range', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2024-06-15').getTime());
+
+      expect(await getDateConditions('ytd')).toEqual(
+        expect.arrayContaining([
+          { date: { gt: endOfDay(parseDate('2023-12-31')) } },
+          { date: { lte: endOfDay(parseDate('2024-06-15')) } }
+        ])
+      );
+    });
+
+    it('keeps the start date of the date range max', async () => {
+      expect(await getDateConditions('max')).toEqual(
+        expect.arrayContaining([{ date: { gt: new Date(0) } }])
+      );
+    });
+
+    async function getDateConditions(dateRange: DateRange) {
+      const findMany = jest.fn().mockResolvedValue([]);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          order: {
+            findMany,
+            count: jest.fn().mockResolvedValue(0)
+          }
+        } as unknown as PrismaService,
+        {
+          getSymbolProfiles: jest.fn().mockResolvedValue([])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
+
+      await service.getActivities({
+        endDate,
+        startDate,
+        userCurrency: 'USD',
+        userId: 'user-id'
+      });
+
+      return findMany.mock.calls[0][0].where.AND;
+    }
   });
 
   describe('getActivitiesForPortfolioCalculator', () => {
