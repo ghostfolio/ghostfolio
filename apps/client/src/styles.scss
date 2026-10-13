@@ -349,10 +349,6 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
-.gf-pointer-events-none {
-  pointer-events: none;
-}
-
 .gf-spacer {
   flex: 1 1 auto;
 }
@@ -370,10 +366,6 @@ ngx-skeleton-loader {
   .page:has(gf-page-tabs) {
     height: calc(100svh - 2 * var(--mat-toolbar-standard-height));
   }
-}
-
-.hidden {
-  visibility: hidden;
 }
 
 .lead {
@@ -509,10 +501,6 @@ ngx-skeleton-loader {
   .svgMap-tooltip-pointer {
     display: none;
   }
-}
-
-.text-line-through {
-  text-decoration: line-through;
 }
 
 .with-placeholder-as-option {
