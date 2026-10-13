@@ -95,7 +95,7 @@ describe('AiController', () => {
   describe('getActivitiesFromFile', () => {
     it('Requires the permission and limits the requests of each user per week', () => {
       expect(getMetadataOfMethod<string>(HAS_PERMISSION_KEY)).toBe(
-        permissions.importActivitiesWithAi
+        permissions.enableGhostfolioAi
       );
 
       const guards = getMetadataOfMethod<unknown[]>(GUARDS_METADATA);

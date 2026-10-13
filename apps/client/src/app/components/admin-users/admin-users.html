@@ -192,12 +192,23 @@
                 class="mat-mdc-cell px-1 py-2 text-nowrap"
                 mat-cell
               >
-                {{
-                  formatRelativeTime({
-                    date: element.lastActivity,
-                    language: user?.settings?.language
-                  })
-                }}
+                <div class="align-items-center d-flex">
+                  @if (element.lastRequestClient) {
+                    <ion-icon
+                      class="mr-1"
+                      [name]="requestClientIcons[element.lastRequestClient]"
+                      [title]="element.lastRequestClient"
+                    />
+                  } @else {
+                    <ion-icon class="hidden mr-1" />
+                  }
+                  {{
+                    formatRelativeTime({
+                      date: element.lastActivity,
+                      language: user?.settings?.language
+                    })
+                  }}
+                </div>
               </td>
             </ng-container>
           }

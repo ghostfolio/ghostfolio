@@ -125,8 +125,7 @@
               </small>
             </p>
             @if (
-              data.deviceType !== 'mobile' &&
-              hasPermissionToImportActivitiesWithAi
+              data.deviceType !== 'mobile' && hasPermissionToEnableGhostfolioAi
             ) {
               <div class="align-items-center d-flex mt-4">
                 <mat-checkbox
