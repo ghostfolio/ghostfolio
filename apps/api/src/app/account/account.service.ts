@@ -10,12 +10,13 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATE_FORMAT,
-  getStartOfUtcDateOfTomorrow
+  getStartOfUtcDateOfTomorrow,
+  resetHours
 } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { AccountWithBalance } from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   Account,
@@ -42,16 +43,25 @@ export class AccountService {
     private readonly tagService: TagService
   ) {}
 
-  public async account({
-    id_userId
-  }: Prisma.AccountWhereUniqueInput): Promise<AccountWithBalance | null> {
-    const account = await this.prismaService.account.findUnique({
+  public async account(
+    {
+      date,
+      id_userId
+    }: Prisma.AccountWhereUniqueInput & {
+      date?: Date;
+    },
+    transaction?: Prisma.TransactionClient
+  ): Promise<AccountWithBalance | null> {
+    const account = await (
+      transaction ?? this.prismaService
+    ).account.findUnique({
       include: {
         balances: {
           orderBy: { date: 'desc' },
           take: 1,
-          // Ignore account balances in the future
-          where: getWhereAccountBalanceNotInFuture()
+          where: date
+            ? { date: { lte: resetHours(date) } }
+            : getWhereAccountBalanceNotInFuture()
         }
       },
       where: { id_userId }
@@ -363,37 +373,54 @@ export class AccountService {
     accountId,
     amount,
     currency,
-    date = new Date(),
+    date,
+    transaction,
     userId
   }: {
     accountId: string;
     amount: number;
     currency: string;
     date?: Date;
+    transaction?: Prisma.TransactionClient;
     userId: string;
   }) {
-    const { balance, currency: currencyOfAccount } = await this.account({
-      id_userId: {
-        userId,
-        id: accountId
-      }
-    });
+    const balanceDate = date ?? new Date();
+    const { balance, currency: currencyOfAccount } = await this.account(
+      {
+        date,
+        id_userId: {
+          userId,
+          id: accountId
+        }
+      },
+      transaction
+    );
 
     const amountInCurrencyOfAccount =
       await this.exchangeRateDataService.toCurrencyAtDate(
         amount,
         currency,
         currencyOfAccount,
-        date
+        balanceDate
       );
+
+    if (!Number.isFinite(amountInCurrencyOfAccount)) {
+      throw new BadRequestException(
+        'Unable to convert the activity amount to the account currency'
+      );
+    }
 
     if (amountInCurrencyOfAccount) {
       await this.accountBalanceService.createOrUpdateAccountBalance({
         accountId,
         userId,
+        ...(transaction ? { transaction } : {}),
         balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber(),
-        date: date.toISOString()
+        balanceChange: amountInCurrencyOfAccount,
+        date: balanceDate.toISOString()
       });
     }
+
+    return amountInCurrencyOfAccount;
   }
 }

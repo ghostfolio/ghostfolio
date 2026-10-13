@@ -2,7 +2,10 @@ import { EnhancedAssetProfile } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 import type { Order, Tag } from '@ghostfolio/prisma/browser';
 
-export interface Activity extends Order {
+export interface Activity extends Omit<
+  Order,
+  'accountBalanceChange' | 'updateAccountBalance'
+> {
   account?: AccountWithPlatform;
   assetProfile: EnhancedAssetProfile;
   error?: ActivityError;

@@ -48,12 +48,18 @@ export class AccountBalanceService {
   public async createOrUpdateAccountBalance({
     accountId,
     balance,
+    balanceChange,
     date,
+    transaction,
     userId
   }: CreateAccountBalanceDto & {
+    balanceChange?: number;
+    transaction?: Prisma.TransactionClient;
     userId: string;
   }): Promise<AccountBalance> {
-    const accountBalance = await this.prismaService.accountBalance.upsert({
+    const balanceDate = resetHours(parseISO(date));
+    const prisma = transaction ?? this.prismaService;
+    const upsert = prisma.accountBalance.upsert({
       create: {
         account: {
           connect: {
@@ -63,7 +69,7 @@ export class AccountBalanceService {
             }
           }
         },
-        date: resetHours(parseISO(date)),
+        date: balanceDate,
         value: balance
       },
       update: {
@@ -72,17 +78,49 @@ export class AccountBalanceService {
       where: {
         accountId_date: {
           accountId,
-          date: resetHours(parseISO(date))
+          date: balanceDate
         }
       }
     });
 
-    this.eventEmitter.emit(
-      PortfolioChangedEvent.getName(),
-      new PortfolioChangedEvent({
-        userId
-      })
-    );
+    let accountBalance: AccountBalance;
+
+    const updateLaterBalances = balanceChange
+      ? prisma.accountBalance.updateMany({
+          data: {
+            value: { increment: balanceChange }
+          },
+          where: {
+            accountId,
+            userId,
+            date: { gt: balanceDate }
+          }
+        })
+      : undefined;
+
+    if (transaction) {
+      accountBalance = await upsert;
+
+      if (updateLaterBalances !== undefined) {
+        await updateLaterBalances;
+      }
+    } else if (updateLaterBalances !== undefined) {
+      [accountBalance] = await this.prismaService.$transaction([
+        upsert,
+        updateLaterBalances
+      ]);
+    } else {
+      accountBalance = await upsert;
+    }
+
+    if (!transaction) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({
+          userId
+        })
+      );
+    }
 
     return accountBalance;
   }

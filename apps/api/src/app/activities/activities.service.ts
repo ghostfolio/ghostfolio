@@ -38,7 +38,8 @@ import {
   getAssetProfileIdentifier,
   getStartOfUtcDateOfTomorrow,
   hasGhostfolioPrefix,
-  isDraftActivity
+  isDraftActivity,
+  resetHours
 } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
@@ -49,7 +50,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
@@ -297,34 +298,38 @@ export class ActivitiesService {
       type: data.type
     });
 
-    const activity = await this.prismaService.order.create({
-      data: {
-        ...orderData,
-        account,
-        tags: {
-          connect: tagsToConnect
+    const activity = await this.prismaService.$transaction(
+      async (transaction) => {
+        const createdActivity = await transaction.order.create({
+          data: {
+            ...orderData,
+            account,
+            accountBalanceChange: null,
+            updateAccountBalance,
+            tags: {
+              connect: tagsToConnect
+            }
+          },
+          include: { SymbolProfile: true }
+        });
+
+        if (accountId && updateAccountBalance) {
+          const accountBalanceChange = await this.applyAccountBalanceChange(
+            createdActivity,
+            transaction
+          );
+
+          return transaction.order.update({
+            data: { accountBalanceChange },
+            include: { SymbolProfile: true },
+            where: { id: createdActivity.id }
+          });
         }
+
+        return createdActivity;
       },
-      include: { SymbolProfile: true }
-    });
-
-    if (accountId && updateAccountBalance === true) {
-      let amount = new Big(data.unitPrice).mul(data.quantity);
-
-      if (['BUY', 'FEE'].includes(data.type)) {
-        amount = amount.mul(-1);
-      }
-
-      amount = amount.minus(data.fee);
-
-      await this.accountService.updateAccountBalance({
-        accountId,
-        userId,
-        amount: amount.toNumber(),
-        currency: activity.currency ?? activity.SymbolProfile.currency,
-        date: data.date as Date
-      });
-    }
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+    );
 
     this.eventEmitter.emit(
       AssetProfileChangedEvent.getName(),
@@ -348,9 +353,16 @@ export class ActivitiesService {
   public async deleteActivity(
     where: Prisma.OrderWhereUniqueInput
   ): Promise<Order> {
-    const activity = await this.prismaService.order.delete({
-      where
-    });
+    const activity = await this.prismaService.$transaction(
+      async (transaction) => {
+        const deletedActivity = await transaction.order.delete({ where });
+
+        await this.reverseAccountBalanceChange(deletedActivity, transaction);
+
+        return deletedActivity;
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+    );
 
     const [symbolProfile] =
       await this.symbolProfileService.getSymbolProfilesByIds([
@@ -413,18 +425,62 @@ export class ActivitiesService {
       withExcludedAccountsAndActivities: true
     });
 
-    const activities = await this.prismaService.order.findMany({
-      where,
-      distinct: ['symbolProfileId'],
-      select: { symbolProfileId: true }
-    });
+    const { activities, count } = await this.prismaService.$transaction(
+      async (transaction) => {
+        const deletedActivities = await transaction.order.findMany({ where });
+        const result = await transaction.order.deleteMany({
+          where: {
+            userId,
+            id: {
+              in: deletedActivities.map(({ id }) => {
+                return id;
+              })
+            }
+          }
+        });
 
-    const { count } = await this.prismaService.order.deleteMany({ where });
+        const activitiesByAccountAndDate = groupBy(
+          deletedActivities,
+          ({ accountId, accountUserId, date, userId: activityUserId }) => {
+            return JSON.stringify([
+              accountId,
+              accountUserId ?? activityUserId,
+              resetHours(date).toISOString()
+            ]);
+          }
+        );
+
+        for (const activitiesOnDate of Object.values(
+          activitiesByAccountAndDate
+        )) {
+          const accountBalanceChange = activitiesOnDate.reduce(
+            (amount, activity) => {
+              return amount.plus(activity.accountBalanceChange ?? 0);
+            },
+            new Big(0)
+          );
+
+          await this.reverseAccountBalanceChange(
+            {
+              ...activitiesOnDate[0],
+              accountBalanceChange: accountBalanceChange.toNumber()
+            },
+            transaction
+          );
+        }
+
+        return { activities: deletedActivities, count: result.count };
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+        timeout: 60_000
+      }
+    );
 
     const [benchmarkAssetProfiles, symbolProfiles] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.symbolProfileService.getSymbolProfilesByIds(
-        activities.map(({ symbolProfileId }) => {
+        uniqBy(activities, 'symbolProfileId').map(({ symbolProfileId }) => {
           return symbolProfileId;
         })
       )
@@ -753,7 +809,7 @@ export class ActivitiesService {
         ]);
 
         return {
-          ...omit(order, ['SymbolProfile']),
+          ...omit(order, ['accountBalanceChange', 'SymbolProfile']),
           assetProfile,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
@@ -908,6 +964,7 @@ export class ActivitiesService {
       symbol?: string;
       tags?: { id: string }[];
       type?: ActivityType;
+      updateAccountBalance?: boolean;
     };
     originalDate: Date;
     userId: string;
@@ -915,6 +972,9 @@ export class ActivitiesService {
   }): Promise<Order> {
     const areTagsProvided = data.tags !== undefined;
     const tags = data.tags ?? [];
+    const updateAccountBalance = data.updateAccountBalance;
+
+    delete data.updateAccountBalance;
 
     await this.tagService.validateTagIds({
       userId,
@@ -983,13 +1043,66 @@ export class ActivitiesService {
       tagsToUpdate = { connect: { id: TAG_ID_DRAFT } };
     }
 
-    const activity = await this.prismaService.order.update({
-      where,
-      data: {
-        ...data,
-        tags: tagsToUpdate
-      }
-    });
+    const activity = await this.prismaService.$transaction(
+      async (transaction) => {
+        const originalActivity = await transaction.order.findUnique({
+          include: { SymbolProfile: true },
+          where: { ...where, userId }
+        });
+
+        if (!originalActivity) {
+          throw new NotFoundException();
+        }
+
+        const shouldUpdateAccountBalance =
+          updateAccountBalance ?? originalActivity.updateAccountBalance;
+        const updatedActivity = await transaction.order.update({
+          where: { ...where, userId },
+          data: {
+            ...data,
+            accountBalanceChange: originalActivity.accountBalanceChange,
+            tags: tagsToUpdate,
+            updateAccountBalance: shouldUpdateAccountBalance
+          },
+          include: { SymbolProfile: true }
+        });
+
+        const hasCashEffectChanged =
+          originalActivity.accountId !== updatedActivity.accountId ||
+          resetHours(originalActivity.date).getTime() !==
+            resetHours(updatedActivity.date).getTime() ||
+          originalActivity.fee !== updatedActivity.fee ||
+          originalActivity.quantity !== updatedActivity.quantity ||
+          originalActivity.type !== updatedActivity.type ||
+          originalActivity.unitPrice !== updatedActivity.unitPrice ||
+          (originalActivity.currency ??
+            originalActivity.SymbolProfile.currency) !==
+            (updatedActivity.currency ??
+              updatedActivity.SymbolProfile.currency);
+
+        if (
+          shouldUpdateAccountBalance ===
+            originalActivity.updateAccountBalance &&
+          (!shouldUpdateAccountBalance || !hasCashEffectChanged)
+        ) {
+          return updatedActivity;
+        }
+
+        await this.reverseAccountBalanceChange(originalActivity, transaction);
+
+        const accountBalanceChange =
+          shouldUpdateAccountBalance && updatedActivity.accountId
+            ? await this.applyAccountBalanceChange(updatedActivity, transaction)
+            : null;
+
+        return transaction.order.update({
+          data: { accountBalanceChange },
+          include: { SymbolProfile: true },
+          where: { ...where, userId }
+        });
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.Serializable }
+    );
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
@@ -999,6 +1112,44 @@ export class ActivitiesService {
     );
 
     return activity;
+  }
+
+  private applyAccountBalanceChange(
+    activity: Order & { SymbolProfile: { currency: string } },
+    transaction: Prisma.TransactionClient
+  ) {
+    let amount = new Big(activity.unitPrice).mul(activity.quantity);
+
+    if (['BUY', 'FEE'].includes(activity.type)) {
+      amount = amount.mul(-1);
+    }
+
+    return this.accountService.updateAccountBalance({
+      transaction,
+      accountId: activity.accountId,
+      amount: amount.minus(activity.fee).toNumber(),
+      currency: activity.currency ?? activity.SymbolProfile.currency,
+      date: activity.date,
+      userId: activity.accountUserId ?? activity.userId
+    });
+  }
+
+  private async reverseAccountBalanceChange(
+    activity: Order,
+    transaction: Prisma.TransactionClient
+  ) {
+    if (activity.accountId && activity.accountBalanceChange) {
+      await transaction.accountBalance.updateMany({
+        data: {
+          value: { increment: -activity.accountBalanceChange }
+        },
+        where: {
+          accountId: activity.accountId,
+          userId: activity.accountUserId ?? activity.userId,
+          date: { gte: resetHours(activity.date) }
+        }
+      });
+    }
   }
 
   private getWhereClause({

@@ -54,6 +54,87 @@ describe('ActivitiesService', () => {
   });
 
   describe('createActivity', () => {
+    it('updates the cash balance at the date of a backdated buy, including its fee', async () => {
+      const date = parseDate('2024-01-01');
+      const updateAccountBalance = jest.fn().mockResolvedValue(-302);
+      const create = jest.fn(({ data }: Prisma.OrderCreateArgs) => {
+        return {
+          ...data,
+          accountId: data.account?.connect?.id_userId.id,
+          id: 'activity-id',
+          userId: data.user.connect.id,
+          SymbolProfile: data.SymbolProfile.connectOrCreate.create
+        };
+      });
+      const transaction = {
+        order: {
+          create,
+          update: jest.fn(({ data }) => {
+            return { ...create.mock.results[0].value, ...data };
+          })
+        }
+      };
+
+      const service = new ActivitiesService(
+        null,
+        { updateAccountBalance } as unknown as AccountService,
+        null,
+        null,
+        null,
+        null,
+        { emit: jest.fn() } as unknown as EventEmitter2,
+        null,
+        null,
+        {
+          $transaction: jest.fn(async (operation) => operation(transaction))
+        } as unknown as PrismaService,
+        null,
+        { validateTagIds: jest.fn() } as unknown as TagService
+      );
+
+      await service.createActivity({
+        date,
+        accountId: 'account-id',
+        currency: 'USD',
+        fee: 2,
+        quantity: 3,
+        SymbolProfile: {
+          connectOrCreate: {
+            create: {
+              currency: 'USD',
+              dataSource: DataSource.MANUAL,
+              symbol: 'Asset'
+            },
+            where: {
+              dataSource_symbol: {
+                dataSource: DataSource.MANUAL,
+                symbol: 'Asset'
+              }
+            }
+          }
+        },
+        type: 'BUY',
+        unitPrice: 100,
+        updateAccountBalance: true,
+        user: { connect: { id: 'user-id' } },
+        userId: 'user-id'
+      });
+
+      expect(updateAccountBalance).toHaveBeenCalledWith({
+        date,
+        accountId: 'account-id',
+        amount: -302,
+        currency: 'USD',
+        transaction,
+        userId: 'user-id'
+      });
+      expect(transaction.order.update).toHaveBeenCalledWith({
+        data: { accountBalanceChange: -302 },
+        include: { SymbolProfile: true },
+        where: { id: 'activity-id' }
+      });
+    });
+
     it('creates a custom asset profile with a UUID if no asset profile exists for a symbol with the prefix', async () => {
       const assetProfile = await getCreatedAssetProfile({ symbol: 'GF_COPX' });
 
@@ -103,6 +184,9 @@ describe('ActivitiesService', () => {
         null,
         null,
         {
+          $transaction: jest.fn(async (operation) => {
+            return operation({ order: { create } });
+          }),
           order: { create },
           symbolProfile: {
             findUnique: jest
@@ -158,6 +242,7 @@ describe('ActivitiesService', () => {
       const findMany = jest.fn().mockResolvedValue([
         {
           ...activityDummyData,
+          accountBalanceChange: -302,
           account: null,
           currency: 'USD',
           date: parseDate('2021-01-01'),
@@ -219,6 +304,7 @@ describe('ActivitiesService', () => {
         })
       );
       expect(activities).toHaveLength(1);
+      expect(activities[0]).not.toHaveProperty('accountBalanceChange');
       expect(activities[0]).not.toHaveProperty('SymbolProfile');
       expect(activities[0].assetProfile).toBe(assetProfile);
     });

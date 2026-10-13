@@ -18,11 +18,13 @@ export interface ExportResponse {
   })[];
   activities: (Omit<
     Order,
+    | 'accountBalanceChange'
     | 'accountUserId'
     | 'createdAt'
     | 'date'
     | 'symbolProfileId'
     | 'updatedAt'
+    | 'updateAccountBalance'
     | 'userId'
   > & { date: string } & AssetProfileIdentifier)[];
   assetProfiles: (Omit<

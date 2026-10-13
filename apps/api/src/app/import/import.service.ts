@@ -909,6 +909,7 @@ export class ImportService {
           type,
           unitPrice,
           account: validatedAccount,
+          accountBalanceChange: null,
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
@@ -916,6 +917,7 @@ export class ImportService {
           symbolProfileId: undefined,
           tags: previewTags,
           updatedAt: new Date(),
+          updateAccountBalance: false,
           userId: user.id
         };
       } else {

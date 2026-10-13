@@ -38,6 +38,7 @@ import {
 import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { omit } from 'lodash-es';
 
 import { ActivitiesFilterDto } from './activities-filter.dto';
 import { ActivitiesService } from './activities.service';
@@ -103,7 +104,7 @@ export class ActivitiesController {
   public async deleteActivity(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<Order> {
+  ): Promise<Omit<Order, 'accountBalanceChange'>> {
     const activity = await this.activitiesService.order({
       id,
       userId
@@ -116,9 +117,11 @@ export class ActivitiesController {
       );
     }
 
-    return this.activitiesService.deleteActivity({
+    const deletedActivity = await this.activitiesService.deleteActivity({
       id
     });
+
+    return omit(deletedActivity, ['accountBalanceChange']);
   }
 
   @Get()
@@ -314,7 +317,7 @@ export class ActivitiesController {
       }
     ]);
 
-    return { ...activity, assetProfile };
+    return { ...omit(activity, ['accountBalanceChange']), assetProfile };
   }
 
   @HasPermission(permissions.updateActivity)
@@ -326,7 +329,7 @@ export class ActivitiesController {
     @Body() data: UpdateOrderDto,
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ) {
+  ): Promise<Omit<Order, 'accountBalanceChange'>> {
     const originalActivity = await this.activitiesService.order({
       id,
       userId
@@ -355,7 +358,7 @@ export class ActivitiesController {
 
     delete data.dataSource;
 
-    return this.activitiesService.updateActivity({
+    const updatedActivity = await this.activitiesService.updateActivity({
       userId,
       data: {
         ...data,
@@ -390,5 +393,7 @@ export class ActivitiesController {
         id
       }
     });
+
+    return omit(updatedActivity, ['accountBalanceChange']);
   }
 }
