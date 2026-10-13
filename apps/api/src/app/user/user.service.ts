@@ -509,6 +509,13 @@ export class UserService {
       }
     } else {
       if (
+        (hasRole(user, Role.ADMIN) || hasRole(user, Role.USER)) &&
+        (user.settings.settings as UserSettings).isExperimentalFeatures
+      ) {
+        currentPermissions.push(permissions.enableGhostfolioAi);
+      }
+
+      if (
         this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX') ||
         (await this.propertyService.getByKey<string>(
           PROPERTY_API_KEY_GHOSTFOLIO
