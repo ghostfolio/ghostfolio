@@ -80,7 +80,12 @@ import {
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { utc } from '@date-fns/utc';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
   Type as ActivityType,
@@ -110,6 +115,7 @@ import { groupBy, uniq } from 'lodash-es';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { CurrentRateService } from './current-rate.service';
+import { CalendarPerformancePeriodDto } from './get-calendar-performance.dto';
 import { RulesService } from './rules.service';
 
 const Fuse = require('fuse.js');
@@ -1194,6 +1200,144 @@ export class PortfolioService {
         userCurrency
       )
     };
+  }
+
+  /** Calculate period returns using the same calculator as portfolio/performance.
+   * Each interval includes the previous calendar day as its baseline.
+   * Unsupported methodologies and incomplete history yield no percentage.
+   */
+  public async getCalendarPerformancePercentages({
+    periods,
+    userId
+  }: {
+    periods: CalendarPerformancePeriodDto[];
+    userId: string;
+  }): Promise<{ startDate: string; endDate: string; percentage?: number }[]> {
+    if (
+      !Array.isArray(periods) ||
+      periods.length === 0 ||
+      periods.length > 55
+    ) {
+      throw new BadRequestException('Invalid calendar periods');
+    }
+    // Browser-local "today" may be one calendar day ahead of UTC near
+    // midnight. Allow that single-day rollover; the calculator still
+    // returns no result when the requested closing snapshot is absent.
+    const latestAllowedDate = new Date(Date.now() + 86400000)
+      .toISOString()
+      .slice(0, 10);
+    const parseKey = (key: string) => {
+      const date = new Date(`${key}T00:00:00.000Z`);
+      if (
+        !Number.isFinite(date.getTime()) ||
+        date.toISOString().slice(0, 10) !== key
+      ) {
+        throw new BadRequestException('Invalid calendar date');
+      }
+      return date;
+    };
+
+    for (const { startDate, endDate } of periods) {
+      const start = parseKey(startDate);
+      const end = parseKey(endDate);
+      if (
+        start > end ||
+        (end.getTime() - start.getTime()) / 86400000 > 366 ||
+        endDate > latestAllowedDate
+      ) {
+        throw new BadRequestException('Invalid calendar period');
+      }
+    }
+
+    const earliest = periods.reduce(
+      (date, period) => (period.startDate < date ? period.startDate : date),
+      periods[0].startDate
+    );
+    const latest = periods.reduce(
+      (date, period) => (period.endDate > date ? period.endDate : date),
+      periods[0].endDate
+    );
+    if (
+      (parseKey(latest).getTime() - parseKey(earliest).getTime()) / 86400000 >
+      366
+    ) {
+      throw new BadRequestException('Calendar request exceeds one year');
+    }
+
+    const unavailable = () =>
+      periods.map(({ startDate, endDate }) => ({ startDate, endDate }));
+    const user = await this.userService.user({ id: userId });
+    // The other calculation classes in Ghostfolio 3.85.0 are placeholders.
+    if (
+      this.getUserPerformanceCalculationType(user) !==
+      PerformanceCalculationType.ROAI
+    ) {
+      return unavailable();
+    }
+
+    const userCurrency = this.getUserCurrency(user);
+    const [accountBalanceItems, { activities }] = await Promise.all([
+      this.accountBalanceService.getAccountBalanceItems({
+        userId,
+        userCurrency
+      }),
+      this.activitiesService.getActivitiesForPortfolioCalculator({
+        userId,
+        userCurrency
+      })
+    ]);
+    if (accountBalanceItems.length === 0 && activities.length === 0) {
+      return unavailable();
+    }
+
+    const calculator = this.calculatorFactory.createCalculator({
+      accountBalanceItems,
+      activities,
+      userId,
+      calculationType: PerformanceCalculationType.ROAI,
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
+    });
+    const snapshot = await calculator.getSnapshot();
+    if (snapshot.hasErrors) {
+      return unavailable();
+    }
+    const availableDates = new Set(
+      snapshot.historicalData.map(({ date }) => date)
+    );
+    const results: {
+      startDate: string;
+      endDate: string;
+      percentage?: number;
+    }[] = [];
+
+    for (const { startDate, endDate } of periods) {
+      const baselineDate = new Date(`${startDate}T00:00:00.000Z`);
+      baselineDate.setUTCDate(baselineDate.getUTCDate() - 1);
+      const baselineKey = baselineDate.toISOString().slice(0, 10);
+      if (!availableDates.has(baselineKey) || !availableDates.has(endDate)) {
+        results.push({ startDate, endDate });
+        continue;
+      }
+
+      const { chart } = await calculator.getPerformance({
+        start: parseKey(baselineKey),
+        end: parseKey(endDate)
+      });
+      const last = chart.at(-1);
+      const value = last?.netPerformanceInPercentageWithCurrencyEffect;
+      if (
+        chart.length >= 2 &&
+        last?.date === endDate &&
+        typeof value === 'number' &&
+        Number.isFinite(value)
+      ) {
+        results.push({ startDate, endDate, percentage: value * 100 });
+      } else {
+        results.push({ startDate, endDate });
+      }
+    }
+    return results;
   }
 
   public async getPerformance({

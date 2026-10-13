@@ -1,0 +1,171 @@
+<mat-card appearance="outlined" class="pnl-calendar">
+  <mat-card-header>
+    <mat-card-title i18n>Profit and loss calendar</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="calendar-toolbar">
+      <div
+        aria-label="Calendar view"
+        class="calendar-tabs"
+        i18n-aria-label
+        role="group"
+      >
+        <button
+          i18n
+          mat-button
+          type="button"
+          [attr.aria-pressed]="view() === 'daily'"
+          (click)="setView('daily')"
+        >
+          Daily
+        </button>
+        <button
+          i18n
+          mat-button
+          type="button"
+          [attr.aria-pressed]="view() === 'weekly'"
+          (click)="setView('weekly')"
+        >
+          Weekly
+        </button>
+        <button
+          i18n
+          mat-button
+          type="button"
+          [attr.aria-pressed]="view() === 'monthly'"
+          (click)="setView('monthly')"
+        >
+          Monthly
+        </button>
+        <button
+          i18n
+          mat-button
+          type="button"
+          [attr.aria-pressed]="view() === 'last30'"
+          (click)="setView('last30')"
+        >
+          Last 30 days
+        </button>
+      </div>
+      @if (showDetails()) {
+        <div
+          aria-label="Calendar unit"
+          class="calendar-tabs"
+          i18n-aria-label
+          role="group"
+        >
+          <button
+            mat-button
+            type="button"
+            [attr.aria-pressed]="effectiveUnit() === 'currency'"
+            (click)="setUnit('currency')"
+          >
+            {{ currency() }}
+          </button>
+          <button
+            mat-button
+            type="button"
+            [attr.aria-pressed]="effectiveUnit() === 'percentage'"
+            (click)="setUnit('percentage')"
+          >
+            %
+          </button>
+        </div>
+      }
+    </div>
+    <div class="calendar-navigation">
+      @if (view() !== 'last30') {
+        <button
+          aria-label="Previous period"
+          i18n-aria-label
+          mat-button
+          type="button"
+          (click)="navigate(-1)"
+        >
+          ‹
+        </button>
+      }
+      <strong aria-live="polite">{{ title() }}</strong>
+      @if (view() !== 'last30') {
+        <button
+          aria-label="Next period"
+          i18n-aria-label
+          mat-button
+          type="button"
+          (click)="navigate(1)"
+        >
+          ›
+        </button>
+      }
+    </div>
+    @if (chart() === null) {
+      <p class="calendar-status" i18n>Loading calendar…</p>
+    } @else if (days().length === 0) {
+      <p class="calendar-status" i18n>
+        No historical performance data available.
+      </p>
+    } @else if (view() === 'daily' || view() === 'last30') {
+      <div class="calendar-grid daily-grid">
+        @for (weekday of weekdays(); track $index) {
+          <div class="weekday">{{ weekday }}</div>
+        }
+        @for (cell of cells(); track cell.startDate) {
+          <div
+            class="calendar-cell"
+            [class.negative]="
+              !cell.outsideMonth &&
+              getValue(cell) !== undefined &&
+              (getValue(cell) ?? 0) < 0
+            "
+            [class.outside-month]="cell.outsideMonth"
+            [class.positive]="
+              !cell.outsideMonth &&
+              getValue(cell) !== undefined &&
+              (getValue(cell) ?? 0) > 0
+            "
+          >
+            <span class="cell-label">{{ cell.label }}</span>
+            <span class="cell-value">{{
+              cell.outsideMonth ? '—' : formatValue(getValue(cell))
+            }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div
+        class="calendar-grid"
+        [class.monthly-grid]="view() === 'monthly'"
+        [class.weekly-grid]="view() === 'weekly'"
+      >
+        @for (cell of cells(); track cell.startDate) {
+          <div
+            class="calendar-cell"
+            [class.negative]="
+              getValue(cell) !== undefined && (getValue(cell) ?? 0) < 0
+            "
+            [class.positive]="
+              getValue(cell) !== undefined && (getValue(cell) ?? 0) > 0
+            "
+          >
+            <span class="cell-label">{{ cell.label }}</span>
+            <span class="cell-value">{{ formatValue(getValue(cell)) }}</span>
+          </div>
+        }
+      </div>
+    }
+    <div class="calendar-total">
+      <span i18n>Period change</span>
+      <strong
+        [class.negative-text]="(periodTotal() ?? 0) < 0"
+        [class.positive-text]="(periodTotal() ?? 0) > 0"
+        >{{ formatValue(periodTotal()) }}</strong
+      >
+    </div>
+    @if (effectiveUnit() === 'percentage') {
+      <p class="calendar-note" i18n>
+        Period return calculated using Ghostfolio ROAI (return on average
+        investment). Unavailable percentages are shown as a dash.
+      </p>
+    }
+  </mat-card-content>
+</mat-card>
