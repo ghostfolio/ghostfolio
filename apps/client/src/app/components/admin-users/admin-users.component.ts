@@ -22,6 +22,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { RequestClient } from '@ghostfolio/prisma/enums';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -114,6 +115,7 @@ export class GfAdminUsersComponent implements OnInit {
     internalRoutes.adminControl.subRoutes.users.routerLink;
 
   protected totalItems = 0;
+  protected readonly translate = translate;
   protected user: User;
 
   private readonly deviceType = computed(
