@@ -259,7 +259,7 @@ export class GfImportActivitiesDialogComponent {
     files: FileList;
     stepper: MatStepper;
   }) {
-    if (files.length === 0) {
+    if (files.length === 0 || this.importStep !== ImportStep.UPLOAD_FILE) {
       return;
     }
 
