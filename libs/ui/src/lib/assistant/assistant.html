@@ -55,7 +55,7 @@
             isLoading.quickLinks || searchResults?.quickLinks?.length !== 0
           ) {
             <div class="mb-2">
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-muted title">
                 <ng-container i18n>Quick Links</ng-container>
               </div>
               @for (
@@ -81,7 +81,7 @@
           }
           @if (isLoading.accounts || searchResults?.accounts?.length !== 0) {
             <div>
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-muted title">
                 <ng-container i18n>Accounts</ng-container>
               </div>
               @for (
@@ -107,7 +107,7 @@
           }
           @if (isLoading.holdings || searchResults?.holdings?.length !== 0) {
             <div>
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-muted title">
                 <ng-container i18n>Holdings</ng-container>
               </div>
               @for (
@@ -137,7 +137,7 @@
               searchResults?.assetProfiles?.length !== 0)
           ) {
             <div class="mt-2">
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-muted title">
                 <ng-container i18n>Asset Profiles</ng-container>
               </div>
               @for (
