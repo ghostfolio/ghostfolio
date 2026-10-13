@@ -174,7 +174,9 @@
             i18n
             size="medium"
             [isLoading]="isLoading"
-            [value]="user?.lastRequestClient || '-'"
+            [value]="
+              user?.lastRequestClient ? translate(user.lastRequestClient) : '-'
+            "
             >Client</gf-value
           >
         </div>

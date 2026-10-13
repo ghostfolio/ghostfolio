@@ -13,7 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the labels of the client of the last request in the users section of the admin control panel
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
+
+### Fixed
+
+- Fixed the missing platform icon in the preview step of the activities import
+- Fixed the link of the _Manage Asset Profile_ button in the holding detail dialog before the holding has loaded
 
 ## 3.85.0 - 2026-10-12
 
