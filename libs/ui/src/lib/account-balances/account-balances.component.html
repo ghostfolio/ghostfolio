@@ -22,7 +22,7 @@
             [matDatepicker]="date"
             [max]="maxDate"
           />
-          <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
+          <mat-datepicker-toggle class="me-2" matSuffix [for]="date">
             <ion-icon
               class="text-muted"
               matDatepickerToggleIcon
@@ -52,7 +52,7 @@
         <div class="d-flex justify-content-end">
           <mat-form-field appearance="outline" class="without-hint">
             <input formControlName="balance" matInput type="number" />
-            <div class="ml-2" matTextSuffix>
+            <div class="ms-2" matTextSuffix>
               {{ accountCurrency() }}
             </div>
           </mat-form-field>
@@ -81,7 +81,7 @@
             (click)="onDeleteAccountBalance(element.id)"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="trash-outline" />
+              <ion-icon class="me-2" name="trash-outline" />
               <span i18n>Delete</span>
             </span>
           </button>

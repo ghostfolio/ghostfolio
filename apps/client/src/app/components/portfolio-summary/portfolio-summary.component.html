@@ -27,7 +27,7 @@
           other {activities}
         }</ng-container>
         <span
-          class="align-items-center d-none d-sm-flex ml-1"
+          class="align-items-center d-none d-sm-flex ms-1"
           matTooltipPosition="above"
           [matTooltip]="buyAndSellActivitiesTooltip"
         >
@@ -116,7 +116,7 @@
     <div class="flex-grow-1 text-truncate" i18n>Fees</div>
     <div class="d-flex justify-content-end">
       @if (isNumber(summary?.fees)) {
-        <span class="mr-1">-</span>
+        <span class="me-1">-</span>
       }
       <gf-value
         class="justify-content-end"
@@ -154,7 +154,7 @@
         PerformanceCalculationType.ROAI
       ) {
         <abbr
-          class="d-none d-sm-inline-block initialism ml-2 text-muted"
+          class="d-none d-sm-inline-block initialism ms-2 text-muted"
           i18n-title
           title="Return on Average Investment (total return with dividends)"
           >(ROAI)</abbr
@@ -214,7 +214,7 @@
     >
       @if (hasHoldingsBreakdown) {
         <span
-          class="align-items-center caret-container d-inline-flex justify-content-center ml-n3"
+          class="align-items-center caret-container d-inline-flex justify-content-center"
         >
           <ion-icon
             class="caret text-muted"
@@ -230,7 +230,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-muted"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -292,7 +292,7 @@
     >
       @if (hasCashBreakdown) {
         <span
-          class="align-items-center caret-container d-inline-flex justify-content-center ml-n3"
+          class="align-items-center caret-container d-inline-flex justify-content-center"
         >
           <ion-icon
             class="caret text-muted"
@@ -308,7 +308,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-muted"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -371,7 +371,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-muted"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -398,7 +398,7 @@
     <div class="flex-grow-1 text-truncate" i18n>Liabilities</div>
     <div class="d-flex justify-content-end">
       @if (isNumber(summary?.liabilitiesInBaseCurrency)) {
-        <span class="mr-1">-</span>
+        <span class="me-1">-</span>
       }
       <gf-value
         class="justify-content-end"
@@ -456,7 +456,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-muted"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -486,7 +486,7 @@
         user?.subscription?.type !== 'Basic'
       ) {
         <ion-icon
-          class="mr-1 text-muted"
+          class="me-1 text-muted"
           name="ellipsis-horizontal-circle-outline"
         />
       }

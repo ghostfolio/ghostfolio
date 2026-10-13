@@ -70,7 +70,7 @@
           <gf-line-chart
             class="position-absolute"
             unit="%"
-            [class.pr-3]="deviceType() === 'mobile'"
+            [class.pe-3]="deviceType() === 'mobile'"
             [colorScheme]="user()?.settings?.colorScheme"
             [hidden]="historicalDataItems()?.length === 0"
             [historicalDataItems]="historicalDataItems()"
@@ -96,7 +96,7 @@
         </div>
       </div>
       @if (showExperimentalHoldings()) {
-        <div class="col-xl-4 d-none d-xl-block ml-5 p-0 position-relative">
+        <div class="col-xl-4 d-none d-xl-block ms-5 p-0 position-relative">
           <mat-card
             appearance="outlined"
             class="h-100 holdings position-absolute w-100"
