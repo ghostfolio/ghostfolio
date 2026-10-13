@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Reduced the size of the global stylesheet by removing the unused utilities of `bootstrap`
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
 
 ## 3.86.0 - 2026-10-13
