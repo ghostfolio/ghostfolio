@@ -66,7 +66,11 @@ export class ImportActivitiesService {
     assetProfiles: CreateAssetProfileWithMarketDataDto[];
   }> {
     const content = csvToJson<Record<string, unknown>>(fileContent, {
-      dynamicTyping: true,
+      dynamicTyping: (field: string) => {
+        return !ImportActivitiesService.SYMBOL_KEYS.includes(
+          field.toLowerCase()
+        );
+      },
       header: true,
       skipEmptyLines: true
     }).data;
@@ -420,7 +424,7 @@ export class ImportActivitiesService {
     for (const key of ImportActivitiesService.SYMBOL_KEYS) {
       const value = item[key];
 
-      if (isNumber(value) || isString(value)) {
+      if (isNumber(value) || (isString(value) && value.length > 0)) {
         return String(value);
       }
     }
