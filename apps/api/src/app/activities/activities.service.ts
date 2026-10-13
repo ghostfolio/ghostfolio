@@ -61,6 +61,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
+import { endOfDay, isAfter } from 'date-fns';
 import { groupBy, omit, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
@@ -1042,7 +1043,11 @@ export class ActivitiesService {
     }
 
     if (startDate) {
-      andConditions.push({ date: { gt: startDate } });
+      andConditions.push({
+        date: {
+          gt: isAfter(startDate, new Date(0)) ? endOfDay(startDate) : startDate
+        }
+      });
     }
 
     const {
