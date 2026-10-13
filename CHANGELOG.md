@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to paste a file in the import activities dialog
+
 ### Changed
 
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
