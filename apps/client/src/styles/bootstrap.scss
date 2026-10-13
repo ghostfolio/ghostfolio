@@ -22,18 +22,20 @@ $container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1140px,
-  xxl: 1140px
+  xl: 1140px
 );
 $cyan: #17a2b8;
 $enable-dark-mode: false;
 $enable-rfs: false;
 $enable-smooth-scroll: false;
+$figure-caption-font-size: 90%;
 $green: #28a745;
 $grid-gutter-width: 30px;
 $hr-opacity: 1;
+$initialism-font-size: 90%;
 $link-decoration: none;
 $link-hover-decoration: underline;
+$table-cell-padding-y: 0.75rem;
 
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/variables-dark';
@@ -194,4 +196,10 @@ $utilities: map.merge(
 .badge-warning {
   background-color: var(--bs-warning);
   color: var(--bs-dark);
+}
+
+// Typography compatibility
+small,
+.small {
+  font-weight: $font-weight-normal;
 }
