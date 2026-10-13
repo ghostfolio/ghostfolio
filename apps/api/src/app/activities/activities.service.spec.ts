@@ -29,6 +29,7 @@ import {
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
+import { endOfDay } from 'date-fns';
 
 import { ActivitiesService } from './activities.service';
 
@@ -236,13 +237,13 @@ describe('ActivitiesService', () => {
 
       expect(await getDateConditions('ytd')).toEqual(
         expect.arrayContaining([
-          { date: { gt: new Date('2023-12-31T23:59:59.999Z') } },
-          { date: { lte: new Date('2024-06-15T23:59:59.999Z') } }
+          { date: { gt: endOfDay(parseDate('2023-12-31')) } },
+          { date: { lte: endOfDay(parseDate('2024-06-15')) } }
         ])
       );
     });
 
-    it('includes the activities of 1970-01-01 in the date range max', async () => {
+    it('keeps the start date of the date range max', async () => {
       expect(await getDateConditions('max')).toEqual(
         expect.arrayContaining([{ date: { gt: new Date(0) } }])
       );
