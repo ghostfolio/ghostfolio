@@ -469,6 +469,9 @@ export class UserService {
 
         // Reset holdings view mode
         user.settings.settings.holdingsViewMode = undefined;
+
+        // Reset Ghostfolio AI
+        user.settings.settings.isGhostfolioAiEnabled = undefined;
       } else if (user.subscription?.type === SubscriptionType.Premium) {
         if (!hasRole(user, Role.DEMO)) {
           currentPermissions.push(permissions.createApiKey);
@@ -477,7 +480,7 @@ export class UserService {
           currentPermissions.push(permissions.reportDataGlitch);
 
           if ((user.settings.settings as UserSettings).isExperimentalFeatures) {
-            currentPermissions.push(permissions.importActivitiesWithAi);
+            currentPermissions.push(permissions.enableGhostfolioAi);
           }
         }
 
@@ -527,9 +530,9 @@ export class UserService {
       if (isReadOnlyMode) {
         currentPermissions = currentPermissions.filter((permission) => {
           return !(
+            permission === permissions.enableGhostfolioAi ||
             permission.startsWith('create') ||
             permission.startsWith('delete') ||
-            permission.startsWith('import') ||
             permission.startsWith('update')
           );
         });

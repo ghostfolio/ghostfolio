@@ -1,4 +1,4 @@
-import type { Order, SymbolProfile } from '@ghostfolio/prisma/browser';
+import type { Order } from '@ghostfolio/prisma/browser';
 
 import { EnhancedAssetProfile } from '../enhanced-asset-profile.interface';
 
@@ -7,9 +7,4 @@ export interface CreateActivityResponse extends Omit<
   'accountBalanceChange'
 > {
   assetProfile: EnhancedAssetProfile;
-
-  /**
-   * @deprecated Use `assetProfile` instead
-   */
-  SymbolProfile: SymbolProfile;
 }
