@@ -1,18 +1,143 @@
 /*!
- * Bootstrap v4.6.2 (https://getbootstrap.com/)
- * Copyright 2011-2022 The Bootstrap Authors
- * Copyright 2011-2022 Twitter, Inc.
+ * Bootstrap v5.3.8 (https://getbootstrap.com/)
+ * Copyright 2011-2025 The Bootstrap Authors
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+@use 'sass:map';
+
+// Configuration
 @import 'bootstrap/scss/functions';
+
+// Restore Bootstrap 4 defaults
+$badge-padding-x: 0.4em;
+$badge-padding-y: 0.25em;
+$blue: #007bff;
+$body-secondary-color: #6c757d;
+$border-radius: 0.25rem;
+$code-color: inherit;
+$code-color-dark: inherit;
+$code-font-size: 1em;
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px
+);
+$cyan: #17a2b8;
+$enable-dark-mode: false;
+$enable-rfs: false;
+$enable-smooth-scroll: false;
+$figure-caption-font-size: 90%;
+$green: #28a745;
+$grid-gutter-width: 30px;
+$hr-opacity: 1;
+$initialism-font-size: 90%;
+$link-decoration: none;
+$link-hover-decoration: underline;
+$table-cell-padding-y: 0.75rem;
+
 @import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
 @import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
+
+// Compatibility mappings for legacy Bootstrap 4 utility classes
+$utilities: map.merge(
+  $utilities,
+  (
+    'margin-right-compat': (
+      responsive: true,
+      property: margin-right,
+      class: mr,
+      values: map.merge(
+          map.merge(
+            $spacers,
+            (
+              auto: auto
+            )
+          ),
+          negativify-map($spacers)
+        )
+    ),
+    'margin-left-compat': (
+      responsive: true,
+      property: margin-left,
+      class: ml,
+      values: map.merge(
+          map.merge(
+            $spacers,
+            (
+              auto: auto
+            )
+          ),
+          negativify-map($spacers)
+        )
+    ),
+    'padding-right-compat': (
+      responsive: true,
+      property: padding-right,
+      class: pr,
+      values: $spacers
+    ),
+    'padding-left-compat': (
+      responsive: true,
+      property: padding-left,
+      class: pl,
+      values: $spacers
+    ),
+    'text-align-compat': (
+      responsive: true,
+      property: text-align,
+      class: text,
+      values: (
+        left: left,
+        right: right
+      )
+    ),
+    'font-weight-compat': (
+      property: font-weight,
+      class: font-weight,
+      values: (
+        bold: $font-weight-bold,
+        normal: $font-weight-normal,
+        light: $font-weight-light,
+        bolder: $font-weight-bolder,
+        lighter: $font-weight-lighter
+      )
+    ),
+    'font-style-compat': (
+      property: font-style,
+      class: font,
+      values: (
+        italic: italic
+      )
+    ),
+    'float-compat': (
+      responsive: true,
+      property: float,
+      values: (
+        left: left,
+        right: right
+      )
+    ),
+    'font-family-compat': (
+      property: font-family,
+      class: text,
+      values: (
+        monospace: var(--bs-font-monospace)
+      )
+    )
+  )
+);
+
+// Layout & components
 @import 'bootstrap/scss/root';
 @import 'bootstrap/scss/reboot';
 @import 'bootstrap/scss/type';
 @import 'bootstrap/scss/images';
-// @import 'bootstrap/scss/code';
+@import 'bootstrap/scss/containers';
 @import 'bootstrap/scss/grid';
 // @import 'bootstrap/scss/tables';
 // @import 'bootstrap/scss/forms';
@@ -20,18 +145,15 @@
 // @import 'bootstrap/scss/transitions';
 // @import 'bootstrap/scss/dropdown';
 // @import 'bootstrap/scss/button-group';
-// @import 'bootstrap/scss/input-group';
-// @import 'bootstrap/scss/custom-forms';
 // @import 'bootstrap/scss/nav';
 // @import 'bootstrap/scss/navbar';
 // @import 'bootstrap/scss/card';
+// @import 'bootstrap/scss/accordion';
 @import 'bootstrap/scss/breadcrumb';
 // @import 'bootstrap/scss/pagination';
 @import 'bootstrap/scss/badge';
-// @import 'bootstrap/scss/jumbotron';
 // @import 'bootstrap/scss/alert';
 // @import 'bootstrap/scss/progress';
-// @import 'bootstrap/scss/media';
 // @import 'bootstrap/scss/list-group';
 // @import 'bootstrap/scss/close';
 // @import 'bootstrap/scss/toasts';
@@ -40,5 +162,44 @@
 // @import 'bootstrap/scss/popover';
 // @import 'bootstrap/scss/carousel';
 // @import 'bootstrap/scss/spinners';
-@import 'bootstrap/scss/utilities';
-// @import 'bootstrap/scss/print';
+// @import 'bootstrap/scss/offcanvas';
+// @import 'bootstrap/scss/placeholders';
+
+// Helpers
+@import 'bootstrap/scss/helpers/text-truncation';
+
+// Utilities
+@import 'bootstrap/scss/utilities/api';
+
+// Grid & layout compatibility
+.no-gutters {
+  --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
+}
+
+// Badge compatibility
+.badge-pill {
+  border-radius: var(--bs-border-radius-pill, 50rem);
+  padding-left: 0.6em;
+  padding-right: 0.6em;
+}
+
+.badge-secondary {
+  background-color: var(--bs-secondary);
+}
+
+.badge-light {
+  background-color: var(--bs-light);
+  color: var(--bs-dark);
+}
+
+.badge-warning {
+  background-color: var(--bs-warning);
+  color: var(--bs-dark);
+}
+
+// Typography compatibility
+small,
+.small {
+  font-weight: $font-weight-normal;
+}

@@ -7,11 +7,11 @@
     height: 2rem;
 
     &.okay {
-      color: var(--success);
+      color: var(--bs-success);
     }
 
     &.warn {
-      color: var(--danger);
+      color: var(--bs-danger);
     }
   }
 }
