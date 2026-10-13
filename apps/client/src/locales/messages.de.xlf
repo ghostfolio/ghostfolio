@@ -4075,7 +4075,7 @@
       </trans-unit>
       <trans-unit id="749104632257292438" datatype="html">
         <source>Powered by third-party AI providers</source>
-        <target state="new">Powered by third-party AI providers</target>
+        <target state="translated">Bereitgestellt durch KI-Drittanbieter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">298</context>
@@ -7174,7 +7174,7 @@
       </trans-unit>
       <trans-unit id="8330037678926820011" datatype="html">
         <source>The content of your file will be processed by third-party AI providers. Please remove any personal data before uploading.</source>
-        <target state="new">Der Inhalt deiner Datei wird von einem KI-Drittanbieter verarbeitet. Bitte entferne vor dem Hochladen alle personenbezogenen Daten.</target>
+        <target state="translated">Der Inhalt deiner Datei wird von KI-Drittanbietern verarbeitet. Bitte entferne vor dem Hochladen alle personenbezogenen Daten.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">126</context>
@@ -8088,7 +8088,7 @@
       </trans-unit>
       <trans-unit id="2228771480313313055" datatype="html">
         <source>AI-assisted import</source>
-        <target state="new">AI-assisted import</target>
+        <target state="translated">KI-gestützter Import</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">137</context>
