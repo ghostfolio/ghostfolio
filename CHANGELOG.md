@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the label of the client of the last request in the users section of the admin control panel
+- Improved the labels of the client of the last request in the users section of the admin control panel
 
 ## 3.85.0 - 2026-10-12
 
