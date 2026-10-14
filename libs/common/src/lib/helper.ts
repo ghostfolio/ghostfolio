@@ -610,6 +610,16 @@ export function interpolate(template: string, context: any) {
   });
 }
 
+export function isAccountBalanceInFuture({
+  date,
+  startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow()
+}: {
+  date: Date;
+  startOfUtcDateOfTomorrow?: Date;
+}) {
+  return isAfter(date, startOfUtcDateOfTomorrow);
+}
+
 export function isAccountExcluded(account?: { tags?: { id: string }[] }) {
   return (
     account?.tags?.some(({ id }) => {
