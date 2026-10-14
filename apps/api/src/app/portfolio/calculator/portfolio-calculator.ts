@@ -470,19 +470,19 @@ export abstract class PortfolioCalculator {
       hasAnyHoldingPerformanceErrors =
         hasAnyHoldingPerformanceErrors || hasErrors;
 
-      // Every increase of a cash balance is a synthetic buy (deposit), which
-      // would count the same capital twice in the total buy value: once when
-      // it is deposited and once when securities are bought with it. Cash is
-      // therefore excluded from the total buy value, while its value (and thus
-      // its currency effect) still contributes to the performance.
-      const isCash = item.assetSubClass === AssetSubClass.CASH;
-
       // Cash in the base currency cannot generate a currency effect and thus
-      // contributes nothing but its balance to the performance calculation. It
-      // is therefore excluded from the value and the investment, while still
-      // contributing to the net worth.
+      // contributes nothing but its balance to the performance calculation.
+      // Depending on the performance calculation type, cash in another
+      // currency is excluded the same way. In both cases, the cash is
+      // excluded from the value and the investment, while still contributing
+      // to the net worth.
+      const isExcludedFromPerformance =
+        isCashInBaseCurrency ||
+        (item.assetSubClass === AssetSubClass.CASH &&
+          !this.isCashIncludedInPerformance());
+
       valuesByAssetProfileIdentifier[assetProfileIdentifier] =
-        isCashInBaseCurrency
+        isExcludedFromPerformance
           ? {
               averageInvestmentValues: {},
               averageInvestmentValuesWithCurrencyEffect: {},
@@ -501,10 +501,8 @@ export abstract class PortfolioCalculator {
           : {
               averageInvestmentValues,
               averageInvestmentValuesWithCurrencyEffect,
-              buyValuesAccumulated: isCash ? {} : buyValuesAccumulated,
-              buyValuesAccumulatedWithCurrencyEffect: isCash
-                ? {}
-                : buyValuesAccumulatedWithCurrencyEffect,
+              buyValuesAccumulated,
+              buyValuesAccumulatedWithCurrencyEffect,
               currentValues,
               currentValuesWithCurrencyEffect,
               dividendValuesWithCurrencyEffect,
@@ -541,7 +539,7 @@ export abstract class PortfolioCalculator {
           ? (grossPerformanceWithCurrencyEffect ?? null)
           : null,
         includeInHoldings: item.includeInHoldings,
-        includeInPerformance: !isCashInBaseCurrency,
+        includeInPerformance: !isExcludedFromPerformance,
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
         marketPrice:
@@ -1920,6 +1918,12 @@ export abstract class PortfolioCalculator {
 
     return marketPriceAtEndDate;
   }
+
+  /**
+   * Returns whether cash in a currency other than the base currency
+   * contributes to the performance (cash in the base currency never does)
+   */
+  protected abstract isCashIncludedInPerformance(): boolean;
 
   @LogPerformance
   private computeHoldingBalancesByDate() {

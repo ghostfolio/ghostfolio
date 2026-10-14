@@ -292,30 +292,28 @@ describe('RoiPortfolioCalculator', () => {
       });
 
       /**
-       * Total buy value: 2 * 100 CHF = 200 CHF (only the security, the
-       * deposits of the cash are excluded as the capital would otherwise be
-       * counted twice)
-       * Net performance: 0 CHF (security: 2 * 100 CHF - 200 CHF = 0 CHF, cash:
-       * 2000 USD * 0.91 - 2000 USD * 0.91 = 0 CHF)
-       * Net performance with currency effect: 0 CHF (security) + 70 CHF (cash)
-       * = 70 CHF
-       * ROI with currency effect: 70 CHF / 200 CHF = 0.35
-       * Value: 2 * 100 CHF + 2000 USD * 0.91 = 2020 CHF
+       * Cash in every currency is excluded from the performance, it only
+       * contributes to the net worth
+       * Total buy value: 2 * 100 CHF = 200 CHF (only the security)
+       * Net performance: 2 * 100 CHF - 200 CHF = 0 CHF
+       * Net performance with currency effect: 0 CHF (the 70 CHF currency gain
+       * of the USD cash is not counted)
+       * ROI: 0 CHF / 200 CHF = 0
+       * Value: 2 * 100 CHF = 200 CHF
+       * Net worth: 200 CHF + 2000 USD * 0.91 = 2020 CHF
        */
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
         date: '2025-01-01',
         netPerformance: 0,
         netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: new Big('70')
-          .div('200')
-          .toNumber(),
-        netPerformanceWithCurrencyEffect: 70,
+        netPerformanceInPercentageWithCurrencyEffect: 0,
+        netPerformanceWithCurrencyEffect: 0,
         netWorth: 2020,
         totalBuyValue: 200,
         totalBuyValueWithCurrencyEffect: 200,
         totalCashInBaseCurrency: 1820,
-        value: 2020,
-        valueWithCurrencyEffect: 2020
+        value: 200,
+        valueWithCurrencyEffect: 200
       });
     });
   });

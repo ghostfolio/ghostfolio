@@ -650,6 +650,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     return PerformanceCalculationType.ROAI;
   }
 
+  protected isCashIncludedInPerformance() {
+    return true;
+  }
+
   private getAverageInvestment({
     grossPerformanceAtStartDate,
     investment,

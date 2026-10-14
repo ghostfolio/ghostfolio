@@ -44,4 +44,8 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
   protected getPerformanceCalculationType() {
     return PerformanceCalculationType.MWR;
   }
+
+  protected isCashIncludedInPerformance(): boolean {
+    throw new Error('Method not implemented.');
+  }
 }

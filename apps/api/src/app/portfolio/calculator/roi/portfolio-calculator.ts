@@ -395,4 +395,10 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
   protected getPerformanceCalculationType() {
     return PerformanceCalculationType.ROI;
   }
+
+  protected isCashIncludedInPerformance() {
+    // The ROI relates the performance to the purchases of securities, so a
+    // deposit of cash is neither a purchase nor a gain
+    return false;
+  }
 }
