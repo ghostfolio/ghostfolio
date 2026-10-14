@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a _Storybook_ story for the investment chart component
 
+### Added
+
+- Added a tool to update the cash balance of an account to the server of the Model Context Protocol (MCP) (experimental)
+
 ### Changed
 
 - Highlighted the negative values in the performance timeline chart on the analysis page (experimental)
