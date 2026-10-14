@@ -7,9 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Return on Investment_ (ROI) as a performance calculation method
+
 ### Changed
 
 - Hardened the validation of the date in the endpoint to create an account balance
+- Enabled the selection of the performance calculation method in the user account settings
+- Improved the colors of the muted texts and borders by enabling the dark mode of `bootstrap`
+- Reduced the size of the global stylesheet by removing the unused utilities of `bootstrap`
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
 
 ### Fixed
