@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Hardened the validation of the date in the endpoint to create an account balance
+- Added `userId` to the unique constraint of the `AccountBalance` database schema
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
 - Upgraded `stripe` from version `22.6.2` to `23.0.0`
 
