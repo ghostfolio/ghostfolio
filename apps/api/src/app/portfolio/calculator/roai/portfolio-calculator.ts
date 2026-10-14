@@ -250,6 +250,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     return performancePercentagesByDate;
   }
 
+  protected getAdditionalHistoricalDataItemValues() {
+    return {};
+  }
+
   protected getHoldingPerformance({
     chartDates,
     dataSource,

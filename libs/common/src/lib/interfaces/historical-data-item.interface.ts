@@ -13,6 +13,8 @@ export interface HistoricalDataItem {
   netWorth?: number;
   netWorthInPercentage?: number;
   quantity?: number;
+  totalBuyValue?: number;
+  totalBuyValueWithCurrencyEffect?: number;
   totalCashInBaseCurrency?: number;
   totalInvestment?: number;
   totalInvestmentValueWithCurrencyEffect?: number;

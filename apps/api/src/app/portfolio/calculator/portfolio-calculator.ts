@@ -735,6 +735,7 @@ export abstract class PortfolioCalculator {
 
       return {
         ...performancePercentagesByDate[date],
+        ...this.getAdditionalHistoricalDataItemValues(values),
         date,
         dividendInBaseCurrency: totalDividendValueWithCurrencyEffect.toNumber(),
         investmentValueWithCurrencyEffect:
@@ -911,6 +912,15 @@ export abstract class PortfolioCalculator {
       return sortIndex.getTime();
     });
   }
+
+  /**
+   * Returns the values of a historical data item which the performance
+   * calculation type requires in addition, e.g. to calculate the performance
+   * percentages of a date range
+   */
+  protected abstract getAdditionalHistoricalDataItemValues(
+    accumulatedValues: AccumulatedValues
+  ): Partial<HistoricalDataItem>;
 
   public getDataProviderInfos() {
     return this.dataProviderInfos;
