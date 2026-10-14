@@ -68,7 +68,7 @@ export const SCOPES_OF_READ_RESTRICTED_ACCESS: readonly Scope[] =
  * monetary values.
  */
 const SCOPES_OF_TYPE: Record<AccessType, readonly Scope[]> = {
-  MCP: [...SCOPES_OF_READ_ACCESS, scopes.activityCreate],
+  MCP: [...SCOPES_OF_READ_ACCESS, scopes.accountUpdate, scopes.activityCreate],
   PRIVATE: Object.values(scopes),
   PUBLIC: SCOPES_OF_PUBLIC_ACCESS
 };
