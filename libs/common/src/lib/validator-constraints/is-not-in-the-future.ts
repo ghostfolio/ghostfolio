@@ -15,7 +15,12 @@ export class IsNotInTheFutureConstraint implements ValidatorConstraintInterface 
     return '$property must not be a date in the future';
   }
 
-  public validate(aDate: string) {
+  public validate(aDate: unknown) {
+    // IsISO8601 refuses a value which is not a string
+    if (typeof aDate !== 'string') {
+      return true;
+    }
+
     return !isAccountBalanceInFuture({ date: resetHours(parseISO(aDate)) });
   }
 }

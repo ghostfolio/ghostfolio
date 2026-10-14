@@ -26,4 +26,10 @@ describe('IsNotInTheFutureConstraint', () => {
   it('Refuses a date in the future', () => {
     expect(constraint.validate('2026-09-05')).toBe(false);
   });
+
+  it('Leaves a value which is not a string to IsISO8601', () => {
+    expect(constraint.validate(undefined)).toBe(true);
+    expect(constraint.validate(null)).toBe(true);
+    expect(constraint.validate(123)).toBe(true);
+  });
 });
