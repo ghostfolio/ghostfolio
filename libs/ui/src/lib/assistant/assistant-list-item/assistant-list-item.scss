@@ -8,7 +8,7 @@
       color: rgba(var(--light-primary-text));
       font-weight: bold;
 
-      .text-muted {
+      .text-body-secondary {
         color: rgba(var(--light-primary-text)) !important;
       }
     }
@@ -20,7 +20,7 @@
     a {
       color: rgba(var(--dark-primary-text));
 
-      .text-muted {
+      .text-body-secondary {
         color: rgba(var(--dark-primary-text)) !important;
       }
     }
