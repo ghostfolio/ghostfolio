@@ -79,7 +79,7 @@
                 >
                   <div class="text-truncate">{{ parentHolding?.name }}</div>
                   <div>
-                    <small class="text-muted">{{
+                    <small class="text-body-secondary">{{
                       parentHolding?.symbol
                     }}</small>
                   </div>
@@ -177,7 +177,7 @@
 }
 
 @if (dataSource.data.length === 0 && !isLoading) {
-  <div class="p-3 text-center text-muted">
+  <div class="p-3 text-body-secondary text-center">
     <small i18n>No data available</small>
   </div>
 }
