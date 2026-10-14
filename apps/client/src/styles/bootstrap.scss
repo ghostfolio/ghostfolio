@@ -50,7 +50,6 @@ $table-cell-padding-y: 0.75rem;
 @import 'bootstrap/scss/utilities';
 
 // Remove the utility groups that the app does not use
-// (keep 'pointer-events' and 'visibility')
 $unused-utilities: (
   'align-content',
   'bg-opacity',

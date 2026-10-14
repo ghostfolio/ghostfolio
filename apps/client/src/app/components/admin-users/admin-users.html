@@ -19,12 +19,16 @@
               <div class="align-items-center d-flex text-nowrap">
                 <span
                   class="d-none d-sm-inline-block font-monospace"
-                  [class.text-line-through]="element.role === 'INACTIVE'"
+                  [class.text-decoration-line-through]="
+                    element.role === 'INACTIVE'
+                  "
                   >{{ element.id }}</span
                 >
                 <span
                   class="d-inline-block d-sm-none font-monospace"
-                  [class.text-line-through]="element.role === 'INACTIVE'"
+                  [class.text-decoration-line-through]="
+                    element.role === 'INACTIVE'
+                  "
                   >{{ `${(element.id | slice: 0 : 5)}...` }}</span
                 >
                 @if (element.subscription?.expiresAt) {
@@ -200,7 +204,7 @@
                       [title]="translate(element.lastRequestClient)"
                     />
                   } @else {
-                    <ion-icon class="hidden me-1" />
+                    <ion-icon class="invisible me-1" />
                   }
                   {{
                     formatRelativeTime({

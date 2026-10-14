@@ -88,7 +88,7 @@
               <p i18n>Self-hosted, update manually.</p>
               <p class="h5 text-end" i18n>Free</p>
               @if (user?.subscription?.type === 'Basic') {
-                <div class="d-none d-lg-block hidden mt-3 text-center">
+                <div class="d-none d-lg-block invisible mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
                   <p class="m-0 text-muted">
                     <small>&nbsp;</small>
@@ -96,7 +96,7 @@
                 </div>
               }
               @if (durationExtension) {
-                <div class="d-none d-lg-block hidden mt-3">
+                <div class="d-none d-lg-block invisible mt-3">
                   <div class="badge p-3 w-100">&nbsp;</div>
                 </div>
               }
@@ -154,7 +154,7 @@
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
               <p class="h5 text-end" i18n>Free</p>
               @if (user?.subscription?.type === 'Basic') {
-                <div class="d-none d-lg-block hidden mt-3 text-center">
+                <div class="d-none d-lg-block invisible mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
                   <p class="m-0 text-muted">
                     <small>&nbsp;</small>
@@ -162,7 +162,7 @@
                 </div>
               }
               @if (durationExtension) {
-                <div class="d-none d-lg-block hidden mt-3">
+                <div class="d-none d-lg-block invisible mt-3">
                   <div class="badge p-3 w-100">&nbsp;</div>
                 </div>
               }
@@ -238,7 +238,7 @@
                   </li>
                   <li class="align-items-center d-flex line-height-1 mb-1">
                     <ion-icon
-                      class="hidden me-1"
+                      class="invisible me-1"
                       name="checkmark-circle-outline"
                     />
                     <small
