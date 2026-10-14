@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the missing margin of the proportion of net worth on the allocations page
 - Fixed the missing padding of the base currency and performance calculation labels in the user account settings
 
 ## 3.86.0 - 2026-10-13
