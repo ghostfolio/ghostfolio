@@ -365,8 +365,7 @@ describe('Helper', () => {
 
   // A user in a time zone ahead of the instance is already on the next day at
   // this moment. The expected limit is a moment in UTC, hence this suite must
-  // give the same result with the instance in any time zone. Set TEST_TZ to run
-  // it with the instance in another time zone.
+  // give the same result with the instance in any time zone.
   describe('Is account balance in future', () => {
     beforeAll(() => {
       jest.useFakeTimers().setSystemTime(new Date('2026-09-03T23:30:00.000Z'));
