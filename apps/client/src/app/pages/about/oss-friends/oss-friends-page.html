@@ -11,7 +11,7 @@
       </h1>
       <div class="row">
         @for (ossFriend of ossFriends; track ossFriend) {
-          <div class="col-xs-12 col-md-4" [class.mb-3]="!$last">
+          <div class="col-md-4" [class.mb-3]="!$last">
             <a target="_blank" [href]="ossFriend.href">
               <mat-card appearance="outlined" class="d-flex flex-column h-100">
                 <mat-card-header>

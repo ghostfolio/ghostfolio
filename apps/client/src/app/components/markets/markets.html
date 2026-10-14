@@ -5,7 +5,7 @@
     hasPermissionToReadMarketDataOfMarkets
   ) {
     <div class="mb-4 row">
-      <div class="col-xs-12 col-md-10 offset-md-1">
+      <div class="col-md-10 offset-md-1">
         @if (hasPermissionToReadMarketDataOfMarkets) {
           @if (user?.settings?.isExperimentalFeatures) {
             <div
@@ -48,7 +48,7 @@
   }
 
   <div class="mb-3 row">
-    <div class="col-xs-12 col-md-10 offset-md-1">
+    <div class="col-md-10 offset-md-1">
       <gf-benchmark
         [benchmarks]="benchmarks()"
         [deviceType]="deviceType()"
