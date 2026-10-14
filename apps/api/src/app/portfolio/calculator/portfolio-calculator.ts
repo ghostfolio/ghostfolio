@@ -1101,14 +1101,14 @@ export abstract class PortfolioCalculator {
     let lastAveragePriceWithCurrencyEffect = new Big(0);
     const netPerformanceValues: { [date: string]: Big } = {};
     const netPerformanceValuesWithCurrencyEffect: { [date: string]: Big } = {};
-    let totalInvestment = new Big(0);
-    let totalInvestmentFromBuyTransactions = new Big(0);
-    let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
-    let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalBuyValue = new Big(0);
     let totalBuyValueAtStartDate = new Big(0);
     let totalBuyValueAtStartDateWithCurrencyEffect = new Big(0);
     let totalBuyValueWithCurrencyEffect = new Big(0);
+    let totalInvestment = new Big(0);
+    let totalInvestmentFromBuyTransactions = new Big(0);
+    let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
+    let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalQuantity = new Big(0);
     let totalQuantityFromBuyTransactions = new Big(0);
 
@@ -1359,16 +1359,16 @@ export abstract class PortfolioCalculator {
       if (activity.itemType === 'start') {
         dividendsAtStartDateWithCurrencyEffect = dividendsWithCurrencyEffect;
         feesAtStartDate = fees;
-        totalBuyValueAtStartDate = totalBuyValue;
-
-        totalBuyValueAtStartDateWithCurrencyEffect =
-          totalBuyValueWithCurrencyEffect;
-
         feesAtStartDateWithCurrencyEffect = feesWithCurrencyEffect;
         grossPerformanceAtStartDate = grossPerformance;
 
         grossPerformanceAtStartDateWithCurrencyEffect =
           grossPerformanceWithCurrencyEffect;
+
+        totalBuyValueAtStartDate = totalBuyValue;
+
+        totalBuyValueAtStartDateWithCurrencyEffect =
+          totalBuyValueWithCurrencyEffect;
       }
 
       if (i > indexOfStartActivity) {
