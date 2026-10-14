@@ -18,12 +18,12 @@
             >
               <div class="align-items-center d-flex text-nowrap">
                 <span
-                  class="d-none d-sm-inline-block text-monospace"
+                  class="d-none d-sm-inline-block font-monospace"
                   [class.text-line-through]="element.role === 'INACTIVE'"
                   >{{ element.id }}</span
                 >
                 <span
-                  class="d-inline-block d-sm-none text-monospace"
+                  class="d-inline-block d-sm-none font-monospace"
                   [class.text-line-through]="element.role === 'INACTIVE'"
                   >{{ `${(element.id | slice: 0 : 5)}...` }}</span
                 >
@@ -94,14 +94,14 @@
           <ng-container matColumnDef="accounts">
             <th
               *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
+              class="mat-mdc-header-cell px-1 py-2 text-end"
               mat-header-cell
             >
               <ng-container i18n>Accounts</ng-container>
             </th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2 text-right"
+              class="mat-mdc-cell px-1 py-2 text-end"
               mat-cell
             >
               <gf-value
@@ -115,14 +115,14 @@
           <ng-container matColumnDef="activities">
             <th
               *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
+              class="mat-mdc-header-cell px-1 py-2 text-end"
               mat-header-cell
             >
               <ng-container i18n>Activities</ng-container>
             </th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2 text-right"
+              class="mat-mdc-cell px-1 py-2 text-end"
               mat-cell
             >
               <gf-value
@@ -137,14 +137,14 @@
             <ng-container matColumnDef="engagementPerDay">
               <th
                 *matHeaderCellDef
-                class="mat-mdc-header-cell px-1 py-2 text-right"
+                class="mat-mdc-header-cell px-1 py-2 text-end"
                 mat-header-cell
               >
                 <ng-container i18n>Engagement per Day</ng-container>
               </th>
               <td
                 *matCellDef="let element"
-                class="mat-mdc-cell px-1 py-2 text-right"
+                class="mat-mdc-cell px-1 py-2 text-end"
                 mat-cell
               >
                 <gf-value
@@ -158,14 +158,14 @@
             <ng-container matColumnDef="dailyApiRequests">
               <th
                 *matHeaderCellDef
-                class="mat-mdc-header-cell px-1 py-2 text-right"
+                class="mat-mdc-header-cell px-1 py-2 text-end"
                 mat-header-cell
               >
                 <ng-container i18n>API Requests Today</ng-container>
               </th>
               <td
                 *matCellDef="let element"
-                class="mat-mdc-cell px-1 py-2 text-right"
+                class="mat-mdc-cell px-1 py-2 text-end"
                 mat-cell
               >
                 <gf-value
@@ -216,12 +216,12 @@
           <ng-container matColumnDef="actions" stickyEnd>
             <th
               *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
+              class="mat-mdc-header-cell px-1 py-2 text-end"
               mat-header-cell
             ></th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2 text-right"
+              class="mat-mdc-cell px-1 py-2 text-end"
               mat-cell
             >
               <button
