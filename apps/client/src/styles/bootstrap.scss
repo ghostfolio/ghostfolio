@@ -51,8 +51,8 @@ $table-cell-padding-y: 0.75rem;
 @import 'bootstrap/scss/utilities';
 
 // Remove the utility groups that the app does not use
-$utilities: map.remove(
-  $utilities,
+// (keep 'pointer-events' and 'visibility')
+$unused-utilities: (
   'align-content',
   'bg-opacity',
   'border-color',
@@ -99,6 +99,14 @@ $utilities: map.remove(
   'viewport-width',
   'z-index'
 );
+
+@each $key in $unused-utilities {
+  @if not map.has-key($utilities, $key) {
+    @error 'The utility group "#{$key}" does not exist';
+  }
+}
+
+$utilities: map.remove($utilities, $unused-utilities...);
 
 // Layout & components
 @import 'bootstrap/scss/root';
