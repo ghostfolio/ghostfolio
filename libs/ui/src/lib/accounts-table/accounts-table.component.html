@@ -6,7 +6,7 @@
       [disabled]="dataSource?.data.length < 2"
       [routerLink]="transferCashBalanceRouterLink"
     >
-      <ion-icon class="mr-2" name="arrow-redo-outline" />
+      <ion-icon class="me-2" name="arrow-redo-outline" />
       <span><ng-container i18n>Transfer Cash Balance</ng-container>...</span>
     </button>
   </div>
@@ -52,7 +52,7 @@
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
         <div class="align-items-center d-flex">
           <gf-entity-logo
-            class="d-sm-none mr-1"
+            class="d-sm-none me-1"
             [hasPlaceholder]="true"
             [tooltip]="element.platform?.name"
             [url]="element.platform?.url"
@@ -100,7 +100,7 @@
       >
         <div class="d-flex">
           <gf-entity-logo
-            class="mr-1"
+            class="me-1"
             [hasPlaceholder]="true"
             [tooltip]="element.platform?.name"
             [url]="element.platform?.url"
@@ -125,10 +125,10 @@
         <span class="d-block d-sm-none">#</span>
         <span class="d-none d-sm-block" i18n>Activities</span>
       </th>
-      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
         {{ element.activitiesCount }}
       </td>
-      <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
+      <td *matFooterCellDef class="px-1 text-end" mat-footer-cell>
         {{ activitiesCount() }}
       </td>
     </ng-container>
@@ -142,7 +142,7 @@
       >
         <ng-container i18n>Quantity</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
         <gf-value
           class="d-inline-block justify-content-end"
           [isCurrency]="true"
@@ -164,7 +164,7 @@
       </th>
       <td
         *matCellDef="let element"
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-cell
       >
         <gf-value
@@ -176,7 +176,7 @@
       </td>
       <td
         *matFooterCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-footer-cell
       >
         <gf-value
@@ -199,7 +199,7 @@
       </th>
       <td
         *matCellDef="let element"
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-cell
       >
         <gf-value
@@ -211,7 +211,7 @@
       </td>
       <td
         *matFooterCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-footer-cell
       >
         <gf-value
@@ -234,7 +234,7 @@
       </th>
       <td
         *matCellDef="let element"
-        class="d-lg-none d-xl-none px-1 text-right"
+        class="d-lg-none d-xl-none px-1 text-end"
         mat-cell
       >
         <gf-value
@@ -246,7 +246,7 @@
       </td>
       <td
         *matFooterCellDef
-        class="d-lg-none d-xl-none px-1 text-right"
+        class="d-lg-none d-xl-none px-1 text-end"
         mat-footer-cell
       >
         <gf-value
@@ -269,7 +269,7 @@
       </th>
       <td
         *matCellDef="let element"
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-cell
       >
         <gf-value
@@ -335,7 +335,7 @@
               [routerLink]="accountDialogRouterLinks().get(element.id)?.detail"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="wallet-outline" />
+                <ion-icon class="me-2" name="wallet-outline" />
                 <span><ng-container i18n>View Details</ng-container>...</span>
               </span>
             </a>
@@ -346,7 +346,7 @@
               [routerLink]="accountDialogRouterLinks().get(element.id)?.update"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="create-outline" />
+                <ion-icon class="me-2" name="create-outline" />
                 <span><ng-container i18n>Edit</ng-container>...</span>
               </span>
             </a>
@@ -359,7 +359,7 @@
               (click)="onDeleteAccount(element.id)"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="trash-outline" />
+                <ion-icon class="me-2" name="trash-outline" />
                 <span i18n>Delete</span>
               </span>
             </button>

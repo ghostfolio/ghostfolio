@@ -99,7 +99,7 @@
             }
             <p class="mb-0 mt-3 text-center">
               <small>
-                <span class="mr-1" i18n
+                <span class="me-1" i18n
                   >The following file formats are supported:</span
                 >
                 <a
@@ -108,7 +108,7 @@
                   >CSV</a
                 >
                 @if (isGhostfolioAiEnabled) {
-                  <span class="mr-1">, JPG,</span>
+                  <span class="me-1">, JPG,</span>
                 } @else {
                   <span class="mx-1" i18n>or</span>
                 }
@@ -165,9 +165,9 @@
             @if (rowsWithoutMatch.length > 0) {
               <mat-accordion class="d-block mb-3" displayMode="flat">
                 <mat-expansion-panel>
-                  <mat-expansion-panel-header class="pl-1">
+                  <mat-expansion-panel-header class="ps-1">
                     <mat-panel-title>
-                      <div class="align-items-center d-flex mr-2">
+                      <div class="align-items-center d-flex me-2">
                         <ion-icon name="warning-outline" />
                       </div>
                       <ng-container i18n>{rowsWithoutMatch.length, plural,
@@ -188,8 +188,8 @@
               </mat-accordion>
             }
             @if (isMaxActivitiesOfGhostfolioAiReached) {
-              <div class="align-items-center d-flex mb-3 pl-1">
-                <ion-icon class="mr-2" name="warning-outline" />
+              <div class="align-items-center d-flex mb-3 ps-1">
+                <ion-icon class="me-2" name="warning-outline" />
                 <span i18n
                   >Ghostfolio AI has processed the maximum of
                   {{ maxActivitiesOfGhostfolioAi }} activities. The file can
@@ -223,7 +223,7 @@
               <ng-container i18n>Back</ng-container>
             </button>
             <button
-              class="ml-1"
+              class="ms-1"
               color="primary"
               mat-flat-button
               [disabled]="!selectedActivities?.length"
@@ -237,10 +237,10 @@
             <mat-accordion displayMode="flat">
               @for (message of errorMessages; track message; let i = $index) {
                 <mat-expansion-panel [disabled]="!details[i]">
-                  <mat-expansion-panel-header class="pl-1">
+                  <mat-expansion-panel-header class="ps-1">
                     <mat-panel-title class="w-100">
                       <div class="d-flex w-100">
-                        <div class="align-items-center d-flex mr-2">
+                        <div class="align-items-center d-flex me-2">
                           <ion-icon name="warning-outline" />
                         </div>
                         <div class="text-truncate" title="{{ message }}">
@@ -261,7 +261,7 @@
               <ng-container i18n>Back</ng-container>
             </button>
             <button
-              class="ml-1"
+              class="ms-1"
               color="primary"
               mat-flat-button
               [disabled]="true"

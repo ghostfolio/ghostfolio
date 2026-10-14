@@ -14,7 +14,7 @@
       <div class="align-items-center align-middle d-inline-flex line-height-1">
         @if (selectedAccount()?.platform?.url) {
           <gf-entity-logo
-            class="mr-1"
+            class="me-1"
             [tooltip]="selectedAccount()?.platform?.name ?? ''"
             [url]="selectedAccount()?.platform?.url ?? ''"
           />
@@ -31,7 +31,7 @@
       <mat-option [value]="account.id">
         <div class="align-items-center d-flex">
           <gf-entity-logo
-            class="mr-1"
+            class="me-1"
             [hasPlaceholder]="true"
             [tooltip]="account.platform?.name ?? ''"
             [url]="account.platform?.url ?? ''"

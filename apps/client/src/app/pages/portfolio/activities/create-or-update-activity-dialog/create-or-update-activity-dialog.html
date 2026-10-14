@@ -142,7 +142,7 @@
           [matDatepicker]="date"
           [matDatepickerFilter]="dateFilter"
         />
-        <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
+        <mat-datepicker-toggle class="me-2" matSuffix [for]="date">
           <ion-icon
             class="text-muted"
             matDatepickerToggleIcon
@@ -193,7 +193,7 @@
           </mat-label>
           <input formControlName="unitPrice" matInput type="number" />
           <div
-            class="ml-2"
+            class="ms-2"
             matTextSuffix
             [class.d-none]="!activityForm.get('currency')?.value"
           >
@@ -215,7 +215,7 @@
           isToday(activityForm.get('date')?.value)
         ) {
           <button
-            class="ml-2 mt-1 no-min-width"
+            class="ms-2 mt-1 no-min-width"
             i18n-title
             mat-button
             title="Apply current market price"
@@ -239,7 +239,7 @@
         <mat-label i18n>Fee</mat-label>
         <input formControlName="fee" matInput type="number" />
         <div
-          class="ml-2"
+          class="ms-2"
           matTextSuffix
           [class.d-none]="!activityForm.get('currency')?.value"
         >
