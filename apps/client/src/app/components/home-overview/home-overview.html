@@ -15,7 +15,7 @@
         <ol class="fw-bold">
           <li
             class="mb-2"
-            [class.text-muted]="(user()?.accounts?.length ?? 0) > 1"
+            [class.text-body-secondary]="(user()?.accounts?.length ?? 0) > 1"
           >
             <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />

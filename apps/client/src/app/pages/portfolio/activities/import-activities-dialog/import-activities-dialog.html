@@ -51,7 +51,7 @@
                       ><b>{{ holding.assetProfile.name }}</b></span
                     >
                     <br />
-                    <small class="text-muted"
+                    <small class="text-body-secondary"
                       >{{ holding.assetProfile.symbol }} ·
                       {{ holding.assetProfile.currency }}</small
                     >
@@ -77,14 +77,14 @@
           <div class="d-flex flex-column justify-content-center">
             @if (isLoading) {
               <div
-                class="align-items-center d-flex drop-area flex-column justify-content-center p-4 text-center text-muted"
+                class="align-items-center d-flex drop-area flex-column justify-content-center p-4 text-body-secondary text-center"
               >
                 <mat-spinner [diameter]="20" />
                 <span i18n>Ghostfolio AI is processing the file...</span>
               </div>
             } @else {
               <button
-                class="drop-area p-4 text-center text-muted"
+                class="drop-area p-4 text-body-secondary text-center"
                 gfFileDrop
                 (click)="onSelectFile(stepper)"
                 (filesDropped)="onFilesDropped({ stepper, files: $event })"
@@ -139,7 +139,7 @@
                 <span
                   class="align-items-center d-flex"
                   matTooltipPosition="above"
-                  [class.text-muted]="isLoading"
+                  [class.text-body-secondary]="isLoading"
                   [matTooltip]="ghostfolioAiTooltip"
                 >
                   <ion-icon name="information-circle-outline" />

@@ -90,7 +90,7 @@
               @if (user?.subscription?.type === 'Basic') {
                 <div class="d-none d-lg-block invisible mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
-                  <p class="m-0 text-muted">
+                  <p class="m-0 text-body-secondary">
                     <small>&nbsp;</small>
                   </p>
                 </div>
@@ -156,7 +156,7 @@
               @if (user?.subscription?.type === 'Basic') {
                 <div class="d-none d-lg-block invisible mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
-                  <p class="m-0 text-muted">
+                  <p class="m-0 text-body-secondary">
                     <small>&nbsp;</small>
                   </p>
                 </div>
@@ -264,7 +264,7 @@
                 <p class="h5 text-end">
                   <span class="fw-normal">
                     @if (coupon) {
-                      <del class="text-muted"
+                      <del class="text-body-secondary"
                         >{{ baseCurrency }}&nbsp;{{ price }}</del
                       >&nbsp;{{ baseCurrency }}&nbsp;<strong>{{
                         price - coupon
@@ -293,7 +293,7 @@
                       <ng-container i18n>Upgrade Plan</ng-container>
                     }
                   </button>
-                  <p class="m-0 text-muted">
+                  <p class="m-0 text-body-secondary">
                     <small i18n>One-time payment, no auto-renewal.</small>
                   </p>
                 </div>
@@ -371,7 +371,7 @@
           [routerLink]="routerLinkRegister"
           >Get Started</a
         >
-        <p class="m-0 text-muted"><small i18n>It’s free.</small></p>
+        <p class="m-0 text-body-secondary"><small i18n>It’s free.</small></p>
       </div>
     </div>
   }

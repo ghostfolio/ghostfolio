@@ -30,7 +30,7 @@
             >
               <ng-container i18n>Get Access</ng-container>
             </a>
-            <div class="mx-3 text-muted">
+            <div class="mx-3 text-body-secondary">
               <small i18n>or</small>
             </div>
             <a
@@ -91,7 +91,7 @@
                 </a>
                 @if (isGhostfolioApiKeyValid === true) {
                   <div class="line-height-1">
-                    <small class="text-muted">
+                    <small class="text-body-secondary">
                       <ng-container i18n>Valid until</ng-container>
                       {{
                         ghostfolioApiStatus?.subscription?.expiresAt
@@ -165,7 +165,7 @@
                         100
                     "
                   />
-                  <small class="text-muted">
+                  <small class="text-body-secondary">
                     {{ ghostfolioApiStatus.dailyRequests }}
                     <ng-container i18n>of</ng-container>
                     {{ ghostfolioApiStatus.dailyRequestsMax }}

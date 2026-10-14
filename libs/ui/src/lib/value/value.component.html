@@ -20,7 +20,7 @@
         (mousedown)="$event.preventDefault()"
       >
         <ion-icon
-          class="text-muted"
+          class="text-body-secondary"
           [name]="isCopied ? 'checkmark-outline' : 'copy-outline'"
         />
       </button>
@@ -57,7 +57,7 @@
           [class.h4]="size === 'medium'"
         >
           @if (value === null) {
-            <span class="font-monospace text-muted">*****</span>
+            <span class="font-monospace text-body-secondary">*****</span>
           } @else {
             {{ formattedValue }}
           }
@@ -91,7 +91,7 @@
         <ng-container *ngTemplateOutlet="copyIcon" />
       }
       @if (subLabel) {
-        <span class="text-muted"> {{ subLabel }}</span>
+        <span class="text-body-secondary"> {{ subLabel }}</span>
       }
     </div>
   } @else {

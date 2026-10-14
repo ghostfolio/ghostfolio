@@ -98,7 +98,7 @@
       />
     </div>
   </div>
-  <div class="d-flex py-1 text-muted">
+  <div class="d-flex py-1 text-body-secondary">
     <div class="flex-grow-1 indent-1 text-truncate" i18n>thereof Dividend</div>
     <div class="justify-content-end">
       <gf-value
@@ -154,7 +154,7 @@
         PerformanceCalculationType.ROAI
       ) {
         <abbr
-          class="d-none d-sm-inline-block initialism ms-2 text-muted"
+          class="d-none d-sm-inline-block initialism ms-2 text-body-secondary"
           i18n-title
           title="Return on Average Investment (total return with dividends)"
           >(ROAI)</abbr
@@ -180,7 +180,7 @@
       />
     </div>
   </div>
-  <div class="d-flex py-1 text-muted">
+  <div class="d-flex py-1 text-body-secondary">
     <div class="flex-grow-1 indent-2 text-truncate">
       <ng-container i18n>thereof Dividend Performance</ng-container>
     </div>
@@ -224,7 +224,7 @@
           class="align-items-center caret-container d-inline-flex justify-content-center"
         >
           <ion-icon
-            class="caret text-muted"
+            class="caret text-body-secondary"
             name="caret-forward-outline"
             [class.caret-expanded]="isHoldingsExpanded"
           />
@@ -237,7 +237,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ms-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -302,7 +302,7 @@
           class="align-items-center caret-container d-inline-flex justify-content-center"
         >
           <ion-icon
-            class="caret text-muted"
+            class="caret text-body-secondary"
             name="caret-forward-outline"
             [class.caret-expanded]="isCashExpanded"
           />
@@ -315,7 +315,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ms-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -378,7 +378,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ms-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -463,7 +463,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ms-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -493,7 +493,7 @@
         user?.subscription?.type !== 'Basic'
       ) {
         <ion-icon
-          class="me-1 text-muted"
+          class="me-1 text-body-secondary"
           name="ellipsis-horizontal-circle-outline"
         />
       }

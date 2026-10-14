@@ -23,7 +23,7 @@
                   [currencies]="currencies"
                 />
                 @if (hasImpersonationId) {
-                  <mat-hint class="mt-1 text-muted text-truncate" i18n
+                  <mat-hint class="mt-1 text-body-secondary text-truncate" i18n
                     >Derived from the portfolio you are viewing</mat-hint
                   >
                 }
@@ -60,7 +60,7 @@
             <div class="pe-1 w-50">
               <div i18n>Language</div>
               @if (isCommunityLanguage()) {
-                <div class="hint-text text-muted" i18n>
+                <div class="hint-text text-body-secondary" i18n>
                   If a translation is missing, kindly support us in extending it
                   <a
                     href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
@@ -154,7 +154,7 @@
           <div class="align-items-center d-flex mb-4">
             <div class="pe-1 w-50">
               <div i18n>Locale</div>
-              <div class="hint-text text-muted">
+              <div class="hint-text text-body-secondary">
                 <ng-container i18n>Date and number format</ng-container>
               </div>
             </div>
@@ -176,7 +176,7 @@
                     <mat-option [value]="locale">{{ locale }}</mat-option>
                   }
                 </mat-select>
-                <mat-hint class="d-flex mt-2 text-muted text-truncate">
+                <mat-hint class="d-flex mt-2 text-body-secondary text-truncate">
                   <gf-value
                     [deviceType]="deviceType()"
                     [isDate]="true"
@@ -224,7 +224,7 @@
       <div class="align-items-center d-flex mt-4 py-1">
         <div class="pe-1 w-50">
           <div i18n>Presenter View</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Protection for sensitive information like absolute performances and
             quantity values
           </div>
@@ -242,7 +242,7 @@
       <div class="d-flex mt-4 py-1">
         <div class="pe-1 w-50">
           <div i18n>Zen Mode</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Distraction-free experience for turbulent times
           </div>
         </div>
@@ -259,7 +259,9 @@
       <div class="align-items-center d-flex mt-4 py-1">
         <div class="pe-1 w-50">
           <div i18n>Biometric Authentication</div>
-          <div class="hint-text text-muted" i18n>Sign in with fingerprint</div>
+          <div class="hint-text text-body-secondary" i18n>
+            Sign in with fingerprint
+          </div>
         </div>
         <div class="ps-1 w-50">
           <mat-slide-toggle
@@ -276,7 +278,7 @@
       <div class="align-items-center d-flex mt-4 py-1">
         <div class="pe-1 w-50">
           <div i18n>Experimental Features</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Sneak peek at upcoming functionality
           </div>
         </div>
@@ -294,7 +296,7 @@
         <div class="align-items-center d-flex mt-4 py-1">
           <div class="pe-1 w-50">
             <div>Ghostfolio AI</div>
-            <div class="hint-text text-muted" i18n>
+            <div class="hint-text text-body-secondary" i18n>
               Powered by third-party AI providers
             </div>
           </div>
@@ -401,7 +403,7 @@
               <button color="warn" i18n mat-flat-button [disabled]="true">
                 Close Account
               </button>
-              <div class="hint-text mt-2 text-muted" i18n>
+              <div class="hint-text mt-2 text-body-secondary" i18n>
                 For security reasons, please delete all activities and accounts
                 first before your Ghostfolio account can be closed.
               </div>

@@ -13,7 +13,7 @@
       <div class="h4 mb-0">
         <span class="me-2">{{ fearAndGreedIndexText() }}</span>
         @let value = fearAndGreedIndex() | number: '1.0-0';
-        <small class="text-muted"
+        <small class="text-body-secondary"
           ><span [class.fw-bold]="value">{{ value ?? placeholder }}</span
           >/100</small
         >

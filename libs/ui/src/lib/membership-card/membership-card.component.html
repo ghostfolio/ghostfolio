@@ -16,13 +16,13 @@
       <div class="d-flex justify-content-end">
         <gf-logo
           size="large"
-          [class.text-muted]="name === 'Basic'"
+          [class.text-body-secondary]="name === 'Basic'"
           [showLabel]="false"
         />
       </div>
       @if (hasPermissionToCreateApiKey) {
         <div class="mt-5">
-          <div class="heading text-muted" i18n>API Key</div>
+          <div class="heading text-body-secondary" i18n>API Key</div>
           <div class="align-items-center d-flex">
             <div class="font-monospace value">* * * * * * * * *</div>
             <div class="ms-1">
@@ -41,12 +41,12 @@
       }
       <div class="d-flex justify-content-between">
         <div>
-          <div class="heading text-muted" i18n>Membership</div>
+          <div class="heading text-body-secondary" i18n>Membership</div>
           <div class="text-truncate value">{{ name }}</div>
         </div>
         @if (expiresAt) {
           <div>
-            <div class="heading text-muted" i18n>Valid until</div>
+            <div class="heading text-body-secondary" i18n>Valid until</div>
             <div class="text-truncate value">
               {{ expiresAt }}
             </div>
