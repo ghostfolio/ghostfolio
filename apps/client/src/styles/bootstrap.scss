@@ -4,6 +4,8 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+@use 'sass:map';
+
 // Configuration
 @import 'bootstrap/scss/functions';
 
@@ -28,6 +30,13 @@ $enable-rfs: false;
 $enable-smooth-scroll: false;
 $figure-caption-font-size: 90%;
 $green: #28a745;
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
 $grid-gutter-width: 30px;
 $hr-opacity: 1;
 $initialism-font-size: 90%;
@@ -40,6 +49,64 @@ $table-cell-padding-y: 0.75rem;
 @import 'bootstrap/scss/maps';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/utilities';
+
+// Remove the utility groups that the app does not use
+// (keep 'pointer-events' and 'visibility')
+$unused-utilities: (
+  'align-content',
+  'bg-opacity',
+  'border-color',
+  'border-end',
+  'border-opacity',
+  'border-start',
+  'border-width',
+  'bottom',
+  'column-gap',
+  'end',
+  'flex',
+  'focus-ring',
+  'font-size',
+  'font-style',
+  'gap',
+  'gradient',
+  'line-height',
+  'link-offset',
+  'link-opacity',
+  'link-underline',
+  'link-underline-opacity',
+  'max-height',
+  'min-viewport-height',
+  'min-viewport-width',
+  'object-fit',
+  'opacity',
+  'order',
+  'overflow-y',
+  'rounded-bottom',
+  'rounded-end',
+  'rounded-start',
+  'rounded-top',
+  'row-gap',
+  'shadow',
+  'start',
+  'subtle-background-color',
+  'subtle-border-color',
+  'text-color',
+  'text-opacity',
+  'top',
+  'translate-middle',
+  'user-select',
+  'viewport-height',
+  'viewport-width',
+  'z-index'
+);
+
+@each $key in $unused-utilities {
+  @if not map.has-key($utilities, $key) {
+    @error 'The utility group "#{$key}" does not exist';
+  }
+}
+
+$utilities: map.remove($utilities, $unused-utilities...);
 
 // Layout & components
 @import 'bootstrap/scss/root';
