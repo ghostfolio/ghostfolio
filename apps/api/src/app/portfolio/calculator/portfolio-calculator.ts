@@ -470,6 +470,13 @@ export abstract class PortfolioCalculator {
       hasAnyHoldingPerformanceErrors =
         hasAnyHoldingPerformanceErrors || hasErrors;
 
+      // Every increase of a cash balance is a synthetic buy (deposit), which
+      // would count the same capital twice in the total buy value: once when
+      // it is deposited and once when securities are bought with it. Cash is
+      // therefore excluded from the total buy value, while its value (and thus
+      // its currency effect) still contributes to the performance.
+      const isCash = item.assetSubClass === AssetSubClass.CASH;
+
       // Cash in the base currency cannot generate a currency effect and thus
       // contributes nothing but its balance to the performance calculation. It
       // is therefore excluded from the value and the investment, while still
@@ -494,8 +501,10 @@ export abstract class PortfolioCalculator {
           : {
               averageInvestmentValues,
               averageInvestmentValuesWithCurrencyEffect,
-              buyValuesAccumulated,
-              buyValuesAccumulatedWithCurrencyEffect,
+              buyValuesAccumulated: isCash ? {} : buyValuesAccumulated,
+              buyValuesAccumulatedWithCurrencyEffect: isCash
+                ? {}
+                : buyValuesAccumulatedWithCurrencyEffect,
               currentValues,
               currentValuesWithCurrencyEffect,
               dividendValuesWithCurrencyEffect,
