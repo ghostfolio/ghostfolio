@@ -76,24 +76,30 @@ function getHistoricalDataItem({
   date,
   dividendInBaseCurrency = 0,
   netPerformance,
+  netPerformanceWithCurrencyEffect = netPerformance,
   totalBuyValue,
-  value
+  totalBuyValueWithCurrencyEffect = totalBuyValue,
+  value,
+  valueWithCurrencyEffect = value
 }: {
   date: string;
   dividendInBaseCurrency?: number;
   netPerformance: number;
+  netPerformanceWithCurrencyEffect?: number;
   totalBuyValue: number;
+  totalBuyValueWithCurrencyEffect?: number;
   value: number;
+  valueWithCurrencyEffect?: number;
 }): HistoricalDataItem {
   return {
     date,
     dividendInBaseCurrency,
     netPerformance,
+    netPerformanceWithCurrencyEffect,
     totalBuyValue,
+    totalBuyValueWithCurrencyEffect,
     value,
-    netPerformanceWithCurrencyEffect: netPerformance,
-    totalBuyValueWithCurrencyEffect: totalBuyValue,
-    valueWithCurrencyEffect: value
+    valueWithCurrencyEffect
   };
 }
 
@@ -208,15 +214,21 @@ describe('RoiPortfolioCalculator', () => {
           getHistoricalDataItem({
             date: '2024-01-01',
             netPerformance: 0,
+            netPerformanceWithCurrencyEffect: 0,
             totalBuyValue: 1000,
-            value: 2000
+            totalBuyValueWithCurrencyEffect: 900,
+            value: 2000,
+            valueWithCurrencyEffect: 1800
           }),
           getHistoricalDataItem({
             date: '2024-12-31',
-            dividendInBaseCurrency: 30,
+            dividendInBaseCurrency: 27,
             netPerformance: 300,
+            netPerformanceWithCurrencyEffect: 540,
             totalBuyValue: 2000,
-            value: 3300
+            totalBuyValueWithCurrencyEffect: 1800,
+            value: 3300,
+            valueWithCurrencyEffect: 3240
           })
         ]
       });
@@ -226,7 +238,13 @@ describe('RoiPortfolioCalculator', () => {
         performancePercentagesByDate['2024-12-31'].netPerformanceInPercentage
       ).toBeCloseTo(0.1, 10);
 
-      // 30 / (2000 + 2000 - 1000) = 0.01
+      // 540 / (1800 + 1800 - 900) = 0.2
+      expect(
+        performancePercentagesByDate['2024-12-31']
+          .netPerformanceInPercentageWithCurrencyEffect
+      ).toBeCloseTo(0.2, 10);
+
+      // 27 / (1800 + 1800 - 900) = 0.01
       expect(
         performancePercentagesByDate['2024-12-31']
           .dividendInPercentageWithCurrencyEffect

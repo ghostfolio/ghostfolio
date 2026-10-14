@@ -159,6 +159,20 @@ function mockGetValue({
 
       return { marketPrice: 0 };
 
+    case 'ROI-TWO-YEARS':
+      if (isSameDay(parseDate('2023-06-01'), date)) {
+        return { marketPrice: 10 };
+      } else if (
+        isSameDay(parseDate('2023-12-31'), date) ||
+        isSameDay(parseDate('2024-03-01'), date)
+      ) {
+        return { marketPrice: 12 };
+      } else if (isSameDay(parseDate('2024-12-31'), date)) {
+        return { marketPrice: 15 };
+      }
+
+      return { marketPrice: 0 };
+
     default:
       return { marketPrice: 0 };
   }

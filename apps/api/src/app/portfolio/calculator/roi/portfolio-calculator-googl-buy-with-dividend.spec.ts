@@ -94,6 +94,10 @@ describe('RoiPortfolioCalculator', () => {
     );
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   describe('get current positions', () => {
     it('with GOOGL buy and dividend', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());

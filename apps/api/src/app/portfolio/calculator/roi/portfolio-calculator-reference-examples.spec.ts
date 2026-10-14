@@ -1,6 +1,7 @@
 import {
   activityDummyData,
   assetProfileDummyData,
+  getPerformanceByDateRange,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -238,6 +239,69 @@ describe('RoiPortfolioCalculator', () => {
         netPerformanceInPercentage: 0.05,
         totalBuyValue: 2000
       });
+    });
+
+    it('with buys in two years', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2024-12-31').getTime());
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities: [
+          getActivity({
+            date: '2023-06-01',
+            quantity: 100,
+            symbol: 'ROI-TWO-YEARS',
+            type: 'BUY',
+            unitPrice: 10
+          }),
+          getActivity({
+            date: '2024-03-01',
+            quantity: 100,
+            symbol: 'ROI-TWO-YEARS',
+            type: 'BUY',
+            unitPrice: 12
+          })
+        ],
+        calculationType: PerformanceCalculationType.ROI,
+        currency: 'CHF',
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      /**
+       * max: gain 200 * 15 - (1000 + 1200) = 800, bought 1000 + 1200 = 2200
+       * ytd (starts at 2023-12-31): value at the start 100 * 12 = 1200, gain
+       * 800 - (100 * 12 - 1000) = 600, bought 1200 => 600 / (1200 + 1200)
+       * 2023 (clipped to the first activity): value at the start 0, gain
+       * 100 * 12 - 1000 = 200, bought 1000 => 200 / (0 + 1000)
+       */
+      expect(portfolioSnapshot.positions).toMatchObject([
+        {
+          netPerformancePercentageWithCurrencyEffectMap: {
+            '2023': new Big('200').div('1000'),
+            max: new Big('800').div('2200'),
+            ytd: new Big('600').div(new Big('1200').plus('1200'))
+          }
+        }
+      ]);
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['ytd']
+      });
+
+      /**
+       * Gain of the date range: 600, value at the start date: 1200, buys
+       * within the date range: 2200 - 1000 = 1200
+       */
+      expect(performanceByDateRange.ytd.netPerformance).toEqual(600);
+
+      expect(performanceByDateRange.ytd.netPerformanceInPercentage).toBeCloseTo(
+        new Big('600')
+          .div(new Big('1200').plus('2200').minus('1000'))
+          .toNumber()
+      );
     });
   });
 });
