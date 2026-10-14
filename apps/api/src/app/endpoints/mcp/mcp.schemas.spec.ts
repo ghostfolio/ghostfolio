@@ -7,15 +7,18 @@ import {
   SEARCH_QUERY_MINIMUM_LENGTH,
   SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 
 import { DataSource } from '@prisma/client';
+import { addDays, format } from 'date-fns';
 
 import {
   GET_ACCOUNTS_PARAMETERS,
   GET_ACTIVITIES_PARAMETERS,
   GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
-  SEARCH_ASSET_PROFILES_PARAMETERS
+  SEARCH_ASSET_PROFILES_PARAMETERS,
+  UPDATE_ACCOUNT_BALANCE_PARAMETERS
 } from './mcp.schemas';
 import { createActivity } from './mcp.test-utils';
 
@@ -310,5 +313,38 @@ describe('SEARCH_ASSET_PROFILES_PARAMETERS', () => {
     expect(
       SEARCH_ASSET_PROFILES_PARAMETERS.parse({ query: ' Apple ' }).query
     ).toBe('Apple');
+  });
+});
+
+describe('UPDATE_ACCOUNT_BALANCE_PARAMETERS', () => {
+  function parse(parameters: Record<string, unknown>) {
+    return UPDATE_ACCOUNT_BALANCE_PARAMETERS.safeParse({
+      accountId: 'account-id',
+      balance: 1000,
+      date: '2024-01-01',
+      ...parameters
+    }).success;
+  }
+
+  it('Accepts a cash balance of today', () => {
+    expect(parse({ date: format(new Date(), DATE_FORMAT) })).toBe(true);
+  });
+
+  it('Accepts a negative cash balance', () => {
+    expect(parse({ balance: -1000 })).toBe(true);
+  });
+
+  it('Refuses an empty identifier of the account', () => {
+    expect(parse({ accountId: '' })).toBe(false);
+  });
+
+  it('Refuses a date at or before the epoch', () => {
+    expect(parse({ date: '0000-01-01' })).toBe(false);
+  });
+
+  it('Refuses a date in the future', () => {
+    expect(parse({ date: format(addDays(new Date(), 2), DATE_FORMAT) })).toBe(
+      false
+    );
   });
 });
