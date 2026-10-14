@@ -21,7 +21,7 @@
             *ngTemplateOutlet="tabContent; context: { $implicit: tab }"
           />
           <ion-icon
-            class="d-none d-sm-block external-link-icon ml-auto text-muted"
+            class="d-none d-sm-block external-link-icon ms-auto text-muted"
             name="open-outline"
           />
         </button>
@@ -52,7 +52,7 @@
       [size]="deviceType === 'mobile' ? 'large' : 'small'"
     />
     <span
-      class="d-none d-sm-block line-height-normal ml-1 overflow-hidden p-0 text-truncate"
+      class="d-none d-sm-block line-height-normal ms-1 overflow-hidden p-0 text-truncate"
       [innerHTML]="tab.label"
     ></span>
   </span>

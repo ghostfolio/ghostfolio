@@ -112,7 +112,7 @@
                     mat-flat-button
                     (click)="onSetSystemMessage()"
                   >
-                    <ion-icon class="mr-1" name="information-circle-outline" />
+                    <ion-icon class="me-1" name="information-circle-outline" />
                     <span i18n>Set Message</span>
                   </button>
                 }
@@ -130,12 +130,12 @@
                     mat-flat-button
                     (click)="onSyncDemoUserAccount()"
                   >
-                    <ion-icon class="mr-1" name="sync-outline" />
+                    <ion-icon class="me-1" name="sync-outline" />
                     <span i18n>Sync Demo User Account</span>
                   </button>
                 }
                 <button color="warn" mat-flat-button (click)="onFlushCache()">
-                  <ion-icon class="mr-1" name="close-circle-outline" />
+                  <ion-icon class="me-1" name="close-circle-outline" />
                   <span i18n>Flush Cache</span>
                 </button>
               </div>
@@ -232,7 +232,7 @@
                         (click)="onDeleteCoupon(element.code)"
                       >
                         <span class="align-items-center d-flex">
-                          <ion-icon class="mr-2" name="trash-outline" />
+                          <ion-icon class="me-2" name="trash-outline" />
                           <span i18n>Delete</span>
                         </span>
                       </button>
@@ -264,7 +264,7 @@
           </mat-card-content>
           <mat-card-actions align="end">
             <form #couponForm="ngForm" class="align-items-stretch d-flex">
-              <mat-form-field appearance="outline" class="mr-1 without-hint">
+              <mat-form-field appearance="outline" class="me-1 without-hint">
                 <mat-select
                   name="duration"
                   [value]="couponDuration"

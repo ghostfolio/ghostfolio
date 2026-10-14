@@ -4,7 +4,7 @@
       assetProfile?.name ?? data.symbol
     }}</span>
     <button
-      class="ml-1 no-min-width px-2"
+      class="ms-1 no-min-width px-2"
       mat-button
       type="button"
       [matMenuTriggerFor]="assetProfileActionsMenu"
@@ -112,7 +112,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="reader-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Overview</div>
+          <div class="d-none d-sm-block ms-2" i18n>Overview</div>
         </ng-template>
         <div class="container px-0 py-3">
           <div class="row w-100">
@@ -138,7 +138,7 @@
                     />
                   </mat-form-field>
                   <button
-                    class="ml-2 no-min-width px-2"
+                    class="ms-2 no-min-width px-2"
                     color="primary"
                     mat-flat-button
                     type="submit"
@@ -155,7 +155,7 @@
                     <ng-container i18n>Apply</ng-container>
                   </button>
                   <button
-                    class="ml-2 no-min-width px-2"
+                    class="ms-2 no-min-width px-2"
                     mat-button
                     type="button"
                     (click)="onCancelEditAssetProfileIdentifierMode()"
@@ -493,7 +493,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="server-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Historical Market Data</div>
+          <div class="d-none d-sm-block ms-2" i18n>Historical Market Data</div>
         </ng-template>
         <div class="container mt-3 p-0">
           <div class="no-gutters row w-100">
@@ -516,7 +516,7 @@
         <mat-tab>
           <ng-template mat-tab-label>
             <ion-icon name="git-compare-outline" />
-            <div class="d-none d-sm-block ml-2" i18n>Splits</div>
+            <div class="d-none d-sm-block ms-2" i18n>Splits</div>
           </ng-template>
           <div class="container mt-3 p-0">
             <div class="no-gutters row w-100">
@@ -571,7 +571,7 @@
                       [matDatepicker]="dateOfSplit"
                     />
                     <mat-datepicker-toggle
-                      class="mr-2"
+                      class="me-2"
                       matSuffix
                       [for]="dateOfSplit"
                     >
@@ -632,7 +632,7 @@
         <mat-tab>
           <ng-template mat-tab-label>
             <ion-icon name="code-slash-outline" />
-            <div class="d-none d-sm-block ml-2" i18n>Scraper Configuration</div>
+            <div class="d-none d-sm-block ms-2" i18n>Scraper Configuration</div>
           </ng-template>
           <div class="container mt-3 p-0">
             <div [formGroup]="assetProfileForm">
