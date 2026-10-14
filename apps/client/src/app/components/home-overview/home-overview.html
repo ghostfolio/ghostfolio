@@ -73,7 +73,7 @@
             class="position-absolute"
             unit="%"
             [buyDateMarkers]="buyDateMarkers()"
-            [class.pr-3]="deviceType() === 'mobile'"
+            [class.pe-3]="deviceType() === 'mobile'"
             [colorScheme]="user()?.settings?.colorScheme"
             [dateMarkerCurrency]="user()?.settings?.baseCurrency"
             [hidden]="historicalDataItems()?.length === 0"
@@ -101,7 +101,7 @@
         </div>
       </div>
       @if (showExperimentalHoldings()) {
-        <div class="col-xl-4 d-none d-xl-block ml-5 p-0 position-relative">
+        <div class="col-xl-4 d-none d-xl-block ms-5 p-0 position-relative">
           <mat-card
             appearance="outlined"
             class="h-100 holdings position-absolute w-100"

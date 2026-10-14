@@ -47,46 +47,6 @@ $table-cell-padding-y: 0.75rem;
 $utilities: map.merge(
   $utilities,
   (
-    'margin-right-compat': (
-      responsive: true,
-      property: margin-right,
-      class: mr,
-      values: map.merge(
-          map.merge(
-            $spacers,
-            (
-              auto: auto
-            )
-          ),
-          negativify-map($spacers)
-        )
-    ),
-    'margin-left-compat': (
-      responsive: true,
-      property: margin-left,
-      class: ml,
-      values: map.merge(
-          map.merge(
-            $spacers,
-            (
-              auto: auto
-            )
-          ),
-          negativify-map($spacers)
-        )
-    ),
-    'padding-right-compat': (
-      responsive: true,
-      property: padding-right,
-      class: pr,
-      values: $spacers
-    ),
-    'padding-left-compat': (
-      responsive: true,
-      property: padding-left,
-      class: pl,
-      values: $spacers
-    ),
     'text-align-compat': (
       responsive: true,
       property: text-align,

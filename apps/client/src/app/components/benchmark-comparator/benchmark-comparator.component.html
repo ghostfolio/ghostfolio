@@ -5,7 +5,7 @@
     >
       <span i18n>Performance</span>
       @if (user()?.subscription?.type === 'Basic') {
-        <gf-premium-indicator class="ml-1" />
+        <gf-premium-indicator class="ms-1" />
       }
     </div>
   </div>
@@ -31,7 +31,7 @@
         @if (hasPermissionToAccessAdminControl) {
           <mat-option [routerLink]="routerLinkAdminControlMarketData">
             <div class="align-items-center d-flex">
-              <ion-icon class="mr-2 text-muted" name="arrow-forward-outline" />
+              <ion-icon class="me-2 text-muted" name="arrow-forward-outline" />
               <span i18n>Manage Benchmarks</span>
             </div>
           </mat-option>

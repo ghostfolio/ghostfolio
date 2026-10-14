@@ -105,7 +105,7 @@
             <span class="align-items-center d-flex">
               <span i18n>Pricing</span>
               @if (currentRoute() !== routePricing && hasPromotion()) {
-                <span class="badge badge-warning ml-1">%</span>
+                <span class="badge badge-warning ms-1">%</span>
               }
             </span>
           </a>
@@ -198,7 +198,7 @@
                   }
                 </span>
                 <gf-premium-indicator
-                  class="d-inline-block ml-1"
+                  class="d-inline-block ms-1"
                   [enableLink]="false" /></span
             ></a>
             <hr class="m-0" />
@@ -207,7 +207,7 @@
             <button mat-menu-item (click)="impersonateAccount(null)">
               <span class="align-items-center d-flex">
                 <ion-icon
-                  class="mr-2"
+                  class="me-2"
                   [name]="
                     hasImpersonationId
                       ? 'radio-button-off-outline'
@@ -221,7 +221,7 @@
               <button mat-menu-item (click)="impersonateAccount(accessItem.id)">
                 <span class="align-items-center d-flex">
                   <ion-icon
-                    class="mr-2"
+                    class="me-2"
                     name="square-outline"
                     [name]="
                       accessItem.id === impersonationId
@@ -313,7 +313,7 @@
               <span class="align-items-center d-flex">
                 <span i18n>Pricing</span>
                 @if (currentRoute() !== routePricing && hasPromotion()) {
-                  <span class="badge badge-warning ml-1">%</span>
+                  <span class="badge badge-warning ms-1">%</span>
                 }
               </span>
             </a>
@@ -388,7 +388,7 @@
             <span class="align-items-center d-flex">
               <span i18n>Pricing</span>
               @if (currentRoute() !== routePricing && hasPromotion()) {
-                <span class="badge badge-warning ml-1">%</span>
+                <span class="badge badge-warning ms-1">%</span>
               }
             </span>
           </a>
@@ -427,7 +427,7 @@
         </button>
       </li>
       @if (currentRoute() !== 'register' && hasPermissionToCreateUser) {
-        <li class="list-inline-item ml-1">
+        <li class="list-inline-item ms-1">
           <a
             class="d-none d-sm-block px-3 rounded"
             color="primary"

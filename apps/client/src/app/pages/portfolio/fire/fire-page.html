@@ -6,7 +6,7 @@
         <h4 class="align-items-center d-flex mb-3">
           <span i18n>Calculator</span>
           @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
+            <gf-premium-indicator class="ms-1" />
           }
         </h4>
         <gf-fire-calculator
@@ -41,7 +41,7 @@
     <h4 class="align-items-center d-flex">
       <span i18n>Sustainable retirement income</span>
       @if (user?.subscription?.type === 'Basic') {
-        <gf-premium-indicator class="ml-1" />
+        <gf-premium-indicator class="ms-1" />
       }
     </h4>
     @if (isLoading) {

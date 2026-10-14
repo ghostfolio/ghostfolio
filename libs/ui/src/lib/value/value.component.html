@@ -1,5 +1,5 @@
 @if (icon) {
-  <div class="align-self-center mr-3">
+  <div class="align-self-center me-3">
     <ion-icon class="h3 m-0" [name]="icon" />
   </div>
 }
@@ -12,7 +12,7 @@
   <ng-template #copyIcon>
     @if (enableCopyToClipboardButton) {
       <button
-        class="ml-1 no-height no-min-width p-1"
+        class="ms-1 no-height no-min-width p-1"
         mat-button
         type="button"
         [title]="isCopied ? copiedTitle : copyToClipboardTitle"
@@ -44,10 +44,10 @@
       @if (isNumber || value === null) {
         @if (colorizeSign && !useAbsoluteValue && value !== null) {
           @if (+value > 0) {
-            <div class="mr-1 text-success">+</div>
+            <div class="me-1 text-success">+</div>
           }
           @if (+value < 0) {
-            <div class="mr-1 text-danger">-</div>
+            <div class="me-1 text-danger">-</div>
           }
         }
         <div
@@ -63,7 +63,7 @@
           }
         </div>
         @if (isPercent || unit) {
-          <div class="ml-1">
+          <div class="ms-1">
             {{ isPercent ? '%' : unit }}
           </div>
         }

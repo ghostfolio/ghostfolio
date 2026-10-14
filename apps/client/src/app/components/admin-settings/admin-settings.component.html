@@ -74,12 +74,12 @@
                 >
                   Ghostfolio Premium
                   <gf-premium-indicator
-                    class="d-inline-block ml-1"
+                    class="d-inline-block ms-1"
                     [enableLink]="false"
                   />
                   @if (isGhostfolioApiKeyValid === false) {
                     <span
-                      class="badge badge-pill badge-secondary ml-2 text-uppercase"
+                      class="badge badge-pill badge-secondary ms-2 text-uppercase"
                       i18n
                       >popular</span
                     >
@@ -193,7 +193,7 @@
                   >
                     <button mat-menu-item (click)="onRemoveGhostfolioApiKey()">
                       <span class="align-items-center d-flex">
-                        <ion-icon class="mr-2" name="trash-outline" />
+                        <ion-icon class="me-2" name="trash-outline" />
                         <span i18n>Remove API key</span>
                       </span>
                     </button>
