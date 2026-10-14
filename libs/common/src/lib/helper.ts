@@ -735,6 +735,12 @@ export function isUserSettingOfAuthenticatedUser(aKey: string) {
   );
 }
 
+export function isValidAccountBalanceDate(aDate: string) {
+  const date = parseISO(aDate);
+
+  return isValid(date) && !isAccountBalanceInFuture({ date: resetHours(date) });
+}
+
 export function isValidCurrencyCode(aCurrency: string) {
   if (!aCurrency) {
     return false;

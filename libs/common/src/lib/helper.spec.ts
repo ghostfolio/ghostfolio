@@ -18,6 +18,7 @@ import {
   isCurrencySymbol,
   isDarkColorScheme,
   isSplitRatio,
+  isValidAccountBalanceDate,
   isValidCurrencyCode,
   isValidCustomAssetProfileSymbol,
   isValidDateAfter1970,
@@ -555,6 +556,36 @@ describe('Helper', () => {
       expect(isSplitRatio({ denominator: null, numerator: null })).toEqual(
         false
       );
+    });
+  });
+
+  describe('Is valid account balance date', () => {
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-09-03T23:30:00.000Z'));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it('Accepts a date in the past', () => {
+      expect(isValidAccountBalanceDate('2026-09-02')).toBe(true);
+    });
+
+    it('Accepts the current date', () => {
+      expect(isValidAccountBalanceDate('2026-09-03')).toBe(true);
+    });
+
+    it('Accepts the current date of a user in a time zone ahead of the instance', () => {
+      expect(isValidAccountBalanceDate('2026-09-04')).toBe(true);
+    });
+
+    it('Refuses a date in the future', () => {
+      expect(isValidAccountBalanceDate('2026-09-05')).toBe(false);
+    });
+
+    it('Refuses a date which is not valid', () => {
+      expect(isValidAccountBalanceDate('2026-02-30')).toBe(false);
     });
   });
 
