@@ -610,6 +610,16 @@ export function interpolate(template: string, context: any) {
   });
 }
 
+export function isAccountBalanceInFuture({
+  date,
+  startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow()
+}: {
+  date: Date;
+  startOfUtcDateOfTomorrow?: Date;
+}) {
+  return isAfter(date, startOfUtcDateOfTomorrow);
+}
+
 export function isAccountExcluded(account?: { tags?: { id: string }[] }) {
   return (
     account?.tags?.some(({ id }) => {
@@ -723,6 +733,12 @@ export function isUserSettingOfAuthenticatedUser(aKey: string) {
   return USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.includes(
     aKey as keyof UserSettings
   );
+}
+
+export function isValidAccountBalanceDate(aDate: string) {
+  const date = parseISO(aDate);
+
+  return isValid(date) && !isAccountBalanceInFuture({ date: resetHours(date) });
 }
 
 export function isValidCurrencyCode(aCurrency: string) {
