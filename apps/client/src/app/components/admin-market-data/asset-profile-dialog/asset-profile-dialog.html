@@ -526,10 +526,7 @@
                     <thead>
                       <tr class="mat-mdc-header-row">
                         <th class="mat-mdc-header-cell px-1 py-2" i18n>Date</th>
-                        <th
-                          class="mat-mdc-header-cell px-1 py-2 text-right"
-                          i18n
-                        >
+                        <th class="mat-mdc-header-cell px-1 py-2 text-end" i18n>
                           Split Ratio
                         </th>
                         <th class="mat-mdc-header-cell px-1 py-2"></th>
@@ -541,10 +538,10 @@
                           <td class="mat-mdc-cell px-1 py-2">
                             {{ split.date | date: defaultDateFormat }}
                           </td>
-                          <td class="mat-mdc-cell px-1 py-2 text-right">
+                          <td class="mat-mdc-cell px-1 py-2 text-end">
                             {{ split.numerator }}:{{ split.denominator }}
                           </td>
-                          <td class="mat-mdc-cell px-1 py-2 text-right">
+                          <td class="mat-mdc-cell px-1 py-2 text-end">
                             <button
                               mat-icon-button
                               type="button"
@@ -610,7 +607,7 @@
                       />
                     </mat-form-field>
                   </div>
-                  <div class="text-right">
+                  <div class="text-end">
                     <button
                       color="primary"
                       mat-flat-button
@@ -715,7 +712,7 @@
                     <input formControlName="url" matInput type="text" />
                   </mat-form-field>
                 </div>
-                <div class="my-3 text-right">
+                <div class="my-3 text-end">
                   <button
                     color="accent"
                     mat-flat-button

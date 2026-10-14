@@ -12,14 +12,14 @@
       <div class="col introduction">
         <h4 i18n>Welcome to Ghostfolio</h4>
         <p i18n>Ready to take control of your personal finances?</p>
-        <ol class="font-weight-bold">
+        <ol class="fw-bold">
           <li
             class="mb-2"
             [class.text-muted]="(user()?.accounts?.length ?? 0) > 1"
           >
             <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
-              <span class="font-weight-normal" i18n
+              <span class="fw-normal" i18n
                 >Get a comprehensive financial overview by adding your bank and
                 brokerage accounts.</span
               ></a
@@ -28,7 +28,7 @@
           <li class="mb-2">
             <a class="d-block" [routerLink]="routerLinkPortfolioActivities">
               <span i18n>Capture your activities</span><br />
-              <span class="font-weight-normal" i18n
+              <span class="fw-normal" i18n
                 >Record your investment activities to keep your portfolio up to
                 date.</span
               ></a
@@ -37,7 +37,7 @@
           <li class="mb-2">
             <a class="d-block" [routerLink]="routerLinkPortfolio">
               <span i18n>Monitor and analyze your portfolio</span><br />
-              <span class="font-weight-normal" i18n
+              <span class="fw-normal" i18n
                 >Track your progress in real-time with comprehensive analysis
                 and insights.</span
               >

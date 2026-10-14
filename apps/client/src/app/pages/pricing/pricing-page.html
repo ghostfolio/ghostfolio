@@ -86,7 +86,7 @@
                 </ul>
               </div>
               <p i18n>Self-hosted, update manually.</p>
-              <p class="h5 text-right" i18n>Free</p>
+              <p class="h5 text-end" i18n>Free</p>
               @if (user?.subscription?.type === 'Basic') {
                 <div class="d-none d-lg-block hidden mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
@@ -152,7 +152,7 @@
                 </ul>
               </div>
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
-              <p class="h5 text-right" i18n>Free</p>
+              <p class="h5 text-end" i18n>Free</p>
               @if (user?.subscription?.type === 'Basic') {
                 <div class="d-none d-lg-block hidden mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
@@ -177,7 +177,7 @@
           >
             <mat-card-content class="d-flex flex-column h-100">
               @if (label) {
-                <div class="badge-container position-absolute text-right">
+                <div class="badge-container position-absolute text-end">
                   <span class="badge badge-warning m-1">{{ label }}</span>
                 </div>
               }
@@ -259,8 +259,8 @@
               </div>
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
               @if (price) {
-                <p class="h5 text-right">
-                  <span class="font-weight-normal">
+                <p class="h5 text-end">
+                  <span class="fw-normal">
                     @if (coupon) {
                       <del class="text-muted"
                         >{{ baseCurrency }}&nbsp;{{ price }}</del
@@ -299,7 +299,7 @@
               @if (durationExtension) {
                 <div class="mt-3">
                   <div
-                    class="badge badge-warning font-weight-normal line-height-1 p-3 w-100"
+                    class="badge badge-warning fw-normal line-height-1 p-3 w-100"
                   >
                     <strong i18n>Limited Offer!</strong>
                     <ng-container>&nbsp;</ng-container>

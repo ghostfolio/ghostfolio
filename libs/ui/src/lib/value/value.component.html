@@ -52,12 +52,12 @@
         }
         <div
           class="mb-0 value"
-          [class.font-weight-bold]="size === 'large'"
+          [class.fw-bold]="size === 'large'"
           [class.h2]="size === 'large'"
           [class.h4]="size === 'medium'"
         >
           @if (value === null) {
-            <span class="text-monospace text-muted">*****</span>
+            <span class="font-monospace text-muted">*****</span>
           } @else {
             {{ formattedValue }}
           }
@@ -71,7 +71,7 @@
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
-          [class.font-weight-bold]="size === 'large'"
+          [class.fw-bold]="size === 'large'"
           [class.h2]="size === 'large'"
           [class.h4]="size === 'medium'"
         >

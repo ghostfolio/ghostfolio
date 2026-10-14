@@ -14,9 +14,7 @@
         <span class="me-2">{{ fearAndGreedIndexText() }}</span>
         @let value = fearAndGreedIndex() | number: '1.0-0';
         <small class="text-muted"
-          ><span [class.font-weight-bold]="value">{{
-            value ?? placeholder
-          }}</span
+          ><span [class.fw-bold]="value">{{ value ?? placeholder }}</span
           >/100</small
         >
       </div>

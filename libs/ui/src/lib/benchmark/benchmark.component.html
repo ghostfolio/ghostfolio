@@ -58,7 +58,7 @@
     <ng-container matColumnDef="trend50d">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>50-Day Trend</ng-container>
@@ -87,7 +87,7 @@
     <ng-container matColumnDef="trend200d">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>200-Day Trend</ng-container>
@@ -116,7 +116,7 @@
     <ng-container matColumnDef="date">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>Last All Time High</ng-container>
@@ -150,7 +150,7 @@
         >
         <span class="d-block d-sm-none text-nowrap" i18n>from ATH</span>
       </th>
-      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
         @if (isNumber(element?.performances?.allTimeHigh?.performancePercent)) {
           <gf-value
             class="d-inline-block justify-content-end"

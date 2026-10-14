@@ -4,8 +4,6 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
-@use 'sass:map';
-
 // Configuration
 @import 'bootstrap/scss/functions';
 
@@ -42,55 +40,6 @@ $table-cell-padding-y: 0.75rem;
 @import 'bootstrap/scss/maps';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/utilities';
-
-// Compatibility mappings for legacy Bootstrap 4 utility classes
-$utilities: map.merge(
-  $utilities,
-  (
-    'text-align-compat': (
-      responsive: true,
-      property: text-align,
-      class: text,
-      values: (
-        left: left,
-        right: right
-      )
-    ),
-    'font-weight-compat': (
-      property: font-weight,
-      class: font-weight,
-      values: (
-        bold: $font-weight-bold,
-        normal: $font-weight-normal,
-        light: $font-weight-light,
-        bolder: $font-weight-bolder,
-        lighter: $font-weight-lighter
-      )
-    ),
-    'font-style-compat': (
-      property: font-style,
-      class: font,
-      values: (
-        italic: italic
-      )
-    ),
-    'float-compat': (
-      responsive: true,
-      property: float,
-      values: (
-        left: left,
-        right: right
-      )
-    ),
-    'font-family-compat': (
-      property: font-family,
-      class: text,
-      values: (
-        monospace: var(--bs-font-monospace)
-      )
-    )
-  )
-);
 
 // Layout & components
 @import 'bootstrap/scss/root';
