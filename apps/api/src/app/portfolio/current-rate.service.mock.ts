@@ -123,6 +123,42 @@ function mockGetValue({
 
       return { marketPrice: 0 };
 
+    case 'ROI-DCA':
+      if (isSameDay(parseDate('2024-01-01'), date)) {
+        return { marketPrice: 10 };
+      } else if (
+        isSameDay(parseDate('2024-10-27'), date) ||
+        isSameDay(parseDate('2024-12-31'), date)
+      ) {
+        return { marketPrice: 15 };
+      }
+
+      return { marketPrice: 0 };
+
+    case 'ROI-PARTIAL-SELL':
+      if (isSameDay(parseDate('2024-01-01'), date)) {
+        return { marketPrice: 10 };
+      } else if (isSameDay(parseDate('2024-06-01'), date)) {
+        return { marketPrice: 16 };
+      } else if (isSameDay(parseDate('2024-12-31'), date)) {
+        return { marketPrice: 18 };
+      }
+
+      return { marketPrice: 0 };
+
+    case 'ROI-REBUY':
+      if (
+        isSameDay(parseDate('2024-01-01'), date) ||
+        isSameDay(parseDate('2024-06-01'), date) ||
+        isSameDay(parseDate('2024-06-02'), date)
+      ) {
+        return { marketPrice: 10 };
+      } else if (isSameDay(parseDate('2024-12-31'), date)) {
+        return { marketPrice: 11 };
+      }
+
+      return { marketPrice: 0 };
+
     default:
       return { marketPrice: 0 };
   }

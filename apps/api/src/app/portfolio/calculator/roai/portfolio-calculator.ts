@@ -5,11 +5,8 @@ import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/hol
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { WeightedInvestment } from '@ghostfolio/api/app/portfolio/interfaces/weighted-investment.interface';
 import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
-import {
-  getAnnualizedPerformancePercent,
-  getIntervalFromDateRange
-} from '@ghostfolio/common/calculation-helper';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { getAnnualizedPerformancePercent } from '@ghostfolio/common/calculation-helper';
+import { parseDate } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HistoricalDataItem
@@ -19,7 +16,7 @@ import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
-import { differenceInDays, format, isBefore } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import { sortedIndex } from 'lodash-es';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
@@ -294,6 +291,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       symbol
     });
 
+    // `!` does not narrow the union under `strictNullChecks: false`
     if (holdingValuationOfPeriod.hasMarketPrices === false) {
       return holdingValuationOfPeriod.holdingPerformance;
     }
@@ -514,16 +512,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     } = {};
 
     for (const dateRange of this.getDateRanges({ end, start })) {
-      const dateInterval = getIntervalFromDateRange({ dateRange });
-      const endDate = dateInterval.endDate;
-      let startDate = dateInterval.startDate;
-
-      if (isBefore(startDate, start)) {
-        startDate = start;
-      }
-
-      const rangeEndDateString = format(endDate, DATE_FORMAT);
-      const rangeStartDateString = format(startDate, DATE_FORMAT);
+      const { rangeEndDateString, rangeStartDateString } =
+        this.getDateRangeBoundaries({ dateRange, start });
 
       const currentValuesAtDateRangeStartWithCurrencyEffect =
         currentValuesWithCurrencyEffect[rangeStartDateString] ?? new Big(0);
@@ -568,15 +558,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         : new Big(0);
 
       netPerformanceWithCurrencyEffectMap[dateRange] =
-        netPerformanceValuesWithCurrencyEffect[rangeEndDateString]?.minus(
-          // If the date range is 'max', take 0 as a start value. Otherwise,
-          // the value of the end of the day of the start date is taken which
-          // differs from the buying price.
-          dateRange === 'max'
-            ? new Big(0)
-            : (netPerformanceValuesWithCurrencyEffect[rangeStartDateString] ??
-                new Big(0))
-        ) ?? new Big(0);
+        this.getNetPerformanceOfDateRange({
+          dateRange,
+          netPerformanceValuesWithCurrencyEffect,
+          rangeEndDateString,
+          rangeStartDateString
+        });
 
       netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
         ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)

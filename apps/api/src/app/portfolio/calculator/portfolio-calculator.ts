@@ -221,7 +221,8 @@ export abstract class PortfolioCalculator {
   }
 
   protected abstract calculateOverallPerformance(
-    positions: PortfolioCalculatorHolding[]
+    positions: PortfolioCalculatorHolding[],
+    accumulatedValuesByDate: { [date: string]: AccumulatedValues }
   ): PortfolioSnapshot;
 
   protected abstract calculatePerformancePercentages({
@@ -753,7 +754,10 @@ export abstract class PortfolioCalculator {
       };
     });
 
-    const overall = this.calculateOverallPerformance(positions);
+    const overall = this.calculateOverallPerformance(
+      positions,
+      accumulatedValuesByDate
+    );
 
     return {
       ...overall,
@@ -924,6 +928,28 @@ export abstract class PortfolioCalculator {
 
   public getDataProviderInfos() {
     return this.dataProviderInfos;
+  }
+
+  /**
+   * Returns the start and the end date string of a date range, where the
+   * start date is not before the start date of the calculation
+   */
+  protected getDateRangeBoundaries({
+    dateRange,
+    start
+  }: {
+    dateRange: DateRange;
+    start: Date;
+  }) {
+    const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
+
+    return {
+      rangeEndDateString: format(endDate, DATE_FORMAT),
+      rangeStartDateString: format(
+        isBefore(startDate, start) ? start : startDate,
+        DATE_FORMAT
+      )
+    };
   }
 
   /**
@@ -1615,6 +1641,33 @@ export abstract class PortfolioCalculator {
     await this.snapshotPromise;
 
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
+  }
+
+  /**
+   * Returns the net performance with currency effect within a date range
+   */
+  protected getNetPerformanceOfDateRange({
+    dateRange,
+    netPerformanceValuesWithCurrencyEffect,
+    rangeEndDateString,
+    rangeStartDateString
+  }: {
+    dateRange: DateRange;
+    netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
+    rangeEndDateString: string;
+    rangeStartDateString: string;
+  }) {
+    return (
+      netPerformanceValuesWithCurrencyEffect[rangeEndDateString]?.minus(
+        // If the date range is 'max', take 0 as a start value. Otherwise,
+        // the value of the end of the day of the start date is taken which
+        // differs from the buying price.
+        dateRange === 'max'
+          ? new Big(0)
+          : (netPerformanceValuesWithCurrencyEffect[rangeStartDateString] ??
+              new Big(0))
+      ) ?? new Big(0)
+    );
   }
 
   public async getPerformance({ end, start }: { end: Date; start: Date }) {
