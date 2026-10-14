@@ -410,7 +410,7 @@
         <nav class="d-flex justify-content-between my-5">
           @if (previousProduct()) {
             <a
-              class="fw-light link-primary text-decoration-none small"
+              class="fw-light text-decoration-none small"
               [routerLink]="getProductRouterLink(previousProduct())"
               [title]="getProductTitle(previousProduct())"
               >← <span i18n>Previous</span></a
@@ -420,7 +420,7 @@
           }
           @if (nextProduct()) {
             <a
-              class="fw-light link-primary text-decoration-none small"
+              class="fw-light text-decoration-none small"
               [routerLink]="getProductRouterLink(nextProduct())"
               [title]="getProductTitle(nextProduct())"
               ><span i18n>Next</span> →</a
