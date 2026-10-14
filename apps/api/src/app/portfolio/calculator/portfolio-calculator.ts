@@ -10,6 +10,7 @@ import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/i
 import { PortfolioCalculatorActivity } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
+import { HoldingValuationOfPeriod } from '@ghostfolio/api/app/portfolio/types/holding-valuation-of-period.type';
 import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
@@ -47,7 +48,7 @@ import {
   PortfolioSnapshot,
   PortfolioSnapshotHolding
 } from '@ghostfolio/common/models';
-import { GroupBy } from '@ghostfolio/common/types';
+import { DateRange, GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
@@ -66,6 +67,7 @@ import {
   isBefore,
   isFuture,
   isPast,
+  isThisYear,
   isWithinInterval,
   min,
   startOfDay,
@@ -891,6 +893,29 @@ export abstract class PortfolioCalculator {
     return this.dataProviderInfos;
   }
 
+  /**
+   * Returns the date ranges of the performance of a holding: the fixed ranges
+   * and each past calendar year between the start and the end date
+   */
+  protected getDateRanges({ end, start }: { end: Date; start: Date }) {
+    return [
+      '1d',
+      '1y',
+      '5y',
+      'max',
+      'mtd',
+      'wtd',
+      'ytd',
+      ...eachYearOfInterval({ end, start })
+        .filter((date) => {
+          return !isThisYear(date);
+        })
+        .map((date) => {
+          return format(date, 'yyyy');
+        })
+    ] as DateRange[];
+  }
+
   protected getDividendInBaseCurrencyOfHoldings(
     holdings: PortfolioSnapshotHolding[]
   ) {
@@ -1354,6 +1379,129 @@ export abstract class PortfolioCalculator {
     };
   }
 
+  /**
+   * Returns the valuation of a holding between the start and the end date. If
+   * the holding has no activities or a market price is missing, it returns
+   * the holding performance which only contains the totals of the activities.
+   */
+  protected getHoldingValuationOfPeriod({
+    chartDates,
+    dataSource,
+    end,
+    exchangeRates,
+    marketSymbolMap,
+    start,
+    symbol
+  }: {
+    chartDates: string[];
+    end: Date;
+    exchangeRates: { [dateString: string]: number };
+    marketSymbolMap: {
+      [date: string]: { [assetProfileIdentifier: string]: Big };
+    };
+    start: Date;
+  } & AssetProfileIdentifier): HoldingValuationOfPeriod {
+    const assetProfileIdentifier = getAssetProfileIdentifier({
+      dataSource,
+      symbol
+    });
+
+    let activities: PortfolioCalculatorActivityItem[] =
+      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? [];
+
+    const isCash = activities[0]?.assetProfile?.assetSubClass === 'CASH';
+
+    if (activities.length <= 0) {
+      return {
+        hasMarketPrices: false,
+        holdingPerformance: this.getEmptyHoldingPerformance()
+      };
+    }
+
+    // The dividends, the interest and the liabilities are derived from the
+    // activities only. Accumulate them upfront so that they survive the bail
+    // out for symbols without a market price below.
+    const {
+      totalDividend,
+      totalDividendInBaseCurrency,
+      totalInterestInBaseCurrency,
+      totalLiabilitiesInBaseCurrency
+    } = this.getTotalsFromActivities({ activities, exchangeRates });
+
+    const dateOfFirstActivity = parseDate(activities[0].date);
+
+    const endDateString = format(end, DATE_FORMAT);
+    const startDateString = format(start, DATE_FORMAT);
+
+    const unitPriceAtStartDate =
+      marketSymbolMap[startDateString]?.[assetProfileIdentifier];
+
+    const unitPriceAtEndDate = this.getUnitPriceAtEndDate({
+      activities,
+      dataSource,
+      isCash,
+      marketPriceAtEndDate:
+        marketSymbolMap[endDateString]?.[assetProfileIdentifier]
+    });
+
+    if (
+      !unitPriceAtEndDate ||
+      (!unitPriceAtStartDate && isBefore(dateOfFirstActivity, start))
+    ) {
+      // A missing market price can only affect the quantity which is held. The
+      // dividends, the interest and the liabilities do not hold any quantity
+      // and are therefore not in error.
+      const hasActivitiesWithQuantity = activities.some(({ type }) => {
+        return ['BUY', 'SELL'].includes(type);
+      });
+
+      return {
+        hasMarketPrices: false,
+        holdingPerformance: {
+          ...this.getEmptyHoldingPerformance(),
+          totalDividend,
+          totalDividendInBaseCurrency,
+          totalInterestInBaseCurrency,
+          totalLiabilitiesInBaseCurrency,
+          hasErrors: hasActivitiesWithQuantity
+        }
+      };
+    }
+
+    activities = this.getActivitiesWithMarketPrices({
+      activities,
+      chartDates,
+      endDateString,
+      marketSymbolMap,
+      startDateString,
+      unitPriceAtEndDate,
+      unitPriceAtStartDate,
+      assetProfile: {
+        dataSource,
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
+      }
+    });
+
+    const holdingValuation = this.getHoldingValuation({
+      activities,
+      exchangeRates,
+      unitPriceAtStartDate
+    });
+
+    return {
+      activities,
+      dateOfFirstActivity,
+      holdingValuation,
+      totalDividend,
+      totalDividendInBaseCurrency,
+      totalInterestInBaseCurrency,
+      totalLiabilitiesInBaseCurrency,
+      unitPriceAtEndDate,
+      hasMarketPrices: true
+    };
+  }
+
   public async getInterestInBaseCurrency() {
     await this.snapshotPromise;
 
@@ -1558,6 +1706,64 @@ export abstract class PortfolioCalculator {
       totalDividendInBaseCurrency,
       totalInterestInBaseCurrency,
       totalLiabilitiesInBaseCurrency
+    };
+  }
+
+  /**
+   * Returns the totals of the positions which do not depend on the
+   * performance calculation type
+   */
+  protected getTotalsOfPositions(positions: PortfolioCalculatorHolding[]) {
+    let currentValueInBaseCurrency = new Big(0);
+    let hasErrors = false;
+    let totalFeesWithCurrencyEffect = new Big(0);
+    let totalInvestment = new Big(0);
+    let totalInvestmentWithCurrencyEffect = new Big(0);
+
+    for (const currentPosition of positions) {
+      if (currentPosition.valueInBaseCurrency) {
+        currentValueInBaseCurrency = currentValueInBaseCurrency.plus(
+          currentPosition.valueInBaseCurrency
+        );
+      } else {
+        hasErrors = true;
+      }
+
+      if (!currentPosition.includeInPerformance) {
+        continue;
+      }
+
+      if (currentPosition.feeInBaseCurrency) {
+        totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
+          currentPosition.feeInBaseCurrency
+        );
+      }
+
+      if (currentPosition.investment) {
+        totalInvestment = totalInvestment.plus(currentPosition.investment);
+
+        totalInvestmentWithCurrencyEffect =
+          totalInvestmentWithCurrencyEffect.plus(
+            currentPosition.investmentWithCurrencyEffect
+          );
+      } else {
+        hasErrors = true;
+      }
+
+      if (
+        !currentPosition.grossPerformance &&
+        !currentPosition.quantity.eq(0)
+      ) {
+        hasErrors = true;
+      }
+    }
+
+    return {
+      currentValueInBaseCurrency,
+      hasErrors,
+      totalFeesWithCurrencyEffect,
+      totalInvestment,
+      totalInvestmentWithCurrencyEffect
     };
   }
 

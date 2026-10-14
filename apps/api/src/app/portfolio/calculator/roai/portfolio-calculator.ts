@@ -2,7 +2,6 @@ import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/po
 import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accumulated-values.interface';
 import { AverageInvestmentItem } from '@ghostfolio/api/app/portfolio/interfaces/average-investment-item.interface';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
-import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { WeightedInvestment } from '@ghostfolio/api/app/portfolio/interfaces/weighted-investment.interface';
 import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
@@ -10,11 +9,7 @@ import {
   getAnnualizedPerformancePercent,
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
-import {
-  DATE_FORMAT,
-  getAssetProfileIdentifier,
-  parseDate
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HistoricalDataItem
@@ -24,63 +19,30 @@ import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
-import {
-  differenceInDays,
-  eachYearOfInterval,
-  format,
-  isBefore,
-  isThisYear
-} from 'date-fns';
+import { differenceInDays, format, isBefore } from 'date-fns';
 import { sortedIndex } from 'lodash-es';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(
     positions: PortfolioCalculatorHolding[]
   ): PortfolioSnapshot {
-    let currentValueInBaseCurrency = new Big(0);
-    let hasErrors = false;
+    const totalsOfPositions = this.getTotalsOfPositions(positions);
+
+    const {
+      currentValueInBaseCurrency,
+      totalFeesWithCurrencyEffect,
+      totalInvestment,
+      totalInvestmentWithCurrencyEffect
+    } = totalsOfPositions;
+
+    let { hasErrors } = totalsOfPositions;
     let totalAverageInvestment = new Big(0);
     let totalAverageInvestmentWithCurrencyEffect = new Big(0);
-    let totalFeesWithCurrencyEffect = new Big(0);
     const totalInterestWithCurrencyEffect = new Big(0);
-    let totalInvestment = new Big(0);
-    let totalInvestmentWithCurrencyEffect = new Big(0);
 
     for (const currentPosition of positions) {
-      if (currentPosition.valueInBaseCurrency) {
-        currentValueInBaseCurrency = currentValueInBaseCurrency.plus(
-          currentPosition.valueInBaseCurrency
-        );
-      } else {
-        hasErrors = true;
-      }
-
       if (!currentPosition.includeInPerformance) {
         continue;
-      }
-
-      if (currentPosition.feeInBaseCurrency) {
-        totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
-          currentPosition.feeInBaseCurrency
-        );
-      }
-
-      if (currentPosition.investment) {
-        totalInvestment = totalInvestment.plus(currentPosition.investment);
-
-        totalInvestmentWithCurrencyEffect =
-          totalInvestmentWithCurrencyEffect.plus(
-            currentPosition.investmentWithCurrencyEffect
-          );
-      } else {
-        hasErrors = true;
-      }
-
-      if (
-        !currentPosition.grossPerformance &&
-        !currentPosition.quantity.eq(0)
-      ) {
-        hasErrors = true;
       }
 
       if (currentPosition.averageInvestment) {
@@ -318,98 +280,41 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
-    const assetProfileIdentifier = getAssetProfileIdentifier({
+    const holdingValuationOfPeriod = this.getHoldingValuationOfPeriod({
+      chartDates,
       dataSource,
+      end,
+      exchangeRates,
+      marketSymbolMap,
+      start,
       symbol
     });
 
-    let activities: PortfolioCalculatorActivityItem[] =
-      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? [];
-
-    const isCash = activities[0]?.assetProfile?.assetSubClass === 'CASH';
-
-    if (activities.length <= 0) {
-      return this.getEmptyHoldingPerformance();
+    if (holdingValuationOfPeriod.hasMarketPrices === false) {
+      return holdingValuationOfPeriod.holdingPerformance;
     }
 
-    // The dividends, the interest and the liabilities are derived from the
-    // activities only. Accumulate them upfront so that they survive the bail
-    // out for symbols without a market price below.
     const {
+      activities,
+      dateOfFirstActivity,
+      holdingValuation: {
+        currentValues,
+        currentValuesWithCurrencyEffect,
+        dividendValuesWithCurrencyEffect,
+        initialValue,
+        investmentValuesAccumulated,
+        investmentValuesAccumulatedWithCurrencyEffect,
+        investmentValuesWithCurrencyEffect,
+        items,
+        netPerformanceValues,
+        netPerformanceValuesWithCurrencyEffect
+      },
       totalDividend,
       totalDividendInBaseCurrency,
       totalInterestInBaseCurrency,
-      totalLiabilitiesInBaseCurrency
-    } = this.getTotalsFromActivities({ activities, exchangeRates });
-
-    const dateOfFirstActivity = parseDate(activities[0].date);
-
-    const endDateString = format(end, DATE_FORMAT);
-    const startDateString = format(start, DATE_FORMAT);
-
-    const unitPriceAtStartDate =
-      marketSymbolMap[startDateString]?.[assetProfileIdentifier];
-
-    const unitPriceAtEndDate = this.getUnitPriceAtEndDate({
-      activities,
-      dataSource,
-      isCash,
-      marketPriceAtEndDate:
-        marketSymbolMap[endDateString]?.[assetProfileIdentifier]
-    });
-
-    if (
-      !unitPriceAtEndDate ||
-      (!unitPriceAtStartDate && isBefore(dateOfFirstActivity, start))
-    ) {
-      // A missing market price can only affect the quantity which is held. The
-      // dividends, the interest and the liabilities do not hold any quantity
-      // and are therefore not in error.
-      const hasActivitiesWithQuantity = activities.some(({ type }) => {
-        return ['BUY', 'SELL'].includes(type);
-      });
-
-      return {
-        ...this.getEmptyHoldingPerformance(),
-        totalDividend,
-        totalDividendInBaseCurrency,
-        totalInterestInBaseCurrency,
-        totalLiabilitiesInBaseCurrency,
-        hasErrors: hasActivitiesWithQuantity
-      };
-    }
-
-    activities = this.getActivitiesWithMarketPrices({
-      activities,
-      chartDates,
-      endDateString,
-      marketSymbolMap,
-      startDateString,
-      unitPriceAtEndDate,
-      unitPriceAtStartDate,
-      assetProfile: {
-        dataSource,
-        symbol,
-        assetSubClass: isCash ? 'CASH' : undefined
-      }
-    });
-
-    const {
-      currentValues,
-      currentValuesWithCurrencyEffect,
-      dividendValuesWithCurrencyEffect,
-      initialValue,
-      investmentValuesAccumulated,
-      investmentValuesAccumulatedWithCurrencyEffect,
-      investmentValuesWithCurrencyEffect,
-      items,
-      netPerformanceValues,
-      netPerformanceValuesWithCurrencyEffect
-    } = this.getHoldingValuation({
-      activities,
-      exchangeRates,
-      unitPriceAtStartDate
-    });
+      totalLiabilitiesInBaseCurrency,
+      unitPriceAtEndDate
+    } = holdingValuationOfPeriod;
 
     const indexOfStartActivity = items.findIndex(({ itemType }) => {
       return itemType === 'start';
@@ -602,22 +507,7 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       [key: DateRange]: Big;
     } = {};
 
-    for (const dateRange of [
-      '1d',
-      '1y',
-      '5y',
-      'max',
-      'mtd',
-      'wtd',
-      'ytd',
-      ...eachYearOfInterval({ end, start })
-        .filter((date) => {
-          return !isThisYear(date);
-        })
-        .map((date) => {
-          return format(date, 'yyyy');
-        })
-    ] as DateRange[]) {
+    for (const dateRange of this.getDateRanges({ end, start })) {
       const dateInterval = getIntervalFromDateRange({ dateRange });
       const endDate = dateInterval.endDate;
       let startDate = dateInterval.startDate;
