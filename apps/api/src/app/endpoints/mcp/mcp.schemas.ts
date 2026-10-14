@@ -11,14 +11,12 @@ import {
   SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 import {
-  isAccountBalanceInFuture,
+  isValidAccountBalanceDate,
   isValidCurrencyCode,
-  isValidDateAfter1970,
-  resetHours
+  isValidDateAfter1970
 } from '@ghostfolio/common/helper';
 
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
-import { parseISO } from 'date-fns';
 import { z } from 'zod';
 
 const DATA_SOURCE_PARAMETER_ERROR = `Invalid option: expected one of ${Object.values(DataSource).join('|')} or a data source as given by a tool`;
@@ -188,14 +186,16 @@ export const UPDATE_ACCOUNT_BALANCE_PARAMETERS = z.object({
   balance: z
     .number()
     .describe('The cash balance of the account in the currency of the account'),
-  date: z
-    .string()
-    .refine(isValidDateAfter1970)
-    .refine(
-      (date) => {
-        return !isAccountBalanceInFuture({ date: resetHours(parseISO(date)) });
-      },
-      { error: 'The date must not be in the future' }
-    )
+  date: z.iso
+    .date({
+      abort: true,
+      error: 'The date must be an ISO 8601 date, for example 2024-01-01'
+    })
+    .refine(isValidDateAfter1970, {
+      error: 'The date must be after 1970-01-01'
+    })
+    .refine(isValidAccountBalanceDate, {
+      error: 'The date must not be in the future'
+    })
     .describe('The date of the cash balance, as an ISO 8601 date')
 });

@@ -280,7 +280,9 @@ export class McpService {
       userId: account.userId
     });
 
-    return this.getTextResult('Updated the cash balance of the account');
+    return this.getTextResult(
+      `Updated the cash balance of the account at ${date}`
+    );
   }
 
   private getHoldingFilterParameters({

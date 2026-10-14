@@ -700,7 +700,10 @@ describe('McpService', () => {
 
       expect(await mcpService.updateAccountBalance(parameters)).toEqual({
         content: [
-          { text: 'Updated the cash balance of the account', type: 'text' }
+          {
+            text: 'Updated the cash balance of the account at 2024-01-01',
+            type: 'text'
+          }
         ]
       });
 

@@ -7,10 +7,8 @@ import {
   SEARCH_QUERY_MINIMUM_LENGTH,
   SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
 
 import { DataSource } from '@prisma/client';
-import { addDays, format } from 'date-fns';
 
 import {
   GET_ACCOUNTS_PARAMETERS,
@@ -317,6 +315,14 @@ describe('SEARCH_ASSET_PROFILES_PARAMETERS', () => {
 });
 
 describe('UPDATE_ACCOUNT_BALANCE_PARAMETERS', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-09-03T23:30:00.000Z'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   function parse(parameters: Record<string, unknown>) {
     return UPDATE_ACCOUNT_BALANCE_PARAMETERS.safeParse({
       accountId: 'account-id',
@@ -327,7 +333,7 @@ describe('UPDATE_ACCOUNT_BALANCE_PARAMETERS', () => {
   }
 
   it('Accepts a cash balance of today', () => {
-    expect(parse({ date: format(new Date(), DATE_FORMAT) })).toBe(true);
+    expect(parse({ date: '2026-09-03' })).toBe(true);
   });
 
   it('Accepts a negative cash balance', () => {
@@ -339,12 +345,15 @@ describe('UPDATE_ACCOUNT_BALANCE_PARAMETERS', () => {
   });
 
   it('Refuses a date at or before the epoch', () => {
-    expect(parse({ date: '0000-01-01' })).toBe(false);
+    expect(parse({ date: '1969-12-31' })).toBe(false);
+    expect(parse({ date: '1970-01-01' })).toBe(false);
+  });
+
+  it('Refuses a date and time', () => {
+    expect(parse({ date: '2024-01-01T00:30:00+02:00' })).toBe(false);
   });
 
   it('Refuses a date in the future', () => {
-    expect(parse({ date: format(addDays(new Date(), 2), DATE_FORMAT) })).toBe(
-      false
-    );
+    expect(parse({ date: '2026-09-05' })).toBe(false);
   });
 });
