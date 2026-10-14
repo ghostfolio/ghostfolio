@@ -35,9 +35,16 @@
               <ng-container i18n>Performance Calculation</ng-container>
             </div>
             <div class="ps-1 w-50">
-              <mat-form-field appearance="outline" class="w-100 without-hint">
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                [class.without-hint]="!hasImpersonationId"
+              >
                 <mat-select
                   name="performanceCalculationType"
+                  [disabled]="
+                    hasImpersonationId || !hasPermissionToUpdateUserSettings
+                  "
                   [value]="user.settings.performanceCalculationType"
                   (selectionChange)="
                     onChangeUserSetting(
@@ -53,6 +60,11 @@
                     >Return on Investment (ROI)</mat-option
                   >
                 </mat-select>
+                @if (hasImpersonationId) {
+                  <mat-hint class="mt-1 text-muted text-truncate" i18n
+                    >Derived from the portfolio you are viewing</mat-hint
+                  >
+                }
               </mat-form-field>
             </div>
           </div>
