@@ -389,6 +389,8 @@ export abstract class PortfolioCalculator {
       [assetProfileIdentifier: string]: {
         averageInvestmentValues: { [date: string]: Big };
         averageInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
+        buyValuesAccumulated: { [date: string]: Big };
+        buyValuesAccumulatedWithCurrencyEffect: { [date: string]: Big };
         currentValues: { [date: string]: Big };
         currentValuesWithCurrencyEffect: { [date: string]: Big };
         dividendValuesWithCurrencyEffect: { [date: string]: Big };
@@ -425,6 +427,8 @@ export abstract class PortfolioCalculator {
         averageInvestmentValues,
         averageInvestmentValuesWithCurrencyEffect,
         averageInvestmentWithCurrencyEffect,
+        buyValuesAccumulated,
+        buyValuesAccumulatedWithCurrencyEffect,
         currentValues,
         currentValuesWithCurrencyEffect,
         dividendValuesWithCurrencyEffect,
@@ -474,6 +478,8 @@ export abstract class PortfolioCalculator {
           ? {
               averageInvestmentValues: {},
               averageInvestmentValuesWithCurrencyEffect: {},
+              buyValuesAccumulated: {},
+              buyValuesAccumulatedWithCurrencyEffect: {},
               currentValues: {},
               currentValuesWithCurrencyEffect: {},
               dividendValuesWithCurrencyEffect: {},
@@ -487,6 +493,8 @@ export abstract class PortfolioCalculator {
           : {
               averageInvestmentValues,
               averageInvestmentValuesWithCurrencyEffect,
+              buyValuesAccumulated,
+              buyValuesAccumulatedWithCurrencyEffect,
               currentValues,
               currentValuesWithCurrencyEffect,
               dividendValuesWithCurrencyEffect,
@@ -625,6 +633,14 @@ export abstract class PortfolioCalculator {
             dateString
           ] ?? new Big(0);
 
+        const buyValueAccumulated =
+          assetProfileValues.buyValuesAccumulated?.[dateString] ?? new Big(0);
+
+        const buyValueAccumulatedWithCurrencyEffect =
+          assetProfileValues.buyValuesAccumulatedWithCurrencyEffect?.[
+            dateString
+          ] ?? new Big(0);
+
         accumulatedValuesByDate[dateString] = {
           investmentValueWithCurrencyEffect: (
             accumulatedValuesByDate[dateString]
@@ -638,6 +654,13 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalAverageInvestmentValueWithCurrencyEffect ?? new Big(0)
           ).add(averageInvestmentValueWithCurrencyEffect),
+          totalBuyValue: (
+            accumulatedValuesByDate[dateString]?.totalBuyValue ?? new Big(0)
+          ).add(buyValueAccumulated),
+          totalBuyValueWithCurrencyEffect: (
+            accumulatedValuesByDate[dateString]
+              ?.totalBuyValueWithCurrencyEffect ?? new Big(0)
+          ).add(buyValueAccumulatedWithCurrencyEffect),
           totalCashValueWithCurrencyEffect: (
             accumulatedValuesByDate[dateString]
               ?.totalCashValueWithCurrencyEffect ?? new Big(0)
@@ -932,6 +955,8 @@ export abstract class PortfolioCalculator {
       averageInvestmentValues: {},
       averageInvestmentValuesWithCurrencyEffect: {},
       averageInvestmentWithCurrencyEffect: new Big(0),
+      buyValuesAccumulated: {},
+      buyValuesAccumulatedWithCurrencyEffect: {},
       currentValues: {},
       currentValuesWithCurrencyEffect: {},
       dividendValuesWithCurrencyEffect: {},
@@ -1000,6 +1025,8 @@ export abstract class PortfolioCalculator {
     unitPriceAtStartDate: Big | undefined;
   }): HoldingValuation {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
+    const buyValuesAccumulated: { [date: string]: Big } = {};
+    const buyValuesAccumulatedWithCurrencyEffect: { [date: string]: Big } = {};
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
     const dividendValuesWithCurrencyEffect: { [date: string]: Big } = {};
@@ -1033,6 +1060,10 @@ export abstract class PortfolioCalculator {
     let totalInvestmentFromBuyTransactions = new Big(0);
     let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
+    let totalBuyValue = new Big(0);
+    let totalBuyValueAtStartDate = new Big(0);
+    let totalBuyValueAtStartDateWithCurrencyEffect = new Big(0);
+    let totalBuyValueWithCurrencyEffect = new Big(0);
     let totalQuantity = new Big(0);
     let totalQuantityFromBuyTransactions = new Big(0);
 
@@ -1127,6 +1158,12 @@ export abstract class PortfolioCalculator {
           totalInvestmentFromBuyTransactionsWithCurrencyEffect.plus(
             transactionInvestmentWithCurrencyEffect
           );
+
+        totalBuyValue = totalBuyValue.plus(transactionInvestment);
+
+        totalBuyValueWithCurrencyEffect = totalBuyValueWithCurrencyEffect.plus(
+          transactionInvestmentWithCurrencyEffect
+        );
       } else if (activity.type === 'SELL') {
         if (totalQuantity.gt(0)) {
           const remainingQuantity = totalQuantity.minus(activity.quantity);
@@ -1277,6 +1314,11 @@ export abstract class PortfolioCalculator {
       if (activity.itemType === 'start') {
         dividendsAtStartDateWithCurrencyEffect = dividendsWithCurrencyEffect;
         feesAtStartDate = fees;
+        totalBuyValueAtStartDate = totalBuyValue;
+
+        totalBuyValueAtStartDateWithCurrencyEffect =
+          totalBuyValueWithCurrencyEffect;
+
         feesAtStartDateWithCurrencyEffect = feesWithCurrencyEffect;
         grossPerformanceAtStartDate = grossPerformance;
 
@@ -1285,6 +1327,15 @@ export abstract class PortfolioCalculator {
       }
 
       if (i > indexOfStartActivity) {
+        buyValuesAccumulated[activity.date] = totalBuyValue.minus(
+          totalBuyValueAtStartDate
+        );
+
+        buyValuesAccumulatedWithCurrencyEffect[activity.date] =
+          totalBuyValueWithCurrencyEffect.minus(
+            totalBuyValueAtStartDateWithCurrencyEffect
+          );
+
         currentValues[activity.date] = valueOfInvestment;
 
         currentValuesWithCurrencyEffect[activity.date] =
@@ -1366,6 +1417,8 @@ export abstract class PortfolioCalculator {
     }
 
     return {
+      buyValuesAccumulated,
+      buyValuesAccumulatedWithCurrencyEffect,
       currentValues,
       currentValuesWithCurrencyEffect,
       dividendValuesWithCurrencyEffect,

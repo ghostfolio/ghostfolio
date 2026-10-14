@@ -4,6 +4,8 @@ export interface AccumulatedValues {
   investmentValueWithCurrencyEffect: Big;
   totalAverageInvestmentValue: Big;
   totalAverageInvestmentValueWithCurrencyEffect: Big;
+  totalBuyValue: Big;
+  totalBuyValueWithCurrencyEffect: Big;
   totalCashValueWithCurrencyEffect: Big;
   totalCurrentValue: Big;
   totalCurrentValueWithCurrencyEffect: Big;

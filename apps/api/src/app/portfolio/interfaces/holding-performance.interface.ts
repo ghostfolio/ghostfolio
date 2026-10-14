@@ -11,6 +11,12 @@ export interface HoldingPerformance {
     [date: string]: Big;
   };
   averageInvestmentWithCurrencyEffect: Big;
+  buyValuesAccumulated: {
+    [date: string]: Big;
+  };
+  buyValuesAccumulatedWithCurrencyEffect: {
+    [date: string]: Big;
+  };
   currentValues: {
     [date: string]: Big;
   };

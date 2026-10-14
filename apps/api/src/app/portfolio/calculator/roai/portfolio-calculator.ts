@@ -298,6 +298,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       activities,
       dateOfFirstActivity,
       holdingValuation: {
+        buyValuesAccumulated,
+        buyValuesAccumulatedWithCurrencyEffect,
         currentValues,
         currentValuesWithCurrencyEffect,
         dividendValuesWithCurrencyEffect,
@@ -619,6 +621,8 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
     return {
       averageInvestmentValues,
       averageInvestmentValuesWithCurrencyEffect,
+      buyValuesAccumulated,
+      buyValuesAccumulatedWithCurrencyEffect,
       currentValues,
       currentValuesWithCurrencyEffect,
       dividendValuesWithCurrencyEffect,
