@@ -70,6 +70,7 @@ export class AccountBalanceService {
         value: balance
       },
       where: {
+        userId,
         accountId_date: {
           accountId,
           date: resetHours(parseISO(date))
