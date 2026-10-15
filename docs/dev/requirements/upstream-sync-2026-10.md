@@ -1,6 +1,6 @@
 # 同步上游官方 3.86.0：需求与开发文档
 
-- 状态：进行中（分支 `feat/upstream-sync-3.86`）
+- 状态：方案修订中（分支 `feat/upstream-sync-3.86`，已完成 A1–A3；试合并已做，等待确认冲突处理规则）
 - 上游：`ghostfolio/ghostfolio` `main`，3.86.0（2026-10-15，`204f0d857`）
 - 上次合并点：`de975a599`（2026-07-13），其后上游新增 699 个提交，约 40 个版本
 - 相关：[ADR 0002](../adr/0002-mcp-single-write-exception.md)、[ADR 0003](../adr/0003-rebalancing-base-is-actual-value.md)、[MCP 服务端](../architecture/mcp-server.md)
@@ -13,14 +13,17 @@
 
 ## 2. 原则
 
-1. **以官方为准，本仓库只做增量。** 官方已经覆盖的行为，冲突时采用官方实现；本仓库独有的
-   功能（投资计划、MCP、账户本金等）保留。
+1. **官方为底，本仓库只做增量；但不是一刀切。** 本仓库独有的功能（投资计划、MCP、账户本金、
+   AI 投资建议等）一律保留，不因“官方也有类似的”被替换（例如官方 MCP 只有 7 个工具、无 OAuth 和
+   投资计划，两个 MCP 并存）。两边都改过的文件按第 10 节的规则逐个决定：**改动更大的一方做底，把另一方的
+   改动重新接上**；官方已覆盖的行为（计算、校验、导入等）以官方实现为准。
 2. **之前对计算逻辑的微调，官方更合理时舍弃。** 每一处被舍弃的本仓库改动，必须在本文
    第 6 节登记原因，方便以后追溯。
-3. **逐提交摘取，保留溯源。** 用 `git cherry-pick -x`，提交信息里自带上游提交号；不做整包
-   合并（见第 7 节）。
+3. **合并到上游的 3.86.0 正式版，而不是逐提交摘取。** 逐提交摘取试过了：A4、A5 依赖上游
+   更早的一串提交，一项会牵出一串（见第 7 节）。合并能保留依赖关系。
 4. **一项一提交，每批后都要测试和构建。** 任何一批失败可以单独回退。
-5. **不把大版本升级混进来。** Angular、Prisma 新生成器、bootstrap 另做。
+5. **两个分支分开做。** 本分支只做“从上游同步”；bootstrap 5 升级留给下一个分支（它在上游历史的
+   最末尾，能干净地排除）。Angular 22 和 Prisma 新生成器拆不开，见第 7 节。
 
 ## 3. 范围与进度
 
@@ -86,23 +89,23 @@ Angular 21→22、Prisma 新生成器（`prisma-client`）迁移、bootstrap 4�
 | AI 报告、模型配置 | `endpoints/ai/`、`admin-model-provider` | 与 C5 冲突 |
 | 首页/关注列表 | `home-overview`、`home-watchlist` 等 | 关注列表市场价格列等 |
 
-## 5. 摘取方法
+## 5. 合并方法
 
 ```shell
 git switch feat/upstream-sync-3.86
-git cherry-pick -x <上游提交>     # 按本文顺序，一项一提交
+git merge --no-commit --no-ff ef47c0d1b      # 上游 3.86.0 正式版
+# 按第 10 节逐个解决冲突，再提交
 ```
 
-- 顺序：A → B（先前置重构）→ C。同一批内按上游时间顺序摘取。
-- 冲突处理：
-  1. 文件里只有官方的改动 → 直接接受。
-  2. 本仓库在同一处也改了 → 默认采纳官方，再把本仓库字段（第 4 节）重新接上，并在第 6 节登记。
-  3. 官方的改动依赖尚未摘取的前置提交 → 回头补前置提交，不手工拼凑。
-- 每摘完一批：`npx tsc -p apps/api/tsconfig.app.json --noEmit`、`npx nx test api`、
-  `npx nx build api`；动了前端的再 `npx ngc -p apps/client/tsconfig.app.json --noEmit`。
-- 数据库：C6 等带 Prisma 迁移，摘取后在测试库上跑 `npx prisma migrate deploy`，确认迁移
-  能在带数据的库上通过，再上线。
-- 每一项完成后回到第 3 节把“状态”改成“已完成（提交号）”。
+- 先在内存里试算过：`git merge-tree --write-tree --name-only HEAD ef47c0d1b`，29 个文件冲突。
+- 解决冲突按第 10 节的表，其余文件（只有一方改过）自动合并。
+- 合并完成后依次：`npm install`、`npx prisma generate`、`npx tsc -p apps/api/tsconfig.app.json --noEmit`、
+  `npx ngc -p apps/client/tsconfig.app.json --noEmit`、`npx nx test api`、`npx nx build api`、
+  `npx nx build client`。
+- 数据库：合并带入上游的 Prisma 迁移（如“草稿”标签），在带数据的测试库上跑
+  `npx prisma migrate deploy` 通过后再上线。
+- 已摘取的 A1–A3 会在合并里自然去重。
+- 第 3 节的 A/B/C 清单改作**验收清单**：合并后逐项确认功能在，状态填“已验收”。
 
 ## 6. 被舍弃的本仓库改动
 
@@ -112,16 +115,37 @@ git cherry-pick -x <上游提交>     # 按本文顺序，一项一提交
 | --- | --- | --- | --- |
 | | | | |
 
-## 7. 为什么不整包合并
+## 7. 为什么改为合并，以及三项升级能否拆开
 
-试算 `git merge upstream/main`：28 个文件冲突，集中在组合计算、活动、AI、首页和分析页组件；
-并且有不报冲突的语义破坏：官方 3.63 把持仓从 map 改成数组，投资计划的再平衡和
-`fetchPortfolioSummary` 都按 map 使用，会悄悄算错。逐提交摘取能把这些问题分散到具体一项里处理。
+### 逐提交摘取行不通
 
-**已知破坏点（摘取 3.63 之后的提交前必须处理）**：`PortfolioService.getDetails().holdings`
-由 `{[symbol]: position}` 变为数组。受影响：`investment-plan.controller.ts`
-（`getRebalancing`、`fetchPortfolioSummary`）、`rebalancing.service.ts`（入参）、`cron.service.ts`、
-MCP 工具描述。
+A1–A3 摘取成功。A4（更新资产档案的归属检查）缺少前置改动，编译不过；A5（symbol 校验）依赖更早的
+DTO 校验提交，冲突。上游改动彼此依赖，一项会牵出一串。
+
+### 合并目标：3.86.0 正式版（`ef47c0d1b`，2026-10-13）
+
+不合并到最新 `main`，是因为最末尾 20 个提交里有 bootstrap 4→5 的升级（`c169311fa` 及三个
+样式类迁移提交，2026-10-14）。停在 3.86.0 正式版，就把 bootstrap 排除在本分支之外。
+
+### 三项升级的可拆分性
+
+| 升级 | 上游提交 | 能否排除 |
+| --- | --- | --- |
+| bootstrap 4→5 | `c169311fa`、`6ab615107`、`e88a2cb14`、`96d266f79`（10-14） | **能**：在历史末尾，停在 3.86.0 即可 |
+| Angular 21→22 | `d83d9cac5`（08-19），随后 `5af0c7f1c` 把服务迁到 Angular 22 的 `@Service()` | **不能**：699 个提交里 661 个在它之后，后续前端代码按 22 写 |
+| Prisma 新生成器 | `c1c73e145`（09-29，89 个文件） | **不能**：此后所有引用 `@prisma/client` 的代码都改了路径 |
+| `lodash`→`lodash-es` | `f46f77f35`（09-30） | 不能，同上 |
+
+因此本分支会带入 Angular 22 和 Prisma 新生成器。若一定要排除，只能停在 Angular 22 之前
+（2026-08-18，只含 38 个提交），那样 B、C 组几乎全部拿不到。
+
+### 已知的语义破坏（合并不会报冲突）
+
+官方 3.63 把持仓从 map 改成数组：`PortfolioService.getDetails().holdings` 由
+`{[symbol]: position}` 变为数组。受影响：`investment-plan.controller.ts`
+（`getRebalancing`、`fetchPortfolioSummary`）、`rebalancing.service.ts` 的入参、
+`cron.service.ts`、MCP 工具描述。这些地方有 `any` 类型，编译不会报错，需要逐处检查，
+并用 `rebalancing.service.spec.ts` 兜底。
 
 ## 8. 待决事项
 
@@ -141,3 +165,51 @@ MCP 工具描述。
 - [ ] 迁移在带数据的库上通过，并能回滚到备份
 - [ ] `GET /api/v1/health/liveness` 返回 200；停止容器时请求能处理完
 - [ ] 部署前备份数据库
+
+## 10. 试合并结果：29 个冲突文件的处理规则
+
+“我方 / 上游”是自上次合并点以来各自在该文件改动的行数。规则：改动更大的一方做底，另一方的
+改动重新接上；本仓库的功能面（投资计划、AI 建议等）以我方为主。
+
+### 官方为底，再接回本仓库的小改动
+
+| 文件 | 我方 / 上游 | 本仓库当初的改动 | 处理 |
+| --- | --- | --- | --- |
+| `portfolio.controller.ts` | 3 / 391 | 进入 overview 强制刷新（`refresh`） | 官方为底，接回 `refresh` |
+| `portfolio.service.ts` | 98 / 1369 | 账户本金 `investmentInBaseCurrency`、`refresh` | 官方为底，接回本金与 `refresh` |
+| `portfolio.service.spec.ts` | 121 / 1606 | 本金相关用例 | 官方为底，接回用例 |
+| `activities.controller.ts` | 12 / 247 | 活动筛选 | 官方为底，接回筛选参数 |
+| `activities-page.component.ts` | 93 / 199 | 活动筛选界面 | 官方为底，接回 |
+| `accounts-page.component.ts` | 4 / 357 | 持仓本金 | 官方为底，接回 |
+| `allocations-page.component.ts` | 31 / 342 | AI 建议、饼图调整、报错修复 | 官方为底，接回 |
+| `admin-page.routes.ts` | 6 / 55 | 投资计划管理页路由 | 官方为底，接回路由 |
+| `config.ts` | 3 / 122 | AI 相关常量 | 官方为底，接回常量 |
+| `benchmark.interface.ts` | 2 / 8 | 关注列表市场价格字段 | 官方为底，接回字段 |
+| `date-range.type.ts`、`calculation-helper.ts` | 6 / 12，22 / 35 | 折线图的日期范围选项 | 官方为底，接回我方选项 |
+| `symbol-autocomplete.component.html` | 1 / 3 | 小修 | 官方为底 |
+| `portfolio-summary.*` | 81 / 421 等 | 简单收益率、资金池三层 | 官方（已大改）为底，接回两块 |
+| `portfolio-performance.component.html` | 10 / 20 | 简单收益率 | 官方为底，接回 |
+| `holdings-table.component.*` | 47 / 85，16 / 77 | 本金、简单收益率列 | 官方为底，接回列 |
+| `README.md` | 36 / 117 | 文档入口 | 官方为底，保留我方文档链接 |
+
+### 我方为底，手工并入官方改动
+
+| 文件 | 我方 / 上游 | 说明 | 处理 |
+| --- | --- | --- | --- |
+| `line-chart.component.ts` | 675 / 134 | 我方重写较多（买入标记、日期范围、价格统计） | 我方为底，并入官方改动 |
+| `home-overview.component.ts`、`home-overview.html` | 21 / 83，52 / 62 | 智能投资计划入口、样式 | 我方为底，并入官方（如控股表） |
+| `holding-detail-dialog.component.ts` | 91 / 157 | 买入标记、简单收益率、Webhook | 两边都大，逐块合并 |
+| `libs/ui/.../data.service.ts` | 110 / 178 | 我方是投资计划等接口方法，官方也加了方法 | 两边都是新增，取并集 |
+
+### 需要你定的
+
+| 文件 | 问题 |
+| --- | --- |
+| `ai.controller.ts`（我方 110 / 上游 183） | 我方是 AI 投资建议和模型配置；上游是 Ghostfolio AI 导入交易（C5）。两个 AI 功能并存还是以官方为准？ |
+| `market-data.service.ts`（54 / 47） | 我方“分批下载数据”，上游同期重写了历史行情查询并加了缓存。倾向采用官方，舍弃我方改动，需确认。 |
+
+### 无冲突、直接保留
+
+`apps/api/src/app/investment-plan/`、`apps/api/src/app/mcp/`、`docs/`、投资计划页面、
+价格提醒等本仓库独有文件。官方的 MCP 在 `endpoints/mcp/`、路径 `/mcp`，与我方 `/api/v1/mcp`
+并存。
