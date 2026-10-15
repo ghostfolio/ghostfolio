@@ -12,7 +12,7 @@ import { Request, Response } from 'express';
 
 import { renderConsentPage, renderErrorPage } from './oauth-pages';
 import { OAuthError } from './oauth-utils';
-import { MCP_RESOURCE_PATH } from './oauth.constants';
+import { MCP_RESOURCE_PATH, getBaseUrl } from './oauth.constants';
 import { OAuthService } from './oauth.service';
 
 /**
@@ -38,16 +38,18 @@ export class OAuthController {
     '.well-known/oauth-authorization-server',
     `.well-known/oauth-authorization-server${MCP_RESOURCE_PATH}`
   ])
-  public getAuthorizationServerMetadata() {
-    return this.oAuthService.getAuthorizationServerMetadata();
+  public getAuthorizationServerMetadata(@Req() request: Request) {
+    return this.oAuthService.getAuthorizationServerMetadata(
+      getBaseUrl(request)
+    );
   }
 
   @Get([
     '.well-known/oauth-protected-resource',
     `.well-known/oauth-protected-resource${MCP_RESOURCE_PATH}`
   ])
-  public getProtectedResourceMetadata() {
-    return this.oAuthService.getProtectedResourceMetadata();
+  public getProtectedResourceMetadata(@Req() request: Request) {
+    return this.oAuthService.getProtectedResourceMetadata(getBaseUrl(request));
   }
 
   @Post('oauth/register')
@@ -62,7 +64,8 @@ export class OAuthController {
   public showConsentPage(@Req() request: Request, @Res() response: Response) {
     try {
       const authorizeRequest = this.oAuthService.parseAuthorizeRequest(
-        request.query
+        request.query,
+        getBaseUrl(request)
       );
 
       return this.sendHtml(
@@ -85,7 +88,10 @@ export class OAuthController {
   ) {
     try {
       const body = request.body ?? {};
-      const authorizeRequest = this.oAuthService.parseAuthorizeRequest(body);
+      const authorizeRequest = this.oAuthService.parseAuthorizeRequest(
+        body,
+        getBaseUrl(request)
+      );
 
       if (body.decision !== 'allow') {
         return this.redirectToClient(response, authorizeRequest, {

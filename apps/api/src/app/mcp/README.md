@@ -34,9 +34,11 @@ own (`oauth/`): protected-resource and authorization-server metadata under
 page at `/oauth/authorize`, and `/oauth/token` for `authorization_code` (PKCE
 S256 required) and `refresh_token`.
 
-- **Needs `ROOT_URL`** set to the public URL of the instance. It is the issuer,
-  the redirect base and the audience of every token; it is deliberately not
-  taken from the `Host` header.
+- **Public URL:** issuer, redirect base and token audience come from `ROOT_URL`
+  if set. Otherwise they are derived from `X-Forwarded-Proto`/`X-Forwarded-Host`
+  (or the request's own host). Set `ROOT_URL` explicitly when the reverse proxy
+  does not forward those headers: its built-in default is the listen address
+  (`http://0.0.0.0:3333`), which no client can reach.
 - **Consent:** the page asks for the Security Token you sign in with. There is no
   server-side browser session in Ghostfolio to reuse (the web app keeps its JWT
   client-side), so this is the sign-in. Accounts without a Security Token (for

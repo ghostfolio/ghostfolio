@@ -128,6 +128,8 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
 
     if (
       path.startsWith('/api/') ||
+      // OAuth endpoints of the MCP server, served by controllers
+      path.startsWith('/oauth/') ||
       path.startsWith(STORYBOOK_PATH) ||
       this.isFileRequest(path) ||
       !environment.production

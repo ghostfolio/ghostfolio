@@ -12,7 +12,7 @@ import { Request, Response } from 'express';
 
 import { McpAuthService } from './mcp-auth.service';
 import { McpService } from './mcp.service';
-import { OAuthService } from './oauth/oauth.service';
+import { getBaseUrl } from './oauth/oauth.constants';
 
 /**
  * Model Context Protocol endpoint (Streamable HTTP, stateless, JSON
@@ -28,8 +28,7 @@ export class McpController {
 
   public constructor(
     private readonly mcpAuthService: McpAuthService,
-    private readonly mcpService: McpService,
-    private readonly oAuthService: OAuthService
+    private readonly mcpService: McpService
   ) {}
 
   @Delete()
@@ -47,15 +46,17 @@ export class McpController {
     @Req() request: Request,
     @Res() response: Response
   ) {
+    const baseUrl = getBaseUrl(request);
     const authorizationToken = await this.mcpAuthService.getAuthorizationToken(
-      request.headers.authorization
+      request.headers.authorization,
+      baseUrl
     );
 
     if (!authorizationToken) {
       // Tells an OAuth-capable client (RFC 9728) where to start the flow
       response.setHeader(
         'WWW-Authenticate',
-        `Bearer resource_metadata="${this.oAuthService.resourceMetadataUrl}"`
+        `Bearer resource_metadata="${baseUrl}/.well-known/oauth-protected-resource"`
       );
 
       return response.status(401).json({

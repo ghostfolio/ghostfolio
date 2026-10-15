@@ -163,6 +163,8 @@ describe('McpService', () => {
   });
 });
 
+const BASE_URL = 'https://example.com';
+
 describe('McpAuthService', () => {
   const jwtService = {
     sign: jest.fn(() => 'minted-jwt'),
@@ -193,12 +195,18 @@ describe('McpAuthService', () => {
   });
 
   it('rejects a missing or non-bearer header', async () => {
-    expect(await service.getAuthorizationToken(undefined)).toBeUndefined();
-    expect(await service.getAuthorizationToken('Basic abc')).toBeUndefined();
+    expect(
+      await service.getAuthorizationToken(undefined, BASE_URL)
+    ).toBeUndefined();
+    expect(
+      await service.getAuthorizationToken('Basic abc', BASE_URL)
+    ).toBeUndefined();
   });
 
   it('passes a valid JWT through', async () => {
-    expect(await service.getAuthorizationToken('Bearer a.b.c')).toBe('a.b.c');
+    expect(await service.getAuthorizationToken('Bearer a.b.c', BASE_URL)).toBe(
+      'a.b.c'
+    );
   });
 
   it('rejects an invalid JWT', async () => {
@@ -206,15 +214,17 @@ describe('McpAuthService', () => {
       throw new Error('invalid');
     });
 
-    expect(await service.getAuthorizationToken('Bearer a.b.c')).toBeUndefined();
+    expect(
+      await service.getAuthorizationToken('Bearer a.b.c', BASE_URL)
+    ).toBeUndefined();
   });
 
   it('exchanges an API key for a short-lived JWT', async () => {
     apiKeyService.getUserByApiKey.mockResolvedValueOnce({ id: 'user-1' });
 
-    expect(await service.getAuthorizationToken('Bearer key-123')).toBe(
-      'minted-jwt'
-    );
+    expect(
+      await service.getAuthorizationToken('Bearer key-123', BASE_URL)
+    ).toBe('minted-jwt');
     expect(jwtService.sign).toHaveBeenCalledWith(
       { id: 'user-1' },
       { expiresIn: '10m' }
@@ -224,7 +234,7 @@ describe('McpAuthService', () => {
   it('exchanges the Security Token for a short-lived JWT', async () => {
     userService.users.mockResolvedValueOnce([{ id: 'user-2' }]);
 
-    expect(await service.getAuthorizationToken('Bearer secret')).toBe(
+    expect(await service.getAuthorizationToken('Bearer secret', BASE_URL)).toBe(
       'minted-jwt'
     );
     expect(userService.users).toHaveBeenCalledWith({
@@ -237,6 +247,8 @@ describe('McpAuthService', () => {
   });
 
   it('rejects an unknown credential', async () => {
-    expect(await service.getAuthorizationToken('Bearer nope')).toBeUndefined();
+    expect(
+      await service.getAuthorizationToken('Bearer nope', BASE_URL)
+    ).toBeUndefined();
   });
 });
