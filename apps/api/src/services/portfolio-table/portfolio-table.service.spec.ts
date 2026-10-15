@@ -119,12 +119,14 @@ function createHolding({
   assetClass = AssetClass.EQUITY,
   assetSubClass = AssetSubClass.STOCK,
   dataSource = DataSource.YAHOO,
+  isin,
   symbol = 'AAPL'
 }: {
   allocationInPercentage?: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
   dataSource?: DataSource;
+  isin?: string;
   symbol?: string;
 } = {}) {
   return {
@@ -134,6 +136,7 @@ function createHolding({
       assetClass,
       assetSubClass,
       dataSource,
+      isin,
       symbol,
       currency: 'CHF',
       name: `Name of ${symbol}`
@@ -317,6 +320,7 @@ describe('PortfolioTableService', () => {
     it('gives no column with a monetary value', () => {
       expect(PortfolioTableService.getHoldingsTableColumnNames()).toEqual([
         'Name',
+        'ISIN',
         'Symbol',
         'Data Source',
         'Currency',
@@ -602,6 +606,18 @@ describe('PortfolioTableService', () => {
 
       expect(row).toContain('| USD |  | CHF |');
       expect(row).not.toContain(encodeDataSource(DataSource.YAHOO));
+    });
+
+    it('gives the ISIN', async () => {
+      const result = await getHoldingsTable([
+        createHolding({ isin: 'US0378331005' })
+      ]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain('| Name of AAPL | US0378331005 | AAPL |');
     });
 
     it('gives the translation of the asset class and of the asset sub class', async () => {

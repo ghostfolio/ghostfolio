@@ -97,6 +97,9 @@ describe('AiService', () => {
       getAccounts: jest.fn().mockResolvedValue({
         content: [{ text: '## Accounts', type: 'text' }]
       }),
+      getPortfolio: jest.fn().mockResolvedValue({
+        content: [{ text: '## Holdings', type: 'text' }]
+      }),
       searchAssetProfiles: jest.fn().mockResolvedValue({
         content: [{ text: '{ "assetProfiles": [] }', type: 'text' }]
       })
@@ -522,6 +525,24 @@ describe('AiService', () => {
         });
     }
 
+    function mockHoldings() {
+      jest.mocked(mcpService.getPortfolio).mockResolvedValue({
+        content: [
+          {
+            text: [
+              '## Holdings',
+              '',
+              '| Name | ISIN | Symbol | Data Source | Currency |',
+              '| :-- | :-- | :-- | :-- | :-- |',
+              '| Vanguard FTSE All-World UCITS ETF | IE00BK5BQT80 | VWRA.SW | YAHOO | USD |',
+              '| US Dollar |  | USD |  | USD |'
+            ].join('\n'),
+            type: 'text'
+          }
+        ]
+      });
+    }
+
     it('Gives an activity for each row whose asset matches an asset profile', async () => {
       const row = createActivityRow({ currency: null });
 
@@ -673,7 +694,7 @@ describe('AiService', () => {
       );
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        'Left out 1 asset matches which the search of their asset did not give'
+        'Left out 1 asset matches which neither the search of their asset nor the holdings gave'
       );
     });
 
@@ -707,8 +728,91 @@ describe('AiService', () => {
       });
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        'Left out 1 asset matches which the search of their asset did not give'
+        'Left out 1 asset matches which neither the search of their asset nor the holdings gave'
       );
+    });
+
+    it('Gives an activity for a row whose asset matches a holding which no search gave', async () => {
+      const row = createActivityRow({
+        accountName: null,
+        currency: 'CHF',
+        isin: 'IE00BK5BQT80',
+        name: 'Vanguard FTSE All-World UCITS ETF USD Accumulating',
+        symbol: null
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'VWRA.SW' }
+        ]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({
+        activities: [
+          expect.objectContaining({
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            symbol: 'VWRA.SW'
+          })
+        ],
+        rowsWithoutMatch: []
+      });
+    });
+
+    it('Gives a row whose asset match has the symbol of a holding but another data source as a row without a match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      const row = createActivityRow({ accountName: null });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          { currency: 'USD', dataSource: 'MANUAL', id: 0, symbol: 'VWRA.SW' }
+        ]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+    });
+
+    it('Gives a row whose asset match is a cash position of the holdings as a row without a match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      const row = createActivityRow({ accountName: null });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [{ currency: 'USD', dataSource: '', id: 0, symbol: 'USD' }]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
     });
 
     it('Matches a row without an account name by the broker of the file', async () => {
@@ -895,7 +999,8 @@ describe('AiService', () => {
             name: 'Apple Inc.',
             symbol: 'AAPL'
           }
-        ]
+        ],
+        holdings: '## Holdings'
       });
     });
 
@@ -1114,6 +1219,78 @@ describe('AiService', () => {
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
         'Could not get the accounts: Database failed'
+      );
+    });
+
+    it('Gets the holdings with the tool of the server of the Model Context Protocol without values', async () => {
+      mockRowMatches({});
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow()]
+      });
+
+      expect(mcpService.getPortfolio).toHaveBeenCalledWith({
+        userId,
+        withValues: false
+      });
+    });
+
+    it('Does not get the holdings without an asset', async () => {
+      mockRowMatches({});
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [
+          createActivityRow({
+            fee: 5,
+            name: 'Custody fee',
+            quantity: 0,
+            type: ActivityType.FEE,
+            unitPrice: 0
+          })
+        ]
+      });
+
+      expect(mcpService.getPortfolio).not.toHaveBeenCalled();
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).not.toHaveProperty('holdings');
+    });
+
+    it('Passes no holdings to the model and continues if the holdings cannot be got', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      jest
+        .mocked(mcpService.getPortfolio)
+        .mockRejectedValueOnce(new Error('Calculation failed'));
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow()]
+      });
+
+      expect(activities).toEqual([expect.objectContaining({ symbol: 'AAPL' })]);
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).not.toHaveProperty('holdings');
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Could not get the holdings: Calculation failed'
       );
     });
 

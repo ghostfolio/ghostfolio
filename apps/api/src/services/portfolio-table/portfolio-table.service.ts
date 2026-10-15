@@ -232,6 +232,12 @@ export class PortfolioTableService {
       },
       {
         getValue: ({ assetProfile }) => {
+          return assetProfile.isin;
+        },
+        name: 'ISIN'
+      },
+      {
+        getValue: ({ assetProfile }) => {
           return assetProfile.symbol;
         },
         name: 'Symbol'
