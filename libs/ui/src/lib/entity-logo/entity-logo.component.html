@@ -16,6 +16,7 @@
 } @else if (src && !hasError) {
   <img
     class="logo"
+    [alt]="tooltip ? tooltip : ''"
     [class.large]="size === 'large'"
     [src]="src"
     [title]="tooltip ? tooltip : ''"
