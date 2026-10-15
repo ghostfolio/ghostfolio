@@ -132,19 +132,7 @@ export class FinancialModelingPrepService
         );
         response.name = quote.name;
       } else {
-        const queryParams = new URLSearchParams({
-          symbol,
-          apikey: this.apiKey
-        });
-
-        const [assetProfile] = await this.fetchService
-          .fetch(
-            `${this.getUrl({ version: 'stable' })}/profile?${queryParams.toString()}`,
-            {
-              signal: AbortSignal.timeout(requestTimeout)
-            }
-          )
-          .then((res) => res.json());
+        const assetProfile = await this.getProfile({ requestTimeout, symbol });
 
         if (!assetProfile) {
           const indexProfile = await this.getIndexProfile({
@@ -549,6 +537,13 @@ export class FinancialModelingPrepService
     return 'AAPL';
   }
 
+  /**
+   * Searches by ISIN, else by name and by symbol. A result of the search by
+   * ISIN has no currency and no asset class, thus they are taken from the
+   * profile of the symbol only, without the further requests of an asset
+   * profile, for example the holdings of an ETF. A failed request of a profile
+   * gives a result without a currency and without an asset class.
+   */
   public async search({
     includeIndices = false,
     query,
@@ -578,18 +573,28 @@ export class FinancialModelingPrepService
 
         await Promise.all(
           result.map(({ symbol }) => {
-            return this.getAssetProfile({ symbol }).then((assetProfile) => {
-              assetProfileBySymbolMap[symbol] = assetProfile;
-            });
+            return this.getProfile({ requestTimeout, symbol })
+              .then((profile) => {
+                assetProfileBySymbolMap[symbol] = {
+                  ...this.parseAssetClass(profile),
+                  currency: profile?.currency
+                };
+              })
+              .catch((error) => {
+                this.logger.error(error);
+              });
           })
         );
 
-        items = result.map(({ assetClass, assetSubClass, name, symbol }) => {
+        items = result.map(({ name, symbol }) => {
+          const { assetClass, assetSubClass, currency } =
+            assetProfileBySymbolMap[symbol] ?? {};
+
           return {
             assetClass,
             assetSubClass,
+            currency,
             symbol,
-            currency: assetProfileBySymbolMap[symbol]?.currency,
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: this.getName(),
             name: this.formatName({ name })
@@ -694,6 +699,30 @@ export class FinancialModelingPrepService
       currency: index.currency,
       name: this.formatName({ name: index.name })
     };
+  }
+
+  private async getProfile({
+    requestTimeout,
+    symbol
+  }: {
+    requestTimeout: number;
+    symbol: string;
+  }) {
+    const queryParams = new URLSearchParams({
+      symbol,
+      apikey: this.apiKey
+    });
+
+    const [profile] = await this.fetchService
+      .fetch(
+        `${this.getUrl({ version: 'stable' })}/profile?${queryParams.toString()}`,
+        {
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      )
+      .then((res) => res.json());
+
+    return profile;
   }
 
   private async getSearchResults({
