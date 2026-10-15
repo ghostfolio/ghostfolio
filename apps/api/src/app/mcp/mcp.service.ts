@@ -10,6 +10,7 @@ import {
   buildApiPath,
   callLocalApi
 } from './mcp-api-client';
+import { sanitizeResponseBody } from './mcp-sanitize';
 import { MCP_TOOLS, McpToolDefinition } from './mcp-tools';
 
 /**
@@ -80,13 +81,15 @@ export class McpService {
     tool: McpToolDefinition;
   }): Promise<CallToolResult> {
     try {
-      const { body, statusCode } = await callLocalApi({
+      const { body: rawBody, statusCode } = await callLocalApi({
         authorizationToken,
         body: tool.method === 'POST' ? buildApiBody({ args, tool }) : undefined,
         method: tool.method ?? 'GET',
         path: buildApiPath({ args, tool }),
         port: this.configurationService.get('PORT')
       });
+
+      const body = sanitizeResponseBody(rawBody);
 
       if (statusCode < 200 || statusCode >= 300) {
         return this.errorResult(

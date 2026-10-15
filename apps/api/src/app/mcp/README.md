@@ -25,6 +25,19 @@ decisions, and record transactions from a screenshot.
   entries and get explicit confirmation before writing, and check
   `list_activities` for duplicates first. The call is not idempotent.
 
+## Secrets never leave through MCP
+
+Tool results go straight into the context of the connected model, so every
+response is sanitized in `mcp-sanitize.ts` before it is returned, even where
+the REST API returns the value as is (the web client has to show and edit it):
+
+- `webhookUrl` keeps only its host (`discord.com/***`): the token is in the
+  path. The `webhookEnabled` flag still tells whether it is set.
+- credential-like fields (`accessToken`, `apiKey`, `hashedKey`, `password`,
+  `secret`, `token`, `scraperConfiguration`) become `[redacted]`.
+
+A new tool that can return another kind of secret needs its field added there.
+
 ## Authentication
 
 `Authorization: Bearer <credential>`, where the credential is one of
