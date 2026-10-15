@@ -195,4 +195,46 @@
       </a>
     </div>
   }
+  @case (4) {
+    <div class="flex-grow-1 pt-0" mat-dialog-content>
+      <div class="intro-container">
+        <div class="intro-inner-container mx-auto">
+          <div class="h-100 intro w-100"></div>
+        </div>
+      </div>
+      <div>
+        <h5 class="align-items-center d-flex justify-content-center mb-3">
+          <span>Ghostfolio Premium</span>
+          <gf-premium-indicator class="ms-1" [enableLink]="false" />
+        </h5>
+        <div class="fw-normal h5 mb-3 text-center" i18n>
+          Not sure yet? Try it for free.
+        </div>
+        <p class="m-0 text-center" i18n>
+          No credit card required. The trial ends automatically.
+        </p>
+      </div>
+    </div>
+    <div class="justify-content-end" mat-dialog-actions>
+      <button
+        mat-button
+        [disabled]="remainingSkipButtonDelay > 0"
+        (click)="closeDialog()"
+      >
+        <ng-container i18n>Skip</ng-container>
+        @if (remainingSkipButtonDelay > 0) {
+          ({{ remainingSkipButtonDelay }})
+        }
+      </button>
+      <a
+        color="primary"
+        mat-flat-button
+        [href]="trySubscriptionMailHref"
+        (click)="closeDialog()"
+      >
+        <span i18n>Try Premium</span>
+        <ion-icon class="ms-1" name="arrow-forward-outline" />
+      </a>
+    </div>
+  }
 }

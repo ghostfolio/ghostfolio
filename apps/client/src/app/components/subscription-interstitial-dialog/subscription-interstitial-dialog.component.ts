@@ -1,3 +1,4 @@
+import { TRY_SUBSCRIPTION_MAIL_HREF } from '@ghostfolio/common/config';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -51,6 +52,7 @@ export class GfSubscriptionInterstitialDialogComponent implements OnInit {
   public remainingSkipButtonDelay =
     GfSubscriptionInterstitialDialogComponent.SKIP_BUTTON_DELAY_IN_SECONDS;
   public routerLinkPricing = publicRoutes.pricing.routerLink;
+  public trySubscriptionMailHref = TRY_SUBSCRIPTION_MAIL_HREF;
   public variantIndex: number;
 
   public constructor(
@@ -59,9 +61,13 @@ export class GfSubscriptionInterstitialDialogComponent implements OnInit {
     private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfSubscriptionInterstitialDialogComponent>
   ) {
-    this.variantIndex = Math.floor(
-      Math.random() * GfSubscriptionInterstitialDialogComponent.VARIANTS_COUNT
-    );
+    const isEligibleForTrial = !this.data.user?.subscription?.subscribedAt;
+
+    const variantsCount = isEligibleForTrial
+      ? GfSubscriptionInterstitialDialogComponent.VARIANTS_COUNT + 1
+      : GfSubscriptionInterstitialDialogComponent.VARIANTS_COUNT;
+
+    this.variantIndex = Math.floor(Math.random() * variantsCount);
 
     addIcons({ arrowForwardOutline, checkmarkCircleOutline });
   }
