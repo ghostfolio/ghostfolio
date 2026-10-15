@@ -14,6 +14,7 @@ architecture, decisions, and field notes. Chinese is fine here.
 | [deployment.md](guide/deployment.md)                 | Docker deployment, pre-built image vs. local build |
 | [investment-features.md](guide/investment-features.md) | Capital Pool, DCA, Rebalancing, Signals, AI report |
 | [operations.md](guide/operations.md)                 | Scheduled jobs, emails, common commands, troubleshooting |
+| [mcp.md](guide/mcp.md)                               | MCP endpoint: connect Claude, tools, OAuth, verify |
 
 ## dev/
 

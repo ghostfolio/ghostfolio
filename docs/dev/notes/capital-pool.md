@@ -30,3 +30,4 @@ Long-term Growth Portfolio的理解应当是当前静态预备投资股本。 �
 
 Systematic Investment Plan (SIP)：流动资金定投层：这一层主要是用于跟踪当前流动月收入中可用于定投的部分，这个值结合Rebalance结果 将影响DCA决策，最终配合DCA决定在一个决策周期内加仓多少哪天加
 
+> 再平衡的分母不是 Long-term Growth Target，而是实际持仓市值；目标资金与实际的差额单独提示，见 [ADR 0003](../adr/0003-rebalancing-base-is-actual-value.md)。

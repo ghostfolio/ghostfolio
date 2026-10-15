@@ -68,6 +68,12 @@ adjustmentValue = totalValue × (targetWeight% − currentWeight%) / 100
 action          = |deviation| ≥ threshold ? BUY / SELL : OK
 ```
 
+All weights and amounts are based on the **actual market value** of your holdings, so the
+weights of a fully assigned portfolio add up to 100%. The result also reports how that value
+compares with your Long-term Growth Target (`capital`): how much of the target is not
+deployed yet, or by how much you are above it. This is shown beside the weights and never
+triggers a rebalancing on its own.
+
 The result is a list of suggested actions plus a flag indicating whether at least one
 symbol crossed its threshold. Thresholds are per symbol, so different holdings can
 tolerate different drift.

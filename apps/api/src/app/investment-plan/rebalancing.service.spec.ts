@@ -4,328 +4,279 @@ import { RebalancingService } from './rebalancing.service';
 // Helpers
 // ---------------------------------------------------------------------------
 
-/** Build a minimal InvestmentPlanAllocation-shaped object */
+/** Build a minimal InvestmentPlanAllocation-shaped object; one group per symbol by default */
 function alloc(
   symbol: string,
   targetWeight: number,
-  rebalanceThreshold = 5
+  rebalanceThreshold = 5,
+  groupId = symbol,
+  name = ''
 ) {
   return {
     createdAt: new Date(),
+    groupId,
     id: symbol + '-alloc',
+    name,
     planId: 'plan-1',
     rebalanceThreshold,
     symbol,
     targetWeight,
     updatedAt: new Date()
-  };
+  } as any;
 }
 
-/** Build a holdings map — each entry is just { valueInBaseCurrency } */
+/** Build a holdings map: each entry is just { valueInBaseCurrency } */
 function holdings(map: Record<string, number>) {
   return Object.fromEntries(
-    Object.entries(map).map(([sym, val]) => [
-      sym,
-      { valueInBaseCurrency: val }
-    ])
+    Object.entries(map).map(([sym, val]) => [sym, { valueInBaseCurrency: val }])
   );
 }
 
 // RebalancingService only uses prisma for generateRebalancingSignals.
-// calculateRebalancing is pure — pass a stub.
+// calculateRebalancing is pure, pass a stub.
 const svc = new RebalancingService(null as any);
+
+const byGroup = (
+  r: Awaited<ReturnType<typeof svc.calculateRebalancing>>,
+  groupId: string
+) => r.actions.find((a) => a.groupId === groupId)!;
 
 // ---------------------------------------------------------------------------
 // Test suite
 // ---------------------------------------------------------------------------
 
 describe('RebalancingService.calculateRebalancing', () => {
-  // ── Guard cases ────────────────────────────────────────────────────────────
+  it('returns no actions when there are no allocations', async () => {
+    const r = await svc.calculateRebalancing([], holdings({ 'XIC.TO': 5000 }));
 
-  it('G1: returns empty result when allocations array is empty', async () => {
-    const result = await svc.calculateRebalancing([], holdings({ 'XIC.TO': 5000 }));
-
-    expect(result).toEqual({ actions: [], hasTriggered: false, totalValue: 0 });
+    expect(r.actions).toEqual([]);
+    expect(r.hasTriggered).toBe(false);
+    expect(r.totalValue).toBe(0);
   });
 
-  it('G2: returns empty result when total portfolio value is 0 (no holdings)', async () => {
-    const result = await svc.calculateRebalancing(
-      [alloc('XIC.TO', 40)],
-      {}  // no holdings at all
+  it('returns no actions when nothing is held', async () => {
+    const r = await svc.calculateRebalancing([alloc('XIC.TO', 40)], {});
+
+    expect(r.actions).toEqual([]);
+    expect(r.hasTriggered).toBe(false);
+    expect(r.totalValue).toBe(0);
+  });
+
+  it('is all OK for a perfectly balanced portfolio', async () => {
+    const r = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 40), alloc('XEF.TO', 30), alloc('VCN.TO', 30)],
+      holdings({ 'XIC.TO': 4000, 'XEF.TO': 3000, 'VCN.TO': 3000 })
     );
 
-    expect(result).toEqual({ actions: [], hasTriggered: false, totalValue: 0 });
+    expect(r.totalValue).toBe(10000);
+    expect(r.hasTriggered).toBe(false);
+    expect(r.actions.every((a) => a.type === 'OK')).toBe(true);
   });
 
-  // ── Case 1: Perfectly balanced portfolio ───────────────────────────────────
-  //
-  //   Total: $10 000
-  //   XIC.TO $4 000 → 40 %  target 40 %  deviation   0 %  threshold 5 %  → OK
-  //   XEF.TO $3 000 → 30 %  target 30 %  deviation   0 %  threshold 5 %  → OK
-  //   VCN.TO $3 000 → 30 %  target 30 %  deviation   0 %  threshold 5 %  → OK
+  it('sells the overweight and buys the underweight group', async () => {
+    // XIC 48% (+8), XEF 28% (-2), VCN 24% (-6), threshold 5
+    const r = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 40), alloc('XEF.TO', 30), alloc('VCN.TO', 30)],
+      holdings({ 'XIC.TO': 4800, 'XEF.TO': 2800, 'VCN.TO': 2400 })
+    );
 
-  describe('Case 1 – Perfectly balanced (no action needed)', () => {
+    expect(r.hasTriggered).toBe(true);
+    expect(byGroup(r, 'XIC.TO')).toMatchObject({ type: 'SELL' });
+    expect(byGroup(r, 'XIC.TO').amount).toBeCloseTo(800, 4);
+    expect(byGroup(r, 'XEF.TO').type).toBe('OK');
+    expect(byGroup(r, 'VCN.TO')).toMatchObject({ type: 'BUY' });
+    expect(byGroup(r, 'VCN.TO').amount).toBeCloseTo(600, 4);
+  });
+
+  it('treats a target symbol that is not held as 0', async () => {
+    const r = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 60), alloc('VCN.TO', 40)],
+      holdings({ 'XIC.TO': 10000 })
+    );
+
+    expect(byGroup(r, 'VCN.TO').currentValue).toBe(0);
+    expect(byGroup(r, 'VCN.TO').type).toBe('BUY');
+    expect(byGroup(r, 'VCN.TO').amount).toBeCloseTo(4000, 4);
+  });
+
+  it('triggers exactly at the threshold and not just below it', async () => {
+    const at = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 40, 5)],
+      holdings({ 'XIC.TO': 4500, 'XEF.TO': 5500 })
+    );
+    const below = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 40, 5)],
+      holdings({ 'XIC.TO': 4490, 'XEF.TO': 5510 })
+    );
+
+    expect(byGroup(at, 'XIC.TO').type).toBe('SELL');
+    expect(byGroup(below, 'XIC.TO').type).toBe('OK');
+    expect(below.hasTriggered).toBe(false);
+  });
+
+  it('uses the threshold of each group', async () => {
+    const r = await svc.calculateRebalancing(
+      [alloc('QQQ', 50, 10), alloc('SPY', 50, 20)],
+      holdings({ QQQ: 6000, SPY: 4000 })
+    );
+
+    expect(byGroup(r, 'QQQ').type).toBe('SELL');
+    expect(byGroup(r, 'SPY').type).toBe('OK');
+  });
+
+  it('adds the symbols of a group together', async () => {
+    const r = await svc.calculateRebalancing(
+      [
+        alloc('XUS.TO', 25, 5, 'us', 'US'),
+        alloc('XQQ.TO', 25, 5, 'us', 'US'),
+        alloc('XIC.TO', 50, 5, 'ca', 'Canada')
+      ],
+      holdings({ 'XUS.TO': 2000, 'XQQ.TO': 3000, 'XIC.TO': 5000 })
+    );
+
+    expect(byGroup(r, 'us').currentValue).toBe(5000);
+    expect(byGroup(r, 'us').currentWeight).toBeCloseTo(50, 4);
+    expect(byGroup(r, 'us').symbols).toEqual(['XUS.TO', 'XQQ.TO']);
+  });
+
+  it('describes the direction in the reason', async () => {
+    const over = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 40)],
+      holdings({ 'XIC.TO': 4800, other: 5200 })
+    );
+    const under = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 60)],
+      holdings({ 'XIC.TO': 4000, other: 6000 })
+    );
+
+    expect(byGroup(over, 'XIC.TO').reason).toContain('overweight');
+    expect(byGroup(under, 'XIC.TO').reason).toContain('underweight');
+  });
+
+  // ── The base of the weights is the actual market value ─────────────────────
+  //
+  // Regression: with a Long-term Growth Target of 32 000 and 35 973 actually
+  // held, the weights were taken from 32 000. They added up to 112% and XQQ.TO
+  // was reported as 5.7% overweight although it is at 31.8% against 30%.
+
+  describe('actual holdings above the Long-term Growth Target', () => {
     const allocations = [
-      alloc('XIC.TO', 40),
-      alloc('XEF.TO', 30),
-      alloc('VCN.TO', 30)
-    ];
-    const h = holdings({ 'XIC.TO': 4000, 'XEF.TO': 3000, 'VCN.TO': 3000 });
-
-    it('totalValue equals sum of all holdings', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      expect(r.totalValue).toBe(10000);
-    });
-
-    it('hasTriggered is false', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      expect(r.hasTriggered).toBe(false);
-    });
-
-    it('all actions are type OK', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      expect(r.actions.every((a) => a.type === 'OK')).toBe(true);
-    });
-
-    it('deviation for each symbol is exactly 0', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      for (const action of r.actions) {
-        expect(action.deviation).toBeCloseTo(0, 5);
-      }
-    });
-  });
-
-  // ── Case 2: XIC overweight, VCN underweight ────────────────────────────────
-  //
-  //   Total: $10 000
-  //   XIC.TO $4 800 → 48 %  target 40 %  deviation  +8 %  ≥ 5 %  → SELL $800
-  //   XEF.TO $2 800 → 28 %  target 30 %  deviation  −2 %  < 5 %  → OK
-  //   VCN.TO $2 400 → 24 %  target 30 %  deviation  −6 %  ≥ 5 %  → BUY  $600
-
-  describe('Case 2 – XIC overweight (+8%) and VCN underweight (−6%)', () => {
-    const allocations = [
-      alloc('XIC.TO', 40),
-      alloc('XEF.TO', 30),
-      alloc('VCN.TO', 30)
-    ];
-    const h = holdings({ 'XIC.TO': 4800, 'XEF.TO': 2800, 'VCN.TO': 2400 });
-
-    it('hasTriggered is true', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      expect(r.hasTriggered).toBe(true);
-    });
-
-    it('XIC.TO → SELL $800 (8% overweight)', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const xic = r.actions.find((a) => a.symbol === 'XIC.TO')!;
-
-      expect(xic.type).toBe('SELL');
-      expect(xic.currentWeight).toBeCloseTo(48, 4);
-      expect(xic.deviation).toBeCloseTo(8, 4);
-      expect(xic.amount).toBeCloseTo(800, 4);
-    });
-
-    it('XEF.TO → OK (only 2% underweight, below 5% threshold)', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const xef = r.actions.find((a) => a.symbol === 'XEF.TO')!;
-
-      expect(xef.type).toBe('OK');
-      expect(xef.deviation).toBeCloseTo(-2, 4);
-    });
-
-    it('VCN.TO → BUY $600 (6% underweight)', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const vcn = r.actions.find((a) => a.symbol === 'VCN.TO')!;
-
-      expect(vcn.type).toBe('BUY');
-      expect(vcn.currentWeight).toBeCloseTo(24, 4);
-      expect(vcn.deviation).toBeCloseTo(-6, 4);
-      expect(vcn.amount).toBeCloseTo(600, 4);
-    });
-  });
-
-  // ── Case 3: Symbol entirely missing from holdings ──────────────────────────
-  //
-  //   Total: $10 000  (XIC only)
-  //   XIC.TO $10 000 → 100 %  target 60 %  deviation +40 %  → SELL $4 000
-  //   VCN.TO $0      →   0 %  target 40 %  deviation −40 %  → BUY  $4 000
-
-  describe('Case 3 – Target symbol not held at all (new position needed)', () => {
-    const allocations = [alloc('XIC.TO', 60), alloc('VCN.TO', 40)];
-    const h = holdings({ 'XIC.TO': 10000 }); // VCN.TO not in holdings
-
-    it('VCN.TO currentValue is treated as 0', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const vcn = r.actions.find((a) => a.symbol === 'VCN.TO')!;
-
-      expect(vcn.currentValue).toBe(0);
-      expect(vcn.currentWeight).toBeCloseTo(0, 4);
-    });
-
-    it('VCN.TO → BUY $4 000 (entirely underweight)', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const vcn = r.actions.find((a) => a.symbol === 'VCN.TO')!;
-
-      expect(vcn.type).toBe('BUY');
-      expect(vcn.amount).toBeCloseTo(4000, 4);
-    });
-
-    it('XIC.TO → SELL $4 000 (entirely overweight)', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const xic = r.actions.find((a) => a.symbol === 'XIC.TO')!;
-
-      expect(xic.type).toBe('SELL');
-      expect(xic.amount).toBeCloseTo(4000, 4);
-    });
-  });
-
-  // ── Case 4: Deviation exactly at and just below threshold ──────────────────
-  //
-  //   Total: $10 000, threshold = 5 %
-  //   XIC.TO $4 500 → 45 %  target 40 %  deviation  +5 %  → exactly AT threshold → SELL
-  //   XEF.TO $4 490 → 44.9% target 40 %  deviation +4.9%  → just below threshold  → OK
-
-  describe('Case 4 – Threshold boundary (exactly at vs just below)', () => {
-    it('4a: deviation = exactly threshold → triggers (SELL)', async () => {
-      const h = holdings({ 'XIC.TO': 4500, 'XEF.TO': 5500 });
-      // XIC: 4500/10000 = 45%, target 40%, deviation = +5% = threshold
-      const r = await svc.calculateRebalancing(
-        [alloc('XIC.TO', 40, 5)],
-        h
-      );
-
-      const xic = r.actions.find((a) => a.symbol === 'XIC.TO')!;
-      expect(xic.type).toBe('SELL');
-      expect(r.hasTriggered).toBe(true);
-    });
-
-    it('4b: deviation = threshold − 0.1% → does NOT trigger (OK)', async () => {
-      // XIC: 4490/10000 = 44.9%, target 40%, deviation = +4.9% < 5%
-      const h = holdings({ 'XIC.TO': 4490, 'XEF.TO': 5510 });
-      const r = await svc.calculateRebalancing(
-        [alloc('XIC.TO', 40, 5)],
-        h
-      );
-
-      const xic = r.actions.find((a) => a.symbol === 'XIC.TO')!;
-      expect(xic.type).toBe('OK');
-      expect(r.hasTriggered).toBe(false);
-    });
-  });
-
-  // ── Case 5: Custom per-symbol threshold ────────────────────────────────────
-  //
-  //   Total: $10 000
-  //   QQQ: target 50 %, threshold 10 %   holdings $6 000 → 60 % → dev +10 % → SELL $1 000
-  //   SPY: target 50 %, threshold 20 %   holdings $4 000 → 40 % → dev −10 % < 20 % → OK
-
-  describe('Case 5 – Different thresholds per symbol', () => {
-    const allocations = [alloc('QQQ', 50, 10), alloc('SPY', 50, 20)];
-    const h = holdings({ QQQ: 6000, SPY: 4000 });
-
-    it('QQQ hits its 10% threshold → SELL $1 000', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const qqq = r.actions.find((a) => a.symbol === 'QQQ')!;
-
-      expect(qqq.type).toBe('SELL');
-      expect(qqq.amount).toBeCloseTo(1000, 4);
-    });
-
-    it('SPY deviation is 10% but its threshold is 20% → OK', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const spy = r.actions.find((a) => a.symbol === 'SPY')!;
-
-      expect(spy.type).toBe('OK');
-    });
-
-    it('hasTriggered reflects at least one symbol triggering', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      expect(r.hasTriggered).toBe(true);
-    });
-  });
-
-  // ── Case 6: reason string content ──────────────────────────────────────────
-  //
-  //   XIC.TO $4 800 / $10 000 = 48 %, target 40 %, deviation +8 %
-
-  describe('Case 6 – Reason string is descriptive', () => {
-    it('contains "overweight" for a positive deviation', async () => {
-      const r = await svc.calculateRebalancing(
-        [alloc('XIC.TO', 40)],
-        holdings({ 'XIC.TO': 4800, other: 5200 })
-      );
-      const xic = r.actions.find((a) => a.symbol === 'XIC.TO')!;
-
-      expect(xic.reason).toContain('overweight');
-      expect(xic.reason).toContain('XIC.TO');
-    });
-
-    it('contains "underweight" for a negative deviation', async () => {
-      const r = await svc.calculateRebalancing(
-        [alloc('XIC.TO', 60)],
-        holdings({ 'XIC.TO': 4000, other: 6000 })
-      );
-      const xic = r.actions.find((a) => a.symbol === 'XIC.TO')!;
-      // 40% actual vs 60% target → underweight
-      expect(xic.reason).toContain('underweight');
-    });
-  });
-
-  // ── Case 7: Real-world 3-ETF Canadian portfolio ────────────────────────────
-  //
-  //   Total value: $27 000 CAD (realistic portfolio size)
-  //   Targets:  XIC.TO 40 %  XEF.TO 35 %  XBB.TO 25 %   threshold 5 %
-  //   Actual:   XIC.TO $12 000  XEF.TO $8 100  XBB.TO $6 900
-  //
-  //   XIC.TO: 12000/27000 = 44.4 %  target 40 %  dev +4.4 % < 5 % → OK
-  //   XEF.TO:  8100/27000 = 30.0 %  target 35 %  dev −5.0 % = 5 % → BUY $1 350
-  //   XBB.TO:  6900/27000 = 25.6 %  target 25 %  dev +0.6 % < 5 % → OK
-
-  describe('Case 7 – Real-world 3-ETF Canadian portfolio ($27 000)', () => {
-    const allocations = [
-      alloc('XIC.TO', 40),
-      alloc('XEF.TO', 35),
-      alloc('XBB.TO', 25)
+      alloc('XUS.TO', 25),
+      alloc('XQQ.TO', 30),
+      alloc('XIC.TO', 15),
+      alloc('XEF.TO', 15),
+      alloc('RISK', 15, 4)
     ];
     const h = holdings({
-      'XIC.TO': 12000,
-      'XEF.TO': 8100,
-      'XBB.TO': 6900
+      'XUS.TO': 7190,
+      'XQQ.TO': 11424,
+      'XIC.TO': 3648,
+      'XEF.TO': 6661,
+      RISK: 7050
     });
 
-    it('totalValue = $27 000', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      expect(r.totalValue).toBe(27000);
+    it('takes the actual market value as the base', async () => {
+      const r = await svc.calculateRebalancing(allocations, h, 32000);
+
+      expect(r.totalValue).toBe(35973);
     });
 
-    it('XIC.TO is 44.4 % — within 5 % of target 40 % → OK', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const xic = r.actions.find((a) => a.symbol === 'XIC.TO')!;
+    it('lets the weights of a fully assigned portfolio add up to 100%', async () => {
+      const r = await svc.calculateRebalancing(allocations, h, 32000);
+      const sum = r.actions.reduce((total, a) => total + a.currentWeight, 0);
 
-      expect(xic.currentWeight).toBeCloseTo(44.44, 1);
-      expect(xic.type).toBe('OK');
+      expect(sum).toBeCloseTo(100, 6);
     });
 
-    it('XEF.TO is exactly 5 % underweight → triggers BUY $1 350', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const xef = r.actions.find((a) => a.symbol === 'XEF.TO')!;
+    it('does not report XQQ.TO as overweight', async () => {
+      const r = await svc.calculateRebalancing(allocations, h, 32000);
 
-      expect(xef.currentWeight).toBeCloseTo(30, 1);
-      expect(xef.deviation).toBeCloseTo(-5, 4);
-      expect(xef.type).toBe('BUY');
-      expect(xef.amount).toBeCloseTo(1350, 0);
+      expect(byGroup(r, 'XQQ.TO').currentWeight).toBeCloseTo(31.76, 1);
+      expect(byGroup(r, 'XQQ.TO').type).toBe('OK');
     });
 
-    it('XBB.TO is 0.6 % overweight — below threshold → OK', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
-      const xbb = r.actions.find((a) => a.symbol === 'XBB.TO')!;
+    it('finds the real drift: XUS.TO under, RISK over', async () => {
+      const r = await svc.calculateRebalancing(allocations, h, 32000);
 
-      expect(xbb.type).toBe('OK');
-    });
-
-    it('hasTriggered = true (XEF.TO hit threshold)', async () => {
-      const r = await svc.calculateRebalancing(allocations, h);
+      expect(byGroup(r, 'XUS.TO').type).toBe('BUY');
+      expect(byGroup(r, 'RISK').type).toBe('SELL');
       expect(r.hasTriggered).toBe(true);
+    });
+
+    it('computes amounts from the same base', async () => {
+      const r = await svc.calculateRebalancing(allocations, h, 32000);
+
+      // 25% of 35 973 = 8 993.25, held 7 190
+      expect(byGroup(r, 'XUS.TO').amount).toBeCloseTo(1803.25, 2);
+    });
+
+    it('gives the same weights whatever the target is', async () => {
+      const a = await svc.calculateRebalancing(allocations, h, 32000);
+      const b = await svc.calculateRebalancing(allocations, h, 0);
+
+      expect(b.actions.map((x) => x.currentWeight)).toEqual(
+        a.actions.map((x) => x.currentWeight)
+      );
+    });
+  });
+
+  // ── The target capital is reported beside the weights ──────────────────────
+
+  describe('capital status', () => {
+    const allocations = [alloc('XIC.TO', 100)];
+
+    it('flags holdings above the target capital', async () => {
+      const r = await svc.calculateRebalancing(
+        allocations,
+        holdings({ 'XIC.TO': 35973 }),
+        32000
+      );
+
+      expect(r.capital.status).toBe('ABOVE_TARGET');
+      expect(r.capital.gap).toBe(-3973);
+      expect(r.capital.reason).toContain('3,973 above the 32,000 target');
+    });
+
+    it('shows how much is still to deploy below the target', async () => {
+      const r = await svc.calculateRebalancing(
+        allocations,
+        holdings({ 'XIC.TO': 27000 }),
+        32000
+      );
+
+      expect(r.capital.status).toBe('BELOW_TARGET');
+      expect(r.capital.gap).toBe(5000);
+      expect(r.capital.reason).toContain('5,000 of the 32,000');
+    });
+
+    it('is on target within half a percent', async () => {
+      const r = await svc.calculateRebalancing(
+        allocations,
+        holdings({ 'XIC.TO': 32100 }),
+        32000
+      );
+
+      expect(r.capital.status).toBe('ON_TARGET');
+    });
+
+    it('is unset without a target and never changes the weights', async () => {
+      const r = await svc.calculateRebalancing(
+        allocations,
+        holdings({ 'XIC.TO': 1000 })
+      );
+
+      expect(r.capital.status).toBe('UNSET');
+      expect(r.capital.reason).toBe('');
+    });
+
+    it('does not make a rebalancing out of the capital gap', async () => {
+      const r = await svc.calculateRebalancing(
+        allocations,
+        holdings({ 'XIC.TO': 35973 }),
+        32000
+      );
+
+      expect(r.hasTriggered).toBe(false);
     });
   });
 });

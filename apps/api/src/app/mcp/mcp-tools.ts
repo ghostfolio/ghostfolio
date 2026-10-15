@@ -211,7 +211,7 @@ export const MCP_TOOLS: McpToolDefinition[] = [
   },
   {
     description:
-      'Rebalancing analysis: current vs target weight per allocation group and the buy/sell actions needed once a threshold is breached.',
+      "Rebalancing analysis: current vs target weight per allocation group and the buy/sell actions once a threshold is breached. Weights and amounts are based on the actual market value (totalValue); capital compares that value with the plan's long-term growth target.",
     inputSchema: {},
     name: 'get_rebalancing',
     path: '/investment-plan/rebalancing'

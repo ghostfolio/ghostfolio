@@ -263,6 +263,30 @@ describe('McpService', () => {
     expect(received).toHaveLength(0);
   });
 
+  it('never lets the webhook token of the investment plan reach the model', async () => {
+    const token = 'SuperSecretToken_abc-DEF';
+
+    responseBody = JSON.stringify({
+      capitalPool: 100000,
+      webhookEnabled: true,
+      webhookUrl: `https://discord.com/api/webhooks/1234567890/${token}`
+    });
+
+    const result = await client.callTool({
+      arguments: {},
+      name: 'get_investment_plan'
+    });
+    const text = (result.content as any)[0].text;
+
+    expect(text).not.toContain(token);
+    expect(text).not.toContain('1234567890');
+    expect(JSON.parse(text)).toEqual({
+      capitalPool: 100000,
+      webhookEnabled: true,
+      webhookUrl: 'discord.com/***'
+    });
+  });
+
   it('refuses a response that is too large instead of truncating it', async () => {
     responseBody = JSON.stringify({ data: 'x'.repeat(250_000) });
 
