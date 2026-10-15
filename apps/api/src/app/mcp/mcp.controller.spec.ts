@@ -101,6 +101,28 @@ describe('McpController', () => {
     );
   });
 
+  it('does not let an unauthenticated client call create_activity', async () => {
+    apiAuthorization = 'untouched';
+
+    const response = await fetch(baseUrl, {
+      body: JSON.stringify({
+        id: 1,
+        jsonrpc: '2.0',
+        method: 'tools/call',
+        params: { arguments: {}, name: 'create_activity' }
+      }),
+      headers: {
+        accept: 'application/json, text/event-stream',
+        authorization: 'Bearer bad',
+        'content-type': 'application/json'
+      },
+      method: 'POST'
+    });
+
+    expect(response.status).toBe(401);
+    expect(apiAuthorization).toBe('untouched');
+  });
+
   it('answers GET with 405 because the server is stateless', async () => {
     const response = await fetch(baseUrl, {
       headers: { authorization: 'Bearer good' }

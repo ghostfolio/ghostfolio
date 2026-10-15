@@ -2,6 +2,12 @@ import { z } from 'zod';
 
 export interface McpToolDefinition {
   description: string;
+  /**
+   * `GET` for every tool except the single, explicitly allowlisted write (see
+   * MCP_ALLOWED_WRITES). For `POST` the arguments that are not path parameters
+   * are sent as the JSON body.
+   */
+  method?: 'GET' | 'POST';
   inputSchema: z.ZodRawShape;
   name: string;
   /** Names of arguments that are substituted into the `:param` path segments. */
@@ -57,6 +63,16 @@ export const MCP_TOOLS: McpToolDefinition[] = [
     inputSchema: {},
     name: 'get_user',
     path: '/user'
+  },
+  {
+    description:
+      'Resolve a ticker or company name to the dataSource and symbol Ghostfolio uses, e.g. a Canadian ETF XEF is listed as XEF.TO on YAHOO. Use it to get both values right before create_activity.',
+    inputSchema: {
+      includeIndices: z.boolean().optional(),
+      query: z.string().min(1).describe('Ticker or name to search for')
+    },
+    name: 'lookup_symbol',
+    path: '/symbol/lookup'
   },
   {
     description:
@@ -206,5 +222,32 @@ export const MCP_TOOLS: McpToolDefinition[] = [
     inputSchema: {},
     name: 'get_watchlist',
     path: '/watchlist'
+  },
+  {
+    description:
+      'WRITE. Record one transaction in the ledger (it does not place an order). Before calling: show the user the full list of entries you are about to write and get explicit confirmation, and check list_activities for duplicates. Not idempotent: calling twice records it twice. No edit or delete exists.',
+    inputSchema: {
+      accountId: z.string().describe('Account id from list_accounts'),
+      comment: z.string().optional(),
+      currency: z
+        .string()
+        .length(3)
+        .describe('Currency of the transaction, e.g. CAD'),
+      dataSource: z
+        .string()
+        .optional()
+        .describe(
+          'Data source from lookup_symbol, e.g. YAHOO. Optional only for FEE, INTEREST and LIABILITY'
+        ),
+      date: z.string().describe('ISO 8601 date of the trade, e.g. 2026-10-14'),
+      fee: z.number().min(0).default(0).describe('Commission, 0 if none'),
+      quantity: z.number().min(0),
+      symbol: z.string().describe('Symbol from lookup_symbol, e.g. XEF.TO'),
+      type: z.enum(['BUY', 'SELL', 'DIVIDEND', 'FEE', 'INTEREST', 'LIABILITY']),
+      unitPrice: z.number().min(0).describe('Price per unit, not the total')
+    },
+    method: 'POST',
+    name: 'create_activity',
+    path: '/activities'
   }
 ];

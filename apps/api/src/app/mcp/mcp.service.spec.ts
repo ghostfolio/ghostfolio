@@ -3,7 +3,11 @@ import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { createServer, IncomingMessage, Server } from 'node:http';
 import { AddressInfo } from 'node:net';
 
-import { buildApiPath } from './mcp-api-client';
+import {
+  assertRequestAllowed,
+  buildApiBody,
+  buildApiPath
+} from './mcp-api-client';
 import { McpAuthService } from './mcp-auth.service';
 import { MCP_TOOLS } from './mcp-tools';
 import { McpService } from './mcp.service';
@@ -105,14 +109,16 @@ describe('McpService', () => {
     await client.close();
   });
 
-  it('advertises the tools as read-only together with instructions', async () => {
+  it('advertises every tool as read-only except create_activity', async () => {
     const { tools } = await client.listTools();
 
     expect(tools).toHaveLength(MCP_TOOLS.length);
-    expect(tools.every(({ annotations }) => annotations.readOnlyHint)).toBe(
-      true
-    );
-    expect(client.getInstructions()).toContain('read-only');
+    expect(
+      tools
+        .filter(({ annotations }) => !annotations.readOnlyHint)
+        .map(({ name }) => name)
+    ).toEqual(['create_activity']);
+    expect(client.getInstructions()).toContain('read-only except');
   });
 
   it('forwards a tool call to the API with the internal token', async () => {
@@ -150,6 +156,113 @@ describe('McpService', () => {
     expect((result.content as any)[0].text).toBe('403 Forbidden');
   });
 
+  it('replays create_activity as a POST with a JSON body', async () => {
+    responseBody = JSON.stringify({ id: 'activity-1' });
+    let body = '';
+
+    apiServer.once('request', (request) => {
+      request.on('data', (chunk) => (body += chunk));
+    });
+
+    const args = {
+      accountId: 'tfsa',
+      currency: 'CAD',
+      dataSource: 'YAHOO',
+      date: '2026-10-14',
+      fee: 0,
+      quantity: 10,
+      symbol: 'XEF.TO',
+      type: 'BUY',
+      unitPrice: 38.5
+    };
+    const result = await client.callTool({
+      arguments: args,
+      name: 'create_activity'
+    });
+
+    expect(result.isError).toBeFalsy();
+    expect(received).toHaveLength(1);
+    expect(received[0].method).toBe('POST');
+    expect(received[0].url).toBe('/api/v1/activities');
+    expect(received[0].headers.authorization).toBe('Bearer internal-jwt');
+    expect(received[0].headers['content-type']).toBe('application/json');
+    expect(JSON.parse(body)).toEqual(args);
+  });
+
+  it('defaults the fee to 0 and rejects an invalid transaction before calling the API', async () => {
+    let body = '';
+
+    apiServer.once('request', (request) => {
+      request.on('data', (chunk) => (body += chunk));
+    });
+
+    await client.callTool({
+      arguments: {
+        accountId: 'tfsa',
+        currency: 'CAD',
+        dataSource: 'YAHOO',
+        date: '2026-10-14',
+        quantity: 1,
+        symbol: 'XEF.TO',
+        type: 'BUY',
+        unitPrice: 1
+      },
+      name: 'create_activity'
+    });
+
+    expect(JSON.parse(body).fee).toBe(0);
+
+    const invalid = await client.callTool({
+      arguments: { accountId: 'tfsa', quantity: -1, type: 'GIFT' },
+      name: 'create_activity'
+    });
+
+    expect(invalid.isError).toBe(true);
+    expect(received).toHaveLength(1);
+  });
+
+  it('passes an authorization failure of the API on as a tool error', async () => {
+    responseBody = JSON.stringify({ message: 'Forbidden', statusCode: 403 });
+    responseStatus = 403;
+
+    const result = await client.callTool({
+      arguments: {
+        accountId: 'tfsa',
+        currency: 'CAD',
+        date: '2026-10-14',
+        quantity: 1,
+        symbol: 'XEF.TO',
+        type: 'BUY',
+        unitPrice: 1
+      },
+      name: 'create_activity'
+    });
+
+    expect(result.isError).toBe(true);
+    expect((result.content as any)[0].text).toBe('403 Forbidden');
+  });
+
+  it('refuses a tool that tries to write to a non-allowlisted endpoint', async () => {
+    const service = new McpService({ get: () => 1 } as any);
+    const result = await service.executeTool({
+      args: {},
+      authorizationToken: 'internal-jwt',
+      tool: {
+        description: 'rogue',
+        inputSchema: {},
+        method: 'POST',
+        name: 'rogue',
+        path: '/account'
+      }
+    });
+
+    expect(result.isError).toBe(true);
+    expect((result.content as any)[0].text).toContain(
+      'not allowed through MCP'
+    );
+    expect(received).toHaveLength(0);
+  });
+
   it('refuses a response that is too large instead of truncating it', async () => {
     responseBody = JSON.stringify({ data: 'x'.repeat(250_000) });
 
@@ -160,6 +273,46 @@ describe('McpService', () => {
 
     expect(result.isError).toBe(true);
     expect((result.content as any)[0].text).toContain('too large');
+  });
+});
+
+describe('write allowlist', () => {
+  const tool = (name: string) => MCP_TOOLS.find((t) => t.name === name);
+
+  it('allows only POST /api/v1/activities as a write', () => {
+    expect(() =>
+      assertRequestAllowed({ method: 'POST', path: '/api/v1/activities' })
+    ).not.toThrow();
+
+    for (const [method, path] of [
+      ['POST', '/api/v1/account'],
+      ['POST', '/api/v1/activities/import'],
+      ['POST', '/api/v1/activities?x=1'],
+      ['PUT', '/api/v1/activities/abc'],
+      ['DELETE', '/api/v1/activities/abc'],
+      ['POST', '/api/v1/investment-plan/ai-report']
+    ]) {
+      expect(() => assertRequestAllowed({ method, path })).toThrow(
+        'is not allowed through MCP'
+      );
+    }
+  });
+
+  it('exposes exactly one tool that writes', () => {
+    expect(
+      MCP_TOOLS.filter(({ method }) => method === 'POST').map(
+        ({ name }) => name
+      )
+    ).toEqual(['create_activity']);
+  });
+
+  it('sends the arguments of a POST tool as the body, not the query', () => {
+    const args = { accountId: 'a1', symbol: 'XEF.TO', type: 'BUY' };
+
+    expect(buildApiPath({ args, tool: tool('create_activity') })).toBe(
+      '/api/v1/activities'
+    );
+    expect(buildApiBody({ args, tool: tool('create_activity') })).toEqual(args);
   });
 });
 

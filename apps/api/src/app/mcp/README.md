@@ -1,8 +1,8 @@
 # MCP server
 
-Read-only [Model Context Protocol](https://modelcontextprotocol.io/) endpoint
-that lets an AI client (Claude Code, ...) pull portfolio data to support
-investment decisions.
+[Model Context Protocol](https://modelcontextprotocol.io/) endpoint that lets an
+AI client (Claude Code, ...) pull portfolio data to support investment
+decisions, and record transactions from a screenshot.
 
 - **Endpoint:** `POST /api/v1/mcp` (Streamable HTTP, stateless, JSON responses;
   `GET`/`DELETE` answer `405`)
@@ -11,7 +11,19 @@ investment decisions.
   replayed against the API of the same process over `127.0.0.1`, so guards,
   permissions, subscription checks and response interceptors all apply as for
   the web client.
-- **Read-only on purpose:** no tool places, edits or deletes anything.
+- **Read-only for the most part, with one write exception:** every tool only
+  reads, except `create_activity`. The reason is bookkeeping from screenshots:
+  an agent reads a broker trade confirmation and records the trades. The
+  boundary is deliberate: `create_activity` only creates one transaction
+  (`POST /api/v1/activities`, which places no order). There is no edit, no
+  delete and no import, so a wrong entry can be added but never silently
+  changed or removed, and the user fixes it in the UI. The write is allowlisted
+  where the request is sent (`MCP_ALLOWED_WRITES` in `mcp-api-client.ts`), not
+  just by tool definition, and it goes through the normal API guards, so the
+  user needs the `createActivity` permission.
+- **Rules baked into the tool description:** show the user the full list of
+  entries and get explicit confirmation before writing, and check
+  `list_activities` for duplicates first. The call is not idempotent.
 
 ## Authentication
 
@@ -70,6 +82,7 @@ holdings against my investment plan".
 | Tool                        | Endpoint                                     |
 | --------------------------- | -------------------------------------------- |
 | `get_user`                  | `GET /user`                                  |
+| `lookup_symbol`             | `GET /symbol/lookup`                         |
 | `list_accounts`             | `GET /account`                               |
 | `get_portfolio_details`     | `GET /portfolio/details`                     |
 | `list_holdings`             | `GET /portfolio/holdings`                    |
@@ -83,13 +96,17 @@ holdings against my investment plan".
 | `get_investment_signals`    | `GET /investment-plan/signals`               |
 | `get_rebalancing`           | `GET /investment-plan/rebalancing`           |
 | `get_watchlist`             | `GET /watchlist`                             |
+| `create_activity` (write)   | `POST /activities`                           |
 
 ## Adding a tool
 
-Add an entry to `MCP_TOOLS` in `mcp-tools.ts` (GET endpoints only) and keep its
-description short: the tool list is resident context for the connected model.
-Responses above 200,000 characters are refused with a hint to narrow the
-filters instead of being truncated.
+Add an entry to `MCP_TOOLS` in `mcp-tools.ts` and keep its description short:
+the tool list is resident context for the connected model. Tools are `GET`
+only. A tool that writes also needs its `METHOD /path` added to
+`MCP_ALLOWED_WRITES` in `mcp-api-client.ts`, an explicit decision that should
+come with a test and an update of this README and the consent text in
+`oauth/oauth-pages.ts`. Responses above 200,000 characters are refused with a
+hint to narrow the filters instead of being truncated.
 
 ## Tests
 
