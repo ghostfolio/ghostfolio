@@ -23,6 +23,8 @@ import { addMilliseconds, isBefore } from 'date-fns';
 import ms, { StringValue } from 'ms';
 import Stripe from 'stripe';
 
+import { StringLiteral } from './types/string-literal.type';
+
 @Injectable()
 export class SubscriptionService {
   private readonly logger = new Logger(SubscriptionService.name);
@@ -268,7 +270,7 @@ export class SubscriptionService {
     const unsupportedLanguageCodes: Record<
       Exclude<
         (typeof SUPPORTED_LANGUAGE_CODES)[number],
-        Stripe.Checkout.SessionCreateParams.Locale
+        StringLiteral<Stripe.Checkout.SessionCreateParams.Locale>
       >,
       true
     > = {
