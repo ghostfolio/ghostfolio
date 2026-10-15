@@ -542,7 +542,8 @@ export class FinancialModelingPrepService
    * ISIN has no currency and no asset class, thus they are taken from the
    * profile of the symbol only, without the further requests of an asset
    * profile, for example the holdings of an ETF. A failed request of a profile
-   * gives a result without a currency and without an asset class.
+   * gives a result without a currency and without an asset class, which the
+   * caller removes unless indices are included.
    */
   public async search({
     includeIndices = false,
@@ -581,7 +582,9 @@ export class FinancialModelingPrepService
                 };
               })
               .catch((error) => {
-                this.logger.error(error);
+                this.logger.error(
+                  `Could not get the profile of ${symbol} (${this.getName()}): [${error?.name}] ${error?.message}`
+                );
               });
           })
         );
