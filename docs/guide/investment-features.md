@@ -92,14 +92,3 @@ reason, and date, and can be marked as:
 
 DCA signals are generated automatically every weekday morning; see
 [operations.md](operations.md).
-
-## AI report
-
-The DCA page has a **Generate Report** button. It aggregates your current holdings,
-the current rebalancing result, your DCA schedules, and the signals from the last 7
-days, and asks the configured AI model for a written assessment. The report is shown
-in the page and is **not** stored and **not** emailed — it can be generated as often
-as you like.
-
-The report language follows the AI response language configured in the administration
-settings.

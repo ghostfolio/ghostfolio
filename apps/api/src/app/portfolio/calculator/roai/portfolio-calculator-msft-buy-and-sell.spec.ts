@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -52,8 +52,12 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
+
     exchangeRateDataService = new ExchangeRateDataService(
       null,
       null,
@@ -71,56 +75,56 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  describe('get transaction point', () => {
+  describe('get holding balances by date', () => {
     it('with MSFT buy and sell with fractional quantities (multiples of 1/3)', () => {
       jest.useFakeTimers().setSystemTime(parseDate('2024-04-01').getTime());
 
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2024-03-08'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 0.3333333333333333,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-08'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 0.3333333333333333,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 408
         },
         {
           ...activityDummyData,
-          date: new Date('2024-03-13'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 0.6666666666666666,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-13'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 0.6666666666666666,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 400
         },
         {
           ...activityDummyData,
-          date: new Date('2024-03-14'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Microsoft Inc.',
             symbol: 'MSFT'
           },
+          date: new Date('2024-03-14'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'SELL',
           unitPriceInAssetProfileCurrency: 411
         }
@@ -133,15 +137,19 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const transactionPoints = portfolioCalculator.getTransactionPoints();
-      const lastTransactionPoint =
-        transactionPoints[transactionPoints.length - 1];
-      const position = lastTransactionPoint.items.find(
-        (item) => item.symbol === 'MSFT'
+      const holdingBalancesByDate =
+        portfolioCalculator.getHoldingBalancesByDate();
+
+      const latestHoldingBalances = holdingBalancesByDate.at(-1);
+
+      const { investment, quantity } = latestHoldingBalances.holdings.find(
+        ({ symbol }) => {
+          return symbol === 'MSFT';
+        }
       );
 
-      expect(position.investment.toNumber()).toBe(0);
-      expect(position.quantity.toNumber()).toBe(0);
+      expect(investment.toNumber()).toBe(0);
+      expect(quantity.toNumber()).toBe(0);
     });
   });
 });

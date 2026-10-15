@@ -1,24 +1,22 @@
 <div class="row">
   <div class="col">
     @if (readonly) {
-      <div class="h5" i18n>Tags</div>
+      <div class="h5 mb-0" i18n>Tags</div>
       @if (
-        (tags && tags.length > 0) || (tagsReadOnly && tagsReadOnly.length > 0)
+        tagsSelected().length > 0 || (tagsReadOnly && tagsReadOnly.length > 0)
       ) {
-        <mat-chip-listbox>
+        <mat-chip-set>
           @if (tagsReadOnly) {
-            @for (tag of tagsReadOnly; track tag) {
-              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+            @for (tag of tagsReadOnly; track tag.id) {
+              <mat-chip>{{ tag.name }}</mat-chip>
             }
           }
-          @if (tags) {
-            @for (tag of tags; track tag) {
-              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
-            }
+          @for (tag of tagsSelected(); track tag.id) {
+            <mat-chip>{{ tag.name }}</mat-chip>
           }
-        </mat-chip-listbox>
+        </mat-chip-set>
       } @else {
-        <div>-</div>
+        <div>–</div>
       }
     } @else {
       <mat-form-field appearance="outline" class="w-100 without-hint">
@@ -32,13 +30,11 @@
             }
           }
           @for (tag of tagsSelected(); track tag.id) {
-            <mat-chip-row
-              matChipRemove
-              [removable]="true"
-              (removed)="onRemoveTag(tag)"
-            >
+            <mat-chip-row [removable]="true" (removed)="onRemoveTag(tag)">
               {{ tag.name }}
-              <ion-icon matChipTrailingIcon name="close-outline" />
+              <button matChipRemove type="button">
+                <ion-icon name="close-outline" />
+              </button>
             </mat-chip-row>
           }
           <input
@@ -59,12 +55,12 @@
             </mat-option>
           }
 
-          @if (hasPermissionToCreateTag && tagInputControl.value) {
-            <mat-option [value]="tagInputControl.value.trim()">
+          @if (hasPermissionToCreateTag && tagNameToCreate()) {
+            <mat-option [value]="tagNameToCreate()">
               <span class="align-items-center d-flex">
                 <ion-icon class="mr-2" name="add-circle-outline" />
                 <ng-container i18n>Create</ng-container> "{{
-                  tagInputControl.value.trim()
+                  tagNameToCreate()
                 }}"
               </span>
             </mat-option>

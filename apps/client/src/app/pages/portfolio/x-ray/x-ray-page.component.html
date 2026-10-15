@@ -2,10 +2,17 @@
   <div class="row">
     <div class="col">
       <h2 class="d-none d-sm-block h3 mb-3 text-center">X-ray</h2>
-      <p i18n>
-        Ghostfolio X-ray uses static analysis to uncover potential issues and
-        risks in your portfolio. Adjust the rules below and set custom
-        thresholds to align with your personal investment strategy.
+      <p>
+        <ng-container i18n
+          >Ghostfolio X-ray uses static analysis to uncover potential issues and
+          risks in the portfolio.</ng-container
+        >
+        @if (!hasImpersonationId && hasPermissionToUpdateUserSettings) {
+          <ng-container i18n
+            >Adjust the rules below and set custom thresholds to align with a
+            personal investment strategy.</ng-container
+          >
+        }
       </p>
       <div class="d-flex pb-3">
         @if (isLoading) {
@@ -55,7 +62,7 @@
             <ng-container>{{ statistics?.rulesFulfilledCount }} </ng-container>
             <ng-container i18n>out of</ng-container>
             {{ statistics?.rulesActiveCount }}
-            <ng-container i18n>rules align with your portfolio.</ng-container>
+            <ng-container i18n>rules align with the portfolio.</ng-container>
           </div>
         }
       </div>

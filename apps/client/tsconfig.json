@@ -14,15 +14,19 @@
     }
   ],
   "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        // TODO: Remove once the fields are typed as optional
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    },
     "strictInjectionParameters": true,
-    // TODO: Enable stricter rules for this project
-    "strictInputAccessModifiers": false,
-    "strictTemplates": false
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
   },
   "compilerOptions": {
-    "lib": ["dom", "es2022"],
     "module": "preserve",
-    "strictNullChecks": true,
-    "target": "es2020"
+    "strictNullChecks": true
   }
 }

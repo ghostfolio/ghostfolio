@@ -1,17 +1,10 @@
-import { getLocale } from '@ghostfolio/common/helper';
+import { canOpenHoldingDetail, getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  HoldingWithParents
+  HoldingWithParents,
+  PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -25,25 +18,14 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { capitalize } from 'lodash';
+import { capitalize } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfValueComponent } from '../value/value.component';
 
 @Component({
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed,void', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      )
-    ])
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    GfSymbolPipe,
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,
@@ -56,24 +38,29 @@ import { GfValueComponent } from '../value/value.component';
   templateUrl: './top-holdings.component.html'
 })
 export class GfTopHoldingsComponent implements OnChanges {
-  @Input() baseCurrency: string;
-  @Input() locale = getLocale();
-  @Input() pageSize = Number.MAX_SAFE_INTEGER;
-  @Input() topHoldings: HoldingWithParents[];
+  @Input() public baseCurrency?: string;
+  @Input() public hasPermissionToShowValues = true;
+  @Input() public locale?: string = getLocale();
+  @Input() public pageSize = Number.MAX_SAFE_INTEGER;
+  @Input() public topHoldings?: HoldingWithParents[];
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   public dataSource = new MatTableDataSource<HoldingWithParents>();
-  public displayedColumns: string[] = [
-    'name',
-    'valueInBaseCurrency',
-    'allocationInPercentage'
-  ];
+  public displayedColumns: string[] = [];
   public isLoading = true;
 
   public ngOnChanges() {
+    this.displayedColumns = ['name'];
+
+    if (this.hasPermissionToShowValues) {
+      this.displayedColumns.push('valueInBaseCurrency');
+    }
+
+    this.displayedColumns.push('allocationInPercentage');
+
     this.isLoading = true;
 
     this.dataSource = new MatTableDataSource(this.topHoldings);
@@ -84,8 +71,19 @@ export class GfTopHoldingsComponent implements OnChanges {
     }
   }
 
-  public onClickHolding({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.holdingClicked.emit({ dataSource, symbol });
+  public canShowDetails(holding: { position?: PortfolioPosition }): boolean {
+    return !!holding?.position && canOpenHoldingDetail(holding.position);
+  }
+
+  public onClickHolding({ position }: { position?: PortfolioPosition }) {
+    if (!position || !canOpenHoldingDetail(position)) {
+      return;
+    }
+
+    this.holdingClicked.emit({
+      dataSource: position.assetProfile.dataSource,
+      symbol: position.assetProfile.symbol
+    });
   }
 
   public onShowAllHoldings() {

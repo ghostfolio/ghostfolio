@@ -1,6 +1,8 @@
 export interface HistoricalDataItem {
   averagePrice?: number;
   date: string;
+  dividendInBaseCurrency?: number;
+  dividendInPercentageWithCurrencyEffect?: number;
   grossPerformancePercent?: number;
   investmentValueWithCurrencyEffect?: number;
   marketPrice?: number;
@@ -11,7 +13,7 @@ export interface HistoricalDataItem {
   netWorth?: number;
   netWorthInPercentage?: number;
   quantity?: number;
-  totalAccountBalance?: number;
+  totalCashInBaseCurrency?: number;
   totalInvestment?: number;
   totalInvestmentValueWithCurrencyEffect?: number;
   value?: number;

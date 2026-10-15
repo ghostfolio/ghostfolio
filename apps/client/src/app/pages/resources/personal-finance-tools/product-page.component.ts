@@ -1,4 +1,5 @@
-import { getCountryName } from '@ghostfolio/common/helper';
+import { getCountryName, getEmojiFlag } from '@ghostfolio/common/helper';
+import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -13,7 +14,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
-import { ResolvedProduct } from './interfaces/interfaces';
+import { ResolvedProduct, ResolvedRegion } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +42,7 @@ export class GfProductPageComponent {
     isOpenSource: true,
     key: 'ghostfolio',
     languages: [
+      // 'Català',
       'Chinese (简体中文)',
       'Deutsch',
       'English',
@@ -50,13 +52,15 @@ export class GfProductPageComponent {
       // 'Japanese (日本語)',
       'Korean (한국어)',
       'Nederlands',
+      'Polski',
       'Português',
       'Türkçe'
+      // 'Ukrainian (Українська)'
     ],
     name: 'Ghostfolio',
-    origin: getCountryName({ code: 'CH' }),
+    origin: this.getResolvedCountry('CH'),
     platforms: this.getSortedTranslations(['ANDROID', 'WEB']),
-    regions: [$localize`Global`],
+    regions: [{ name: $localize`Global` }],
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
   }));
@@ -71,28 +75,35 @@ export class GfProductPageComponent {
       name: product?.name ?? '',
       ...product,
       categories: this.getSortedTranslations(product?.categories),
-      platforms: this.getSortedTranslations(product?.platforms)
-    };
-
-    if (mappedProduct.origin) {
-      mappedProduct.origin = getCountryName({ code: mappedProduct.origin });
-    }
-
-    if (mappedProduct.regions) {
-      mappedProduct.regions = mappedProduct.regions.map((region) => {
+      origin: product?.origin
+        ? this.getResolvedCountry(product.origin)
+        : undefined,
+      platforms: this.getSortedTranslations(product?.platforms),
+      regions: product?.regions?.map((region) => {
         return region === 'Global'
-          ? translate(region)
-          : getCountryName({ code: region });
-      });
-    }
+          ? { name: translate(region) }
+          : this.getResolvedCountry(region);
+      })
+    };
 
     return mappedProduct;
   });
 
   protected readonly routerLinkAbout = publicRoutes.about.routerLink;
   protected readonly routerLinkFeatures = publicRoutes.features.routerLink;
+
   protected readonly routerLinkResourcesPersonalFinanceTools =
     publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
+
+  protected readonly titlePrefix = $localize`The Open Source Alternative to`;
+
+  protected readonly nextProduct = computed(() => {
+    return personalFinanceTools[this.getCurrentProductIndex() + 1];
+  });
+
+  protected readonly previousProduct = computed(() => {
+    return personalFinanceTools[this.getCurrentProductIndex() - 1];
+  });
 
   protected readonly tags = computed<string[]>(() => {
     const product1 = this.product1();
@@ -107,7 +118,7 @@ export class GfProductPageComponent {
                 ...(categories ?? []),
                 ...(platforms ?? []),
                 name,
-                origin
+                origin?.name
               ];
             }
           ),
@@ -138,6 +149,34 @@ export class GfProductPageComponent {
 
   private readonly dataService = inject(DataService);
   private readonly route = inject(ActivatedRoute);
+
+  protected getProductRouterLink(product?: Product) {
+    if (!product) {
+      return this.routerLinkResourcesPersonalFinanceTools;
+    }
+
+    return [
+      ...this.routerLinkResourcesPersonalFinanceTools,
+      `${publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product.path}-${product.alias ?? product.key}`
+    ];
+  }
+
+  protected getProductTitle(product?: Product) {
+    return `Ghostfolio: ${this.titlePrefix} ${product?.name ?? ''}`;
+  }
+
+  private getCurrentProductIndex() {
+    return personalFinanceTools.findIndex(({ key }) => {
+      return key === this.product2().key;
+    });
+  }
+
+  private getResolvedCountry(code: string): ResolvedRegion {
+    return {
+      emojiFlag: getEmojiFlag(code),
+      name: getCountryName({ code })
+    };
+  }
 
   private getSortedTranslations(values?: string[]) {
     return values

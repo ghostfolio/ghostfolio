@@ -3,25 +3,30 @@
   <div class="row">
     <div class="col">
       <div class="d-flex py-1">
-        <form #changeUserSettingsForm="ngForm" class="w-100">
-          <div class="d-flex mb-2">
+        <div class="w-100">
+          <div
+            class="d-flex"
+            [class.mb-2]="!hasImpersonationId"
+            [class.mb-4]="hasImpersonationId"
+          >
             <div class="align-items-center d-flex pt-1 pt-1 w-50">
               <ng-container i18n>Base Currency</ng-container>
             </div>
-            <div class="pl-1 w-50">
-              <mat-form-field appearance="outline" class="w-100 without-hint">
-                <mat-select
-                  name="baseCurrency"
-                  [disabled]="!hasPermissionToUpdateUserSettings"
-                  [value]="user.settings.baseCurrency"
-                  (selectionChange)="
-                    onChangeUserSetting('baseCurrency', $event.value)
-                  "
-                >
-                  @for (currency of currencies; track currency) {
-                    <mat-option [value]="currency">{{ currency }}</mat-option>
-                  }
-                </mat-select>
+            <div class="pl-1 w-50" [formGroup]="baseCurrencyForm">
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                [class.without-hint]="!hasImpersonationId"
+              >
+                <gf-currency-selector
+                  formControlName="baseCurrency"
+                  [currencies]="currencies"
+                />
+                @if (hasImpersonationId) {
+                  <mat-hint class="mt-1 text-muted text-truncate" i18n
+                    >Derived from the portfolio you are viewing</mat-hint
+                  >
+                }
               </mat-form-field>
             </div>
           </div>
@@ -146,7 +151,7 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="align-items-center d-flex mb-2">
+          <div class="align-items-center d-flex mb-4">
             <div class="pr-1 w-50">
               <div i18n>Locale</div>
               <div class="hint-text text-muted">
@@ -154,7 +159,10 @@
               </div>
             </div>
             <div class="pl-1 w-50">
-              <mat-form-field appearance="outline" class="w-100 without-hint">
+              <mat-form-field
+                appearance="outline"
+                class="w-100 with-value-hint"
+              >
                 <mat-select
                   name="locale"
                   [disabled]="!hasPermissionToUpdateUserSettings"
@@ -168,6 +176,23 @@
                     <mat-option [value]="locale">{{ locale }}</mat-option>
                   }
                 </mat-select>
+                <mat-hint class="d-flex mt-2 text-muted text-truncate">
+                  <gf-value
+                    [deviceType]="deviceType()"
+                    [isDate]="true"
+                    [isLoading]="isLoading"
+                    [locale]="user.settings.locale"
+                    [value]="previewDate"
+                  />
+                  <span class="mx-1">·</span>
+                  <gf-value
+                    [isCurrency]="true"
+                    [isLoading]="isLoading"
+                    [locale]="user.settings.locale"
+                    [unit]="user.settings.baseCurrency"
+                    [value]="previewValue"
+                  />
+                </mat-hint>
               </mat-form-field>
             </div>
           </div>
@@ -194,7 +219,7 @@
               </mat-form-field>
             </div>
           </div>
-        </form>
+        </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">
         <div class="pr-1 w-50">
@@ -265,6 +290,25 @@
           />
         </div>
       </div>
+      @if (deviceType() !== 'mobile' && hasPermissionToEnableGhostfolioAi) {
+        <div class="align-items-center d-flex mt-4 py-1">
+          <div class="pr-1 w-50">
+            <div>Ghostfolio AI</div>
+            <div class="hint-text text-muted" i18n>
+              Powered by third-party AI providers
+            </div>
+          </div>
+          <div class="pl-1 w-50">
+            <mat-slide-toggle
+              color="primary"
+              hideIcon="true"
+              [checked]="user.settings.isGhostfolioAiEnabled"
+              [disabled]="!hasPermissionToUpdateUserSettings"
+              (change)="onGhostfolioAiChange($event)"
+            />
+          </div>
+        </div>
+      }
       <div class="align-items-center d-flex mt-4 py-1">
         <div class="pr-1 w-50">
           Ghostfolio <ng-container i18n>User ID</ng-container>
@@ -273,6 +317,7 @@
           <gf-value
             class="text-monospace"
             [enableCopyToClipboardButton]="true"
+            [isLoading]="isLoading"
             [value]="user?.id"
           />
         </div>
@@ -292,7 +337,10 @@
         <div class="d-flex py-1">
           <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
           <div class="pl-1 w-50">
-            @if (hasPermissionToDeleteOwnUser) {
+            @if (
+              hasPermissionToDeleteOwnUser &&
+              hasPermissionToUpdateOwnAccessToken
+            ) {
               <form
                 class="w-100"
                 [formGroup]="deleteOwnUserForm"
@@ -337,6 +385,15 @@
                   Close Account
                 </button>
               </form>
+            } @else if (hasPermissionToDeleteOwnUser && !hasImpersonationId) {
+              <button
+                color="warn"
+                i18n
+                mat-flat-button
+                (click)="onCloseAccount()"
+              >
+                Close Account
+              </button>
             } @else if (
               hasPermissionToRequestOwnUserDeletion &&
               (user?.accounts?.length > 0 || user?.activitiesCount > 0)
@@ -349,7 +406,11 @@
                 first before your Ghostfolio account can be closed.
               </div>
             } @else if (hasPermissionToRequestOwnUserDeletion) {
-              <a color="warn" i18n mat-flat-button [href]="closeUserAccountMail"
+              <a
+                color="warn"
+                i18n
+                mat-flat-button
+                [href]="closeUserAccountMailHref"
                 >Close Account</a
               >
             }

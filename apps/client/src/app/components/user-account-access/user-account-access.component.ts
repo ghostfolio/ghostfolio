@@ -1,9 +1,10 @@
 import { GfAccessTableComponent } from '@ghostfolio/client/components/access-table/access-table.component';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { CreateAccessDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -13,11 +14,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  inject,
-  OnInit
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -27,19 +26,14 @@ import {
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, eyeOffOutline, eyeOutline } from 'ionicons/icons';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-import { GfCreateOrUpdateAccessDialogComponent } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
-import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dialog/interfaces/interfaces';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,7 +43,6 @@ import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dial
     GfPremiumIndicatorComponent,
     IonIcon,
     MatButtonModule,
-    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
@@ -60,12 +53,14 @@ import { CreateOrUpdateAccessDialogParams } from './create-or-update-access-dial
   styleUrls: ['./user-account-access.scss'],
   templateUrl: './user-account-access.html'
 })
-export class GfUserAccountAccessComponent implements OnInit {
+export class GfUserAccountAccessComponent {
   protected accessesGet: Access[];
   protected accessesGive: Access[];
+  protected hasImpersonationId: boolean;
   protected hasPermissionToCreateAccess: boolean;
   protected hasPermissionToDeleteAccess: boolean;
   protected hasPermissionToUpdateOwnAccessToken: boolean;
+  protected readonly internalRoutes = internalRoutes;
   protected isAccessTokenHidden = true;
   protected readonly updateOwnAccessTokenForm = new FormGroup({
     accessToken: new FormControl<string>('', {
@@ -75,18 +70,13 @@ export class GfUserAccountAccessComponent implements OnInit {
   });
   protected user: User;
 
-  private readonly deviceType = computed(
-    () => this.deviceDetectorService.deviceInfo().deviceType
-  );
-
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly dialog = inject(MatDialog);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly notificationService = inject(NotificationService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -96,6 +86,15 @@ export class GfUserAccountAccessComponent implements OnInit {
       globalPermissions,
       permissions.deleteAccess
     );
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -118,36 +117,50 @@ export class GfUserAccountAccessComponent implements OnInit {
             permissions.updateOwnAccessToken
           );
 
-          this.changeDetectorRef.markForCheck();
-        }
-      });
+          this.update();
 
-    this.route.queryParams
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        if (params['createDialog']) {
-          this.openCreateAccessDialog();
-        } else if (params['editDialog'] && params['accessId']) {
-          this.openUpdateAccessDialog(params['accessId']);
+          this.changeDetectorRef.markForCheck();
         }
       });
 
     addIcons({ addOutline, eyeOffOutline, eyeOutline });
   }
 
-  public ngOnInit() {
-    this.update();
-  }
-
   protected onDeleteAccess(aId: string) {
     this.dataService
       .deleteAccess(aId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.update();
-        }
+      .pipe(
+        catchError(() => {
+          this.notificationService.alert({
+            title: $localize`Oops! Could not revoke the granted access.`
+          });
+
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.update();
       });
+  }
+
+  protected onDeleteReceivedAccess(aId: string) {
+    this.dataService
+      .deleteAccess(aId)
+      .pipe(
+        switchMap(() => {
+          return this.userService.get(true);
+        }),
+        catchError(() => {
+          this.notificationService.alert({
+            title: $localize`Oops! Could not remove the received access.`
+          });
+
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   protected onGenerateAccessToken() {
@@ -185,77 +198,20 @@ export class GfUserAccountAccessComponent implements OnInit {
     });
   }
 
-  protected onUpdateAccess(aId: string) {
-    this.router.navigate([], {
-      queryParams: { accessId: aId, editDialog: true }
-    });
-  }
-
-  private openCreateAccessDialog() {
-    const dialogRef = this.dialog.open<
-      GfCreateOrUpdateAccessDialogComponent,
-      CreateOrUpdateAccessDialogParams
-    >(GfCreateOrUpdateAccessDialogComponent, {
-      data: {} satisfies CreateOrUpdateAccessDialogParams,
-      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
-      if (access) {
-        this.update();
-      }
-
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
-  }
-
-  private openUpdateAccessDialog(accessId: string) {
-    const access = this.accessesGive?.find(({ id }) => {
-      return id === accessId;
-    });
-
-    if (!access) {
-      return;
-    }
-
-    const dialogRef = this.dialog.open<
-      GfCreateOrUpdateAccessDialogComponent,
-      CreateOrUpdateAccessDialogParams
-    >(GfCreateOrUpdateAccessDialogComponent, {
-      data: {
-        access: {
-          alias: access.alias,
-          grantee: access.grantee === 'Public' ? undefined : access.grantee,
-          id: access.id,
-          permissions: access.permissions,
-          settings: access.settings,
-          type: access.type
-        }
-      } satisfies CreateOrUpdateAccessDialogParams,
-      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
-      width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.update();
-      }
-
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
-  }
-
   private update() {
-    this.accessesGet = this.user.access.map(({ alias, id, permissions }) => {
-      return {
-        id,
-        permissions,
-        alias: alias ?? '',
-        grantee: $localize`Me`,
-        type: 'PRIVATE'
-      };
-    });
+    this.accessesGet = this.user.access.map(
+      ({ alias, expiresAt, id, lastUsedAt, scopes }) => {
+        return {
+          expiresAt,
+          id,
+          lastUsedAt,
+          scopes,
+          alias: alias ?? '',
+          grantee: $localize`Me`,
+          type: 'PRIVATE'
+        };
+      }
+    );
 
     this.dataService
       .fetchAccesses()

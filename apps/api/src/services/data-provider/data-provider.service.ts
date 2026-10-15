@@ -1,3 +1,4 @@
+import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
@@ -9,6 +10,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
+  NON_INVESTMENT_ACTIVITY_TYPES,
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
@@ -16,26 +18,31 @@ import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   DATE_FORMAT,
+  formatAssetProfileName,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol,
   getStartOfUtcDate,
   isCurrency,
-  isDerivedCurrency
+  isDerivedCurrency,
+  isValidCustomAssetProfileSymbol,
+  isValidSearchQuery
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   DataProviderHistoricalResponse,
   DataProviderResponse,
   LookupItem,
-  LookupResponse
+  LookupResponse,
+  MarketDataOfMarketsResponse
 } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
-import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
+import { groupBy, isEmpty, isNumber, omit, uniqWith } from 'lodash-es';
 import ms from 'ms';
 
 import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
@@ -44,7 +51,7 @@ import { AssetProfileInvalidError } from './errors/asset-profile-invalid.error';
 export class DataProviderService implements OnModuleInit {
   private readonly logger = new Logger(DataProviderService.name);
 
-  private dataProviderMapping: { [dataProviderName: string]: string };
+  private dataProviderMapping: { [dataProviderName: string]: string } = {};
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -98,7 +105,7 @@ export class DataProviderService implements OnModuleInit {
       return dataSource;
     });
 
-    const promises = [];
+    const promises: Promise<void>[] = [];
 
     for (const [dataSource, assetProfileIdentifiers] of Object.entries(
       itemsGroupedByDataSource
@@ -122,7 +129,11 @@ export class DataProviderService implements OnModuleInit {
                   symbol,
                   dataSource: DataSource[dataSource]
                 })
-              ] = { ...assetProfile, symbol };
+              ] = {
+                ...assetProfile,
+                symbol,
+                name: formatAssetProfileName(assetProfile)
+              };
             }
           })
         );
@@ -138,7 +149,7 @@ export class DataProviderService implements OnModuleInit {
         );
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -194,11 +205,7 @@ export class DataProviderService implements OnModuleInit {
         return DataSource[dataSource];
       });
 
-    const ghostfolioApiKey = await this.propertyService.getByKey<string>(
-      PROPERTY_API_KEY_GHOSTFOLIO
-    );
-
-    if (ghostfolioApiKey) {
+    if (await this.isDataProviderGhostfolioConfigured()) {
       dataSources.push('GHOSTFOLIO');
     }
 
@@ -209,7 +216,7 @@ export class DataProviderService implements OnModuleInit {
     activitiesDto,
     assetProfilesWithMarketDataDto,
     maxActivitiesToImport,
-    user
+    subscription
   }: {
     activitiesDto: Pick<
       Partial<CreateOrderDto>,
@@ -217,10 +224,12 @@ export class DataProviderService implements OnModuleInit {
     >[];
     assetProfilesWithMarketDataDto?: ImportDataDto['assetProfiles'];
     maxActivitiesToImport: number;
-    user: UserWithSettings;
+    subscription: UserWithSettings['subscription'];
   }) {
     if (activitiesDto?.length > maxActivitiesToImport) {
-      throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
+      throw new ImportValidationError(
+        `Too many activities (${maxActivitiesToImport} at most)`
+      );
     }
 
     const assetProfiles: {
@@ -244,19 +253,28 @@ export class DataProviderService implements OnModuleInit {
       });
 
       if (!dataSources.includes(dataSource)) {
-        throw new Error(
+        throw new ImportValidationError(
           `${activityPath}.dataSource ("${dataSource}") is not valid`
         );
       }
 
       if (
+        dataSource !== DataSource.MANUAL &&
+        isValidCustomAssetProfileSymbol(symbol)
+      ) {
+        throw new ImportValidationError(
+          `${activityPath}.symbol ("${symbol}") is not valid for the data source ("${maskedDataSource}")`
+        );
+      }
+
+      if (
         this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-        user.subscription.type === SubscriptionType.Basic
+        subscription?.type === SubscriptionType.Basic
       ) {
         const dataProvider = this.getDataProvider(DataSource[dataSource]);
 
         if (dataProvider.getDataProviderInfo().isPremium) {
-          throw new Error(
+          throw new ImportValidationError(
             `${activityPath}.dataSource ("${maskedDataSource}") requires Ghostfolio Premium`
           );
         }
@@ -268,23 +286,31 @@ export class DataProviderService implements OnModuleInit {
       });
 
       if (!assetProfiles[assetProfileIdentifier]) {
+        const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
+          (assetProfileWithMarketData) => {
+            return (
+              assetProfileWithMarketData.dataSource === dataSource &&
+              assetProfileWithMarketData.symbol === symbol
+            );
+          }
+        );
+
+        // A custom asset profile of the import is created after the
+        // validation, thus the data provider cannot resolve it yet
         if (
           (dataSource === DataSource.MANUAL && type === 'BUY') ||
-          ['FEE', 'INTEREST', 'LIABILITY'].includes(type)
+          assetProfileInImport?.dataSource === DataSource.MANUAL ||
+          NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
         ) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (assetProfile) => {
-              return (
-                assetProfile.dataSource === dataSource &&
-                assetProfile.symbol === symbol
-              );
-            }
-          );
-
           assetProfiles[assetProfileIdentifier] = {
-            currency,
+            ...omit(assetProfileInImport ?? {}, [
+              'dataSource',
+              'marketData',
+              'symbol'
+            ]),
             dataSource,
             symbol,
+            currency: assetProfileInImport?.currency ?? currency,
             name: assetProfileInImport?.name ?? symbol
           };
 
@@ -305,22 +331,8 @@ export class DataProviderService implements OnModuleInit {
         } catch {}
 
         if (!assetProfile?.name) {
-          const assetProfileInImport = assetProfilesWithMarketDataDto?.find(
-            (profile) => {
-              return (
-                profile.dataSource === dataSource && profile.symbol === symbol
-              );
-            }
-          );
-
-          if (assetProfileInImport) {
-            Object.assign(assetProfile, assetProfileInImport);
-          }
-        }
-
-        if (!assetProfile?.name) {
-          throw new Error(
-            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${maskedDataSource}")`
+          throw new ImportValidationError(
+            `${activityPath}.symbol ("${symbol}") cannot be resolved by the data source ("${maskedDataSource}")`
           );
         }
 
@@ -341,7 +353,13 @@ export class DataProviderService implements OnModuleInit {
     from: Date;
     granularity: Granularity;
     to: Date;
-  } & AssetProfileIdentifier) {
+  } & AssetProfileIdentifier): Promise<{
+    [date: string]: DataProviderHistoricalResponse;
+  }> {
+    if (!isValid(from) || !isValid(to)) {
+      return {};
+    }
+
     return this.getDataProvider(DataSource[dataSource]).getDividends({
       from,
       granularity,
@@ -351,12 +369,15 @@ export class DataProviderService implements OnModuleInit {
     });
   }
 
-  public async getHistorical(
-    aItems: AssetProfileIdentifier[],
-    aGranularity: Granularity = 'month',
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistorical({
+    assetProfileIdentifiers,
+    from,
+    to
+  }: {
+    assetProfileIdentifiers: AssetProfileIdentifier[];
+    from: Date;
+    to: Date;
+  }): Promise<{
     [assetProfileIdentifier: string]: {
       [date: string]: DataProviderHistoricalResponse;
     };
@@ -367,43 +388,29 @@ export class DataProviderService implements OnModuleInit {
       };
     } = {};
 
-    if (isEmpty(aItems) || !isValid(from) || !isValid(to)) {
+    if (isEmpty(assetProfileIdentifiers) || !isValid(from) || !isValid(to)) {
       return response;
     }
 
-    const granularityQuery =
-      aGranularity === 'month'
-        ? Prisma.sql`AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
-        : Prisma.empty;
-
-    const rangeQuery =
-      from && to
-        ? Prisma.sql`AND date >= ${format(from, DATE_FORMAT)}::timestamp AND date <= ${format(
-            to,
-            DATE_FORMAT
-          )}::timestamp`
-        : Prisma.empty;
-
-    const dataSources = aItems.map(({ dataSource }) => {
-      return dataSource;
-    });
-
-    const symbols = aItems.map(({ symbol }) => {
-      return symbol;
-    });
+    const assetProfileIdentifierTuples = assetProfileIdentifiers.map(
+      ({ dataSource, symbol }) => {
+        return Prisma.sql`(${dataSource}::"DataSource", ${symbol})`;
+      }
+    );
 
     try {
-      const marketDataByGranularity: MarketData[] = await this.prismaService
-        .$queryRaw`
-          SELECT *
+      const marketDataItems: Pick<
+        MarketData,
+        'dataSource' | 'date' | 'marketPrice' | 'symbol'
+      >[] = await this.prismaService.$queryRaw`
+          SELECT "dataSource", "date", "marketPrice", "symbol"
           FROM "MarketData"
-          WHERE "dataSource"::text IN (${Prisma.join(dataSources)})
-            AND "symbol" IN (${Prisma.join(symbols)})
-            ${granularityQuery}
-            ${rangeQuery}
+          WHERE ("dataSource", "symbol") IN (${Prisma.join(assetProfileIdentifierTuples)})
+            AND date >= ${format(from, DATE_FORMAT, { in: utc })}::timestamp
+            AND date <= ${format(to, DATE_FORMAT, { in: utc })}::timestamp
           ORDER BY date;`;
 
-      response = marketDataByGranularity.reduce((r, marketData) => {
+      response = marketDataItems.reduce((r, marketData) => {
         const { dataSource, date, marketPrice, symbol } = marketData;
 
         const assetProfileIdentifier = getAssetProfileIdentifier({
@@ -415,14 +422,16 @@ export class DataProviderService implements OnModuleInit {
           r[assetProfileIdentifier] = {};
         }
 
-        r[assetProfileIdentifier][format(new Date(date), DATE_FORMAT)] = {
+        r[assetProfileIdentifier][
+          format(new Date(date), DATE_FORMAT, { in: utc })
+        ] = {
           marketPrice
         };
 
         return r;
       }, {});
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     } finally {
       return response;
     }
@@ -490,8 +499,11 @@ export class DataProviderService implements OnModuleInit {
             [date: string]: DataProviderHistoricalResponse;
           } = {};
 
-          for (const date of eachDayOfInterval({ end: to, start: from })) {
-            data[format(date, DATE_FORMAT)] = { marketPrice: 100 };
+          for (const date of eachDayOfInterval(
+            { end: to, start: from },
+            { in: utc }
+          )) {
+            data[format(date, DATE_FORMAT, { in: utc })] = { marketPrice: 100 };
           }
 
           promises.push(
@@ -511,7 +523,7 @@ export class DataProviderService implements OnModuleInit {
                 requestTimeout: ms('30 seconds')
               })
               .then((data) => {
-                return { dataSource, symbol, data: data?.[symbol] };
+                return { data, dataSource, symbol };
               })
           );
         }
@@ -543,7 +555,7 @@ export class DataProviderService implements OnModuleInit {
         result[getAssetProfileIdentifier({ dataSource, symbol })] = data;
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -551,16 +563,32 @@ export class DataProviderService implements OnModuleInit {
     return result;
   }
 
+  public async getMarketDataOfMarkets({
+    includeHistoricalData
+  }: {
+    includeHistoricalData: number;
+  }): Promise<MarketDataOfMarketsResponse> {
+    const dataProvider = this.getDataProvider(DataSource.GHOSTFOLIO);
+
+    if (!dataProvider.getMarketDataOfMarkets) {
+      throw new Error(
+        `The data provider (${DataSource.GHOSTFOLIO}) does not support the market data of markets`
+      );
+    }
+
+    return dataProvider.getMarketDataOfMarkets({ includeHistoricalData });
+  }
+
   public async getQuotes({
     items,
     requestTimeout,
-    useCache = true,
-    user
+    subscriptionType,
+    useCache = true
   }: {
     items: AssetProfileIdentifier[];
     requestTimeout?: number;
+    subscriptionType?: SubscriptionType;
     useCache?: boolean;
-    user?: UserWithSettings;
   }): Promise<{
     [assetProfileIdentifier: string]: DataProviderResponse;
   }> {
@@ -647,7 +675,7 @@ export class DataProviderService implements OnModuleInit {
           } else if (
             dataProvider.getDataProviderInfo().isPremium &&
             this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-            user?.subscription.type === SubscriptionType.Basic
+            subscriptionType === SubscriptionType.Basic
           ) {
             // Skip symbols of Premium data providers for users without subscription
             return false;
@@ -685,6 +713,10 @@ export class DataProviderService implements OnModuleInit {
 
         promises.push(
           promise.then(async (result) => {
+            const fetchedQuotes: (DataProviderResponse & {
+              symbol: string;
+            })[] = [];
+
             for (const [symbol, dataProviderResponse] of Object.entries(
               result
             )) {
@@ -699,12 +731,16 @@ export class DataProviderService implements OnModuleInit {
                 continue;
               }
 
+              const quote = { ...dataProviderResponse, symbol };
+
+              fetchedQuotes.push(quote);
+
               response[
                 getAssetProfileIdentifier({
                   symbol,
                   dataSource: DataSource[dataSource]
                 })
-              ] = { ...dataProviderResponse, symbol };
+              ] = quote;
 
               this.redisCacheService.set(
                 this.redisCacheService.getQuoteKey({
@@ -732,15 +768,19 @@ export class DataProviderService implements OnModuleInit {
                     marketState: 'open'
                   };
 
+                  const derivedQuote = {
+                    ...derivedDataProviderResponse,
+                    symbol: `${DEFAULT_CURRENCY}${currency}`
+                  };
+
+                  fetchedQuotes.push(derivedQuote);
+
                   response[
                     getAssetProfileIdentifier({
                       dataSource: DataSource[dataSource],
                       symbol: `${DEFAULT_CURRENCY}${currency}`
                     })
-                  ] = {
-                    ...derivedDataProviderResponse,
-                    symbol: `${DEFAULT_CURRENCY}${currency}`
-                  };
+                  ] = derivedQuote;
 
                   this.redisCacheService.set(
                     this.redisCacheService.getQuoteKey({
@@ -765,7 +805,7 @@ export class DataProviderService implements OnModuleInit {
 
             try {
               await this.marketDataService.updateMany({
-                data: Object.values(response)
+                data: fetchedQuotes
                   .filter(({ marketPrice, marketState }) => {
                     return (
                       isNumber(marketPrice) &&
@@ -807,6 +847,12 @@ export class DataProviderService implements OnModuleInit {
     return response;
   }
 
+  public async isDataProviderGhostfolioConfigured(): Promise<boolean> {
+    return !!(await this.propertyService.getByKey<string>(
+      PROPERTY_API_KEY_GHOSTFOLIO
+    ));
+  }
+
   public async search({
     includeIndices = false,
     query,
@@ -819,7 +865,9 @@ export class DataProviderService implements OnModuleInit {
     let lookupItems: LookupItem[] = [];
     const promises: Promise<LookupResponse>[] = [];
 
-    if (query?.length < 2) {
+    query = query?.trim();
+
+    if (!isValidSearchQuery(query)) {
       return { items: lookupItems };
     }
 
@@ -857,7 +905,7 @@ export class DataProviderService implements OnModuleInit {
       })
       .map((lookupItem) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-          if (user.subscription.type === SubscriptionType.Premium) {
+          if (user.subscription?.type === SubscriptionType.Premium) {
             lookupItem.dataProviderInfo.isPremium = false;
           }
 
@@ -868,16 +916,7 @@ export class DataProviderService implements OnModuleInit {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 
-        if (
-          lookupItem.assetSubClass === 'CRYPTOCURRENCY' &&
-          user?.settings?.settings.isExperimentalFeatures
-        ) {
-          // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
-          lookupItem.name = lookupItem.name.replace(
-            new RegExp(` ${DEFAULT_CURRENCY}$`),
-            ''
-          );
-        }
+        lookupItem.name = formatAssetProfileName(lookupItem);
 
         return lookupItem;
       })

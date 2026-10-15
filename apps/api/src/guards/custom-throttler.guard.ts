@@ -5,7 +5,9 @@ import { ThrottlerException, ThrottlerGuard } from '@nestjs/throttler';
 export class CustomThrottlerGuard extends ThrottlerGuard {
   private readonly logger = new Logger(CustomThrottlerGuard.name);
 
-  public async canActivate(context: ExecutionContext): Promise<boolean> {
+  public override async canActivate(
+    context: ExecutionContext
+  ): Promise<boolean> {
     try {
       return await super.canActivate(context);
     } catch (error) {

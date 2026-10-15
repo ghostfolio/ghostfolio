@@ -15,11 +15,11 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [isLoading]="isLoading"
             [isPercent]="true"
             [precision]="2"
             [value]="
-              publicPortfolioDetails?.performance?.['1d']?.relativeChange ??
-              undefined
+              publicPortfolioDetails?.performance?.['1d']?.relativeChange
             "
             >Today</gf-value
           >
@@ -33,11 +33,11 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [isLoading]="isLoading"
             [isPercent]="true"
             [precision]="2"
             [value]="
-              publicPortfolioDetails?.performance?.['ytd']?.relativeChange ??
-              undefined
+              publicPortfolioDetails?.performance?.['ytd']?.relativeChange
             "
             >This year</gf-value
           >
@@ -51,11 +51,11 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [isLoading]="isLoading"
             [isPercent]="true"
             [precision]="2"
             [value]="
-              publicPortfolioDetails?.performance?.['max']?.relativeChange ??
-              undefined
+              publicPortfolioDetails?.performance?.['max']?.relativeChange
             "
             >From the beginning</gf-value
           >

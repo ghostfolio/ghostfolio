@@ -1,8 +1,11 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
+  E_MAIL_LINE_BREAK,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
-  NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+  NUMERICAL_PRECISION_THRESHOLD_4_FIGURES,
+  TAG_ID_DRAFT
 } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
@@ -13,7 +16,7 @@ import {
 import {
   Activity,
   DataProviderInfo,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Filter,
   LineChartItem,
   NullableLineChartItem,
@@ -21,6 +24,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { AccountWithValue } from '@ghostfolio/common/types';
+import type { MarketData, Tag } from '@ghostfolio/prisma/browser';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
@@ -30,12 +35,12 @@ import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -62,9 +67,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Account, MarketData, Tag } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
@@ -77,11 +81,14 @@ import {
   swapVerticalOutline,
   walletOutline
 } from 'ionicons/icons';
-import { isNumber, round, uniqBy } from 'lodash';
+import { isNumber, round, uniqBy } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 
-import { HoldingDetailDialogParams } from './interfaces/interfaces';
+import {
+  HoldingDetailDialogParams,
+  HoldingDetailDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,6 +102,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
+    GfPremiumIndicatorComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
     IonIcon,
@@ -107,17 +115,16 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     ReactiveFormsModule,
     RouterModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holding-detail-dialog',
   styleUrls: ['./holding-detail-dialog.component.scss'],
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnInit {
-  protected accounts: Account[];
+  protected accounts: AccountWithValue[];
   protected activitiesCount: number;
   protected assetClass: string;
   protected assetProfile: Pick<
-    EnhancedSymbolProfile,
+    EnhancedAssetProfile,
     | 'assetClass'
     | 'assetSubClass'
     | 'countries'
@@ -134,8 +141,8 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected averagePricePrecision = 2;
   protected benchmarkDataItems: NullableLineChartItem[];
   protected readonly benchmarkLabel = $localize`Average Unit Price`;
-  protected buyDateMarkers: NullableLineChartItem[] = [];
-  protected sellDateMarkers: NullableLineChartItem[] = [];
+  protected buyDateMarkers: LineChartItem[] = [];
+  protected sellDateMarkers: LineChartItem[] = [];
   protected countries: {
     [code: string]: { name: string; value: number };
   };
@@ -156,6 +163,8 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   }>;
   protected investmentInBaseCurrencyWithCurrencyEffect: number;
   protected investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
+  protected isLoading = true;
+  protected isOwnAssetProfile: boolean;
   protected readonly isUUID = isUUID;
   protected marketDataItems: MarketData[] = [];
   protected marketPrice: number;
@@ -172,10 +181,11 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
   protected quantity: number;
   protected quantityPrecision = 2;
-  protected reportDataGlitchMail: string;
+  protected reportDataGlitchMailHref: string;
   protected readonly round = round;
-  protected readonly routerLinkAdminControlMarketData =
-    internalRoutes.adminControl.subRoutes.marketData.routerLink;
+  protected readonly routerLinkAdminControlMarketDataUpdate =
+    internalRoutes.adminControl.subRoutes.marketData.subRoutes.update
+      .routerLink;
   protected sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -188,9 +198,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   protected value: number;
 
   protected readonly data = inject<HoldingDetailDialogParams>(MAT_DIALOG_DATA);
-  protected readonly dialogRef = inject(
-    MatDialogRef<GfHoldingDetailDialogComponent>
-  );
+  protected readonly dialogRef =
+    inject<
+      MatDialogRef<GfHoldingDetailDialogComponent, HoldingDetailDialogResult>
+    >(MatDialogRef);
 
   private tags: Tag[];
 
@@ -198,10 +209,24 @@ export class GfHoldingDetailDialogComponent implements OnInit {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
+    this.router.events
+      .pipe(
+        filter((event) => {
+          return event instanceof NavigationStart;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close({ isNavigating: true });
+      });
+
     addIcons({
       arrowDownCircleOutline,
       createOutline,
@@ -351,13 +376,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           this.feeInBaseCurrency = feeInBaseCurrency;
 
-          this.hasPermissionToReadMarketDataOfOwnAssetProfile =
-            hasPermission(
-              this.user?.permissions,
-              permissions.readMarketDataOfOwnAssetProfile
-            ) &&
-            assetProfile?.dataSource === 'MANUAL' &&
-            assetProfile?.userId === this.user?.id;
+          this.hasPermissionToReadMarketDataOfOwnAssetProfile = hasPermission(
+            this.user?.permissions,
+            permissions.readMarketDataOfOwnAssetProfile
+          );
 
           this.historicalDataItems = historicalData.map(
             ({ averagePrice, date, marketPrice, quantity }) => {
@@ -384,6 +406,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           ) {
             this.investmentInBaseCurrencyWithCurrencyEffectPrecision = 0;
           }
+
+          this.isOwnAssetProfile =
+            assetProfile?.dataSource === 'MANUAL' &&
+            assetProfile?.userId === this.user?.id;
 
           this.marketPrice = marketPrice;
           this.marketPriceMax = marketPriceMax;
@@ -464,7 +490,20 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             this.assetProfile?.symbol ? ` (${this.assetProfile.symbol})` : ''
           }`;
 
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${this.assetProfile?.symbol}%0DData Source: ${this.assetProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
+          this.reportDataGlitchMailHref = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=${[
+            'Hello',
+            '',
+            'I would like to report a data glitch for',
+            '',
+            `Symbol: ${this.assetProfile?.symbol}`,
+            `Data Source: ${this.assetProfile?.dataSource}`,
+            '',
+            'Additional notes:',
+            '',
+            'Can you please take a look?',
+            '',
+            'Kind regards'
+          ].join(E_MAIL_LINE_BREAK)}`;
 
           if (this.assetProfile?.assetClass) {
             this.assetClass = translate(this.assetProfile?.assetClass);
@@ -546,11 +585,15 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           );
 
-          if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
+          if (
+            this.hasPermissionToReadMarketDataOfOwnAssetProfile &&
+            this.isOwnAssetProfile
+          ) {
             this.fetchMarketData();
           }
 
           this.fetchFullHistoricalData();
+          this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -562,17 +605,26 @@ export class GfHoldingDetailDialogComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          // A tag created during an impersonation belongs to the authenticated
+          // user, hence it cannot be assigned to the data of the impersonated
+          // user
           this.hasPermissionToCreateOwnTag =
-            hasPermission(this.user.permissions, permissions.createOwnTag) &&
-            (this.user?.settings?.isExperimentalFeatures ?? false);
+            !this.impersonationStorageService.getId() &&
+            hasPermission(this.user?.permissions, permissions.createOwnTag);
 
           this.tagsAvailable =
-            this.user?.tags?.map((tag) => {
-              return {
-                ...tag,
-                name: translate(tag.name)
-              };
-            }) ?? [];
+            this.user?.tags
+              ?.filter(({ id }) => {
+                // The "DRAFT" tag qualifies an individual activity and cannot
+                // be assigned to all activities of a holding
+                return id !== TAG_ID_DRAFT;
+              })
+              .map((tag) => {
+                return {
+                  ...tag,
+                  name: translate(tag.name)
+                };
+              }) ?? [];
 
           this.changeDetectorRef.markForCheck();
         }
@@ -583,17 +635,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     this.pageIndex = page.pageIndex;
 
     this.fetchActivities();
-  }
-
-  protected onCloneActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, createDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
   }
 
   protected onClose() {
@@ -623,11 +664,9 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       .postActivity(activity)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.router.navigate(
-          internalRoutes.portfolio.subRoutes.activities.routerLink
-        );
+        this.userService.get(true).subscribe();
 
-        this.dialogRef.close();
+        this.navigateToActivities();
       });
   }
 
@@ -655,17 +694,6 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  protected onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, editDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
   }
 
   private fetchActivities(filters: Filter[] = this.getActivityFilters()) {
@@ -792,5 +820,13 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       { id: this.data.dataSource, type: 'DATA_SOURCE' },
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
+  }
+
+  private navigateToActivities() {
+    this.router.navigate(
+      internalRoutes.portfolio.subRoutes.activities.routerLink
+    );
+
+    this.dialogRef.close();
   }
 }

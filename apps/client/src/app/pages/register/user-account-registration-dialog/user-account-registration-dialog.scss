@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 :host {
   --mat-dialog-with-actions-content-padding: 0;
 
@@ -8,6 +10,15 @@
     &:hover {
       color: rgba(var(--palette-primary-300), 1);
     }
+  }
+
+  mat-stepper {
+    @include mat.stepper-overrides(
+      (
+        header-focus-state-layer-color: transparent,
+        header-hover-state-layer-color: transparent
+      )
+    );
   }
 
   .mat-mdc-dialog-actions {

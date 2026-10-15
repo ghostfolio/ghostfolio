@@ -23,6 +23,7 @@ import { ImportService } from './import.service';
 
 @Module({
   controllers: [ImportController],
+  exports: [ImportService],
   imports: [
     AccountModule,
     ActivitiesModule,

@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "date": "2026-10-01T00:00:00.000Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "currency": "CHF",
+      "dataSource": "YAHOO",
+      "date": "2021-11-30T00:00:00.000Z",
+      "fee": 1.55,
+      "id": "d82cae72-04b1-5beb-9d84-8e7740cd1b44",
+      "quantity": 2,
+      "symbol": "BALN.SW",
+      "type": "BUY",
+      "unitPrice": 136.6
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "CHF",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}

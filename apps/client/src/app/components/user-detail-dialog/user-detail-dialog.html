@@ -13,10 +13,19 @@
     class="no-max-width"
     xPosition="before"
   >
+    <button mat-menu-item type="button" (click)="initialize()">
+      <ng-container i18n>Refresh</ng-container>
+    </button>
+    <hr class="m-0" />
     <button
       mat-menu-item
       type="button"
-      [disabled]="this.data.currentUserId === this.data.userId"
+      [disabled]="
+        !canDeleteUser({
+          currentUserId: data.currentUserId,
+          userId: data.userId
+        })
+      "
       (click)="deleteUser()"
     >
       <ng-container i18n>Delete</ng-container>
@@ -31,12 +40,19 @@
           i18n
           size="medium"
           [enableCopyToClipboardButton]="true"
+          [isLoading]="isLoading"
           [value]="user?.id"
           >User ID</gf-value
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="user?.role">Role</gf-value>
+        <gf-value
+          i18n
+          size="medium"
+          [isLoading]="isLoading"
+          [value]="user?.role"
+          >Role</gf-value
+        >
       </div>
     </div>
 
@@ -46,6 +62,7 @@
           i18n
           size="medium"
           [isDate]="true"
+          [isLoading]="isLoading"
           [locale]="data.locale"
           [value]="user?.createdAt"
           >Registration Date</gf-value
@@ -55,6 +72,7 @@
         <gf-value
           i18n
           size="medium"
+          [isLoading]="isLoading"
           [locale]="data.locale"
           [value]="user?.provider"
           >Authentication</gf-value
@@ -68,6 +86,7 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [locale]="data.locale"
             [value]="user?.subscription ? 'Premium' : 'Basic'"
             >Membership</gf-value
@@ -77,6 +96,7 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [value]="
               user?.country ? getCountryName({ code: user.country }) : '-'
             "
@@ -91,6 +111,7 @@
         <gf-value
           i18n
           size="medium"
+          [isLoading]="isLoading"
           [locale]="data.locale"
           [value]="user?.accountCount"
           >Accounts</gf-value
@@ -100,6 +121,7 @@
         <gf-value
           i18n
           size="medium"
+          [isLoading]="isLoading"
           [locale]="data.locale"
           [value]="user?.activityCount"
           >Activities</gf-value
@@ -113,6 +135,7 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [locale]="data.locale"
             [precision]="0"
             [value]="user?.engagement"
@@ -123,9 +146,38 @@
           <gf-value
             i18n
             size="medium"
+            [isLoading]="isLoading"
             [locale]="data.locale"
             [value]="user?.dailyApiRequests"
             >API Requests Today</gf-value
+          >
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <div class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [isLoading]="isLoading"
+            [value]="
+              formatRelativeTime({
+                date: user?.lastActivity,
+                language: data.language
+              }) || '-'
+            "
+            >Last Request</gf-value
+          >
+        </div>
+        <div class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [isLoading]="isLoading"
+            [value]="
+              user?.lastRequestClient ? translate(user.lastRequestClient) : '-'
+            "
+            >Client</gf-value
           >
         </div>
       </div>

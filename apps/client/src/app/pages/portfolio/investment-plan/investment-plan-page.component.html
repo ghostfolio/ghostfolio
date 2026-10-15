@@ -439,41 +439,6 @@
         </div>
 
         <div class="col-md-6">
-          <mat-card appearance="outlined" class="mb-3">
-            <mat-card-header>
-              <mat-card-title i18n>AI Investment Analysis</mat-card-title>
-              <mat-card-subtitle i18n>Based on your rebalancing plan + DCA schedules + current holdings</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content class="py-3">
-              @if (aiReport) {
-                <div class="ai-report-content" [innerHTML]="aiReport"></div>
-              } @else {
-                <div class="ai-report-placeholder">
-                  Click Generate to get an AI summary of your investment plan, suggested actions, and market timing insights.
-                </div>
-              }
-            </mat-card-content>
-            <mat-card-actions class="d-flex justify-content-end gap-2" style="padding: 12px 16px 16px">
-              <button
-                mat-stroked-button
-                [disabled]="isCopyingPrompt"
-                (click)="onCopyPrompt()"
-                i18n
-              >
-                {{ isCopyingPrompt ? 'Copying...' : 'Copy Prompt' }}
-              </button>
-              <button
-                color="primary"
-                mat-flat-button
-                [disabled]="isGeneratingReport"
-                (click)="onGenerateReport()"
-                i18n
-              >
-                {{ isGeneratingReport ? 'Generating...' : 'Generate Report' }}
-              </button>
-            </mat-card-actions>
-          </mat-card>
-
           <mat-card appearance="outlined">
             <mat-card-header>
               <mat-card-title i18n>Configured schedules</mat-card-title>
@@ -486,7 +451,7 @@
                 <div class="border rounded p-3 mb-2">
                   <div class="d-flex justify-content-between">
                     <strong>{{ dca.symbol }}</strong>
-                    <button color="warn" mat-icon-button (click)="onDeleteDca(dca.id)">
+                    <button color="warn" mat-icon-button (click)="onDeleteDca(dca.id!)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>
@@ -676,7 +641,7 @@
                     <button
                       mat-icon-button
                       style="margin-right: 10px; width:100px; font-size:16px; color:red"
-                      (click)="onDeletePriceAlert(alert.id)"
+                      (click)="onDeletePriceAlert(alert.id!)"
                     >
                       delete
                     </button>
@@ -697,7 +662,7 @@
                       <button
                         class="ms-2"
                         mat-stroked-button
-                        (click)="onRearmPriceAlert(alert.id)"
+                        (click)="onRearmPriceAlert(alert.id!)"
                         i18n
                       >
                         Re-arm

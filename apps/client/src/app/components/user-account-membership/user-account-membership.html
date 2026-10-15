@@ -3,7 +3,9 @@
     <div class="col">
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
-          [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
+          [expiresAt]="
+            (user?.subscription?.expiresAt | date: defaultDateFormat) ?? ''
+          "
           [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
           [hover3d]="true"
           [name]="user?.subscription?.type"
@@ -49,7 +51,10 @@
             }
             <div class="align-items-center d-flex justify-content-center mt-4">
               @if (!user?.subscription?.expiresAt) {
-                <a class="mx-1" mat-stroked-button [href]="trySubscriptionMail"
+                <a
+                  class="mx-1"
+                  mat-stroked-button
+                  [href]="trySubscriptionMailHref"
                   ><span i18n>Try Premium</span>
                   <gf-premium-indicator
                     class="d-inline-block ml-1"

@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "date": "2026-10-01T00:00:00.000Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2021-09-16T00:00:00.000Z",
+      "fee": 19,
+      "id": "dcec53cf-61d7-522b-985f-fd94b1f074a0",
+      "quantity": 1,
+      "symbol": "MSFT",
+      "type": "BUY",
+      "unitPrice": 298.58
+    },
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2021-11-16T00:00:00.000Z",
+      "fee": 0,
+      "id": "ac5970cf-4bb9-5385-8faf-9dd1efaca883",
+      "quantity": 1,
+      "symbol": "MSFT",
+      "type": "DIVIDEND",
+      "unitPrice": 0.62
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { NUMERICAL_PRECISION_THRESHOLD_6_FIGURES } from '@ghostfolio/common/config';
 import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
 import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -20,34 +21,42 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { formatDistanceToNow } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  caretForwardOutline,
   ellipsisHorizontalCircleOutline,
   informationCircleOutline
 } from 'ionicons/icons';
+import { isNumber } from 'lodash-es';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GfValueComponent, IonIcon, MatTooltipModule],
+  imports: [
+    GfValueComponent,
+    IonIcon,
+    MatTooltipModule,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-portfolio-summary',
   styleUrls: ['./portfolio-summary.component.scss'],
   templateUrl: './portfolio-summary.component.html'
 })
 export class GfPortfolioSummaryComponent implements OnChanges, OnDestroy {
-  @Input() baseCurrency: string;
-  @Input() deviceType: string;
-  @Input() hasImpersonationId: boolean;
-  @Input() hasPermissionToUpdateUserSettings: boolean;
-  @Input() isLoading: boolean;
-  @Input() language: string;
-  @Input() locale = getLocale();
-  @Input() investmentPlan: {
+  @Input() public baseCurrency?: string;
+  @Input() public deviceType: string;
+  @Input() public hasImpersonationId: boolean;
+  @Input() public hasPermissionToUpdateUserSettings: boolean;
+  @Input() public isLoading: boolean;
+  @Input() public investmentPlan: {
     cashBuffer: number;
     cashReserve: number;
     longTermGrowthTarget: number;
     preservationBucket: number;
     sipMonthlyBudget: number;
   } | null = null;
-  @Input() summary: PortfolioSummary;
-  @Input() user: User;
+  @Input() public language?: string;
+  @Input() public locale?: string = getLocale();
+  @Input() public summary?: PortfolioSummary;
+  @Input() public user?: User;
 
   public emergencyFundChanged = output<number>();
 
@@ -55,6 +64,11 @@ export class GfPortfolioSummaryComponent implements OnChanges, OnDestroy {
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
   );
 
+  protected readonly isNumber = isNumber;
+  protected readonly PerformanceCalculationType = PerformanceCalculationType;
+
+  protected isCashExpanded = false;
+  protected isHoldingsExpanded = false;
   protected precision = 2;
   protected showSimpleReturn = signal(false);
   protected timeInMarket: string | undefined;
@@ -63,7 +77,11 @@ export class GfPortfolioSummaryComponent implements OnChanges, OnDestroy {
   private simpleReturnToggleIntervalId: ReturnType<typeof setInterval>;
 
   public constructor() {
-    addIcons({ ellipsisHorizontalCircleOutline, informationCircleOutline });
+    addIcons({
+      caretForwardOutline,
+      ellipsisHorizontalCircleOutline,
+      informationCircleOutline
+    });
 
     this.simpleReturnToggleIntervalId = setInterval(() => {
       this.showSimpleReturn.update((value) => !value);
@@ -74,10 +92,15 @@ export class GfPortfolioSummaryComponent implements OnChanges, OnDestroy {
     clearInterval(this.simpleReturnToggleIntervalId);
   }
 
-  protected get buyingPowerPercentage() {
+  protected get cashPercentage() {
     return this.summary?.totalValueInBaseCurrency
-      ? this.summary.cash / this.summary.totalValueInBaseCurrency
+      ? this.summary.totalCashInBaseCurrency /
+          this.summary.totalValueInBaseCurrency
       : 0;
+  }
+
+  protected get displayedCurrency() {
+    return this.deviceType === 'mobile' ? undefined : this.baseCurrency;
   }
 
   protected get emergencyFundPercentage() {
@@ -92,6 +115,45 @@ export class GfPortfolioSummaryComponent implements OnChanges, OnDestroy {
       ? this.summary.excludedAccountsAndActivities /
           this.summary.totalValueInBaseCurrency
       : 0;
+  }
+
+  protected get hasCashBreakdown() {
+    return !this.isLoading && (this.summary?.emergencyFund?.cash ?? 0) > 0;
+  }
+
+  protected get hasHoldingsBreakdown() {
+    return !this.isLoading && (this.summary?.emergencyFund?.assets ?? 0) > 0;
+  }
+
+  protected get holdingsInBaseCurrency() {
+    if (
+      !isNumber(this.summary?.totalAssetsInBaseCurrency) ||
+      !isNumber(this.summary?.totalCashInBaseCurrency)
+    ) {
+      return null;
+    }
+
+    return (
+      this.summary.totalAssetsInBaseCurrency -
+      this.summary.totalCashInBaseCurrency
+    );
+  }
+
+  protected get holdingsPercentage() {
+    return this.summary?.totalValueInBaseCurrency &&
+      isNumber(this.holdingsInBaseCurrency)
+      ? this.holdingsInBaseCurrency / this.summary.totalValueInBaseCurrency
+      : 0;
+  }
+
+  protected get investmentsInBaseCurrency() {
+    if (!isNumber(this.holdingsInBaseCurrency)) {
+      return null;
+    }
+
+    return (
+      this.holdingsInBaseCurrency - (this.summary?.emergencyFund?.assets ?? 0)
+    );
   }
 
   protected get simpleReturnPercentage() {
@@ -119,7 +181,7 @@ export class GfPortfolioSummaryComponent implements OnChanges, OnDestroy {
           }
         );
       } else {
-        this.timeInMarket = '-';
+        this.timeInMarket = '–';
       }
     } else {
       this.timeInMarket = undefined;
@@ -134,8 +196,17 @@ export class GfPortfolioSummaryComponent implements OnChanges, OnDestroy {
         this.emergencyFundChanged.emit(emergencyFund);
       },
       confirmLabel: $localize`Save`,
-      defaultValue: this.summary.emergencyFund?.total?.toString() ?? '0',
-      title: $localize`Please set the amount of your emergency fund.`
+      defaultValue: this.summary?.emergencyFund?.total?.toString() ?? '0',
+      title: $localize`Please set the amount of your emergency fund.`,
+      valueSuffix: this.baseCurrency
     });
+  }
+
+  protected onToggleCash() {
+    this.isCashExpanded = !this.isCashExpanded;
+  }
+
+  protected onToggleHoldings() {
+    this.isHoldingsExpanded = !this.isHoldingsExpanded;
   }
 }

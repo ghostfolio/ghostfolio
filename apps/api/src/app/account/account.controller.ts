@@ -1,13 +1,11 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   CreateAccountDto,
   TransferBalanceDto,
@@ -19,29 +17,26 @@ import {
   AccountsResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Body,
   Controller,
   Delete,
   Get,
-  Headers,
   HttpException,
-  Inject,
   Param,
   Post,
   Put,
   Query,
-  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
+import { GetAllAccountsDto } from './get-all-accounts.dto';
 
 @Controller('account')
 export class AccountController {
@@ -49,21 +44,22 @@ export class AccountController {
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly apiService: ApiService,
-    private readonly impersonationService: ImpersonationService,
-    private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    private readonly portfolioService: PortfolioService
   ) {}
 
   @Delete(':id')
   @HasPermission(permissions.deleteAccount)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
+  @RequiresScope(scopes.accountDelete)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async deleteAccount(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ): Promise<AccountModel> {
     const account = await this.accountService.accountWithActivities(
       {
         id_userId: {
           id,
-          userId: this.request.user.id
+          userId
         }
       },
       { activities: true }
@@ -79,51 +75,54 @@ export class AccountController {
     return this.accountService.deleteAccount({
       id_userId: {
         id,
-        userId: this.request.user.id
+        userId
       }
     });
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getAllAccounts(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('symbol') filterBySymbol?: string
+    @Impersonation() { userId }: ImpersonationContext,
+    @Query()
+    {
+      accounts,
+      assetClasses,
+      dataSource,
+      query,
+      symbol,
+      tags
+    }: GetAllAccountsDto
   ): Promise<AccountsResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByDataSource,
-      filterBySearchQuery,
-      filterBySymbol
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySearchQuery: query,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     return this.portfolioService.getAccountsWithAggregations({
       filters,
-      userId: impersonationUserId || this.request.user.id,
+      userId,
       withExcludedAccounts: true
     });
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<AccountResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
     const accountsWithAggregations =
       await this.portfolioService.getAccountsWithAggregations({
+        userId,
         filters: [{ id, type: 'ACCOUNT' }],
-        userId: impersonationUserId || this.request.user.id,
         withExcludedAccounts: true
       });
 
@@ -131,69 +130,66 @@ export class AccountController {
   }
 
   @Get(':id/balances')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountBalancesById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<AccountBalancesResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-    const userId = impersonationUserId || this.request.user.id;
-
-    const { settings } = await this.userService.user({ id: userId });
-
     return this.accountBalanceService.getAccountBalances({
       userId,
       filters: [{ id, type: 'ACCOUNT' }],
-      userCurrency: settings.settings.baseCurrency
+      userCurrency: userSettings.baseCurrency
     });
   }
 
   @HasPermission(permissions.createAccount)
   @Post()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountCreate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async createAccount(
-    @Body() data: CreateAccountDto
+    @Body() data: CreateAccountDto,
+    @Impersonation() { userId }: ImpersonationContext
   ): Promise<AccountModel> {
-    const { tags: tagIds, ...accountData } = data;
+    const { balance, tags: tagIds, ...accountData } = data;
 
     if (accountData.platformId) {
       const platformId = accountData.platformId;
       delete accountData.platformId;
 
-      return this.accountService.createAccount(
-        {
+      return this.accountService.createAccount({
+        balance,
+        tagIds,
+        userId,
+        data: {
           ...accountData,
           platform: { connect: { id: platformId } },
-          user: { connect: { id: this.request.user.id } }
-        },
-        this.request.user.id,
-        tagIds
-      );
+          user: { connect: { id: userId } }
+        }
+      });
     } else {
       delete accountData.platformId;
 
-      return this.accountService.createAccount(
-        {
+      return this.accountService.createAccount({
+        balance,
+        tagIds,
+        userId,
+        data: {
           ...accountData,
-          user: { connect: { id: this.request.user.id } }
-        },
-        this.request.user.id,
-        tagIds
-      );
+          user: { connect: { id: userId } }
+        }
+      });
     }
   }
 
   @HasPermission(permissions.updateAccount)
   @Post('transfer-balance')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountUpdate)
   public async transferAccountBalance(
-    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
+    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto,
+    @Impersonation() { userId }: ImpersonationContext
   ) {
-    const accountsOfUser = await this.accountService.getAccounts(
-      this.request.user.id
-    );
+    const accountsOfUser = await this.accountService.getAccounts(userId);
 
     const accountFrom = accountsOfUser.find(({ id }) => {
       return id === accountIdFrom;
@@ -225,28 +221,33 @@ export class AccountController {
     }
 
     await this.accountService.updateAccountBalance({
+      userId,
       accountId: accountFrom.id,
       amount: -balance,
-      currency: accountFrom.currency,
-      userId: this.request.user.id
+      currency: accountFrom.currency
     });
 
     await this.accountService.updateAccountBalance({
+      userId,
       accountId: accountTo.id,
       amount: balance,
-      currency: accountFrom.currency,
-      userId: this.request.user.id
+      currency: accountFrom.currency
     });
   }
 
   @HasPermission(permissions.updateAccount)
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async update(
+    @Body() data: UpdateAccountDto,
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ) {
     const originalAccount = await this.accountService.account({
       id_userId: {
         id,
-        userId: this.request.user.id
+        userId
       }
     });
 
@@ -257,52 +258,50 @@ export class AccountController {
       );
     }
 
-    const { tags: tagIds, ...accountData } = data;
+    const { balance, tags: tagIds, ...accountData } = data;
 
     if (accountData.platformId) {
       const platformId = accountData.platformId;
       delete accountData.platformId;
 
-      return this.accountService.updateAccount(
-        {
-          data: {
-            ...accountData,
-            platform: { connect: { id: platformId } },
-            user: { connect: { id: this.request.user.id } }
-          },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
-            }
-          }
+      return this.accountService.updateAccount({
+        balance,
+        tagIds,
+        userId,
+        data: {
+          ...accountData,
+          platform: { connect: { id: platformId } },
+          user: { connect: { id: userId } }
         },
-        this.request.user.id,
-        tagIds
-      );
+        where: {
+          id_userId: {
+            id,
+            userId
+          }
+        }
+      });
     } else {
       // platformId is null, remove it
       delete accountData.platformId;
 
-      return this.accountService.updateAccount(
-        {
-          data: {
-            ...accountData,
-            platform: originalAccount.platformId
-              ? { disconnect: true }
-              : undefined,
-            user: { connect: { id: this.request.user.id } }
-          },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
-            }
-          }
+      return this.accountService.updateAccount({
+        balance,
+        tagIds,
+        userId,
+        data: {
+          ...accountData,
+          platform: originalAccount.platformId
+            ? { disconnect: true }
+            : undefined,
+          user: { connect: { id: userId } }
         },
-        this.request.user.id,
-        tagIds
-      );
+        where: {
+          id_userId: {
+            id,
+            userId
+          }
+        }
+      });
     }
   }
 }

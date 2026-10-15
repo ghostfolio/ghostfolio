@@ -26,4 +26,5 @@ export interface PromptParams {
   discardLabel?: string;
   title: string;
   valueLabel?: string;
+  valueSuffix?: string;
 }

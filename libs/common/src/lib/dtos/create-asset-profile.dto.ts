@@ -1,14 +1,32 @@
+import {
+  COMMENT_MAXIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
+} from '@ghostfolio/common/config';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
+import type { Prisma } from '@ghostfolio/prisma/browser';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 
-import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import { Transform, TransformFnParams, Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
-  IsUrl
+  IsUrl,
+  MaxLength,
+  ValidateNested
 } from 'class-validator';
+import { isString } from 'lodash-es';
+
+import { CountryDto } from './country.dto';
+import { HoldingDto } from './holding.dto';
+import { SectorDto } from './sector.dto';
 
 export class CreateAssetProfileDto {
   @IsEnum(AssetClass)
@@ -21,10 +39,13 @@ export class CreateAssetProfileDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(COMMENT_MAXIMUM_LENGTH)
   comment?: string;
 
   @IsArray()
   @IsOptional()
+  @Type(() => CountryDto)
+  @ValidateNested({ each: true })
   countries?: Prisma.InputJsonArray;
 
   @IsCurrencyCode()
@@ -51,6 +72,8 @@ export class CreateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
+  @Type(() => HoldingDto)
+  @ValidateNested({ each: true })
   holdings?: Prisma.InputJsonArray;
 
   @IsBoolean()
@@ -67,9 +90,16 @@ export class CreateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
+  @Type(() => SectorDto)
+  @ValidateNested({ each: true })
   sectors?: Prisma.InputJsonArray;
 
+  @IsNotEmpty()
   @IsString()
+  @MaxLength(SYMBOL_MAXIMUM_LENGTH)
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) ? value.trim() : value
+  )
   symbol: string;
 
   @IsOptional()

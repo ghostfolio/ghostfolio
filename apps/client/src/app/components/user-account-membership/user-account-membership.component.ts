@@ -1,4 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { E_MAIL_LINE_BREAK } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
@@ -23,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import ms, { StringValue } from 'ms';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,8 +49,13 @@ export class GfUserAccountMembershipComponent {
   protected hasPermissionToCreateApiKey: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected price: number;
-  protected readonly trySubscriptionMail =
-    'mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
+  protected readonly trySubscriptionMailHref = `mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=${[
+    'Hello',
+    '',
+    'I am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?',
+    '',
+    'Kind regards'
+  ].join(E_MAIL_LINE_BREAK)}`;
   protected user: User;
 
   private couponId: string | undefined;
@@ -167,6 +173,9 @@ export class GfUserAccountMembershipComponent {
           this.dataService
             .redeemCoupon(couponCode)
             .pipe(
+              switchMap(() => {
+                return this.userService.get(true);
+              }),
               catchError(() => {
                 this.snackBar.open(
                   '😞 ' + $localize`Could not redeem coupon code`,
@@ -181,27 +190,13 @@ export class GfUserAccountMembershipComponent {
               takeUntilDestroyed(this.destroyRef)
             )
             .subscribe(() => {
-              const snackBarRef = this.snackBar.open(
+              this.snackBar.open(
                 '✅ ' + $localize`Coupon code has been redeemed`,
-                $localize`Reload`,
+                undefined,
                 {
                   duration: ms('3 seconds')
                 }
               );
-
-              snackBarRef
-                .afterDismissed()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                  window.location.reload();
-                });
-
-              snackBarRef
-                .onAction()
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                  window.location.reload();
-                });
             });
         }
       },

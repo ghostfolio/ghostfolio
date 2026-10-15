@@ -9,6 +9,9 @@ const config = {
     getAbsolutePath('@storybook/addon-docs'),
     getAbsolutePath('@storybook/addon-themes')
   ],
+  core: {
+    disableTelemetry: true
+  },
   framework: {
     name: getAbsolutePath('@storybook/angular'),
     options: {}

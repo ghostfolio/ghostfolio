@@ -24,7 +24,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { CountUp } from 'countup.js';
 import { addIcons } from 'ionicons';
 import { timeOutline } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
@@ -36,16 +36,16 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 })
 export class GfPortfolioPerformanceComponent {
   public readonly errors = input<ResponseError['errors']>();
-  public readonly isLoading = input<boolean>();
+  public readonly isLoading = input<boolean>(false);
   public readonly locale = input<string>(getLocale());
-  public readonly performance = input.required<PortfolioPerformance>();
+  public readonly performance = input.required<PortfolioPerformance | null>();
   public readonly precision = input.required<number, number>({
     transform: (value) => {
       return value >= 0 ? value : 2;
     }
   });
   public readonly showDetails = input<boolean>(false);
-  public readonly unit = input.required<string>();
+  public readonly unit = input.required<string | undefined>();
 
   public showSimpleReturn = signal(false);
 
@@ -63,17 +63,19 @@ export class GfPortfolioPerformanceComponent {
           this.value().nativeElement.innerHTML = '';
         }
       } else {
-        if (isNumber(this.performance().currentValueInBaseCurrency)) {
-          new CountUp('value', this.performance().currentValueInBaseCurrency, {
+        const performance = this.performance();
+
+        if (isNumber(performance?.currentValueInBaseCurrency)) {
+          new CountUp('value', performance.currentValueInBaseCurrency, {
             decimal: getNumberFormatDecimal(this.locale()),
             decimalPlaces: this.precision(),
             duration: 1,
             separator: getNumberFormatGroup(this.locale())
           }).start();
-        } else if (this.showDetails() === false) {
+        } else if (this.showDetails() === false && performance) {
           new CountUp(
             'value',
-            this.performance().netPerformancePercentageWithCurrencyEffect * 100,
+            performance.netPerformancePercentageWithCurrencyEffect * 100,
             {
               decimal: getNumberFormatDecimal(this.locale()),
               decimalPlaces: 2,
@@ -89,9 +91,11 @@ export class GfPortfolioPerformanceComponent {
   }
 
   public get simpleReturnPercentage() {
-    return this.performance()?.totalInvestmentValueWithCurrencyEffect
-      ? this.performance().netPerformanceWithCurrencyEffect /
-          this.performance().totalInvestmentValueWithCurrencyEffect
+    const performance = this.performance();
+
+    return performance?.totalInvestmentValueWithCurrencyEffect
+      ? performance.netPerformanceWithCurrencyEffect /
+          performance.totalInvestmentValueWithCurrencyEffect
       : undefined;
   }
 

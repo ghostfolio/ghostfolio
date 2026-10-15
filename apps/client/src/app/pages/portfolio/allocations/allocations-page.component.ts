@@ -1,20 +1,39 @@
 import { GfAccountDetailDialogComponent } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
-import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
+import {
+  AccountDetailDialogParams,
+  AccountDetailDialogResult
+} from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getCountryName, prettifySymbol } from '@ghostfolio/common/helper';
 import {
-  AssetProfileIdentifier,
+  canOpenHoldingDetail,
+  convertValuesToPercentagesOfTotal,
+  getAssetProfileIdentifier,
+  getCountryName,
+  getHoldingName,
+  isCashPosition
+} from '@ghostfolio/common/helper';
+import {
   HoldingWithParents,
   PortfolioDetails,
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { MarketAdvanced } from '@ghostfolio/common/types';
+import type { Account, Platform } from '@ghostfolio/prisma/browser';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
-import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import {
+  GfPortfolioProportionChartComponent,
+  PortfolioProportionChartClickEvent
+} from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTopHoldingsComponent } from '@ghostfolio/ui/top-holdings';
@@ -36,14 +55,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Account,
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  Platform
-} from '@prisma/client';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { filter, switchMap, tap } from 'rxjs';
 
@@ -82,9 +94,8 @@ export class GfAllocationsPageComponent implements OnInit {
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
-  protected hasImpersonationId: boolean;
   protected holdings: {
-    [symbol: string]: Pick<
+    [assetProfileIdentifier: string]: Pick<
       PortfolioPosition['assetProfile'],
       | 'assetClass'
       | 'assetClassLabel'
@@ -92,8 +103,9 @@ export class GfAllocationsPageComponent implements OnInit {
       | 'assetSubClassLabel'
       | 'currency'
       | 'name'
-    > & { etfProvider: string; exchange?: string; value: number };
+    > & { etfProvider: string; value: number };
   };
+  protected impersonationId: string | null;
   protected isLoading = false;
   protected markets: PortfolioDetails['markets'];
   protected marketsAdvanced: {
@@ -114,22 +126,18 @@ export class GfAllocationsPageComponent implements OnInit {
     [name: string]: { name: string; value: number };
   };
   protected symbols: {
-    [name: string]: {
+    [symbol: string]: {
       dataSource?: DataSource;
       investment: number;
+      isClickable?: boolean;
       name: string;
       symbol: string;
       value: number;
     };
   };
-  protected topHoldings: HoldingWithParents[];
+  protected topHoldings: HoldingWithParents[] | undefined;
   protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
   protected user: User;
-
-  private topHoldingsMap: {
-    [name: string]: { name: string; value: number };
-  };
-  private totalValueInEtf = 0;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
@@ -166,7 +174,7 @@ export class GfAllocationsPageComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -201,7 +209,9 @@ export class GfAllocationsPageComponent implements OnInit {
     this.initialize();
   }
 
-  protected onAccountChartClicked({ accountId }: { accountId: string }) {
+  protected onAccountChartClicked(event: PortfolioProportionChartClickEvent) {
+    const accountId = 'accountId' in event ? event.accountId : undefined;
+
     if (accountId && accountId !== UNKNOWN_KEY) {
       void this.router.navigate([], {
         queryParams: { accountId, accountDetailDialog: true }
@@ -209,10 +219,9 @@ export class GfAllocationsPageComponent implements OnInit {
     }
   }
 
-  protected onSymbolChartClicked({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
+  protected onSymbolChartClicked(event: PortfolioProportionChartClickEvent) {
+    const { dataSource, symbol } = 'symbol' in event ? event : {};
+
     if (dataSource && symbol) {
       void this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
@@ -221,7 +230,10 @@ export class GfAllocationsPageComponent implements OnInit {
   }
 
   protected showValuesInPercentage() {
-    return this.hasImpersonationId || this.user?.settings?.isRestrictedView;
+    return (
+      !hasScope(this.user?.scopes, scopes.portfolioReadValues) ||
+      this.user?.settings?.isRestrictedView
+    );
   }
 
   private extractCurrency({
@@ -257,6 +269,20 @@ export class GfAllocationsPageComponent implements OnInit {
     }
 
     return UNKNOWN_KEY;
+  }
+
+  private extractValue({
+    valueInBaseCurrency,
+    valueInPercentage
+  }: {
+    valueInBaseCurrency?: PortfolioPosition['valueInBaseCurrency'];
+    valueInPercentage?: PortfolioPosition['valueInPercentage'];
+  }) {
+    return (
+      (isNumber(valueInBaseCurrency)
+        ? valueInBaseCurrency
+        : valueInPercentage) ?? 0
+    );
   }
 
   private fetchPortfolioDetails() {
@@ -322,7 +348,7 @@ export class GfAllocationsPageComponent implements OnInit {
     this.portfolioDetails = {
       accounts: {},
       createdAt: new Date(),
-      holdings: {},
+      holdings: [],
       platforms: {},
       summary: undefined
     };
@@ -340,7 +366,7 @@ export class GfAllocationsPageComponent implements OnInit {
         value: 0
       }
     };
-    this.topHoldingsMap = {};
+    this.topHoldings = undefined;
   }
 
   private initializeAllocationsData() {
@@ -363,10 +389,19 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
-    for (const [symbol, position] of Object.entries(
-      this.portfolioDetails.holdings
-    )) {
-      this.holdings[symbol] = {
+    const topHoldingsMap: {
+      [name: string]: { name: string; value: number };
+    } = {};
+
+    let totalValueExcludingCashPositions = 0;
+    let totalValueInFunds = 0;
+
+    for (const position of this.portfolioDetails.holdings) {
+      const assetProfileIdentifier = getAssetProfileIdentifier(
+        position.assetProfile
+      );
+
+      this.holdings[assetProfileIdentifier] = {
         assetClass:
           position.assetProfile.assetClass || (UNKNOWN_KEY as AssetClass),
         assetClassLabel: position.assetProfile.assetClassLabel ?? UNKNOWN_KEY,
@@ -379,134 +414,147 @@ export class GfAllocationsPageComponent implements OnInit {
           assetSubClass: position.assetProfile.assetSubClass,
           name: position.assetProfile.name
         }),
-        exchange: position.exchange,
         name: position.assetProfile.name,
         value: this.showValuesInPercentage()
           ? position.allocationInPercentage
           : (position.valueInBaseCurrency ?? 0)
       };
 
-      // Prepare analysis data by continents, countries, holdings and sectors
+      if (!isCashPosition(position.assetProfile)) {
+        // Prepare analysis data by continents, countries, holdings and sectors
+        // except for cash
 
-      if (position.assetProfile.countries.length > 0) {
-        for (const country of position.assetProfile.countries) {
-          const { code, continent, weight } = country;
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
+        totalValueExcludingCashPositions += this.extractValue(position);
 
-          const continentData = this.continents[continent];
+        if (position.assetProfile.countries.length > 0) {
+          for (const country of position.assetProfile.countries) {
+            const { code, continent, weight } = country;
+            const value = this.extractValue(position);
+
+            const continentData = this.continents[continent];
+
+            if (continentData) {
+              continentData.value += weight * value;
+            } else {
+              this.continents[continent] = {
+                name: translate(continent),
+                value: weight * value
+              };
+            }
+
+            const countryData = this.countries[code];
+
+            if (countryData) {
+              countryData.value += weight * value;
+            } else {
+              this.countries[code] = {
+                name: getCountryName({ code }),
+                value: weight * value
+              };
+            }
+          }
+        } else {
+          const value = this.extractValue(position);
+
+          const continentData = this.continents[UNKNOWN_KEY];
 
           if (continentData) {
-            continentData.value += weight * value;
-          } else {
-            this.continents[continent] = {
-              name: translate(continent),
-              value: weight * value
-            };
+            continentData.value += value;
           }
 
-          const countryData = this.countries[code];
+          const countryData = this.countries[UNKNOWN_KEY];
 
           if (countryData) {
-            countryData.value += weight * value;
-          } else {
-            this.countries[code] = {
-              name: getCountryName({ code }),
-              value: weight * value
-            };
+            countryData.value += value;
           }
         }
-      } else {
-        const value =
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0;
 
-        const continentData = this.continents[UNKNOWN_KEY];
+        if (position.assetProfile.holdings.length > 0) {
+          totalValueInFunds += this.holdings[assetProfileIdentifier].value;
 
-        if (continentData) {
-          continentData.value += value;
-        }
+          for (const {
+            allocationInPercentage,
+            name,
+            valueInBaseCurrency
+          } of position.assetProfile.holdings) {
+            const normalizedAssetName = this.normalizeAssetName(name);
+            const value = isNumber(valueInBaseCurrency)
+              ? valueInBaseCurrency
+              : allocationInPercentage * (position.valueInPercentage ?? 0);
 
-        const countryData = this.countries[UNKNOWN_KEY];
+            const holdingData = topHoldingsMap[normalizedAssetName];
 
-        if (countryData) {
-          countryData.value += value;
-        }
-      }
-
-      if (position.assetProfile.holdings.length > 0) {
-        for (const {
-          allocationInPercentage,
-          name,
-          valueInBaseCurrency
-        } of position.assetProfile.holdings) {
-          const normalizedAssetName = this.normalizeAssetName(name);
-          const value = isNumber(valueInBaseCurrency)
-            ? valueInBaseCurrency
-            : allocationInPercentage * (position.valueInPercentage ?? 0);
-
-          const holdingData = this.topHoldingsMap[normalizedAssetName];
-
-          if (holdingData) {
-            holdingData.value += value;
-          } else {
-            this.topHoldingsMap[normalizedAssetName] = {
-              name,
-              value
-            };
+            if (holdingData) {
+              holdingData.value += value;
+            } else {
+              topHoldingsMap[normalizedAssetName] = {
+                name,
+                value
+              };
+            }
           }
         }
-      }
 
-      if (position.assetProfile.sectors.length > 0) {
-        for (const sector of position.assetProfile.sectors) {
-          const { name, weight } = sector;
-          const value =
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage) ?? 0;
+        if (position.assetProfile.sectors.length > 0) {
+          for (const sector of position.assetProfile.sectors) {
+            const { name, weight } = sector;
+            const value = this.extractValue(position);
 
-          const sectorData = this.sectors[name];
+            const sectorData = this.sectors[name];
+
+            if (sectorData) {
+              sectorData.value += weight * value;
+            } else {
+              this.sectors[name] = {
+                name: translate(name),
+                value: weight * value
+              };
+            }
+          }
+        } else {
+          const value = this.extractValue(position);
+
+          const sectorData = this.sectors[UNKNOWN_KEY];
 
           if (sectorData) {
-            sectorData.value += weight * value;
-          } else {
-            this.sectors[name] = {
-              name: translate(name),
-              value: weight * value
-            };
+            sectorData.value += value;
           }
         }
+      }
+
+      const symbol = position.assetProfile.symbol;
+
+      const value = this.extractValue(position);
+
+      const symbolData = this.symbols[symbol];
+
+      if (symbolData) {
+        // Aggregate holdings with the same symbol from different data sources
+        symbolData.dataSource = undefined;
+        symbolData.investment += position.investment ?? 0;
+        symbolData.isClickable = false;
+        symbolData.value += value;
       } else {
-        const value =
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0;
-
-        const sectorData = this.sectors[UNKNOWN_KEY];
-
-        if (sectorData) {
-          sectorData.value += value;
-        }
+        this.symbols[symbol] = {
+          symbol,
+          value,
+          dataSource: position.assetProfile.dataSource,
+          investment: position.investment ?? 0,
+          isClickable: canOpenHoldingDetail(position),
+          name: getHoldingName(position.assetProfile)
+        };
       }
+    }
 
-      if (this.holdings[symbol].assetSubClass === 'ETF') {
-        this.totalValueInEtf += this.holdings[symbol].value;
+    if (this.showValuesInPercentage()) {
+      // The values are percentages of the whole portfolio, but the analysis
+      // data does not contain the cash positions
+      for (const values of [this.continents, this.countries, this.sectors]) {
+        convertValuesToPercentagesOfTotal({
+          values,
+          total: totalValueExcludingCashPositions
+        });
       }
-
-      this.symbols[prettifySymbol(symbol)] = {
-        dataSource: position.assetProfile.dataSource,
-        investment: position.investment ?? 0,
-        name: position.assetProfile.name ?? '',
-        symbol: prettifySymbol(symbol),
-        value:
-          (isNumber(position.valueInBaseCurrency)
-            ? position.valueInBaseCurrency
-            : position.valueInPercentage) ?? 0
-      };
     }
 
     if ((this.symbols[UNKNOWN_KEY]?.value ?? 0) < 0.01) {
@@ -544,7 +592,7 @@ export class GfAllocationsPageComponent implements OnInit {
       };
     }
 
-    this.topHoldings = Object.values(this.topHoldingsMap)
+    this.topHoldings = Object.values(topHoldingsMap)
       .map(({ name, value }): HoldingWithParents => {
         if (this.showValuesInPercentage()) {
           return {
@@ -556,9 +604,9 @@ export class GfAllocationsPageComponent implements OnInit {
         return {
           name,
           allocationInPercentage:
-            this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
-          parents: Object.entries(this.portfolioDetails.holdings)
-            .map(([symbol, holding]) => {
+            totalValueInFunds > 0 ? value / totalValueInFunds : 0,
+          parents: this.portfolioDetails.holdings
+            .map((holding) => {
               if (holding.assetProfile.holdings.length > 0) {
                 const currentParentHolding = holding.assetProfile.holdings.find(
                   (parentHolding) => {
@@ -573,10 +621,12 @@ export class GfAllocationsPageComponent implements OnInit {
                   isNumber(currentParentHolding.valueInBaseCurrency)
                   ? {
                       allocationInPercentage:
-                        currentParentHolding.valueInBaseCurrency / value,
+                        value > 0
+                          ? currentParentHolding.valueInBaseCurrency / value
+                          : 0,
                       name: holding.assetProfile.name ?? '',
                       position: holding,
-                      symbol: prettifySymbol(symbol),
+                      symbol: holding.assetProfile.symbol,
                       valueInBaseCurrency:
                         currentParentHolding.valueInBaseCurrency
                     }
@@ -614,17 +664,22 @@ export class GfAllocationsPageComponent implements OnInit {
   private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open<
       GfAccountDetailDialogComponent,
-      AccountDetailDialogParams
+      AccountDetailDialogParams,
+      AccountDetailDialogResult
     >(GfAccountDetailDialogComponent, {
       autoFocus: false,
       data: {
         accountId: aAccountId,
         deviceType: this.deviceType(),
-        hasImpersonationId: this.hasImpersonationId,
         hasPermissionToCreateActivity:
-          !this.hasImpersonationId &&
+          !this.impersonationId &&
           hasPermission(this.user?.permissions, permissions.createActivity) &&
-          !this.user?.settings?.isRestrictedView
+          !this.user?.settings?.isRestrictedView,
+        hasPermissionToUpdateActivity:
+          !this.impersonationId &&
+          hasPermission(this.user?.permissions, permissions.updateActivity) &&
+          !this.user?.settings?.isRestrictedView,
+        impersonationId: this.impersonationId
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
@@ -633,7 +688,11 @@ export class GfAllocationsPageComponent implements OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
+      .subscribe((result) => {
+        if (result?.isNavigating) {
+          return;
+        }
+
         void this.router.navigate(['.'], { relativeTo: this.route });
       });
   }

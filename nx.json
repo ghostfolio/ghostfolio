@@ -98,10 +98,16 @@
       "cache": true
     },
     "lint": {
+      "inputs": ["default", "^default", "{workspaceRoot}/eslint.config.cjs"],
       "cache": true
     },
     "@nx/jest:jest": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js",
+        { "env": "TEST_TZ" }
+      ],
       "cache": true,
       "options": {
         "passWithNoTests": true
@@ -119,7 +125,8 @@
     "sharedGlobals": [
       "{workspaceRoot}/angular.json",
       "{workspaceRoot}/tsconfig.base.json",
-      "{workspaceRoot}/nx.json"
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/prisma/schema.prisma"
     ],
     "production": [
       "default",

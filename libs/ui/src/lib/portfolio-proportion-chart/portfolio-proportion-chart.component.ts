@@ -3,6 +3,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getSum, getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { DataSource } from '@ghostfolio/prisma/enums';
 
 import {
   AfterViewInit,
@@ -15,7 +16,6 @@ import {
   output,
   viewChild
 } from '@angular/core';
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import {
   ArcElement,
@@ -33,6 +33,7 @@ import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
+import { onPrefersColorSchemeChange } from '../chart';
 import { PortfolioProportionChartClickEvent } from './interfaces/interfaces';
 
 const {
@@ -60,19 +61,20 @@ const {
 export class GfPortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() baseCurrency: string;
-  @Input() colorScheme: ColorScheme;
+  @Input() baseCurrency?: string;
+  @Input() colorScheme?: ColorScheme;
   @Input() cursor: string;
   @Input() data: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & {
       dataSource?: DataSource;
-      name: string;
+      isClickable?: boolean;
+      name?: string | null;
       value: number;
     };
   } = {};
-  @Input() isInPercentage = false;
+  @Input() isInPercentage?: boolean = false;
   @Input() keys: string[] = [];
-  @Input() locale = getLocale();
+  @Input() locale?: string = getLocale();
   @Input() maxItems?: number;
   @Input() showLabels = false;
 
@@ -93,6 +95,12 @@ export class GfPortfolioProportionChartComponent
 
   public constructor() {
     Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.initialize();
+      }
+    });
   }
 
   public ngAfterViewInit() {
@@ -113,6 +121,7 @@ export class GfPortfolioProportionChartComponent
 
   private initialize() {
     this.isLoading = true;
+
     const chartData: {
       [symbol: string]: {
         color?: string;
@@ -121,9 +130,12 @@ export class GfPortfolioProportionChartComponent
         value: Big;
       };
     } = {};
+
+    const textColor = getTextColor(this.colorScheme);
+
     this.colorMap = {
-      [this.OTHER_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.24)`,
-      [UNKNOWN_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.12)`
+      [this.OTHER_KEY]: `rgba(${textColor}, 0.24)`,
+      [UNKNOWN_KEY]: `rgba(${textColor}, 0.12)`
     };
 
     if (this.keys.length > 0) {
@@ -177,7 +189,7 @@ export class GfPortfolioProportionChartComponent
             );
           } else {
             chartData[UNKNOWN_KEY] = {
-              name: this.data[symbol].name,
+              name: this.data[symbol].name ?? '',
               subCategory: secondaryKey
                 ? { [secondaryKey]: { value: new Big(0) } }
                 : undefined,
@@ -189,7 +201,7 @@ export class GfPortfolioProportionChartComponent
     } else {
       Object.keys(this.data).forEach((symbol) => {
         chartData[symbol] = {
-          name: this.data[symbol].name,
+          name: this.data[symbol].name ?? '',
           value: new Big(this.data[symbol].value || 0)
         };
       });
@@ -356,6 +368,10 @@ export class GfPortfolioProportionChartComponent
                 const dataIndex = activeElements[0].index;
                 const symbol = chart.data.labels?.[dataIndex] as string;
 
+                if (this.data[symbol]?.isClickable === false) {
+                  return;
+                }
+
                 const dataSource = this.data[symbol]?.dataSource;
 
                 this.proportionChartClicked.emit(
@@ -363,10 +379,16 @@ export class GfPortfolioProportionChartComponent
                 );
               } catch {}
             },
-            onHover: (event, chartElement) => {
+            onHover: (event, chartElement, chart) => {
               if (this.cursor) {
+                const symbol = chartElement[0]
+                  ? (chart.data.labels?.[chartElement[0].index] as string)
+                  : undefined;
+
                 (event.native?.target as HTMLElement).style.cursor =
-                  chartElement[0] ? this.cursor : 'default';
+                  symbol && this.data[symbol]?.isClickable !== false
+                    ? this.cursor
+                    : 'default';
               }
             },
             plugins: {
@@ -386,11 +408,13 @@ export class GfPortfolioProportionChartComponent
                         context.dataIndex
                       ] as string;
 
-                      return value > 0
-                        ? isUUID(symbol)
-                          ? (this.data[symbol]?.name ?? symbol)
-                          : symbol
-                        : '';
+                      if (value <= 0) {
+                        return '';
+                      }
+
+                      return isUUID(symbol)
+                        ? (this.data[symbol]?.name ?? symbol)
+                        : symbol;
                     },
                     offset: 8
                   }
@@ -472,8 +496,9 @@ export class GfPortfolioProportionChartComponent
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
-                minimumFractionDigits: 2
-              })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
+                minimumFractionDigits: 2,
+                useGrouping: true
+              })} ${this.baseCurrency ?? ''} (${percentage.toFixed(2)}%)`
             ];
           }
         },

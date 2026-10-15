@@ -1,40 +1,40 @@
+import { COMMENT_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
-  IsBoolean,
   IsNumber,
   IsOptional,
   IsString,
+  MaxLength,
   ValidateIf
 } from 'class-validator';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 
 export class UpdateAccountDto {
+  /**
+   * The balance, stored as the account balance of today.
+   * Optional because the account balances are the source of truth.
+   */
   @IsNumber()
-  balance: number;
+  @IsOptional()
+  balance?: number;
 
   @IsOptional()
   @IsString()
+  @MaxLength(COMMENT_MAXIMUM_LENGTH)
   @Transform(({ value }: TransformFnParams) =>
     isString(value) ? value.trim() : value
   )
-  comment?: string;
+  comment?: string | null;
 
   @IsCurrencyCode()
   currency: string;
 
   @IsString()
   id: string;
-
-  /**
-   * @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
-   */
-  @IsBoolean()
-  @IsOptional()
-  isExcluded?: boolean;
 
   @IsString()
   name: string;

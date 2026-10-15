@@ -1,6 +1,6 @@
 const baseConfig = require('../../eslint.config.cjs');
 const angularEslintPlugin = require('@angular-eslint/eslint-plugin');
-const typescriptEslintPlugin = require('@typescript-eslint/eslint-plugin');
+const typescriptEslintPlugin = require('typescript-eslint').plugin;
 
 module.exports = [
   {
@@ -47,7 +47,9 @@ module.exports = [
   {
     files: ['**/*.ts', '**/*.tsx'],
     // Override or add rules here
-    rules: {}
+    rules: {
+      '@typescript-eslint/prefer-nullish-coalescing': 'error'
+    }
   },
   {
     files: ['**/*.js', '**/*.jsx'],

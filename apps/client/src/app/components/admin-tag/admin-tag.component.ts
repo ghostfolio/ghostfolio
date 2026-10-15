@@ -2,7 +2,13 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { CreateTagDto, UpdateTagDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
-import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  getLowercase,
+  isSystemTag
+} from '@ghostfolio/common/helper';
+import { TagWithAccountAndActivityCount } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -27,7 +33,6 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Tag } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import {
   createOutline,
@@ -35,6 +40,7 @@ import {
   trashOutline
 } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfCreateOrUpdateTagDialogComponent } from './create-or-update-tag-dialog/create-or-update-tag-dialog.component';
 import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/interfaces/interfaces';
@@ -49,6 +55,7 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
+    NgxSkeletonLoaderModule,
     RouterModule
   ],
   selector: 'gf-admin-tag',
@@ -58,20 +65,28 @@ import { CreateOrUpdateTagDialogParams } from './create-or-update-tag-dialog/int
 export class GfAdminTagComponent implements OnInit {
   public readonly locale = input(getLocale());
 
-  protected dataSource = new MatTableDataSource<Tag>();
+  protected dataSource =
+    new MatTableDataSource<TagWithAccountAndActivityCount>();
+
   protected readonly displayedColumns = [
     'name',
     'userId',
     'accounts',
     'activities',
+    'total',
     'actions'
   ];
+
+  protected isLoading = false;
+  protected readonly isSystemTag = isSystemTag;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
-  protected tags: Tag[];
+  protected tags: TagWithAccountAndActivityCount[];
+  protected readonly translate = translate;
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+
   private readonly paginator = viewChild.required(MatPaginator);
   private readonly sort = viewChild.required(MatSort);
 
@@ -97,7 +112,7 @@ export class GfAdminTagComponent implements OnInit {
               return id === params['tagId'];
             });
 
-            if (tag) {
+            if (tag && !isSystemTag(tag)) {
               this.openUpdateTagDialog(tag);
             }
           } else {
@@ -113,6 +128,13 @@ export class GfAdminTagComponent implements OnInit {
     this.fetchTags();
   }
 
+  protected getTotalCount({
+    accountCount,
+    activityCount
+  }: TagWithAccountAndActivityCount) {
+    return accountCount + activityCount;
+  }
+
   protected onDeleteTag(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
@@ -123,7 +145,7 @@ export class GfAdminTagComponent implements OnInit {
     });
   }
 
-  protected onUpdateTag({ id }: Tag) {
+  protected onUpdateTag({ id }: TagWithAccountAndActivityCount) {
     this.router.navigate([], {
       queryParams: { editTagDialog: true, tagId: id }
     });
@@ -146,6 +168,8 @@ export class GfAdminTagComponent implements OnInit {
   }
 
   private fetchTags() {
+    this.isLoading = true;
+
     this.dataService
       .fetchTags()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -155,9 +179,20 @@ export class GfAdminTagComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.tags);
         this.dataSource.paginator = this.paginator();
         this.dataSource.sort = this.sort();
-        this.dataSource.sortingDataAccessor = getLowercase;
+
+        this.dataSource.sortingDataAccessor = (tag, path) => {
+          if (path === 'name') {
+            return translate(tag.name).toLocaleLowerCase();
+          } else if (path === 'totalCount') {
+            return this.getTotalCount(tag);
+          }
+
+          return getLowercase(tag, path) as number | string;
+        };
 
         this.dataService.updateInfo();
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

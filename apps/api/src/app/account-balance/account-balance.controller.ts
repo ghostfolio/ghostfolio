@@ -1,9 +1,12 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Controller,
@@ -11,12 +14,9 @@ import {
   Post,
   Delete,
   HttpException,
-  Inject,
   Param,
-  UseGuards
+  UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
 import { AccountBalance } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -26,20 +26,21 @@ import { AccountBalanceService } from './account-balance.service';
 export class AccountBalanceController {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
-    private readonly accountService: AccountService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly accountService: AccountService
   ) {}
 
   @HasPermission(permissions.createAccountBalance)
   @Post()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async createAccountBalance(
-    @Body() data: CreateAccountBalanceDto
+    @Body() data: CreateAccountBalanceDto,
+    @Impersonation() { userId }: ImpersonationContext
   ): Promise<AccountBalance> {
     const account = await this.accountService.account({
       id_userId: {
-        id: data.accountId,
-        userId: this.request.user.id
+        userId,
+        id: data.accountId
       }
     });
 
@@ -60,13 +61,15 @@ export class AccountBalanceController {
 
   @HasPermission(permissions.deleteAccountBalance)
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async deleteAccountBalance(
+    @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<AccountBalance> {
     const accountBalance = await this.accountBalanceService.accountBalance({
       id,
-      userId: this.request.user.id
+      userId
     });
 
     if (!accountBalance) {

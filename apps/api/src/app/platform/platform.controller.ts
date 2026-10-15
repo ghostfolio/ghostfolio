@@ -1,3 +1,4 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
@@ -20,6 +21,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PlatformService } from './platform.service';
 
+@AllowDuringImpersonation()
 @Controller('platform')
 export class PlatformController {
   public constructor(private readonly platformService: PlatformService) {}

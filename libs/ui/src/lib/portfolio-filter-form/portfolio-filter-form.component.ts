@@ -1,6 +1,5 @@
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
 
 import {
@@ -29,15 +28,15 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { GfAccountSelectorComponent } from '../account-selector/account-selector.component';
+import { translate } from '../i18n';
 import { PortfolioFilterFormValue } from './interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
-    GfEntityLogoComponent,
-    GfSymbolPipe,
+    GfAccountSelectorComponent,
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule
@@ -69,6 +68,8 @@ export class GfPortfolioFilterFormComponent
     holding: FormControl<PortfolioPosition | null>;
     tag: FormControl<string | null>;
   }>;
+
+  public readonly labelAccount = translate('ACCOUNT');
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);

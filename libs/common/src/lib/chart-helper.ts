@@ -1,13 +1,17 @@
 import type { ElementRef } from '@angular/core';
 import type {
   Chart,
+  ChartOptions,
   ChartType,
   ControllerDatasetOptions,
   Plugin,
   Point,
+  ScaleOptions,
+  Tick,
   TooltipOptions,
   TooltipPosition
 } from 'chart.js';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { format } from 'date-fns';
 
 import {
@@ -15,6 +19,7 @@ import {
   DATE_FORMAT_MONTHLY,
   DATE_FORMAT_YEARLY,
   getBackgroundColor,
+  getDateFormatString,
   getLocale,
   getTextColor
 } from './helper';
@@ -36,6 +41,53 @@ export function formatGroupedDate({
   return format(date, DATE_FORMAT);
 }
 
+export function getChartBorderColor(colorScheme?: ColorScheme) {
+  return `rgba(${getTextColor(colorScheme)}, 0.1)`;
+}
+
+export function getChartElementsOptions(
+  colorScheme?: ColorScheme
+): ChartOptions<'bar' | 'line'>['elements'] {
+  return {
+    line: {
+      tension: 0
+    },
+    point: {
+      hoverBackgroundColor: getBackgroundColor(colorScheme),
+      hoverRadius: 2,
+      radius: 0
+    }
+  };
+}
+
+export function getTimeAxisOptions({
+  borderWidth = 1,
+  colorScheme,
+  display = true,
+  locale = getLocale()
+}: {
+  borderWidth?: number;
+  colorScheme?: ColorScheme;
+  display?: boolean;
+  locale?: string;
+}): ScaleOptions<'time'> {
+  return {
+    display,
+    border: {
+      color: getChartBorderColor(colorScheme),
+      width: borderWidth
+    },
+    grid: {
+      display: false
+    },
+    time: {
+      tooltipFormat: getDateFormatString(locale),
+      unit: 'year'
+    },
+    type: 'time'
+  };
+}
+
 export function getTooltipOptions<T extends ChartType>({
   colorScheme,
   currency = '',
@@ -43,17 +95,19 @@ export function getTooltipOptions<T extends ChartType>({
   locale = getLocale(),
   unit = ''
 }: {
-  colorScheme: ColorScheme;
+  colorScheme?: ColorScheme;
   currency?: string;
   groupBy?: GroupBy;
   locale?: string;
   unit?: string;
 }): Partial<TooltipOptions<T>> {
+  const textColor = getTextColor(colorScheme);
+
   return {
     backgroundColor: getBackgroundColor(colorScheme),
-    bodyColor: `rgb(${getTextColor(colorScheme)})`,
+    bodyColor: `rgb(${textColor})`,
     borderWidth: 1,
-    borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
+    borderColor: getChartBorderColor(colorScheme),
     // @ts-expect-error: no need to set all attributes in callbacks
     callbacks: {
       label: (context) => {
@@ -69,7 +123,8 @@ export function getTooltipOptions<T extends ChartType>({
           if (currency) {
             label += `${yPoint.toLocaleString(locale, {
               maximumFractionDigits: 2,
-              minimumFractionDigits: 2
+              minimumFractionDigits: 2,
+              useGrouping: true
             })} ${currency}`;
           } else if (unit) {
             label += `${yPoint.toFixed(2)} ${unit}`;
@@ -92,12 +147,12 @@ export function getTooltipOptions<T extends ChartType>({
     },
     caretSize: 0,
     cornerRadius: 2,
-    footerColor: `rgb(${getTextColor(colorScheme)})`,
+    footerColor: `rgb(${textColor})`,
     itemSort: (a, b) => {
       // Reverse order
       return b.datasetIndex - a.datasetIndex;
     },
-    titleColor: `rgb(${getTextColor(colorScheme)})`,
+    titleColor: `rgb(${textColor})`,
     usePointStyle: true
   };
 }
@@ -116,9 +171,55 @@ export function getTooltipPositionerMapTop(
   };
 }
 
+export function getValueAxisOptions({
+  colorScheme,
+  display = true,
+  highlightedValues = [],
+  tickCallback
+}: {
+  colorScheme?: ColorScheme;
+  display?: boolean;
+  highlightedValues?: number[];
+  tickCallback: (
+    tickValue: number | string,
+    index: number,
+    ticks: Tick[]
+  ) => string;
+}): ScaleOptions<'linear'> {
+  const borderColor = getChartBorderColor(colorScheme);
+
+  return {
+    display,
+    border: {
+      display: false
+    },
+    grid: {
+      color: ({ scale, tick }) => {
+        if (
+          tick.value === 0 ||
+          tick.value === scale.max ||
+          tick.value === scale.min ||
+          highlightedValues.includes(tick.value)
+        ) {
+          return borderColor;
+        }
+
+        return 'transparent';
+      }
+    },
+    position: 'right',
+    ticks: {
+      display,
+      callback: tickCallback,
+      mirror: true,
+      z: 1
+    }
+  };
+}
+
 export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
   chartCanvas: ElementRef<HTMLCanvasElement>,
-  colorScheme: ColorScheme
+  colorScheme?: ColorScheme
 ): Plugin<T, { color: string; width: number }> {
   return {
     afterDatasetsDraw: (chart, _, options) => {
@@ -149,6 +250,18 @@ export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
       }
     },
     id: 'verticalHoverLine'
+  };
+}
+
+export function getZeroLineAnnotation(
+  colorScheme?: ColorScheme
+): AnnotationOptions<'line'> {
+  return {
+    borderColor: getChartBorderColor(colorScheme),
+    borderWidth: 1,
+    scaleID: 'y',
+    type: 'line',
+    value: 0
   };
 }
 

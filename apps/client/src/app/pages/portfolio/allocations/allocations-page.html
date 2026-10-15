@@ -14,21 +14,20 @@
           <gf-value
             class="justify-content-end l-2"
             size="medium"
+            [isLoading]="isLoading"
             [isPercent]="true"
-            [value]="
-              isLoading
-                ? undefined
-                : portfolioDetails?.summary?.filteredValueInPercentage
-            "
+            [value]="portfolioDetails?.summary?.filteredValueInPercentage"
           />
         </mat-card-header>
         <mat-card-content>
           <mat-progress-bar
             mode="determinate"
             [title]="`${(
-              portfolioDetails?.summary?.filteredValueInPercentage * 100
+              (portfolioDetails?.summary?.filteredValueInPercentage ?? 0) * 100
             ).toFixed(2)}%`"
-            [value]="portfolioDetails?.summary?.filteredValueInPercentage * 100"
+            [value]="
+              (portfolioDetails?.summary?.filteredValueInPercentage ?? 0) * 100
+            "
           />
         </mat-card-content>
       </mat-card>
@@ -227,6 +226,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.developedMarkets?.valueInPercentage"
                 >Developed Markets</gf-value
@@ -236,6 +236,7 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.emergingMarkets?.valueInPercentage"
                 >Emerging Markets</gf-value
@@ -245,16 +246,18 @@
               <gf-value
                 i18n
                 size="large"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [value]="markets?.otherMarkets?.valueInPercentage"
                 >Other Markets</gf-value
               >
             </div>
-            @if (markets?.[UNKNOWN_KEY]?.valueInPercentage > 0) {
+            @if ((markets?.[UNKNOWN_KEY]?.valueInPercentage ?? 0) > 0) {
               <div class="col-xs-12 col-md my-2">
                 <gf-value
                   i18n
                   size="large"
+                  [isLoading]="isLoading"
                   [isPercent]="true"
                   [value]="markets?.[UNKNOWN_KEY]?.valueInPercentage"
                   >No data available</gf-value
@@ -352,6 +355,7 @@
         <mat-card-content>
           <gf-top-holdings
             [baseCurrency]="user?.settings?.baseCurrency"
+            [hasPermissionToShowValues]="!showValuesInPercentage()"
             [locale]="user?.settings?.locale"
             [pageSize]="10"
             [topHoldings]="topHoldings"

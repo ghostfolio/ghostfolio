@@ -6,6 +6,7 @@ import type { AdminData } from './admin-data.interface';
 import type { AdminJobs } from './admin-jobs.interface';
 import type { AdminMarketDataDetails } from './admin-market-data-details.interface';
 import type { AdminUser } from './admin-user.interface';
+import type { AiActivityRow } from './ai-activity-row.interface';
 import type { AssetClassSelectorOption } from './asset-class-selector-option.interface';
 import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { AssetProfileItem } from './asset-profile-item.interface';
@@ -13,7 +14,7 @@ import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
-import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
+import type { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { FireCalculationCompleteEvent } from './fire-calculation-complete-event.interface';
@@ -45,6 +46,7 @@ import type { ActivitiesResponse } from './responses/activities-response.interfa
 import type { ActivityResponse } from './responses/activity-response.interface';
 import type { AdminUserResponse } from './responses/admin-user-response.interface';
 import type { AdminUsersResponse } from './responses/admin-users-response.interface';
+import type { AiActivitiesResponse } from './responses/ai-activities-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { AiServiceHealthResponse } from './responses/ai-service-health-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
@@ -53,6 +55,7 @@ import type { AssetProfilesResponse } from './responses/asset-profiles-response.
 import type { AssetResponse } from './responses/asset-response.interface';
 import type { BenchmarkMarketDataDetailsResponse } from './responses/benchmark-market-data-details-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type { CreateActivityResponse } from './responses/create-activity-response.interface';
 import type { CreateStripeCheckoutSessionResponse } from './responses/create-stripe-checkout-session-response.interface';
 import type { DataEnhancerHealthResponse } from './responses/data-enhancer-health-response.interface';
 import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
@@ -93,9 +96,7 @@ import type {
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
 import type { SymbolItem } from './symbol-item.interface';
-import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
-import type { ToggleOption } from './toggle-option.interface';
 import type { UserItem } from './user-item.interface';
 import type { UserSettings } from './user-settings.interface';
 import type { User } from './user.interface';
@@ -119,6 +120,8 @@ export {
   AdminUser,
   AdminUserResponse,
   AdminUsersResponse,
+  AiActivitiesResponse,
+  AiActivityRow,
   AiPromptResponse,
   AiServiceHealthResponse,
   ApiKeyResponse,
@@ -135,6 +138,7 @@ export {
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
+  CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
   DataEnhancerHealthResponse,
   DataProviderGhostfolioAssetProfileResponse,
@@ -144,7 +148,7 @@ export {
   DataProviderInfo,
   DataProviderResponse,
   DividendsResponse,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   ExportResponse,
   Filter,
   FilterGroup,
@@ -191,9 +195,7 @@ export {
   Statistics,
   SubscriptionOffer,
   SymbolItem,
-  SymbolMetrics,
   SystemMessage,
-  ToggleOption,
   User,
   UserItem,
   UserSettings,

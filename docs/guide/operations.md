@@ -22,7 +22,9 @@ When an investment plan has `emailEnabled = true` and a notification address:
 2. An email is sent to the configured address.
 3. The signals are marked as sent, so they are never emailed twice.
 
-The email language follows the AI response language from the administration settings.
+The email lists the signals in a table. Its language follows the language of the
+account (_Settings → Language_); Chinese and English are supported, anything else
+falls back to English.
 
 ## Common commands
 

@@ -4,9 +4,8 @@
       <article>
         <div class="mb-4 text-center">
           <h1 class="mb-1">
-            <strong>Ghostfolio</strong>:
-            <ng-container i18n>The Open Source Alternative to</ng-container
-            >&nbsp;<strong>{{ product2().name }}</strong>
+            <strong>Ghostfolio</strong>: {{ titlePrefix }}
+            <strong>{{ product2().name }}</strong>
           </h1>
         </div>
         @if (product2().isArchived) {
@@ -101,27 +100,47 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Origin</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1().origin }}</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product2().origin }}</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @if (product1().origin; as origin) {
+                    <span aria-hidden="true">{{ origin.emojiFlag }}</span
+                    >&nbsp;{{ origin.name }}
+                  }
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @if (product2().origin; as origin) {
+                    <span aria-hidden="true">{{ origin.emojiFlag }}</span
+                    >&nbsp;{{ origin.name }}
+                  }
+                </td>
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Region</td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @for (
                     region of product1().regions;
-                    track region;
+                    track region.name;
                     let isLast = $last
                   ) {
-                    {{ region }}{{ isLast ? '' : ', ' }}
+                    @if (region.emojiFlag) {
+                      <span aria-hidden="true">{{ region.emojiFlag }}</span
+                      >&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
+                    } @else {
+                      {{ region.name }}{{ isLast ? '' : ', ' }}
+                    }
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @for (
                     region of product2().regions;
-                    track region;
+                    track region.name;
                     let isLast = $last
                   ) {
-                    {{ region }}{{ isLast ? '' : ', ' }}
+                    @if (region.emojiFlag) {
+                      <span aria-hidden="true">{{ region.emojiFlag }}</span
+                      >&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
+                    } @else {
+                      {{ region.name }}{{ isLast ? '' : ', ' }}
+                    }
                   }
                 </td>
               </tr>
@@ -379,7 +398,7 @@
             >
           </div>
         </section>
-        <section class="mb-4">
+        <section>
           <ul class="list-inline">
             @for (tag of tags(); track tag) {
               <li class="list-inline-item">
@@ -388,9 +407,29 @@
             }
           </ul>
         </section>
+        <nav class="d-flex justify-content-between my-5">
+          @if (previousProduct()) {
+            <a
+              class="font-weight-light link-primary text-decoration-none small"
+              [routerLink]="getProductRouterLink(previousProduct())"
+              [title]="getProductTitle(previousProduct())"
+              >← <span i18n>Previous</span></a
+            >
+          } @else {
+            <span></span>
+          }
+          @if (nextProduct()) {
+            <a
+              class="font-weight-light link-primary text-decoration-none small"
+              [routerLink]="getProductRouterLink(nextProduct())"
+              [title]="getProductTitle(nextProduct())"
+              ><span i18n>Next</span> →</a
+            >
+          }
+        </nav>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item text-truncate">
               <a i18n [routerLink]="routerLinkResourcesPersonalFinanceTools"
                 >Personal Finance Tools</a
               >

@@ -1,3 +1,5 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
+import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -31,6 +33,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { SubscriptionService } from './subscription.service';
 
+@AllowDuringImpersonation()
 @Controller('subscription')
 export class SubscriptionController {
   private readonly logger = new Logger(SubscriptionController.name);
@@ -44,7 +47,7 @@ export class SubscriptionController {
 
   @Post('redeem-coupon')
   @HttpCode(StatusCodes.OK)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), CustomThrottlerGuard, HasPermissionGuard)
   public async redeemCoupon(@Body() { couponCode }: { couponCode: string }) {
     if (!this.request.user) {
       throw new HttpException(
@@ -54,7 +57,9 @@ export class SubscriptionController {
     }
 
     let coupons =
-      (await this.propertyService.getByKey<Coupon[]>(PROPERTY_COUPONS)) ?? [];
+      (await this.propertyService.getByKey<Coupon[]>(PROPERTY_COUPONS, {
+        skipCache: true
+      })) ?? [];
 
     const coupon = coupons.find((currentCoupon) => {
       return currentCoupon.code === couponCode;
@@ -115,7 +120,7 @@ export class SubscriptionController {
   }
 
   @Post('stripe/checkout-session')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'), CustomThrottlerGuard, HasPermissionGuard)
   public async createStripeCheckoutSession(
     @Body() { couponId, priceId }: { couponId?: string; priceId: string }
   ): Promise<CreateStripeCheckoutSessionResponse> {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'client',
 
@@ -19,6 +18,6 @@ export default {
       }
     ]
   },
-  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
+  transformIgnorePatterns: ['node_modules/(?!.*.mjs$|lodash-es/)'],
   preset: '../../jest.preset.js'
 };

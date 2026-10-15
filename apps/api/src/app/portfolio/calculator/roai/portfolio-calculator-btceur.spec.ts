@@ -1,7 +1,7 @@
 import {
   activityDummyData,
+  assetProfileDummyData,
   loadExportFile,
-  symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -64,9 +64,12 @@ describe('PortfolioCalculator', () => {
   });
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -95,17 +98,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = exportResponse.activities.map(
         (activity) => ({
           ...activityDummyData,
-          ...activity,
-          date: parseDate(activity.date),
-          feeInAssetProfileCurrency: 4.46,
-          feeInBaseCurrency: 4.46,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: activity.dataSource,
             name: 'Bitcoin',
             symbol: activity.symbol
           },
+          ...activity,
+          date: parseDate(activity.date),
+          feeInAssetProfileCurrency: 4.46,
+          feeInBaseCurrency: 4.46,
           unitPriceInAssetProfileCurrency: 44558.42
         })
       );
@@ -139,13 +142,15 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData[0]).toEqual({
         date: '2021-12-11',
+        dividendInBaseCurrency: 0,
+        dividendInPercentageWithCurrencyEffect: 0,
         investmentValueWithCurrencyEffect: 0,
         netPerformance: 0,
         netPerformanceInPercentage: 0,
         netPerformanceInPercentageWithCurrencyEffect: 0,
         netPerformanceWithCurrencyEffect: 0,
         netWorth: 0,
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
         value: 0,
@@ -157,13 +162,15 @@ describe('PortfolioCalculator', () => {
        */
       expect(portfolioSnapshot.historicalData[1]).toEqual({
         date: '2021-12-12',
+        dividendInBaseCurrency: 0,
+        dividendInPercentageWithCurrencyEffect: 0,
         investmentValueWithCurrencyEffect: 44558.42,
         netPerformance: 5535.42, // 1 * (50098.3 - 44558.42) - 4.46 = 5535.42
         netPerformanceInPercentage: 0.12422837255001412, // 5535.42 ÷ 44558.42 = 0.12422837255001412
         netPerformanceInPercentageWithCurrencyEffect: 0.12422837255001412, // 5535.42 ÷ 44558.42 = 0.12422837255001412
         netPerformanceWithCurrencyEffect: 5535.42,
         netWorth: 50098.3, // 1 * 50098.3 = 50098.3
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 44558.42,
         totalInvestmentValueWithCurrencyEffect: 44558.42,
         value: 50098.3, // 1 * 50098.3 = 50098.3
@@ -176,13 +183,15 @@ describe('PortfolioCalculator', () => {
         ]
       ).toEqual({
         date: '2022-01-14',
+        dividendInBaseCurrency: 0,
+        dividendInPercentageWithCurrencyEffect: 0,
         investmentValueWithCurrencyEffect: 0,
         netPerformance: -1463.18,
         netPerformanceInPercentage: -0.032837340282712,
         netPerformanceInPercentageWithCurrencyEffect: -0.032837340282712,
         netPerformanceWithCurrencyEffect: -1463.18,
         netWorth: 43099.7,
-        totalAccountBalance: 0,
+        totalCashInBaseCurrency: 0,
         totalInvestment: 44558.42,
         totalInvestmentValueWithCurrencyEffect: 44558.42,
         value: 43099.7,
@@ -196,6 +205,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('44558.42'),
+            averageInvestmentWithCurrencyEffect: new Big('44558.42'),
             averagePrice: new Big('44558.42'),
             currency: 'USD',
             dataSource: 'YAHOO',
@@ -225,8 +236,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'BTCUSD',
             tags: [],
-            timeWeightedInvestment: new Big('44558.42'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('44558.42'),
             valueInBaseCurrency: new Big('43099.7')
           }
         ],

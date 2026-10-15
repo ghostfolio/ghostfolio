@@ -1,7 +1,8 @@
+import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
-
-import { AssetClass, DataSource, Tag } from '@prisma/client';
+import type { Tag } from '@ghostfolio/prisma/browser';
+import { AssetClass, DataSource } from '@ghostfolio/prisma/enums';
 
 import { translate } from '../i18n';
 import { PortfolioFilterFormValue } from './interfaces';
@@ -105,8 +106,8 @@ export function getTagFilters(
 ): Filter[] {
   return (
     tags
-      ?.filter(({ isUsed }) => {
-        return isUsed;
+      ?.filter(({ id, isUsed }) => {
+        return id !== TAG_ID_EXCLUDE_FROM_ANALYSIS && isUsed;
       })
       ?.map(({ id, name }) => {
         return {

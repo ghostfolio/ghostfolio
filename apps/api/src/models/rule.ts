@@ -1,32 +1,33 @@
+import { XRayRuleKey } from '@ghostfolio/api/models/types/x-ray-rule-key.type';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import {
   PortfolioPosition,
   PortfolioReportRule,
-  RuleSettings,
-  UserSettings
+  RuleSettings
 } from '@ghostfolio/common/interfaces';
 
 import { Big } from 'big.js';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
-  private key: string;
+  protected exchangeRateDataService: ExchangeRateDataService;
+
+  private key: XRayRuleKey;
   private languageCode: string;
 
-  public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
-    {
-      key,
-      languageCode = DEFAULT_LANGUAGE_CODE
-    }: {
-      key: string;
-      languageCode?: string; // TODO: Make mandatory
-    }
-  ) {
+  public constructor({
+    exchangeRateDataService,
+    key,
+    languageCode
+  }: {
+    exchangeRateDataService: ExchangeRateDataService;
+    key: XRayRuleKey;
+    languageCode: string;
+  }) {
+    this.exchangeRateDataService = exchangeRateDataService;
     this.key = key;
     this.languageCode = languageCode;
   }
@@ -59,7 +60,7 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
               new Big(currentValue.quantity)
                 .mul(currentValue.marketPrice ?? 0)
                 .toNumber(),
-              currentValue.assetProfile.currency,
+              currentValue.assetProfile.currency ?? baseCurrency,
               baseCurrency
             ),
           0
@@ -75,6 +76,4 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   >;
 
   public abstract getName(): string;
-
-  public abstract getSettings(aUserSettings: UserSettings): T;
 }

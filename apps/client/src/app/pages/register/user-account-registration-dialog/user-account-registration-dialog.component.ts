@@ -76,7 +76,7 @@ export class GfUserAccountRegistrationDialogComponent {
 
   protected createAccount() {
     this.dataService
-      .postUser()
+      .postUser({ languageCode: document.documentElement.lang })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ accessToken, authToken, role }) => {
         this.accessToken = accessToken;

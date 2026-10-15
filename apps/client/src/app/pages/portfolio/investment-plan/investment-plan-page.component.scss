@@ -27,31 +27,6 @@
   }
 }
 
-.ai-report-placeholder {
-  border: 1px dashed rgba(var(--palette-foreground-base), 0.15);
-  border-radius: 4px;
-  color: rgba(var(--palette-foreground-base), 0.38);
-  font-size: 14px;
-  line-height: 1.6;
-  min-height: 120px;
-  padding: 16px;
-}
-
-.ai-report-content {
-  border: 1px solid rgba(var(--palette-foreground-base), 0.08);
-  border-radius: 4px;
-  font-size: 14px;
-  line-height: 1.7;
-  padding: 16px;
-
-  ::ng-deep {
-    h3 { font-size: 15px; font-weight: 600; margin: 12px 0 6px; }
-    ul { margin: 4px 0 8px; padding-left: 20px; }
-    li { margin-bottom: 4px; }
-    p { margin: 6px 0; }
-  }
-}
-
 .hint-truncate {
   cursor: help;
   display: block;
@@ -88,14 +63,5 @@
     .ip-tab-btn {
       color: rgba(var(--palette-foreground-base-dark), 0.6);
     }
-  }
-
-  .ai-report-placeholder {
-    border-color: rgba(var(--palette-foreground-base-dark), 0.15);
-    color: rgba(var(--palette-foreground-base-dark), 0.38);
-  }
-
-  .ai-report-content {
-    border-color: rgba(var(--palette-foreground-base-dark), 0.08);
   }
 }

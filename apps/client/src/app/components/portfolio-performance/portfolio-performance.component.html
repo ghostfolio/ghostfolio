@@ -1,7 +1,7 @@
 <div class="container p-0">
   <div class="no-gutters row">
-    <div class="status-container text-muted text-right">
-      @if (errors()?.length > 0 && !isLoading()) {
+    <div class="px-1 status-container text-muted text-right">
+      @if ((errors()?.length ?? 0) > 0 && !isLoading()) {
         <ion-icon
           i18n-title
           name="time-outline"
@@ -33,17 +33,14 @@
     </div>
   </div>
   @if (showDetails()) {
-    <div class="row">
+    <div class="mx-0 row">
       <div class="d-flex col justify-content-end">
         <gf-value
           [colorizeSign]="true"
           [isCurrency]="true"
+          [isLoading]="isLoading()"
           [locale]="locale()"
-          [value]="
-            isLoading()
-              ? undefined
-              : performance().netPerformanceWithCurrencyEffect
-          "
+          [value]="performance()?.netPerformanceWithCurrencyEffect"
         />
       </div>
       <div
@@ -53,6 +50,7 @@
       >
         <gf-value
           [colorizeSign]="true"
+          [isLoading]="isLoading()"
           [isPercent]="true"
           [locale]="locale()"
           [value]="
@@ -60,7 +58,7 @@
               ? undefined
               : showSimpleReturn()
                 ? simpleReturnPercentage
-                : performance().netPerformancePercentageWithCurrencyEffect
+                : performance()?.netPerformancePercentageWithCurrencyEffect
           "
         />
       </div>

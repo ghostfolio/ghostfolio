@@ -1,4 +1,4 @@
-import { SymbolProfile } from '@prisma/client';
+import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 
 import { Statistics } from './statistics.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
@@ -9,7 +9,7 @@ export interface InfoItem {
   countriesOfSubscribers?: string[];
   currencies: string[];
   demoAuthToken: string;
-  fearAndGreedDataSource?: string;
+  fearAndGreedStocksMarketPrice?: number;
   globalPermissions: string[];
   isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;

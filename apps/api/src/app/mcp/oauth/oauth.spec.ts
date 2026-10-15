@@ -24,6 +24,10 @@ const VERIFIER = 'a-code-verifier-of-sufficient-length-0123456789';
 const CHALLENGE = createHash('sha256').update(VERIFIER).digest('base64url');
 
 describe('MCP OAuth', () => {
+  // Starts an HTTP server and a real client; the default 5 s is too tight when
+  // the whole suite runs in parallel
+  jest.setTimeout(30000);
+
   let app: INestApplication;
   let apiServer: Server;
   let apiAuthorization: string;

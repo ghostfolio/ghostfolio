@@ -1,7 +1,10 @@
 import { DcaSignalService } from '@ghostfolio/api/app/investment-plan/dca-signal.service';
 import { InvestmentPlanService } from '@ghostfolio/api/app/investment-plan/investment-plan.service';
 import { PriceAlertService } from '@ghostfolio/api/app/investment-plan/price-alert.service';
-import { RebalancingService } from '@ghostfolio/api/app/investment-plan/rebalancing.service';
+import {
+  RebalancingService,
+  toHoldingValuesBySymbol
+} from '@ghostfolio/api/app/investment-plan/rebalancing.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { MailService } from '@ghostfolio/api/services/mail/mail.service';
@@ -43,12 +46,11 @@ export class CronService {
   ) {}
 
   /**
-   * PortfolioService is request-scoped (it injects REQUEST), and MailService
-   * is transitively request-scoped too (MailService -> AiService ->
-   * PortfolioService). Injecting either directly into CronService's (or
-   * PriceAlertService's) constructor makes the whole dependency tree
-   * request-scoped, which silently breaks ALL @Cron registrations on this
-   * class (Nest logs "Cannot register cron job ... non static provider").
+   * PortfolioService is request-scoped (it injects REQUEST). Injecting it
+   * directly into CronService's (or PriceAlertService's) constructor makes the
+   * whole dependency tree request-scoped, which silently breaks ALL @Cron
+   * registrations on this class (Nest logs "Cannot register cron job ...
+   * non static provider").
    * Resolve a fresh instance per cron run instead, backed by a real user
    * fetched from the DB (same shape the JwtStrategy would attach to a
    * request), so any internal `this.request.user...` lookups work.
@@ -136,14 +138,13 @@ export class CronService {
           const portfolioService = await this.resolveRequestScoped(PortfolioService, plan.userId);
           const { holdings } = await portfolioService.getDetails({
             filters: [],
-            impersonationId: undefined,
             userId: plan.userId,
             withMarkets: false
           });
           await this.rebalancingService.generateRebalancingSignals(
             plan.id,
             plan.allocations,
-            holdings,
+            toHoldingValuesBySymbol(holdings),
             plan.longTermGrowthTarget ?? 0
           );
         } catch {
@@ -168,34 +169,15 @@ export class CronService {
         });
 
         if (actionableSignals.length > 0) {
-          // Gather holdings summary for AI prompt context
-          let portfolioSummary: { symbol: string; currentWeight: number; value: number }[] = [];
-          try {
-            const portfolioService = await this.resolveRequestScoped(PortfolioService, plan.userId);
-            const { holdings } = await portfolioService.getDetails({
-              filters: [],
-              impersonationId: undefined,
-              userId: plan.userId,
-              withMarkets: false
-            });
-            const totalValue = Object.values(holdings).reduce(
-              (sum: number, h: any) => sum + (h.valueInBaseCurrency ?? 0),
-              0
-            );
-            portfolioSummary = Object.entries(holdings).map(([symbol, h]: [string, any]) => ({
-              currentWeight: totalValue > 0 ? (h.valueInBaseCurrency / totalValue) * 100 : 0,
-              symbol,
-              value: h.valueInBaseCurrency ?? 0
-            }));
-          } catch {}
-
           let emailSent = false;
           if (plan.emailEnabled && plan.notifyEmail) {
-            const mailService = await this.resolveRequestScoped(MailService, plan.userId);
+            const mailService = this.moduleRef.get(MailService, { strict: false });
+            const user = await this.userService.user({ id: plan.userId });
+
             emailSent = await mailService.sendInvestmentSignalEmail(
               plan.notifyEmail,
               actionableSignals,
-              portfolioSummary
+              user?.settings?.settings?.language
             );
           }
 
@@ -226,7 +208,7 @@ export class CronService {
       return;
     }
 
-    const mailService = await this.resolveRequestScoped(MailService, plans[0].userId);
+    const mailService = this.moduleRef.get(MailService, { strict: false });
     await this.priceAlertService.checkAndTriggerAlertsForPlans(plans, mailService);
   }
 

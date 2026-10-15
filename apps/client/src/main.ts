@@ -4,7 +4,6 @@ import { registerChartConfiguration } from '@ghostfolio/ui/chart';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 import { GfNotificationModule } from '@ghostfolio/ui/notifications';
 
-import { Platform } from '@angular/cdk/platform';
 import {
   provideHttpClient,
   withInterceptorsFromDi
@@ -17,13 +16,11 @@ import {
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
   MatNativeDateModule
 } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { RouterModule, TitleStrategy } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideIonicAngular } from '@ionic/angular/standalone';
@@ -36,7 +33,6 @@ import { GfAppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { authInterceptorProviders } from './app/core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './app/core/http-response.interceptor';
-import { LanguageService } from './app/core/language.service';
 import { ModulePreloadService } from './app/core/module-preload.service';
 import { PageTitleStrategy } from './app/services/page-title.strategy';
 import { environment } from './environments/environment';
@@ -45,8 +41,7 @@ import { environment } from './environments/environment';
   const response = await fetch('/api/v1/info');
   const info: InfoResponse = await response.json();
   const utmSource = window.localStorage.getItem('utm_source') as
-    | 'ios'
-    | 'trusted-web-activity';
+    'ios' | 'trusted-web-activity';
 
   info.globalPermissions = filterGlobalPermissions(
     info.globalPermissions,
@@ -80,16 +75,13 @@ import { environment } from './environments/environment';
           registrationStrategy: 'registerImmediately'
         })
       ),
-      LanguageService,
       ModulePreloadService,
-      provideAnimations(),
       provideHttpClient(withInterceptorsFromDi()),
       provideIonicAngular(),
       provideMarkdown(),
       provideNgxSkeletonLoader(),
       provideZoneChangeDetection(),
       {
-        deps: [LanguageService, MAT_DATE_LOCALE, Platform],
         provide: DateAdapter,
         useClass: CustomDateAdapter
       },

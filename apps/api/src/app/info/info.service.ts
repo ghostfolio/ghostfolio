@@ -1,14 +1,15 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  ghostfolioFearAndGreedIndexSymbolStocks,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
   PROPERTY_DOCKER_HUB_PULLS,
@@ -23,8 +24,9 @@ import { permissions } from '@ghostfolio/common/permissions';
 
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { MarketData } from '@prisma/client';
 import { subDays } from 'date-fns';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 @Injectable()
 export class InfoService {
@@ -36,6 +38,7 @@ export class InfoService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
+    private readonly marketDataService: MarketDataService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly subscriptionService: SubscriptionService,
@@ -44,7 +47,9 @@ export class InfoService {
 
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
-    let isReadOnlyMode: boolean;
+    let isReadOnlyMode: boolean | undefined;
+    let latestFearAndGreedStocksMarketDataPromise:
+      Promise<MarketData> | undefined;
 
     const globalPermissions: string[] = [];
 
@@ -61,18 +66,18 @@ export class InfoService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      const fearAndGreedIndexDataSource =
-        this.dataProviderService.getDataSourceForFearAndGreedIndexStocks();
-
-      if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-        info.fearAndGreedDataSource = encodeDataSource(
-          fearAndGreedIndexDataSource
-        );
-      } else {
-        info.fearAndGreedDataSource = fearAndGreedIndexDataSource;
-      }
+      latestFearAndGreedStocksMarketDataPromise =
+        this.marketDataService.getLatest({
+          dataSource:
+            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
+        });
 
       globalPermissions.push(permissions.enableFearAndGreedIndex);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_MCP')) {
+      globalPermissions.push(permissions.enableMcp);
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
@@ -102,12 +107,14 @@ export class InfoService {
       benchmarks,
       demoAuthToken,
       isUserSignupEnabled,
+      latestFearAndGreedStocksMarketData,
       statistics,
       subscriptionOffer
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
       this.propertyService.isUserSignupEnabled(),
+      latestFearAndGreedStocksMarketDataPromise,
       this.getStatistics(),
       this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
@@ -125,7 +132,9 @@ export class InfoService {
       statistics,
       subscriptionOffer,
       baseCurrency: DEFAULT_CURRENCY,
-      currencies: this.exchangeRateDataService.getCurrencies()
+      currencies: this.exchangeRateDataService.getCurrencies(),
+      fearAndGreedStocksMarketPrice:
+        latestFearAndGreedStocksMarketData?.marketPrice
     };
   }
 

@@ -10,7 +10,7 @@ import {
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
-import { round } from 'lodash';
+import { round } from 'lodash-es';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
@@ -59,9 +59,9 @@ export class TwitterBotService implements OnModuleInit {
           symbolItem.marketPrice
         );
 
-        let status = `Current market mood is ${emoji} ${text.toLowerCase()} (${
+        let status = `Current market mood is ${emoji} ${text.toLowerCase()} (${round(
           symbolItem.marketPrice
-        }/100)`;
+        )}/100)`;
 
         const benchmarkListing = await this.getBenchmarkListing();
 

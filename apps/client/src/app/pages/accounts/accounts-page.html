@@ -6,27 +6,26 @@
         [accounts]="accounts"
         [activitiesCount]="activitiesCount"
         [baseCurrency]="user?.settings?.baseCurrency"
-        [locale]="user?.settings?.locale"
+        [hasPermissionToDeleteAccount]="hasPermissionToDeleteAccount"
+        [hasPermissionToUpdateAccount]="hasPermissionToUpdateAccount"
+        [locale]="user?.settings?.locale ?? DEFAULT_LOCALE"
         [showActions]="
-          !hasImpersonationId &&
-          hasPermissionToUpdateAccount &&
+          (hasPermissionToDeleteAccount || hasPermissionToUpdateAccount) &&
           !user.settings.isRestrictedView
         "
         [totalBalanceInBaseCurrency]="totalBalanceInBaseCurrency"
         [totalInvestmentInBaseCurrency]="totalInvestmentInBaseCurrency"
         [totalValueInBaseCurrency]="totalValueInBaseCurrency"
         (accountDeleted)="onDeleteAccount($event)"
-        (accountToUpdate)="onUpdateAccount($event)"
-        (transferBalance)="onTransferBalance()"
       />
     </div>
   </div>
 
-  @if (
-    !hasImpersonationId &&
-    hasPermissionToCreateAccount &&
-    !user.settings.isRestrictedView
-  ) {
-    <gf-fab [queryParams]="{ createDialog: true }" />
+  @if (hasPermissionToCreateAccount && !user.settings.isRestrictedView) {
+    <gf-fab
+      [routerLink]="internalRoutes.accounts.subRoutes.create.routerLink"
+    />
   }
 </div>
+
+<router-outlet />

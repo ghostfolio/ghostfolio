@@ -1,5 +1,4 @@
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
@@ -30,7 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { closeOutline, searchOutline } from 'ionicons/icons';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 
 import { translate } from '../i18n';
@@ -39,7 +38,6 @@ import { translate } from '../i18n';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    GfSymbolPipe,
     IonIcon,
     MatAutocompleteModule,
     MatButtonModule,

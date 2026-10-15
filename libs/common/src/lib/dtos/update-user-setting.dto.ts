@@ -86,6 +86,10 @@ export class UpdateUserSettingDto {
 
   @IsBoolean()
   @IsOptional()
+  isGhostfolioAiEnabled?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
   isRestrictedView?: boolean;
 
   @IsString()

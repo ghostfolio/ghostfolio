@@ -10,8 +10,10 @@ import {
   DividendsResponse,
   HistoricalResponse,
   LookupResponse,
+  MarketDataOfMarketsResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/ui/fear-and-greed-index';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -20,19 +22,31 @@ import {
   HttpHeaders,
   HttpParams
 } from '@angular/common/http';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { format, startOfYear } from 'date-fns';
-import { isObject } from 'lodash';
+import { isObject } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { catchError, map, Observable, of, OperatorFunction } from 'rxjs';
 
 import { FetchFailure, FetchResult } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
-  imports: [CommonModule, MatCardModule, NgxSkeletonLoaderModule],
+  imports: [
+    CommonModule,
+    GfFearAndGreedIndexComponent,
+    MatCardModule,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-api-page',
   styleUrls: ['./api-page.scss'],
   templateUrl: './api-page.html'
@@ -48,6 +62,9 @@ export class GfApiPageComponent implements OnInit {
   >;
   protected isinLookupItems$: Observable<FetchResult<LookupResponse['items']>>;
   protected lookupItems$: Observable<FetchResult<LookupResponse['items']>>;
+  protected marketDataOfMarkets$: Observable<
+    FetchResult<MarketDataOfMarketsResponse>
+  >;
   protected quotes$: Observable<FetchResult<QuotesResponse['quotes']>>;
   protected status$: Observable<
     FetchResult<DataProviderGhostfolioStatusResponse>
@@ -68,6 +85,7 @@ export class GfApiPageComponent implements OnInit {
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
     this.isinLookupItems$ = this.fetchLookupItems({ query: 'US0378331005' });
     this.lookupItems$ = this.fetchLookupItems({ query: 'apple' });
+    this.marketDataOfMarkets$ = this.fetchMarketDataOfMarkets();
     this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO'] });
     this.status$ = this.fetchStatus();
   }
@@ -170,6 +188,15 @@ export class GfApiPageComponent implements OnInit {
         this.catchFetchFailure(),
         takeUntilDestroyed(this.destroyRef)
       );
+  }
+
+  private fetchMarketDataOfMarkets() {
+    return this.http
+      .get<MarketDataOfMarketsResponse>(
+        '/api/v1/data-providers/ghostfolio/markets',
+        { headers: this.getHeaders() }
+      )
+      .pipe(this.catchFetchFailure(), takeUntilDestroyed(this.destroyRef));
   }
 
   private fetchQuotes({ symbols }: { symbols: string[] }) {

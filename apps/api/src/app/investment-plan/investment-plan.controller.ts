@@ -1,11 +1,11 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { MailService } from '@ghostfolio/api/services/mail/mail.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_AI_RESPONSE_LANGUAGE } from '@ghostfolio/common/config';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import { PriceAlertService } from './price-alert.service';
-import { RebalancingService } from './rebalancing.service';
+import {
+  RebalancingService,
+  toHoldingValuesBySymbol
+} from './rebalancing.service';
 
 import {
   Body,
@@ -28,10 +28,8 @@ import { InvestmentPlanService } from './investment-plan.service';
 export class InvestmentPlanController {
   public constructor(
     private readonly investmentPlanService: InvestmentPlanService,
-    private readonly mailService: MailService,
     private readonly portfolioService: PortfolioService,
     private readonly priceAlertService: PriceAlertService,
-    private readonly propertyService: PropertyService,
     private readonly rebalancingService: RebalancingService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -251,15 +249,14 @@ export class InvestmentPlanController {
     );
     if (!plan) return { actions: [], hasTriggered: false, totalValue: 0 };
 
-    let holdings: Record<string, any> = {};
+    let holdings: ReturnType<typeof toHoldingValuesBySymbol> = {};
     try {
       const result = await this.portfolioService.getDetails({
         filters: [],
-        impersonationId: undefined,
         userId: this.request.user.id,
         withMarkets: false
       });
-      holdings = result.holdings ?? {};
+      holdings = toHoldingValuesBySymbol(result.holdings);
     } catch {
       // return safe empty result if portfolio data is unavailable
     }
@@ -271,44 +268,6 @@ export class InvestmentPlanController {
     );
   }
 
-  @Post('ai-prompt')
-  @UseGuards(AuthGuard('jwt'))
-  public async getAiPrompt() {
-    const userId = this.request.user.id;
-    const plan = await this.investmentPlanService.getPlanByUserId(userId);
-    const signals = plan
-      ? await this.investmentPlanService.getRecentSignals(plan.id, 7)
-      : [];
-
-    const portfolioSummary = await this.fetchPortfolioSummary(userId);
-
-    const language =
-      (await this.propertyService.getByKey<string>(PROPERTY_AI_RESPONSE_LANGUAGE)) ?? 'en';
-    const prompt = this.mailService.buildPrompt(language, signals, portfolioSummary);
-    return { prompt };
-  }
-
-  @Post('ai-report')
-  @UseGuards(AuthGuard('jwt'))
-  public async generateAiReport() {
-    const userId = this.request.user.id;
-    const plan = await this.investmentPlanService.getPlanByUserId(userId);
-
-    // Gather holdings
-    const portfolioSummary = await this.fetchPortfolioSummary(userId);
-
-    // Gather recent signals
-    const signals = plan
-      ? await this.investmentPlanService.getRecentSignals(plan.id, 7)
-      : [];
-
-    const language =
-      (await this.propertyService.getByKey<string>(PROPERTY_AI_RESPONSE_LANGUAGE)) ?? 'en';
-
-    const report = await this.mailService.generateAiReport(language, signals, portfolioSummary);
-    return { report };
-  }
-
   @Put('signals/:id/status')
   @UseGuards(AuthGuard('jwt'))
   public async updateSignalStatus(
@@ -316,37 +275,6 @@ export class InvestmentPlanController {
     @Body() body: { status: 'EXECUTED' | 'DISMISSED' }
   ) {
     return this.investmentPlanService.updateSignalStatus(id, body.status as any);
-  }
-
-  private async fetchPortfolioSummary(
-    userId: string,
-    timeoutMs = 15000
-  ): Promise<{ symbol: string; currentWeight: number; value: number }[]> {
-    try {
-      const race = await Promise.race([
-        this.portfolioService.getDetails({
-          filters: [],
-          impersonationId: undefined,
-          userId,
-          withMarkets: false
-        }),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('getDetails timeout')), timeoutMs)
-        )
-      ]);
-      const holdings: Record<string, any> = (race as any).holdings ?? {};
-      const totalValue: number = Object.values(holdings).reduce(
-        (sum: number, h: any) => sum + (h.valueInBaseCurrency ?? 0),
-        0
-      );
-      return Object.entries(holdings).map(([symbol, h]: [string, any]) => ({
-        currentWeight: totalValue > 0 ? (h.valueInBaseCurrency / totalValue) * 100 : 0,
-        symbol,
-        value: h.valueInBaseCurrency ?? 0
-      }));
-    } catch {
-      return [];
-    }
   }
 
   private async getOrCreatePlan() {

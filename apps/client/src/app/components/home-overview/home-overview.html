@@ -1,5 +1,5 @@
 <div
-  class="container h-100 overview p-0 position-relative"
+  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative px-xl-3"
 >
   @if (
     !hasImpersonationId() &&
@@ -13,7 +13,10 @@
         <h4 i18n>Welcome to Ghostfolio</h4>
         <p i18n>Ready to take control of your personal finances?</p>
         <ol class="font-weight-bold">
-          <li class="mb-2" [class.text-muted]="user()?.accounts?.length > 1">
+          <li
+            class="mb-2"
+            [class.text-muted]="(user()?.accounts?.length ?? 0) > 1"
+          >
             <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
               <span class="font-weight-normal" i18n
@@ -50,11 +53,11 @@
             >
               <ng-container i18n>Setup accounts</ng-container>
             </a>
-          } @else if (user()?.accounts?.length > 1) {
+          } @else if ((user()?.accounts?.length ?? 0) > 1) {
             <a
               color="primary"
               mat-flat-button
-              [routerLink]="routerLinkPortfolioActivities"
+              [routerLink]="routerLinkPortfolioActivitiesCreate"
             >
               <ng-container i18n>Add activity</ng-container>
             </a>
@@ -63,8 +66,8 @@
       </div>
     </div>
   } @else {
-    <div class="row w-100">
-      <div class="col p-0">
+    <div class="align-items-stretch flex-nowrap row w-100">
+      <div class="col-12 col-xl p-0">
         <div class="chart-container mx-auto position-relative">
           <gf-line-chart
             class="position-absolute"
@@ -75,28 +78,45 @@
             [historicalDataItems]="historicalDataItems()"
             [isAnimated]="user()?.settings?.dateRange === '1d' ? false : true"
             [label]="performanceLabel"
-            [locale]="user()?.settings?.locale"
+            [locale]="locale()"
             [showGradient]="true"
             [showLoader]="false"
             [showXAxis]="false"
             [showYAxis]="false"
           />
         </div>
+        <div class="mt-1">
+          <gf-portfolio-performance
+            [errors]="errors()"
+            [isLoading]="isLoadingPerformance()"
+            [locale]="locale()"
+            [performance]="performance()"
+            [precision]="precision()"
+            [showDetails]="showDetails()"
+            [unit]="unit()"
+          />
+        </div>
       </div>
-    </div>
-    <div class="overview-container row mt-1">
-      <div class="col">
-        <gf-portfolio-performance
-          class="pb-4"
-          [errors]="errors()"
-          [isLoading]="isLoadingPerformance()"
-          [locale]="user()?.settings?.locale"
-          [performance]="performance()"
-          [precision]="precision()"
-          [showDetails]="showDetails()"
-          [unit]="unit()"
-        />
-      </div>
+      @if (showExperimentalHoldings()) {
+        <div class="col-xl-4 d-none d-xl-block ml-5 p-0 position-relative">
+          <mat-card
+            appearance="outlined"
+            class="h-100 holdings position-absolute w-100"
+          >
+            <mat-card-header>
+              <mat-card-title i18n>Holdings</mat-card-title>
+            </mat-card-header>
+            <mat-card-content class="overflow-auto">
+              <gf-holdings-table
+                mode="simple"
+                [holdings]="holdings()"
+                [locale]="locale()"
+                (holdingClicked)="onHoldingClicked($event)"
+              />
+            </mat-card-content>
+          </mat-card>
+        </div>
+      }
     </div>
 
     @if (investmentSignals().length > 0) {

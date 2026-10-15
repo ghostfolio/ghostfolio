@@ -32,7 +32,10 @@
                     class="ml-1"
                     i18n-title
                     title="Expires {{
-                      formatDistanceToNow(element.subscription.expiresAt)
+                      formatRelativeTime({
+                        date: element.subscription.expiresAt,
+                        language: user?.settings?.language
+                      })
                     }} ({{
                       element.subscription.expiresAt | date: defaultDateFormat
                     }})"
@@ -79,7 +82,12 @@
               class="mat-mdc-cell px-1 py-2 text-nowrap"
               mat-cell
             >
-              {{ formatDistanceToNow(element.createdAt) }}
+              {{
+                formatRelativeTime({
+                  date: element.createdAt,
+                  language: user?.settings?.language
+                })
+              }}
             </td>
           </ng-container>
 
@@ -175,17 +183,32 @@
               <th
                 *matHeaderCellDef
                 class="mat-mdc-header-cell px-1 py-2"
-                i18n
                 mat-header-cell
               >
-                Last Request
+                <ng-container i18n>Last Request</ng-container>
               </th>
               <td
                 *matCellDef="let element"
                 class="mat-mdc-cell px-1 py-2 text-nowrap"
                 mat-cell
               >
-                {{ formatDistanceToNow(element.lastActivity) }}
+                <div class="align-items-center d-flex">
+                  @if (element.lastRequestClient) {
+                    <ion-icon
+                      class="mr-1"
+                      [name]="requestClientIcons[element.lastRequestClient]"
+                      [title]="translate(element.lastRequestClient)"
+                    />
+                  } @else {
+                    <ion-icon class="hidden mr-1" />
+                  }
+                  {{
+                    formatRelativeTime({
+                      date: element.lastActivity,
+                      language: user?.settings?.language
+                    })
+                  }}
+                </div>
               </td>
             </ng-container>
           }
@@ -241,12 +264,17 @@
                 <hr class="m-0" />
                 <button
                   mat-menu-item
-                  [disabled]="element.id === user?.id"
+                  [disabled]="
+                    !canDeleteUser({
+                      currentUserId: user?.id,
+                      userId: element.id
+                    })
+                  "
                   (click)="onDeleteUser(element.id)"
                 >
                   <span class="align-items-center d-flex">
                     <ion-icon class="mr-2" name="trash-outline" />
-                    <span i18n>Delete User</span>
+                    <span i18n>Delete</span>
                   </span>
                 </button>
               </mat-menu>

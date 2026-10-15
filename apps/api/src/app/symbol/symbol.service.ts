@@ -2,6 +2,11 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import {
+  ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
+  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
+  ghostfolioFearAndGreedIndexSymbolStocks
+} from '@ghostfolio/common/config';
+import {
   DATE_FORMAT,
   getAssetProfileIdentifier
 } from '@ghostfolio/common/helper';
@@ -9,10 +14,12 @@ import {
   DataProviderHistoricalResponse,
   HistoricalDataItem,
   LookupResponse,
+  MarketDataOfMarketsResponse,
   SymbolItem
 } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, subDays } from 'date-fns';
 
@@ -117,8 +124,55 @@ export class SymbolService {
 
     return {
       marketPrice:
-        historicalData?.[assetProfileIdentifier]?.[format(date, DATE_FORMAT)]
-          ?.marketPrice
+        historicalData?.[assetProfileIdentifier]?.[
+          format(date, DATE_FORMAT, { in: utc })
+        ]?.marketPrice
+    };
+  }
+
+  public async getMarketDataOfMarkets({
+    includeHistoricalData
+  }: {
+    includeHistoricalData: number;
+  }): Promise<MarketDataOfMarketsResponse> {
+    if (await this.dataProviderService.isDataProviderGhostfolioConfigured()) {
+      return this.dataProviderService.getMarketDataOfMarkets({
+        includeHistoricalData
+      });
+    }
+
+    const [
+      marketDataFearAndGreedIndexCryptocurrencies,
+      marketDataFearAndGreedIndexStocks
+    ] = await Promise.all([
+      this.get({
+        includeHistoricalData,
+        dataGatheringItem: {
+          dataSource: ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
+          symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
+        },
+        useIntradayData: true
+      }),
+      this.get({
+        includeHistoricalData,
+        dataGatheringItem: {
+          dataSource:
+            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
+        },
+        useIntradayData: true
+      })
+    ]);
+
+    return {
+      fearAndGreedIndex: {
+        CRYPTOCURRENCIES: {
+          ...marketDataFearAndGreedIndexCryptocurrencies
+        },
+        STOCKS: {
+          ...marketDataFearAndGreedIndexStocks
+        }
+      }
     };
   }
 
@@ -146,7 +200,7 @@ export class SymbolService {
       results.items = items;
       return results;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }

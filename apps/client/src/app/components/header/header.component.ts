@@ -220,7 +220,7 @@ export class GfHeaderComponent implements OnChanges {
     this.assistentMenuTriggerElement().closeMenu();
   }
 
-  protected impersonateAccount(aId: string) {
+  protected impersonateAccount(aId: string | null) {
     if (aId) {
       this.impersonationStorageService.setId(aId);
     } else {

@@ -1,4 +1,4 @@
-import { Filter } from '@ghostfolio/common/interfaces';
+import { Filter, UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 
@@ -14,23 +14,23 @@ export class ApiService {
     filterBySymbol,
     filterByTags
   }: {
-    filterByAccounts?: string;
-    filterByAssetClasses?: string;
+    filterByAccounts?: string[];
+    filterByAssetClasses?: string[];
     filterByAssetSubClasses?: string;
     filterByDataSource?: string;
     filterByHoldingType?: string;
     filterBySearchQuery?: string;
     filterBySymbol?: string;
-    filterByTags?: string;
+    filterByTags?: string[];
   }): Filter[] {
-    const accountIds = filterByAccounts?.split(',') ?? [];
-    const assetClasses = filterByAssetClasses?.split(',') ?? [];
+    const accountIds = filterByAccounts ?? [];
+    const assetClasses = filterByAssetClasses ?? [];
     const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
     const dataSource = filterByDataSource;
     const holdingType = filterByHoldingType;
     const searchQuery = filterBySearchQuery?.toLowerCase();
     const symbol = filterBySymbol;
-    const tagIds = filterByTags?.split(',') ?? [];
+    const tagIds = filterByTags ?? [];
 
     const filters = [
       ...accountIds.map((accountId) => {
@@ -88,5 +88,19 @@ export class ApiService {
     }
 
     return filters;
+  }
+
+  public buildFiltersFromUserSettings({
+    userSettings
+  }: {
+    userSettings: UserSettings;
+  }): Filter[] {
+    return this.buildFiltersFromQueryParams({
+      filterByAccounts: userSettings?.['filters.accounts'],
+      filterByAssetClasses: userSettings?.['filters.assetClasses'],
+      filterByDataSource: userSettings?.['filters.dataSource'],
+      filterBySymbol: userSettings?.['filters.symbol'],
+      filterByTags: userSettings?.['filters.tags']
+    });
   }
 }
