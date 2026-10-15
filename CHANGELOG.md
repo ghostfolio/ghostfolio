@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Hardened the validation of the date in the endpoint to create an account balance
 - Improved the accessibility of the _Google_ icon in the login with access token dialog
+- Hardened the validation of the date in the endpoint to create an account balance
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
 
 ## 3.86.0 - 2026-10-13
