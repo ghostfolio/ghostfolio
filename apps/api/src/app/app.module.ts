@@ -61,6 +61,7 @@ import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { InvestmentPlanModule } from './investment-plan/investment-plan.module';
 import { LogoModule } from './logo/logo.module';
+import { McpModule } from './mcp/mcp.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
@@ -129,6 +130,7 @@ import { UserModule } from './user/user.module';
     InvestmentPlanModule,
     LogoModule,
     MarketDataModule,
+    McpModule,
     PlatformModule,
     PlatformsModule,
     PortfolioModule,
