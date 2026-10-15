@@ -10,7 +10,6 @@ import { AddressInfo } from 'node:net';
 import { McpAuthService } from './mcp-auth.service';
 import { McpController } from './mcp.controller';
 import { McpService } from './mcp.service';
-import { OAuthService } from './oauth/oauth.service';
 
 describe('McpController', () => {
   let app: INestApplication;
@@ -38,10 +37,6 @@ describe('McpController', () => {
             getAuthorizationToken: async (header?: string) =>
               header === 'Bearer good' ? 'internal-jwt' : undefined
           }
-        },
-        {
-          provide: OAuthService,
-          useValue: { resourceMetadataUrl: 'https://example.com/meta' }
         },
         {
           provide: ConfigurationService,
@@ -102,7 +97,7 @@ describe('McpController', () => {
 
     expect(response.status).toBe(401);
     expect(response.headers.get('www-authenticate')).toBe(
-      'Bearer resource_metadata="https://example.com/meta"'
+      `Bearer resource_metadata="${baseUrl.origin}/.well-known/oauth-protected-resource"`
     );
   });
 

@@ -15,6 +15,7 @@ import { McpAuthService } from '../mcp-auth.service';
 import { McpController } from '../mcp.controller';
 import { McpService } from '../mcp.service';
 import { McpTokenService } from './mcp-token.service';
+import { getBaseUrl } from './oauth.constants';
 import { OAuthController } from './oauth.controller';
 import { OAuthService } from './oauth.service';
 
@@ -365,5 +366,46 @@ describe('MCP OAuth', () => {
     });
 
     expect(response.status).toBe(400);
+  });
+});
+
+describe('getBaseUrl', () => {
+  const request = (headers: Record<string, string>) =>
+    ({
+      get: (name: string) => headers[name.toLowerCase()],
+      headers,
+      protocol: 'http'
+    }) as any;
+
+  const original = process.env.ROOT_URL;
+
+  afterEach(() => {
+    if (original === undefined) {
+      delete process.env.ROOT_URL;
+    } else {
+      process.env.ROOT_URL = original;
+    }
+  });
+
+  it('prefers an explicit ROOT_URL', () => {
+    process.env.ROOT_URL = 'https://ghostfolio.example.com/';
+
+    expect(getBaseUrl(request({ host: 'internal:3333' }))).toBe(
+      'https://ghostfolio.example.com'
+    );
+  });
+
+  it('derives the origin from forwarded headers otherwise', () => {
+    delete process.env.ROOT_URL;
+
+    expect(
+      getBaseUrl(
+        request({
+          host: 'internal:3333',
+          'x-forwarded-host': 'ghostfolio.example.com',
+          'x-forwarded-proto': 'https'
+        })
+      )
+    ).toBe('https://ghostfolio.example.com');
   });
 });

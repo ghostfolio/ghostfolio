@@ -1,5 +1,4 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
 import { Injectable } from '@nestjs/common';
 import { randomBytes } from 'node:crypto';
@@ -13,7 +12,7 @@ import {
   validateRedirectUris,
   verifyPkce
 } from './oauth-utils';
-import { MCP_RESOURCE_PATH } from './oauth.constants';
+import { getResourceIdentifier } from './oauth.constants';
 
 const AUTHORIZATION_CODE_TTL_MS = 5 * 60 * 1000;
 const MAX_FAILED_CONSENT_ATTEMPTS = 10;
@@ -45,48 +44,30 @@ export class OAuthService {
   >();
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly mcpAuthService: McpAuthService,
     private readonly mcpTokenService: McpTokenService,
     private readonly userService: UserService
   ) {}
 
-  /**
-   * The externally reachable origin. Taken from ROOT_URL and not from the Host
-   * header: behind a reverse proxy that header is attacker-controllable and
-   * would let a forged value poison the discovery documents.
-   */
-  public get baseUrl() {
-    return this.configurationService.get('ROOT_URL').replace(/\/+$/, '');
-  }
-
-  public get resourceIdentifier() {
-    return `${this.baseUrl}${MCP_RESOURCE_PATH}`;
-  }
-
-  public get resourceMetadataUrl() {
-    return `${this.baseUrl}/.well-known/oauth-protected-resource`;
-  }
-
-  public getAuthorizationServerMetadata() {
+  public getAuthorizationServerMetadata(baseUrl: string) {
     return {
-      authorization_endpoint: `${this.baseUrl}/oauth/authorize`,
+      authorization_endpoint: `${baseUrl}/oauth/authorize`,
       code_challenge_methods_supported: ['S256'],
       grant_types_supported: ['authorization_code', 'refresh_token'],
-      issuer: this.baseUrl,
-      registration_endpoint: `${this.baseUrl}/oauth/register`,
+      issuer: baseUrl,
+      registration_endpoint: `${baseUrl}/oauth/register`,
       response_types_supported: ['code'],
       scopes_supported: [MCP_SCOPE_READ],
-      token_endpoint: `${this.baseUrl}/oauth/token`,
+      token_endpoint: `${baseUrl}/oauth/token`,
       token_endpoint_auth_methods_supported: ['none']
     };
   }
 
-  public getProtectedResourceMetadata() {
+  public getProtectedResourceMetadata(baseUrl: string) {
     return {
-      authorization_servers: [this.baseUrl],
+      authorization_servers: [baseUrl],
       bearer_methods_supported: ['header'],
-      resource: this.resourceIdentifier,
+      resource: getResourceIdentifier(baseUrl),
       scopes_supported: [MCP_SCOPE_READ]
     };
   }
@@ -125,8 +106,10 @@ export class OAuthService {
   }
 
   public parseAuthorizeRequest(
-    values: Record<string, unknown>
+    values: Record<string, unknown>,
+    baseUrl: string
   ): AuthorizeRequest {
+    const resourceIdentifier = getResourceIdentifier(baseUrl);
     const text = (name: string) =>
       typeof values[name] === 'string' ? (values[name] as string) : '';
 
@@ -166,7 +149,7 @@ export class OAuthService {
     // to a different server.
     const resource = text('resource');
 
-    if (resource && resource.replace(/\/+$/, '') !== this.resourceIdentifier) {
+    if (resource && resource.replace(/\/+$/, '') !== resourceIdentifier) {
       throw new OAuthError(
         'invalid_target',
         'resource is not served by this authorization server'
@@ -185,7 +168,7 @@ export class OAuthService {
       clientName: client.clientName ?? '',
       codeChallenge: text('code_challenge'),
       redirectUri,
-      resource: this.resourceIdentifier,
+      resource: resourceIdentifier,
       // Unknown scopes are ignored: there is a single read scope and it is
       // what gets granted (RFC 6749 §3.3 lets the server grant less).
       scope: MCP_SCOPE_READ,

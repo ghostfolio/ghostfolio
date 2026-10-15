@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { McpTokenService } from './oauth/mcp-token.service';
-import { MCP_RESOURCE_PATH } from './oauth/oauth.constants';
+import { getResourceIdentifier } from './oauth/oauth.constants';
 
 @Injectable()
 export class McpAuthService {
@@ -30,7 +30,8 @@ export class McpAuthService {
    * Returns `undefined` if the credential is missing or invalid.
    */
   public async getAuthorizationToken(
-    authorizationHeader?: string
+    authorizationHeader: string | undefined,
+    baseUrl: string
   ): Promise<string | undefined> {
     const credential = /^Bearer\s+(.+)$/i.exec(authorizationHeader ?? '')?.[1];
 
@@ -44,7 +45,7 @@ export class McpAuthService {
 
         return credential;
       } catch {
-        return this.exchangeOAuthAccessToken(credential);
+        return this.exchangeOAuthAccessToken(credential, baseUrl);
       }
     }
 
@@ -63,7 +64,7 @@ export class McpAuthService {
     );
   }
 
-  private exchangeOAuthAccessToken(accessToken: string) {
+  private exchangeOAuthAccessToken(accessToken: string, baseUrl: string) {
     try {
       const claims = this.mcpTokenService.verifyToken(
         accessToken,
@@ -71,11 +72,7 @@ export class McpAuthService {
       );
 
       // A token minted for another resource must not work here
-      const resource = `${this.configurationService
-        .get('ROOT_URL')
-        .replace(/\/+$/, '')}${MCP_RESOURCE_PATH}`;
-
-      return claims.aud === resource
+      return claims.aud === getResourceIdentifier(baseUrl)
         ? this.signInternalToken(claims.sub)
         : undefined;
     } catch {
