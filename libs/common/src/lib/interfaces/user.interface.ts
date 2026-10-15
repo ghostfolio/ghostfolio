@@ -27,6 +27,7 @@ export interface User {
   subscription: {
     expiresAt?: Date;
     offer: SubscriptionOffer;
+    subscribedAt?: Date;
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];
