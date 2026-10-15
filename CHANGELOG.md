@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the AI investment advice, the model provider settings of the admin control panel, the AI report of the DCA page and the AI text of the signal emails in favor of the AI features of the upstream. The old AI settings stay in the `Property` table (`AI_API_URL`, `AI_RESPONSE_LANGUAGE`, `AI_TESTED_MODELS`) and are not read anymore
 - Removed the batched download of the historical market data in favor of the implementation of the upstream
 
+### Fixed
+
+- Fixed an exception in the authentication interceptor when the time zone of the browser is not available
+
 ## 3.86.0 - 2026-10-13
 
 ### Added
