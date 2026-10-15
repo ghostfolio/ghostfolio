@@ -1,5 +1,5 @@
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import { InvestmentPlanAllocation, SignalType } from '@prisma/client';
@@ -17,10 +17,27 @@ export interface RebalancingAction {
   type: 'BUY' | 'SELL' | 'OK';
 }
 
+/**
+ * The actual market value set against the Long-term Growth Target of the plan
+ * (see docs/dev/notes/capital-pool.md). It is information beside the weights,
+ * not their base: the weights and the buy/sell amounts always refer to what is
+ * actually held, so the weights of a fully assigned portfolio add up to 100%.
+ */
+export interface CapitalStatus {
+  actual: number;
+  /** target - actual: positive = still to deploy, negative = above target */
+  gap: number;
+  reason: string;
+  status: 'ABOVE_TARGET' | 'BELOW_TARGET' | 'ON_TARGET' | 'UNSET';
+  target: number;
+}
+
 export interface RebalancingResult {
   actions: RebalancingAction[];
-  totalValue: number;
+  capital: CapitalStatus;
   hasTriggered: boolean;
+  /** Actual market value of the holdings, the base of all weights */
+  totalValue: number;
 }
 
 @Injectable()
@@ -29,23 +46,19 @@ export class RebalancingService {
 
   public async calculateRebalancing(
     allocations: InvestmentPlanAllocation[],
-    holdings: { [symbol: string]: Pick<PortfolioPosition, 'valueInBaseCurrency'> },
+    holdings: {
+      [symbol: string]: Pick<PortfolioPosition, 'valueInBaseCurrency'>;
+    },
     longTermGrowthTarget = 0
   ): Promise<RebalancingResult> {
-    if (!allocations.length) {
-      return { actions: [], hasTriggered: false, totalValue: 0 };
-    }
-
-    const deployedValue = Object.values(holdings).reduce(
+    const totalValue = Object.values(holdings).reduce(
       (sum, h) => sum + (h.valueInBaseCurrency ?? 0),
       0
     );
+    const capital = this.buildCapitalStatus(totalValue, longTermGrowthTarget);
 
-    // Use longTermGrowthTarget as the base when set; fall back to actual deployed value
-    const totalValue = longTermGrowthTarget > 0 ? longTermGrowthTarget : deployedValue;
-
-    if (totalValue === 0) {
-      return { actions: [], hasTriggered: false, totalValue: 0 };
+    if (!allocations.length || totalValue === 0) {
+      return { actions: [], capital, hasTriggered: false, totalValue: 0 };
     }
 
     const actions: RebalancingAction[] = [];
@@ -67,10 +80,10 @@ export class RebalancingService {
         (sum, symbol) => sum + (holdings[symbol]?.valueInBaseCurrency ?? 0),
         0
       );
-      // Current weight is always relative to the target base (longTermGrowthTarget)
       const currentWeight = (currentValue / totalValue) * 100;
       const deviation = currentWeight - targetWeight;
-      const adjustmentValue = (totalValue * (targetWeight - currentWeight)) / 100;
+      const adjustmentValue =
+        (totalValue * (targetWeight - currentWeight)) / 100;
 
       let type: 'BUY' | 'SELL' | 'OK' = 'OK';
       if (Math.abs(deviation) >= rebalanceThreshold) {
@@ -92,16 +105,22 @@ export class RebalancingService {
       });
     }
 
-    return { actions, hasTriggered, totalValue };
+    return { actions, capital, hasTriggered, totalValue };
   }
 
   public async generateRebalancingSignals(
     planId: string,
     allocations: InvestmentPlanAllocation[],
-    holdings: { [symbol: string]: Pick<PortfolioPosition, 'valueInBaseCurrency'> },
+    holdings: {
+      [symbol: string]: Pick<PortfolioPosition, 'valueInBaseCurrency'>;
+    },
     longTermGrowthTarget = 0
   ): Promise<void> {
-    const result = await this.calculateRebalancing(allocations, holdings, longTermGrowthTarget);
+    const result = await this.calculateRebalancing(
+      allocations,
+      holdings,
+      longTermGrowthTarget
+    );
     if (!result.hasTriggered) return;
 
     const startOfWeek = new Date();
@@ -118,7 +137,10 @@ export class RebalancingService {
           date: { gte: startOfWeek },
           planId,
           symbol,
-          type: action.type === 'BUY' ? SignalType.REBALANCE_BUY : SignalType.REBALANCE_SELL
+          type:
+            action.type === 'BUY'
+              ? SignalType.REBALANCE_BUY
+              : SignalType.REBALANCE_SELL
         }
       });
       if (existing) continue;
@@ -130,10 +152,50 @@ export class RebalancingService {
           planId,
           reason: action.reason,
           symbol,
-          type: action.type === 'BUY' ? SignalType.REBALANCE_BUY : SignalType.REBALANCE_SELL
+          type:
+            action.type === 'BUY'
+              ? SignalType.REBALANCE_BUY
+              : SignalType.REBALANCE_SELL
         }
       });
     }
+  }
+
+  private buildCapitalStatus(actual: number, target: number): CapitalStatus {
+    if (!(target > 0)) {
+      return { actual, gap: 0, reason: '', status: 'UNSET', target: 0 };
+    }
+
+    const gap = target - actual;
+    const money = (value: number) =>
+      Math.round(Math.abs(value)).toLocaleString('en-US');
+
+    // Within 0.5% of the target counts as on target
+    if (Math.abs(gap) <= target * 0.005) {
+      return {
+        actual,
+        gap,
+        reason: 'Holdings are on the target capital',
+        status: 'ON_TARGET',
+        target
+      };
+    }
+
+    return gap > 0
+      ? {
+          actual,
+          gap,
+          reason: `${money(gap)} of the ${money(target)} target capital is not deployed yet`,
+          status: 'BELOW_TARGET',
+          target
+        }
+      : {
+          actual,
+          gap,
+          reason: `Holdings are ${money(gap)} above the ${money(target)} target capital; consider selling that part to lower the risk`,
+          status: 'ABOVE_TARGET',
+          target
+        };
   }
 
   private buildReason(

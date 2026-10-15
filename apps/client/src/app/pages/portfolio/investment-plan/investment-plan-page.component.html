@@ -222,6 +222,14 @@
                   {{ rebalancingResult.totalValue | number: '1.0-0' }} CAD</mat-card-subtitle
                 >
               </mat-card-header>
+              @if (
+                rebalancingResult.capital?.reason &&
+                rebalancingResult.capital?.status !== 'ON_TARGET'
+              ) {
+                <div class="px-3 pb-2 small text-muted">
+                  {{ rebalancingResult.capital?.reason }}
+                </div>
+              }
               <mat-card-content class="py-2">
                 @for (action of rebalancingResult.actions; track action.groupId) {
                   <div

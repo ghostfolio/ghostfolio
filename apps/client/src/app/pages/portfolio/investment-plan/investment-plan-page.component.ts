@@ -156,6 +156,7 @@ export class GfInvestmentPlanPageComponent implements OnInit {
   public isGeneratingReport = false;
   public rebalancingResult: {
     actions: any[];
+    capital?: { gap: number; reason: string; status: string };
     hasTriggered: boolean;
     totalValue: number;
   } | null = null;

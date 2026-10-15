@@ -9,6 +9,7 @@
 ## architecture/ 技术方案
 
 - [signal-pipeline.md](architecture/signal-pipeline.md) — 信号生成（cron）→ 前端展示 → 邮件通知的完整链路
+- [mcp-server.md](architecture/mcp-server.md) — MCP 服务端：回环转发、认证、OAuth、写入例外、脱敏
 
 ## adr/ 决策记录
 
