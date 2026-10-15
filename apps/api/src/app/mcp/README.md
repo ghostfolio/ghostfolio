@@ -17,13 +17,38 @@ investment decisions.
 
 `Authorization: Bearer <credential>`, where the credential is one of
 
-1. a Ghostfolio JWT (what the web client uses, valid 180 days),
-2. an API key (Premium, generated in _Account → Membership_),
-3. the **Security Token** you log in with.
+1. an access token from the OAuth flow below,
+2. a Ghostfolio JWT (what the web client uses, valid 180 days),
+3. an API key (Premium, generated in _Account → Membership_),
+4. the **Security Token** you log in with.
 
 An API key or Security Token is exchanged for a 10 minute JWT that is only used
 for the internal calls of that request. A missing or invalid credential gets
-`401`.
+`401` with a `WWW-Authenticate` header pointing at the OAuth metadata.
+
+## OAuth (claude.ai connectors)
+
+Clients that can only connect through OAuth discover and run the flow on their
+own (`oauth/`): protected-resource and authorization-server metadata under
+`/.well-known/`, dynamic client registration at `/oauth/register`, a consent
+page at `/oauth/authorize`, and `/oauth/token` for `authorization_code` (PKCE
+S256 required) and `refresh_token`.
+
+- **Needs `ROOT_URL`** set to the public URL of the instance. It is the issuer,
+  the redirect base and the audience of every token; it is deliberately not
+  taken from the `Host` header.
+- **Consent:** the page asks for the Security Token you sign in with. There is no
+  server-side browser session in Ghostfolio to reuse (the web app keeps its JWT
+  client-side), so this is the sign-in. Accounts without a Security Token (for
+  example Google/OIDC only) cannot use this path; use an API key or JWT.
+- **Stateless tokens:** access tokens last 1 hour, refresh tokens 30 days. Both
+  are signed with a key derived from `JWT_SECRET_KEY`, so they are not valid as
+  API JWTs and vice versa. Registered clients are signed `client_id`s, no table.
+  The consequence is that a single refresh token cannot be revoked: rotating
+  `JWT_SECRET_KEY` revokes everything, deleting the user ends their tokens.
+- **In-memory state:** authorization codes (5 minutes, single use) and the
+  failed-consent counter (10 attempts per IP per 10 minutes) live in memory, so
+  a restart only costs an in-flight sign-in.
 
 ## Connect Claude Code
 
@@ -31,6 +56,9 @@ for the internal calls of that request. A missing or invalid credential gets
 claude mcp add --transport http ghostfolio https://<your-host>/api/v1/mcp \
   --header "Authorization: Bearer <credential>"
 ```
+
+In claude.ai add a custom connector with the URL `https://<your-host>/api/v1/mcp`
+and sign in on the consent page.
 
 Then ask Claude to use the `ghostfolio` MCP, e.g. "use ghostfolio to review my
 holdings against my investment plan".

@@ -58,6 +58,10 @@ async function bootstrap() {
   app.setGlobalPrefix('api', {
     exclude: [
       `${BULL_BOARD_ROUTE.substring(1)}{/*wildcard}`,
+      // OAuth for the MCP endpoint lives at fixed, origin-level locations
+      '.well-known/oauth-authorization-server{/*wildcard}',
+      '.well-known/oauth-protected-resource{/*wildcard}',
+      'oauth/{*wildcard}',
       'sitemap.xml',
       ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
         // Exclude language-specific routes with an optional wildcard

@@ -5,22 +5,27 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { McpTokenService } from './oauth/mcp-token.service';
+import { MCP_RESOURCE_PATH } from './oauth/oauth.constants';
+
 @Injectable()
 export class McpAuthService {
   public constructor(
     private readonly apiKeyService: ApiKeyService,
     private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
+    private readonly mcpTokenService: McpTokenService,
     private readonly userService: UserService
   ) {}
 
   /**
    * Turns the credential of an MCP request into a JWT for the internal API
-   * calls. Accepted bearer credentials, in this order:
+   * calls. Accepted bearer credentials:
    *
-   * 1. a Ghostfolio JWT (the one the web client uses),
-   * 2. an API key (Premium only, generated in the membership page),
-   * 3. the Security Token the user logs in with.
+   * 1. an access token issued by the OAuth flow (claude.ai connectors),
+   * 2. a Ghostfolio JWT (the one the web client uses),
+   * 3. an API key (Premium only, generated in the membership page),
+   * 4. the Security Token the user logs in with.
    *
    * Returns `undefined` if the credential is missing or invalid.
    */
@@ -39,19 +44,47 @@ export class McpAuthService {
 
         return credential;
       } catch {
-        return undefined;
+        return this.exchangeOAuthAccessToken(credential);
       }
     }
 
-    const userId =
-      (await this.getUserIdByApiKey(credential)) ??
-      (await this.getUserIdBySecurityToken(credential));
+    const userId = await this.getUserIdByCredential(credential);
 
-    if (!userId) {
+    return userId ? this.signInternalToken(userId) : undefined;
+  }
+
+  /** Resolves an API key or Security Token to the id of its user. */
+  public async getUserIdByCredential(
+    credential: string
+  ): Promise<string | undefined> {
+    return (
+      (await this.getUserIdByApiKey(credential)) ??
+      (await this.getUserIdBySecurityToken(credential))
+    );
+  }
+
+  private exchangeOAuthAccessToken(accessToken: string) {
+    try {
+      const claims = this.mcpTokenService.verifyToken(
+        accessToken,
+        'mcp_access'
+      );
+
+      // A token minted for another resource must not work here
+      const resource = `${this.configurationService
+        .get('ROOT_URL')
+        .replace(/\/+$/, '')}${MCP_RESOURCE_PATH}`;
+
+      return claims.aud === resource
+        ? this.signInternalToken(claims.sub)
+        : undefined;
+    } catch {
       return undefined;
     }
+  }
 
-    // Short-lived: it only has to survive the tool calls of this request
+  /** Short-lived: it only has to survive the tool calls of one request. */
+  private signInternalToken(userId: string) {
     return this.jwtService.sign({ id: userId }, { expiresIn: '10m' });
   }
 

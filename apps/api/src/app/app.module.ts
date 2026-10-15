@@ -145,6 +145,7 @@ import { UserModule } from './user/user.module';
         `${BULL_BOARD_ROUTE}/*wildcard`,
         '/.well-known/*wildcard',
         '/api/*wildcard',
+        '/oauth/*wildcard',
         '/sitemap.xml'
       ],
       rootPath: join(__dirname, '..', 'client'),

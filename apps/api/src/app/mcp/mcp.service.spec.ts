@@ -178,6 +178,11 @@ describe('McpAuthService', () => {
     apiKeyService as any,
     { get: () => 'salt' } as any,
     jwtService as any,
+    {
+      verifyToken: () => {
+        throw new Error('not an oauth token');
+      }
+    } as any,
     userService as any
   );
 

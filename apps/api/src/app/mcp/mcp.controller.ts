@@ -12,6 +12,7 @@ import { Request, Response } from 'express';
 
 import { McpAuthService } from './mcp-auth.service';
 import { McpService } from './mcp.service';
+import { OAuthService } from './oauth/oauth.service';
 
 /**
  * Model Context Protocol endpoint (Streamable HTTP, stateless, JSON
@@ -27,7 +28,8 @@ export class McpController {
 
   public constructor(
     private readonly mcpAuthService: McpAuthService,
-    private readonly mcpService: McpService
+    private readonly mcpService: McpService,
+    private readonly oAuthService: OAuthService
   ) {}
 
   @Delete()
@@ -50,7 +52,11 @@ export class McpController {
     );
 
     if (!authorizationToken) {
-      response.setHeader('WWW-Authenticate', 'Bearer');
+      // Tells an OAuth-capable client (RFC 9728) where to start the flow
+      response.setHeader(
+        'WWW-Authenticate',
+        `Bearer resource_metadata="${this.oAuthService.resourceMetadataUrl}"`
+      );
 
       return response.status(401).json({
         error: { code: -32001, message: 'Unauthorized' },
