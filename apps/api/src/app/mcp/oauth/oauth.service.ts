@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { randomBytes } from 'node:crypto';
 
 import { McpAuthService } from '../mcp-auth.service';
-import { MCP_SCOPE_READ, McpTokenService } from './mcp-token.service';
+import { MCP_SCOPE, McpTokenService } from './mcp-token.service';
 import { FormField } from './oauth-pages';
 import {
   OAuthError,
@@ -57,7 +57,7 @@ export class OAuthService {
       issuer: baseUrl,
       registration_endpoint: `${baseUrl}/oauth/register`,
       response_types_supported: ['code'],
-      scopes_supported: [MCP_SCOPE_READ],
+      scopes_supported: [MCP_SCOPE],
       token_endpoint: `${baseUrl}/oauth/token`,
       token_endpoint_auth_methods_supported: ['none']
     };
@@ -68,7 +68,7 @@ export class OAuthService {
       authorization_servers: [baseUrl],
       bearer_methods_supported: ['header'],
       resource: getResourceIdentifier(baseUrl),
-      scopes_supported: [MCP_SCOPE_READ]
+      scopes_supported: [MCP_SCOPE]
     };
   }
 
@@ -171,7 +171,7 @@ export class OAuthService {
       resource: resourceIdentifier,
       // Unknown scopes are ignored: there is a single read scope and it is
       // what gets granted (RFC 6749 §3.3 lets the server grant less).
-      scope: MCP_SCOPE_READ,
+      scope: MCP_SCOPE,
       state: text('state')
     };
   }

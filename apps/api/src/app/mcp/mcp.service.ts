@@ -6,6 +6,7 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import {
   MCP_MAX_RESPONSE_CHARACTERS,
+  buildApiBody,
   buildApiPath,
   callLocalApi
 } from './mcp-api-client';
@@ -23,7 +24,7 @@ export const MCP_SERVER_INSTRUCTIONS = `Ghostfolio is a personal portfolio track
 - Investment plan: get_investment_plan holds the user's targets (capital pool, cash buffer, growth target, allocation groups with target weights, DCA schedules, price alerts). Compare it with the actual portfolio: get_rebalancing shows the drift and the needed actions, get_investment_signals the recent DCA signals.
 - Performance figures depend on the range argument (default ytd); state the range when quoting them.
 - A tool error with a 4xx/5xx status comes straight from the Ghostfolio API; do not retry it unchanged.
-- Nothing here can place orders or change data. Any change to the plan or transactions has to be made by the user in the Ghostfolio UI.`;
+- All tools are read-only except create_activity, which records one transaction in the ledger (it places no order). Follow its rules: show the user the full list of entries and get explicit confirmation first, and check list_activities for duplicates. Use lookup_symbol to get the symbol and dataSource right. There is no edit or delete; the plan and any correction have to be made by the user in the Ghostfolio UI.`;
 
 @Injectable()
 export class McpService {
@@ -54,9 +55,9 @@ export class McpService {
         {
           annotations: {
             destructiveHint: false,
-            idempotentHint: true,
+            idempotentHint: tool.method !== 'POST',
             openWorldHint: false,
-            readOnlyHint: true
+            readOnlyHint: tool.method !== 'POST'
           },
           description: tool.description,
           inputSchema: tool.inputSchema
@@ -81,6 +82,8 @@ export class McpService {
     try {
       const { body, statusCode } = await callLocalApi({
         authorizationToken,
+        body: tool.method === 'POST' ? buildApiBody({ args, tool }) : undefined,
+        method: tool.method ?? 'GET',
         path: buildApiPath({ args, tool }),
         port: this.configurationService.get('PORT')
       });

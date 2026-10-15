@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
-export const MCP_SCOPE_READ = 'mcp:read';
+export const MCP_SCOPE = 'mcp';
 
 export const MCP_ACCESS_TOKEN_TTL_SECONDS = 60 * 60;
 export const MCP_REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60;
