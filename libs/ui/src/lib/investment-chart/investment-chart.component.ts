@@ -32,6 +32,7 @@ import {
   LineController,
   LineElement,
   PointElement,
+  type ScriptableContext,
   type ScriptableLineSegmentContext,
   TimeScale,
   Tooltip,
@@ -41,12 +42,15 @@ import 'chartjs-adapter-date-fns';
 import { type AnnotationOptions } from 'chartjs-plugin-annotation';
 import { isFuture } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import OpenColor from 'open-color';
 
 import {
   getTimeSeriesTooltipOptions,
   onPrefersColorSchemeChange,
   registerChartConfiguration
 } from '../chart';
+
+const { orange } = OpenColor;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +62,7 @@ import {
 export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() public benchmarkDataItems: InvestmentItem[] = [];
   @Input() public benchmarkDataLabel = '';
+  @Input() public colorizeSign = false;
   @Input() public colorScheme?: ColorScheme;
   @Input() public currency?: string;
   @Input() public groupBy?: GroupBy;
@@ -133,7 +138,17 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       }),
       datasets: [
         {
-          backgroundColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
+          backgroundColor: (context: ScriptableContext<'bar' | 'line'>) => {
+            if (
+              (context.parsed?.y ?? 0) < 0 &&
+              isBarChart &&
+              this.colorizeSign
+            ) {
+              return orange[5];
+            }
+
+            return `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`;
+          },
           borderColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
           borderWidth: isBarChart ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {

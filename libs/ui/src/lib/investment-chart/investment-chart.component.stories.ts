@@ -69,6 +69,7 @@ export const PerformanceByYear: Story = {
       }
     ],
     benchmarkDataLabel: 'Net Performance',
+    colorizeSign: true,
     groupBy: 'year',
     isInPercentage: true
   }
