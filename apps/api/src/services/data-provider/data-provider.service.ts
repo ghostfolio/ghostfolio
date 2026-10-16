@@ -157,26 +157,32 @@ export class DataProviderService implements OnModuleInit {
     return response;
   }
 
+  /**
+   * Gives the data provider of the data source, or the data provider which
+   * the data source mapping gives for this data source
+   */
   public getDataProvider(providerName: DataSource) {
-    for (const dataProviderInterface of this.dataProviderInterfaces) {
-      if (this.dataProviderMapping[dataProviderInterface.getName()]) {
-        const mappedDataProviderInterface = this.dataProviderInterfaces.find(
-          (currentDataProviderInterface) => {
-            return (
-              currentDataProviderInterface.getName() ===
-              this.dataProviderMapping[dataProviderInterface.getName()]
-            );
-          }
+    const mappedDataProviderInterface = this.dataProviderInterfaces.find(
+      (dataProviderInterface) => {
+        return (
+          dataProviderInterface.getName() ===
+          this.dataProviderMapping[providerName]
         );
-
-        if (mappedDataProviderInterface) {
-          return mappedDataProviderInterface;
-        }
       }
+    );
 
-      if (dataProviderInterface.getName() === providerName) {
-        return dataProviderInterface;
+    if (mappedDataProviderInterface) {
+      return mappedDataProviderInterface;
+    }
+
+    const dataProviderInterface = this.dataProviderInterfaces.find(
+      (currentDataProviderInterface) => {
+        return currentDataProviderInterface.getName() === providerName;
       }
+    );
+
+    if (dataProviderInterface) {
+      return dataProviderInterface;
     }
 
     throw new Error('No data provider has been found.');
