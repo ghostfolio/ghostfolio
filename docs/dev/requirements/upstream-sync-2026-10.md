@@ -163,7 +163,7 @@ DTO 校验提交，冲突。上游改动彼此依赖，一项会牵出一串。
 - ~~`market-data.service.ts`~~：已定，整文件采用官方。
 - **C9 服务端去重**：`create_activity` 目前靠提示词查重。参考官方 `import-activities`
   “已有相同交易就跳过”的做法，在 MCP 层或 REST 层加服务端去重。不属于本次合并，另开。
-- **bootstrap 4→5**：下一个分支。
+- ~~**bootstrap 4→5**~~：已在分支 `feat/bootstrap-5` 做完（见第 12 节）。
 
 ## 9. 验证清单
 
@@ -261,3 +261,21 @@ DTO 校验提交，冲突。上游改动彼此依赖，一项会牵出一串。
 - 没有在浏览器里点过页面；只做了类型、模板、构建和单元测试。尤其是折线图（买入标记、日期范围、外部提示框）
   和汇总页，是并入官方重构后的版本。
 - 简单收益率切换用的是 60 秒定时器，随汇总组件销毁时清除，没改动。
+
+## 12. bootstrap 4→5（分支 `feat/bootstrap-5`，从 `main` 切出）
+
+- 摘取上游 16 个提交（`c169311fa`…`28713505f`，`-x` 记录了来源）：升级到 5.3.8、迁移间距/文字/栅格/徽章类名、
+  裁剪样式表、暗色模式、清理无效类。跳过 `3d4aa1967`（只改 CHANGELOG，摘取后为空）；没有取
+  `a057f1bdc`（官方 MCP 工具）、`4921c001b`、`204f0d857`（Stripe 23），它们与 bootstrap 无关，下次同步再取。
+- 冲突 4 处：`CHANGELOG.md`（保留我方，条目另写）、汇总页（保留投资计划目标行，并改成 `d-flex py-1`）、
+  首页（保留买卖标记）、资产配置页（保留“By Holding”卡片，去掉无效的 `proportion-charts` 类）。
+- 本仓库自己的页面上游碰不到，用全仓替换迁移：`text-muted`→`text-body-secondary`、`text-right`→`text-end`、
+  `font-weight-bold`→`fw-bold`、`ml/mr/pl/pr-*`→`ms/me/ps/pe-*`。涉及投资计划页、汇总页、资产配置页、
+  首页、账户表、基准表。
+- 上游把没用到的工具类整组从样式表里去掉了（`gap-*`、`shadow`、`border-start/end`、`fs-*` 等）。用编译出的
+  CSS 反查所有模板：只有投资计划页的 `gap-2`/`gap-3` 未定义，但它在 Bootstrap 4 下本来就没有定义，
+  所以界面与迁移前一致。想要这些间距，在页面 scss 里自己写。
+- 验证：`ngc`、`nx lint client,ui`、`nx test common,ui,client`、完整的 `npm run build:production`（含 storybook）通过；
+  `npm ci --dry-run` 在 npm 10.9.9 下通过。
+- **没做**：没有在浏览器里逐页看过。`.row` 在 5 里的间距规则变了，重点看首页（含投资建议卡片）、投资计划页、
+  汇总页、资产配置页、持仓表。

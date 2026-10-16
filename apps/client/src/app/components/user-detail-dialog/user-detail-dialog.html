@@ -1,6 +1,6 @@
 <div class="align-items-center d-flex justify-content-end" mat-dialog-title>
   <button
-    class="ml-1 no-min-width px-2"
+    class="ms-1 no-min-width px-2"
     mat-button
     type="button"
     [matMenuTriggerFor]="userDetailActionsMenu"
@@ -219,17 +219,13 @@
                 </ng-container>
 
                 <ng-container matColumnDef="price">
-                  <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+                  <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>
                     <ng-container i18n>Price</ng-container>
                   </th>
-                  <td
-                    *matCellDef="let element"
-                    class="px-1 text-right"
-                    mat-cell
-                  >
+                  <td *matCellDef="let element" class="px-1 text-end" mat-cell>
                     @if (element.price === null) {
                       <span>–</span>
-                      <span class="ml-1">{{ baseCurrency }}</span>
+                      <span class="ms-1">{{ baseCurrency }}</span>
                     } @else {
                       <gf-value
                         class="d-inline-block justify-content-end"
@@ -240,7 +236,7 @@
                       />
                     }
                   </td>
-                  <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
+                  <td *matFooterCellDef class="px-1 text-end" mat-footer-cell>
                     <gf-value
                       class="d-inline-block justify-content-end"
                       [isCurrency]="true"

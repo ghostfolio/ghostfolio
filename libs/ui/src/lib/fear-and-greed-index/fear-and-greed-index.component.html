@@ -8,15 +8,13 @@
   />
 } @else {
   <div class="align-items-center d-flex flex-row">
-    <div class="h2 mb-0 mr-2">{{ fearAndGreedIndexEmoji() }}</div>
+    <div class="h2 mb-0 me-2">{{ fearAndGreedIndexEmoji() }}</div>
     <div>
       <div class="h4 mb-0">
-        <span class="mr-2">{{ fearAndGreedIndexText() }}</span>
+        <span class="me-2">{{ fearAndGreedIndexText() }}</span>
         @let value = fearAndGreedIndex() | number: '1.0-0';
-        <small class="text-muted"
-          ><span [class.font-weight-bold]="value">{{
-            value ?? placeholder
-          }}</span
+        <small class="text-body-secondary"
+          ><span [class.fw-bold]="value">{{ value ?? placeholder }}</span
           >/100</small
         >
       </div>

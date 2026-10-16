@@ -351,9 +351,11 @@ export class GfAppComponent implements OnInit {
     if (isDarkColorScheme(userPreferredColorScheme)) {
       this.document.body.classList.add('theme-dark');
       this.document.body.classList.remove('theme-light');
+      this.document.documentElement.setAttribute('data-bs-theme', 'dark');
     } else {
       this.document.body.classList.add('theme-light');
       this.document.body.classList.remove('theme-dark');
+      this.document.documentElement.setAttribute('data-bs-theme', 'light');
     }
 
     this.document

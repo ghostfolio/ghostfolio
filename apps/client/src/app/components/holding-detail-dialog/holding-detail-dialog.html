@@ -51,7 +51,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="reader-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Overview</div>
+          <div class="d-none d-sm-block ms-2" i18n>Overview</div>
         </ng-template>
         <div class="container mt-3 p-0">
           <div class="row w-100">
@@ -376,7 +376,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="swap-vertical-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Activities</div>
+          <div class="d-none d-sm-block ms-2" i18n>Activities</div>
         </ng-template>
         <gf-activities-table
           [baseCurrency]="data.baseCurrency"
@@ -410,7 +410,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="wallet-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Accounts</div>
+          <div class="d-none d-sm-block ms-2" i18n>Accounts</div>
         </ng-template>
         <gf-accounts-table
           [accounts]="accounts"
@@ -430,9 +430,9 @@
         <mat-tab [disabled]="!hasPermissionToReadMarketDataOfOwnAssetProfile">
           <ng-template mat-tab-label>
             <ion-icon name="server-outline" />
-            <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
+            <div class="d-none d-sm-block ms-2" i18n>Market Data</div>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" [enableLink]="false" />
+              <gf-premium-indicator class="ms-1" [enableLink]="false" />
             }
           </ng-template>
           <gf-historical-market-data-editor
@@ -464,7 +464,7 @@
                 mat-stroked-button
                 (click)="onCloseHolding()"
               >
-                <ion-icon class="mr-1" name="arrow-down-circle-outline" /><span
+                <ion-icon class="me-1" name="arrow-down-circle-outline" /><span
                   i18n
                   >Close Holding</span
                 >
@@ -478,7 +478,7 @@
                 color="warn"
                 mat-stroked-button
                 [href]="reportDataGlitchMailHref"
-                ><ion-icon class="mr-1" name="flag-outline" /><span i18n
+                ><ion-icon class="me-1" name="flag-outline" /><span i18n
                   >Report Data Glitch</span
                 >...</a
               >
@@ -493,7 +493,7 @@
                   )
                 "
                 (click)="onClose()"
-                ><ion-icon class="mr-1" name="create-outline" /><span i18n
+                ><ion-icon class="me-1" name="create-outline" /><span i18n
                   >Manage Asset Profile</span
                 >...</a
               >

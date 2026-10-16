@@ -27,7 +27,7 @@
           mat-stroked-button
           (click)="onImport()"
         >
-          <ion-icon class="mr-2" name="cloud-upload-outline" />
+          <ion-icon class="me-2" name="cloud-upload-outline" />
           <span><ng-container i18n>Import Activities</ng-container>...</span>
         </button>
       }
@@ -53,7 +53,7 @@
             (click)="onImportDividends()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="color-wand-outline" />
+              <ion-icon class="me-2" name="color-wand-outline" />
               <span><ng-container i18n>Import Dividends</ng-container>...</span>
             </span>
           </button>
@@ -66,7 +66,7 @@
             (click)="onExport()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="cloud-download-outline" />
+              <ion-icon class="me-2" name="cloud-download-outline" />
               @if (canExportActivities()) {
                 <span i18n
                   >Export {{ (totalItems ?? 0) > 1 ? totalItems : '' }}
@@ -86,7 +86,7 @@
             (click)="onExportDrafts()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="calendar-clear-outline" />
+              <ion-icon class="me-2" name="calendar-clear-outline" />
               <span i18n>Export Drafts as ICS</span>
             </span>
           </button>
@@ -104,7 +104,7 @@
             (click)="onDeleteActivities()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="trash-outline" />
+              <ion-icon class="me-2" name="trash-outline" />
               @if (canDeleteActivities()) {
                 <span i18n
                   >Delete {{ (totalItems ?? 0) > 1 ? totalItems : '' }}
@@ -188,7 +188,7 @@
         <div class="align-items-center d-flex text-nowrap">
           <span class="text-truncate">{{ element.assetProfile?.name }}</span>
           @if (isDraftActivity(element)) {
-            <span class="badge badge-secondary ml-1" i18n>Draft</span>
+            <span class="badge bg-secondary ms-1" i18n>Draft</span>
           }
         </div>
         @if (
@@ -196,7 +196,9 @@
           !isUUID(element.assetProfile?.symbol)
         ) {
           <div>
-            <small class="text-muted">{{ element.assetProfile?.symbol }}</small>
+            <small class="text-body-secondary">{{
+              element.assetProfile?.symbol
+            }}</small>
           </div>
         }
       </td>
@@ -306,7 +308,7 @@
     <ng-container matColumnDef="value">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>Value</ng-container>
@@ -343,7 +345,7 @@
     <ng-container matColumnDef="valueInBaseCurrency">
       <th
         *matHeaderCellDef
-        class="d-lg-none d-xl-none px-1 text-right"
+        class="d-lg-none d-xl-none px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>Value</ng-container>
@@ -367,7 +369,7 @@
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
           <gf-entity-logo
-            class="mr-1"
+            class="me-1"
             [hasPlaceholder]="true"
             [tooltip]="element.account?.platform?.name"
             [url]="element.account?.platform?.url"
@@ -430,7 +432,7 @@
               (click)="onImport()"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="cloud-upload-outline" />
+                <ion-icon class="me-2" name="cloud-upload-outline" />
                 <span
                   ><ng-container i18n>Import Activities</ng-container>...</span
                 >
@@ -444,7 +446,7 @@
               (click)="onImportDividends()"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="color-wand-outline" />
+                <ion-icon class="me-2" name="color-wand-outline" />
                 <span
                   ><ng-container i18n>Import Dividends</ng-container>...</span
                 >
@@ -459,7 +461,7 @@
               (click)="onExport()"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="cloud-download-outline" />
+                <ion-icon class="me-2" name="cloud-download-outline" />
                 <span i18n>Export Activities</span>
               </span>
             </button>
@@ -472,7 +474,7 @@
               (click)="onExportDrafts()"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="calendar-clear-outline" />
+                <ion-icon class="me-2" name="calendar-clear-outline" />
                 <span i18n>Export Drafts as ICS</span>
               </span>
             </button>
@@ -498,7 +500,7 @@
           @if (canClickActivity(element)) {
             <button mat-menu-item (click)="onClickActivity(element)">
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="tablet-landscape-outline" />
+                <ion-icon class="me-2" name="tablet-landscape-outline" />
                 <span><ng-container i18n>View Holding</ng-container>...</span>
               </span>
             </button>
@@ -509,7 +511,7 @@
               [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="create-outline" />
+                <ion-icon class="me-2" name="create-outline" />
                 <span><ng-container i18n>Edit</ng-container>...</span>
               </span>
             </a>
@@ -520,7 +522,7 @@
               [routerLink]="activityDialogRouterLinks().get(element.id)?.clone"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="copy-outline" />
+                <ion-icon class="me-2" name="copy-outline" />
                 <span><ng-container i18n>Clone</ng-container>...</span>
               </span>
             </a>
@@ -532,7 +534,7 @@
               (click)="onExportDraft(element.id)"
             >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="calendar-clear-outline" />
+                <ion-icon class="me-2" name="calendar-clear-outline" />
                 <span i18n>Export Draft as ICS</span>
               </span>
             </button>
@@ -544,7 +546,7 @@
             (click)="onDeleteActivity(element.id)"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="trash-outline" />
+              <ion-icon class="me-2" name="trash-outline" />
               <span i18n>Delete</span>
             </span>
           </button>

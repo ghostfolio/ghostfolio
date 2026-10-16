@@ -1,15 +1,15 @@
 <div class="mb-2 row">
-  <div class="col-md-6 col-xs-12 d-flex">
+  <div class="col-md-6 d-flex">
     <div
       class="align-items-center d-flex flex-grow-1 h5 mb-0 py-2 text-truncate"
     >
       <span i18n>Performance</span>
       @if (user()?.subscription?.type === 'Basic') {
-        <gf-premium-indicator class="ml-1" />
+        <gf-premium-indicator class="ms-1" />
       }
     </div>
   </div>
-  <div class="col-md-6 col-xs-12 d-flex justify-content-end">
+  <div class="col-md-6 d-flex justify-content-end">
     <mat-form-field
       appearance="outline"
       class="gf-form-field-dense w-100 without-hint"
@@ -31,7 +31,10 @@
         @if (hasPermissionToAccessAdminControl) {
           <mat-option [routerLink]="routerLinkAdminControlMarketData">
             <div class="align-items-center d-flex">
-              <ion-icon class="mr-2 text-muted" name="arrow-forward-outline" />
+              <ion-icon
+                class="me-2 text-body-secondary"
+                name="arrow-forward-outline"
+              />
               <span i18n>Manage Benchmarks</span>
             </div>
           </mat-option>

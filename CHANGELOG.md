@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `bootstrap` from version `4.6.2` to `5.3.8` (taken from the upstream commits `c169311fa` to `28713505f`) and migrated the classes of the pages of this fork (investment plan, portfolio summary, allocations, home overview, tables)
 - Changed the email language of the investment signal emails to the language of the account (_Settings → Language_) and the body to the table of the signals
 - Changed the holdings of the portfolio details from a map to a list in the rebalancing of the investment plan (`toHoldingValuesBySymbol`)
 - Changed the _Public API_ routes of the MCP server and its OAuth flow to be listed as public routes of the app module test, as they authenticate by themselves
@@ -22,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the AI investment advice, the model provider settings of the admin control panel, the AI report of the DCA page and the AI text of the signal emails in favor of the AI features of the upstream. The old AI settings stay in the `Property` table (`AI_API_URL`, `AI_RESPONSE_LANGUAGE`, `AI_TESTED_MODELS`) and are not read anymore
 - Removed the batched download of the historical market data in favor of the implementation of the upstream
+
+### Fixed
+
+- Fixed the missing margin of the proportion of net worth on the allocations page
+- Fixed the missing padding of the base currency and performance calculation labels in the user account settings
 
 ## 3.86.0 - 2026-10-13
 

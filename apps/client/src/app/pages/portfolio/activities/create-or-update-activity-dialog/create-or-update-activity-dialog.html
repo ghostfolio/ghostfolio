@@ -21,7 +21,9 @@
             <span
               ><b>{{ typesTranslationMap['BUY'] }}</b></span
             >
-            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+            <small
+              class="d-block line-height-1 text-body-secondary text-nowrap"
+              i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
@@ -29,7 +31,9 @@
             <span
               ><b>{{ typesTranslationMap['FEE'] }}</b></span
             >
-            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+            <small
+              class="d-block line-height-1 text-body-secondary text-nowrap"
+              i18n
               >One-time fee, annual account fees</small
             >
           </mat-option>
@@ -37,7 +41,9 @@
             <span
               ><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span
             >
-            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+            <small
+              class="d-block line-height-1 text-body-secondary text-nowrap"
+              i18n
               >Distribution of corporate earnings</small
             >
           </mat-option>
@@ -45,7 +51,9 @@
             <span
               ><b>{{ typesTranslationMap['INTEREST'] }}</b></span
             >
-            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+            <small
+              class="d-block line-height-1 text-body-secondary text-nowrap"
+              i18n
               >Revenue for lending out money</small
             >
           </mat-option>
@@ -53,7 +61,9 @@
             <span
               ><b>{{ typesTranslationMap['LIABILITY'] }}</b></span
             >
-            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+            <small
+              class="d-block line-height-1 text-body-secondary text-nowrap"
+              i18n
               >Mortgages, personal loans, credit cards</small
             >
           </mat-option>
@@ -61,7 +71,9 @@
             <span
               ><b>{{ typesTranslationMap['SELL'] }}</b></span
             >
-            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+            <small
+              class="d-block line-height-1 text-body-secondary text-nowrap"
+              i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
@@ -69,7 +81,9 @@
             <span
               ><b>{{ typesTranslationMap['VALUABLE'] }}</b></span
             >
-            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+            <small
+              class="d-block line-height-1 text-body-secondary text-nowrap"
+              i18n
               >Luxury items, real estate, private companies</small
             >
           </mat-option>
@@ -142,9 +156,9 @@
           [matDatepicker]="date"
           [matDatepickerFilter]="dateFilter"
         />
-        <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
+        <mat-datepicker-toggle class="me-2" matSuffix [for]="date">
           <ion-icon
-            class="text-muted"
+            class="text-body-secondary"
             matDatepickerToggleIcon
             name="calendar-clear-outline"
           />
@@ -193,7 +207,7 @@
           </mat-label>
           <input formControlName="unitPrice" matInput type="number" />
           <div
-            class="ml-2"
+            class="ms-2"
             matTextSuffix
             [class.d-none]="!activityForm.get('currency')?.value"
           >
@@ -215,14 +229,14 @@
           isToday(activityForm.get('date')?.value)
         ) {
           <button
-            class="ml-2 mt-1 no-min-width"
+            class="ms-2 mt-1 no-min-width"
             i18n-title
             mat-button
             title="Apply current market price"
             type="button"
             (click)="applyCurrentMarketPrice()"
           >
-            <ion-icon class="text-muted" name="refresh-outline" />
+            <ion-icon class="text-body-secondary" name="refresh-outline" />
           </button>
         }
       </div>
@@ -239,7 +253,7 @@
         <mat-label i18n>Fee</mat-label>
         <input formControlName="fee" matInput type="number" />
         <div
-          class="ml-2"
+          class="ms-2"
           matTextSuffix
           [class.d-none]="!activityForm.get('currency')?.value"
         >

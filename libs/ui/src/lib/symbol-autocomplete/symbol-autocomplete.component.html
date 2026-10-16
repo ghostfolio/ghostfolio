@@ -23,10 +23,10 @@
         <span class="align-items-center d-flex line-height-1"
           ><span>{{ lookupItem.name }}</span>
           @if (lookupItem.dataProviderInfo.isPremium) {
-            <gf-premium-indicator class="ml-1" [enableLink]="false" />
+            <gf-premium-indicator class="ms-1" [enableLink]="false" />
           }
         </span>
-        <small class="text-muted"
+        <small class="text-body-secondary"
           >{{ lookupItem.symbol }}
           @if (lookupItem.currency) {
             · {{ lookupItem.currency }}
