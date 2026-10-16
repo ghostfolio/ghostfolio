@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Activity imports now detect identical rows within the same payload. Identical broker partial fills in the same second can also be flagged as duplicates.
 - Moved the investment chart component to `@ghostfolio/ui`
 - Hardened the validation of the date in the endpoint to create an account balance
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Scoped import duplicate detection to the same account, including unassigned activities, and aligned currency matching for saved and incoming activities
 - Fixed an exception in the authentication interceptor when the time zone of the browser is not available
 
 ## 3.86.0 - 2026-10-13
