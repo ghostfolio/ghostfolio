@@ -12,7 +12,6 @@ import {
   PROPERTY_OPENROUTER_MODEL_AGENT,
   PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
-import { SubscriptionType } from '@ghostfolio/common/enums';
 import { isValidCustomAssetProfileSymbol } from '@ghostfolio/common/helper';
 import type { UserWithSettings } from '@ghostfolio/common/types';
 
@@ -100,8 +99,7 @@ describe('AiService', () => {
     dataProviderService = {
       getDataSources: jest
         .fn()
-        .mockResolvedValue([DataSource.MANUAL, DataSource.YAHOO]),
-      isPremiumRequired: jest.fn().mockReturnValue(false)
+        .mockResolvedValue([DataSource.MANUAL, DataSource.YAHOO])
     } as unknown as DataProviderService;
 
     mcpService = {
@@ -355,8 +353,7 @@ describe('AiService', () => {
     const user = {
       accounts: [{ currency: 'CHF', id: 'account-id', name: 'Brokerage' }],
       id: 'user-id',
-      settings: { settings: { baseCurrency: 'EUR', locale: 'de-CH' } },
-      subscription: { type: SubscriptionType.Basic }
+      settings: { settings: { baseCurrency: 'EUR', locale: 'de-CH' } }
     } as unknown as UserWithSettings;
 
     it('Reads the rows of the file and matches them with the accounts, the base currency and the id of the user', async () => {
@@ -400,7 +397,6 @@ describe('AiService', () => {
         rows,
         accounts: user.accounts,
         broker: 'Swissquote',
-        subscription: user.subscription,
         userCurrency: 'EUR',
         userId: 'user-id'
       });
@@ -946,55 +942,6 @@ describe('AiService', () => {
         ],
         rowsWithoutMatch: []
       });
-
-      expect(dataProviderService.isPremiumRequired).toHaveBeenCalledWith({
-        dataSource: DataSource.YAHOO,
-        subscription: undefined
-      });
-    });
-
-    it('Passes no holding with a data source which requires Premium to the model and gives a row whose asset match is such a holding as a row without a match', async () => {
-      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
-
-      jest.mocked(dataProviderService.isPremiumRequired).mockReturnValue(true);
-
-      const row = createActivityRow({
-        accountName: null,
-        isin: 'IE00BK5BQT80',
-        symbol: null
-      });
-
-      const subscription = {
-        type: SubscriptionType.Basic
-      } as UserWithSettings['subscription'];
-
-      mockRowMatches({
-        assetProfilesOfSearch: [],
-        assets: [
-          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'VWRA.SW' }
-        ]
-      });
-
-      mockHoldings();
-
-      await expect(
-        aiService.getActivitiesFromRows({
-          accounts,
-          subscription,
-          userCurrency,
-          userId,
-          rows: [row]
-        })
-      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
-
-      expect(dataProviderService.isPremiumRequired).toHaveBeenCalledWith({
-        subscription,
-        dataSource: DataSource.YAHOO
-      });
-
-      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
-
-      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', []);
     });
 
     it('Passes no holding with a data source which is not configured to the model and gives a row whose asset match is such a holding as a row without a match', async () => {

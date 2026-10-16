@@ -124,7 +124,6 @@ export class AiService {
       broker,
       rows,
       accounts: user.accounts,
-      subscription: user.subscription,
       userCurrency: user.settings.settings.baseCurrency,
       userId: user.id
     });
@@ -151,7 +150,6 @@ export class AiService {
     accounts,
     broker,
     rows,
-    subscription,
     userCurrency,
     userId
   }: {
@@ -159,7 +157,6 @@ export class AiService {
     accounts: AccountToMatch[];
     broker?: string;
     rows: ActivityRow[];
-    subscription?: UserWithSettings['subscription'];
     userCurrency: string;
     userId: string;
   }) {
@@ -210,7 +207,6 @@ export class AiService {
             abortSignal,
             accountHints,
             assets,
-            subscription,
             userId
           })
         : { accounts: [], assets: [] };
@@ -478,26 +474,16 @@ export class AiService {
    * Gives the holdings of the user from the server of the Model Context
    * Protocol, also the closed positions and the holdings of the excluded
    * accounts, without a portfolio calculation and without the holdings whose
-   * data source the import refuses for the user
+   * data source the import refuses
    */
-  private async getHoldingsToMatch({
-    subscription,
-    userId
-  }: {
-    subscription?: UserWithSettings['subscription'];
-    userId: string;
-  }) {
+  private async getHoldingsToMatch({ userId }: { userId: string }) {
     const [assetProfiles, dataSources] = await Promise.all([
       this.mcpService.getAssetProfilesOfUser({ userId }),
       this.dataProviderService.getDataSources()
     ]);
 
     return assetProfiles.filter(({ dataSource }) => {
-      return this.isValidDataSourceForImport({
-        dataSource,
-        dataSources,
-        subscription
-      });
+      return this.isValidDataSourceForImport({ dataSource, dataSources });
     });
   }
 
@@ -559,31 +545,29 @@ export class AiService {
    * without values, the holdings with their currency, data source, ISIN, name
    * and symbol only. The holdings let the model select an asset profile which
    * the user already has, also if no search gives it, for example as no data
-   * provider finds its ISIN. A holding whose data source the import refuses for
-   * the user is not given to the model, so that the model selects an asset
-   * profile of the search instead and the whole import does not fail. If
-   * get-accounts fails, the model gets no accounts, so that only the account
-   * hints have no match. If the holdings or the data sources cannot be got, the
-   * model gets no holdings. The reasoning is disabled, as it can add thousands
-   * of output tokens. An asset match is left out if neither the search of its
-   * own asset nor the holdings gave its asset profile, or if its holding has
-   * another ISIN than its own asset, as the import refuses a symbol which the
-   * data source cannot resolve and as the model can mix up the ids of the
-   * assets. The ISINs are compared without spaces and in upper case. A holding
-   * without an ISIN is matched by the model by its name only, hence the code
-   * cannot check it against the asset.
+   * provider finds its ISIN. A holding whose data source the import refuses is
+   * not given to the model, so that the model selects an asset profile of the
+   * search instead and the whole import does not fail. If get-accounts fails,
+   * the model gets no accounts, so that only the account hints have no match.
+   * If the holdings or the data sources cannot be got, the model gets no
+   * holdings. The reasoning is disabled, as it can add thousands of output
+   * tokens. An asset match is left out if neither the search of its own asset
+   * nor the holdings gave its asset profile, or if its holding has another ISIN
+   * than its own asset, as the import refuses a symbol which the data source
+   * cannot resolve and as the model can mix up the ids of the assets. The ISINs
+   * are compared without spaces and in upper case. A holding without an ISIN is
+   * matched by the model by its name only, hence the code cannot check it
+   * against the asset.
    */
   private async getRowMatches({
     abortSignal,
     accountHints,
     assets,
-    subscription,
     userId
   }: {
     abortSignal?: AbortSignal;
     accountHints: AccountHint[];
     assets: AssetToMatch[];
-    subscription?: UserWithSettings['subscription'];
     userId: string;
   }) {
     const startTime = performance.now();
@@ -602,7 +586,7 @@ export class AiService {
             })
         : undefined,
       assets.length > 0
-        ? this.getHoldingsToMatch({ subscription, userId }).catch(
+        ? this.getHoldingsToMatch({ userId }).catch(
             (error: Error): undefined => {
               this.logger.warn(`Could not get the holdings: ${error.message}`);
 
@@ -703,31 +687,24 @@ export class AiService {
 
   /**
    * Checks without a request to a data provider if the import takes a data
-   * source for the user: it is configured and does not require Ghostfolio
-   * Premium, for example after the Premium subscription has expired. The data
-   * source is first transformed as POST api/v1/import transforms it. A symbol
-   * which the data source cannot resolve, for example a delisted one, is not
-   * found, as this needs a request to the data provider.
+   * source of a holding: it is configured. The data source is first
+   * transformed as POST api/v1/import transforms it. A data source which
+   * requires Ghostfolio Premium is taken, as the import takes it for an asset
+   * profile which the user already has. A symbol which the data source cannot
+   * resolve, for example a delisted one, is not found, as this needs a
+   * request to the data provider.
    */
   private isValidDataSourceForImport({
     dataSource,
-    dataSources,
-    subscription
+    dataSources
   }: {
     dataSource: string;
     dataSources: DataSource[];
-    subscription?: UserWithSettings['subscription'];
   }) {
-    const dataSourceOfImport = transformDataSourceInRequest({
-      dataSource,
-      configurationService: this.configurationService
-    });
-
-    return (
-      dataSources.includes(dataSourceOfImport) &&
-      !this.dataProviderService.isPremiumRequired({
-        subscription,
-        dataSource: dataSourceOfImport
+    return dataSources.includes(
+      transformDataSourceInRequest({
+        dataSource,
+        configurationService: this.configurationService
       })
     );
   }
