@@ -232,7 +232,7 @@ export class PortfolioTableService {
       },
       {
         getValue: ({ assetProfile }) => {
-          return assetProfile.isin;
+          return assetProfile.isin ?? '';
         },
         name: 'ISIN'
       },

@@ -1,6 +1,8 @@
 import { McpService } from '@ghostfolio/api/app/endpoints/mcp/mcp.service';
 import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
+import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -10,6 +12,7 @@ import {
   PROPERTY_OPENROUTER_MODEL_AGENT,
   PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { isValidCustomAssetProfileSymbol } from '@ghostfolio/common/helper';
 import type { UserWithSettings } from '@ghostfolio/common/types';
 
@@ -64,6 +67,7 @@ describe('AiService', () => {
 
   let aiService: AiService;
   let chat: jest.Mock;
+  let dataProviderService: DataProviderService;
   let mcpService: McpService;
   let properties: Record<string, string>;
 
@@ -93,6 +97,13 @@ describe('AiService', () => {
       [PROPERTY_OPENROUTER_MODEL_VISION]: 'vision-model'
     };
 
+    dataProviderService = {
+      getDataSources: jest
+        .fn()
+        .mockResolvedValue([DataSource.MANUAL, DataSource.YAHOO]),
+      isPremiumRequired: jest.fn().mockReturnValue(false)
+    } as unknown as DataProviderService;
+
     mcpService = {
       getAccounts: jest.fn().mockResolvedValue({
         content: [{ text: '## Accounts', type: 'text' }]
@@ -112,7 +123,8 @@ describe('AiService', () => {
     } as unknown as PropertyService;
 
     aiService = new AiService(
-      {} as ConfigurationService,
+      { get: jest.fn() } as unknown as ConfigurationService,
+      dataProviderService,
       mcpService,
       {} as PortfolioTableService,
       propertyService
@@ -345,7 +357,8 @@ describe('AiService', () => {
     const user = {
       accounts: [{ currency: 'CHF', id: 'account-id', name: 'Brokerage' }],
       id: 'user-id',
-      settings: { settings: { baseCurrency: 'EUR', locale: 'de-CH' } }
+      settings: { settings: { baseCurrency: 'EUR', locale: 'de-CH' } },
+      subscription: { type: SubscriptionType.Basic }
     } as unknown as UserWithSettings;
 
     it('Reads the rows of the file and matches them with the accounts, the base currency and the id of the user', async () => {
@@ -389,6 +402,7 @@ describe('AiService', () => {
         rows,
         accounts: user.accounts,
         broker: 'Swissquote',
+        subscription: user.subscription,
         userCurrency: 'EUR',
         userId: 'user-id'
       });
@@ -525,18 +539,23 @@ describe('AiService', () => {
         });
     }
 
-    function mockHoldings() {
+    function mockHoldings({
+      dataSource = 'YAHOO'
+    }: { dataSource?: string } = {}) {
       jest.mocked(mcpService.getPortfolio).mockResolvedValue({
         content: [
           {
             text: [
               '## Holdings',
               '',
-              '| Name | ISIN | Symbol | Data Source | Currency |',
-              '| :-- | :-- | :-- | :-- | :-- |',
-              '| Vanguard FTSE All-World UCITS ETF | IE00BK5BQT80 | VWRA.SW | YAHOO | USD |',
-              '| US Dollar |  | USD |  | USD |'
-            ].join('\n'),
+              '| Name                              | ISIN         | Symbol  | Data Source | Currency | Asset Class | Asset Sub Class | Date of First Activity | Activities Count | Allocation in Percentage |',
+              '| :-------------------------------- | :----------- | :------ | :---------- | :------- | :---------- | :-------------- | :--------------------- | ---------------: | -----------------------: |',
+              '| Vanguard FTSE All-World UCITS ETF | IE00BK5BQT80 | VWRA.SW | YAHOO       | USD      | Equity      | ETF             | 2021-03-15             |                4 |                  70.000% |',
+              '| Apple Inc.                        |              | AAPL    | YAHOO       | USD      | Equity      | Stock           | 2022-06-01             |                2 |                  20.000% |',
+              '| US Dollar                         |              | USD     |             | USD      | Liquidity   | Cash            | 2021-03-15             |                1 |                  10.000% |'
+            ]
+              .join('\n')
+              .replaceAll('| YAHOO       |', `| ${dataSource.padEnd(11)} |`),
             type: 'text'
           }
         ]
@@ -769,15 +788,225 @@ describe('AiService', () => {
       });
     });
 
+    it('Gives an activity for a row whose asset matches a holding without an ISIN which no search gave', async () => {
+      const row = createActivityRow({
+        accountName: null,
+        name: 'APPLE INC',
+        symbol: null
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({
+        activities: [
+          expect.objectContaining({ dataSource: 'YAHOO', symbol: 'AAPL' })
+        ],
+        rowsWithoutMatch: []
+      });
+    });
+
     it('Gives a row whose asset match has the symbol of a holding but another data source as a row without a match', async () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
-      const row = createActivityRow({ accountName: null });
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'IE00BK5BQT80'
+      });
 
       mockRowMatches({
         assetProfilesOfSearch: [],
         assets: [
           { currency: 'USD', dataSource: 'MANUAL', id: 0, symbol: 'VWRA.SW' }
+        ]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+    });
+
+    it('Gives a row whose asset match has the symbol in the currency column of a holding as a row without a match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'IE00BK5BQT80'
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [{ currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'USD' }]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+    });
+
+    it('Gives a row whose asset match is a holding with another ISIN as a row without a match and logs the left out match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'IE00B3RBWM25',
+        name: 'Vanguard FTSE All-World UCITS ETF USD Distributing',
+        symbol: null
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'VWRA.SW' }
+        ]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Left out 1 asset matches which neither the search of their asset nor the holdings gave'
+      );
+    });
+
+    it('Gives an activity for a row whose asset matches a holding with an encoded data source and checks the decoded data source', async () => {
+      const encodedDataSource = encodeDataSource(DataSource.YAHOO);
+
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'IE00BK5BQT80',
+        symbol: null
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          {
+            currency: 'USD',
+            dataSource: encodedDataSource,
+            id: 0,
+            symbol: 'VWRA.SW'
+          }
+        ]
+      });
+
+      mockHoldings({ dataSource: encodedDataSource });
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({
+        activities: [
+          expect.objectContaining({
+            dataSource: encodedDataSource,
+            symbol: 'VWRA.SW'
+          })
+        ],
+        rowsWithoutMatch: []
+      });
+
+      expect(dataProviderService.isPremiumRequired).toHaveBeenCalledWith({
+        dataSource: DataSource.YAHOO,
+        subscription: undefined
+      });
+    });
+
+    it('Gives a row whose asset match is a holding with a data source which requires Premium as a row without a match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(dataProviderService.isPremiumRequired).mockReturnValue(true);
+
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'IE00BK5BQT80',
+        symbol: null
+      });
+
+      const subscription = {
+        type: SubscriptionType.Basic
+      } as UserWithSettings['subscription'];
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'VWRA.SW' }
+        ]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          subscription,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+
+      expect(dataProviderService.isPremiumRequired).toHaveBeenCalledWith({
+        subscription,
+        dataSource: DataSource.YAHOO
+      });
+    });
+
+    it('Gives a row whose asset match is a holding with a data source which is not configured as a row without a match', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest
+        .mocked(dataProviderService.getDataSources)
+        .mockResolvedValue([DataSource.MANUAL]);
+
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'IE00BK5BQT80',
+        symbol: null
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'VWRA.SW' }
         ]
       });
 
