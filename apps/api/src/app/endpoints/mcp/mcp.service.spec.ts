@@ -9,6 +9,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ImportValidationError } from '@ghostfolio/api/services/import/errors/import-validation.error';
 import { ImportService } from '@ghostfolio/api/services/import/import.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_LANGUAGE_CODE,
   MCP_MAX_ACTIVITIES
@@ -44,6 +45,7 @@ describe('McpService', () => {
   let importService: ImportService;
   let mcpService: McpService;
   let portfolioTableService: PortfolioTableService;
+  let symbolProfileService: SymbolProfileService;
   let symbolService: SymbolService;
   let userService: UserService;
 
@@ -92,6 +94,10 @@ describe('McpService', () => {
       getWatchlistTable: jest.fn().mockResolvedValue('## Watchlist')
     } as unknown as PortfolioTableService;
 
+    symbolProfileService = {
+      getSymbolProfilesOfUser: jest.fn().mockResolvedValue([])
+    } as unknown as SymbolProfileService;
+
     symbolService = {
       lookup: jest.fn().mockResolvedValue({ items: [] })
     } as unknown as SymbolService;
@@ -105,6 +111,7 @@ describe('McpService', () => {
       configurationService,
       importService,
       portfolioTableService,
+      symbolProfileService,
       symbolService,
       userService
     );
@@ -303,6 +310,63 @@ describe('McpService', () => {
       expect(portfolioTableService.getActivitiesTable).toHaveBeenCalledWith(
         expect.objectContaining({ withValues: true })
       );
+    });
+  });
+
+  describe('getAssetProfilesOfUser', () => {
+    it('Gives the currency, the data source, the ISIN, the name and the symbol of the asset profiles of the user', async () => {
+      jest
+        .spyOn(symbolProfileService, 'getSymbolProfilesOfUser')
+        .mockResolvedValue([
+          {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            isin: 'US0378331005',
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]);
+
+      await expect(
+        mcpService.getAssetProfilesOfUser({ userId })
+      ).resolves.toEqual([
+        {
+          currency: 'USD',
+          dataSource: DataSource.YAHOO,
+          isin: 'US0378331005',
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        }
+      ]);
+
+      expect(symbolProfileService.getSymbolProfilesOfUser).toHaveBeenCalledWith(
+        { userId }
+      );
+    });
+
+    it('Encodes the data source if the subscription is enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      jest
+        .spyOn(symbolProfileService, 'getSymbolProfilesOfUser')
+        .mockResolvedValue([
+          {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            isin: 'US0378331005',
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]);
+
+      await expect(
+        mcpService.getAssetProfilesOfUser({ userId })
+      ).resolves.toEqual([
+        expect.objectContaining({
+          dataSource: encodeDataSource(DataSource.YAHOO)
+        })
+      ]);
     });
   });
 
