@@ -1,8 +1,14 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
+import {
+  COMMENT_MAXIMUM_LENGTH,
+  TAG_ID_DRAFT
+} from '@ghostfolio/common/config';
 import { CreateAccountDto, UpdateAccountDto } from '@ghostfolio/common/dtos';
+import { getStringOrNull } from '@ghostfolio/common/helper';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import type { Platform, Tag } from '@ghostfolio/prisma/browser';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -27,7 +33,6 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -35,7 +40,6 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Platform, Tag } from '@prisma/client';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -51,7 +55,6 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
     GfTagsSelectorComponent,
     MatAutocompleteModule,
     MatButtonModule,
-    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -62,10 +65,12 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-account-dialog.html'
 })
 export class GfCreateOrUpdateAccountDialogComponent {
+  protected readonly COMMENT_MAXIMUM_LENGTH = COMMENT_MAXIMUM_LENGTH;
+
   protected accountForm: FormGroup;
   protected currencies: string[] = [];
   protected filteredPlatforms: Observable<Platform[]> | undefined;
-  protected hasPermissionToCreateOwnTag: boolean | undefined;
+  protected hasPermissionToCreateOwnTag: boolean;
   protected platforms: Platform[] = [];
   protected tagsAvailable: Tag[] = [];
 
@@ -76,36 +81,46 @@ export class GfCreateOrUpdateAccountDialogComponent {
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateAccountDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private readonly userService = inject(UserService);
+
+  protected get selectedPlatform() {
+    const platform = this.accountForm.get('platformId')?.value;
+
+    return typeof platform === 'string' ? undefined : (platform as Platform);
+  }
 
   public ngOnInit() {
     const { currencies } = this.dataService.fetchInfo();
     this.currencies = currencies;
 
+    // A tag created during an impersonation belongs to the authenticated user,
+    // hence it cannot be assigned to the data of the impersonated user
     this.hasPermissionToCreateOwnTag =
-      this.data.user?.settings?.isExperimentalFeatures &&
+      !this.impersonationStorageService.getId() &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
 
-    this.tagsAvailable = [
-      ...(this.data.user?.tags ?? []),
-      {
-        id: TAG_ID_EXCLUDE_FROM_ANALYSIS,
-        name: 'EXCLUDE_FROM_ANALYSIS',
-        userId: null
-      }
-    ].map((tag) => {
-      return {
-        ...tag,
-        name: translate(tag.name)
-      };
-    });
+    this.tagsAvailable =
+      this.data.user?.tags
+        ?.filter(({ id }) => {
+          // The "DRAFT" tag qualifies an individual activity and cannot be
+          // assigned to an account
+          return id !== TAG_ID_DRAFT;
+        })
+        .map((tag) => {
+          return {
+            ...tag,
+            name: translate(tag.name)
+          };
+        }) ?? [];
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],
       balance: [this.data.account.balance, Validators.required],
       comment: [this.data.account.comment],
       currency: [this.data.account.currency, Validators.required],
-      isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
       platformId: [null, this.autocompleteObjectValidator()],
       tags: [
@@ -200,12 +215,11 @@ export class GfCreateOrUpdateAccountDialogComponent {
   protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.get('balance')?.value,
-      comment: this.accountForm.get('comment')?.value || null,
+      comment: getStringOrNull(this.accountForm.get('comment')?.value),
       currency: this.accountForm.get('currency')?.value,
       id: this.accountForm.get('accountId')?.value,
-      isExcluded: this.accountForm.get('isExcluded')?.value,
       name: this.accountForm.get('name')?.value,
-      platformId: this.accountForm.get('platformId')?.value?.id || null,
+      platformId: this.accountForm.get('platformId')?.value?.id ?? null,
       tags: this.accountForm
         .get('tags')
         ?.value?.filter(({ id }: Tag) => {

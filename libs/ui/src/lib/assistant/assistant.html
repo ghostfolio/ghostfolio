@@ -13,6 +13,7 @@
         name="search"
         type="text"
         [formControl]="searchFormControl"
+        [maxlength]="SEARCH_QUERY_MAXIMUM_LENGTH"
         [placeholder]="placeholder"
       />
       @if (deviceType !== 'mobile' && !searchFormControl.value) {

@@ -1,5 +1,9 @@
 # AI Integration 需求
 
+> **已作废（2026-10）**：Module 1（信号入 cron）和 Module 2 的邮件部分仍然有效，但 Module 2 里“使用 AI
+> Response Language”和 Module 3（DCA 页的 AI 报告）已随上游同步移除，见
+> [上游同步](upstream-sync-2026-10.md) 第 6 节。邮件语言现在取账户语言，邮件正文固定为信号表格。
+
 > 原文来自 `docs/01-requirements/domain-knowledge/Signal.md` 的 AI Integration 章节。
 > 背景链路见 [signal-pipeline](../architecture/signal-pipeline.md)。
 

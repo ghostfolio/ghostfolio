@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { PreloadingStrategy, Route } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class ModulePreloadService implements PreloadingStrategy {
   /**
    * Preloads all lazy loading modules with the attribute 'preload' set to true

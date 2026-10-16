@@ -8,9 +8,8 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
-  Output
+  output
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -26,13 +25,13 @@ export class GfRulesComponent {
   @Input() categoryName: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale?: string;
   @Input() rules: PortfolioReportRule[];
-  @Input() settings: XRayRulesSettings;
+  @Input() settings?: XRayRulesSettings;
 
-  @Output() rulesUpdated = new EventEmitter<UpdateUserSettingDto>();
+  public readonly rulesUpdated = output<UpdateUserSettingDto>();
 
-  public onRuleUpdated(event: UpdateUserSettingDto) {
+  protected onRuleUpdated(event: UpdateUserSettingDto) {
     this.rulesUpdated.emit(event);
   }
 }

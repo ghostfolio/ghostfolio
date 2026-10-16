@@ -1,3 +1,4 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
@@ -9,6 +10,7 @@ import { Controller, Inject, Post, UseGuards } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
+@AllowDuringImpersonation()
 @Controller('api-keys')
 export class ApiKeysController {
   public constructor(

@@ -1,6 +1,8 @@
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { OAuthCallbackGuard } from '@ghostfolio/api/guards/oauth-callback.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import {
@@ -14,7 +16,6 @@ import {
   Controller,
   Get,
   HttpException,
-  Param,
   Post,
   Req,
   Res,
@@ -27,7 +28,9 @@ import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
+import { GenerateAuthenticationOptionsDto } from './generate-authentication-options.dto';
 
+@AllowDuringImpersonation()
 @Controller('auth')
 export class AuthController {
   public constructor(
@@ -35,26 +38,6 @@ export class AuthController {
     private readonly configurationService: ConfigurationService,
     private readonly webAuthService: WebAuthService
   ) {}
-
-  /**
-   * @deprecated
-   */
-  @Get('anonymous/:accessToken')
-  @UseGuards(CustomThrottlerGuard)
-  public async accessTokenLoginGet(
-    @Param('accessToken') accessToken: string
-  ): Promise<OAuthResponse> {
-    try {
-      const authToken =
-        await this.authService.validateAnonymousLogin(accessToken);
-      return { authToken };
-    } catch {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-  }
 
   @Post('anonymous')
   @UseGuards(CustomThrottlerGuard)
@@ -81,13 +64,13 @@ export class AuthController {
   }
 
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(OAuthCallbackGuard('google'))
   @Version(VERSION_NEUTRAL)
   public googleLoginCallback(
     @Req() request: Request,
     @Res() response: Response
   ) {
-    const jwt: string = (request.user as any).jwt;
+    const jwt: string = (request.user as any)?.jwt;
 
     if (jwt) {
       response.redirect(
@@ -117,10 +100,10 @@ export class AuthController {
   }
 
   @Get('oidc/callback')
-  @UseGuards(AuthGuard('oidc'))
+  @UseGuards(OAuthCallbackGuard('oidc'))
   @Version(VERSION_NEUTRAL)
   public oidcLoginCallback(@Req() request: Request, @Res() response: Response) {
-    const jwt: string = (request.user as any).jwt;
+    const jwt: string = (request.user as any)?.jwt;
 
     if (jwt) {
       response.redirect(
@@ -140,7 +123,7 @@ export class AuthController {
   @Post('webauthn/generate-authentication-options')
   @UseGuards(CustomThrottlerGuard)
   public async generateAuthenticationOptions(
-    @Body() body: { deviceId: string }
+    @Body() body: GenerateAuthenticationOptionsDto
   ) {
     return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }

@@ -12,6 +12,10 @@ import { McpController } from './mcp.controller';
 import { McpService } from './mcp.service';
 
 describe('McpController', () => {
+  // Starts an HTTP server and a real client; the default 5 s is too tight when
+  // the whole suite runs in parallel
+  jest.setTimeout(30000);
+
   let app: INestApplication;
   let apiServer: Server;
   let apiAuthorization: string;

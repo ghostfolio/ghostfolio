@@ -1,3 +1,16 @@
 :host {
   display: block;
+
+  .gf-table {
+    &.simple {
+      .mat-column-icon,
+      .mat-column-performanceInPercentage {
+        width: min-content;
+      }
+
+      .mat-column-nameWithSymbol {
+        max-width: 0;
+      }
+    }
+  }
 }

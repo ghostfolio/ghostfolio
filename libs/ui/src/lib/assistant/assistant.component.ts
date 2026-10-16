@@ -1,3 +1,4 @@
+import { SEARCH_QUERY_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
@@ -38,7 +39,7 @@ import {
   closeOutline,
   searchOutline
 } from 'ionicons/icons';
-import { isFunction, sample } from 'lodash';
+import { isFunction, sample } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, merge, of } from 'rxjs';
 import {
@@ -130,6 +131,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   );
 
   public searchFormControl = new FormControl('');
+  public readonly SEARCH_QUERY_MAXIMUM_LENGTH = SEARCH_QUERY_MAXIMUM_LENGTH;
 
   public searchResults: SearchResults = {
     accounts: [],
@@ -202,6 +204,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
+          return searchTerm?.trim();
+        }),
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap(() => {
           this.isLoading = {
             accounts: true,
             assetProfiles: true,
@@ -216,11 +223,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           };
 
           this.changeDetectorRef.markForCheck();
-
-          return searchTerm?.trim();
         }),
-        debounceTime(300),
-        distinctUntilChanged(),
         switchMap((searchTerm) => {
           const results = {
             accounts: [],
@@ -476,7 +479,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.setIsOpen(true);
 
     this.dataService
-      .fetchPortfolioHoldings()
+      .fetchPortfolioHoldings({
+        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.holdings = getHoldingsForFilter(holdings);
@@ -611,7 +616,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             return {
               id,
               name,
-              routerLink: internalRoutes.accounts.routerLink,
+              routerLink:
+                internalRoutes.accounts.subRoutes.detail.routerLink(id),
               mode: SearchMode.ACCOUNT as const
             };
           });
@@ -688,21 +694,31 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   private searchQuickLinks(aSearchTerm: string): SearchResultItem[] {
     const searchTerm = aSearchTerm.toLowerCase();
 
-    const allRoutes = Object.values<InternalRoute>(internalRoutes)
-      .filter(({ excludeFromAssistant }) => {
-        if (isFunction(excludeFromAssistant)) {
-          return excludeFromAssistant(this.user);
-        }
+    const isIncludedInAssistant = ({ excludeFromAssistant }: InternalRoute) => {
+      if (isFunction(excludeFromAssistant)) {
+        return excludeFromAssistant(this.user);
+      }
 
-        return !excludeFromAssistant;
-      })
+      return !excludeFromAssistant;
+    };
+
+    const allRoutes = Object.values<InternalRoute>(internalRoutes)
+      .filter(isIncludedInAssistant)
       .reduce<InternalRoute[]>((acc, route) => {
         acc.push(route);
+
         if (route.subRoutes) {
-          acc.push(...Object.values(route.subRoutes));
+          acc.push(
+            ...Object.values(route.subRoutes).filter(isIncludedInAssistant)
+          );
         }
         return acc;
-      }, []);
+      }, [])
+      .filter((route): route is InternalRoute & { routerLink: string[] } => {
+        // Routes with a parameterized router link cannot be linked to without
+        // their parameters and are therefore not offered as quick links
+        return Array.isArray(route.routerLink);
+      });
 
     const fuse = new Fuse(allRoutes, {
       keys: ['title'],

@@ -21,7 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { catchError, of, timeout } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 interface AllocationRow {
   groupId: string;
@@ -151,9 +151,6 @@ export class GfInvestmentPlanPageComponent implements OnInit {
     webhookEnabled: false,
     webhookUrl: ''
   };
-  public aiReport = '';
-  public isCopyingPrompt = false;
-  public isGeneratingReport = false;
   public rebalancingResult: {
     actions: any[];
     capital?: { gap: number; reason: string; status: string };
@@ -360,46 +357,6 @@ export class GfInvestmentPlanPageComponent implements OnInit {
     this.setTab('dca');
   }
 
-  public onCopyPrompt() {
-    this.isCopyingPrompt = true;
-    this.changeDetectorRef.markForCheck();
-
-    this.dataService
-      .fetchInvestmentAiPrompt()
-      .pipe(
-        catchError(() => of({ prompt: '' })),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(({ prompt }) => {
-        if (prompt) {
-          navigator.clipboard.writeText(prompt).catch(() => {});
-        }
-        this.isCopyingPrompt = false;
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
-  public onGenerateReport() {
-    this.isGeneratingReport = true;
-    this.aiReport = '';
-    this.changeDetectorRef.markForCheck();
-
-    this.dataService
-      .generateInvestmentAiReport()
-      .pipe(
-        timeout(60000),
-        catchError(() =>
-          of({ report: 'Failed to generate report. Please check your AI provider configuration in Admin → Model Provider.' })
-        ),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(({ report }) => {
-        this.aiReport = report;
-        this.isGeneratingReport = false;
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
   public signalTypeLabel(type: string): string {
     const map: Record<string, string> = {
       DCA_BUY: 'DCA Buy',
@@ -419,7 +376,7 @@ export class GfInvestmentPlanPageComponent implements OnInit {
       } else {
         groups.set(row.groupId, {
           groupId: row.groupId,
-          name: row.name || row.symbol,
+          name: row.name?.length ? row.name : row.symbol,
           rebalanceThreshold: row.rebalanceThreshold,
           symbols: [row.symbol],
           targetWeight: row.targetWeight

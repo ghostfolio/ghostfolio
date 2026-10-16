@@ -58,7 +58,7 @@
         mat-cell
         [attr.colspan]="displayedColumns.length"
       >
-        <div [@detailExpand]="element.expand ? 'expanded' : 'collapsed'">
+        <div class="detail-expand" [class.expanded]="element.expand">
           <div class="holding-parents-table">
             <table
               class="gf-table w-100"
@@ -72,15 +72,15 @@
               </colgroup>
 
               <ng-container matColumnDef="name">
-                <td *matCellDef="let parentHolding" class="px-2" mat-cell>
-                  <div
-                    class="align-items-center d-flex line-height-1 text-nowrap"
-                  >
-                    <div>{{ parentHolding?.name }}</div>
-                  </div>
+                <td
+                  *matCellDef="let parentHolding"
+                  class="line-height-normal px-2"
+                  mat-cell
+                >
+                  <div class="text-truncate">{{ parentHolding?.name }}</div>
                   <div>
                     <small class="text-muted">{{
-                      parentHolding?.symbol | gfSymbol
+                      parentHolding?.symbol
                     }}</small>
                   </div>
                 </td>
@@ -120,13 +120,8 @@
               <tr
                 *matRowDef="let row; columns: displayedColumns"
                 mat-row
-                [class.cursor-pointer]="row.position"
-                (click)="
-                  onClickHolding({
-                    dataSource: row.position.assetProfile.dataSource,
-                    symbol: row.position.assetProfile.symbol
-                  })
-                "
+                [class.cursor-pointer]="canShowDetails(row)"
+                (click)="onClickHolding(row)"
               ></tr>
               <tr
                 *matFooterRowDef="displayedColumns"

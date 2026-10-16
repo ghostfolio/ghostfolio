@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -54,9 +54,12 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -85,17 +88,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2022-01-01'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'MANUAL',
             name: 'Penthouse Apartment',
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
           },
+          date: new Date('2022-01-01'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 500000
         }
@@ -105,10 +108,11 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.ROAI,
         currency: 'USD',
+        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('500000'),
@@ -117,6 +121,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('500000'),
+            averageInvestmentWithCurrencyEffect: new Big('500000'),
             averagePrice: new Big('500000'),
             currency: 'USD',
             dataSource: 'MANUAL',
@@ -144,8 +150,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde',
             tags: [],
-            timeWeightedInvestment: new Big('500000'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('500000'),
             valueInBaseCurrency: new Big('500000')
           }
         ],
@@ -166,6 +170,9 @@ describe('PortfolioCalculator', () => {
           totalInvestmentValueWithCurrencyEffect: 500000
         })
       );
+
+      expect(PortfolioSnapshotServiceMock.jobsStore.size).toBe(0);
+      expect(RedisCacheServiceMock.cache.size).toBe(0);
     });
   });
 });

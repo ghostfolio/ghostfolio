@@ -1,9 +1,9 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { isFunction } from 'lodash';
+import { isFunction } from 'lodash-es';
 
 import { GfAlertDialogComponent } from './alert-dialog/alert-dialog.component';
 import { GfConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
@@ -14,7 +14,7 @@ import {
 } from './interfaces/interfaces';
 import { GfPromptDialogComponent } from './prompt-dialog/prompt-dialog.component';
 
-@Injectable()
+@Service({ autoProvided: false })
 export class NotificationService {
   private dialogMaxWidth: string;
   private dialogWidth: string;
@@ -87,7 +87,8 @@ export class NotificationService {
       defaultValue: aParams.defaultValue,
       discardLabel: aParams.discardLabel,
       title: aParams.title,
-      valueLabel: aParams.valueLabel
+      valueLabel: aParams.valueLabel,
+      valueSuffix: aParams.valueSuffix
     });
 
     return dialog.afterClosed().subscribe((result: string) => {

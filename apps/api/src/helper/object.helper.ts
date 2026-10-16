@@ -1,6 +1,6 @@
 import fastRedact from 'fast-redact';
 import jsonpath from 'jsonpath';
-import { cloneDeep, isObject } from 'lodash';
+import { cloneDeep, isObject } from 'lodash-es';
 
 export function hasNotDefinedValuesInObject(aObject: Object): boolean {
   for (const key in aObject) {

@@ -1,167 +1,206 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { FilterDto } from '@ghostfolio/api/dtos/filter.dto';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
+import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
-  PROPERTY_AI_API_URL,
-  PROPERTY_AI_RESPONSE_LANGUAGE,
-  PROPERTY_AI_TESTED_MODELS,
-  PROPERTY_API_KEY_OPENROUTER,
-  PROPERTY_OPENROUTER_MODEL
+  AI_ACTIVITIES_FILE_MAXIMUM_SIZE,
+  AI_ACTIVITIES_TIMEOUT,
+  AI_MAX_ACTIVITIES,
+  THROTTLE_AI_ACTIVITIES_LIMIT,
+  THROTTLE_AI_ACTIVITIES_TTL
 } from '@ghostfolio/common/config';
-import { AiPromptResponse } from '@ghostfolio/common/interfaces';
+import {
+  AiActivitiesResponse,
+  AiPromptResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { AiPromptMode, RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type {
+  AiPromptMode,
+  ImpersonationContext,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 
 import {
-  Body,
   Controller,
   Get,
+  HttpCode,
+  HttpException,
   Inject,
+  Logger,
   Param,
   Post,
-  Put,
   Query,
-  UseGuards
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
+import type { Response } from 'express';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
+import {
+  getDataRowCountOfCsvFile,
+  getMediaTypeOfActivityFile
+} from './ai.helper';
 import { AiService } from './ai.service';
 
 @Controller('ai')
 export class AiController {
+  private readonly logger = new Logger(AiController.name);
+
   public constructor(
     private readonly aiService: AiService,
     private readonly apiService: ApiService,
-    private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get('config')
-  @HasPermission(permissions.accessAdminControl)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getAiConfig() {
-    const apiKey = await this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER);
-    const apiUrl = await this.propertyService.getByKey<string>(PROPERTY_AI_API_URL);
-    const model = await this.propertyService.getByKey<string>(PROPERTY_OPENROUTER_MODEL);
-    const responseLanguage = await this.propertyService.getByKey<string>(PROPERTY_AI_RESPONSE_LANGUAGE);
-    const testedModelsRaw = await this.propertyService.getByKey<string>(PROPERTY_AI_TESTED_MODELS);
+  /**
+   * Reads the activities of a CSV, JPEG, PDF or PNG file with Ghostfolio AI,
+   * without saving anything. The client imports the activities which the user
+   * selects with POST api/v1/import. The weekly limit applies to each user
+   * instead of each IP address. The models stop if the client closes the
+   * request before the response or at the timeout. An error whose message is
+   * written for the caller gives the status 400 with this message, the
+   * timeout gives the status 400 with a message for the caller as well.
+   */
+  @HasPermission(permissions.enableGhostfolioAi)
+  @HttpCode(StatusCodes.OK)
+  @Post('activities')
+  @Throttle({
+    default: {
+      getTracker: ({ user }: RequestWithUser) => {
+        return user.id;
+      },
+      limit: THROTTLE_AI_ACTIVITIES_LIMIT,
+      ttl: THROTTLE_AI_ACTIVITIES_TTL
+    }
+  })
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard, CustomThrottlerGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      defParamCharset: 'utf8',
+      limits: { fileSize: AI_ACTIVITIES_FILE_MAXIMUM_SIZE }
+    })
+  )
+  public async getActivitiesFromFile(
+    @Res({ passthrough: true }) response: Response,
+    @UploadedFile() file?: { buffer: Buffer; originalname: string }
+  ): Promise<AiActivitiesResponse> {
+    const mediaType = file
+      ? getMediaTypeOfActivityFile({
+          buffer: file.buffer,
+          fileName: file.originalname
+        })
+      : undefined;
 
-    let testedModels: string[] = [];
+    if (!mediaType) {
+      throw new HttpException(
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [
+            'The file is not a CSV file in UTF-8, a JPEG, a PDF or a PNG file'
+          ]
+        },
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (mediaType === 'text/csv') {
+      const dataRowCount = getDataRowCountOfCsvFile(file.buffer);
+
+      if (dataRowCount > AI_MAX_ACTIVITIES) {
+        this.logger.warn(`Rejected a CSV file with ${dataRowCount} rows`);
+
+        throw new HttpException(
+          {
+            error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+            message: [
+              `The CSV file has more than ${AI_MAX_ACTIVITIES} rows of activities`
+            ]
+          },
+          StatusCodes.BAD_REQUEST
+        );
+      }
+    }
+
+    const abortController = new AbortController();
+    const timeoutSignal = AbortSignal.timeout(AI_ACTIVITIES_TIMEOUT);
+
+    response.on('close', () => {
+      if (!response.writableFinished) {
+        abortController.abort();
+      }
+    });
+
     try {
-      testedModels = testedModelsRaw ? JSON.parse(testedModelsRaw) : [];
-    } catch {}
+      return await this.aiService.getActivitiesFromFile({
+        abortSignal: AbortSignal.any([abortController.signal, timeoutSignal]),
+        file: { mediaType, buffer: file.buffer, name: file.originalname },
+        user: this.request.user
+      });
+    } catch (error) {
+      if (error instanceof CallerFacingError) {
+        throw new HttpException(
+          {
+            error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+            message: [error.message]
+          },
+          StatusCodes.BAD_REQUEST
+        );
+      } else if (timeoutSignal.aborted) {
+        this.logger.warn(
+          `Stopped reading a file of the type ${mediaType} at the timeout of ${AI_ACTIVITIES_TIMEOUT} ms`
+        );
 
-    return {
-      apiKey: apiKey ? '***' + apiKey.slice(-4) : '',
-      apiUrl: apiUrl ?? '',
-      hasApiKey: !!apiKey,
-      model: model ?? '',
-      responseLanguage: responseLanguage ?? 'auto',
-      testedModels
-    };
-  }
-
-  @Put('config')
-  @HasPermission(permissions.accessAdminControl)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async updateAiConfig(
-    @Body() body: { apiKey?: string; apiUrl?: string; model?: string; responseLanguage?: string }
-  ) {
-    if (body.apiKey && !body.apiKey.startsWith('***')) {
-      await this.propertyService.put({ key: PROPERTY_API_KEY_OPENROUTER, value: body.apiKey });
-    }
-    if (body.apiUrl !== undefined) {
-      await this.propertyService.put({ key: PROPERTY_AI_API_URL, value: body.apiUrl });
-    }
-    if (body.responseLanguage !== undefined) {
-      await this.propertyService.put({ key: PROPERTY_AI_RESPONSE_LANGUAGE, value: body.responseLanguage });
-    }
-    if (body.model !== undefined) {
-      await this.propertyService.put({ key: PROPERTY_OPENROUTER_MODEL, value: body.model });
-      if (body.model) {
-        const raw = await this.propertyService.getByKey<string>(PROPERTY_AI_TESTED_MODELS);
-        let models: string[] = [];
-        try { models = raw ? JSON.parse(raw) : []; } catch {}
-        if (!models.includes(body.model)) {
-          models.unshift(body.model);
-          await this.propertyService.put({
-            key: PROPERTY_AI_TESTED_MODELS,
-            value: JSON.stringify(models.slice(0, 20))
-          });
-        }
+        throw new HttpException(
+          {
+            error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+            message: [
+              'Ghostfolio AI needs too much time for the file. Split it into smaller files.'
+            ]
+          },
+          StatusCodes.BAD_REQUEST
+        );
       }
+
+      throw error;
     }
-    return { success: true };
-  }
-
-  @Post('test')
-  @HasPermission(permissions.accessAdminControl)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async testAiConnection(
-    @Body() body: { apiKey?: string; apiUrl?: string; model: string; responseLanguage?: string }
-  ) {
-    const apiKey =
-      body.apiKey && !body.apiKey.startsWith('***')
-        ? body.apiKey
-        : await this.propertyService.getByKey<string>(PROPERTY_API_KEY_OPENROUTER);
-
-    const apiUrl =
-      body.apiUrl ??
-      (await this.propertyService.getByKey<string>(PROPERTY_AI_API_URL)) ??
-      'https://openrouter.ai/api/v1';
-
-    const responseLanguage =
-      body.responseLanguage ??
-      (await this.propertyService.getByKey<string>(PROPERTY_AI_RESPONSE_LANGUAGE)) ??
-      'auto';
-
-    const result = await this.aiService.testConnection({ apiKey, apiUrl, model: body.model, responseLanguage });
-
-    if (result.success) {
-      // Add model to tested history
-      const raw = await this.propertyService.getByKey<string>(PROPERTY_AI_TESTED_MODELS);
-      let models: string[] = [];
-      try { models = raw ? JSON.parse(raw) : []; } catch {}
-      if (!models.includes(body.model)) {
-        models.unshift(body.model);
-        await this.propertyService.put({
-          key: PROPERTY_AI_TESTED_MODELS,
-          value: JSON.stringify(models.slice(0, 20))
-        });
-      }
-    }
-
-    return result;
   }
 
   @Get('prompt/:mode')
   @HasPermission(permissions.readAiPrompt)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.portfolioRead)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getPrompt(
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Param('mode') mode: AiPromptMode,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Query()
+    { accounts, assetClasses, dataSource, symbol, tags }: FilterDto
   ): Promise<AiPromptResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     const prompt = await this.aiService.getPrompt({
       filters,
       mode,
-      impersonationId: undefined,
+      userId,
       languageCode: this.request.user.settings.settings.language,
-      userCurrency: this.request.user.settings.settings.baseCurrency,
-      userId: this.request.user.id
+      userCurrency: userSettings.baseCurrency
     });
 
     return { prompt };

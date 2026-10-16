@@ -1,6 +1,15 @@
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
+import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
+import {
+  PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW,
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
+} from '@ghostfolio/common/config';
 import { AuthDeviceDto } from '@ghostfolio/common/dtos';
 import {
   AssertionCredentialJSON,
@@ -12,7 +21,8 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
-  Logger
+  Logger,
+  NotFoundException
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -29,6 +39,7 @@ import {
   VerifyRegistrationResponseOpts
 } from '@simplewebauthn/server';
 import { isoBase64URL, isoUint8Array } from '@simplewebauthn/server/helpers';
+import { isPast } from 'date-fns';
 import ms from 'ms';
 
 @Injectable()
@@ -36,9 +47,12 @@ export class WebAuthService {
   private readonly logger = new Logger(WebAuthService.name);
 
   public constructor(
+    private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly deviceService: AuthDeviceService,
     private readonly jwtService: JwtService,
+    private readonly portfolioSnapshotService: PortfolioSnapshotService,
+    private readonly redisCacheService: RedisCacheService,
     private readonly userService: UserService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -86,6 +100,11 @@ export class WebAuthService {
   ): Promise<AuthDeviceDto> {
     const user = this.request.user;
     const expectedChallenge = user.authChallenge;
+
+    if (!expectedChallenge) {
+      throw new Error('Missing authentication challenge');
+    }
+
     let verification: VerifiedRegistrationResponse;
 
     try {
@@ -152,8 +171,11 @@ export class WebAuthService {
     const device = await this.deviceService.authDevice({ id: deviceId });
 
     if (!device) {
-      throw new Error('Device not found');
+      throw new NotFoundException('Device not found');
     }
+
+    // Compute in the background during the biometric authentication
+    void this.warmUpPortfolioSnapshot({ userId: device.userId });
 
     const opts: GenerateAuthenticationOptionsOpts = {
       allowCredentials: [],
@@ -197,7 +219,7 @@ export class WebAuthService {
           id: isoBase64URL.fromBuffer(device.credentialId),
           publicKey: device.credentialPublicKey
         },
-        expectedChallenge: `${user.authChallenge}`,
+        expectedChallenge: `${user?.authChallenge}`,
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID,
         requireUserVerification: false,
@@ -227,10 +249,67 @@ export class WebAuthService {
       });
 
       return this.jwtService.sign({
-        id: user.id
+        id: user?.id
       });
     }
 
     throw new Error();
+  }
+
+  private async isPortfolioSnapshotExpired(portfolioSnapshotKey: string) {
+    try {
+      const { expiration }: PortfolioSnapshotValue = JSON.parse(
+        await this.redisCacheService.get(portfolioSnapshotKey)
+      );
+
+      return isPast(new Date(expiration));
+    } catch {
+      return true;
+    }
+  }
+
+  private async warmUpPortfolioSnapshot({ userId }: { userId: string }) {
+    try {
+      const user = await this.userService.user({ id: userId });
+
+      if (!user) {
+        return;
+      }
+
+      const userSettings = user.settings.settings;
+
+      const filters = this.apiService.buildFiltersFromUserSettings({
+        userSettings
+      });
+
+      const portfolioSnapshotKey =
+        this.redisCacheService.getPortfolioSnapshotKey({
+          filters,
+          userId,
+          calculationType: userSettings.performanceCalculationType
+        });
+
+      if (await this.isPortfolioSnapshotExpired(portfolioSnapshotKey)) {
+        await this.portfolioSnapshotService.addJobToQueue({
+          data: {
+            filters,
+            userId,
+            calculationType: userSettings.performanceCalculationType,
+            userCurrency: userSettings.baseCurrency
+          },
+          name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
+          opts: {
+            ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+            jobId: portfolioSnapshotKey,
+            priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
+          }
+        });
+      }
+    } catch (error) {
+      this.logger.error(
+        `Portfolio snapshot of user '${userId}' could not be warmed up`,
+        error
+      );
+    }
   }
 }

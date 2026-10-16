@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "date": "2023-02-05T00:00:00.000Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "accountId": null,
+      "comment": null,
+      "currency": "USD",
+      "dataSource": "MANUAL",
+      "date": "2022-01-01T00:00:00.000Z",
+      "fee": 0,
+      "quantity": 1,
+      "symbol": "Penthouse Apartment",
+      "tags": [],
+      "type": "BUY",
+      "unitPrice": 500000
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}

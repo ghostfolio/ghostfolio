@@ -1,19 +1,14 @@
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import {
-  ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
-  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
-  ghostfolioFearAndGreedIndexSymbolStocks
-} from '@ghostfolio/common/config';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/common/dtos';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import { MarketDataOfMarketsResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -33,10 +28,10 @@ import { DataSource, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
+@AllowDuringImpersonation()
 @Controller('market-data')
 export class MarketDataController {
   public constructor(
-    private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly symbolProfileService: SymbolProfileService,
@@ -50,39 +45,9 @@ export class MarketDataController {
     @Query('includeHistoricalData', new ParseIntPipe({ optional: true }))
     includeHistoricalData = 0
   ): Promise<MarketDataOfMarketsResponse> {
-    const [
-      marketDataFearAndGreedIndexCryptocurrencies,
-      marketDataFearAndGreedIndexStocks
-    ] = await Promise.all([
-      this.symbolService.get({
-        includeHistoricalData,
-        dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
-          symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
-        },
-        useIntradayData: true
-      }),
-      this.symbolService.get({
-        includeHistoricalData,
-        dataGatheringItem: {
-          dataSource:
-            this.dataProviderService.getDataSourceForFearAndGreedIndexStocks(),
-          symbol: ghostfolioFearAndGreedIndexSymbolStocks
-        },
-        useIntradayData: true
-      })
-    ]);
-
-    return {
-      fearAndGreedIndex: {
-        CRYPTOCURRENCIES: {
-          ...marketDataFearAndGreedIndexCryptocurrencies
-        },
-        STOCKS: {
-          ...marketDataFearAndGreedIndexStocks
-        }
-      }
-    };
+    return this.symbolService.getMarketDataOfMarkets({
+      includeHistoricalData
+    });
   }
 
   @Post(':dataSource/:symbol')

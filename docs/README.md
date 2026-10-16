@@ -12,7 +12,7 @@ architecture, decisions, and field notes. Chinese is fine here.
 | --------------------------------------------------- | ----------------------------------------------- |
 | [getting-started.md](guide/getting-started.md)       | Prerequisites and running the app locally       |
 | [deployment.md](guide/deployment.md)                 | Docker deployment, pre-built image vs. local build |
-| [investment-features.md](guide/investment-features.md) | Capital Pool, DCA, Rebalancing, Signals, AI report |
+| [investment-features.md](guide/investment-features.md) | Capital Pool, DCA, Rebalancing, Signals |
 | [operations.md](guide/operations.md)                 | Scheduled jobs, emails, common commands, troubleshooting |
 | [mcp.md](guide/mcp.md)                               | MCP endpoint: connect Claude, tools, OAuth, verify |
 

@@ -1,48 +1,48 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { isActivityInFuture } from '@ghostfolio/api/helper/activity.helper';
+import { isDataGatheringSupported } from '@ghostfolio/api/helper/data-source.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import {
-  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-  HEADER_KEY_IMPERSONATION
-} from '@ghostfolio/common/config';
+import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   ActivitiesResponse,
-  ActivityResponse
+  ActivityResponse,
+  CreateActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import { scopes } from '@ghostfolio/common/scopes';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
 
 import {
   Body,
   Controller,
   Delete,
   Get,
-  Headers,
   HttpException,
-  Inject,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
-  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
-import { Order, Prisma, Type as ActivityType } from '@prisma/client';
+import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { omit } from 'lodash-es';
 
+import { ActivitiesFilterDto } from './activities-filter.dto';
 import { ActivitiesService } from './activities.service';
+import { GetActivitiesDto } from './get-activities.dto';
 
 @Controller('activities')
 export class ActivitiesController {
@@ -51,48 +51,69 @@ export class ActivitiesController {
     private readonly apiService: ApiService,
     private readonly dataProviderService: DataProviderService,
     private readonly dataGatheringService: DataGatheringService,
-    private readonly impersonationService: ImpersonationService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Delete()
   @HasPermission(permissions.deleteActivity)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityDelete)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('tags') filterByTags?: string
+    @Impersonation() { userId }: ImpersonationContext,
+    @Query()
+    {
+      accounts,
+      activityTypes,
+      assetClasses,
+      dataSource,
+      range,
+      symbol,
+      tags
+    }: ActivitiesFilterDto
   ): Promise<number> {
+    let endDate: Date | undefined;
+    let startDate: Date | undefined;
+
+    if (range) {
+      ({ endDate, startDate } = getIntervalFromDateRange({
+        dateRange: range
+      }));
+    }
+
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
 
     return this.activitiesService.deleteActivities({
+      endDate,
       filters,
-      userId: this.request.user.id
+      startDate,
+      userId,
+      types: activityTypes
     });
   }
 
   @Delete(':id')
   @HasPermission(permissions.deleteActivity)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteActivity(@Param('id') id: string): Promise<Order> {
+  @RequiresScope(scopes.activityDelete)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async deleteActivity(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ): Promise<Order> {
     const activity = await this.activitiesService.order({
       id,
-      userId: this.request.user.id
+      userId
     });
 
     if (!activity) {
       throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
       );
     }
 
@@ -102,56 +123,57 @@ export class ActivitiesController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllActivities(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('activityTypes') filterByTypes?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('endDate') endDateParam?: string,
-    @Query('range') dateRange?: DateRange,
-    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
-    @Query('sortColumn') sortColumn?: string,
-    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
-    @Query('startDate') startDateParam?: string,
-    @Query('symbol') filterBySymbol?: string,
-    @Query('symbols') filterBySymbols?: string,
-    @Query('tags') filterByTags?: string,
-    @Query('take', new ParseIntPipe({ optional: true })) take?: number
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
+    @Query()
+    {
+      accounts,
+      activityTypes,
+      assetClasses,
+      dataSource,
+      endDate: endDateParam,
+      range,
+      skip,
+      sortColumn,
+      sortDirection,
+      startDate: startDateParam,
+      symbol,
+      symbols: symbolsParam,
+      tags,
+      take
+    }: GetActivitiesDto
   ): Promise<ActivitiesResponse> {
-    let endDate: Date;
-    let startDate: Date;
+    let endDate: Date | undefined;
+    let startDate: Date | undefined;
 
-    if (dateRange) {
-      ({ endDate, startDate } = getIntervalFromDateRange({ dateRange }));
+    if (range) {
+      ({ endDate, startDate } = getIntervalFromDateRange({
+        dateRange: range
+      }));
     } else {
+      // Without a range, the dates apply as given
       if (startDateParam) {
         startDate = parseISO(startDateParam);
       }
+
       if (endDateParam) {
         endDate = parseISO(endDateParam);
       }
     }
 
+    const symbols = symbolsParam?.split(',').filter(Boolean) ?? [];
+
     const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterByDataSource,
-      filterBySymbol,
-      filterByTags
+      filterByAccounts: accounts,
+      filterByAssetClasses: assetClasses,
+      filterByDataSource: dataSource,
+      filterBySymbol: symbol,
+      filterByTags: tags
     });
-
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-
-    const types = (filterByTypes?.split(',') as ActivityType[]) ?? [];
-    const symbols = filterBySymbols?.split(',').filter(Boolean) ?? [];
-
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     const { activities, count } = await this.activitiesService.getActivities({
       endDate,
@@ -162,10 +184,10 @@ export class ActivitiesController {
       startDate,
       symbols,
       take,
-      types,
-      userCurrency,
+      userId,
       includeDrafts: true,
-      userId: impersonationUserId || this.request.user.id,
+      types: activityTypes,
+      userCurrency: userSettings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
@@ -173,21 +195,17 @@ export class ActivitiesController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityRead)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getActivityById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Impersonation() { userId, userSettings }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<ActivityResponse> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.settings.settings.baseCurrency;
-
     const { activities } = await this.activitiesService.getActivities({
-      userCurrency,
+      userId,
       includeDrafts: true,
-      userId: impersonationUserId || this.request.user.id,
+      userCurrency: userSettings.baseCurrency,
       withExcludedAccountsAndActivities: true
     });
 
@@ -207,11 +225,29 @@ export class ActivitiesController {
 
   @HasPermission(permissions.createActivity)
   @Post()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityCreate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async createActivity(@Body() data: CreateOrderDto): Promise<Order> {
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async createActivity(
+    @Body() data: CreateOrderDto,
+    @Impersonation()
+    {
+      authenticatedUserSubscription,
+      userId,
+      userSubscription
+    }: ImpersonationContext
+  ): Promise<CreateActivityResponse> {
+    // Evaluate the more restrictive subscription of the authenticated user
+    // and the owner of the activity
+    const subscription =
+      userSubscription?.type === SubscriptionType.Basic
+        ? userSubscription
+        : authenticatedUserSubscription;
+
     try {
       await this.dataProviderService.validateActivities({
+        subscription,
         activitiesDto: [
           {
             currency: data.currency,
@@ -220,8 +256,7 @@ export class ActivitiesController {
             type: data.type
           }
         ],
-        maxActivitiesToImport: 1,
-        user: this.request.user
+        maxActivitiesToImport: 1
       });
     } catch (error) {
       throw new HttpException(
@@ -247,6 +282,7 @@ export class ActivitiesController {
 
     const activity = await this.activitiesService.createActivity({
       ...data,
+      userId,
       date: parseISO(data.date),
       SymbolProfile: {
         connectOrCreate: {
@@ -266,44 +302,56 @@ export class ActivitiesController {
       tags: data.tags?.map((id) => {
         return { id };
       }),
-      user: { connect: { id: this.request.user.id } },
-      userId: this.request.user.id
+      user: { connect: { id: userId } }
     });
 
-    if (dataSource && !activity.isDraft) {
-      // Gather symbol data in the background, if data source is set
-      // (not MANUAL) and not draft
+    if (
+      isDataGatheringSupported(activity.SymbolProfile) &&
+      !isActivityInFuture({ date: activity.date })
+    ) {
+      // Gather symbol data in the background, if the asset profile supports
+      // data gathering and the date is not in the future
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: [
           {
-            dataSource,
+            dataSource: activity.SymbolProfile.dataSource,
             date: activity.date,
-            symbol: data.symbol
+            symbol: activity.SymbolProfile.symbol
           }
         ],
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
       });
     }
 
-    return activity;
+    const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
+      }
+    ]);
+
+    return { ...omit(activity, ['SymbolProfile']), assetProfile };
   }
 
   @HasPermission(permissions.updateActivity)
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @RequiresScope(scopes.activityUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async updateActivity(
-    @Param('id') id: string,
-    @Body() data: UpdateOrderDto
+    @Body() data: UpdateOrderDto,
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
   ) {
     const originalActivity = await this.activitiesService.order({
-      id
+      id,
+      userId
     });
 
-    if (!originalActivity || originalActivity.userId !== this.request.user.id) {
+    if (!originalActivity) {
       throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
       );
     }
 
@@ -324,14 +372,17 @@ export class ActivitiesController {
     delete data.dataSource;
 
     return this.activitiesService.updateActivity({
+      userId,
       data: {
         ...data,
         date,
-        account: {
-          connect: {
-            id_userId: { id: accountId, userId: this.request.user.id }
-          }
-        },
+        account: accountId
+          ? {
+              connect: {
+                id_userId: { userId, id: accountId }
+              }
+            }
+          : { disconnect: true },
         SymbolProfile: {
           connect: {
             dataSource_symbol: {
@@ -348,8 +399,9 @@ export class ActivitiesController {
         tags: data.tags?.map((id) => {
           return { id };
         }),
-        user: { connect: { id: this.request.user.id } }
+        user: { connect: { id: userId } }
       },
+      originalDate: originalActivity.date,
       where: {
         id
       }

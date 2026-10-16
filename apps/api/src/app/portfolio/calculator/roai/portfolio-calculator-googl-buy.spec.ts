@@ -1,6 +1,6 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -66,9 +66,12 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -97,17 +100,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2023-01-03'),
-          feeInAssetProfileCurrency: 1,
-          feeInBaseCurrency: 0.9238,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Alphabet Inc.',
             symbol: 'GOOGL'
           },
+          date: new Date('2023-01-03'),
+          feeInAssetProfileCurrency: 1,
+          feeInBaseCurrency: 0.9238,
+          quantity: 1,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 89.12
         }
@@ -141,6 +144,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('89.12').mul(0.8854),
+            averageInvestmentWithCurrencyEffect: new Big('82.329056'),
             averagePrice: new Big('89.12'),
             currency: 'USD',
             dataSource: 'YAHOO',
@@ -170,8 +175,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'GOOGL',
             tags: [],
-            timeWeightedInvestment: new Big('89.12').mul(0.8854),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
             valueInBaseCurrency: new Big('103.10483')
           }
         ],

@@ -1,14 +1,13 @@
-import { EnhancedSymbolProfile } from '@ghostfolio/common/interfaces';
+import { EnhancedAssetProfile } from '@ghostfolio/common/interfaces';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
-
-import { Order, Tag } from '@prisma/client';
+import type { Order, Tag } from '@ghostfolio/prisma/browser';
 
 export interface Activity extends Order {
   account?: AccountWithPlatform;
+  assetProfile: EnhancedAssetProfile;
   error?: ActivityError;
   feeInAssetProfileCurrency: number;
   feeInBaseCurrency: number;
-  SymbolProfile: EnhancedSymbolProfile;
   tagIds?: string[];
   tags?: Tag[];
   unitPriceInAssetProfileCurrency: number;

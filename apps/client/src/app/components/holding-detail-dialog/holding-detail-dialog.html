@@ -12,6 +12,7 @@
         <gf-value
           size="large"
           [isCurrency]="true"
+          [isLoading]="isLoading"
           [locale]="data.locale"
           [unit]="data.baseCurrency"
           [value]="value"
@@ -44,6 +45,7 @@
     <mat-tab-group
       animationDuration="0ms"
       class="mb-4"
+      [disablePagination]="true"
       [mat-stretch-tabs]="false"
     >
       <mat-tab>
@@ -59,6 +61,7 @@
                 size="medium"
                 [colorizeSign]="true"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="netPerformanceWithCurrencyEffectPrecision"
                 [unit]="data.baseCurrency"
@@ -79,6 +82,7 @@
                 i18n
                 size="medium"
                 [colorizeSign]="true"
+                [isLoading]="isLoading"
                 [isPercent]="true"
                 [locale]="data.locale"
                 [precision]="netPerformancePercentWithCurrencyEffectPrecision"
@@ -99,6 +103,7 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="averagePricePrecision"
                 [unit]="assetProfile?.currency"
@@ -111,6 +116,7 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPricePrecision"
                 [unit]="assetProfile?.currency"
@@ -129,6 +135,7 @@
                     round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPriceMinPrecision"
                 [unit]="assetProfile?.currency"
@@ -147,6 +154,7 @@
                     round(marketPriceMin, marketPriceMinPrecision)
                 "
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="marketPriceMaxPrecision"
                 [unit]="assetProfile?.currency"
@@ -158,6 +166,7 @@
               <gf-value
                 i18n
                 size="medium"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="quantityPrecision"
                 [value]="quantity"
@@ -169,23 +178,23 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [precision]="
                   investmentInBaseCurrencyWithCurrencyEffectPrecision
                 "
                 [unit]="data.baseCurrency"
                 [value]="investmentInBaseCurrencyWithCurrencyEffect"
-                >Investment</gf-value
+                >Invested Capital</gf-value
               >
             </div>
-            @if (
-              dividendInBaseCurrency && user?.settings?.isExperimentalFeatures
-            ) {
+            @if (dividendInBaseCurrency) {
               <div class="col-6 mb-3">
                 <gf-value
                   i18n
                   size="medium"
                   [isCurrency]="true"
+                  [isLoading]="isLoading"
                   [locale]="data.locale"
                   [precision]="dividendInBaseCurrencyPrecision"
                   [unit]="data.baseCurrency"
@@ -197,6 +206,7 @@
                 <gf-value
                   i18n
                   size="medium"
+                  [isLoading]="isLoading"
                   [isPercent]="true"
                   [locale]="data.locale"
                   [value]="dividendYieldPercentWithCurrencyEffect"
@@ -209,6 +219,7 @@
                 i18n
                 size="medium"
                 [isCurrency]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [unit]="data.baseCurrency"
                 [value]="feeInBaseCurrency"
@@ -221,6 +232,7 @@
                 size="medium"
                 [deviceType]="data.deviceType"
                 [isDate]="true"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="dateOfFirstActivity"
                 >First Activity</gf-value
@@ -229,6 +241,7 @@
             <div class="col-6 mb-3">
               <gf-value
                 size="medium"
+                [isLoading]="isLoading"
                 [locale]="data.locale"
                 [value]="activitiesCount"
               >
@@ -336,8 +349,19 @@
                 >ISIN</gf-value
               >
             </div>
+            <div class="col-12 mb-3">
+              <form [formGroup]="holdingForm">
+                <gf-tags-selector
+                  formControlName="tags"
+                  [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+                  [readonly]="!data.hasPermissionToUpdateActivity"
+                  [tagsAvailable]="tagsAvailable"
+                  [tagsReadOnly]="tagsOfAccounts"
+                />
+              </form>
+            </div>
 
-            @if (dataProviderInfo) {
+            @if (dataProviderInfo?.name) {
               <div class="col-md-12 mb-3 text-center">
                 <hr />
                 <gf-data-provider-credits
@@ -358,20 +382,20 @@
           [baseCurrency]="data.baseCurrency"
           [dataSource]="dataSource"
           [deviceType]="data.deviceType"
-          [hasPermissionToCreateActivity]="false"
+          [hasActivities]="true"
+          [hasPermissionToCreateActivity]="data.hasPermissionToCreateActivity"
           [hasPermissionToDeleteActivity]="false"
           [hasPermissionToExportActivities]="
-            !data.hasImpersonationId && !user?.settings?.isRestrictedView
+            !data.impersonationId && !user?.settings?.isRestrictedView
           "
-          [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
+          [hasPermissionToUpdateActivity]="data.hasPermissionToUpdateActivity"
           [locale]="data.locale"
           [pageIndex]="pageIndex"
           [pageSize]="pageSize"
           [showActions]="
-            !data.hasImpersonationId &&
             data.hasPermissionToCreateActivity &&
-            user?.settings?.isExperimentalFeatures &&
+            !data.impersonationId &&
             !user?.settings?.isRestrictedView
           "
           [showNameColumn]="false"
@@ -379,8 +403,6 @@
           [sortDirection]="sortDirection"
           [sortDisabled]="true"
           [totalItems]="activitiesCount"
-          (activityToClone)="onCloneActivity($event)"
-          (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
           (pageChanged)="onChangePage($event)"
         />
@@ -399,18 +421,19 @@
           [showAllocationInPercentage]="user?.settings?.isExperimentalFeatures"
           [showBalance]="false"
           [showFooter]="false"
+          [showQuantity]="user?.settings?.isExperimentalFeatures"
           [showValue]="false"
           [showValueInBaseCurrency]="false"
         />
       </mat-tab>
-      @if (
-        hasPermissionToReadMarketDataOfOwnAssetProfile &&
-        user?.settings?.isExperimentalFeatures
-      ) {
-        <mat-tab>
+      @if (isOwnAssetProfile && user?.settings?.isExperimentalFeatures) {
+        <mat-tab [disabled]="!hasPermissionToReadMarketDataOfOwnAssetProfile">
           <ng-template mat-tab-label>
             <ion-icon name="server-outline" />
             <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" [enableLink]="false" />
+            }
           </ng-template>
           <gf-historical-market-data-editor
             [currency]="assetProfile?.currency"
@@ -425,16 +448,6 @@
         </mat-tab>
       }
     </mat-tab-group>
-
-    <form [formGroup]="holdingForm">
-      <gf-tags-selector
-        formControlName="tags"
-        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-        [readonly]="!data.hasPermissionToUpdateActivity"
-        [tagsAvailable]="tagsAvailable"
-        [tagsReadOnly]="tagsOfAccounts"
-      />
-    </form>
 
     @if (
       data.hasPermissionToAccessAdminControl ||
@@ -461,7 +474,10 @@
               dataSource?.data.length > 0 &&
               data.hasPermissionToReportDataGlitch === true
             ) {
-              <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+              <a
+                color="warn"
+                mat-stroked-button
+                [href]="reportDataGlitchMailHref"
                 ><ion-icon class="mr-1" name="flag-outline" /><span i18n
                   >Report Data Glitch</span
                 >...</a
@@ -470,12 +486,12 @@
             @if (data.hasPermissionToAccessAdminControl) {
               <a
                 mat-stroked-button
-                [queryParams]="{
-                  assetProfileDialog: true,
-                  dataSource: assetProfile?.dataSource,
-                  symbol: assetProfile?.symbol
-                }"
-                [routerLink]="routerLinkAdminControlMarketData"
+                [routerLink]="
+                  routerLinkAdminControlMarketDataUpdate(
+                    assetProfile?.dataSource ?? data.dataSource,
+                    assetProfile?.symbol ?? data.symbol
+                  )
+                "
                 (click)="onClose()"
                 ><ion-icon class="mr-1" name="create-outline" /><span i18n
                   >Manage Asset Profile</span

@@ -1,4 +1,7 @@
-import { RebalancingService } from './rebalancing.service';
+import {
+  RebalancingService,
+  toHoldingValuesBySymbol
+} from './rebalancing.service';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -278,5 +281,52 @@ describe('RebalancingService.calculateRebalancing', () => {
 
       expect(r.hasTriggered).toBe(false);
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// The holdings come as a list since Ghostfolio 3.63
+// ---------------------------------------------------------------------------
+
+describe('toHoldingValuesBySymbol', () => {
+  it('maps the list of holdings to the value per symbol', () => {
+    const r = toHoldingValuesBySymbol([
+      { assetProfile: { symbol: 'XIC.TO' }, valueInBaseCurrency: 4000 },
+      { assetProfile: { symbol: 'XEF.TO' }, valueInBaseCurrency: 6000 }
+    ] as any);
+
+    expect(r).toEqual({
+      'XEF.TO': { valueInBaseCurrency: 6000 },
+      'XIC.TO': { valueInBaseCurrency: 4000 }
+    });
+  });
+
+  it('adds up a symbol held under two data sources', () => {
+    const r = toHoldingValuesBySymbol([
+      { assetProfile: { symbol: 'XIC.TO' }, valueInBaseCurrency: 1000 },
+      { assetProfile: { symbol: 'XIC.TO' }, valueInBaseCurrency: 500 }
+    ] as any);
+
+    expect(r['XIC.TO'].valueInBaseCurrency).toBe(1500);
+  });
+
+  it('treats a missing value as 0 and a missing list as empty', () => {
+    expect(
+      toHoldingValuesBySymbol([{ assetProfile: { symbol: 'A' } }] as any)
+    ).toEqual({ A: { valueInBaseCurrency: 0 } });
+    expect(toHoldingValuesBySymbol(undefined as any)).toEqual({});
+  });
+
+  it('feeds calculateRebalancing', async () => {
+    const r = await svc.calculateRebalancing(
+      [alloc('XIC.TO', 50), alloc('XEF.TO', 50)],
+      toHoldingValuesBySymbol([
+        { assetProfile: { symbol: 'XIC.TO' }, valueInBaseCurrency: 7000 },
+        { assetProfile: { symbol: 'XEF.TO' }, valueInBaseCurrency: 3000 }
+      ] as any)
+    );
+
+    expect(r.totalValue).toBe(10000);
+    expect(byGroup(r, 'XIC.TO').type).toBe('SELL');
   });
 });

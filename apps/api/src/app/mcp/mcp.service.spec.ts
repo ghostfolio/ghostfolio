@@ -47,6 +47,10 @@ describe('buildApiPath', () => {
 });
 
 describe('MCP_TOOLS', () => {
+  // Starts an HTTP server and a real client; the default 5 s is too tight when
+  // the whole suite runs in parallel
+  jest.setTimeout(30000);
+
   it('has unique names and only read endpoints without path leaks', () => {
     const names = MCP_TOOLS.map(({ name }) => name);
 

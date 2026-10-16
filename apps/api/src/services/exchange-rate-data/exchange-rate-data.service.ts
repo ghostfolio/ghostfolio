@@ -12,11 +12,12 @@ import {
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
-  getYesterday,
+  getStartOfUtcDateOfYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
 import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   eachDayOfInterval,
@@ -25,7 +26,7 @@ import {
   isToday,
   subDays
 } from 'date-fns';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import ms from 'ms';
 
 import { ExchangeRatesByCurrency } from './interfaces/exchange-rate-data.interface';
@@ -164,12 +165,19 @@ export class ExchangeRateDataService {
   }
 
   public async loadCurrencies() {
-    const historicalData = await this.dataProviderService.getHistorical(
-      this.currencyPairs,
-      'day',
-      getYesterday(),
-      getYesterday()
+    const startOfUtcDateOfYesterday = getStartOfUtcDateOfYesterday();
+
+    const dateStringOfYesterday = format(
+      startOfUtcDateOfYesterday,
+      DATE_FORMAT,
+      { in: utc }
     );
+
+    const historicalData = await this.dataProviderService.getHistorical({
+      assetProfileIdentifiers: this.currencyPairs,
+      from: startOfUtcDateOfYesterday,
+      to: startOfUtcDateOfYesterday
+    });
 
     const quotes = await this.dataProviderService.getQuotes({
       items: this.currencyPairs.map(({ dataSource, symbol }) => {
@@ -196,7 +204,7 @@ export class ExchangeRateDataService {
 
       if (isNumber(quote?.marketPrice)) {
         result[symbol] = {
-          [format(getYesterday(), DATE_FORMAT)]: {
+          [dateStringOfYesterday]: {
             marketPrice: quote.marketPrice
           }
         };
@@ -219,17 +227,19 @@ export class ExchangeRateDataService {
 
     for (const symbol of Object.keys(resultExtended)) {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
-      const date = format(getYesterday(), DATE_FORMAT);
 
-      this.exchangeRates[symbol] = resultExtended[symbol]?.[date]?.marketPrice;
+      this.exchangeRates[symbol] =
+        resultExtended[symbol]?.[dateStringOfYesterday]?.marketPrice;
 
       if (!this.exchangeRates[symbol]) {
         // Not found, calculate indirectly via base currency
         this.exchangeRates[symbol] =
-          resultExtended[`${currency1}${DEFAULT_CURRENCY}`]?.[date]
-            ?.marketPrice *
-          resultExtended[`${DEFAULT_CURRENCY}${currency2}`]?.[date]
-            ?.marketPrice;
+          resultExtended[`${currency1}${DEFAULT_CURRENCY}`]?.[
+            dateStringOfYesterday
+          ]?.marketPrice *
+          resultExtended[`${DEFAULT_CURRENCY}${currency2}`]?.[
+            dateStringOfYesterday
+          ]?.marketPrice;
 
         // Calculate the opposite direction
         this.exchangeRates[`${currency2}${currency1}`] =
@@ -261,8 +271,6 @@ export class ExchangeRateDataService {
         const factor2 = this.exchangeRates[`${DEFAULT_CURRENCY}${aToCurrency}`];
 
         factor = factor1 * factor2;
-
-        this.exchangeRates[`${aFromCurrency}${aToCurrency}`] = factor;
       }
     }
 

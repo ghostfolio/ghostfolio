@@ -6,22 +6,31 @@ import {
   getSelectableDateRanges
 } from '@ghostfolio/common/chart-date-range';
 import {
+  getChartBorderColor,
+  getTimeAxisOptions,
   getTooltipOptions,
+  getValueAxisOptions,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
-  getDateFormatString,
   getLocale,
   getTextColor
 } from '@ghostfolio/common/helper';
-import { LineChartItem, ToggleOption } from '@ghostfolio/common/interfaces';
+import {
+  LineChartItem,
+  NullableLineChartItem
+} from '@ghostfolio/common/interfaces';
 import {
   PriceStatistics,
   calculatePriceStatistics
 } from '@ghostfolio/common/price-statistics';
-import { ColorScheme, DateRange } from '@ghostfolio/common/types';
+import {
+  ColorScheme,
+  DateRange,
+  ToggleOption
+} from '@ghostfolio/common/types';
 
 import {
   AfterViewInit,
@@ -40,6 +49,7 @@ import {
 import {
   type AnimationsSpec,
   Chart,
+  type ChartData,
   Filler,
   LinearScale,
   LineController,
@@ -58,7 +68,10 @@ import annotationPlugin, {
 } from 'chartjs-plugin-annotation';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { registerChartConfiguration } from '../chart';
+import {
+  onPrefersColorSchemeChange,
+  registerChartConfiguration
+} from '../chart';
 import { GfToggleComponent } from '../toggle/toggle.component';
 
 @Component({
@@ -71,15 +84,15 @@ import { GfToggleComponent } from '../toggle/toggle.component';
 export class GfLineChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() benchmarkDataItems: LineChartItem[] = [];
+  @Input() benchmarkDataItems: NullableLineChartItem[] = [];
   @Input() benchmarkLabel = '';
   @Input() buyDateMarkers: LineChartItem[] = [];
-  @Input() colorScheme: ColorScheme;
-  @Input() dateMarkerCurrency: string;
+  @Input() colorScheme?: ColorScheme;
+  @Input() dateMarkerCurrency?: string;
   @Input() sellDateMarkers: LineChartItem[] = [];
-  @Input() currency: string;
+  @Input() currency?: string;
   @Input() dateRange: DateRange = DEFAULT_CHART_DATE_RANGE;
-  @Input() historicalDataItems: LineChartItem[];
+  @Input() historicalDataItems: LineChartItem[] | null;
   @Input() purchaseDate: string;
   @Input() isAnimated = false;
   @Input() label: string;
@@ -101,7 +114,7 @@ export class GfLineChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart<'line'>;
+  public chart?: Chart<'line'>;
   public isLoading = true;
 
   protected dateRangeOptions: ToggleOption[] = [];
@@ -111,7 +124,7 @@ export class GfLineChartComponent
   private hasUserSelectedDateRange = false;
   private preferredDateRange: DateRange | undefined;
   private tooltipElement: HTMLDivElement | undefined;
-  private visibleBenchmarkDataItems: LineChartItem[] = [];
+  private visibleBenchmarkDataItems: NullableLineChartItem[] = [];
   private visibleHistoricalDataItems: LineChartItem[] = [];
   private visiblePriceStatistics: PriceStatistics[] = [];
   private readonly ANIMATION_DURATION = 800;
@@ -159,6 +172,15 @@ export class GfLineChartComponent
     );
 
     registerChartConfiguration();
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.chart.destroy();
+        this.chart = undefined;
+
+        this.initialize();
+      }
+    });
   }
 
   public ngAfterViewInit() {
@@ -173,6 +195,11 @@ export class GfLineChartComponent
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes['colorScheme'] && this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+    }
+
     if (changes['dateRange']) {
       // Remember the requested date range, as it may not be selectable yet
       // while the historical data is still loading
@@ -339,12 +366,12 @@ export class GfLineChartComponent
 
     this.applyDateRange();
 
-    const benchmarkPrices: number[] = [];
+    const benchmarkPrices: (number | null)[] = [];
     const labels: string[] = [];
     const marketPrices: number[] = [];
 
     this.visibleHistoricalDataItems.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.visibleBenchmarkDataItems[index]?.value);
+      benchmarkPrices.push(this.visibleBenchmarkDataItems[index]?.value ?? null);
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
@@ -369,7 +396,7 @@ export class GfLineChartComponent
       gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
 
-    const data = {
+    const data: ChartData<'line'> = {
       labels,
       datasets: [
         {
@@ -430,7 +457,7 @@ export class GfLineChartComponent
           this.scheduleAnnotationReveal();
         }
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'line'>(this.chartCanvas.nativeElement, {
           data,
           options: {
             animations: this.isAnimationEnabled ? animations : undefined,
@@ -453,49 +480,21 @@ export class GfLineChartComponent
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
-                color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                color: getChartBorderColor(this.colorScheme)
               }
             },
             scales: {
-              x: {
-                border: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
-                },
+              x: getTimeAxisOptions({
+                colorScheme: this.colorScheme,
                 display: this.showXAxis,
-                grid: {
-                  display: false
-                },
-                time: {
-                  tooltipFormat: getDateFormatString(this.locale),
-                  unit: 'year'
-                },
-                type: 'time'
-              },
+                locale: this.locale
+              }),
               y: {
-                border: {
-                  width: 0
-                },
-                display: this.showYAxis,
-                grid: {
-                  color: ({ scale, tick }) => {
-                    if (
-                      tick.value === 0 ||
-                      tick.value === scale.max ||
-                      tick.value === scale.min ||
-                      tick.value === this.yMax ||
-                      tick.value === this.yMin
-                    ) {
-                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
-                    }
-
-                    return 'transparent';
-                  }
-                },
-                max: this.yMax,
-                min: this.yMin,
-                position: 'right',
-                ticks: {
-                  callback: (tickValue, index, ticks) => {
+                ...getValueAxisOptions({
+                  colorScheme: this.colorScheme,
+                  display: this.showYAxis,
+                  highlightedValues: [this.yMax, this.yMin],
+                  tickCallback: (tickValue, index, ticks) => {
                     if (index === 0 || index === ticks.length - 1) {
                       // Only print last and first legend entry
 
@@ -510,7 +509,8 @@ export class GfLineChartComponent
                       if (typeof tickValue === 'number') {
                         return tickValue.toLocaleString(this.locale, {
                           maximumFractionDigits: 2,
-                          minimumFractionDigits: 2
+                          minimumFractionDigits: 2,
+                          useGrouping: true
                         });
                       }
 
@@ -518,11 +518,10 @@ export class GfLineChartComponent
                     }
 
                     return '';
-                  },
-                  display: this.showYAxis,
-                  mirror: true,
-                  z: 1
-                },
+                  }
+                }),
+                max: this.yMax,
+                min: this.yMin,
                 type: 'linear'
               }
             },

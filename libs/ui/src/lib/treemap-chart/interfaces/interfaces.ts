@@ -1,6 +1,6 @@
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
-import { ScriptableContext, TooltipItem } from 'chart.js';
+import { ScriptableContext } from 'chart.js';
 import { TreemapDataPoint } from 'chartjs-chart-treemap';
 
 export interface GetColorParams {
@@ -9,13 +9,10 @@ export interface GetColorParams {
   positiveNetPerformancePercentsRange: { max: number; min: number };
 }
 
-interface GfTreemapDataPoint extends TreemapDataPoint {
+export type GfTreemapDataPoint = TreemapDataPoint & {
   _data: PortfolioPosition;
-}
+};
 
-export interface GfTreemapScriptableContext extends ScriptableContext<'treemap'> {
-  raw: GfTreemapDataPoint;
-}
-export interface GfTreemapTooltipItem extends TooltipItem<'treemap'> {
-  raw: GfTreemapDataPoint;
-}
+export type GfTreemapScriptableContext = ScriptableContext<'treemap'> & {
+  raw: TreemapDataPoint;
+};

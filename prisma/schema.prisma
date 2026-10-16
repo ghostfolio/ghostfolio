@@ -1,7 +1,12 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = []
   binaryTargets   = ["debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x", "native"]
+  previewFeatures = []
+  provider        = "prisma-client-js"
+}
+
+generator workspaceClient {
+  output   = "./generated"
+  provider = "prisma-client"
 }
 
 datasource db {
@@ -10,15 +15,18 @@ datasource db {
 
 model Access {
   alias         String?
-  createdAt     DateTime           @default(now())
-  granteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
+  createdAt     DateTime   @default(now())
+  expiresAt     DateTime
+  granteeUser   User?      @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
   granteeUserId String?
-  id            String             @id @default(uuid())
-  permissions   AccessPermission[] @default([READ_RESTRICTED])
-  settings      Json               @default("{}")
-  updatedAt     DateTime           @updatedAt
+  id            String     @id @default(uuid())
+  lastUsedAt    DateTime?
+  scopes        String[]   @default([])
+  settings      Json       @default("{}")
+  type          AccessType @default(PRIVATE)
+  updatedAt     DateTime   @updatedAt
   userId        String
-  user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
+  user          User       @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([alias])
   @@index([granteeUserId])
@@ -27,14 +35,11 @@ model Access {
 
 model Account {
   activities Order[]
-  balance    Float            @default(0)
   balances   AccountBalance[]
   comment    String?
   createdAt  DateTime         @default(now())
   currency   String?
   id         String           @default(uuid())
-  /// @deprecated Use the "Exclude from Analysis" tag (`TAG_ID_EXCLUDE_FROM_ANALYSIS`) instead
-  isExcluded Boolean          @default(false)
   name       String?
   platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
@@ -46,7 +51,6 @@ model Account {
   @@id([id, userId])
   @@index([currency])
   @@index([id])
-  @@index([isExcluded])
   @@index([name])
   @@index([userId])
 }
@@ -67,13 +71,14 @@ model AccountBalance {
 }
 
 model Analytics {
-  activityCount                       Int      @default(0)
+  activityCount                       Int            @default(0)
   country                             String?
-  dataProviderGhostfolioDailyRequests Int      @default(0)
-  lastRequestAt                       DateTime @default(now())
-  updatedAt                           DateTime @updatedAt
-  user                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
-  userId                              String   @id
+  dataProviderGhostfolioDailyRequests Int            @default(0)
+  lastRequestAt                       DateTime       @default(now())
+  lastRequestClient                   RequestClient?
+  updatedAt                           DateTime       @updatedAt
+  user                                User           @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId                              String         @id
 
   @@index([lastRequestAt])
   @@index([updatedAt])
@@ -119,6 +124,33 @@ model AssetProfileResolution {
   @@unique([dataSourceOrigin, symbolOrigin])
 }
 
+/// A stock split of an asset profile. The numerator is the number of shares
+/// held after the split, the denominator the number of shares held before, for
+/// example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split.
+///
+/// The ratio is stored as two integers instead of the resulting factor, so that
+/// it stays exact, for example 1/3 for a 1:3 reverse split.
+///
+/// Activities before the date are adjusted by the ratio: the quantity is
+/// multiplied by it and the unit price divided by it, so that the total value
+/// of an activity stays the same.
+///
+/// Market data is already split-adjusted by the data providers and must not be
+/// adjusted again.
+model AssetProfileSplit {
+  createdAt       DateTime      @default(now())
+  date            DateTime
+  denominator     Int
+  id              String        @id @default(uuid())
+  numerator       Int
+  symbolProfile   SymbolProfile @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
+  symbolProfileId String
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([symbolProfileId, date])
+  @@index([date])
+}
+
 model AuthDevice {
   createdAt           DateTime @default(now())
   credentialId        Bytes
@@ -133,19 +165,17 @@ model AuthDevice {
 }
 
 model MarketData {
-  createdAt   DateTime        @default(now())
-  dataSource  DataSource
-  date        DateTime
-  id          String          @id @default(uuid())
-  marketPrice Float
-  state       MarketDataState @default(CLOSE)
-  symbol      String
+  createdAt        DateTime        @default(now())
+  dataSource       DataSource
+  date             DateTime
+  id               String          @id @default(uuid())
+  isCarriedForward Boolean         @default(false)
+  marketPrice      Float
+  state            MarketDataState @default(CLOSE)
+  symbol           String
 
-  @@unique([dataSource, date, symbol])
-  @@index([dataSource])
-  @@index([dataSource, symbol])
+  @@unique([dataSource, symbol, date])
   @@index([date])
-  @@index([marketPrice])
   @@index([state])
   @@index([symbol])
 }
@@ -160,7 +190,6 @@ model Order {
   date            DateTime
   fee             Float
   id              String        @id @default(uuid())
-  isDraft         Boolean       @default(false)
   quantity        Float
   symbolProfileId String
   tags            Tag[]
@@ -173,9 +202,9 @@ model Order {
 
   @@index([accountId])
   @@index([date])
-  @@index([isDraft])
-  @@index([type])
-  @@index([userId])
+  @@index([symbolProfileId, date])
+  @@index([userId, date])
+  @@index([userId, type, date])
 }
 
 model Platform {
@@ -203,6 +232,7 @@ model SymbolProfile {
   activities             Order[]
   assetClass             AssetClass?
   assetProfileOverrides  AssetProfileOverrides?
+  assetProfileSplits     AssetProfileSplit[]
   assetSubClass          AssetSubClass?
   comment                String?
   countries              Json?
@@ -309,9 +339,10 @@ model User {
   @@index([thirdPartyId])
 }
 
-enum AccessPermission {
-  READ
-  READ_RESTRICTED
+enum AccessType {
+  MCP
+  PRIVATE
+  PUBLIC
 }
 
 enum AssetClass {
@@ -364,6 +395,13 @@ enum Provider {
   GOOGLE
   INTERNET_IDENTITY
   OIDC
+}
+
+enum RequestClient {
+  API
+  MCP
+  SELF_HOSTING
+  WEB
 }
 
 enum Role {

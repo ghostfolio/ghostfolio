@@ -1,15 +1,3 @@
-export type DateRange =
-  | '10y'
-  | '1d'
-  | '1m'
-  | '1w'
-  | '1y'
-  | '2y'
-  | '3m'
-  | '5y'
-  | '6m'
-  | 'max'
-  | 'mtd'
-  | 'wtd'
-  | 'ytd'
-  | string; // '2024', '2023', '2022', etc.
+import type { DATE_RANGES } from '../config';
+
+export type DateRange = (typeof DATE_RANGES)[number] | string; // '2024', '2023', '2022', etc.

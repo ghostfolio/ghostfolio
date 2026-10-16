@@ -1,4 +1,6 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { PortfolioSnapshotComputationExceptionFilter } from '@ghostfolio/api/filters/portfolio-snapshot-computation-exception.filter';
+import { ImpersonationWriteGuard } from '@ghostfolio/api/guards/impersonation-write.guard';
 import { getRedisConnectionOptions } from '@ghostfolio/api/helper/redis.helper';
 import { BullBoardAuthMiddleware } from '@ghostfolio/api/middlewares/bull-board-auth.middleware';
 import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
@@ -14,8 +16,6 @@ import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-g
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import {
   BULL_BOARD_ROUTE,
-  DEFAULT_LANGUAGE_CODE,
-  SUPPORTED_LANGUAGE_CODES,
   THROTTLE_DEFAULT_LIMIT,
   THROTTLE_DEFAULT_TTL
 } from '@ghostfolio/common/config';
@@ -26,6 +26,7 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -49,6 +50,7 @@ import { AssetsModule } from './endpoints/assets/assets.module';
 import { BenchmarksModule } from './endpoints/benchmarks/benchmarks.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
+import { McpModule } from './endpoints/mcp/mcp.module';
 import { PlatformsModule } from './endpoints/platforms/platforms.module';
 import { PublicModule } from './endpoints/public/public.module';
 import { SitemapModule } from './endpoints/sitemap/sitemap.module';
@@ -61,7 +63,7 @@ import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { InvestmentPlanModule } from './investment-plan/investment-plan.module';
 import { LogoModule } from './logo/logo.module';
-import { McpModule } from './mcp/mcp.module';
+import { McpModule as McpServerModule } from './mcp/mcp.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
@@ -131,6 +133,7 @@ import { UserModule } from './user/user.module';
     LogoModule,
     MarketDataModule,
     McpModule,
+    McpServerModule,
     PlatformModule,
     PlatformsModule,
     PortfolioModule,
@@ -148,29 +151,7 @@ import { UserModule } from './user/user.module';
         '/oauth/*wildcard',
         '/sitemap.xml'
       ],
-      rootPath: join(__dirname, '..', 'client'),
-      serveStaticOptions: {
-        setHeaders: (res) => {
-          if (res.req?.path === '/') {
-            let languageCode = DEFAULT_LANGUAGE_CODE;
-
-            try {
-              const code = res.req.headers['accept-language']
-                .split(',')[0]
-                .split('-')[0];
-
-              if (
-                (SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(code)
-              ) {
-                languageCode = code;
-              }
-            } catch {}
-
-            res.set('Location', `/${languageCode}`);
-            res.statusCode = StatusCodes.MOVED_PERMANENTLY;
-          }
-        }
-      }
+      rootPath: join(__dirname, '..', 'client')
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client', '.well-known'),
@@ -213,7 +194,17 @@ import { UserModule } from './user/user.module';
     UserModule,
     WatchlistModule
   ],
-  providers: [I18nService]
+  providers: [
+    I18nService,
+    {
+      provide: APP_FILTER,
+      useClass: PortfolioSnapshotComputationExceptionFilter
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ImpersonationWriteGuard
+    }
+  ]
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {

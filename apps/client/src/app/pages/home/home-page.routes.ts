@@ -1,8 +1,8 @@
 import { GfHomeHoldingsComponent } from '@ghostfolio/client/components/home-holdings/home-holdings.component';
-import { GfHomeMarketComponent } from '@ghostfolio/client/components/home-market/home-market.component';
 import { GfHomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { GfHomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { GfHomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
+import { GfWatchlistDialogHostComponent } from '@ghostfolio/client/components/home-watchlist/watchlist-dialog-host/watchlist-dialog-host.component';
 import { GfMarketsComponent } from '@ghostfolio/client/components/markets/markets.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
@@ -31,15 +31,18 @@ export const routes: Routes = [
       },
       {
         path: internalRoutes.home.subRoutes.markets.path,
-        component: GfHomeMarketComponent,
+        component: GfMarketsComponent,
         title: internalRoutes.home.subRoutes.markets.title
       },
       {
-        path: internalRoutes.home.subRoutes.marketsPremium.path,
-        component: GfMarketsComponent,
-        title: internalRoutes.home.subRoutes.marketsPremium.title
-      },
-      {
+        children: [
+          {
+            component: GfWatchlistDialogHostComponent,
+            path: internalRoutes.home.subRoutes.watchlist.subRoutes.create.path,
+            title:
+              internalRoutes.home.subRoutes.watchlist.subRoutes.create.title
+          }
+        ],
         path: internalRoutes.home.subRoutes.watchlist.path,
         component: GfHomeWatchlistComponent,
         title: internalRoutes.home.subRoutes.watchlist.title

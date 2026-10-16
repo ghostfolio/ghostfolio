@@ -43,9 +43,18 @@
         }}</span>
       </mat-form-field>
     </div>
-    <div [class.d-none]="platforms?.length < 1">
+    <div [class.d-none]="platforms.length < 1">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
+        @if (selectedPlatform) {
+          <gf-entity-logo
+            class="ml-3"
+            matPrefix
+            [hasPlaceholder]="true"
+            [tooltip]="selectedPlatform.name ?? ''"
+            [url]="selectedPlatform.url"
+          />
+        }
         <input
           formControlName="platformId"
           matInput
@@ -63,7 +72,8 @@
               <span class="d-flex">
                 <gf-entity-logo
                   class="mr-1"
-                  [tooltip]="platformEntry.name"
+                  [hasPlaceholder]="true"
+                  [tooltip]="platformEntry.name ?? ''"
                   [url]="platformEntry.url"
                 />
                 <span>{{ platformEntry.name }}</span>
@@ -81,23 +91,17 @@
           cdkTextareaAutosize
           formControlName="comment"
           matInput
+          [maxlength]="COMMENT_MAXIMUM_LENGTH"
           (keyup.enter)="$event.stopPropagation()"
         ></textarea>
       </mat-form-field>
     </div>
-    @if (data.user?.settings?.isExperimentalFeatures) {
-      <div class="mb-3">
-        <gf-tags-selector
-          formControlName="tags"
-          [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
-          [tagsAvailable]="tagsAvailable"
-        />
-      </div>
-    }
-    <div class="mb-3 px-2">
-      <mat-checkbox color="primary" formControlName="isExcluded" i18n
-        >Exclude from Analysis</mat-checkbox
-      >
+    <div class="mb-3">
+      <gf-tags-selector
+        formControlName="tags"
+        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
+        [tagsAvailable]="tagsAvailable"
+      />
     </div>
     @if (data.account.id) {
       <div>

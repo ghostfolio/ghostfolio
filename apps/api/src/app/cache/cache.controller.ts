@@ -1,4 +1,5 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -6,6 +7,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
+@AllowDuringImpersonation()
 @Controller('cache')
 export class CacheController {
   public constructor(private readonly redisCacheService: RedisCacheService) {}

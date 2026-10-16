@@ -22,7 +22,7 @@ const range = z
   .string()
   .optional()
   .describe(
-    "Date range: 1d, wtd, 1w, mtd, 1m, 3m, 6m, ytd, 1y, 2y, 3y, 5y, 10y, max, or a calendar year such as '2024'. Default ytd"
+    "Date range: 1d, wtd, 1w, mtd, 1m, 3m, 6m, ytd, 1y, 2y, 5y, 10y, max, or a calendar year such as '2024'. Default ytd"
   );
 
 const accounts = z

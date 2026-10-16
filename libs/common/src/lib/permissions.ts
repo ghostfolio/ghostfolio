@@ -1,6 +1,5 @@
 import { UserWithSettings } from '@ghostfolio/common/types';
-
-import { Role } from '@prisma/client';
+import { Role } from '@ghostfolio/prisma/enums';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
@@ -12,6 +11,9 @@ export const permissions = {
   createAccountBalance: 'createAccountBalance',
   createActivity: 'createActivity',
   createApiKey: 'createApiKey',
+  createAssetProfileSplit: 'createAssetProfileSplit',
+  createAssetProfileSplitOfOwnAssetProfile:
+    'createAssetProfileSplitOfOwnAssetProfile',
   createMarketData: 'createMarketData',
   createMarketDataOfOwnAssetProfile: 'createMarketDataOfOwnAssetProfile',
   createOwnTag: 'createOwnTag',
@@ -23,6 +25,9 @@ export const permissions = {
   deleteAccount: 'deleteAccount',
   deleteAccountBalance: 'deleteAccountBalance',
   deleteActivity: 'deleteActivity',
+  deleteAssetProfileSplit: 'deleteAssetProfileSplit',
+  deleteAssetProfileSplitOfOwnAssetProfile:
+    'deleteAssetProfileSplitOfOwnAssetProfile',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOwnUser: 'deleteOwnUser',
   deletePlatform: 'deletePlatform',
@@ -34,7 +39,9 @@ export const permissions = {
   enableAuthToken: 'enableAuthToken',
   enableDataProviderGhostfolio: 'enableDataProviderGhostfolio',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
+  enableGhostfolioAi: 'enableGhostfolioAi',
   enableImport: 'enableImport',
+  enableMcp: 'enableMcp',
   enableBlog: 'enableBlog',
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',
@@ -80,6 +87,8 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createWatchlistItem,
         permissions.deleteAccountBalance,
         permissions.deleteWatchlistItem,
+        permissions.createAssetProfileSplit,
+        permissions.createAssetProfileSplitOfOwnAssetProfile,
         permissions.createMarketData,
         permissions.createMarketDataOfOwnAssetProfile,
         permissions.createOwnTag,
@@ -88,6 +97,8 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccess,
         permissions.deleteAccount,
         permissions.deleteActivity,
+        permissions.deleteAssetProfileSplit,
+        permissions.deleteAssetProfileSplitOfOwnAssetProfile,
         permissions.deleteAuthDevice,
         permissions.deletePlatform,
         permissions.deleteTag,
@@ -128,6 +139,9 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createAccount,
         permissions.createAccountBalance,
         permissions.createActivity,
+        // TODO: Grant createAssetProfileSplitOfOwnAssetProfile and
+        // deleteAssetProfileSplitOfOwnAssetProfile once the stock splits
+        // feature is no longer experimental
         permissions.createMarketDataOfOwnAssetProfile,
         permissions.createOwnTag,
         permissions.createWatchlistItem,
@@ -183,24 +197,6 @@ export function hasPermission(
   aPermission: string
 ) {
   return aPermissions.includes(aPermission);
-}
-
-export function hasReadRestrictedAccessPermission({
-  impersonationId,
-  user
-}: {
-  impersonationId: string;
-  user: UserWithSettings;
-}) {
-  if (!impersonationId) {
-    return false;
-  }
-
-  const access = user?.accessesGet?.find(({ id }) => {
-    return id === impersonationId;
-  });
-
-  return access?.permissions?.includes('READ_RESTRICTED') ?? true;
 }
 
 export function hasRole(aUser: UserWithSettings, aRole: Role) {

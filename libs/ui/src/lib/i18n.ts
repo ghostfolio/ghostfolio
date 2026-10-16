@@ -3,6 +3,7 @@ import type {
   ProductPlatform,
   SectorName
 } from '@ghostfolio/common/types';
+import { RequestClient } from '@ghostfolio/prisma/enums';
 
 import '@angular/localize/init';
 
@@ -18,6 +19,7 @@ const locales = {
   DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC: $localize`Switch to Ghostfolio Premium or Ghostfolio Open Source easily`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS: $localize`Switch to Ghostfolio Premium easily`,
   DATA_SOURCE: $localize`Data Source`,
+  DRAFT: $localize`Draft`,
   EMERGENCY_FUND: $localize`Emergency Fund`,
   EXCLUDE_FROM_ANALYSIS: $localize`Exclude from Analysis`,
   Global: $localize`Global`,
@@ -48,24 +50,24 @@ const locales = {
   VALUABLE: $localize`Valuable`,
 
   // AssetClass (enum)
-  ALTERNATIVE_INVESTMENT: $localize`Alternative Investment`,
-  COMMODITY: $localize`Commodity`,
-  EQUITY: $localize`Equity`,
-  FIXED_INCOME: $localize`Fixed Income`,
-  LIQUIDITY: $localize`Liquidity`,
-  REAL_ESTATE: $localize`Real Estate`,
+  ALTERNATIVE_INVESTMENT: $localize`:@@assetClass.ALTERNATIVE_INVESTMENT:Alternative Investment`,
+  COMMODITY: $localize`:@@assetClass.COMMODITY:Commodity`,
+  EQUITY: $localize`:@@assetClass.EQUITY:Equity`,
+  FIXED_INCOME: $localize`:@@assetClass.FIXED_INCOME:Fixed Income`,
+  LIQUIDITY: $localize`:@@assetClass.LIQUIDITY:Liquidity`,
+  REAL_ESTATE: $localize`:@@assetClass.REAL_ESTATE:Real Estate`,
 
   // AssetSubClass (enum)
-  BOND: $localize`Bond`,
-  CASH: $localize`Cash`,
-  COLLECTIBLE: $localize`Collectible`,
-  CRYPTOCURRENCY: $localize`Cryptocurrency`,
-  ETF: $localize`ETF`,
-  LOAN: $localize`Loan`,
-  MUTUALFUND: $localize`Mutual Fund`,
-  PRECIOUS_METAL: $localize`Precious Metal`,
-  PRIVATE_EQUITY: $localize`Private Equity`,
-  STOCK: $localize`Stock`,
+  BOND: $localize`:@@assetSubClass.BOND:Bond`,
+  CASH: $localize`:@@assetSubClass.CASH:Cash`,
+  COLLECTIBLE: $localize`:@@assetSubClass.COLLECTIBLE:Collectible`,
+  CRYPTOCURRENCY: $localize`:@@assetSubClass.CRYPTOCURRENCY:Cryptocurrency`,
+  ETF: $localize`:@@assetSubClass.ETF:ETF`,
+  LOAN: $localize`:@@assetSubClass.LOAN:Loan`,
+  MUTUALFUND: $localize`:@@assetSubClass.MUTUALFUND:Mutual Fund`,
+  PRECIOUS_METAL: $localize`:@@assetSubClass.PRECIOUS_METAL:Precious Metal`,
+  PRIVATE_EQUITY: $localize`:@@assetSubClass.PRIVATE_EQUITY:Private Equity`,
+  STOCK: $localize`:@@assetSubClass.STOCK:Stock`,
 
   // Benchmark
   ALL_TIME_HIGH: 'All time high',
@@ -85,6 +87,7 @@ const locales = {
   FEAR: $localize`Fear`,
   GREED: $localize`Greed`,
   NEUTRAL: $localize`Neutral`,
+  UNKNOWN: $localize`Unknown`,
 
   // Sectors
   'Basic Materials': $localize`Basic Materials`,
@@ -105,6 +108,7 @@ const locales = {
   DIVIDEND_TRACKING: $localize`Dividend Tracking`,
   ETF_TRACKING: $localize`ETF Tracking`,
   FAMILY_OFFICE: $localize`Family Office`,
+  FINANCIAL_ADVISOR: $localize`Financial Advisor`,
   FINANCIAL_PLANNING: $localize`Financial Planning`,
   INVESTMENT_RESEARCH: $localize`Investment Research`,
   NET_WORTH_TRACKING: $localize`Net Worth Tracking`,
@@ -118,9 +122,15 @@ const locales = {
   LINUX: 'Linux',
   MACOS: 'macOS',
   WEB: $localize`Web`,
-  WINDOWS: 'Windows'
+  WINDOWS: 'Windows',
+
+  // Request clients (WEB is defined above under Product platforms)
+  API: 'API',
+  MCP: 'MCP',
+  SELF_HOSTING: $localize`Self-Hosting`
 } satisfies Record<ProductCategory, string> &
   Record<ProductPlatform, string> &
+  Record<RequestClient, string> &
   Record<SectorName, string> &
   Record<string, string>;
 

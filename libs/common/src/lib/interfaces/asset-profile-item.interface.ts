@@ -1,4 +1,10 @@
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource
+} from '@ghostfolio/prisma/enums';
+
+import { DataProviderInfo } from './data-provider-info.interface';
 
 export interface AssetProfileItem {
   activitiesCount: number;
@@ -7,6 +13,7 @@ export interface AssetProfileItem {
   comment?: string;
   countriesCount: number;
   currency: string;
+  dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
   date: Date;
   id: string;

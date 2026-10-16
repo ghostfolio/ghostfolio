@@ -6,123 +6,131 @@
   (ngSubmit)="onSubmit()"
 >
   <div class="py-3" mat-dialog-content>
-    @if (
-      data.rule.configuration?.thresholdMin &&
-      data.rule.configuration?.thresholdMax
-    ) {
-      <div class="w-100">
-        <h6 class="d-flex mb-0">
-          <ng-container i18n>Threshold range</ng-container>:
-          <gf-value
-            class="ml-1"
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="settingsForm.get('thresholdMin').value"
-          />
-          <span class="mx-1">-</span>
-          <gf-value
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="settingsForm.get('thresholdMax').value"
-          />
-        </h6>
-        <div class="align-items-center d-flex w-100">
-          <gf-value
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="data.rule.configuration.threshold.min"
-          />
-          <mat-slider
-            class="flex-grow-1"
-            [max]="data.rule.configuration.threshold.max"
-            [min]="data.rule.configuration.threshold.min"
-            [step]="data.rule.configuration.threshold.step"
-          >
-            <input formControlName="thresholdMin" matSliderStartThumb />
-            <input formControlName="thresholdMax" matSliderEndThumb />
-          </mat-slider>
-          <gf-value
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="data.rule.configuration.threshold.max"
-          />
+    @if (data.rule.configuration?.threshold; as threshold) {
+      @if (
+        data.rule.configuration.thresholdMin &&
+        data.rule.configuration.thresholdMax
+      ) {
+        <div class="w-100">
+          <h6 class="d-flex mb-0">
+            <ng-container i18n>Threshold range</ng-container>:
+            <gf-value
+              class="ml-1"
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="settingsForm.get('thresholdMin')?.value"
+            />
+            <span class="mx-1">-</span>
+            <gf-value
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="settingsForm.get('thresholdMax')?.value"
+            />
+          </h6>
+          <div class="align-items-center d-flex w-100">
+            <gf-value
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="threshold.min"
+            />
+            <mat-slider
+              class="flex-grow-1"
+              [max]="threshold.max"
+              [min]="threshold.min"
+              [step]="threshold.step"
+            >
+              <input formControlName="thresholdMin" matSliderStartThumb />
+              <input formControlName="thresholdMax" matSliderEndThumb />
+            </mat-slider>
+            <gf-value
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="threshold.max"
+            />
+          </div>
         </div>
-      </div>
-    } @else {
-      <div class="w-100" [class.d-none]="!data.rule.configuration.thresholdMin">
-        <h6 class="d-flex mb-0">
-          <ng-container i18n>Threshold Min</ng-container>:
-          <gf-value
-            class="ml-1"
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="settingsForm.get('thresholdMin').value"
-          />
-        </h6>
-        <div class="align-items-center d-flex w-100">
-          <gf-value
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="data.rule.configuration.threshold.min"
-          />
-          <mat-slider
-            class="flex-grow-1"
-            name="thresholdMin"
-            [max]="data.rule.configuration.threshold.max"
-            [min]="data.rule.configuration.threshold.min"
-            [step]="data.rule.configuration.threshold.step"
-          >
-            <input formControlName="thresholdMin" matSliderThumb />
-          </mat-slider>
-          <gf-value
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="data.rule.configuration.threshold.max"
-          />
+      } @else {
+        <div
+          class="w-100"
+          [class.d-none]="!data.rule.configuration.thresholdMin"
+        >
+          <h6 class="d-flex mb-0">
+            <ng-container i18n>Threshold Min</ng-container>:
+            <gf-value
+              class="ml-1"
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="settingsForm.get('thresholdMin')?.value"
+            />
+          </h6>
+          <div class="align-items-center d-flex w-100">
+            <gf-value
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="threshold.min"
+            />
+            <mat-slider
+              class="flex-grow-1"
+              name="thresholdMin"
+              [max]="threshold.max"
+              [min]="threshold.min"
+              [step]="threshold.step"
+            >
+              <input formControlName="thresholdMin" matSliderThumb />
+            </mat-slider>
+            <gf-value
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="threshold.max"
+            />
+          </div>
         </div>
-      </div>
-      <div class="w-100" [class.d-none]="!data.rule.configuration.thresholdMax">
-        <h6 class="d-flex mb-0">
-          <ng-container i18n>Threshold Max</ng-container>:
-          <gf-value
-            class="ml-1"
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="settingsForm.get('thresholdMax').value"
-          />
-        </h6>
-        <div class="align-items-center d-flex w-100">
-          <gf-value
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="data.rule.configuration.threshold.min"
-          />
-          <mat-slider
-            class="flex-grow-1"
-            name="thresholdMax"
-            [max]="data.rule.configuration.threshold.max"
-            [min]="data.rule.configuration.threshold.min"
-            [step]="data.rule.configuration.threshold.step"
-          >
-            <input formControlName="thresholdMax" matSliderThumb />
-          </mat-slider>
-          <gf-value
-            [isPercent]="data.rule.configuration.threshold.unit === '%'"
-            [locale]="data.locale"
-            [precision]="2"
-            [value]="data.rule.configuration.threshold.max"
-          />
+        <div
+          class="w-100"
+          [class.d-none]="!data.rule.configuration.thresholdMax"
+        >
+          <h6 class="d-flex mb-0">
+            <ng-container i18n>Threshold Max</ng-container>:
+            <gf-value
+              class="ml-1"
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="settingsForm.get('thresholdMax')?.value"
+            />
+          </h6>
+          <div class="align-items-center d-flex w-100">
+            <gf-value
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="threshold.min"
+            />
+            <mat-slider
+              class="flex-grow-1"
+              name="thresholdMax"
+              [max]="threshold.max"
+              [min]="threshold.min"
+              [step]="threshold.step"
+            >
+              <input formControlName="thresholdMax" matSliderThumb />
+            </mat-slider>
+            <gf-value
+              [isPercent]="threshold.unit === '%'"
+              [locale]="data.locale"
+              [precision]="2"
+              [value]="threshold.max"
+            />
+          </div>
         </div>
-      </div>
+      }
     }
   </div>
 

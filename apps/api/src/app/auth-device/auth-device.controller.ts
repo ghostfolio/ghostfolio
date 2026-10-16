@@ -1,8 +1,9 @@
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Controller,
@@ -16,6 +17,7 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
+@AllowDuringImpersonation()
 @Controller('auth-device')
 export class AuthDeviceController {
   public constructor(

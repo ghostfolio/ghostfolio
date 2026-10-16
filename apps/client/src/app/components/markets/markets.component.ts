@@ -1,15 +1,17 @@
-import { GfFearAndGreedIndexComponent } from '@ghostfolio/client/components/fear-and-greed-index/fear-and-greed-index.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
   Benchmark,
-  HistoricalDataItem,
+  InfoItem,
+  LineChartItem,
   MarketDataOfMarketsResponse,
-  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { FearAndGreedIndexMode } from '@ghostfolio/common/types';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { FearAndGreedIndexMode, ToggleOption } from '@ghostfolio/common/types';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
+import { GfFearAndGreedIndexComponent } from '@ghostfolio/ui/fear-and-greed-index';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
@@ -18,11 +20,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  OnInit
+  inject,
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
@@ -39,35 +45,73 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   templateUrl: './markets.html'
 })
 export class GfMarketsComponent implements OnInit {
-  public benchmarks: Benchmark[];
-  public deviceType: string;
-  public fearAndGreedIndex: number;
-  public fearAndGreedIndexData: MarketDataOfMarketsResponse['fearAndGreedIndex'];
-  public fearLabel = $localize`Fear`;
-  public greedLabel = $localize`Greed`;
-  public historicalDataItems: HistoricalDataItem[];
-  public fearAndGreedIndexMode: FearAndGreedIndexMode = 'STOCKS';
-  public fearAndGreedIndexModeOptions: ToggleOption[] = [
-    { label: $localize`Stocks`, value: 'STOCKS' },
-    { label: $localize`Cryptocurrencies`, value: 'CRYPTOCURRENCIES' }
-  ];
-  public readonly numberOfDays = 365;
-  public user: User;
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private userService: UserService
-  ) {
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
+  protected readonly benchmarks = signal<Benchmark[] | undefined>(undefined);
+
+  protected readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
+
+  protected readonly fearAndGreedIndexModeOptions: ToggleOption<FearAndGreedIndexMode>[] =
+    [
+      { label: $localize`Stocks`, value: 'STOCKS' },
+      { label: $localize`Cryptocurrencies`, value: 'CRYPTOCURRENCIES' }
+    ];
+
+  protected readonly fearLabel = $localize`Fear`;
+  protected readonly greedLabel = $localize`Greed`;
+  protected readonly numberOfDays = 365;
+
+  protected fearAndGreedIndex: number | undefined;
+  protected fearAndGreedIndexMode: FearAndGreedIndexMode = 'STOCKS';
+  protected hasPermissionToAccessFearAndGreedIndex: boolean;
+  protected hasPermissionToReadMarketDataOfMarkets: boolean;
+  protected historicalDataItems: LineChartItem[];
+  protected isLoadingFearAndGreedIndex = true;
+  protected user: User;
+
+  private fearAndGreedIndexData: MarketDataOfMarketsResponse['fearAndGreedIndex'];
+
+  private readonly info: InfoItem;
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableFearAndGreedIndex
+    );
+
+    if (this.hasPermissionToAccessFearAndGreedIndex) {
+      this.fearAndGreedIndex = this.info.fearAndGreedStocksMarketPrice;
+    }
 
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToReadMarketDataOfMarkets = hasPermission(
+            this.user.permissions,
+            permissions.readMarketDataOfMarkets
+          );
+
+          if (
+            this.hasPermissionToReadMarketDataOfMarkets &&
+            !this.fearAndGreedIndexData
+          ) {
+            this.fetchMarketDataOfMarkets();
+          } else {
+            this.isLoadingFearAndGreedIndex = false;
+          }
 
           this.changeDetectorRef.markForCheck();
         }
@@ -76,45 +120,59 @@ export class GfMarketsComponent implements OnInit {
 
   public ngOnInit() {
     this.dataService
+      .fetchBenchmarks()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: () => {
+          this.benchmarks.set([]);
+        },
+        next: ({ benchmarks }) => {
+          this.benchmarks.set(benchmarks ?? []);
+        }
+      });
+  }
+
+  protected onChangeFearAndGreedIndexMode(
+    aFearAndGreedIndexMode: FearAndGreedIndexMode
+  ) {
+    this.fearAndGreedIndexMode = aFearAndGreedIndexMode;
+
+    this.initializeFearAndGreedIndex();
+  }
+
+  private fetchMarketDataOfMarkets() {
+    this.dataService
       .fetchMarketDataOfMarkets({ includeHistoricalData: this.numberOfDays })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ fearAndGreedIndex }) => {
         this.fearAndGreedIndexData = fearAndGreedIndex;
 
-        this.initialize();
+        this.initializeFearAndGreedIndex();
 
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchBenchmarks()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ benchmarks }) => {
-        this.benchmarks = benchmarks;
+        this.isLoadingFearAndGreedIndex = false;
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
-  public initialize() {
+  private initializeFearAndGreedIndex() {
     this.fearAndGreedIndex =
       this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.marketPrice;
 
-    this.historicalDataItems = [
-      ...(this.fearAndGreedIndexData[this.fearAndGreedIndexMode]
-        ?.historicalData ?? []),
-      {
+    const historicalDataItems = (
+      this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.historicalData ??
+      []
+    ).filter((item): item is LineChartItem => {
+      return isNumber(item.value);
+    });
+
+    if (isNumber(this.fearAndGreedIndex)) {
+      historicalDataItems.push({
         date: resetHours(new Date()).toISOString(),
         value: this.fearAndGreedIndex
-      }
-    ];
-  }
+      });
+    }
 
-  public onChangeFearAndGreedIndexMode(
-    aFearAndGreedIndexMode: FearAndGreedIndexMode
-  ) {
-    this.fearAndGreedIndexMode = aFearAndGreedIndexMode;
-
-    this.initialize();
+    this.historicalDataItems = historicalDataItems;
   }
 }

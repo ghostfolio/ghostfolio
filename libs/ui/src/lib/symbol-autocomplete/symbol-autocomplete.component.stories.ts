@@ -2,14 +2,13 @@ import { LookupItem } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { importProvidersFrom } from '@angular/core';
+import { ANIMATION_MODULE_TYPE, importProvidersFrom } from '@angular/core';
 import {
   FormControl,
   FormsModule,
   NgControl,
   ReactiveFormsModule
 } from '@angular/forms';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 
 import { HttpClientMock } from '../mocks/httpClient.mock';
@@ -75,8 +74,11 @@ export default {
   decorators: [
     applicationConfig({
       providers: [
-        provideNoopAnimations(),
         importProvidersFrom(CommonModule, FormsModule, ReactiveFormsModule),
+        {
+          provide: ANIMATION_MODULE_TYPE,
+          useValue: 'NoopAnimations'
+        },
         {
           provide: NgControl,
           useValue: {

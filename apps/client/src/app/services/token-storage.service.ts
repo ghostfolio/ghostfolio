@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { KEY_TOKEN } from './settings-storage.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class TokenStorageService {
   public getToken(): string | null {
     return (

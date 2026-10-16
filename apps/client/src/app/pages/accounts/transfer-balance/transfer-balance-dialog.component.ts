@@ -1,12 +1,18 @@
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
+import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,8 +23,6 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { Account } from '@prisma/client';
 
 import {
   TransferBalanceDialogParams,
@@ -29,12 +33,11 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    GfEntityLogoComponent,
+    GfAccountSelectorComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     ReactiveFormsModule
   ],
   selector: 'gf-transfer-balance-dialog',
@@ -42,34 +45,50 @@ import {
   templateUrl: 'transfer-balance-dialog.html'
 })
 export class GfTransferBalanceDialogComponent {
-  protected readonly accounts: Account[] =
+  protected readonly accounts: AccountWithPlatform[] =
     inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA).accounts;
 
   protected currency: string;
 
-  protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup(
-    {
-      balance: new FormControl<number | string | null>('', Validators.required),
-      fromAccount: new FormControl<string | null>('', Validators.required),
-      toAccount: new FormControl<string | null>('', Validators.required)
-    },
-    {
-      validators: this.compareAccounts
-    }
-  );
+  protected readonly labelFrom = $localize`From`;
+  protected readonly labelTo = $localize`To`;
+
+  protected readonly toAccounts = computed(() => {
+    const fromAccountId = this.fromAccountId();
+
+    return this.accounts.filter(({ id }) => {
+      return id !== fromAccountId;
+    });
+  });
+
+  protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup({
+    balance: new FormControl<number | string | null>('', Validators.required),
+    fromAccount: new FormControl<string | null>(null, Validators.required),
+    toAccount: new FormControl<string | null>(null, Validators.required)
+  });
 
   private readonly dialogRef =
     inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
 
+  private readonly fromAccountId = signal<string | null>(null);
+
   public ngOnInit() {
     this.transferBalanceForm.controls.fromAccount.valueChanges.subscribe(
       (id) => {
-        const currency = this.accounts.find((account) => {
-          return account.id === id;
-        })?.currency;
+        this.fromAccountId.set(id);
+
+        const currency = this.getAccountById(id)?.currency;
 
         if (currency) {
           this.currency = currency;
+        }
+
+        const toAccountControl = this.transferBalanceForm.controls.toAccount;
+
+        if (id && toAccountControl.value === id) {
+          toAccountControl.setValue(null);
+          toAccountControl.markAsPristine();
+          toAccountControl.markAsUntouched();
         }
       }
     );
@@ -80,25 +99,18 @@ export class GfTransferBalanceDialogComponent {
   }
 
   protected onSubmit() {
-    const account: TransferBalanceDto = {
+    const transferBalance: TransferBalanceDto = {
       accountIdFrom: this.transferBalanceForm.controls.fromAccount.value ?? '',
       accountIdTo: this.transferBalanceForm.controls.toAccount.value ?? '',
       balance: Number(this.transferBalanceForm.controls.balance.value)
     };
 
-    this.dialogRef.close({ account });
+    this.dialogRef.close(transferBalance);
   }
 
-  private compareAccounts(
-    formGroup: TransferBalanceForm
-  ): ValidationErrors | null {
-    const accountFrom = formGroup.controls.fromAccount;
-    const accountTo = formGroup.controls.toAccount;
-
-    if (accountFrom.value === accountTo.value) {
-      return { invalid: true };
-    }
-
-    return null;
+  private getAccountById(aId: string | null) {
+    return this.accounts.find(({ id }) => {
+      return id === aId;
+    });
   }
 }

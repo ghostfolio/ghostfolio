@@ -8,6 +8,9 @@
       <mat-label>{{ valueLabel }}</mat-label>
     }
     <input matInput [formControl]="formControl" />
+    @if (valueSuffix) {
+      <span class="ml-2" matTextSuffix>{{ valueSuffix }}</span>
+    }
   </mat-form-field>
 </div>
 

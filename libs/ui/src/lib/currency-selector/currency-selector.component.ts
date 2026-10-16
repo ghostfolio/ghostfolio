@@ -1,3 +1,5 @@
+import { getCountryCodeFromCurrency } from '@ghostfolio/common/helper';
+
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -24,25 +26,30 @@ import {
 import {
   MatAutocomplete,
   MatAutocompleteModule,
+  MatAutocompleteOrigin,
   MatOption
 } from '@angular/material/autocomplete';
 import {
+  MAT_FORM_FIELD,
   MatFormFieldControl,
   MatFormFieldModule
 } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { map, startWith } from 'rxjs/operators';
 
+import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.aria-describedBy]': 'describedBy',
-    '[id]': 'id'
+    '[id]': 'id',
+    class: 'align-items-center d-flex'
   },
   imports: [
     FormsModule,
+    GfEntityLogoComponent,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
@@ -56,7 +63,6 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-currency-selector',
-  styleUrls: ['./currency-selector.component.scss'],
   templateUrl: 'currency-selector.component.html'
 })
 export class GfCurrencySelectorComponent
@@ -72,38 +78,58 @@ export class GfCurrencySelectorComponent
   public readonly formControlName = input.required<string>();
 
   private readonly destroyRef = inject(DestroyRef);
+  private readonly formField = inject(MAT_FORM_FIELD);
   private readonly input = viewChild.required(MatInput);
+  private lastSelectedCurrency: string | null = null;
 
   public constructor(
-    public readonly _elementRef: ElementRef,
-    public readonly _focusMonitor: FocusMonitor,
+    public override readonly _elementRef: ElementRef,
+    public override readonly _focusMonitor: FocusMonitor,
     public readonly changeDetectorRef: ChangeDetectorRef,
     private readonly formGroupDirective: FormGroupDirective,
-    public readonly ngControl: NgControl
+    public override readonly ngControl: NgControl
   ) {
     super(_elementRef, _focusMonitor, ngControl);
 
     this.controlType = 'currency-selector';
   }
 
-  public get empty() {
-    return this.input().empty;
+  public get autocompleteOrigin(): MatAutocompleteOrigin {
+    return { elementRef: this.formField.getConnectedOverlayOrigin() };
   }
 
-  public set value(value: string | null) {
+  public get countryCodeOfSelectedCurrency() {
+    const selectedCurrency = this.currencies().find((currency) => {
+      return currency === this.control.value;
+    });
+
+    return getCountryCodeFromCurrency(selectedCurrency);
+  }
+
+  public override get empty() {
+    return !this.control.value;
+  }
+
+  public override get value() {
+    return super.value;
+  }
+
+  public override set value(value: string | null) {
     this.control.setValue(value);
     super.value = value;
+
+    this.lastSelectedCurrency = value;
   }
 
   public focus() {
     this.input().focus();
   }
 
-  public ngOnInit() {
-    if (this.disabled) {
-      this.control.disable();
-    }
+  public getCountryCodeFromCurrency(aCurrency = '') {
+    return getCountryCodeFromCurrency(aCurrency);
+  }
 
+  public ngOnInit() {
     const formGroup = this.formGroupDirective.form;
 
     if (formGroup) {
@@ -138,7 +164,7 @@ export class GfCurrencySelectorComponent
       });
   }
 
-  public ngDoCheck() {
+  public override ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
       this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);
@@ -146,8 +172,23 @@ export class GfCurrencySelectorComponent
     }
   }
 
+  public onPanelClosed() {
+    // Typing clears the selected currency, so restore the last selection once
+    // the panel closes without an option having been picked. An empty input is
+    // left untouched to allow clearing the currency.
+    if (super.value || !this.control.value) {
+      return;
+    }
+
+    this.value = this.lastSelectedCurrency;
+
+    this.changeDetectorRef.markForCheck();
+  }
+
   public onUpdateCurrency({ option }: { option: MatOption<string> }) {
     super.value = option.value;
+
+    this.lastSelectedCurrency = option.value;
   }
 
   private filter(value: string) {

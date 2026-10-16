@@ -1,20 +1,22 @@
 import {
-  getTooltipOptions,
+  getChartBorderColor,
+  getChartElementsOptions,
+  getTimeAxisOptions,
+  getValueAxisOptions,
   getVerticalHoverLinePlugin,
+  getZeroLineAnnotation,
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import {
-  getBackgroundColor,
-  getDateFormatString,
-  getLocale,
-  getTextColor,
-  parseDate
-} from '@ghostfolio/common/helper';
+import { getLocale, parseDate } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
-import { registerChartConfiguration } from '@ghostfolio/ui/chart';
+import {
+  getTimeSeriesTooltipOptions,
+  onPrefersColorSchemeChange,
+  registerChartConfiguration
+} from '@ghostfolio/ui/chart';
 
 import {
   ChangeDetectionStrategy,
@@ -23,6 +25,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  SimpleChanges,
   viewChild
 } from '@angular/core';
 import {
@@ -41,7 +44,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { type AnnotationOptions } from 'chartjs-plugin-annotation';
-import { isAfter } from 'date-fns';
+import { isFuture } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
@@ -52,21 +55,21 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './investment-chart.component.html'
 })
 export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
-  @Input() public readonly benchmarkDataItems: InvestmentItem[] = [];
-  @Input() public readonly benchmarkDataLabel = '';
-  @Input() public readonly colorScheme: ColorScheme;
-  @Input() public readonly currency: string;
-  @Input() public readonly groupBy: GroupBy;
-  @Input() public readonly historicalDataItems: LineChartItem[] = [];
-  @Input() public readonly isInPercentage = false;
-  @Input() public readonly isLoading = false;
-  @Input() public readonly locale = getLocale();
-  @Input() public readonly savingsRate = 0;
+  @Input() public benchmarkDataItems: InvestmentItem[] = [];
+  @Input() public benchmarkDataLabel = '';
+  @Input() public colorScheme?: ColorScheme;
+  @Input() public currency?: string;
+  @Input() public groupBy?: GroupBy;
+  @Input() public historicalDataItems: LineChartItem[] = [];
+  @Input() public isInPercentage?: boolean = false;
+  @Input() public isLoading = false;
+  @Input() public locale?: string = getLocale();
+  @Input() public savingsRate?: number = 0;
 
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
-  private chart: Chart<'bar' | 'line'>;
+  private chart?: Chart<'bar' | 'line'>;
   private investments: InvestmentItem[];
   private values: LineChartItem[];
 
@@ -83,9 +86,23 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     );
 
     registerChartConfiguration();
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme) {
+        this.chart.destroy();
+        this.chart = undefined;
+
+        this.initialize();
+      }
+    });
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.colorScheme && this.chart) {
+      this.chart.destroy();
+      this.chart = undefined;
+    }
+
     if (this.benchmarkDataItems && this.historicalDataItems) {
       this.initialize();
     }
@@ -96,10 +113,15 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    // Create a clone
+    const isBarChart = !!this.groupBy;
+
+    const benchmarkColorRgb = isBarChart ? primaryColorRgb : secondaryColorRgb;
+
+    // Create clones of the input data
     this.investments = this.benchmarkDataItems.map((item) =>
       Object.assign({}, item)
     );
+
     this.values = this.historicalDataItems.map((item) =>
       Object.assign({}, item)
     );
@@ -110,9 +132,9 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       }),
       datasets: [
         {
-          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderWidth: this.groupBy ? 0 : 1,
+          backgroundColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
+          borderColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
+          borderWidth: isBarChart ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {
             return {
               x: parseDate(date)?.getTime() ?? null,
@@ -124,7 +146,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
             borderColor: (context) =>
               this.isInFuture(
                 context,
-                `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.67)`
+                `rgba(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b}, 0.67)`
               ),
             borderDash: (context) => this.isInFuture(context, [2, 2])
           },
@@ -175,16 +197,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
             data: chartData,
             options: {
               animation: false,
-              elements: {
-                line: {
-                  tension: 0
-                },
-                point: {
-                  hoverBackgroundColor: getBackgroundColor(this.colorScheme),
-                  hoverRadius: 2,
-                  radius: 0
-                }
-              },
+              elements: getChartElementsOptions(this.colorScheme),
               interaction: { intersect: false, mode: 'index' },
               maintainAspectRatio: true,
               plugins: {
@@ -192,10 +205,10 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                   annotations: {
                     savingsRate: this.savingsRate
                       ? {
-                          borderColor: `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.75)`,
+                          borderColor: `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.75)`,
                           borderWidth: 1,
                           label: {
-                            backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+                            backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
                             borderRadius: 2,
                             color: 'white',
                             content: $localize`Savings Rate`,
@@ -212,13 +225,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                           value: this.savingsRate
                         }
                       : undefined,
-                    yAxis: {
-                      borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                      borderWidth: 1,
-                      scaleID: 'y',
-                      type: 'line',
-                      value: 0
-                    }
+                    yAxis: getZeroLineAnnotation(this.colorScheme)
                   }
                 },
                 legend: {
@@ -226,60 +233,29 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                 },
                 tooltip: this.getTooltipPluginConfiguration(),
                 verticalHoverLine: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                  color: getChartBorderColor(this.colorScheme)
                 }
               },
               responsive: true,
               scales: {
-                x: {
-                  border: {
-                    color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                    width: this.groupBy ? 0 : 1
-                  },
-                  display: true,
-                  grid: {
-                    display: false
-                  },
-                  type: 'time',
-                  time: {
-                    tooltipFormat: getDateFormatString(this.locale),
-                    unit: 'year'
-                  }
-                },
-                y: {
-                  border: {
-                    display: false
-                  },
+                x: getTimeAxisOptions({
+                  borderWidth: isBarChart ? 0 : 1,
+                  colorScheme: this.colorScheme,
+                  locale: this.locale
+                }),
+                y: getValueAxisOptions({
+                  colorScheme: this.colorScheme,
                   display: !this.isInPercentage,
-                  grid: {
-                    color: ({ scale, tick }) => {
-                      if (
-                        tick.value === 0 ||
-                        tick.value === scale.max ||
-                        tick.value === scale.min
-                      ) {
-                        return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
-                      }
-
-                      return 'transparent';
-                    }
-                  },
-                  position: 'right',
-                  ticks: {
-                    callback: (value: number) => {
-                      return transformTickToAbbreviation(value);
-                    },
-                    display: true,
-                    mirror: true,
-                    z: 1
+                  tickCallback: (tickValue) => {
+                    return transformTickToAbbreviation(Number(tickValue));
                   }
-                }
+                })
               }
             },
             plugins: [
               getVerticalHoverLinePlugin(this.chartCanvas(), this.colorScheme)
             ],
-            type: this.groupBy ? 'bar' : 'line'
+            type: isBarChart ? 'bar' : 'line'
           }
         );
       }
@@ -289,19 +265,13 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   private getTooltipPluginConfiguration(): Partial<
     TooltipOptions<'bar' | 'line'>
   > {
-    return {
-      ...getTooltipOptions({
-        colorScheme: this.colorScheme,
-        currency: this.isInPercentage ? undefined : this.currency,
-        groupBy: this.groupBy,
-        locale: this.isInPercentage ? undefined : this.locale,
-        unit: this.isInPercentage ? '%' : undefined
-      }),
-      mode: 'index',
-      position: 'top',
-      xAlign: 'center',
-      yAlign: 'bottom'
-    };
+    return getTimeSeriesTooltipOptions<'bar' | 'line'>({
+      colorScheme: this.colorScheme,
+      currency: this.isInPercentage ? undefined : this.currency,
+      groupBy: this.groupBy,
+      locale: this.isInPercentage ? undefined : this.locale,
+      unit: this.isInPercentage ? '%' : undefined
+    });
   }
 
   private isInFuture<T>(aContext: ScriptableLineSegmentContext, aValue: T) {
@@ -311,6 +281,6 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       return undefined;
     }
 
-    return isAfter(new Date(xValue), new Date()) ? aValue : undefined;
+    return isFuture(new Date(xValue)) ? aValue : undefined;
   }
 }

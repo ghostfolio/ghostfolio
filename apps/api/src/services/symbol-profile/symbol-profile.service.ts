@@ -3,7 +3,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Holding,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
@@ -32,6 +32,15 @@ export class SymbolProfileService {
   public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.symbolProfile.delete({
       where: { dataSource_symbol: { dataSource, symbol } }
+    });
+  }
+
+  public deleteAssetProfileOverrides({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    return this.prismaService.assetProfileOverrides.deleteMany({
+      where: { symbolProfile: { dataSource, symbol } }
     });
   }
 
@@ -96,9 +105,30 @@ export class SymbolProfileService {
     };
   }
 
+  public async getCustomSymbolProfilesByNames({
+    names,
+    userId
+  }: {
+    names: string[];
+    userId: string;
+  }): Promise<Pick<SymbolProfile, 'name' | 'symbol'>[]> {
+    if (names.length === 0) {
+      return [];
+    }
+
+    return this.prismaService.symbolProfile.findMany({
+      select: { name: true, symbol: true },
+      where: {
+        userId,
+        dataSource: DataSource.MANUAL,
+        name: { in: names }
+      }
+    });
+  }
+
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
-  ): Promise<EnhancedSymbolProfile[]> {
+  ): Promise<EnhancedAssetProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
         include: {
@@ -130,7 +160,7 @@ export class SymbolProfileService {
 
   public async getSymbolProfilesByIds(
     symbolProfileIds: string[]
-  ): Promise<EnhancedSymbolProfile[]> {
+  ): Promise<EnhancedAssetProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
         include: {
@@ -218,7 +248,7 @@ export class SymbolProfileService {
       }[];
       assetProfileOverrides: AssetProfileOverrides;
     })[]
-  ): EnhancedSymbolProfile[] {
+  ): EnhancedAssetProfile[] {
     return symbolProfiles.map((symbolProfile) => {
       const symbolProfileWithOverrides = applyAssetProfileOverrides(
         symbolProfile,

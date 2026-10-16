@@ -23,6 +23,20 @@ export const internalRoutes = {
       access: {
         path: 'access',
         routerLink: ['/account', 'access'],
+        subRoutes: {
+          create: {
+            path: 'create',
+            routerLink: ['/account', 'access', 'create'],
+            title: $localize`Grant access`
+          },
+          update: {
+            path: 'update',
+            routerLink: (aAccessId: string) => {
+              return ['/account', 'access', aAccessId, 'update'];
+            },
+            title: $localize`Edit access`
+          }
+        },
         title: $localize`Access`
       },
       membership: {
@@ -48,12 +62,21 @@ export const internalRoutes = {
       marketData: {
         path: 'market-data',
         routerLink: ['/admin', 'market-data'],
+        subRoutes: {
+          create: {
+            path: 'create',
+            routerLink: ['/admin', 'market-data', 'create'],
+            title: $localize`Add Asset Profile`
+          },
+          update: {
+            path: 'update',
+            routerLink: (aDataSource: string, aSymbol: string) => {
+              return ['/admin', 'market-data', aDataSource, aSymbol, 'update'];
+            },
+            title: $localize`Asset Profile`
+          }
+        },
         title: $localize`Market Data`
-      },
-      modelProvider: {
-        path: 'model-provider',
-        routerLink: ['/admin', 'model-provider'],
-        title: $localize`Model Provider`
       },
       settings: {
         path: 'settings',
@@ -71,6 +94,32 @@ export const internalRoutes = {
   accounts: {
     path: 'accounts',
     routerLink: ['/accounts'],
+    subRoutes: {
+      create: {
+        path: 'create',
+        routerLink: ['/accounts', 'create'],
+        title: $localize`Add Account`
+      },
+      detail: {
+        path: undefined, // Default sub route
+        routerLink: (aAccountId: string) => {
+          return ['/accounts', aAccountId];
+        },
+        title: $localize`Account`
+      },
+      transferCashBalance: {
+        path: 'transfer-cash-balance',
+        routerLink: ['/accounts', 'transfer-cash-balance'],
+        title: $localize`Transfer Cash Balance`
+      },
+      update: {
+        path: 'update',
+        routerLink: (aAccountId: string) => {
+          return ['/accounts', aAccountId, 'update'];
+        },
+        title: $localize`Update Account`
+      }
+    },
     title: $localize`Accounts`
   },
   api: {
@@ -99,11 +148,6 @@ export const internalRoutes = {
         routerLink: ['/home', 'markets'],
         title: $localize`Markets`
       },
-      marketsPremium: {
-        path: 'markets-premium',
-        routerLink: ['/home', 'markets-premium'],
-        title: $localize`Markets`
-      },
       summary: {
         path: 'summary',
         routerLink: ['/home', 'summary'],
@@ -112,6 +156,13 @@ export const internalRoutes = {
       watchlist: {
         path: 'watchlist',
         routerLink: ['/home', 'watchlist'],
+        subRoutes: {
+          create: {
+            path: 'create',
+            routerLink: ['/home', 'watchlist', 'create'],
+            title: $localize`Add to Watchlist`
+          }
+        },
         title: $localize`Watchlist`
       }
     },
@@ -130,6 +181,27 @@ export const internalRoutes = {
       activities: {
         path: 'activities',
         routerLink: ['/portfolio', 'activities'],
+        subRoutes: {
+          clone: {
+            path: 'clone',
+            routerLink: (aActivityId: string) => {
+              return ['/portfolio', 'activities', aActivityId, 'clone'];
+            },
+            title: $localize`Clone Activity`
+          },
+          create: {
+            path: 'create',
+            routerLink: ['/portfolio', 'activities', 'create'],
+            title: $localize`Add Activity`
+          },
+          update: {
+            path: 'update',
+            routerLink: (aActivityId: string) => {
+              return ['/portfolio', 'activities', aActivityId, 'update'];
+            },
+            title: $localize`Update Activity`
+          }
+        },
         title: $localize`Activities`
       },
       allocations: {

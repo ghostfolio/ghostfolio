@@ -1,4 +1,5 @@
 import {
+  ANIMATION_MODULE_TYPE,
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
@@ -11,7 +12,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';

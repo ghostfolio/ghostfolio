@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import '@angular/localize/init';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ANIMATION_MODULE_TYPE } from '@angular/core';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
 import { GfTagsSelectorComponent } from './tags-selector.component';
@@ -10,7 +9,13 @@ export default {
   component: GfTagsSelectorComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, NoopAnimationsModule]
+      imports: [CommonModule],
+      providers: [
+        {
+          provide: ANIMATION_MODULE_TYPE,
+          useValue: 'NoopAnimations'
+        }
+      ]
     })
   ]
 } as Meta<GfTagsSelectorComponent>;
@@ -77,6 +82,14 @@ export const Readonly: Story = {
         userId: null
       }
     ],
+    tagsAvailable: OPTIONS
+  }
+};
+
+export const ReadonlyWithoutValue: Story = {
+  args: {
+    readonly: true,
+    tags: [],
     tagsAvailable: OPTIONS
   }
 };

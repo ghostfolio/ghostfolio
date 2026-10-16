@@ -2,6 +2,7 @@
 
 # compiled output
 /out-tsc
+/prisma/generated
 /tmp
 
 # dependencies
@@ -31,6 +32,7 @@ npm-debug.log
 .env
 .env.prod
 .github/instructions/nx.instructions.md
+.mcp.json
 .nx/cache
 .nx/migrate-runs
 .nx/polygraph

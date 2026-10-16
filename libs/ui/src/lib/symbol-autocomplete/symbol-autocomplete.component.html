@@ -5,6 +5,7 @@
   [formControl]="control"
   [matAutocomplete]="symbolAutocomplete"
   (blur)="onBlur()"
+  [maxlength]="SEARCH_QUERY_MAXIMUM_LENGTH"
 />
 
 <mat-autocomplete
@@ -26,7 +27,7 @@
           }
         </span>
         <small class="text-muted"
-          >{{ lookupItem.symbol | gfSymbol }}
+          >{{ lookupItem.symbol }}
           @if (lookupItem.currency) {
             · {{ lookupItem.currency }}
           }

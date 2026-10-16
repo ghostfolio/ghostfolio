@@ -5,18 +5,22 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
+  DEFAULT_LOCALE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, isCashPosition } from '@ghostfolio/common/helper';
 import {
   Activity,
   AssetProfileIdentifier,
   LineChartItem,
   PortfolioPerformance,
+  PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
 
@@ -33,7 +37,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { catchError, of } from 'rxjs';
@@ -42,6 +46,7 @@ import { catchError, of } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    GfHoldingsTableComponent,
     GfLineChartComponent,
     GfPortfolioPerformanceComponent,
     MatButtonModule,
@@ -58,7 +63,15 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly hasImpersonationId = signal(false);
   protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
   protected readonly investmentSignals = signal<any[]>([]);
+  protected readonly holdings = signal<PortfolioPosition[] | undefined>(
+    undefined
+  );
   protected readonly isLoadingPerformance = signal(true);
+
+  protected readonly locale = computed(() => {
+    return this.user()?.settings?.locale ?? DEFAULT_LOCALE;
+  });
+
   protected readonly performance = signal<PortfolioPerformance | null>(null);
   protected readonly performanceLabel = $localize`Performance`;
   protected readonly precision = signal(2);
@@ -69,27 +82,45 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   protected readonly routerLinkPortfolioActivities =
     internalRoutes.portfolio.subRoutes.activities.routerLink;
+  protected readonly routerLinkPortfolioActivitiesCreate =
+    internalRoutes.portfolio.subRoutes.activities.subRoutes.create.routerLink;
 
   protected readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
 
   protected readonly hasPermissionToCreateActivity = computed(() => {
-    return hasPermission(this.user()?.permissions, permissions.createActivity);
+    return (
+      hasPermission(this.user()?.permissions, permissions.createActivity) &&
+      hasScope(this.user()?.scopes, scopes.activityCreate)
+    );
   });
 
   protected readonly showDetails = computed(() => {
     const user = this.user();
 
     return user
-      ? !user.settings.isRestrictedView && user.settings.viewMode !== 'ZEN'
+      ? !user?.settings?.isRestrictedView && user?.settings?.viewMode !== 'ZEN'
       : false;
   });
 
+  protected readonly showExperimentalHoldings = computed(() => {
+    const user = this.user();
+
+    return (
+      user?.settings?.isExperimentalFeatures === true &&
+      user?.settings?.viewMode !== 'ZEN'
+    );
+  });
+
   protected readonly unit = computed(() => {
-    return this.showDetails()
-      ? (this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY)
-      : '%';
+    if (!this.showDetails()) {
+      return '%';
+    }
+
+    return this.deviceType() === 'mobile'
+      ? undefined
+      : (this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY);
   });
 
   private readonly dataService = inject(DataService);
@@ -99,6 +130,7 @@ export class GfHomeOverviewComponent implements OnInit {
     ImpersonationStorageService
   );
   private readonly layoutService = inject(LayoutService);
+  private readonly router = inject(Router);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -141,15 +173,49 @@ export class GfHomeOverviewComponent implements OnInit {
       });
   }
 
+  protected onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
+    if (dataSource && symbol) {
+      void this.router.navigate([], {
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
+      });
+    }
+  }
+
   private update() {
+    const userSettings = this.user()?.settings;
+
     this.historicalDataItems.set(null);
     this.isLoadingPerformance.set(true);
+
+    if (this.showExperimentalHoldings()) {
+      this.holdings.set(undefined);
+
+      this.dataService
+        .fetchPortfolioHoldings({
+          filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }],
+          range: userSettings?.dateRange
+        })
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(({ holdings }) => {
+          const baseCurrency = userSettings?.baseCurrency ?? DEFAULT_CURRENCY;
+
+          this.holdings.set(
+            holdings.filter(({ assetProfile }) => {
+              return !(
+                isCashPosition(assetProfile) &&
+                assetProfile.currency === baseCurrency &&
+                assetProfile.symbol === baseCurrency
+              );
+            })
+          );
+        });
+    }
 
     this.fetchDateMarkers();
 
     this.dataService
       .fetchPortfolioPerformance({
-        range: this.user()?.settings?.dateRange ?? DEFAULT_DATE_RANGE,
+        range: userSettings?.dateRange ?? DEFAULT_DATE_RANGE,
         refresh: true
       })
       .pipe(takeUntilDestroyed(this.destroyRef))

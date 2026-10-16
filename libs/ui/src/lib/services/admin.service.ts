@@ -4,7 +4,9 @@ import {
   HEADER_KEY_TOKEN
 } from '@ghostfolio/common/config';
 import {
+  CreateAssetProfileSplitDto,
   CreatePlatformDto,
+  MergeAssetProfileDto,
   UpdateAssetProfileDto,
   UpdatePlatformDto
 } from '@ghostfolio/common/dtos';
@@ -16,20 +18,22 @@ import {
   AssetProfileIdentifier,
   DataProviderGhostfolioStatusResponse,
   DataProviderHistoricalResponse,
-  EnhancedSymbolProfile
+  EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
+import type {
+  AssetProfileSplit,
+  MarketData,
+  Platform
+} from '@ghostfolio/prisma/browser';
 import { GF_ENVIRONMENT } from '@ghostfolio/ui/environment';
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { MarketData, Platform } from '@prisma/client';
+import { inject, Service } from '@angular/core';
 import { JobStatus } from 'bull';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class AdminService {
   private readonly environment = inject(GF_ENVIRONMENT);
   private readonly http = inject(HttpClient);
@@ -59,6 +63,16 @@ export class AdminService {
 
   public deletePlatform(aId: string) {
     return this.http.delete<void>(`/api/v1/platform/${aId}`);
+  }
+
+  public deleteAssetProfileSplit({
+    dataSource,
+    id,
+    symbol
+  }: AssetProfileIdentifier & { id: string }) {
+    return this.http.delete<void>(
+      `/api/v1/asset-profiles/${dataSource}/${encodeURIComponent(symbol)}/splits/${id}`
+    );
   }
 
   public deleteProfileData({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -177,6 +191,16 @@ export class AdminService {
     return this.http.get<DataProviderHistoricalResponse>(url);
   }
 
+  public mergeAssetProfile(
+    { dataSource, symbol }: AssetProfileIdentifier,
+    targetAssetProfile: MergeAssetProfileDto
+  ) {
+    return this.http.post<EnhancedAssetProfile>(
+      `/api/v1/admin/profile-data/${dataSource}/${encodeURIComponent(symbol)}/merge`,
+      targetAssetProfile
+    );
+  }
+
   public patchAssetProfile(
     { dataSource, symbol }: AssetProfileIdentifier,
     {
@@ -196,7 +220,7 @@ export class AdminService {
       url
     }: UpdateAssetProfileDto
   ) {
-    return this.http.patch<EnhancedSymbolProfile>(
+    return this.http.patch<EnhancedAssetProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${encodeURIComponent(symbol)}`,
       {
         assetClass,
@@ -214,6 +238,17 @@ export class AdminService {
         symbolMapping,
         url
       }
+    );
+  }
+
+  public postAssetProfileSplit({
+    dataSource,
+    split,
+    symbol
+  }: AssetProfileIdentifier & { split: CreateAssetProfileSplitDto }) {
+    return this.http.post<AssetProfileSplit>(
+      `/api/v1/asset-profiles/${dataSource}/${encodeURIComponent(symbol)}/splits`,
+      split
     );
   }
 

@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "date": "2026-10-01T00:00:00.000Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2015-01-01T00:00:00.000Z",
+      "fee": 0,
+      "id": "0d9ac134-2329-5234-8b59-8aaa6424e79d",
+      "quantity": 2,
+      "symbol": "BTCUSD",
+      "type": "BUY",
+      "unitPrice": 320.43
+    },
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2017-12-31T00:00:00.000Z",
+      "fee": 0,
+      "id": "f7a55970-57b0-52b3-9846-c7c306645050",
+      "quantity": 1,
+      "symbol": "BTCUSD",
+      "type": "SELL",
+      "unitPrice": 14156.4
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "CHF",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}

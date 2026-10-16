@@ -1,10 +1,11 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DATE_FORMAT,
-  getYesterday,
+  getStartOfUtcDateOfYesterday,
   interpolate
 } from '@ghostfolio/common/helper';
 
+import { utc } from '@date-fns/utc';
 import { Controller, Get, Res, VERSION_NEUTRAL, Version } from '@nestjs/common';
 import { format } from 'date-fns';
 import { Response } from 'express';
@@ -32,7 +33,9 @@ export class SitemapController {
   @Get()
   @Version(VERSION_NEUTRAL)
   public getSitemapXml(@Res() response: Response) {
-    const currentDate = format(getYesterday(), DATE_FORMAT);
+    const currentDate = format(getStartOfUtcDateOfYesterday(), DATE_FORMAT, {
+      in: utc
+    });
 
     response.setHeader('content-type', 'application/xml');
     response.send(

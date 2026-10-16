@@ -4,7 +4,8 @@
 
 ## requirements/ 需求
 
-- [ai-integration.md](requirements/ai-integration.md) — Rebalancing 信号入 cron、邮件语言、DCA 手动报告三个模块的改造需求
+- [ai-integration.md](requirements/ai-integration.md) — （已作废）Rebalancing 信号入 cron、邮件语言、DCA 手动报告三个模块的改造需求；AI 部分已在上游同步中移除
+- [upstream-sync-2026-10.md](requirements/upstream-sync-2026-10.md) — 同步上游官方 3.86.0 的需求与开发文档（范围、原则、摘取方法、进度）
 
 ## architecture/ 技术方案
 

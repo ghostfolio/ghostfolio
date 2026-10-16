@@ -40,6 +40,30 @@ export interface RebalancingResult {
   totalValue: number;
 }
 
+/**
+ * `getDetails` returns the holdings as a list. Rebalancing works on the value
+ * per symbol; the same symbol held under two data sources adds up.
+ */
+export function toHoldingValuesBySymbol(
+  holdings: Pick<PortfolioPosition, 'assetProfile' | 'valueInBaseCurrency'>[]
+): { [symbol: string]: Pick<PortfolioPosition, 'valueInBaseCurrency'> } {
+  const valuesBySymbol: {
+    [symbol: string]: Pick<PortfolioPosition, 'valueInBaseCurrency'>;
+  } = {};
+
+  for (const { assetProfile, valueInBaseCurrency } of holdings ?? []) {
+    const symbol = assetProfile.symbol;
+
+    valuesBySymbol[symbol] = {
+      valueInBaseCurrency:
+        (valuesBySymbol[symbol]?.valueInBaseCurrency ?? 0) +
+        (valueInBaseCurrency ?? 0)
+    };
+  }
+
+  return valuesBySymbol;
+}
+
 @Injectable()
 export class RebalancingService {
   public constructor(private readonly prismaService: PrismaService) {}

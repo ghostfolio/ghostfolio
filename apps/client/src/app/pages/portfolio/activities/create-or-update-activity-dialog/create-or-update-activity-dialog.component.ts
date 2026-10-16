@@ -1,14 +1,24 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { ASSET_CLASS_MAPPING, DEFAULT_LOCALE } from '@ghostfolio/common/config';
+import {
+  ASSET_CLASS_MAPPING,
+  COMMENT_MAXIMUM_LENGTH,
+  DEFAULT_LOCALE
+} from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import {
+  getDateFormatString,
+  getStringOrNull
+} from '@ghostfolio/common/helper';
 import {
   AssetClassSelectorOption,
   LookupItem
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import type { Tag } from '@ghostfolio/prisma/browser';
+import { AssetClass, Type } from '@ghostfolio/prisma/enums';
+import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
@@ -42,7 +52,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AssetClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
@@ -56,7 +65,7 @@ import { ActivityType } from './types/activity-type.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    GfEntityLogoComponent,
+    GfAccountSelectorComponent,
     GfSymbolAutocompleteComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
@@ -75,6 +84,9 @@ import { ActivityType } from './types/activity-type.type';
   templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class GfCreateOrUpdateActivityDialogComponent {
+  protected readonly COMMENT_MAXIMUM_LENGTH = COMMENT_MAXIMUM_LENGTH;
+  protected readonly DEFAULT_LOCALE = DEFAULT_LOCALE;
+
   protected activityForm: FormGroup;
 
   protected readonly assetClassOptions: AssetClassSelectorOption[] =
@@ -92,9 +104,10 @@ export class GfCreateOrUpdateActivityDialogComponent {
   protected currentMarketPrice: number | null = null;
   protected defaultDateFormat: string;
   protected defaultLookupItems: LookupItem[] = [];
-  protected hasPermissionToCreateOwnTag: boolean | undefined;
+  protected hasPermissionToCreateOwnTag: boolean;
   protected isLoading = false;
   protected readonly isToday = isToday;
+  protected readonly labelAccount = $localize`Account`;
   protected mode: 'create' | 'update';
   protected tagsAvailable: Tag[] = [];
   protected total = 0;
@@ -111,6 +124,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateActivityDialogComponent>>(MatDialogRef);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
   private locale = inject<string>(MAT_DATE_LOCALE);
   private readonly userService = inject(UserService);
 
@@ -119,10 +135,14 @@ export class GfCreateOrUpdateActivityDialogComponent {
   }
 
   public ngOnInit() {
-    this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;
+    this.currencyOfAssetProfile = this.data.activity?.assetProfile?.currency;
+
+    // A tag created during an impersonation belongs to the authenticated user,
+    // hence it cannot be assigned to the data of the impersonated user
     this.hasPermissionToCreateOwnTag =
-      this.data.user?.settings?.isExperimentalFeatures &&
+      !this.impersonationStorageService.getId() &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
+
     this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
@@ -134,7 +154,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
     this.defaultDateFormat = getDateFormatString(this.locale);
 
     this.dataService
-      .fetchPortfolioHoldings()
+      .fetchPortfolioHoldings({
+        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.defaultLookupItems = holdings
@@ -185,31 +207,31 @@ export class GfCreateOrUpdateActivityDialogComponent {
           ? this.data.accounts[0].id
           : this.data.activity?.accountId
       ],
-      assetClass: [this.data.activity?.SymbolProfile?.assetClass],
-      assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
+      assetClass: [this.data.activity?.assetProfile?.assetClass],
+      assetSubClass: [this.data.activity?.assetProfile?.assetSubClass],
       comment: [this.data.activity?.comment],
       currency: [
-        this.data.activity?.SymbolProfile?.currency,
+        this.data.activity?.assetProfile?.currency,
         Validators.required
       ],
       currencyOfUnitPrice: [
         this.data.activity?.currency ??
-          this.data.activity?.SymbolProfile?.currency,
+          this.data.activity?.assetProfile?.currency,
         Validators.required
       ],
       dataSource: [
-        this.data.activity?.SymbolProfile?.dataSource,
+        this.data.activity?.assetProfile?.dataSource,
         Validators.required
       ],
       date: [this.data.activity?.date, Validators.required],
       fee: [this.data.activity?.fee, Validators.required],
-      name: [this.data.activity?.SymbolProfile?.name, Validators.required],
+      name: [this.data.activity?.assetProfile?.name, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
       searchSymbol: [
-        this.data.activity?.SymbolProfile
+        this.data.activity?.assetProfile
           ? {
-              dataSource: this.data.activity?.SymbolProfile?.dataSource,
-              symbol: this.data.activity?.SymbolProfile?.symbol
+              dataSource: this.data.activity?.assetProfile?.dataSource,
+              symbol: this.data.activity?.assetProfile?.symbol
             }
           : null,
         Validators.required
@@ -265,16 +287,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
         this.activityForm.get('currency')?.setValue(currency);
         this.activityForm.get('currencyOfUnitPrice')?.setValue(currency);
-
-        if (['FEE', 'INTEREST'].includes(type)) {
-          if (this.activityForm.get('accountId')?.value) {
-            this.activityForm.get('updateAccountBalance')?.enable();
-          } else {
-            this.activityForm.get('updateAccountBalance')?.disable();
-            this.activityForm.get('updateAccountBalance')?.setValue(false);
-          }
-        }
       }
+
+      this.syncUpdateAccountBalanceControl();
     });
 
     this.activityForm
@@ -298,19 +313,14 @@ export class GfCreateOrUpdateActivityDialogComponent {
       });
 
     this.activityForm.get('date')?.valueChanges.subscribe(() => {
-      if (isToday(this.activityForm.get('date')?.value)) {
-        this.activityForm.get('updateAccountBalance')?.enable();
-      } else {
-        this.activityForm.get('updateAccountBalance')?.disable();
-        this.activityForm.get('updateAccountBalance')?.setValue(false);
-      }
+      this.syncUpdateAccountBalanceControl();
 
       this.changeDetectorRef.markForCheck();
     });
 
     this.activityForm.get('searchSymbol')?.valueChanges.subscribe(() => {
       if (this.activityForm.get('searchSymbol')?.invalid) {
-        this.data.activity.SymbolProfile = null;
+        this.data.activity.assetProfile = null;
       } else if (
         ['BUY', 'DIVIDEND', 'SELL'].includes(
           this.activityForm.get('type')?.value
@@ -383,8 +393,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
             .get('searchSymbol')
             ?.removeValidators(Validators.required);
           this.activityForm.get('searchSymbol')?.updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance')?.disable();
-          this.activityForm.get('updateAccountBalance')?.setValue(false);
         } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           const currency =
             this.data.accounts.find(({ id }) => {
@@ -420,16 +428,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
           if (type === 'FEE') {
             this.activityForm.get('unitPrice')?.setValue(0);
           }
-
-          if (
-            ['FEE', 'INTEREST'].includes(type) &&
-            this.activityForm.get('accountId')?.value
-          ) {
-            this.activityForm.get('updateAccountBalance')?.enable();
-          } else {
-            this.activityForm.get('updateAccountBalance')?.disable();
-            this.activityForm.get('updateAccountBalance')?.setValue(false);
-          }
         } else {
           this.activityForm
             .get('dataSource')
@@ -441,8 +439,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
             .get('searchSymbol')
             ?.setValidators(Validators.required);
           this.activityForm.get('searchSymbol')?.updateValueAndValidity();
-          this.activityForm.get('updateAccountBalance')?.enable();
         }
+
+        this.syncUpdateAccountBalanceControl();
 
         this.changeDetectorRef.markForCheck();
       });
@@ -454,11 +453,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
       this.activityForm.get('type')?.disable();
     }
 
-    if (this.data.activity?.SymbolProfile?.symbol) {
+    if (this.data.activity?.assetProfile?.symbol) {
       this.dataService
         .fetchSymbolItem({
-          dataSource: this.data.activity?.SymbolProfile?.dataSource,
-          symbol: this.data.activity?.SymbolProfile?.symbol
+          dataSource: this.data.activity?.assetProfile?.dataSource,
+          symbol: this.data.activity?.assetProfile?.symbol
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ marketPrice }) => {
@@ -489,11 +488,19 @@ export class GfCreateOrUpdateActivityDialogComponent {
   }
 
   protected async onSubmit() {
+    const isAssetClassApplicable =
+      this.activityForm.get('type')?.value === 'VALUABLE' ||
+      this.mode === 'update';
+
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.get('accountId')?.value,
-      assetClass: this.activityForm.get('assetClass')?.value,
-      assetSubClass: this.activityForm.get('assetSubClass')?.value,
-      comment: this.activityForm.get('comment')?.value || null,
+      assetClass: isAssetClassApplicable
+        ? this.activityForm.get('assetClass')?.value
+        : undefined,
+      assetSubClass: isAssetClassApplicable
+        ? this.activityForm.get('assetSubClass')?.value
+        : undefined,
+      comment: getStringOrNull(this.activityForm.get('comment')?.value),
       currency: this.activityForm.get('currency')?.value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice')?.value,
       dataSource: ['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
@@ -558,6 +565,27 @@ export class GfCreateOrUpdateActivityDialogComponent {
     }
   }
 
+  private syncUpdateAccountBalanceControl() {
+    const accountBalanceControl = this.activityForm.get('updateAccountBalance');
+    const accountId = this.activityForm.get('accountId')?.value;
+    const dataSource = this.activityForm.get('dataSource')?.value;
+    const date = this.activityForm.get('date')?.value;
+    const type = this.activityForm.get('type')?.value;
+
+    const isEligible =
+      !!accountId &&
+      isToday(date) &&
+      !['LIABILITY', 'VALUABLE'].includes(type) &&
+      !(dataSource === 'MANUAL' && type === 'BUY');
+
+    if (isEligible) {
+      accountBalanceControl?.enable();
+    } else {
+      accountBalanceControl?.disable();
+      accountBalanceControl?.setValue(false);
+    }
+  }
+
   private updateAssetProfile() {
     this.isLoading = true;
     this.changeDetectorRef.markForCheck();
@@ -569,7 +597,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       })
       .pipe(
         catchError(() => {
-          this.data.activity.SymbolProfile = null;
+          this.data.activity.assetProfile = null;
 
           this.isLoading = false;
 
