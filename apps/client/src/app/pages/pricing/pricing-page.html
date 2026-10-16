@@ -17,7 +17,7 @@
         </p>
       </div>
       <div class="row">
-        <div class="col-xs-12 col-lg-4 mb-3">
+        <div class="col-lg-4 mb-3">
           <mat-card appearance="outlined" class="h-100">
             <mat-card-content class="d-flex flex-column h-100">
               <div class="flex-grow-1">
@@ -31,42 +31,42 @@
                     <ng-container>&nbsp;</ng-container>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Unlimited Transactions</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Unlimited Accounts</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Portfolio Performance</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Portfolio Summary</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Portfolio Allocations</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Performance Benchmarks</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>FIRE Calculator</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span>Ghostfolio MCP</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Data Import and Export</span>
                     <span
-                      class="align-items-center d-flex ml-1"
+                      class="align-items-center d-flex ms-1"
                       matTooltipPosition="above"
                       [matTooltip]="importAndExportTooltipOSS"
                     >
@@ -74,36 +74,36 @@
                     </span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <a i18n [routerLink]="routerLinkFeatures"
                       >and more Features...</a
                     >
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Community Support</span>
                   </li>
                 </ul>
               </div>
               <p i18n>Self-hosted, update manually.</p>
-              <p class="h5 text-right" i18n>Free</p>
+              <p class="h5 text-end" i18n>Free</p>
               @if (user?.subscription?.type === 'Basic') {
-                <div class="d-none d-lg-block hidden mt-3 text-center">
+                <div class="d-none d-lg-block invisible mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
-                  <p class="m-0 text-muted">
+                  <p class="m-0 text-body-secondary">
                     <small>&nbsp;</small>
                   </p>
                 </div>
               }
               @if (durationExtension) {
-                <div class="d-none d-lg-block hidden mt-3">
+                <div class="d-none d-lg-block invisible mt-3">
                   <div class="badge p-3 w-100">&nbsp;</div>
                 </div>
               }
             </mat-card-content>
           </mat-card>
         </div>
-        <div class="col-xs-12 col-lg-4 mb-3">
+        <div class="col-lg-4 mb-3">
           <mat-card
             appearance="outlined"
             class="h-100"
@@ -115,7 +115,7 @@
                   <h4 class="flex-grow-1 m-0">Basic</h4>
                   @if (user?.subscription?.type === 'Basic') {
                     <div>
-                      <ion-icon class="mr-1" name="checkmark-outline" />
+                      <ion-icon class="me-1" name="checkmark-outline" />
                     </div>
                   }
                 </div>
@@ -127,22 +127,22 @@
                     <ng-container>&nbsp;</ng-container>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Unlimited Transactions</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Unlimited Accounts</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Portfolio Performance</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Data Import and Export</span>
                     <span
-                      class="align-items-center d-flex ml-1"
+                      class="align-items-center d-flex ms-1"
                       matTooltipPosition="above"
                       [matTooltip]="importAndExportTooltipBasic"
                     >
@@ -152,24 +152,24 @@
                 </ul>
               </div>
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
-              <p class="h5 text-right" i18n>Free</p>
+              <p class="h5 text-end" i18n>Free</p>
               @if (user?.subscription?.type === 'Basic') {
-                <div class="d-none d-lg-block hidden mt-3 text-center">
+                <div class="d-none d-lg-block invisible mt-3 text-center">
                   <a color="primary" mat-flat-button>&nbsp;</a>
-                  <p class="m-0 text-muted">
+                  <p class="m-0 text-body-secondary">
                     <small>&nbsp;</small>
                   </p>
                 </div>
               }
               @if (durationExtension) {
-                <div class="d-none d-lg-block hidden mt-3">
+                <div class="d-none d-lg-block invisible mt-3">
                   <div class="badge p-3 w-100">&nbsp;</div>
                 </div>
               }
             </mat-card-content>
           </mat-card>
         </div>
-        <div class="col-xs-12 col-lg-4 mb-3">
+        <div class="col-lg-4 mb-3">
           <mat-card
             appearance="outlined"
             class="h-100"
@@ -177,19 +177,21 @@
           >
             <mat-card-content class="d-flex flex-column h-100">
               @if (label) {
-                <div class="badge-container position-absolute text-right">
-                  <span class="badge badge-warning m-1">{{ label }}</span>
+                <div class="badge-container position-absolute text-end">
+                  <span class="badge bg-warning m-1 text-dark">{{
+                    label
+                  }}</span>
                 </div>
               }
               <div class="flex-grow-1">
                 <div class="align-items-center d-flex mb-2">
                   <h4 class="align-items-center d-flex flex-grow-1 m-0">
                     <span>Premium</span>
-                    <gf-premium-indicator class="ml-1" [enableLink]="false" />
+                    <gf-premium-indicator class="ms-1" [enableLink]="false" />
                   </h4>
                   @if (user?.subscription?.type === 'Premium') {
                     <div>
-                      <ion-icon class="mr-1" name="checkmark-outline" />
+                      <ion-icon class="me-1" name="checkmark-outline" />
                     </div>
                   }
                 </div>
@@ -204,30 +206,30 @@
                     >:
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Portfolio Summary</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Portfolio Allocations</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Performance Benchmarks</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>FIRE Calculator</span>
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span>Ghostfolio MCP</span>
                   </li>
                   <li class="align-items-center d-flex">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Professional Data Provider</span>
                     <span
-                      class="align-items-center d-flex ml-1"
+                      class="align-items-center d-flex ms-1"
                       matTooltipPosition="above"
                       [matTooltip]="professionalDataProviderTooltipPremium"
                     >
@@ -236,7 +238,7 @@
                   </li>
                   <li class="align-items-center d-flex line-height-1 mb-1">
                     <ion-icon
-                      class="hidden mr-1"
+                      class="invisible me-1"
                       name="checkmark-circle-outline"
                     />
                     <small
@@ -246,23 +248,23 @@
                     >
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <a i18n [routerLink]="routerLinkFeatures"
                       >and more Features...</a
                     >
                   </li>
                   <li class="align-items-center d-flex mb-1">
-                    <ion-icon class="mr-1" name="checkmark-circle-outline" />
+                    <ion-icon class="me-1" name="checkmark-circle-outline" />
                     <span i18n>Email and Chat Support</span>
                   </li>
                 </ul>
               </div>
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
               @if (price) {
-                <p class="h5 text-right">
-                  <span class="font-weight-normal">
+                <p class="h5 text-end">
+                  <span class="fw-normal">
                     @if (coupon) {
-                      <del class="text-muted"
+                      <del class="text-body-secondary"
                         >{{ baseCurrency }}&nbsp;{{ price }}</del
                       >&nbsp;{{ baseCurrency }}&nbsp;<strong>{{
                         price - coupon
@@ -291,7 +293,7 @@
                       <ng-container i18n>Upgrade Plan</ng-container>
                     }
                   </button>
-                  <p class="m-0 text-muted">
+                  <p class="m-0 text-body-secondary">
                     <small i18n>One-time payment, no auto-renewal.</small>
                   </p>
                 </div>
@@ -299,7 +301,7 @@
               @if (durationExtension) {
                 <div class="mt-3">
                   <div
-                    class="badge badge-warning font-weight-normal line-height-1 p-3 w-100"
+                    class="badge bg-warning fw-normal line-height-1 p-3 text-dark w-100"
                   >
                     <strong i18n>Limited Offer!</strong>
                     <ng-container>&nbsp;</ng-container>
@@ -369,7 +371,7 @@
           [routerLink]="routerLinkRegister"
           >Get Started</a
         >
-        <p class="m-0 text-muted"><small i18n>It’s free.</small></p>
+        <p class="m-0 text-body-secondary"><small i18n>It’s free.</small></p>
       </div>
     </div>
   }

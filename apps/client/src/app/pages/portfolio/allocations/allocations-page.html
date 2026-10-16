@@ -12,7 +12,7 @@
             >Proportion of Net Worth</mat-card-title
           >
           <gf-value
-            class="justify-content-end l-2"
+            class="justify-content-end ms-2"
             size="medium"
             [isLoading]="isLoading"
             [isPercent]="true"
@@ -56,12 +56,12 @@
                 (proportionChartClicked)="onSymbolChartClicked($event)"
               />
             </div>
-            <div class="by-holding-list ml-3">
+            <div class="by-holding-list ms-3">
               @for (item of sortedSymbolList; track item.symbol) {
                 <div class="d-flex align-items-center justify-content-between py-1 border-bottom">
-                  <span class="font-weight-bold">{{ item.symbol }}</span>
-                  <span class="text-muted mx-3">{{ item.investment | currency:user?.settings?.baseCurrency:'symbol':'1.0-0':user?.settings?.locale }}</span>
-                  <span class="text-muted">{{ item.percentage < 1 ? '~' : '' }}{{ item.percentage | number:'1.0-0' }}%</span>
+                  <span class="fw-bold">{{ item.symbol }}</span>
+                  <span class="text-body-secondary mx-3">{{ item.investment | currency:user?.settings?.baseCurrency:'symbol':'1.0-0':user?.settings?.locale }}</span>
+                  <span class="text-body-secondary">{{ item.percentage < 1 ? '~' : '' }}{{ item.percentage | number:'1.0-0' }}%</span>
                 </div>
               }
             </div>
@@ -70,7 +70,7 @@
       </mat-card>
     </div>
   </div>
-  <div class="proportion-charts row">
+  <div class="row">
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
@@ -96,7 +96,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By Currency</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -118,7 +118,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By Asset Class</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -140,7 +140,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By Sector</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -163,7 +163,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By Continent</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -185,7 +185,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By Market</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -208,7 +208,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>Regions</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -222,7 +222,7 @@
             />
           </div>
           <div class="row">
-            <div class="col-xs-12 col-md my-2">
+            <div class="col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -232,7 +232,7 @@
                 >Developed Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md my-2">
+            <div class="col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -242,7 +242,7 @@
                 >Emerging Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md my-2">
+            <div class="col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -253,7 +253,7 @@
               >
             </div>
             @if ((markets?.[UNKNOWN_KEY]?.valueInPercentage ?? 0) > 0) {
-              <div class="col-xs-12 col-md my-2">
+              <div class="col-md my-2">
                 <gf-value
                   i18n
                   size="large"
@@ -276,7 +276,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By Country</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -318,7 +318,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By ETF Provider</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
         </mat-card-header>
@@ -343,7 +343,7 @@
           <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By ETF Holding</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </mat-card-title>
           <mat-card-subtitle>
