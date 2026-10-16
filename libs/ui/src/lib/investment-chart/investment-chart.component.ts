@@ -12,11 +12,6 @@ import { getLocale, parseDate } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
-import {
-  getTimeSeriesTooltipOptions,
-  onPrefersColorSchemeChange,
-  registerChartConfiguration
-} from '@ghostfolio/ui/chart';
 
 import {
   ChangeDetectionStrategy,
@@ -46,6 +41,12 @@ import 'chartjs-adapter-date-fns';
 import { type AnnotationOptions } from 'chartjs-plugin-annotation';
 import { isFuture } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import {
+  getTimeSeriesTooltipOptions,
+  onPrefersColorSchemeChange,
+  registerChartConfiguration
+} from '../chart';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
