@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the search by ISIN number in the _Financial Modeling Prep_ service
 
+### Fixed
+
+- Fixed the data source mapping in the data provider service to apply only to the mapped data source
+
 ## 3.87.0 - 2026-10-17
 
 ### Added
