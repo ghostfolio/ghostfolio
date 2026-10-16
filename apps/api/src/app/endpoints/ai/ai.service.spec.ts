@@ -788,6 +788,38 @@ describe('AiService', () => {
       });
     });
 
+    it('Gives an activity for a row whose asset matches a holding with the same ISIN with spaces and in lower case', async () => {
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'ie00 bk5b qt80',
+        name: 'Vanguard FTSE All-World UCITS ETF USD Accumulating',
+        symbol: null
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'VWRA.SW' }
+        ]
+      });
+
+      mockHoldings();
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({
+        activities: [
+          expect.objectContaining({ dataSource: 'YAHOO', symbol: 'VWRA.SW' })
+        ],
+        rowsWithoutMatch: []
+      });
+    });
+
     it('Gives an activity for a row whose asset matches a holding without an ISIN which no search gave', async () => {
       const row = createActivityRow({
         accountName: null,
@@ -950,7 +982,7 @@ describe('AiService', () => {
       });
     });
 
-    it('Gives a row whose asset match is a holding with a data source which requires Premium as a row without a match', async () => {
+    it('Passes no holding with a data source which requires Premium to the model and gives a row whose asset match is such a holding as a row without a match', async () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
       jest.mocked(dataProviderService.isPremiumRequired).mockReturnValue(true);
@@ -988,9 +1020,13 @@ describe('AiService', () => {
         subscription,
         dataSource: DataSource.YAHOO
       });
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', []);
     });
 
-    it('Gives a row whose asset match is a holding with a data source which is not configured as a row without a match', async () => {
+    it('Passes no holding with a data source which is not configured to the model and gives a row whose asset match is such a holding as a row without a match', async () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
       jest
@@ -1020,6 +1056,10 @@ describe('AiService', () => {
           rows: [row]
         })
       ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', []);
     });
 
     it('Gives a row whose asset match is a cash position of the holdings as a row without a match', async () => {
@@ -1229,7 +1269,7 @@ describe('AiService', () => {
             symbol: 'AAPL'
           }
         ],
-        holdings: '## Holdings'
+        holdings: []
       });
     });
 
@@ -1467,6 +1507,76 @@ describe('AiService', () => {
       });
     });
 
+    it('Passes the currency, the data source, the ISIN, the name and the symbol of each holding without the cash position to the model', async () => {
+      mockRowMatches({});
+
+      mockHoldings();
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow()]
+      });
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', [
+        {
+          currency: 'USD',
+          dataSource: 'YAHOO',
+          isin: 'IE00BK5BQT80',
+          name: 'Vanguard FTSE All-World UCITS ETF',
+          symbol: 'VWRA.SW'
+        },
+        {
+          currency: 'USD',
+          dataSource: 'YAHOO',
+          isin: null,
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        }
+      ]);
+    });
+
+    it('Restores an escaped pipe in a value of the holdings', async () => {
+      mockRowMatches({});
+
+      jest.mocked(mcpService.getPortfolio).mockResolvedValue({
+        content: [
+          {
+            text: [
+              '## Holdings',
+              '',
+              '| Name        | ISIN | Symbol | Data Source | Currency |',
+              '| :---------- | :--- | :----- | :---------- | :------- |',
+              '| Fund A \\| B |      | FAB    | YAHOO       | USD      |'
+            ].join('\n'),
+            type: 'text'
+          }
+        ]
+      });
+
+      await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow()]
+      });
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', [
+        {
+          currency: 'USD',
+          dataSource: 'YAHOO',
+          isin: null,
+          name: 'Fund A | B',
+          symbol: 'FAB'
+        }
+      ]);
+    });
+
     it('Does not get the holdings without an asset', async () => {
       mockRowMatches({});
 
@@ -1486,6 +1596,7 @@ describe('AiService', () => {
       });
 
       expect(mcpService.getPortfolio).not.toHaveBeenCalled();
+      expect(dataProviderService.getDataSources).not.toHaveBeenCalled();
 
       const { prompt } = jest.mocked(generateText).mock.calls[0][0];
 
@@ -1520,6 +1631,39 @@ describe('AiService', () => {
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
         'Could not get the holdings: Calculation failed'
+      );
+    });
+
+    it('Passes no holdings to the model and continues if the data sources cannot be got', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      mockHoldings();
+
+      jest
+        .mocked(dataProviderService.getDataSources)
+        .mockRejectedValueOnce(new Error('Database failed'));
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow()]
+      });
+
+      expect(activities).toEqual([expect.objectContaining({ symbol: 'AAPL' })]);
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).not.toHaveProperty('holdings');
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        'Could not get the holdings: Database failed'
       );
     });
 

@@ -476,12 +476,13 @@ export class AiService {
   }
 
   /**
-   * Gives the data source, the ISIN and the symbol of each holding of the
-   * table of the holdings which has a data source and a symbol. A cash
-   * position has no data source, hence it is left out. The ISIN is empty if
-   * the asset profile has none, which is the case for most stocks of Yahoo
-   * Finance. The columns are found by the header line. A line is split at
-   * each pipe which is not escaped, as the renderer escapes a pipe in a value.
+   * Gives the currency, the data source, the ISIN, the name and the symbol of
+   * each holding of the table of the holdings which has a data source and a
+   * symbol. A cash position has no data source, hence it is left out. The ISIN
+   * is null if the asset profile has none, which is the case for most stocks
+   * of Yahoo Finance. The columns are found by the header line. A line is
+   * split at each pipe which is not escaped, as the renderer escapes a pipe in
+   * a value, and the escaped pipes are restored.
    */
   private getHoldingsFromTable(holdings = '') {
     const [headerLine, , ...lines] = holdings.split('\n').filter((line) => {
@@ -497,7 +498,7 @@ export class AiService {
         .split(/(?<!\\)\|/)
         .slice(1, -1)
         .map((cell) => {
-          return cell.trim();
+          return cell.trim().replaceAll('\\|', '|');
         });
     };
 
@@ -508,14 +509,52 @@ export class AiService {
         const cells = getCells(line);
 
         return {
+          currency: cells[columnNames.indexOf('Currency')],
           dataSource: cells[columnNames.indexOf('Data Source')],
-          isin: cells[columnNames.indexOf('ISIN')],
+          isin: cells[columnNames.indexOf('ISIN')] || null,
+          name: cells[columnNames.indexOf('Name')],
           symbol: cells[columnNames.indexOf('Symbol')]
         };
       })
       .filter(({ dataSource, symbol }) => {
         return dataSource && symbol;
       });
+  }
+
+  /**
+   * Gives the holdings of the user with the tool get-portfolio of the server
+   * of the Model Context Protocol, without the holdings whose data source the
+   * import refuses for the user
+   */
+  private async getHoldingsToMatch({
+    subscription,
+    userId
+  }: {
+    subscription?: UserWithSettings['subscription'];
+    userId: string;
+  }) {
+    const [{ content }, dataSources] = await Promise.all([
+      this.mcpService.getPortfolio({ userId, withValues: false }),
+      this.dataProviderService.getDataSources()
+    ]);
+
+    return this.getHoldingsFromTable(content[0].text).filter(
+      ({ dataSource }) => {
+        return this.isValidDataSourceForImport({
+          dataSource,
+          dataSources,
+          subscription
+        });
+      }
+    );
+  }
+
+  /**
+   * Gives the ISIN without spaces and in upper case, as a file can show an
+   * ISIN in groups or in lower case
+   */
+  private getNormalizedIsin(isin?: string | null) {
+    return isin?.replaceAll(/\s/g, '').toUpperCase();
   }
 
   /**
@@ -564,20 +603,23 @@ export class AiService {
    * and not the model calls the tools search-asset-profiles, get-accounts and
    * get-portfolio of the server of the Model Context Protocol and passes their
    * results to the model, as some providers ignore a required tool call, for
-   * example if the output has a schema. The accounts and the holdings are
-   * given without values. The holdings let the model select an asset profile
-   * which the user already has, also if no search gives it, for example as no
-   * data provider finds its ISIN. If get-accounts fails, the model gets no
-   * accounts, so that only the account hints have no match. If get-portfolio
-   * fails, the model gets no holdings. The reasoning is disabled, as it can
-   * add thousands of output tokens. An asset match is left out if neither the
+   * example if the output has a schema. The accounts are given without
+   * values, the holdings with their currency, data source, ISIN, name and
+   * symbol only. The holdings let the model select an asset profile which the
+   * user already has, also if no search gives it, for example as no data
+   * provider finds its ISIN. A holding whose data source the import refuses
+   * for the user is not given to the model, so that the model selects an
+   * asset profile of the search instead and the whole import does not fail.
+   * If get-accounts fails, the model gets no accounts, so that only the
+   * account hints have no match. If get-portfolio or the data sources fail,
+   * the model gets no holdings. The reasoning is disabled, as it can add
+   * thousands of output tokens. An asset match is left out if neither the
    * search of its own asset nor the holdings gave its asset profile, or if its
    * holding has another ISIN than its own asset, as the import refuses a
    * symbol which the data source cannot resolve and as the model can mix up
-   * the ids of the assets. A holding without an ISIN is matched by the model
-   * by its name only, hence the code cannot check it against the asset. A
-   * holding whose data source the import refuses for the user is left out as
-   * well, so that only its rows have no match and not the whole import fails.
+   * the ids of the assets. The ISINs are compared without spaces and in upper
+   * case. A holding without an ISIN is matched by the model by its name only,
+   * hence the code cannot check it against the asset.
    */
   private async getRowMatches({
     abortSignal,
@@ -608,16 +650,13 @@ export class AiService {
             })
         : undefined,
       assets.length > 0
-        ? this.mcpService
-            .getPortfolio({ userId, withValues: false })
-            .then(({ content }) => {
-              return content[0].text;
-            })
-            .catch((error: Error): undefined => {
+        ? this.getHoldingsToMatch({ subscription, userId }).catch(
+            (error: Error): undefined => {
               this.logger.warn(`Could not get the holdings: ${error.message}`);
 
               return undefined;
-            })
+            }
+          )
         : undefined,
       Promise.all(
         assets.map((asset) => {
@@ -660,18 +699,6 @@ export class AiService {
       })
     });
 
-    const dataSources = await this.dataProviderService.getDataSources();
-
-    const holdingsFromTable = this.getHoldingsFromTable(holdings).filter(
-      ({ dataSource }) => {
-        return this.isValidDataSourceForImport({
-          dataSource,
-          dataSources,
-          subscription
-        });
-      }
-    );
-
     const assetMatches = output.assets.filter(({ dataSource, id, symbol }) => {
       const assetProfileIdentifier = getAssetProfileIdentifier({
         symbol,
@@ -679,11 +706,13 @@ export class AiService {
       });
 
       return (
-        holdingsFromTable.some((holding) => {
+        (holdings ?? []).some((holding) => {
           return (
             holding.dataSource === dataSource &&
             holding.symbol === symbol &&
-            (!holding.isin || holding.isin === assets[id]?.isin)
+            (!holding.isin ||
+              this.getNormalizedIsin(holding.isin) ===
+                this.getNormalizedIsin(assets[id]?.isin))
           );
         }) ||
         (searches[id]?.assetProfiles ?? []).some((assetProfile) => {
