@@ -33,6 +33,8 @@ describe('ImportService', () => {
   let addSymbolProfile: jest.Mock;
   let createActivity: jest.Mock;
   let gatherSymbols: jest.Mock;
+  let getAccounts: jest.Mock;
+  let getActivities: jest.Mock;
   let importService: ImportService;
   let updateManyMarketData: jest.Mock;
 
@@ -46,6 +48,8 @@ describe('ImportService', () => {
     addSymbolProfile = jest.fn();
     createActivity = jest.fn();
     gatherSymbols = jest.fn();
+    getAccounts = jest.fn().mockResolvedValue([]);
+    getActivities = jest.fn().mockResolvedValue({ activities: [], count: 0 });
     updateManyMarketData = jest.fn();
 
     const validateActivities = jest.fn(
@@ -56,7 +60,7 @@ describe('ImportService', () => {
 
         for (const { currency, dataSource, symbol } of activitiesDto) {
           assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] ??= {
-            currency,
+            currency: currency ?? 'USD',
             dataSource,
             symbol,
             name: symbol
@@ -69,11 +73,11 @@ describe('ImportService', () => {
 
     importService = new ImportService(
       {
-        accounts: jest.fn().mockResolvedValue([])
+        accounts: getAccounts
       } as unknown as AccountService,
       {
         createActivity,
-        getActivities: jest.fn().mockResolvedValue({ activities: [], count: 0 })
+        getActivities
       } as unknown as ActivitiesService,
       null,
       {
@@ -507,6 +511,212 @@ describe('ImportService', () => {
         { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
         { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
       ]);
+    });
+
+    it('detects duplicate activities within the same import payload', async () => {
+      const activities = await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          }),
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          })
+        ],
+        isDryRun: true
+      });
+
+      expect(activities[0].error).toBeUndefined();
+      expect(activities[1].error).toEqual({ code: 'IS_DUPLICATE' });
+    });
+
+    it('does not flag identical activities across different accounts as duplicates', async () => {
+      getAccounts.mockResolvedValue([
+        { id: 'account-1', name: 'First account' },
+        { id: 'account-2', name: 'Second account' }
+      ]);
+      const activities = await importActivities({
+        activitiesDto: [
+          {
+            ...createActivityDto({
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL',
+              type: 'BUY'
+            }),
+            accountId: 'account-1'
+          },
+          {
+            ...createActivityDto({
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL',
+              type: 'BUY'
+            }),
+            accountId: 'account-2'
+          }
+        ],
+        isDryRun: true
+      });
+
+      expect(activities[0].error).toBeUndefined();
+      expect(activities[1].error).toBeUndefined();
+    });
+
+    it.each([
+      { accountId: 'account-1', isDuplicate: true },
+      { accountId: 'account-2', isDuplicate: false },
+      { accountId: undefined, isDuplicate: false }
+    ])(
+      'checks saved activities against account $accountId',
+      async ({ accountId, isDuplicate }) => {
+        getAccounts.mockResolvedValue([
+          { id: 'account-1', name: 'First account' },
+          { id: 'account-2', name: 'Second account' }
+        ]);
+        const dto = createActivityDto({
+          dataSource: DataSource.YAHOO,
+          date: '2024-01-01T00:00:00.000Z',
+          symbol: 'AAPL',
+          type: 'BUY'
+        });
+        getActivities.mockResolvedValue({
+          count: 1,
+          activities: [
+            {
+              ...dto,
+              accountId: 'account-1',
+              currency: null,
+              date: parseISO(dto.date),
+              assetProfile: {
+                currency: 'USD',
+                dataSource: dto.dataSource,
+                symbol: dto.symbol
+              }
+            }
+          ]
+        });
+
+        const activities = await importActivities({
+          activitiesDto: [{ ...dto, accountId }],
+          isDryRun: true
+        });
+
+        expect(activities[0].error).toEqual(
+          isDuplicate ? { code: 'IS_DUPLICATE' } : undefined
+        );
+        expect(createActivity).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each([
+      [undefined, 'account-1'],
+      ['account-1', undefined]
+    ])(
+      'keeps assigned and unassigned rows distinct in either order (%s, %s)',
+      async (firstAccountId, secondAccountId) => {
+        getAccounts.mockResolvedValue([
+          { id: 'account-1', name: 'First account' }
+        ]);
+        const dto = createActivityDto({
+          dataSource: DataSource.YAHOO,
+          date: '2024-01-01T00:00:00.000Z',
+          symbol: 'AAPL',
+          type: 'BUY'
+        });
+
+        const activities = await importActivities({
+          activitiesDto: [
+            { ...dto, accountId: firstAccountId },
+            { ...dto, accountId: secondAccountId }
+          ],
+          isDryRun: true
+        });
+
+        expect(activities.map(({ error }) => error)).toEqual([
+          undefined,
+          undefined
+        ]);
+      }
+    );
+
+    it('treats null and omitted accounts as the same unassigned account', async () => {
+      const dto = createActivityDto({
+        dataSource: DataSource.YAHOO,
+        date: '2024-01-01T00:00:00.000Z',
+        symbol: 'AAPL',
+        type: 'BUY'
+      });
+      const activities = await importActivities({
+        activitiesDto: [{ ...dto, accountId: null }, dto],
+        isDryRun: true
+      });
+
+      expect(activities[0].error).toBeUndefined();
+      expect(activities[1].error).toEqual({ code: 'IS_DUPLICATE' });
+    });
+
+    it.each([
+      [undefined, 'USD'],
+      ['USD', undefined]
+    ])(
+      'uses the asset currency consistently within a batch (%s, %s)',
+      async (firstCurrency, secondCurrency) => {
+        const dto = createActivityDto({
+          dataSource: DataSource.YAHOO,
+          date: '2024-01-01T00:00:00.000Z',
+          symbol: 'AAPL',
+          type: 'BUY'
+        });
+        const activities = await importActivities({
+          activitiesDto: [
+            { ...dto, currency: firstCurrency },
+            { ...dto, currency: secondCurrency }
+          ],
+          isDryRun: true
+        });
+
+        expect(activities[0].error).toBeUndefined();
+        expect(activities[1].error).toEqual({ code: 'IS_DUPLICATE' });
+      }
+    );
+
+    it('does not replace an explicit saved transaction currency with the asset currency', async () => {
+      const dto = createActivityDto({
+        dataSource: DataSource.YAHOO,
+        date: '2024-01-01T00:00:00.000Z',
+        symbol: 'AAPL',
+        type: 'BUY'
+      });
+      getActivities.mockResolvedValue({
+        count: 1,
+        activities: [
+          {
+            ...dto,
+            accountId: null,
+            currency: 'EUR',
+            date: parseISO(dto.date),
+            assetProfile: {
+              currency: 'USD',
+              dataSource: dto.dataSource,
+              symbol: dto.symbol
+            }
+          }
+        ]
+      });
+
+      const activities = await importActivities({
+        activitiesDto: [dto],
+        isDryRun: true
+      });
+
+      expect(activities[0].error).toBeUndefined();
     });
   });
 

@@ -45,7 +45,7 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { Account, DataSource, Prisma } from '@prisma/client';
+import { Account, DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { isISIN } from 'class-validator';
 import { isSameSecond, parseISO, subDays } from 'date-fns';
@@ -766,6 +766,7 @@ export class ImportService {
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
+      assetProfiles,
       userCurrency,
       userId: user.id
     });
@@ -1034,10 +1035,14 @@ export class ImportService {
 
   private async extendActivitiesWithErrors({
     activitiesDto,
+    assetProfiles,
     userCurrency,
     userId
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
+    assetProfiles: {
+      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
+    };
     userCurrency: string;
     userId: string;
   }): Promise<(Partial<Activity> & Pick<Activity, 'assetProfile'>)[]> {
@@ -1048,6 +1053,9 @@ export class ImportService {
         includeDrafts: true,
         withExcludedAccountsAndActivities: true
       });
+
+    const processedActivities: (Partial<Activity> &
+      Pick<Activity, 'assetProfile'>)[] = [];
 
     return activitiesDto.map(
       ({
@@ -1064,12 +1072,18 @@ export class ImportService {
         unitPrice
       }) => {
         const date = parseISO(dateString);
+        const assetCurrency =
+          assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })]
+            ?.currency;
 
-        const isDuplicate = existingActivities.some((activity) => {
+        const isMatchingActivity = (
+          activity: Partial<Activity> & Pick<Activity, 'assetProfile'>
+        ) => {
           return (
+            (activity.accountId || null) === (accountId || null) &&
             (activity.comment || null) === (comment || null) &&
-            (activity.currency === currency ||
-              activity.assetProfile.currency === currency) &&
+            (activity.currency ?? activity.assetProfile.currency ?? null) ===
+              (currency ?? assetCurrency ?? null) &&
             activity.assetProfile.dataSource === dataSource &&
             isSameSecond(activity.date, date) &&
             activity.fee === fee &&
@@ -1078,13 +1092,16 @@ export class ImportService {
             activity.type === type &&
             activity.unitPrice === unitPrice
           );
-        });
+        };
+        const isDuplicate =
+          existingActivities.some(isMatchingActivity) ||
+          processedActivities.some(isMatchingActivity);
 
         const error: ActivityError = isDuplicate
           ? { code: 'IS_DUPLICATE' }
           : undefined;
 
-        return {
+        const activityExtended = {
           accountId,
           comment,
           currency,
@@ -1102,7 +1119,7 @@ export class ImportService {
             assetSubClass: undefined,
             countries: undefined,
             createdAt: undefined,
-            currency: undefined,
+            currency: assetCurrency,
             holdings: undefined,
             id: undefined,
             isActive: true,
@@ -1111,6 +1128,12 @@ export class ImportService {
           },
           tagIds: tags
         };
+
+        if (!error) {
+          processedActivities.push(activityExtended);
+        }
+
+        return activityExtended;
       }
     );
   }
