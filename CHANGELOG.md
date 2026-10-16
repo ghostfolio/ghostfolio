@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the email language of the investment signal emails to the language of the account (_Settings → Language_) and the body to the table of the signals
 - Changed the holdings of the portfolio details from a map to a list in the rebalancing of the investment plan (`toHoldingValuesBySymbol`)
+- Upgraded `stripe` from version `22.6.2` to `23.0.0`
+- Moved the validation of the date of an account balance into the shared validator `isValidAccountBalanceDate` (preparation of the upstream for a tool to update the account balance in the MCP server)
 - Changed the _Public API_ routes of the MCP server and its OAuth flow to be listed as public routes of the app module test, as they authenticate by themselves
 
 ### Removed
