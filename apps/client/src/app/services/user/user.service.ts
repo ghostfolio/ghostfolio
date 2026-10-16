@@ -151,6 +151,16 @@ export class UserService extends ObservableStore<UserStoreState> {
           user.settings.retirementDate = parseISO(user.settings.retirementDate);
         }
 
+        if (user.subscription?.expiresAt) {
+          user.subscription.expiresAt = parseISO(user.subscription.expiresAt);
+        }
+
+        if (user.subscription?.subscribedAt) {
+          user.subscription.subscribedAt = parseISO(
+            user.subscription.subscribedAt
+          );
+        }
+
         this.setState({ user }, UserStoreActions.GetUser);
 
         if (
