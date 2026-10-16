@@ -88,6 +88,7 @@ export class GfLineChartComponent
   @Input() benchmarkLabel = '';
   @Input() buyDateMarkers: LineChartItem[] = [];
   @Input() colorScheme?: ColorScheme;
+  @Input() dateMarkerCurrency?: string;
   @Input() sellDateMarkers: LineChartItem[] = [];
   @Input() currency?: string;
   @Input() dateRange: DateRange = DEFAULT_CHART_DATE_RANGE;
@@ -127,6 +128,14 @@ export class GfLineChartComponent
   private visibleHistoricalDataItems: LineChartItem[] = [];
   private visiblePriceStatistics: PriceStatistics[] = [];
   private readonly ANIMATION_DURATION = 800;
+  private readonly DATE_MARKER_DEFAULT_RADIUS = 4;
+  private readonly DATE_MARKER_MAX_RADIUS = 5;
+  private readonly DATE_MARKER_RADIUS_BY_AMOUNT = [
+    { radius: 1.5, threshold: 100 },
+    { radius: 2.4, threshold: 500 },
+    { radius: 3.2, threshold: 2000 },
+    { radius: 4.2, threshold: 5000 }
+  ];
   private readonly NEGATIVE_COLOR = 'rgb(177, 0, 0)';
   private readonly POSITIVE_COLOR = 'rgb(0, 177, 0)';
   private readonly dateRangeLabels: Record<string, string> = {
@@ -142,10 +151,12 @@ export class GfLineChartComponent
     purchase: $localize`Since Purchase`,
     ytd: $localize`YTD`
   };
+  private readonly buyLabel = $localize`Buy`;
   private readonly changeFromLastTroughLabel = $localize`From Last Low`;
   private readonly changeFromMaximumLabel = $localize`From All-Time High`;
   private readonly dailyChangeLabel = $localize`Daily Change`;
   private readonly marketChangeLabel = $localize`Market Change`;
+  private readonly sellLabel = $localize`Sell`;
   private readonly sharesLabel = $localize`Shares`;
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {
@@ -608,7 +619,7 @@ export class GfLineChartComponent
     }
 
     return markers.reduce<Record<string, AnnotationOptions>>(
-      (acc, { date }, index) => {
+      (acc, { amount, date }, index) => {
         const yValue = priceByDate.get(date);
 
         if (yValue == null) {
@@ -621,7 +632,7 @@ export class GfLineChartComponent
           borderWidth: 1,
           display,
           pointStyle: 'circle',
-          radius: 4,
+          radius: this.getDateMarkerRadius(amount),
           type: 'point',
           xScaleID: 'x',
           xValue: date,
@@ -633,6 +644,27 @@ export class GfLineChartComponent
       },
       {}
     );
+  }
+
+  /**
+   * Scales the marker by the transaction amount: markers without an amount
+   * keep the default size, the others are bucketed so that small trades stay
+   * discreet and large ones stand out
+   */
+  private getDateMarkerRadius(amount?: number) {
+    if (amount == null) {
+      return this.DATE_MARKER_DEFAULT_RADIUS;
+    }
+
+    const absoluteAmount = Math.abs(amount);
+
+    const { radius } = this.DATE_MARKER_RADIUS_BY_AMOUNT.find(
+      ({ threshold }) => {
+        return absoluteAmount < threshold;
+      }
+    ) ?? { radius: this.DATE_MARKER_MAX_RADIUS };
+
+    return radius;
   }
 
   private scheduleAnnotationReveal() {
@@ -734,23 +766,61 @@ export class GfLineChartComponent
       return [];
     }
 
-    const buyLines = this.getVisibleMarkers(this.buyDateMarkers)
-      .filter((marker) => {
-        return marker.date === date && marker.quantity;
-      })
-      .map((marker) => {
-        return `${this.sharesLabel}: +${marker.quantity} (${this.formatUnitPrice(marker.value)})`;
-      });
+    const buyLines = this.getTransactionTooltipLinesForMarkers({
+      date,
+      amountLabel: this.buyLabel,
+      markers: this.buyDateMarkers,
+      sign: '+'
+    });
 
-    const sellLines = this.getVisibleMarkers(this.sellDateMarkers)
-      .filter((marker) => {
-        return marker.date === date && marker.quantity;
-      })
-      .map((marker) => {
-        return `${this.sharesLabel}: -${marker.quantity} (${this.formatUnitPrice(marker.value)})`;
-      });
+    const sellLines = this.getTransactionTooltipLinesForMarkers({
+      date,
+      amountLabel: this.sellLabel,
+      markers: this.sellDateMarkers,
+      sign: '-'
+    });
 
     return [...buyLines, ...sellLines];
+  }
+
+  /**
+   * Markers carrying an amount are summarized with their total amount only,
+   * the others keep the detailed quantity and unit price
+   */
+  private getTransactionTooltipLinesForMarkers({
+    amountLabel,
+    date,
+    markers,
+    sign
+  }: {
+    amountLabel: string;
+    date: string;
+    markers: LineChartItem[];
+    sign: '+' | '-';
+  }) {
+    const visibleMarkers = this.getVisibleMarkers(markers).filter((marker) => {
+      return marker.date === date;
+    });
+
+    const totalAmount = visibleMarkers.reduce((total, { amount }) => {
+      return total + (amount ?? 0);
+    }, 0);
+
+    const amountLines = totalAmount
+      ? [
+          `${amountLabel}: ${sign}${this.formatUnitPrice(totalAmount, this.dateMarkerCurrency ?? this.currency)}`
+        ]
+      : [];
+
+    const quantityLines = visibleMarkers
+      .filter(({ quantity }) => {
+        return quantity;
+      })
+      .map(({ quantity, value }) => {
+        return `${this.sharesLabel}: ${sign}${quantity} (${this.formatUnitPrice(value)})`;
+      });
+
+    return [...amountLines, ...quantityLines];
   }
 
   private formatAmount(amount: number) {
@@ -759,13 +829,13 @@ export class GfLineChartComponent
     return `${sign}${this.formatUnitPrice(amount)}`;
   }
 
-  private formatUnitPrice(value: number) {
+  private formatUnitPrice(value: number, currency = this.currency) {
     const formattedAmount = value.toLocaleString(this.locale, {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2
     });
 
-    return `${formattedAmount}${this.currency ? ` ${this.currency}` : ''}`;
+    return `${formattedAmount}${currency ? ` ${currency}` : ''}`;
   }
 
   private getTransactionQuantityTooltipColor(
