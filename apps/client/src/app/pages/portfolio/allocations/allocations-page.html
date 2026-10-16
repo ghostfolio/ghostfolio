@@ -56,12 +56,12 @@
                 (proportionChartClicked)="onSymbolChartClicked($event)"
               />
             </div>
-            <div class="by-holding-list ml-3">
+            <div class="by-holding-list ms-3">
               @for (item of sortedSymbolList; track item.symbol) {
                 <div class="d-flex align-items-center justify-content-between py-1 border-bottom">
-                  <span class="font-weight-bold">{{ item.symbol }}</span>
-                  <span class="text-muted mx-3">{{ item.investment | currency:user?.settings?.baseCurrency:'symbol':'1.0-0':user?.settings?.locale }}</span>
-                  <span class="text-muted">{{ item.percentage < 1 ? '~' : '' }}{{ item.percentage | number:'1.0-0' }}%</span>
+                  <span class="fw-bold">{{ item.symbol }}</span>
+                  <span class="text-body-secondary mx-3">{{ item.investment | currency:user?.settings?.baseCurrency:'symbol':'1.0-0':user?.settings?.locale }}</span>
+                  <span class="text-body-secondary">{{ item.percentage < 1 ? '~' : '' }}{{ item.percentage | number:'1.0-0' }}%</span>
                 </div>
               }
             </div>

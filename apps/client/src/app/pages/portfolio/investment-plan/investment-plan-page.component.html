@@ -59,7 +59,7 @@
                 <mat-hint i18n>Total personal savings (static sum)</mat-hint>
               </mat-form-field>
 
-              <p class="text-muted mt-3 mb-2" i18n>Tier 1 — Emergency Fund</p>
+              <p class="text-body-secondary mt-3 mb-2" i18n>Tier 1 — Emergency Fund</p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label i18n>Cash Reserve</mat-label>
                 <input matInput type="number" [(ngModel)]="plan.cashReserve" />
@@ -71,14 +71,14 @@
                 <mat-hint i18n>Low-probability high-impact events reserve</mat-hint>
               </mat-form-field>
 
-              <p class="text-muted mt-3 mb-2" i18n>Tier 2 — Capital Preservation Bucket</p>
+              <p class="text-body-secondary mt-3 mb-2" i18n>Tier 2 — Capital Preservation Bucket</p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label i18n>Preservation Target (CAD)</mat-label>
                 <input matInput type="number" [(ngModel)]="plan.preservationBucket" />
                 <mat-hint i18n>Buffer for market drawdowns or life events</mat-hint>
               </mat-form-field>
 
-              <p class="text-muted mt-3 mb-2" i18n>Tier 3 — Investment Layer</p>
+              <p class="text-body-secondary mt-3 mb-2" i18n>Tier 3 — Investment Layer</p>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label i18n>Long-term Growth Target</mat-label>
                 <input matInput type="number" [(ngModel)]="plan.longTermGrowthTarget" />
@@ -113,7 +113,7 @@
                 <mat-hint i18n>Auto-calculated from your transaction history</mat-hint>
               </mat-form-field>
               @if (plan.longTermGrowthTarget > 0) {
-                <p class="mt-2 mb-0" [class.text-danger]="plan.deployedCapital > plan.longTermGrowthTarget" [class.text-muted]="plan.deployedCapital <= plan.longTermGrowthTarget">
+                <p class="mt-2 mb-0" [class.text-danger]="plan.deployedCapital > plan.longTermGrowthTarget" [class.text-body-secondary]="plan.deployedCapital <= plan.longTermGrowthTarget">
                   <span i18n>Gap (Target − Deployed):</span>
                   <strong>
                     {{ plan.longTermGrowthTarget - plan.deployedCapital | number: '1.0-0' }} CAD
@@ -135,7 +135,7 @@
               <mat-card-title i18n>Notifications</mat-card-title>
             </mat-card-header>
             <mat-card-content class="py-3">
-              <p class="mb-2 text-muted" i18n>Signals</p>
+              <p class="mb-2 text-body-secondary" i18n>Signals</p>
               <mat-checkbox
                 class="d-block mb-2"
                 [(ngModel)]="plan.subscribeRebalancing"
@@ -157,7 +157,7 @@
 
               <hr class="mb-3" />
 
-              <p class="mb-2 text-muted" i18n>Email</p>
+              <p class="mb-2 text-body-secondary" i18n>Email</p>
               <mat-checkbox class="mb-3 d-block" [(ngModel)]="emailEnabled" i18n
                 >Enable email notifications</mat-checkbox
               >
@@ -174,7 +174,7 @@
 
               <hr class="mb-3" />
 
-              <p class="mb-2 text-muted" i18n>Webhook</p>
+              <p class="mb-2 text-body-secondary" i18n>Webhook</p>
               <mat-checkbox class="mb-3 d-block" [(ngModel)]="plan.webhookEnabled" i18n
                 >Enable webhook notifications</mat-checkbox
               >
@@ -226,7 +226,7 @@
                 rebalancingResult.capital?.reason &&
                 rebalancingResult.capital?.status !== 'ON_TARGET'
               ) {
-                <div class="px-3 pb-2 small text-muted">
+                <div class="px-3 pb-2 small text-body-secondary">
                   {{ rebalancingResult.capital?.reason }}
                 </div>
               }
@@ -238,16 +238,16 @@
                     <!-- Name/symbols + weight arrow -->
                     <div style="min-width: 180px;">
                       <strong style=" margin-right: 2px;">{{ action.name }}</strong>
-                      <span class="text-muted ms-2 small"
+                      <span class="text-body-secondary ms-2 small"
                         >{{ action.currentWeight | number: '1.0-1' }}% → {{ action.targetWeight }}%</span
                       >
                       @if (action.symbols.length > 1) {
-                        <div class="text-muted small">{{ action.symbols.join(', ') }}</div>
+                        <div class="text-body-secondary small">{{ action.symbols.join(', ') }}</div>
                       }
                     </div>
 
                     <!-- Current value in position -->
-                    <div class="text-muted small" style="min-width: 110px">
+                    <div class="text-body-secondary small" style="min-width: 110px">
                       ${{ action.currentValue | number: '1.0-0' }} CAD
                     </div>
 
@@ -264,7 +264,7 @@
                       } @else if (action.type === 'SELL') {
                         <span class="text-danger">Sell ${{ action.amount | number: '1.0-0' }}</span>
                       } @else {
-                        <span class="text-muted">Balanced ✓</span>
+                        <span class="text-body-secondary">Balanced ✓</span>
                       }
                     </div>
                   </div>
@@ -279,7 +279,7 @@
             </mat-card-header>
             <mat-card-content class="py-3">
               @if (allocationGroups.length === 0) {
-                <p class="text-muted" i18n>No target allocations configured yet.</p>
+                <p class="text-body-secondary" i18n>No target allocations configured yet.</p>
               }
               @for (g of allocationGroups; track g.groupId) {
                 <div
@@ -287,12 +287,12 @@
                 >
                   <div>
                     <strong>{{ g.name }}</strong>
-                    <span class="text-muted ms-2"
+                    <span class="text-body-secondary ms-2"
                       ><span i18n>Target</span> {{ g.targetWeight }}% ·
                       <span i18n>Threshold</span> {{ g.rebalanceThreshold }}%</span
                     >
                     @if (g.symbols.length > 1) {
-                      <div class="text-muted small">{{ g.symbols.join(', ') }}</div>
+                      <div class="text-body-secondary small">{{ g.symbols.join(', ') }}</div>
                     }
                   </div>
                   <button
@@ -445,7 +445,7 @@
             </mat-card-header>
             <mat-card-content class="py-3">
               @if (dcaSchedules.length === 0) {
-                <p class="text-muted" i18n>No DCA schedules configured yet.</p>
+                <p class="text-body-secondary" i18n>No DCA schedules configured yet.</p>
               }
               @for (dca of dcaSchedules; track dca.id) {
                 <div class="border rounded p-3 mb-2">
@@ -455,7 +455,7 @@
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>
-                  <div class="text-muted small">
+                  <div class="text-body-secondary small">
                     ${{ dca.weeklyBudget }}/week · {{ dca.signalType }} ·
                     <span i18n>Fallback</span> {{ dca.deadlineDay }}
                     @if (dca.totalBudget) {
@@ -481,7 +481,7 @@
             </mat-card-header>
             <mat-card-content class="py-3">
               @if (signals.length === 0) {
-                <p class="text-muted" i18n>
+                <p class="text-body-secondary" i18n>
                   No signals yet. The system will analyse and generate them automatically on weekdays at 9 AM (server time).
                 </p>
               }
@@ -499,8 +499,8 @@
                         >
                       }
                     </div>
-                    <div class="text-muted small">{{ signal.reason }}</div>
-                    <div class="text-muted small">
+                    <div class="text-body-secondary small">{{ signal.reason }}</div>
+                    <div class="text-body-secondary small">
                       {{ signal.date | date: 'yyyy-MM-dd HH:mm' }}
                     </div>
                   </div>
@@ -627,14 +627,14 @@
             </mat-card-header>
             <mat-card-content class="py-3">
               @if (priceAlerts.length === 0) {
-                <p class="text-muted" i18n>No price alerts configured yet.</p>
+                <p class="text-body-secondary" i18n>No price alerts configured yet.</p>
               }
               @for (alert of priceAlerts; track alert.id) {
                 <div class="border rounded p-3 mb-2">
                   <div class="d-flex justify-content-between align-items-start">
                     <div>
                       <strong>{{ alert.name || alert.symbol }}</strong>
-                      <span class="ms-2 text-muted"
+                      <span class="ms-2 text-body-secondary"
                         >{{ conditionLabel(alert.condition) }} {{ alert.targetValue }}</span
                       >
                     </div>
@@ -647,7 +647,7 @@
                     </button>
                   </div>
                   @if (alert.messageTemplate) {
-                    <div class="text-muted small mt-1">{{ alert.messageTemplate }}</div>
+                    <div class="text-body-secondary small mt-1">{{ alert.messageTemplate }}</div>
                   }
                   <div class="mt-2">
                     @if (alert.isActive) {
@@ -655,7 +655,7 @@
                     } @else {
                       <span class="badge bg-secondary me-2" i18n>Triggered</span>
                       @if (alert.triggeredAt) {
-                        <span class="text-muted small"
+                        <span class="text-body-secondary small"
                           >{{ alert.triggeredValue }} @ {{ alert.triggeredAt | date: 'yyyy-MM-dd HH:mm' }}</span
                         >
                       }

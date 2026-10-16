@@ -39,10 +39,10 @@
     </ng-container>
 
     <ng-container matColumnDef="marketPrice">
-      <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>
         <ng-container i18n>Market Price</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
         @if (isNumber(element?.marketPrice)) {
           <gf-value
             class="d-inline-block justify-content-end"

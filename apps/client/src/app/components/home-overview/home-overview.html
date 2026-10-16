@@ -146,7 +146,7 @@
                 <div class="d-flex align-items-center justify-content-between py-1 signal-row-divider">
                   <div>
                     <strong>{{ signal.symbol }}</strong>
-                    <span class="ms-2 text-muted" style="font-size: 13px;">
+                    <span class="ms-2 text-body-secondary" style="font-size: 13px;">
                       @if (signal.type === 'DCA_BUY') { 📈 DCA 买入 }
                       @if (signal.type === 'REBALANCE_BUY') { 🟢 再平衡买入 }
                       @if (signal.type === 'REBALANCE_SELL') { 🔴 再平衡卖出 }
@@ -157,7 +157,7 @@
                       </span>
                     }
                   </div>
-                  <span class="text-muted" style="font-size: 12px;">
+                  <span class="text-body-secondary" style="font-size: 12px;">
                     {{ signal.date | date:'MM-dd' }}
                   </span>
                 </div>
