@@ -83,61 +83,61 @@ describe('PortfolioCalculator (ROI)', () => {
   });
 
   describe('get current positions', () => {
+    // The second holding is BALN.SW of another data source, so that both
+    // holdings have the same market prices
+    const activities: Activity[] = [
+      {
+        ...activityDummyData,
+        assetProfile: {
+          ...assetProfileDummyData,
+          currency: 'CHF',
+          dataSource: 'YAHOO',
+          name: 'Bâloise Holding AG',
+          symbol: 'BALN.SW'
+        },
+        date: new Date('2021-11-22'),
+        feeInAssetProfileCurrency: 1.55,
+        feeInBaseCurrency: 1.55,
+        quantity: 2,
+        type: 'BUY',
+        unitPriceInAssetProfileCurrency: 142.9
+      },
+      {
+        ...activityDummyData,
+        assetProfile: {
+          ...assetProfileDummyData,
+          currency: 'CHF',
+          dataSource: 'YAHOO',
+          name: 'Bâloise Holding AG',
+          symbol: 'BALN.SW'
+        },
+        date: new Date('2021-11-30'),
+        feeInAssetProfileCurrency: 1.65,
+        feeInBaseCurrency: 1.65,
+        quantity: 2,
+        type: 'SELL',
+        unitPriceInAssetProfileCurrency: 136.6
+      },
+      {
+        ...activityDummyData,
+        assetProfile: {
+          ...assetProfileDummyData,
+          currency: 'CHF',
+          dataSource: 'EOD_HISTORICAL_DATA',
+          name: 'Bâloise Holding AG',
+          symbol: 'BALN.SW'
+        },
+        date: new Date('2021-11-30'),
+        feeInAssetProfileCurrency: 0,
+        feeInBaseCurrency: 0,
+        quantity: 2,
+        type: 'BUY',
+        unitPriceInAssetProfileCurrency: 136.6
+      }
+    ];
+
     it.only('with BALN.SW sell and buy on the same day', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
-
-      // The second holding is BALN.SW of another data source, so that both
-      // holdings have the same market prices
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          date: new Date('2021-11-22'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 142.9
-        },
-        {
-          ...activityDummyData,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.65,
-          feeInBaseCurrency: 1.65,
-          quantity: 2,
-          type: 'SELL',
-          unitPriceInAssetProfileCurrency: 136.6
-        },
-        {
-          ...activityDummyData,
-          assetProfile: {
-            ...assetProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'EOD_HISTORICAL_DATA',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
-          quantity: 2,
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 136.6
-        }
-      ];
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
@@ -231,6 +231,59 @@ describe('PortfolioCalculator (ROI)', () => {
           netPerformanceWithCurrencyEffect: 8.8,
           valueWithCurrencyEffect: 297.8
         }
+      });
+    });
+
+    it.only('with BALN.SW sell and buy on the same day and a dividend', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities: [
+          ...activities,
+          {
+            ...activityDummyData,
+            assetProfile: {
+              ...assetProfileDummyData,
+              currency: 'CHF',
+              dataSource: 'EOD_HISTORICAL_DATA',
+              name: 'Bâloise Holding AG',
+              symbol: 'BALN.SW'
+            },
+            date: new Date('2021-12-17'),
+            feeInAssetProfileCurrency: 0,
+            feeInBaseCurrency: 0,
+            quantity: 2,
+            type: 'DIVIDEND',
+            unitPriceInAssetProfileCurrency: 1.43
+          }
+        ],
+        calculationType: PerformanceCalculationType.ROI,
+        currency: 'CHF',
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      /**
+       * The dividend yield of the holding uses the invested capital of the
+       * holding: (1 + 2.86 CHF / 273.2 CHF) ^ (365 / 18 days) - 1 ≈ 23.51 %
+       */
+      expect(portfolioSnapshot.positions[0]).toMatchObject({
+        averageInvestment: new Big('273.2'),
+        dataSource: 'EOD_HISTORICAL_DATA',
+        dividendInBaseCurrency: new Big('2.86'),
+        dividendYieldPercent: new Big('0.2351283862005056')
+      });
+
+      /**
+       * The dividend yield of the portfolio uses the invested capital of the
+       * portfolio, 285.8 CHF, and not the sum of the holdings, 559 CHF:
+       * (1 + 2.86 CHF / 285.8 CHF) ^ (365 / 26 days) - 1 ≈ 15.00 %
+       */
+      expect(portfolioSnapshot).toMatchObject({
+        dividendYieldPercent: new Big('0.1500260608512471'),
+        dividendYieldPercentWithCurrencyEffect: new Big('0.1500260608512471')
       });
     });
   });
