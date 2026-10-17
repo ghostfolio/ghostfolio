@@ -1093,11 +1093,8 @@ export abstract class PortfolioCalculator {
     const netPerformanceValues: { [date: string]: Big } = {};
     const netPerformanceValuesWithCurrencyEffect: { [date: string]: Big } = {};
     let totalInvestment = new Big(0);
-    let totalInvestmentFromBuyTransactions = new Big(0);
-    let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalQuantity = new Big(0);
-    let totalQuantityFromBuyTransactions = new Big(0);
 
     const indexOfStartActivity = activities.findIndex(({ itemType }) => {
       return itemType === 'start';
@@ -1179,17 +1176,6 @@ export abstract class PortfolioCalculator {
         transactionInvestmentWithCurrencyEffect = activity.quantity
           .mul(activity.unitPriceInBaseCurrencyWithCurrencyEffect)
           .mul(getFactor(activity.type));
-
-        totalQuantityFromBuyTransactions =
-          totalQuantityFromBuyTransactions.plus(activity.quantity);
-
-        totalInvestmentFromBuyTransactions =
-          totalInvestmentFromBuyTransactions.plus(transactionInvestment);
-
-        totalInvestmentFromBuyTransactionsWithCurrencyEffect =
-          totalInvestmentFromBuyTransactionsWithCurrencyEffect.plus(
-            transactionInvestmentWithCurrencyEffect
-          );
       } else if (activity.type === 'SELL') {
         if (totalQuantity.gt(0)) {
           const remainingQuantity = totalQuantity.minus(activity.quantity);
@@ -1279,26 +1265,14 @@ export abstract class PortfolioCalculator {
           grossPerformanceFromSellWithCurrencyEffect
         );
 
-      lastAveragePrice = totalQuantityFromBuyTransactions.eq(0)
+      // Use the cost basis of the currently held quantity for the next sale.
+      lastAveragePrice = totalQuantity.eq(0)
         ? new Big(0)
-        : totalInvestmentFromBuyTransactions.div(
-            totalQuantityFromBuyTransactions
-          );
+        : totalInvestment.div(totalQuantity);
 
-      lastAveragePriceWithCurrencyEffect = totalQuantityFromBuyTransactions.eq(
-        0
-      )
+      lastAveragePriceWithCurrencyEffect = totalQuantity.eq(0)
         ? new Big(0)
-        : totalInvestmentFromBuyTransactionsWithCurrencyEffect.div(
-            totalQuantityFromBuyTransactions
-          );
-
-      if (totalQuantity.eq(0)) {
-        // Reset tracking variables when position is fully closed
-        totalInvestmentFromBuyTransactions = new Big(0);
-        totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
-        totalQuantityFromBuyTransactions = new Big(0);
-      }
+        : totalInvestmentWithCurrencyEffect.div(totalQuantity);
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log(
