@@ -11,7 +11,7 @@
     (closed)="onPanelClosed()"
   >
     <mat-select-trigger>
-      <div class="align-items-center align-middle d-inline-flex line-height-1">
+      <div class="align-items-center align-middle d-inline-flex lh-1">
         @if (selectedAccount()?.platform?.url) {
           <gf-entity-logo
             class="me-1"
@@ -36,7 +36,7 @@
             [tooltip]="account.platform?.name ?? ''"
             [url]="account.platform?.url ?? ''"
           />
-          <div class="line-height-1">
+          <div class="lh-1">
             <span>{{ account.name }}</span>
             <br />
             <small class="text-body-secondary">

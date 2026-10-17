@@ -1,5 +1,4 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
-import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
@@ -25,6 +24,7 @@ import type {
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfInvestmentChartComponent } from '@ghostfolio/ui/investment-chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
