@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a tool to update the cash balance of an account to the server of the Model Context Protocol (MCP) (experimental)
 
+### Changed
+
+- Improved the search by ISIN number in the _Financial Modeling Prep_ service
+
 ## 3.87.0 - 2026-10-17
 
 ### Added
