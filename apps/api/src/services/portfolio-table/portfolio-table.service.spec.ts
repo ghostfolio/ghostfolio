@@ -25,7 +25,8 @@ import { PortfolioTableService } from './portfolio-table.service';
 /**
  * The markdown table is rendered by a package which ships as an ECMAScript
  * module only, which Jest cannot run. The mock keeps the mapping of the
- * columns and of the rows and writes them in the same shape as the renderer
+ * columns and of the rows and writes them in the same shape as the renderer,
+ * which writes null as text and undefined as an empty cell
  */
 jest.mock('@ghostfolio/api/helper/markdown-table.helper', () => {
   const { getTableInput } = jest.requireActual<
@@ -50,7 +51,7 @@ jest.mock('@ghostfolio/api/helper/markdown-table.helper', () => {
             }),
             ...rows.map((row) => {
               return names.map((name) => {
-                return row[name];
+                return row[name] === undefined ? '' : String(row[name]);
               });
             })
           ]
@@ -119,12 +120,14 @@ function createHolding({
   assetClass = AssetClass.EQUITY,
   assetSubClass = AssetSubClass.STOCK,
   dataSource = DataSource.YAHOO,
+  isin,
   symbol = 'AAPL'
 }: {
   allocationInPercentage?: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
   dataSource?: DataSource;
+  isin?: string | null;
   symbol?: string;
 } = {}) {
   return {
@@ -134,6 +137,7 @@ function createHolding({
       assetClass,
       assetSubClass,
       dataSource,
+      isin,
       symbol,
       currency: 'CHF',
       name: `Name of ${symbol}`
@@ -317,6 +321,7 @@ describe('PortfolioTableService', () => {
     it('gives no column with a monetary value', () => {
       expect(PortfolioTableService.getHoldingsTableColumnNames()).toEqual([
         'Name',
+        'ISIN',
         'Symbol',
         'Data Source',
         'Currency',
@@ -602,6 +607,28 @@ describe('PortfolioTableService', () => {
 
       expect(row).toContain('| USD |  | CHF |');
       expect(row).not.toContain(encodeDataSource(DataSource.YAHOO));
+    });
+
+    it('gives the ISIN', async () => {
+      const result = await getHoldingsTable([
+        createHolding({ isin: 'US0378331005' })
+      ]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain('| Name of AAPL | US0378331005 | AAPL |');
+    });
+
+    it('gives an empty ISIN if the asset profile has none', async () => {
+      const result = await getHoldingsTable([createHolding({ isin: null })]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain('| Name of AAPL |  | AAPL |');
     });
 
     it('gives the translation of the asset class and of the asset sub class', async () => {

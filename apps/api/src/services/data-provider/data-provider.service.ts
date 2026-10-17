@@ -267,17 +267,10 @@ export class DataProviderService implements OnModuleInit {
         );
       }
 
-      if (
-        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-        subscription?.type === SubscriptionType.Basic
-      ) {
-        const dataProvider = this.getDataProvider(DataSource[dataSource]);
-
-        if (dataProvider.getDataProviderInfo().isPremium) {
-          throw new ImportValidationError(
-            `${activityPath}.dataSource ("${maskedDataSource}") requires Ghostfolio Premium`
-          );
-        }
+      if (this.isPremiumRequired({ dataSource, subscription })) {
+        throw new ImportValidationError(
+          `${activityPath}.dataSource ("${maskedDataSource}") requires Ghostfolio Premium`
+        );
       }
 
       const assetProfileIdentifier = getAssetProfileIdentifier({
@@ -851,6 +844,26 @@ export class DataProviderService implements OnModuleInit {
     return !!(await this.propertyService.getByKey<string>(
       PROPERTY_API_KEY_GHOSTFOLIO
     ));
+  }
+
+  /**
+   * Checks if a data source requires Ghostfolio Premium for a subscription,
+   * which is the case for a premium data provider and the Basic subscription
+   * if the subscription is enabled
+   */
+  public isPremiumRequired({
+    dataSource,
+    subscription
+  }: {
+    dataSource: DataSource;
+    subscription: UserWithSettings['subscription'];
+  }) {
+    return (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      subscription?.type === SubscriptionType.Basic &&
+      this.getDataProvider(DataSource[dataSource]).getDataProviderInfo()
+        .isPremium
+    );
   }
 
   public async search({
