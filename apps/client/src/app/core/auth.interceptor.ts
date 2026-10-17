@@ -38,10 +38,13 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    let headers = request.headers.set(
-      HEADER_KEY_TIMEZONE,
-      Intl?.DateTimeFormat().resolvedOptions().timeZone
-    );
+    let headers = request.headers;
+
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    if (timezone) {
+      headers = headers.set(HEADER_KEY_TIMEZONE, timezone);
+    }
 
     const token = this.tokenStorageService.getToken();
 

@@ -6,7 +6,7 @@
         <h4 class="align-items-center d-flex mb-3">
           <span i18n>Calculator</span>
           @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
+            <gf-premium-indicator class="ms-1" />
           }
         </h4>
         <gf-fire-calculator
@@ -41,7 +41,7 @@
     <h4 class="align-items-center d-flex">
       <span i18n>Sustainable retirement income</span>
       @if (user?.subscription?.type === 'Basic') {
-        <gf-premium-indicator class="ml-1" />
+        <gf-premium-indicator class="ms-1" />
       }
     </h4>
     @if (isLoading) {
@@ -63,11 +63,11 @@
         />
       </div>
     } @else {
-      <div [class.text-muted]="user?.subscription?.type === 'Basic'">
+      <div [class.text-body-secondary]="user?.subscription?.type === 'Basic'">
         <div class="mb-2">
           <ng-container i18n
             >If you retire today, you would be able to withdraw
-            <span class="font-weight-bold"
+            <span class="fw-bold"
               ><gf-value
                 class="d-inline-block"
                 [isCurrency]="true"
@@ -82,7 +82,7 @@
               per year</span
             >
             or
-            <span class="font-weight-bold"
+            <span class="fw-bold"
               ><gf-value
                 class="d-inline-block"
                 [isCurrency]="true"
@@ -96,7 +96,7 @@
               />
               per month</span
             >, based on your total assets of
-            <span class="font-weight-bold"
+            <span class="fw-bold"
               ><gf-value
                 class="d-inline-block"
                 [isCurrency]="true"
@@ -116,7 +116,7 @@
             user?.settings?.isExperimentalFeatures
           ) {
             <select
-              class="border-0 cursor-pointer d-inline-block font-weight-bold safe-withdrawal-rate-select"
+              class="border-0 cursor-pointer d-inline-block fw-bold safe-withdrawal-rate-select"
               [formControl]="safeWithdrawalRateControl"
             >
               @for (rate of safeWithdrawalRateOptions; track rate) {
@@ -127,7 +127,7 @@
             >.
           } @else {
             <ng-container>&nbsp;</ng-container>
-            <span class="font-weight-bold"
+            <span class="fw-bold"
               ><gf-value
                 class="d-inline-block"
                 [isPercent]="true"
@@ -141,9 +141,9 @@
         @if (user?.settings?.isExperimentalFeatures) {
           <div>
             <ng-container i18n
-              >By <span class="font-weight-bold">{{ retirementDateLabel }}</span
+              >By <span class="fw-bold">{{ retirementDateLabel }}</span
               >, this is projected to increase to
-              <span class="font-weight-bold"
+              <span class="fw-bold"
                 ><gf-value
                   class="d-inline-block"
                   [isCurrency]="true"
@@ -158,7 +158,7 @@
                 per year</span
               >
               or
-              <span class="font-weight-bold"
+              <span class="fw-bold"
                 ><gf-value
                   class="d-inline-block"
                   [isCurrency]="true"
@@ -172,13 +172,13 @@
                 />
                 per month</span
               >, assuming a
-              <span class="font-weight-bold"
+              <span class="fw-bold"
                 ><gf-value
                   class="d-inline-block"
                   [isPercent]="true"
                   [locale]="user?.settings?.locale"
                   [precision]="2"
-                  [value]="user?.settings?.annualInterestRate / 100"
+                  [value]="(user?.settings?.annualInterestRate ?? 0) / 100"
               /></span>
               annual interest rate.</ng-container
             >

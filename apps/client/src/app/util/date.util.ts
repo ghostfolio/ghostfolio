@@ -10,16 +10,17 @@ export function formatRelativeTime({
   date,
   language
 }: {
-  date: string;
+  date: Date | string | null | undefined;
   language?: string;
 }) {
   if (date) {
-    const distanceString = formatDistanceToNowStrict(parseISO(date), {
+    const parsedDate = typeof date === 'string' ? parseISO(date) : date;
+    const distanceString = formatDistanceToNowStrict(parsedDate, {
       addSuffix: true,
       locale: getDateFnsLocale(language)
     });
 
-    return Math.abs(differenceInSeconds(parseISO(date), new Date())) < 60
+    return Math.abs(differenceInSeconds(parsedDate, new Date())) < 60
       ? $localize`just now`
       : distanceString;
   }

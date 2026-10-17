@@ -11,27 +11,27 @@
     }
 
     &.buy {
-      color: var(--green);
+      color: var(--bs-green);
     }
 
     &.dividend {
-      color: var(--blue);
+      color: var(--bs-blue);
     }
 
     &.fee {
-      color: var(--gray);
+      color: var(--bs-gray);
     }
 
     &.interest {
-      color: var(--cyan);
+      color: var(--bs-cyan);
     }
 
     &.liability {
-      color: var(--red);
+      color: var(--bs-red);
     }
 
     &.sell {
-      color: var(--orange);
+      color: var(--bs-orange);
     }
   }
 }

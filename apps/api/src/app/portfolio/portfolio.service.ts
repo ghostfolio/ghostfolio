@@ -47,6 +47,7 @@ import {
   isAccountExcluded,
   isDraftActivity,
   parseDate,
+  resetHours,
   resolveUserSettings
 } from '@ghostfolio/common/helper';
 import {
@@ -97,14 +98,14 @@ import {
   endOfDay,
   format,
   isAfter,
-  isBefore,
   isSameMonth,
   isSameYear,
+  min,
   parseISO,
   set,
   startOfDay
 } from 'date-fns';
-import { groupBy } from 'lodash-es';
+import { groupBy, uniq } from 'lodash-es';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
@@ -558,8 +559,13 @@ export class PortfolioService {
 
     const { historicalData } = await portfolioCalculator.getSnapshot();
 
-    const items = historicalData.filter(({ date }) => {
-      return !isBefore(date, startDate) && !isAfter(date, endDate);
+    const items = historicalData.filter((historicalDataItem) => {
+      const date = resetHours(parseDate(historicalDataItem.date));
+
+      return (
+        isAfter(date, resetHours(startDate)) &&
+        !isAfter(date, resetHours(endDate))
+      );
     });
 
     let investments: InvestmentItem[];
@@ -1049,12 +1055,11 @@ export class PortfolioService {
       );
     });
 
-    const historicalData = await this.dataProviderService.getHistorical(
-      [{ dataSource, symbol }],
-      'day',
-      parseISO(dateOfFirstActivity, { in: utc }),
-      new Date()
-    );
+    const historicalData = await this.dataProviderService.getHistorical({
+      assetProfileIdentifiers: [{ dataSource, symbol }],
+      from: parseISO(dateOfFirstActivity, { in: utc }),
+      to: new Date()
+    });
 
     const [firstActivity] = activitiesOfHolding;
     const referenceUnitPrice =
@@ -1194,10 +1199,12 @@ export class PortfolioService {
   public async getPerformance({
     dateRange = DEFAULT_DATE_RANGE,
     filters,
+    groupBy,
     userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
+    groupBy?: Extract<GroupBy, 'year'>;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
@@ -1252,10 +1259,11 @@ export class PortfolioService {
 
     const { endDate, startDate } = getIntervalFromDateRange({ dateRange });
 
-    const { chart } = await portfolioCalculator.getPerformance({
-      end: endDate,
-      start: startDate
-    });
+    const { chart: chartOfDateRange } =
+      await portfolioCalculator.getPerformance({
+        end: endDate,
+        start: startDate
+      });
 
     const {
       dividendInBaseCurrency,
@@ -1268,7 +1276,7 @@ export class PortfolioService {
       totalInvestment,
       totalInvestmentValueWithCurrencyEffect,
       valueWithCurrencyEffect
-    } = chart?.at(-1) ?? {
+    } = chartOfDateRange?.at(-1) ?? {
       dividendInBaseCurrency: 0,
       dividendInPercentageWithCurrencyEffect: 0,
       netPerformance: 0,
@@ -1279,6 +1287,16 @@ export class PortfolioService {
       totalInvestment: 0,
       valueWithCurrencyEffect: 0
     };
+
+    const chart =
+      groupBy === 'year'
+        ? await this.getPerformanceByYear({
+            chartOfDateRange,
+            endDate,
+            portfolioCalculator,
+            startDate
+          })
+        : chartOfDateRange;
 
     return {
       chart,
@@ -2050,6 +2068,64 @@ export class PortfolioService {
     return { markets, marketsAdvanced };
   }
 
+  /**
+   * Returns one chart item per calendar year of the date range, dated on
+   * 1 January. Each year stands alone and is not accumulated, so its values
+   * are the same as for the date range of the year (e.g. '2024'), clipped to
+   * the requested date range. The investment is the sum of the year, the other
+   * values are the ones at the end of the year. The first chart item of the
+   * date range carries the values at its start date and belongs to the
+   * previous period, like 31 December for a calendar year, so the years before
+   * the first activity have no chart item.
+   */
+  private async getPerformanceByYear({
+    chartOfDateRange,
+    endDate,
+    portfolioCalculator,
+    startDate
+  }: {
+    chartOfDateRange: HistoricalDataItem[];
+    endDate: Date;
+    portfolioCalculator: PortfolioCalculator;
+    startDate: Date;
+  }): Promise<HistoricalDataItem[]> {
+    const chart: HistoricalDataItem[] = [];
+
+    const years = uniq(
+      chartOfDateRange.slice(1).map(({ date }) => {
+        return date.substring(0, 4);
+      })
+    );
+
+    for (const [index, year] of years.entries()) {
+      const { endDate: endDateOfYear, startDate: startDateOfYear } =
+        getIntervalFromDateRange({ dateRange: year });
+
+      const { chart: chartOfYear } = await portfolioCalculator.getPerformance({
+        end: min([endDate, endDateOfYear]),
+        start: index === 0 ? startDate : startDateOfYear
+      });
+
+      let investmentValueWithCurrencyEffect = new Big(0);
+
+      for (const historicalDataItem of chartOfYear.slice(1)) {
+        investmentValueWithCurrencyEffect =
+          investmentValueWithCurrencyEffect.plus(
+            historicalDataItem.investmentValueWithCurrencyEffect ?? 0
+          );
+      }
+
+      chart.push({
+        ...chartOfYear.at(-1),
+        date: `${year}-01-01`,
+        investmentValueWithCurrencyEffect:
+          investmentValueWithCurrencyEffect.toNumber()
+      });
+    }
+
+    return chart;
+  }
+
   private getReportStatistics(
     evaluatedRules: PortfolioReportRule[]
   ): PortfolioReportResponse['xRay']['statistics'] {
@@ -2140,6 +2216,7 @@ export class PortfolioService {
 
     const {
       currentValueInBaseCurrency,
+      dividendInBaseCurrency,
       dividendPercentageWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
@@ -2153,9 +2230,6 @@ export class PortfolioService {
     });
 
     const dateOfFirstActivity = portfolioCalculator.getStartDate();
-
-    const dividendInBaseCurrency =
-      await portfolioCalculator.getDividendInBaseCurrency();
 
     const fees = await portfolioCalculator.getFeesInBaseCurrency();
     const interest = await portfolioCalculator.getInterestInBaseCurrency();
@@ -2237,6 +2311,7 @@ export class PortfolioService {
       cash,
       currentValueInBaseCurrency,
       dateOfFirstActivity,
+      dividendInBaseCurrency,
       dividendPercentageWithCurrencyEffect,
       excludedAccountsAndActivities,
       netPerformance,
@@ -2248,7 +2323,6 @@ export class PortfolioService {
       activityCount: activities.filter(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       }).length,
-      dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       // TODO: Remove the fallback to 0 with the next release, when each
       // cached portfolio snapshot contains the dividend yield
       dividendYieldPercent: dividendYieldPercent?.toNumber() ?? 0,
@@ -2363,6 +2437,9 @@ export class PortfolioService {
       return type;
     });
 
+    const isFilteredByAssetClassOtherThanLiquidity =
+      this.activitiesService.isFilteredByAssetClassOtherThanLiquidity(filters);
+
     let currentAccounts: (AccountWithBalance & {
       Order?: Order[];
       platform?: Platform;
@@ -2410,15 +2487,17 @@ export class PortfolioService {
       });
 
       if (account) {
-        // The cash balance is not part of a holding and would distort the value
-        // and thus the allocation per account and platform
-        const balanceInBaseCurrency = filterBySymbol
-          ? 0
-          : this.exchangeRateDataService.toCurrency(
-              account.balance,
-              account.currency,
-              userCurrency
-            );
+        // The cash balance is not part of a holding or of an asset class other
+        // than liquidity and would distort the value and thus the allocation
+        // per account and platform
+        const balanceInBaseCurrency =
+          filterBySymbol || isFilteredByAssetClassOtherThanLiquidity
+            ? 0
+            : this.exchangeRateDataService.toCurrency(
+                account.balance,
+                account.currency,
+                userCurrency
+              );
 
         accounts[currentAccountId] = {
           balance: account.balance,
@@ -2545,6 +2624,16 @@ export class PortfolioService {
       return !quantity.eq(0);
     });
 
+    const assetProfileIdentifiers: AssetProfileIdentifier[] = openHoldings.map(
+      ({
+        latestActivity: {
+          assetProfile: { dataSource, symbol }
+        }
+      }) => {
+        return { dataSource, symbol };
+      }
+    );
+
     const now = new Date();
 
     // Get the market prices of today with the same fallback as the portfolio
@@ -2553,15 +2642,8 @@ export class PortfolioService {
       openHoldings.length > 0
         ? await this.currentRateService.getValues({
             subscriptionType,
-            dataGatheringItems: openHoldings.map(
-              ({
-                latestActivity: {
-                  assetProfile: { dataSource, symbol }
-                }
-              }) => {
-                return { dataSource, symbol };
-              }
-            ),
+            assetProfileIdentifiersWithQuotes: assetProfileIdentifiers,
+            dataGatheringItems: assetProfileIdentifiers,
             dateQuery: {
               gte: startOfDay(now),
               lt: endOfDay(now)

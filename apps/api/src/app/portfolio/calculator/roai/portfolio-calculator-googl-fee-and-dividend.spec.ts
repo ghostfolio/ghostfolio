@@ -122,8 +122,9 @@ describe('PortfolioCalculator', () => {
         {
           // The first activity of this asset profile is a fee, which is not an
           // investment activity. Thus the holding is not included in the
-          // holdings of the portfolio summary, and its dividend must not be
-          // included in the chart
+          // holdings of the portfolio summary. But its fee and its dividend are
+          // part of the net performance, and thus its dividend is part of the
+          // dividend of the chart
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -167,8 +168,10 @@ describe('PortfolioCalculator', () => {
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      const dividendInBaseCurrency =
-        await portfolioCalculator.getDividendInBaseCurrency();
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['max']
+      });
 
       expect(
         portfolioSnapshot.positions.map(({ symbol }) => {
@@ -176,12 +179,25 @@ describe('PortfolioCalculator', () => {
         })
       ).toEqual(['MSFT']);
 
-      // The chart and the portfolio summary must show the same dividend
-      expect(dividendInBaseCurrency).toEqual(new Big('0.62'));
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
+        dividendInBaseCurrency: 5.62,
+        dividendInPercentageWithCurrencyEffect: 0.01882242615044544,
+        netPerformance: 18.87,
+        netPerformanceInPercentage: 0.06319914260834618
+      });
 
-      expect(
-        portfolioSnapshot.historicalData.at(-1).dividendInBaseCurrency
-      ).toEqual(0.62);
+      // The portfolio summary takes the dividend of the date range max
+      expect(performanceByDateRange).toMatchObject({
+        max: {
+          dividendInBaseCurrency: 5.62,
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.01882242615044535,
+            10
+          ),
+          netPerformance: 18.87,
+          netPerformanceInPercentage: expect.closeTo(0.06319914260834586, 10)
+        }
+      });
     });
 
     it('with GOOGL dividend without investment', async () => {
@@ -221,8 +237,8 @@ describe('PortfolioCalculator', () => {
           unitPriceInAssetProfileCurrency: 0.62
         },
         {
-          // The holding has a dividend, but no average investment. Thus the
-          // dividend percentage stays 0, like the dividend yield
+          // The holding has a dividend, but no average investment. Its dividend
+          // is part of the net performance, and thus of the dividend percentage
           ...activityDummyData,
           assetProfile: {
             ...assetProfileDummyData,
@@ -261,13 +277,114 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
         dividendInBaseCurrency: 5.62,
-        dividendInPercentageWithCurrencyEffect: 0
+        dividendInPercentageWithCurrencyEffect: 0.01882242615044544,
+        netPerformance: 19.87,
+        netPerformanceInPercentage: 0.06654832875611226
       });
 
       expect(performanceByDateRange).toMatchObject({
         max: {
           dividendInBaseCurrency: 5.62,
-          dividendInPercentageWithCurrencyEffect: 0
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.01882242615044535,
+            10
+          ),
+          netPerformance: 19.87,
+          netPerformanceInPercentage: expect.closeTo(0.06654832875611194, 10)
+        }
+      });
+    });
+
+    it('with dividend of a holding without market price', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          date: new Date('2021-09-16'),
+          feeInAssetProfileCurrency: 19,
+          feeInBaseCurrency: 19,
+          quantity: 1,
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 298.58
+        },
+        {
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          date: new Date('2021-11-16'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 0.62
+        },
+        {
+          // The holding has no market price, thus it has no value. Its dividend
+          // is not part of the net performance (unlike the dividend in the
+          // scenario above), and thus not part of the dividend of the chart
+          ...activityDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
+            currency: 'USD',
+            dataSource: 'MANUAL',
+            name: 'Private Equity Fund',
+            symbol: '3b5ba4a5-4c8e-4bd5-9b4c-5e0d5e7cfc3f'
+          },
+          date: new Date('2023-07-10'),
+          feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
+          quantity: 1,
+          type: 'DIVIDEND',
+          unitPriceInAssetProfileCurrency: 5
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'USD',
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['max']
+      });
+
+      expect(portfolioSnapshot.hasErrors).toBe(false);
+
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject({
+        dividendInBaseCurrency: 0.62,
+        dividendInPercentageWithCurrencyEffect: 0.0020764954116149776,
+        netPerformance: 14.87,
+        netPerformanceInPercentage: 0.0498023980172818
+      });
+
+      expect(performanceByDateRange).toMatchObject({
+        max: {
+          dividendInBaseCurrency: 0.62,
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.002076495411614967,
+            10
+          ),
+          netPerformance: 14.87,
+          netPerformanceInPercentage: expect.closeTo(0.049802398017281556, 10)
         }
       });
     });
@@ -350,11 +467,17 @@ describe('PortfolioCalculator', () => {
         },
         max: {
           dividendInBaseCurrency: 1.3,
-          dividendInPercentageWithCurrencyEffect: 0.004353941992095899
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.004353941992095899,
+            10
+          )
         },
         ytd: {
           dividendInBaseCurrency: 0.68,
-          dividendInPercentageWithCurrencyEffect: 0.002002886512915673
+          dividendInPercentageWithCurrencyEffect: expect.closeTo(
+            0.002002886512915673,
+            10
+          )
         }
       });
     });

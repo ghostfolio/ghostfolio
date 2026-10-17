@@ -31,12 +31,9 @@ export const secondaryColorRgb = {
   b: 207
 };
 
-export const warnColorHex = '#dc3545';
-export const warnColorRgb = {
-  r: 220,
-  g: 53,
-  b: 69
-};
+export const AI_ACTIVITIES_FILE_MAXIMUM_SIZE = 10 * 1024 * 1024;
+export const AI_ACTIVITIES_TIMEOUT = ms('2 minutes');
+export const AI_MAX_ACTIVITIES = 25;
 
 export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],
@@ -180,16 +177,6 @@ export const DEFAULT_REDACTED_PATHS = [
   'settings.emergencyFund',
   'settings.projectedTotalAmount',
   'settings.savingsRate',
-
-  /* @deprecated */
-  'SymbolProfile.comment',
-
-  /* @deprecated */
-  'SymbolProfile.scraperConfiguration',
-
-  /* @deprecated */
-  'SymbolProfile.symbolMapping',
-
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',
@@ -197,6 +184,8 @@ export const DEFAULT_REDACTED_PATHS = [
   'value',
   'valueInBaseCurrency'
 ];
+
+export const DELETE_OWN_USER_PERIOD = ms('2 weeks');
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
@@ -326,6 +315,8 @@ export const PROPERTY_MAX_DAILY_REQUESTS = 'MAX_DAILY_REQUESTS';
 export const PROPERTY_OPENROUTER_ENGINE_WEB_FETCH =
   'OPENROUTER_ENGINE_WEB_FETCH';
 export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
+export const PROPERTY_OPENROUTER_MODEL_AGENT = 'OPENROUTER_MODEL_AGENT';
+export const PROPERTY_OPENROUTER_MODEL_VISION = 'OPENROUTER_MODEL_VISION';
 export const PROPERTY_OPENROUTER_MODEL_WEB_FETCH = 'OPENROUTER_MODEL_WEB_FETCH';
 export const PROPERTY_PROXY_ROUTES = 'PROXY_ROUTES';
 export const PROPERTY_REFERRAL_PARTNERS = 'REFERRAL_PARTNERS';
@@ -411,6 +402,8 @@ export const TAG_IDS_SYSTEM = [
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 ];
 
+export const THROTTLE_AI_ACTIVITIES_LIMIT = 25;
+export const THROTTLE_AI_ACTIVITIES_TTL = ms('1 week');
 export const THROTTLE_DAILY_KEY = 'daily';
 export const THROTTLE_DAILY_TTL = ms('1 day');
 export const THROTTLE_DEFAULT_LIMIT = 10;

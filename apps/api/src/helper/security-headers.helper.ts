@@ -25,6 +25,7 @@ export function getHelmetOptions({
   return {
     contentSecurityPolicy: {
       directives: {
+        connectSrc: ["'self'", 'https://ghostfol.io'], // Allow connections to ghostfol.io for the status check of the Ghostfolio data provider
         scriptSrc: ["'self'", "'unsafe-inline'"], // Allow inline scripts
         scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
         styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles

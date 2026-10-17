@@ -4,6 +4,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   canApplyFiltersToAccess,
+  canUseCustomAssetProfileSymbol,
   extractNumberFromString,
   getCountryCodeFromCurrency,
   getEmojiFlag,
@@ -11,11 +12,13 @@ import {
   getNumberFormatGroup,
   getStringOrNull,
   getStringOrUndefined,
+  isAccountBalanceInFuture,
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol,
   isDarkColorScheme,
   isSplitRatio,
+  isValidAccountBalanceDate,
   isValidCurrencyCode,
   isValidCustomAssetProfileSymbol,
   isValidDateAfter1970,
@@ -36,6 +39,50 @@ describe('Helper', () => {
 
     it('A public access', () => {
       expect(canApplyFiltersToAccess({ type: 'PUBLIC' })).toEqual(true);
+    });
+  });
+
+  describe('Can use custom asset profile symbol', () => {
+    const assetProfile = { id: 'asset-profile-id' };
+    const symbol = '7e91b7d4-1430-4212-8380-289a06c9bbc1';
+
+    it('Free-text symbol', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({
+          assetProfile: null,
+          symbol: 'Penthouse Apartment'
+        })
+      ).toEqual(false);
+    });
+
+    it('New asset profile with UUID', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({ symbol, assetProfile: null })
+      ).toEqual(true);
+    });
+
+    it('New asset profile with Ghostfolio prefix', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({
+          assetProfile: null,
+          symbol: 'GF_PENTHOUSE_APARTMENT'
+        })
+      ).toEqual(false);
+    });
+
+    it('Existing asset profile with UUID', () => {
+      expect(canUseCustomAssetProfileSymbol({ assetProfile, symbol })).toEqual(
+        true
+      );
+    });
+
+    it('Existing asset profile with Ghostfolio prefix', () => {
+      expect(
+        canUseCustomAssetProfileSymbol({
+          assetProfile,
+          symbol: 'GF_PENTHOUSE_APARTMENT'
+        })
+      ).toEqual(true);
     });
   });
 
@@ -317,6 +364,43 @@ describe('Helper', () => {
     });
   });
 
+  // A user in a time zone ahead of the instance is already on the next day at
+  // this moment. The expected limit is a moment in UTC, hence this suite must
+  // give the same result with the instance in any time zone.
+  describe('Is account balance in future', () => {
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-09-03T23:30:00.000Z'));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it('should accept the account balance of the current day', () => {
+      expect(
+        isAccountBalanceInFuture({ date: new Date('2026-09-03T00:00:00.000Z') })
+      ).toBe(false);
+    });
+
+    it('should accept the account balance of a user in a time zone ahead of the instance', () => {
+      expect(
+        isAccountBalanceInFuture({ date: new Date('2026-09-04T00:00:00.000Z') })
+      ).toBe(false);
+    });
+
+    it('should reject an account balance after the start of the UTC date of tomorrow', () => {
+      expect(
+        isAccountBalanceInFuture({ date: new Date('2026-09-04T00:00:00.001Z') })
+      ).toBe(true);
+    });
+
+    it('should reject an account balance of the day after tomorrow', () => {
+      expect(
+        isAccountBalanceInFuture({ date: new Date('2026-09-05T00:00:00.000Z') })
+      ).toBe(true);
+    });
+  });
+
   describe('Is account excluded', () => {
     it('Account with Exclude from Analysis tag', () => {
       expect(
@@ -472,6 +556,36 @@ describe('Helper', () => {
       expect(isSplitRatio({ denominator: null, numerator: null })).toEqual(
         false
       );
+    });
+  });
+
+  describe('Is valid account balance date', () => {
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-09-03T23:30:00.000Z'));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    it('Accepts a date in the past', () => {
+      expect(isValidAccountBalanceDate('2026-09-02')).toBe(true);
+    });
+
+    it('Accepts the current date', () => {
+      expect(isValidAccountBalanceDate('2026-09-03')).toBe(true);
+    });
+
+    it('Accepts the current date of a user in a time zone ahead of the instance', () => {
+      expect(isValidAccountBalanceDate('2026-09-04')).toBe(true);
+    });
+
+    it('Refuses a date in the future', () => {
+      expect(isValidAccountBalanceDate('2026-09-05')).toBe(false);
+    });
+
+    it('Refuses a date which is not valid', () => {
+      expect(isValidAccountBalanceDate('2026-02-30')).toBe(false);
     });
   });
 

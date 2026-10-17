@@ -39,6 +39,7 @@ export const permissions = {
   enableAuthToken: 'enableAuthToken',
   enableDataProviderGhostfolio: 'enableDataProviderGhostfolio',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
+  enableGhostfolioAi: 'enableGhostfolioAi',
   enableImport: 'enableImport',
   enableMcp: 'enableMcp',
   enableBlog: 'enableBlog',

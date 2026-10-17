@@ -66,9 +66,9 @@ export class GfHistoricalMarketDataEditorComponent
     DATE_FORMAT
   )};123.45`;
 
-  @Input() currency: string;
+  @Input() currency?: string;
   @Input() dataSource: DataSource;
-  @Input() dateOfFirstActivity: Date;
+  @Input() dateOfFirstActivity?: Date;
   @Input() symbol: string;
   @Input() user: User;
 

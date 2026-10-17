@@ -12,6 +12,8 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo';
+import { EntityLogoImageSourceService } from '../entity-logo/entity-logo-image-source.service';
+import { EntityLogoImageSourceServiceMock } from '../mocks/entity-logo-image-source.service.mock';
 import { NotificationService } from '../notifications';
 import { GfValueComponent } from '../value';
 import { GfAccountsTableComponent } from './accounts-table.component';
@@ -108,7 +110,13 @@ export default {
         NgxSkeletonLoaderModule,
         RouterModule.forChild([])
       ],
-      providers: [NotificationService]
+      providers: [
+        NotificationService,
+        {
+          provide: EntityLogoImageSourceService,
+          useValue: new EntityLogoImageSourceServiceMock()
+        }
+      ]
     })
   ]
 } as Meta<GfAccountsTableComponent>;

@@ -5,7 +5,147 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.87.0 - 2026-10-17
+
+### Added
+
+- Added a _Storybook_ story for the investment chart component
+
+### Changed
+
+- Highlighted the negative values in the performance timeline chart on the analysis page (experimental)
+- Moved the investment chart component to `@ghostfolio/ui`
+- Improved the matching of assets in the import of activities with _Ghostfolio AI_ to prefer the holdings of the user (experimental)
+- Extended the holdings table by the ISIN in the _Copy AI prompt to clipboard_ actions on the analysis page and in the tool to get the portfolio of the server of the Model Context Protocol (MCP) (experimental)
+- Hardened the validation of the date in the endpoint to create an account balance
+- Improved the language localization for German (`de`)
+- Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
+- Upgraded `stripe` from version `22.6.2` to `23.0.0`
+
+### Fixed
+
+- Fixed an exception in the authentication interceptor when the time zone of the browser is not available
+- Fixed the missing `userId` in the unique constraint of the `AccountBalance` database schema
+
+## 3.86.0 - 2026-10-13
+
+### Added
+
+- Added support to paste a file in the import activities dialog
+
+### Changed
+
+- Improved the style of the stepper in the user account registration dialog
+- Improved the labels of the client of the last request in the users section of the admin control panel
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the missing platform icon in the preview step of the activities import
+- Fixed the start date of the date range filter on the activities page and in the dividend timeline chart on the analysis page
+- Fixed the link of the _Manage Asset Profile_ button in the holding detail dialog before the holding has loaded
+
+## 3.85.0 - 2026-10-12
+
+### Added
+
+- Added an option to enable _Ghostfolio AI_ in the user settings of the user account page (experimental)
+- Added an icon to indicate the client of the last request in the users table of the admin control panel
+
+### Changed
+
+- Removed the deprecated `SymbolProfile` field from the endpoint `POST api/v1/activities`
+- Upgraded `ai` from version `7.0.114` to `7.0.127`
+
+### Fixed
+
+- Fixed the border color of the drop area in the import activities dialog (dark mode)
+- Fixed the start date of the investment timeline chart on the analysis page
+- Fixed the matching of assets and accounts in the import of activities with _Ghostfolio AI_ (experimental)
+- Fixed an issue where the update of an activity could change the asset class and asset sub class of an asset profile which does not belong to the user
+
+## 3.84.2 - 2026-10-11
+
+### Added
+
+- Added the endpoint to read the activities of a CSV, JPEG, PDF or PNG file with _Ghostfolio AI_ (`POST api/v1/ai/activities`) (experimental)
+
+### Changed
+
+- Simplified the portfolio performance on the overview tab of the home page by hiding the currency on mobile
+- Extended the user detail dialog in the users section of the admin control panel to include the client of the last request
+- Updated the _Privacy Policy_
+- Extended the import of activities to support CSV files of other brokers, images and PDF files with _Ghostfolio AI_ (experimental)
+- Extended the access to share the portfolio with the Model Context Protocol (MCP) to support the _View_ and the _View and manage_ permissions (experimental)
+- Improved the performance of getting the historical market data by selecting only the required columns
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the _Copy AI prompt to clipboard_ actions on the analysis page in impersonation mode to be based on the impersonated user (experimental)
+- Fixed the start date of the date ranges for instances in time zones with a negative UTC offset
+- Fixed the dates of the benchmark in the benchmark comparator on the analysis page for instances in time zones with a negative UTC offset
+- Fixed the value of the accounts by excluding the cash balance when filtering by an asset class other than liquidity on the accounts page and the allocations page
+- Fixed the value of the accounts by excluding the cash balance when filtering by an asset class other than liquidity in the server of the Model Context Protocol (MCP) (experimental)
+- Fixed the missing check of the inactive role and of the daily request limit in the server of the Model Context Protocol (MCP) (experimental)
+
+## 3.83.0 - 2026-10-10
+
+### Added
+
+- Added the performance timeline grouped by year to the analysis page (experimental)
+- Extended the `GET api/v2/portfolio/performance` endpoint by the `groupBy` query parameter (`year`)
+
+### Changed
+
+- Extended the benchmark comparator to support benchmarks whose market data starts later than the portfolio
+- Harmonized the colors in the investment chart component
+- Improved the performance of getting the historical market data by loading only the requested asset profiles
+- Improved the language localization for Chinese (`zh`)
+
+### Fixed
+
+- Fixed an issue where a user could create a custom asset profile with a symbol of the prefix `GF_`
+- Fixed the horizontal overflow on the overview tab of the home page on mobile
+
+## 3.82.0 - 2026-10-09
+
+### Added
+
+- Extended the content of the _General_ section by information about the import of activities from _Interactive Brokers_ on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Extended the user account deletion flow in the user settings of the user account page to users without a _Security Token_ within 14 days after the registration
+- Improved the _Storybook_ stories of the account selector, accounts table, activities table and holdings table components
+- Removed an unnecessary index from the market data database table
+- Refreshed the cryptocurrencies list
+- Improved the language localization for Spanish (`es`)
+
+### Fixed
+
+- Fixed the missing list numbers in the top and bottom holdings on the analysis page in Safari
+- Fixed the missing first data point in the portfolio evolution chart on the analysis page
+- Fixed the end date of calendar year date ranges in the portfolio performance calculation for instances in time zones with a negative UTC offset
+- Fixed the missing mapping for Korea in the country weightings of the _Financial Modeling Prep_ service
+
+## 3.81.0 - 2026-10-07
+
+### Changed
+
+- Moved the performance calculation including dividends (total return) from experimental to general availability
+- Improved the language localization for German (`de`)
+- Improved the language localization for Turkish (`tr`)
+
+### Fixed
+
+- Fixed the visibility of the asset class, asset sub class, fee and quantity fields of a valuable in the create activity dialog
+- Fixed the missing mapping for Aland Islands in the country weightings of the _Financial Modeling Prep_ service
+- Fixed the net performance percentage of date ranges in the portfolio performance calculation by weighting the average investment by the number of days between the chart dates
+- Fixed the start date of calendar year date ranges in the portfolio performance calculation
+- Fixed an issue where the Content Security Policy in HTTP security headers blocked the status check of the Ghostfolio data provider when `ENABLE_FEATURE_SECURITY_HEADERS` was enabled (experimental)
+
+## 3.80.2 - 2026-10-06
 
 ### Added
 
@@ -13,6 +153,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the portfolio snapshot calculation to get the quotes of active holdings only
 - Improved the performance of getting the latest market data by optimizing the indexes of the market data table
 - Deprecated `SymbolProfile` in favor of `assetProfile` in the endpoint `POST api/v1/activities`
 - Upgraded `Nx` from version `23.1.1` to `23.2.1`

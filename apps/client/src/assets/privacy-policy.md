@@ -61,6 +61,10 @@ The Company will also retain Usage Data for internal analysis purposes. Usage Da
 
 ### Disclosure of Your Personal Data
 
+#### Ghostfolio AI
+
+Ghostfolio AI is optional and only used if You turn it on. In this case, We send the data which the respective feature needs, for example the content of a file or basic data of Your accounts such as name and platform, to Service Providers of AI models, which can be located in the United States. We do not keep a copy of this data. Please remove Personal Data such as Your name or an account number from a file before You use it with Ghostfolio AI.
+
 #### Security of Your Personal Data
 
 The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to store no personal data at all to protect Your Personal Data, We cannot guarantee its absolute security.
@@ -81,4 +85,4 @@ You are advised to review this Privacy Policy periodically for any changes. Chan
 
 If You have any questions about this Privacy Policy, You can contact Us [here](https://ghostfol.io/en/about).
 
-Date of Last Revision: June 30, 2026
+Date of Last Revision: October 11, 2026

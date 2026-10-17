@@ -93,7 +93,9 @@ export class GfUserAccountSettingsComponent implements OnInit {
   });
   protected hasImpersonationId: boolean;
   protected hasPermissionToDeleteOwnUser: boolean;
+  protected hasPermissionToEnableGhostfolioAi: boolean;
   protected hasPermissionToRequestOwnUserDeletion: boolean;
+  protected hasPermissionToUpdateOwnAccessToken: boolean;
   protected hasPermissionToUpdateViewMode: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isAccessTokenHidden = true;
@@ -189,9 +191,19 @@ export class GfUserAccountSettingsComponent implements OnInit {
             permissions.deleteOwnUser
           );
 
+          this.hasPermissionToEnableGhostfolioAi = hasPermission(
+            this.user.permissions,
+            permissions.enableGhostfolioAi
+          );
+
           this.hasPermissionToRequestOwnUserDeletion = hasPermission(
             this.user.permissions,
             permissions.requestOwnUserDeletion
+          );
+
+          this.hasPermissionToUpdateOwnAccessToken = hasPermission(
+            this.user.permissions,
+            permissions.updateOwnAccessToken
           );
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
@@ -271,13 +283,19 @@ export class GfUserAccountSettingsComponent implements OnInit {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
-          .deleteOwnUser({
-            accessToken: this.deleteOwnUserForm.controls.accessToken.value
-          })
+          .deleteOwnUser(
+            this.hasPermissionToUpdateOwnAccessToken
+              ? {
+                  accessToken: this.deleteOwnUserForm.controls.accessToken.value
+                }
+              : {}
+          )
           .pipe(
             catchError(() => {
               this.notificationService.alert({
-                title: $localize`Oops! Incorrect Security Token.`
+                title: this.hasPermissionToUpdateOwnAccessToken
+                  ? $localize`Oops! Incorrect Security Token.`
+                  : $localize`Oops! Something went wrong.`
               });
 
               return EMPTY;
@@ -324,6 +342,22 @@ export class GfUserAccountSettingsComponent implements OnInit {
           )}.json`,
           format: 'json'
         });
+      });
+  }
+
+  protected onGhostfolioAiChange(aEvent: MatSlideToggleChange) {
+    this.dataService
+      .putUserSetting({ isGhostfolioAiEnabled: aEvent.checked })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
       });
   }
 

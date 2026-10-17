@@ -1,12 +1,19 @@
 import type { AccountService } from '@ghostfolio/api/app/account/account.service';
 import type { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import type { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import type { ApiService } from '@ghostfolio/api/services/api/api.service';
 import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import type { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import type { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import type { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import type { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import type { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import type { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { NON_INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
-import type { CreateOrderDto } from '@ghostfolio/common/dtos';
+import type {
+  CreateAssetProfileWithMarketDataDto,
+  CreateOrderDto
+} from '@ghostfolio/common/dtos';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import type {
   Activity,
@@ -16,6 +23,7 @@ import type { UserWithSettings } from '@ghostfolio/common/types';
 
 import type { SymbolProfile } from '@prisma/client';
 import { DataSource } from '@prisma/client';
+import { isUUID } from 'class-validator';
 import { parseISO } from 'date-fns';
 
 import { ImportService } from './import.service';
@@ -23,9 +31,11 @@ import { ImportService } from './import.service';
 const CUSTOM_ASSET_PROFILE_SYMBOL = '1ad7d4a2-6b2d-4e0f-9b1f-2c0f8d3e5a7b';
 
 describe('ImportService', () => {
+  let addSymbolProfile: jest.Mock;
   let createActivity: jest.Mock;
   let gatherSymbols: jest.Mock;
   let importService: ImportService;
+  let updateManyMarketData: jest.Mock;
 
   beforeEach(() => {
     const configuration = {
@@ -34,8 +44,10 @@ describe('ImportService', () => {
       MAX_ACTIVITIES_TO_IMPORT: Number.MAX_SAFE_INTEGER
     };
 
+    addSymbolProfile = jest.fn();
     createActivity = jest.fn();
     gatherSymbols = jest.fn();
+    updateManyMarketData = jest.fn();
 
     const validateActivities = jest.fn(
       ({ activitiesDto }: { activitiesDto: CreateOrderDto[] }) => {
@@ -58,7 +70,7 @@ describe('ImportService', () => {
 
     importService = new ImportService(
       {
-        getAccounts: jest.fn().mockResolvedValue([])
+        accounts: jest.fn().mockResolvedValue([])
       } as unknown as AccountService,
       {
         createActivity,
@@ -78,14 +90,68 @@ describe('ImportService', () => {
       {
         toCurrencyAtDate: jest.fn().mockResolvedValue(0)
       } as unknown as ExchangeRateDataService,
+      { updateMany: updateManyMarketData } as unknown as MarketDataService,
       null,
       null,
-      null,
-      null,
+      {
+        add: addSymbolProfile,
+        getCustomSymbolProfilesByNames: jest.fn().mockResolvedValue([]),
+        getSymbolProfiles: jest.fn().mockResolvedValue([])
+      } as unknown as SymbolProfileService,
       {
         getTagsForUser: jest.fn().mockResolvedValue([])
       } as unknown as TagService
     );
+  });
+
+  describe('getDividends', () => {
+    it('returns no dividends if another request fails while the dividends are loading', async () => {
+      const service = new ImportService(
+        null,
+        {
+          getActivities: jest.fn().mockRejectedValue(new Error())
+        } as unknown as ActivitiesService,
+        {
+          buildFiltersFromQueryParams: jest.fn().mockReturnValue([])
+        } as unknown as ApiService,
+        null,
+        null,
+        {
+          getDividends: jest.fn(() => {
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve({});
+              }, 10);
+            });
+          })
+        } as unknown as DataProviderService,
+        null,
+        null,
+        null,
+        {
+          getAccountsWithAggregations: jest
+            .fn()
+            .mockResolvedValue({ accounts: [] }),
+          getHolding: jest.fn().mockResolvedValue({
+            dateOfFirstActivity: '2024-01-01',
+            historicalData: []
+          })
+        } as unknown as PortfolioService,
+        {
+          getSymbolProfiles: jest.fn().mockResolvedValue([])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      await expect(
+        service.getDividends({
+          dataSource: DataSource.YAHOO,
+          symbol: 'AAPL',
+          userCurrency: 'USD',
+          userId: 'user-id'
+        })
+      ).resolves.toEqual([]);
+    });
   });
 
   describe('import', () => {
@@ -276,6 +342,146 @@ describe('ImportService', () => {
       ]);
     });
 
+    it('creates a custom asset profile with a UUID instead of a symbol with the prefix', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            name: 'Global X Copper Miners ETF',
+            symbol: 'GF_COPX'
+          }
+        ]
+      });
+
+      const { symbol } = addSymbolProfile.mock.calls[0][0];
+
+      expect(isUUID(symbol)).toBe(true);
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.create
+      ).toMatchObject({ symbol, dataSource: DataSource.MANUAL });
+    });
+
+    it('keeps the symbol with the prefix as the name of a custom asset profile without a name', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            symbol: 'GF_COPX'
+          }
+        ]
+      });
+
+      expect(addSymbolProfile.mock.calls[0][0].name).toBe('GF_COPX');
+    });
+
+    it('merges the market data of asset profiles with the same symbol with the prefix', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [{ date: '2024-01-01', marketPrice: 100 }],
+            name: 'Global X Copper Miners ETF',
+            symbol: 'GF_COPX'
+          },
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [{ date: '2024-01-02', marketPrice: 101 }],
+            name: 'Global X Copper Miners ETF',
+            symbol: 'GF_COPX'
+          }
+        ]
+      });
+
+      const { symbol } = addSymbolProfile.mock.calls[0][0];
+
+      expect(addSymbolProfile).toHaveBeenCalledTimes(1);
+
+      expect(updateManyMarketData.mock.calls[0][0].data).toMatchObject([
+        { symbol, date: '2024-01-01', marketPrice: 100 },
+        { symbol, date: '2024-01-02', marketPrice: 101 }
+      ]);
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.create
+      ).toMatchObject({ symbol, dataSource: DataSource.MANUAL });
+    });
+
+    it('refers the next activities with a symbol with the prefix to the custom asset profile which createActivity() has created', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          }),
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ]
+      });
+
+      expect(
+        createActivity.mock.calls.map(([activity]) => {
+          return activity.SymbolProfile.connectOrCreate.create;
+        })
+      ).toMatchObject([
+        { dataSource: DataSource.MANUAL, symbol: 'GF_COPX' },
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+    });
+
     it('keeps the asset profiles of the activities in a dry run', async () => {
       const activities = await importActivities({
         activitiesDto: [
@@ -307,16 +513,18 @@ describe('ImportService', () => {
 
   function importActivities({
     activitiesDto,
+    assetProfilesWithMarketDataDto = [],
     isDryRun
   }: {
     activitiesDto: CreateOrderDto[];
+    assetProfilesWithMarketDataDto?: CreateAssetProfileWithMarketDataDto[];
     isDryRun?: boolean;
   }) {
     return importService.import({
       activitiesDto,
+      assetProfilesWithMarketDataDto,
       isDryRun,
       accountsWithBalancesDto: [],
-      assetProfilesWithMarketDataDto: [],
       platformsDto: [],
       tagsDto: [],
       user: {

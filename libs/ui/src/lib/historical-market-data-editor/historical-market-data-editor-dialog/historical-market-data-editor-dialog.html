@@ -9,9 +9,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
         <input formControlName="date" matInput [matDatepicker]="date" />
-        <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
+        <mat-datepicker-toggle class="me-2" matSuffix [for]="date">
           <ion-icon
-            class="text-muted"
+            class="text-body-secondary"
             matDatepickerToggleIcon
             name="calendar-clear-outline"
           />
@@ -23,17 +23,17 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Market Price</mat-label>
         <input formControlName="marketPrice" matInput type="number" />
-        <span class="ml-2" matTextSuffix>{{ data.currency }}</span>
+        <span class="ms-2" matTextSuffix>{{ data.currency }}</span>
       </mat-form-field>
       <button
-        class="ml-2 mt-1 no-min-width"
+        class="ms-2 mt-1 no-min-width"
         i18n-title
         mat-button
         title="Fetch market price"
         type="button"
         (click)="onFetchSymbolForDate()"
       >
-        <ion-icon class="text-muted" name="refresh-outline" />
+        <ion-icon class="text-body-secondary" name="refresh-outline" />
       </button>
     </div>
   </div>

@@ -725,7 +725,8 @@ export class AdminService {
             activityCount: true,
             country: true,
             dataProviderGhostfolioDailyRequests: true,
-            lastRequestAt: true
+            lastRequestAt: true,
+            lastRequestClient: true
           }
         },
         createdAt: true,
@@ -771,7 +772,8 @@ export class AdminService {
           activityCount: _count.activities || 0,
           country: analytics?.country,
           dailyApiRequests: analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: analytics?.lastRequestAt
+          lastActivity: analytics?.lastRequestAt,
+          lastRequestClient: analytics?.lastRequestClient
         };
       }
     );

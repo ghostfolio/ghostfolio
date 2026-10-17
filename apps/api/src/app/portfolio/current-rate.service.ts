@@ -16,7 +16,7 @@ import { utc } from '@date-fns/utc';
 import { Injectable } from '@nestjs/common';
 import { Type as ActivityType } from '@prisma/client';
 import { isBefore, isSameDay } from 'date-fns';
-import { isEmpty, uniqBy } from 'lodash-es';
+import { uniqBy } from 'lodash-es';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
@@ -34,6 +34,7 @@ export class CurrentRateService {
 
   @LogPerformance
   public async getValues({
+    assetProfileIdentifiersWithQuotes,
     dataGatheringItems,
     dateQuery,
     subscriptionType
@@ -52,10 +53,10 @@ export class CurrentRateService {
     if (includesToday) {
       const quotes = await this.dataProviderService.getQuotes({
         subscriptionType,
-        items: dataGatheringItems
+        items: assetProfileIdentifiersWithQuotes
       });
 
-      for (const { dataSource, symbol } of dataGatheringItems) {
+      for (const { dataSource, symbol } of assetProfileIdentifiersWithQuotes) {
         const quote = quotes[getAssetProfileIdentifier({ dataSource, symbol })];
 
         if (quote?.dataProviderInfo) {
@@ -121,8 +122,25 @@ export class CurrentRateService {
       })
     };
 
-    if (!isEmpty(quoteErrors)) {
-      for (const { dataSource, symbol } of quoteErrors) {
+    if (includesToday) {
+      const assetProfileIdentifiersWithoutQuotes = [
+        ...quoteErrors,
+        ...dataGatheringItems.filter(({ dataSource, symbol }) => {
+          return !assetProfileIdentifiersWithQuotes.some(
+            (assetProfileIdentifier) => {
+              return (
+                assetProfileIdentifier.dataSource === dataSource &&
+                assetProfileIdentifier.symbol === symbol
+              );
+            }
+          );
+        })
+      ];
+
+      for (const {
+        dataSource,
+        symbol
+      } of assetProfileIdentifiersWithoutQuotes) {
         try {
           // If missing quote, fallback to the latest available historical market price
           let value: GetValueObject = response.values.find((currentValue) => {

@@ -19,7 +19,7 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold':
+            'fw-bold':
               currentRoute() === internalRoutes.home.path ||
               currentRoute() === internalRoutes.zen.path,
             'text-decoration-underline':
@@ -36,8 +36,7 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold':
-              currentRoute() === internalRoutes.portfolio.path,
+            'fw-bold': currentRoute() === internalRoutes.portfolio.path,
             'text-decoration-underline':
               currentRoute() === internalRoutes.portfolio.path
           }"
@@ -51,7 +50,7 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute() === internalRoutes.accounts.path,
+            'fw-bold': currentRoute() === internalRoutes.accounts.path,
             'text-decoration-underline':
               currentRoute() === internalRoutes.accounts.path
           }"
@@ -66,8 +65,7 @@
             i18n
             mat-button
             [class]="{
-              'font-weight-bold':
-                currentRoute() === internalRoutes.adminControl.path,
+              'fw-bold': currentRoute() === internalRoutes.adminControl.path,
               'text-decoration-underline':
                 currentRoute() === internalRoutes.adminControl.path
             }"
@@ -82,7 +80,7 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute() === routeResources,
+            'fw-bold': currentRoute() === routeResources,
             'text-decoration-underline': currentRoute() === routeResources
           }"
           [routerLink]="routerLinkResources"
@@ -97,7 +95,7 @@
             class="d-none d-sm-block rounded"
             mat-button
             [class]="{
-              'font-weight-bold': currentRoute() === routePricing,
+              'fw-bold': currentRoute() === routePricing,
               'text-decoration-underline': currentRoute() === routePricing
             }"
             [routerLink]="routerLinkPricing"
@@ -105,7 +103,7 @@
             <span class="align-items-center d-flex">
               <span i18n>Pricing</span>
               @if (currentRoute() !== routePricing && hasPromotion()) {
-                <span class="badge badge-warning ml-1">%</span>
+                <span class="badge bg-warning ms-1 text-dark">%</span>
               }
             </span>
           </a>
@@ -117,14 +115,14 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute() === routeAbout,
+            'fw-bold': currentRoute() === routeAbout,
             'text-decoration-underline': currentRoute() === routeAbout
           }"
           [routerLink]="routerLinkAbout"
           >About</a
         >
       </li>
-      @if (hasPermissionToAccessAssistant) {
+      @if (hasPermissionToAccessAssistant && user(); as user) {
         <li class="d-inline-flex list-inline-item">
           <button
             #assistantTrigger="matMenuTrigger"
@@ -144,7 +142,7 @@
             class="no-max-width"
             xPosition="before"
             [overlapTrigger]="true"
-            (closed)="assistantElement()?.setIsOpen(false)"
+            (closed)="assistantElement().setIsOpen(false)"
           >
             <gf-assistant
               #assistant
@@ -156,7 +154,7 @@
                 hasPermissionToChangeDateRange()
               "
               [hasPermissionToChangeFilters]="hasPermissionToChangeFilters()"
-              [user]="user()"
+              [user]="user"
               (closed)="closeAssistant()"
               (dateRangeChanged)="onDateRangeChange($event)"
               (filtersChanged)="onFiltersChanged($event)"
@@ -191,23 +189,23 @@
             <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
               ><span class="align-items-center d-flex"
                 ><span>
-                  @if (user().subscription.offer.isRenewal) {
+                  @if (user()?.subscription?.offer?.isRenewal) {
                     <ng-container i18n>Renew Plan</ng-container>
                   } @else {
                     <ng-container i18n>Upgrade Plan</ng-container>
                   }
                 </span>
                 <gf-premium-indicator
-                  class="d-inline-block ml-1"
+                  class="d-inline-block ms-1"
                   [enableLink]="false" /></span
             ></a>
             <hr class="m-0" />
           }
-          @if (user()?.access?.length > 0) {
+          @if ((user()?.access?.length ?? 0) > 0) {
             <button mat-menu-item (click)="impersonateAccount(null)">
               <span class="align-items-center d-flex">
                 <ion-icon
-                  class="mr-2"
+                  class="me-2"
                   [name]="
                     hasImpersonationId
                       ? 'radio-button-off-outline'
@@ -221,7 +219,7 @@
               <button mat-menu-item (click)="impersonateAccount(accessItem.id)">
                 <span class="align-items-center d-flex">
                   <ion-icon
-                    class="mr-2"
+                    class="me-2"
                     name="square-outline"
                     [name]="
                       accessItem.id === impersonationId
@@ -243,7 +241,7 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [class.font-weight-bold]="
+            [class.fw-bold]="
               currentRoute() === internalRoutes.home.path ||
               currentRoute() === internalRoutes.zen.path
             "
@@ -254,9 +252,7 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [class.font-weight-bold]="
-              currentRoute() === internalRoutes.portfolio.path
-            "
+            [class.fw-bold]="currentRoute() === internalRoutes.portfolio.path"
             [routerLink]="routerLinkPortfolio"
             >Portfolio</a
           >
@@ -264,18 +260,14 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [class.font-weight-bold]="
-              currentRoute() === internalRoutes.accounts.path
-            "
+            [class.fw-bold]="currentRoute() === internalRoutes.accounts.path"
             [routerLink]="routerLinkAccounts"
             >Accounts</a
           >
           <a
             i18n
             mat-menu-item
-            [class.font-weight-bold]="
-              currentRoute() === internalRoutes.account.path
-            "
+            [class.fw-bold]="currentRoute() === internalRoutes.account.path"
             [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
           >
@@ -284,7 +276,7 @@
               class="d-flex d-sm-none"
               i18n
               mat-menu-item
-              [class.font-weight-bold]="
+              [class.fw-bold]="
                 currentRoute() === internalRoutes.adminControl.path
               "
               [routerLink]="routerLinkAdminControl"
@@ -296,7 +288,7 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [class.font-weight-bold]="currentRoute() === routeResources"
+            [class.fw-bold]="currentRoute() === routeResources"
             [routerLink]="routerLinkResources"
             >Resources</a
           >
@@ -307,13 +299,13 @@
             <a
               class="d-flex d-sm-none"
               mat-menu-item
-              [class.font-weight-bold]="currentRoute() === routePricing"
+              [class.fw-bold]="currentRoute() === routePricing"
               [routerLink]="routerLinkPricing"
             >
               <span class="align-items-center d-flex">
                 <span i18n>Pricing</span>
                 @if (currentRoute() !== routePricing && hasPromotion()) {
-                  <span class="badge badge-warning ml-1">%</span>
+                  <span class="badge bg-warning ms-1 text-dark">%</span>
                 }
               </span>
             </a>
@@ -322,7 +314,7 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [class.font-weight-bold]="currentRoute() === routeAbout"
+            [class.fw-bold]="currentRoute() === routeAbout"
             [routerLink]="routerLinkAbout"
             >About Ghostfolio</a
           >
@@ -354,7 +346,7 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute() === routeFeatures,
+            'fw-bold': currentRoute() === routeFeatures,
             'text-decoration-underline': currentRoute() === routeFeatures
           }"
           [routerLink]="routerLinkFeatures"
@@ -367,7 +359,7 @@
           i18n
           mat-button
           [class]="{
-            'font-weight-bold': currentRoute() === routeAbout,
+            'fw-bold': currentRoute() === routeAbout,
             'text-decoration-underline': currentRoute() === routeAbout
           }"
           [routerLink]="routerLinkAbout"
@@ -380,7 +372,7 @@
             class="d-sm-block rounded"
             mat-button
             [class]="{
-              'font-weight-bold': currentRoute() === routePricing,
+              'fw-bold': currentRoute() === routePricing,
               'text-decoration-underline': currentRoute() === routePricing
             }"
             [routerLink]="routerLinkPricing"
@@ -388,7 +380,7 @@
             <span class="align-items-center d-flex">
               <span i18n>Pricing</span>
               @if (currentRoute() !== routePricing && hasPromotion()) {
-                <span class="badge badge-warning ml-1">%</span>
+                <span class="badge bg-warning ms-1 text-dark">%</span>
               }
             </span>
           </a>
@@ -401,7 +393,7 @@
             i18n
             mat-button
             [class]="{
-              'font-weight-bold': currentRoute() === routeMarkets,
+              'fw-bold': currentRoute() === routeMarkets,
               'text-decoration-underline': currentRoute() === routeMarkets
             }"
             [routerLink]="routerLinkMarkets"
@@ -427,7 +419,7 @@
         </button>
       </li>
       @if (currentRoute() !== 'register' && hasPermissionToCreateUser) {
-        <li class="list-inline-item ml-1">
+        <li class="list-inline-item ms-1">
           <a
             class="d-none d-sm-block px-3 rounded"
             color="primary"

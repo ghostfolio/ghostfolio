@@ -2,7 +2,6 @@ import { TAG_ID_EXCLUDE_FROM_ANALYSIS } from '@ghostfolio/common/config';
 import { getStartOfUtcDateOfTomorrow } from '@ghostfolio/common/helper';
 
 import type { Prisma } from '@prisma/client';
-import { isAfter } from 'date-fns';
 
 export const WHERE_ACCOUNT_NOT_EXCLUDED: Prisma.AccountWhereInput = {
   tags: {
@@ -30,14 +29,4 @@ export function getWhereAccountBalanceNotInFuture(): Prisma.AccountBalanceWhereI
   return {
     date: { lte: getStartOfUtcDateOfTomorrow() }
   };
-}
-
-export function isAccountBalanceInFuture({
-  date,
-  startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow()
-}: {
-  date: Date;
-  startOfUtcDateOfTomorrow?: Date;
-}) {
-  return isAfter(date, startOfUtcDateOfTomorrow);
 }

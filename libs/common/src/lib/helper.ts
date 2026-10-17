@@ -83,6 +83,7 @@ const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
   'filters.tags',
   'holdingsViewMode',
   'isExperimentalFeatures',
+  'isGhostfolioAiEnabled',
   'isRestrictedView',
   'language',
   'locale',
@@ -232,6 +233,29 @@ export function canOpenHoldingDetail({
   assetProfile
 }: Pick<PortfolioPosition, 'assetProfile'>): boolean {
   return assetProfile?.assetSubClass !== AssetSubClass.CASH;
+}
+
+/**
+ * Checks if the symbol of a custom asset profile can be used, either to connect
+ * to the existing asset profile or to create a new one. The prefix is reserved
+ * for the asset profiles of the admin, thus a new asset profile cannot use it.
+ */
+export function canUseCustomAssetProfileSymbol({
+  assetProfile,
+  symbol
+}: {
+  assetProfile: Pick<SymbolProfile, 'id'> | null;
+  symbol: string;
+}): boolean {
+  if (!isValidCustomAssetProfileSymbol(symbol)) {
+    return false;
+  }
+
+  if (assetProfile) {
+    return true;
+  }
+
+  return !hasGhostfolioPrefix(symbol);
 }
 
 export function capitalize(aString: string) {
@@ -583,6 +607,16 @@ export function interpolate(template: string, context: any) {
   });
 }
 
+export function isAccountBalanceInFuture({
+  date,
+  startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow()
+}: {
+  date: Date;
+  startOfUtcDateOfTomorrow?: Date;
+}) {
+  return isAfter(date, startOfUtcDateOfTomorrow);
+}
+
 export function isAccountExcluded(account?: { tags?: { id: string }[] }) {
   return (
     account?.tags?.some(({ id }) => {
@@ -696,6 +730,12 @@ export function isUserSettingOfAuthenticatedUser(aKey: string) {
   return USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.includes(
     aKey as keyof UserSettings
   );
+}
+
+export function isValidAccountBalanceDate(aDate: string) {
+  const date = parseISO(aDate);
+
+  return isValid(date) && !isAccountBalanceInFuture({ date: resetHours(date) });
 }
 
 export function isValidCurrencyCode(aCurrency: string) {

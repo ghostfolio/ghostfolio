@@ -9,6 +9,13 @@
     }
 
     mat-stepper {
+      @include mat.stepper-overrides(
+        (
+          header-focus-state-layer-color: transparent,
+          header-hover-state-layer-color: transparent
+        )
+      );
+
       ::ng-deep {
         .mat-step-header {
           &[aria-selected='false'] {
@@ -35,11 +42,23 @@
       .cloud-icon {
         font-size: 2.5rem;
       }
+
+      .mat-mdc-progress-spinner {
+        @include mat.progress-spinner-overrides(
+          (
+            active-indicator-color: var(--gf-theme-primary-500)
+          )
+        );
+
+        margin: 0.625rem 0;
+      }
     }
 
-    .mat-mdc-progress-spinner {
-      right: 1.5rem;
-      top: calc(50% - 10px);
+    .mat-mdc-form-field {
+      .mat-mdc-progress-spinner {
+        right: 1.5rem;
+        top: calc(50% - 10px);
+      }
     }
 
     .mat-expansion-panel {
@@ -63,10 +82,12 @@
 }
 
 :host-context(.theme-dark) {
-  .drop-area {
-    border-color: rgba(
-      var(--palette-foreground-divider-dark),
-      var(--palette-foreground-divider-alpha-dark)
-    );
+  .mat-mdc-dialog-content {
+    .drop-area {
+      border-color: rgba(
+        var(--palette-foreground-divider-dark),
+        var(--palette-foreground-divider-dark-alpha)
+      );
+    }
   }
 }

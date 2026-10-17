@@ -41,7 +41,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="reader-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Overview</div>
+          <div class="d-none d-sm-block ms-2" i18n>Overview</div>
         </ng-template>
         <div class="container mt-3 p-0">
           <div class="row w-100">
@@ -132,7 +132,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="albums-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Holdings</div>
+          <div class="d-none d-sm-block ms-2" i18n>Holdings</div>
         </ng-template>
         <gf-holdings-table
           [hasPermissionToOpenDetails]="false"
@@ -143,7 +143,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="swap-vertical-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Activities</div>
+          <div class="d-none d-sm-block ms-2" i18n>Activities</div>
         </ng-template>
         <gf-activities-table
           [baseCurrency]="user?.settings?.baseCurrency"
@@ -153,7 +153,6 @@
           [hasPermissionToCreateActivity]="data.hasPermissionToCreateActivity"
           [hasPermissionToDeleteActivity]="false"
           [hasPermissionToExportActivities]="!showValuesInPercentage()"
-          [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [hasPermissionToUpdateActivity]="data.hasPermissionToUpdateActivity"
           [locale]="user?.settings?.locale"
@@ -176,7 +175,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <ion-icon name="cash-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Cash Balances</div>
+          <div class="d-none d-sm-block ms-2" i18n>Cash Balances</div>
         </ng-template>
         <gf-account-balances
           [accountBalances]="accountBalances"

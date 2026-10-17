@@ -6,6 +6,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { AdminUserResponse } from '@ghostfolio/common/interfaces';
 import type { Subscription } from '@ghostfolio/prisma/browser';
+import { translate } from '@ghostfolio/ui/i18n';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -70,6 +71,7 @@ export class GfUserDetailDialogComponent implements OnInit {
     'expiresAt'
   ];
 
+  protected readonly translate = translate;
   protected user: AdminUserResponse;
 
   protected readonly data = inject<UserDetailDialogParams>(MAT_DIALOG_DATA);
