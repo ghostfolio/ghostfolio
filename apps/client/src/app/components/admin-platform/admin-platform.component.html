@@ -56,7 +56,7 @@
       >
         <ng-container i18n>Accounts</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
         <gf-value
           class="d-inline-block justify-content-end"
           [locale]="locale()"
@@ -79,7 +79,7 @@
         <mat-menu #platformMenu="matMenu" xPosition="before">
           <button mat-menu-item (click)="onUpdatePlatform(element)">
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="create-outline" />
+              <ion-icon class="me-2" name="create-outline" />
               <span><ng-container i18n>Edit</ng-container>...</span>
             </span>
           </button>
@@ -90,7 +90,7 @@
             (click)="onDeletePlatform(element.id)"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="trash-outline" />
+              <ion-icon class="me-2" name="trash-outline" />
               <span i18n>Delete</span>
             </span>
           </button>

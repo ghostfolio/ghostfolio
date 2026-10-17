@@ -1,6 +1,6 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { isBrowserUserAgent } from '@ghostfolio/api/helper/user-agent.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_LANGUAGE_CODE,
@@ -10,6 +10,7 @@ import { hasRole } from '@ghostfolio/common/permissions';
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { RequestClient } from '@prisma/client';
 import * as countriesAndTimezones from 'countries-and-timezones';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -18,7 +19,6 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly prismaService: PrismaService,
     private readonly userService: UserService
   ) {
     super({
@@ -52,14 +52,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
           const country =
             countriesAndTimezones.getCountryForTimezone(timezone)?.id;
 
-          await this.prismaService.analytics.upsert({
-            create: { country, user: { connect: { id: user.id } } },
-            update: {
-              country,
-              activityCount: { increment: 1 },
-              lastRequestAt: new Date()
-            },
-            where: { userId: user.id }
+          await this.userService.updateAnalytics({
+            country,
+            requestClient: isBrowserUserAgent(request.headers['user-agent'])
+              ? RequestClient.WEB
+              : RequestClient.API,
+            userId: user.id
           });
         }
 

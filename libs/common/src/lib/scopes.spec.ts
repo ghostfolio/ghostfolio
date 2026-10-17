@@ -3,6 +3,7 @@ import {
   SCOPES_OF_READ_ACCESS,
   SCOPES_OF_READ_RESTRICTED_ACCESS,
   SCOPES_OF_WRITE_ACCESS,
+  canGrantUnrestrictedReadAccess,
   getAccessLevel,
   getScopesOfAccess,
   getScopesOfAccessLevel,
@@ -239,18 +240,27 @@ describe('Scopes', () => {
       expect(scopesOfAccess).toContain(scopes.watchlistRead);
     });
 
-    it('Cannot expose the monetary values', () => {
+    it('Allows reading the monetary values', () => {
       expect(
         getScopesOfAccess({
           scopes: [...SCOPES_OF_READ_ACCESS],
           type: 'MCP'
         })
+      ).toContain(scopes.portfolioReadValues);
+    });
+
+    it('Without the scope to read the values', () => {
+      expect(
+        getScopesOfAccess({
+          scopes: [...SCOPES_OF_READ_RESTRICTED_ACCESS],
+          type: 'MCP'
+        })
       ).not.toContain(scopes.portfolioReadValues);
     });
 
-    // The controller exposes the tool to import activities as the only tool
-    // which writes, hence a further write scope stays ineffective
-    it('Gives the write scope to create an activity only', () => {
+    // The controller exposes no tool for a further write scope, hence it stays
+    // ineffective
+    it('Gives the write scopes to update an account and to create an activity only', () => {
       expect(
         getScopesOfAccess({
           scopes: [...SCOPES_OF_READ_ACCESS, ...SCOPES_OF_WRITE_ACCESS],
@@ -258,7 +268,7 @@ describe('Scopes', () => {
         }).filter((scope) => {
           return SCOPES_OF_WRITE_ACCESS.includes(scope as Scope);
         })
-      ).toEqual([scopes.activityCreate]);
+      ).toEqual([scopes.accountUpdate, scopes.activityCreate]);
     });
 
     // The dialog narrows the access level to the scopes which the type
@@ -275,6 +285,31 @@ describe('Scopes', () => {
           })
         )
       ).toEqual('CREATE_READ_RESTRICTED_UPDATE_DELETE');
+    });
+
+    it('Keeps the access level to change the data with the monetary values', () => {
+      expect(
+        getAccessLevel(
+          getScopesOfAccess({
+            scopes: getScopesOfAccessLevel('CREATE_READ_UPDATE_DELETE'),
+            type: 'MCP'
+          })
+        )
+      ).toEqual('CREATE_READ_UPDATE_DELETE');
+    });
+  });
+
+  describe('Can grant unrestricted read access', () => {
+    it('Model context protocol', () => {
+      expect(canGrantUnrestrictedReadAccess({ type: 'MCP' })).toEqual(true);
+    });
+
+    it('Private', () => {
+      expect(canGrantUnrestrictedReadAccess({ type: 'PRIVATE' })).toEqual(true);
+    });
+
+    it('Public', () => {
+      expect(canGrantUnrestrictedReadAccess({ type: 'PUBLIC' })).toEqual(false);
     });
   });
 

@@ -21,6 +21,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { RequestClient } from '@ghostfolio/prisma/enums';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -51,10 +53,14 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
+  codeSlashOutline,
   contractOutline,
   ellipsisHorizontal,
+  globeOutline,
   keyOutline,
   personOutline,
+  serverOutline,
+  sparklesOutline,
   trashOutline
 } from 'ionicons/icons';
 import ms from 'ms';
@@ -85,6 +91,7 @@ export class GfAdminUsersComponent implements OnInit {
   protected dataSource = new MatTableDataSource<
     AdminUsersResponse['users'][0]
   >();
+
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
   protected readonly canDeleteUser = canDeleteUser;
@@ -96,9 +103,19 @@ export class GfAdminUsersComponent implements OnInit {
   protected info: InfoItem;
   protected isLoading = false;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
+
+  protected readonly requestClientIcons: Record<RequestClient, string> = {
+    API: 'code-slash-outline',
+    MCP: 'sparkles-outline',
+    SELF_HOSTING: 'server-outline',
+    WEB: 'globe-outline'
+  };
+
   protected readonly routerLinkAdminControlUsers =
     internalRoutes.adminControl.subRoutes.users.routerLink;
+
   protected totalItems = 0;
+  protected readonly translate = translate;
   protected user: User;
 
   private readonly deviceType = computed(
@@ -112,9 +129,11 @@ export class GfAdminUsersComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
+
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService
   );
+
   private readonly notificationService = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -182,10 +201,14 @@ export class GfAdminUsersComponent implements OnInit {
       });
 
     addIcons({
+      codeSlashOutline,
       contractOutline,
       ellipsisHorizontal,
+      globeOutline,
       keyOutline,
       personOutline,
+      serverOutline,
+      sparklesOutline,
       trashOutline
     });
   }

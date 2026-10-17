@@ -1,13 +1,23 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { DEFAULT_DATE_RANGE } from '@ghostfolio/common/config';
+import {
+  AI_ACTIVITIES_FILE_MAXIMUM_SIZE,
+  AI_MAX_ACTIVITIES,
+  DEFAULT_DATE_RANGE
+} from '@ghostfolio/common/config';
 import {
   CreateAccountWithBalancesDto,
   CreateAssetProfileWithMarketDataDto,
+  CreateOrderDto,
   CreatePlatformDto,
   CreateTagDto
 } from '@ghostfolio/common/dtos';
-import { Activity, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  Activity,
+  AiActivityRow,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { AssetClass } from '@ghostfolio/prisma/enums';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
@@ -19,6 +29,7 @@ import {
   StepperSelectionEvent
 } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -35,6 +46,10 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
+  MatCheckboxChange,
+  MatCheckboxModule
+} from '@angular/material/checkbox';
+import {
   MAT_DIALOG_DATA,
   MatDialogModule,
   MatDialogRef
@@ -48,11 +63,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SortDirection } from '@angular/material/sort';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { cloudUploadOutline, warningOutline } from 'ionicons/icons';
+import {
+  cloudUploadOutline,
+  informationCircleOutline,
+  warningOutline
+} from 'ionicons/icons';
 import { isArray, sortBy } from 'lodash-es';
 import ms from 'ms';
+import { from, switchMap } from 'rxjs';
 
 import { ImportStep } from './enums/import-step';
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
@@ -68,12 +89,14 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
     GfFileDropDirective,
     IonIcon,
     MatButtonModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatStepperModule,
+    MatTooltipModule,
     ReactiveFormsModule
   ],
   selector: 'gf-import-activities-dialog',
@@ -81,6 +104,14 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class GfImportActivitiesDialogComponent {
+  private static readonly FILE_EXTENSIONS_OF_GHOSTFOLIO_AI = [
+    'csv',
+    'jpeg',
+    'jpg',
+    'pdf',
+    'png'
+  ];
+
   protected readonly assetProfileForm = new FormGroup({
     assetProfileIdentifier: new FormControl<PortfolioPosition | null>(null, {
       validators: [Validators.required]
@@ -92,12 +123,28 @@ export class GfImportActivitiesDialogComponent {
   protected details: any[] = [];
   protected dialogTitle = $localize`Import Activities`;
   protected errorMessages: string[] = [];
+  protected readonly ghostfolioAiTooltip = $localize`The content of your file will be processed by third-party AI providers. Please remove any personal data before uploading.`;
+
+  protected readonly hasPermissionToEnableGhostfolioAi = hasPermission(
+    this.data.user?.permissions,
+    permissions.enableGhostfolioAi
+  );
+
   protected holdings: PortfolioPosition[] = [];
   protected importStep: ImportStep = ImportStep.UPLOAD_FILE;
+
+  protected isGhostfolioAiEnabled =
+    this.data.deviceType !== 'mobile' &&
+    this.hasPermissionToEnableGhostfolioAi &&
+    this.data.user?.settings?.isGhostfolioAiEnabled === true;
+
   protected isLoading = false;
+  protected isMaxActivitiesOfGhostfolioAiReached = false;
+  protected readonly maxActivitiesOfGhostfolioAi = AI_MAX_ACTIVITIES;
   protected mode: 'DIVIDEND';
   protected pageIndex = 0;
   protected readonly pageSize = 8;
+  protected rowsWithoutMatch: AiActivityRow[] = [];
   protected selectedActivities: Activity[] = [];
   protected readonly sortColumn = 'date';
   protected readonly sortDirection: SortDirection = 'desc';
@@ -120,7 +167,7 @@ export class GfImportActivitiesDialogComponent {
   private readonly snackBar = inject(MatSnackBar);
 
   public constructor() {
-    addIcons({ cloudUploadOutline, warningOutline });
+    addIcons({ cloudUploadOutline, informationCircleOutline, warningOutline });
   }
 
   public ngOnInit() {
@@ -212,11 +259,20 @@ export class GfImportActivitiesDialogComponent {
     files: FileList;
     stepper: MatStepper;
   }) {
-    if (files.length === 0) {
+    if (files.length === 0 || this.importStep !== ImportStep.UPLOAD_FILE) {
       return;
     }
 
     this.handleFile({ stepper, file: files[0] });
+  }
+
+  protected onGhostfolioAiChange({ checked }: MatCheckboxChange) {
+    this.isGhostfolioAiEnabled = checked;
+
+    this.dataService
+      .putUserSetting({ isGhostfolioAiEnabled: checked })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   protected onImportStepChange(event: StepperSelectionEvent) {
@@ -264,7 +320,9 @@ export class GfImportActivitiesDialogComponent {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
+    this.isMaxActivitiesOfGhostfolioAiReached = false;
     this.pageIndex = 0;
+    this.rowsWithoutMatch = [];
     this.assetProfileForm.controls.assetProfileIdentifier.enable();
 
     aStepper.reset();
@@ -273,7 +331,16 @@ export class GfImportActivitiesDialogComponent {
   protected onSelectFile(stepper: MatStepper) {
     const input = document.createElement('input');
 
-    input.accept = 'application/JSON, .csv';
+    input.accept = this.isGhostfolioAiEnabled
+      ? [
+          'application/JSON',
+          ...GfImportActivitiesDialogComponent.FILE_EXTENSIONS_OF_GHOSTFOLIO_AI.map(
+            (fileExtension) => {
+              return `.${fileExtension}`;
+            }
+          )
+        ].join(', ')
+      : 'application/JSON, .csv';
     input.type = 'file';
 
     input.onchange = (event) => {
@@ -294,7 +361,71 @@ export class GfImportActivitiesDialogComponent {
     });
   }
 
+  /**
+   * Gives the activities of a CSV file in the format of Ghostfolio, which is
+   * imported without Ghostfolio AI, or undefined for any other CSV file
+   */
+  private async getActivitiesOfCsvInGhostfolioFormat(file: File) {
+    this.snackBar.open('⏳ ' + $localize`Validating data...`);
+
+    try {
+      return await this.importActivitiesService.importCsv({
+        fileContent: await file.text(),
+        isDryRun: true,
+        userAccounts: this.data.user.accounts
+      });
+    } catch {
+      return undefined;
+    } finally {
+      this.snackBar.dismiss();
+    }
+  }
+
+  /**
+   * Gives the error message of a file which the server rejects, as a rejected
+   * file counts towards the weekly limit of Ghostfolio AI
+   */
+  private async getErrorMessageOfFileForGhostfolioAi({
+    file,
+    fileExtension
+  }: {
+    file: File;
+    fileExtension?: string;
+  }) {
+    if (file.size > AI_ACTIVITIES_FILE_MAXIMUM_SIZE) {
+      return $localize`The file is larger than ${AI_ACTIVITIES_FILE_MAXIMUM_SIZE / 1024 / 1024}:maxFileSize: MB`;
+    }
+
+    if (
+      fileExtension === 'csv' &&
+      this.importActivitiesService.getDataRowCountOfCsv(await file.text()) >
+        AI_MAX_ACTIVITIES
+    ) {
+      return $localize`The CSV file has more than ${AI_MAX_ACTIVITIES}:maxActivities: rows of activities`;
+    }
+
+    return undefined;
+  }
+
   private handleFile({ file, stepper }: { file: File; stepper: MatStepper }) {
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+    this.details = [];
+    this.errorMessages = [];
+    this.isMaxActivitiesOfGhostfolioAiReached = false;
+    this.rowsWithoutMatch = [];
+
+    if (
+      this.isGhostfolioAiEnabled &&
+      GfImportActivitiesDialogComponent.FILE_EXTENSIONS_OF_GHOSTFOLIO_AI.includes(
+        fileExtension ?? ''
+      )
+    ) {
+      void this.handleFileWithGhostfolioAi({ file, fileExtension, stepper });
+
+      return;
+    }
+
     this.snackBar.open('⏳ ' + $localize`Validating data...`);
 
     // Setting up the reader
@@ -303,7 +434,6 @@ export class GfImportActivitiesDialogComponent {
 
     reader.onload = async (readerEvent) => {
       const fileContent = readerEvent.target?.result as string;
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
       try {
         if (fileExtension === 'json') {
@@ -396,15 +526,126 @@ export class GfImportActivitiesDialogComponent {
           error: { error: { message: ['Unexpected format'] } }
         });
       } finally {
-        this.importStep = ImportStep.SELECT_ACTIVITIES;
         this.snackBar.dismiss();
-        this.updateSelection(this.activities);
-
-        stepper.next();
-
-        this.changeDetectorRef.markForCheck();
+        this.showSelectActivitiesStep(stepper);
       }
     };
+  }
+
+  /**
+   * Reads the file with Ghostfolio AI, except a CSV file in the format of
+   * Ghostfolio. The request is canceled if the dialog is closed, which stops
+   * the models on the server.
+   */
+  private async handleFileWithGhostfolioAi({
+    file,
+    fileExtension,
+    stepper
+  }: {
+    file: File;
+    fileExtension?: string;
+    stepper: MatStepper;
+  }) {
+    this.accounts = [];
+    this.activities = [];
+    this.assetProfiles = [];
+    this.platforms = [];
+    this.tags = [];
+
+    if (fileExtension === 'csv') {
+      const csvInGhostfolioFormat =
+        await this.getActivitiesOfCsvInGhostfolioFormat(file);
+
+      if (csvInGhostfolioFormat) {
+        const { activities, assetProfiles } = csvInGhostfolioFormat;
+
+        this.activities = activities;
+        this.assetProfiles = assetProfiles;
+        this.dataSource = new MatTableDataSource(activities.reverse());
+        this.pageIndex = 0;
+        this.totalItems = activities.length;
+
+        this.showSelectActivitiesStep(stepper);
+
+        return;
+      }
+    }
+
+    const errorMessage = await this.getErrorMessageOfFileForGhostfolioAi({
+      file,
+      fileExtension
+    });
+
+    if (errorMessage) {
+      this.handleImportError({
+        activities: [],
+        error: { error: { message: [errorMessage] } }
+      });
+
+      this.showSelectActivitiesStep(stepper);
+
+      return;
+    }
+
+    this.isLoading = true;
+    this.changeDetectorRef.markForCheck();
+
+    let activitiesOfFile: CreateOrderDto[] = [];
+
+    this.dataService
+      .postAiActivities(file)
+      .pipe(
+        switchMap(({ activities, assetProfiles, rowsWithoutMatch }) => {
+          activitiesOfFile = activities;
+          this.assetProfiles = assetProfiles;
+          this.isMaxActivitiesOfGhostfolioAiReached =
+            activities.length + rowsWithoutMatch.length >= AI_MAX_ACTIVITIES;
+          this.rowsWithoutMatch = rowsWithoutMatch;
+
+          return from(
+            this.importActivitiesService.importJson({
+              activities,
+              assetProfiles,
+              isDryRun: true
+            })
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        error: (error: HttpErrorResponse) => {
+          console.error(error);
+
+          const { message } = (error.error ?? {}) as { message?: unknown };
+
+          this.handleImportError({
+            activities: activitiesOfFile,
+            error: {
+              error: {
+                message: isArray(message)
+                  ? message
+                  : [
+                      $localize`Oops! Something went wrong.` +
+                        ' ' +
+                        $localize`Please try again later.`
+                    ]
+              }
+            }
+          });
+
+          this.isLoading = false;
+          this.showSelectActivitiesStep(stepper);
+        },
+        next: ({ activities }) => {
+          this.activities = activities;
+          this.dataSource = new MatTableDataSource(activities.reverse());
+          this.pageIndex = 0;
+          this.totalItems = activities.length;
+
+          this.isLoading = false;
+          this.showSelectActivitiesStep(stepper);
+        }
+      });
   }
 
   private handleImportError({
@@ -427,6 +668,15 @@ export class GfImportActivitiesDialogComponent {
         this.details.push('');
       }
     }
+
+    this.changeDetectorRef.markForCheck();
+  }
+
+  private showSelectActivitiesStep(stepper: MatStepper) {
+    this.importStep = ImportStep.SELECT_ACTIVITIES;
+    this.updateSelection(this.activities);
+
+    stepper.next();
 
     this.changeDetectorRef.markForCheck();
   }

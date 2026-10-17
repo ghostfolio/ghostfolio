@@ -25,7 +25,8 @@ import { PortfolioTableService } from './portfolio-table.service';
 /**
  * The markdown table is rendered by a package which ships as an ECMAScript
  * module only, which Jest cannot run. The mock keeps the mapping of the
- * columns and of the rows and writes them in the same shape as the renderer
+ * columns and of the rows and writes them in the same shape as the renderer,
+ * which writes null as text and undefined as an empty cell
  */
 jest.mock('@ghostfolio/api/helper/markdown-table.helper', () => {
   const { getTableInput } = jest.requireActual<
@@ -50,7 +51,7 @@ jest.mock('@ghostfolio/api/helper/markdown-table.helper', () => {
             }),
             ...rows.map((row) => {
               return names.map((name) => {
-                return row[name];
+                return row[name] === undefined ? '' : String(row[name]);
               });
             })
           ]
@@ -84,7 +85,8 @@ function createAccount({
     currency: 'CHF',
     platform: { name: 'Platform A' },
     tags: isExcluded ? [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }] : [],
-    value: 2000
+    value: 2000,
+    valueInBaseCurrency: 1800
   } as unknown as AccountWithValue;
 }
 
@@ -105,8 +107,11 @@ function createActivity({
     },
     currency: 'CHF',
     date: new Date('2024-01-01'),
+    fee: 1.5,
+    quantity: 5,
     type: 'BUY',
-    unitPrice: 100
+    unitPrice: 100,
+    valueInBaseCurrency: 512.3456
   } as unknown as Activity;
 }
 
@@ -115,12 +120,14 @@ function createHolding({
   assetClass = AssetClass.EQUITY,
   assetSubClass = AssetSubClass.STOCK,
   dataSource = DataSource.YAHOO,
+  isin,
   symbol = 'AAPL'
 }: {
   allocationInPercentage?: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
   dataSource?: DataSource;
+  isin?: string | null;
   symbol?: string;
 } = {}) {
   return {
@@ -130,6 +137,7 @@ function createHolding({
       assetClass,
       assetSubClass,
       dataSource,
+      isin,
       symbol,
       currency: 'CHF',
       name: `Name of ${symbol}`
@@ -143,20 +151,24 @@ function createHolding({
 }
 
 function createPerformance({
+  netPerformance = 200,
   netPerformancePercentage = 0.1,
-  netPerformancePercentageWithCurrencyEffect = 0.15
+  netPerformancePercentageWithCurrencyEffect = 0.15,
+  netPerformanceWithCurrencyEffect = 300
 }: {
+  netPerformance?: number;
   netPerformancePercentage?: number;
   netPerformancePercentageWithCurrencyEffect?: number;
+  netPerformanceWithCurrencyEffect?: number;
 } = {}): PortfolioPerformanceResponse['performance'] {
   return {
+    netPerformance,
     netPerformancePercentage,
     netPerformancePercentageWithCurrencyEffect,
+    netPerformanceWithCurrencyEffect,
     currentNetWorth: 3000,
     currentValueInBaseCurrency: 2000,
     dividendInBaseCurrency: 50,
-    netPerformance: 200,
-    netPerformanceWithCurrencyEffect: 300,
     totalInvestment: 1700,
     totalInvestmentValueWithCurrencyEffect: 1700
   };
@@ -246,9 +258,8 @@ function createPortfolioTableService({
 }
 
 describe('PortfolioTableService', () => {
-  // The tools of the model context protocol are the only callers, and an
-  // access of that type never grants the scope to read the monetary values,
-  // hence no table has a column with such a value
+  // A column with a monetary value is given only with the values, hence the
+  // names of these columns are given separately
   describe('getAccountsTableColumnNames', () => {
     it('gives no column with a monetary value', () => {
       expect(PortfolioTableService.getAccountsTableColumnNames()).toEqual([
@@ -259,6 +270,15 @@ describe('PortfolioTableService', () => {
         'Activities Count',
         'Allocation in Percentage',
         'Excluded from Analysis'
+      ]);
+    });
+  });
+
+  describe('getAccountsTableValueColumnNames', () => {
+    it('gives the columns with a monetary value', () => {
+      expect(PortfolioTableService.getAccountsTableValueColumnNames()).toEqual([
+        'Balance',
+        'Value in Base Currency'
       ]);
     });
   });
@@ -278,10 +298,30 @@ describe('PortfolioTableService', () => {
     });
   });
 
+  describe('getActivitiesTableValueColumnNames', () => {
+    it('gives the columns with a quantity or with a monetary value', () => {
+      expect(
+        PortfolioTableService.getActivitiesTableValueColumnNames()
+      ).toEqual(['Quantity', 'Fee', 'Value in Base Currency']);
+    });
+  });
+
+  describe('getAssetPerformanceInBaseCurrencyColumnNames', () => {
+    it('gives the value columns of the performance which give the asset performance', () => {
+      expect(
+        PortfolioTableService.getAssetPerformanceInBaseCurrencyColumnNames()
+      ).toEqual([
+        'Asset Performance in Base Currency',
+        'Currency Performance in Base Currency'
+      ]);
+    });
+  });
+
   describe('getHoldingsTableColumnNames', () => {
     it('gives no column with a monetary value', () => {
       expect(PortfolioTableService.getHoldingsTableColumnNames()).toEqual([
         'Name',
+        'ISIN',
         'Symbol',
         'Data Source',
         'Currency',
@@ -294,12 +334,34 @@ describe('PortfolioTableService', () => {
     });
   });
 
+  describe('getHoldingsTableValueColumnNames', () => {
+    it('gives the columns with a quantity or with a monetary value', () => {
+      expect(PortfolioTableService.getHoldingsTableValueColumnNames()).toEqual([
+        'Quantity',
+        'Value in Base Currency'
+      ]);
+    });
+  });
+
   describe('getPerformanceTableColumnNames', () => {
     it('gives no column with a monetary value', () => {
       expect(PortfolioTableService.getPerformanceTableColumnNames()).toEqual([
         'Asset Performance in Percentage',
         'Currency Performance in Percentage',
         'Net Performance in Percentage'
+      ]);
+    });
+  });
+
+  describe('getPerformanceTableValueColumnNames', () => {
+    it('gives the columns with a monetary value', () => {
+      expect(
+        PortfolioTableService.getPerformanceTableValueColumnNames()
+      ).toEqual([
+        'Value in Base Currency',
+        'Asset Performance in Base Currency',
+        'Currency Performance in Base Currency',
+        'Net Performance in Base Currency'
       ]);
     });
   });
@@ -331,7 +393,25 @@ describe('PortfolioTableService', () => {
 
       expect(result).not.toContain('Cash Balance');
       expect(result).not.toContain('1000');
+      expect(result).not.toContain('1800');
       expect(result).not.toContain('2000');
+    });
+
+    it('gives the balance and the value with the values', async () => {
+      const portfolioTableService = createPortfolioTableService({
+        accounts: [createAccount()]
+      });
+
+      const result = await portfolioTableService.getAccountsTable({
+        userId: 'user-id',
+        withValues: true
+      });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| account-a-id');
+      });
+
+      expect(row).toMatch(/\| false \| 1000 \| 1800\.00 \|$/);
     });
 
     // The accountIds parameter of the tool takes the identifiers, hence the
@@ -405,6 +485,40 @@ describe('PortfolioTableService', () => {
       expect(rowOfAapl).toContain(`| ${encodeDataSource(DataSource.YAHOO)} |`);
       expect(rowOfGold).toContain(`| ${DataSource.MANUAL} |`);
     });
+
+    it('gives no quantity, no fee and no value by default', async () => {
+      const result = await createPortfolioTableService({
+        activities: [createActivity()]
+      }).getActivitiesTable({
+        take: 50,
+        userCurrency: 'CHF',
+        userId: 'user-id'
+      });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 2024-01-01');
+      });
+
+      expect(result).not.toContain('Quantity');
+      expect(row).toMatch(/\| 100 \| Account A \|$/);
+    });
+
+    it('gives the quantity, the fee and the value with the values', async () => {
+      const result = await createPortfolioTableService({
+        activities: [createActivity()]
+      }).getActivitiesTable({
+        take: 50,
+        userCurrency: 'CHF',
+        userId: 'user-id',
+        withValues: true
+      });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 2024-01-01');
+      });
+
+      expect(row).toMatch(/\| Account A \| 5 \| 1\.5 \| 512\.35 \|$/);
+    });
   });
 
   describe('getHoldingsTable', () => {
@@ -412,10 +526,12 @@ describe('PortfolioTableService', () => {
       holdings: PortfolioPosition[],
       {
         configuration,
-        withDataSource
+        withDataSource,
+        withValues
       }: {
         configuration?: Record<string, unknown>;
         withDataSource?: boolean;
+        withValues?: boolean;
       } = {}
     ) {
       return createPortfolioTableService({
@@ -423,6 +539,7 @@ describe('PortfolioTableService', () => {
         holdings
       }).getHoldingsTable({
         withDataSource,
+        withValues,
         languageCode: DEFAULT_LANGUAGE_CODE,
         userId: 'user-id'
       });
@@ -492,6 +609,28 @@ describe('PortfolioTableService', () => {
       expect(row).not.toContain(encodeDataSource(DataSource.YAHOO));
     });
 
+    it('gives the ISIN', async () => {
+      const result = await getHoldingsTable([
+        createHolding({ isin: 'US0378331005' })
+      ]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain('| Name of AAPL | US0378331005 | AAPL |');
+    });
+
+    it('gives an empty ISIN if the asset profile has none', async () => {
+      const result = await getHoldingsTable([createHolding({ isin: null })]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain('| Name of AAPL |  | AAPL |');
+    });
+
     it('gives the translation of the asset class and of the asset sub class', async () => {
       const result = await getHoldingsTable([createHolding()]);
 
@@ -516,13 +655,45 @@ describe('PortfolioTableService', () => {
       expect(firstRow).toContain('AAPL');
       expect(secondRow).toContain('MSFT');
     });
+
+    it('gives no quantity and no value by default', async () => {
+      const result = await getHoldingsTable([createHolding()]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(result).not.toContain('Quantity');
+      expect(row).toMatch(/\| 75\.000% \|$/);
+    });
+
+    it('gives the quantity and the value with the values', async () => {
+      const result = await getHoldingsTable([createHolding()], {
+        withValues: true
+      });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toMatch(/\| 75\.000% \| 5 \| 2000\.00 \|$/);
+    });
   });
 
   describe('getPerformanceTable', () => {
     function getPerformanceTable(
-      parameters: Parameters<typeof createPortfolioTableService>[0] = {}
+      parameters: Parameters<typeof createPortfolioTableService>[0] = {},
+      {
+        withAssetPerformanceInBaseCurrency,
+        withValues
+      }: {
+        withAssetPerformanceInBaseCurrency?: boolean;
+        withValues?: boolean;
+      } = {}
     ) {
       return createPortfolioTableService(parameters).getPerformanceTable({
+        withAssetPerformanceInBaseCurrency,
+        withValues,
         dateRange: 'ytd',
         userId: 'user-id'
       });
@@ -563,6 +734,51 @@ describe('PortfolioTableService', () => {
       for (const cell of row.split('|').slice(1, -1)) {
         expect(cell.trim()).toMatch(/^-?\d+\.\d{3}%$/);
       }
+    });
+
+    it('gives the value and the performance in base currency with the values', async () => {
+      const result = await getPerformanceTable(
+        {},
+        { withAssetPerformanceInBaseCurrency: true, withValues: true }
+      );
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 10.000%');
+      });
+
+      expect(row).toBe(
+        '| 10.000% | 5.000% | 15.000% | 2000.00 | 200.00 | 100.00 | 300.00 |'
+      );
+    });
+
+    it('gives no asset performance and no currency performance in base currency without the asset performance in base currency', async () => {
+      const result = await getPerformanceTable({}, { withValues: true });
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 10.000%');
+      });
+
+      expect(result).not.toContain('Asset Performance in Base Currency');
+      expect(result).not.toContain('Currency Performance in Base Currency');
+      expect(row).toBe('| 10.000% | 5.000% | 15.000% | 2000.00 | 300.00 |');
+    });
+
+    it('gives a currency performance in base currency of zero without a sign', async () => {
+      const result = await getPerformanceTable(
+        {
+          performance: createPerformance({
+            netPerformance: 200.000001,
+            netPerformanceWithCurrencyEffect: 200
+          })
+        },
+        { withAssetPerformanceInBaseCurrency: true, withValues: true }
+      );
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| 10.000%');
+      });
+
+      expect(row).toMatch(/\| 200\.00 \| 0\.00 \| 200\.00 \|$/);
     });
 
     it('tells that no performance is found if the chart is empty', async () => {

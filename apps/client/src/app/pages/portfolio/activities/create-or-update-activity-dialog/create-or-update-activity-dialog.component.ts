@@ -488,10 +488,18 @@ export class GfCreateOrUpdateActivityDialogComponent {
   }
 
   protected async onSubmit() {
+    const isAssetClassApplicable =
+      this.activityForm.get('type')?.value === 'VALUABLE' ||
+      this.mode === 'update';
+
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.get('accountId')?.value,
-      assetClass: this.activityForm.get('assetClass')?.value,
-      assetSubClass: this.activityForm.get('assetSubClass')?.value,
+      assetClass: isAssetClassApplicable
+        ? this.activityForm.get('assetClass')?.value
+        : undefined,
+      assetSubClass: isAssetClassApplicable
+        ? this.activityForm.get('assetSubClass')?.value
+        : undefined,
       comment: getStringOrNull(this.activityForm.get('comment')?.value),
       currency: this.activityForm.get('currency')?.value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice')?.value,

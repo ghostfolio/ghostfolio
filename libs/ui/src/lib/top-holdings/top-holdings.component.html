@@ -21,7 +21,7 @@
     </ng-container>
 
     <ng-container matColumnDef="valueInBaseCurrency">
-      <th *matHeaderCellDef class="px-2 text-right" mat-header-cell>
+      <th *matHeaderCellDef class="px-2 text-end" mat-header-cell>
         <ng-container i18n>Value</ng-container>
       </th>
       <td *matCellDef="let element" class="px-2" mat-cell>
@@ -36,7 +36,7 @@
     </ng-container>
 
     <ng-container matColumnDef="allocationInPercentage" stickyEnd>
-      <th *matHeaderCellDef class="px-2 text-right" mat-header-cell>
+      <th *matHeaderCellDef class="px-2 text-end" mat-header-cell>
         <span class="d-none d-sm-block" i18n>Allocation</span>
         <span class="d-block d-sm-none" i18n-title title="Allocation">%</span>
       </th>
@@ -74,12 +74,12 @@
               <ng-container matColumnDef="name">
                 <td
                   *matCellDef="let parentHolding"
-                  class="line-height-normal px-2"
+                  class="lh-normal px-2"
                   mat-cell
                 >
                   <div class="text-truncate">{{ parentHolding?.name }}</div>
                   <div>
-                    <small class="text-muted">{{
+                    <small class="text-body-secondary">{{
                       parentHolding?.symbol
                     }}</small>
                   </div>
@@ -125,7 +125,7 @@
               ></tr>
               <tr
                 *matFooterRowDef="displayedColumns"
-                class="hidden"
+                class="invisible"
                 mat-footer-row
               ></tr>
             </table>
@@ -177,7 +177,7 @@
 }
 
 @if (dataSource.data.length === 0 && !isLoading) {
-  <div class="p-3 text-center text-muted">
+  <div class="p-3 text-body-secondary text-center">
     <small i18n>No data available</small>
   </div>
 }

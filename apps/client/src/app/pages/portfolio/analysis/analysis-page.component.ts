@@ -1,10 +1,10 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
-import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
+import { SubscriptionType } from '@ghostfolio/common/enums';
 import { canOpenHoldingDetail } from '@ghostfolio/common/helper';
 import {
   InvestmentItem,
@@ -24,6 +24,7 @@ import type {
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfInvestmentChartComponent } from '@ghostfolio/ui/investment-chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfToggleComponent } from '@ghostfolio/ui/toggle';
@@ -93,6 +94,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingDividendTimelineChart: boolean;
   protected isLoadingInvestmentChart: boolean;
   protected isLoadingInvestmentTimelineChart: boolean;
+  protected isLoadingPerformanceTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
   protected readonly mode = signal<GroupBy>('month');
   protected readonly modeOptions: ToggleOption<GroupBy>[] = [
@@ -103,7 +105,9 @@ export class GfAnalysisPageComponent implements OnInit {
   protected readonly PerformanceCalculationType = PerformanceCalculationType;
   protected performanceDataItems: LineChartItem[];
   protected performanceDataItemsInPercentage: LineChartItem[];
-  protected readonly portfolioEvolutionDataLabel = $localize`Investment`;
+  protected performancePercentagesByYear: InvestmentItem[];
+  protected readonly performanceTimelineDataLabel = $localize`Net Performance`;
+  protected readonly portfolioEvolutionDataLabel = $localize`Invested Capital`;
   protected precision = 2;
   protected savingsRatePerMonth: number | undefined;
   protected streaks: PortfolioInvestmentsResponse['streaks'];
@@ -131,36 +135,6 @@ export class GfAnalysisPageComponent implements OnInit {
     this.benchmarks = benchmarks;
 
     addIcons({ copyOutline, ellipsisVertical });
-  }
-
-  protected get netPerformancePercentageWithCurrencyEffect() {
-    if (
-      !this.user?.settings?.isExperimentalFeatures ||
-      !isNumber(this.performance?.netPerformancePercentageWithCurrencyEffect)
-    ) {
-      return this.performance?.netPerformancePercentageWithCurrencyEffect;
-    }
-
-    // Include the dividends (total return)
-    return (
-      this.performance.netPerformancePercentageWithCurrencyEffect +
-      (this.performance.dividendPercentageWithCurrencyEffect ?? 0)
-    );
-  }
-
-  protected get netPerformanceWithCurrencyEffect() {
-    if (
-      !this.user?.settings?.isExperimentalFeatures ||
-      !isNumber(this.performance?.netPerformanceWithCurrencyEffect)
-    ) {
-      return this.performance?.netPerformanceWithCurrencyEffect;
-    }
-
-    // Include the dividends (total return)
-    return (
-      this.performance.netPerformanceWithCurrencyEffect +
-      this.performance.dividendInBaseCurrency
-    );
   }
 
   get savingsRate() {
@@ -342,6 +316,37 @@ export class GfAnalysisPageComponent implements OnInit {
       );
   }
 
+  private fetchPerformanceByYear() {
+    this.isLoadingPerformanceTimelineChart = true;
+
+    this.dataService
+      .fetchPortfolioPerformance({
+        filters: this.userService.getFilters(),
+        groupBy: 'year',
+        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ chart }) => {
+        this.performancePercentagesByYear = [];
+
+        for (const {
+          date,
+          netPerformanceInPercentageWithCurrencyEffect
+        } of chart ?? []) {
+          if (isNumber(netPerformanceInPercentageWithCurrencyEffect)) {
+            this.performancePercentagesByYear.push({
+              date,
+              investment: netPerformanceInPercentageWithCurrencyEffect
+            });
+          }
+        }
+
+        this.isLoadingPerformanceTimelineChart = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private update() {
     this.isLoadingInvestmentChart = true;
 
@@ -359,41 +364,38 @@ export class GfAnalysisPageComponent implements OnInit {
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
 
-        for (const [
-          index,
-          {
-            date,
-            netPerformanceInPercentageWithCurrencyEffect,
-            totalInvestmentValueWithCurrencyEffect,
-            valueInPercentage,
-            valueWithCurrencyEffect
+        for (const {
+          date,
+          dividendInPercentageWithCurrencyEffect,
+          netPerformanceInPercentageWithCurrencyEffect,
+          totalInvestmentValueWithCurrencyEffect,
+          valueInPercentage,
+          valueWithCurrencyEffect
+        } of chart ?? []) {
+          if (totalInvestmentValueWithCurrencyEffect !== undefined) {
+            this.investments.push({
+              date,
+              investment: totalInvestmentValueWithCurrencyEffect
+            });
           }
-        ] of (chart ?? []).entries()) {
-          // Ignore first item where value is 0
-          if (index > 0 || this.user?.settings?.dateRange === 'max') {
-            if (totalInvestmentValueWithCurrencyEffect !== undefined) {
-              this.investments.push({
-                date,
-                investment: totalInvestmentValueWithCurrencyEffect
-              });
-            }
 
-            const value = isNumber(valueWithCurrencyEffect)
-              ? valueWithCurrencyEffect
-              : valueInPercentage;
+          const value = isNumber(valueWithCurrencyEffect)
+            ? valueWithCurrencyEffect
+            : valueInPercentage;
 
-            if (isNumber(value)) {
-              this.performanceDataItems.push({
-                date,
-                value
-              });
-            }
+          if (isNumber(value)) {
+            this.performanceDataItems.push({
+              date,
+              value
+            });
           }
 
           if (isNumber(netPerformanceInPercentageWithCurrencyEffect)) {
             this.performanceDataItemsInPercentage.push({
               date,
-              value: netPerformanceInPercentageWithCurrencyEffect
+              value:
+                netPerformanceInPercentageWithCurrencyEffect -
+                (dividendInPercentageWithCurrencyEffect ?? 0)
             });
           }
         }
@@ -452,6 +454,13 @@ export class GfAnalysisPageComponent implements OnInit {
       });
 
     this.fetchDividendsAndInvestments();
+
+    if (
+      this.user?.settings?.isExperimentalFeatures &&
+      this.user?.subscription?.type !== SubscriptionType.Basic
+    ) {
+      this.fetchPerformanceByYear();
+    }
 
     this.changeDetectorRef.markForCheck();
   }

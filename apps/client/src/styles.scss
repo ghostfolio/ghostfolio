@@ -349,10 +349,6 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
-.gf-pointer-events-none {
-  pointer-events: none;
-}
-
 .gf-spacer {
   flex: 1 1 auto;
 }
@@ -372,20 +368,8 @@ ngx-skeleton-loader {
   }
 }
 
-.hidden {
-  visibility: hidden;
-}
-
 .lead {
   font-weight: unset;
-}
-
-.line-height-1 {
-  line-height: 1;
-}
-
-.line-height-normal {
-  line-height: normal !important;
 }
 
 .mat-mdc-button-base {
@@ -398,12 +382,6 @@ ngx-skeleton-loader {
 .mat-mdc-card {
   .mat-mdc-card-title {
     margin-bottom: 0.5rem;
-  }
-}
-
-.mat-mdc-checkbox {
-  label {
-    margin-bottom: 0;
   }
 }
 
@@ -449,7 +427,7 @@ ngx-skeleton-loader {
   }
 
   .mat-mdc-menu-item {
-    &.font-weight-bold {
+    &.fw-bold {
       .mat-mdc-menu-item-text {
         --mat-menu-item-label-text-weight: 700;
       }
@@ -482,16 +460,8 @@ ngx-skeleton-loader {
   padding: 9px 24px !important;
 }
 
-.no-height {
-  height: unset !important;
-}
-
 .no-min-width {
   min-width: unset !important;
-}
-
-.overflow-x-auto {
-  overflow-x: auto;
 }
 
 .page {
@@ -519,14 +489,6 @@ ngx-skeleton-loader {
   .svgMap-tooltip-pointer {
     display: none;
   }
-}
-
-.text-decoration-underline {
-  text-decoration: underline !important;
-}
-
-.text-line-through {
-  text-decoration: line-through;
 }
 
 .with-placeholder-as-option {

@@ -1,4 +1,3 @@
-import { GfInvestmentChartComponent } from '@ghostfolio/client/components/investment-chart/investment-chart.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
@@ -23,6 +22,7 @@ import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfInvestmentChartComponent } from '@ghostfolio/ui/investment-chart';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -35,7 +35,6 @@ import {
   inject,
   OnInit
 } from '@angular/core';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -82,7 +81,6 @@ import {
     MatTabsModule,
     NgxSkeletonLoaderModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-account-detail-dialog',
   styleUrls: ['./account-detail-dialog.component.scss'],
   templateUrl: 'account-detail-dialog.html'

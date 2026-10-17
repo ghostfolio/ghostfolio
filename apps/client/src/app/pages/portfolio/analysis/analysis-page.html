@@ -26,16 +26,16 @@
               >
                 <span class="align-items-center d-flex">
                   @if (user?.subscription?.type === 'Basic') {
-                    <gf-premium-indicator class="mr-2" />
+                    <gf-premium-indicator class="me-2" />
                   } @else {
                     @if (isLoadingPortfolioPrompt) {
                       <mat-spinner
-                        class="mr-2"
+                        class="me-2"
                         color="accent"
                         [diameter]="16"
                       />
                     } @else {
-                      <ion-icon class="mr-2" name="copy-outline" />
+                      <ion-icon class="me-2" name="copy-outline" />
                     }
                   }
                   <ng-container i18n
@@ -51,16 +51,16 @@
               >
                 <span class="align-items-center d-flex">
                   @if (user?.subscription?.type === 'Basic') {
-                    <gf-premium-indicator class="mr-2" />
+                    <gf-premium-indicator class="me-2" />
                   } @else {
                     @if (isLoadingAnalysisPrompt) {
                       <mat-spinner
-                        class="mr-2"
+                        class="me-2"
                         color="accent"
                         [diameter]="16"
                       />
                     } @else {
-                      <ion-icon class="mr-2" name="copy-outline" />
+                      <ion-icon class="me-2" name="copy-outline" />
                     }
                   }
                   <ng-container i18n
@@ -152,11 +152,11 @@
         <mat-card-content>
           <div class="d-flex py-1">
             <div
-              class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
+              class="align-items-center d-flex flex-grow-1 me-2 text-truncate"
             >
               <span i18n>Absolute Asset Performance</span>
               @if (user?.subscription?.type === 'Basic') {
-                <gf-premium-indicator class="ml-1" />
+                <gf-premium-indicator class="ms-1" />
               }
             </div>
             <div class="d-flex justify-content-end">
@@ -171,8 +171,8 @@
               />
             </div>
           </div>
-          <div class="d-flex mb-3 ml-3 py-1">
-            <div class="flex-grow-1 mr-2 text-truncate">
+          <div class="d-flex mb-3 ms-3 py-1">
+            <div class="flex-grow-1 me-2 text-truncate">
               <ng-container i18n>Asset Performance</ng-container>
             </div>
             <div class="d-flex justify-content-end">
@@ -187,52 +187,13 @@
               />
             </div>
           </div>
-          @if (user?.settings?.isExperimentalFeatures) {
-            <div class="d-flex py-1">
-              <div
-                class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
-              >
-                <span i18n>Absolute Dividend Performance</span>
-                @if (user?.subscription?.type === 'Basic') {
-                  <gf-premium-indicator class="ml-1" />
-                }
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [isCurrency]="true"
-                  [isLoading]="isLoadingInvestmentChart"
-                  [locale]="user?.settings?.locale"
-                  [unit]="user?.settings?.baseCurrency"
-                  [value]="performance?.dividendInBaseCurrency"
-                />
-              </div>
-            </div>
-            <div class="d-flex mb-3 ml-3 py-1">
-              <div class="flex-grow-1 mr-2 text-truncate">
-                <ng-container i18n>Dividend Performance</ng-container>
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [colorizeSign]="true"
-                  [isLoading]="isLoadingInvestmentChart"
-                  [isPercent]="true"
-                  [locale]="user?.settings?.locale"
-                  [value]="performance?.dividendPercentageWithCurrencyEffect"
-                />
-              </div>
-            </div>
-          }
           <div class="d-flex py-1">
             <div
-              class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
+              class="align-items-center d-flex flex-grow-1 me-2 text-truncate"
             >
               <span i18n>Absolute Currency Performance</span>
               @if (user?.subscription?.type === 'Basic') {
-                <gf-premium-indicator class="ml-1" />
+                <gf-premium-indicator class="ms-1" />
               }
             </div>
             <div class="d-flex justify-content-end">
@@ -252,8 +213,8 @@
               />
             </div>
           </div>
-          <div class="d-flex ml-3 py-1">
-            <div class="flex-grow-1 mr-2 text-truncate">
+          <div class="d-flex ms-3 py-1">
+            <div class="flex-grow-1 me-2 text-truncate">
               <ng-container i18n>Currency Performance</ng-container>
             </div>
             <div class="d-flex justify-content-end">
@@ -275,7 +236,7 @@
           </div>
           <div><hr /></div>
           <div class="d-flex py-1">
-            <div class="flex-grow-1 mr-2 text-truncate">
+            <div class="flex-grow-1 me-2 text-truncate">
               <ng-container i18n>Absolute Net Performance</ng-container>
             </div>
             <div class="d-flex justify-content-end">
@@ -286,22 +247,30 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [locale]="user?.settings?.locale"
                 [unit]="user?.settings?.baseCurrency"
-                [value]="netPerformanceWithCurrencyEffect"
+                [value]="performance?.netPerformanceWithCurrencyEffect"
               />
             </div>
           </div>
-          <div class="d-flex ml-3 py-1">
-            <div class="flex-grow-1 mr-2 text-truncate">
+          <div class="d-flex ms-3 py-1">
+            <div class="flex-grow-1 me-2 text-truncate">
               <ng-container i18n>Net Performance</ng-container>
-              @if (
-                user?.settings?.performanceCalculationType ===
-                PerformanceCalculationType.ROAI
-              ) {
-                <abbr
-                  class="d-none d-sm-inline-block initialism ml-2 text-muted"
-                  title="Return on Average Investment"
-                  >(ROAI)</abbr
-                >
+              @switch (user?.settings?.performanceCalculationType) {
+                @case (PerformanceCalculationType.ROAI) {
+                  <abbr
+                    class="d-none d-sm-inline-block initialism ms-2 text-body-secondary"
+                    i18n-title
+                    title="Return on Average Investment (total return with dividends)"
+                    >(ROAI)</abbr
+                  >
+                }
+                @case (PerformanceCalculationType.ROI) {
+                  <abbr
+                    class="d-none d-sm-inline-block initialism ms-2 text-body-secondary"
+                    i18n-title
+                    title="Return on Investment (total return with dividends)"
+                    >(ROI)</abbr
+                  >
+                }
               }
             </div>
             <div class="d-flex justify-content-end">
@@ -312,7 +281,45 @@
                 [isLoading]="isLoadingInvestmentChart"
                 [isPercent]="true"
                 [locale]="user?.settings?.locale"
-                [value]="netPerformancePercentageWithCurrencyEffect"
+                [value]="
+                  performance?.netPerformancePercentageWithCurrencyEffect
+                "
+              />
+            </div>
+          </div>
+          <div class="d-flex ms-3 py-1 text-body-secondary">
+            <div
+              class="align-items-center d-flex flex-grow-1 me-2 text-truncate"
+            >
+              <span i18n>thereof Dividend</span>
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ms-1" />
+              }
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isCurrency]="true"
+                [isLoading]="isLoadingInvestmentChart"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="performance?.dividendInBaseCurrency"
+              />
+            </div>
+          </div>
+          <div class="d-flex ms-3 py-1 text-body-secondary">
+            <div class="flex-grow-1 me-2 text-truncate">
+              <ng-container i18n>thereof Dividend Performance</ng-container>
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isLoading]="isLoadingInvestmentChart"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="performance?.dividendPercentageWithCurrencyEffect"
               />
             </div>
           </div>
@@ -330,7 +337,7 @@
           >
         </mat-card-header>
         <mat-card-content>
-          <ol class="mb-0 ml-1 pl-3">
+          <ol class="holdings mb-0 ms-1 ps-3">
             @for (holding of top3; track holding) {
               <li class="py-1">
                 <a
@@ -342,8 +349,10 @@
                   }"
                   [routerLink]="[]"
                 >
-                  <div class="flex-grow-1 mr-2 text-truncate">
-                    {{ holding.assetProfile.name }}
+                  <div class="flex-grow-1 me-2 name">
+                    <span class="align-top d-inline-block mw-100 text-truncate">
+                      {{ holding.assetProfile.name }}
+                    </span>
                   </div>
                   <div class="d-flex justify-content-end">
                     <gf-value
@@ -381,7 +390,7 @@
           >
         </mat-card-header>
         <mat-card-content>
-          <ol class="mb-0 ml-1 pl-3">
+          <ol class="holdings mb-0 ms-1 ps-3">
             @for (holding of bottom3; track holding) {
               <li class="py-1">
                 <a
@@ -393,8 +402,10 @@
                   }"
                   [routerLink]="[]"
                 >
-                  <div class="flex-grow-1 mr-2 text-truncate">
-                    {{ holding.assetProfile.name }}
+                  <div class="flex-grow-1 me-2 name">
+                    <span class="align-top d-inline-block mw-100 text-truncate">
+                      {{ holding.assetProfile.name }}
+                    </span>
                   </div>
                   <div class="d-flex justify-content-end">
                     <gf-value
@@ -426,6 +437,36 @@
     </div>
   </div>
 
+  @if (user?.settings?.isExperimentalFeatures) {
+    <div class="mb-5 row">
+      <div class="col-lg">
+        <div class="align-items-center d-flex mb-4">
+          <div
+            class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
+          >
+            <span i18n>Performance Timeline</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ms-1" />
+            }
+          </div>
+        </div>
+        <div class="chart-container">
+          <gf-investment-chart
+            class="h-100"
+            groupBy="year"
+            [benchmarkDataItems]="performancePercentagesByYear"
+            [benchmarkDataLabel]="performanceTimelineDataLabel"
+            [colorScheme]="user?.settings?.colorScheme"
+            [highlightNegativeValues]="true"
+            [isInPercentage]="true"
+            [isLoading]="isLoadingPerformanceTimelineChart"
+            [locale]="user?.settings?.locale"
+          />
+        </div>
+      </div>
+    </div>
+  }
+
   <div class="mb-5 row">
     <div class="col-lg">
       <div class="align-items-center d-flex mb-4">
@@ -434,7 +475,7 @@
         >
           <span i18n>Portfolio Evolution</span>
           @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
+            <gf-premium-indicator class="ms-1" />
           }
         </div>
       </div>
@@ -462,7 +503,7 @@
         >
           <span i18n>Investment Timeline</span>
           @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
+            <gf-premium-indicator class="ms-1" />
           }
         </div>
         <gf-toggle
@@ -475,7 +516,7 @@
       </div>
       @if (streaks) {
         <div class="row">
-          <div class="col-md-6 col-xs-12 my-2">
+          <div class="col-md-6 my-2">
             <gf-value
               i18n
               size="large"
@@ -484,7 +525,7 @@
               >Current Streak</gf-value
             >
           </div>
-          <div class="col-md-6 col-xs-12 my-2">
+          <div class="col-md-6 my-2">
             <gf-value
               i18n
               size="large"
@@ -520,7 +561,7 @@
         >
           <span i18n>Dividend Timeline</span>
           @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
+            <gf-premium-indicator class="ms-1" />
           }
         </div>
         <gf-toggle

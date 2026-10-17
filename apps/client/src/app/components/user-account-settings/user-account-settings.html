@@ -9,10 +9,10 @@
             [class.mb-2]="!hasImpersonationId"
             [class.mb-4]="hasImpersonationId"
           >
-            <div class="align-items-center d-flex pt-1 pt-1 w-50">
+            <div class="align-items-center d-flex pe-1 pt-1 w-50">
               <ng-container i18n>Base Currency</ng-container>
             </div>
-            <div class="pl-1 w-50" [formGroup]="baseCurrencyForm">
+            <div class="ps-1 w-50" [formGroup]="baseCurrencyForm">
               <mat-form-field
                 appearance="outline"
                 class="w-100"
@@ -23,23 +23,25 @@
                   [currencies]="currencies"
                 />
                 @if (hasImpersonationId) {
-                  <mat-hint class="mt-1 text-muted text-truncate" i18n
+                  <mat-hint class="mt-1 text-body-secondary text-truncate" i18n
                     >Derived from the portfolio you are viewing</mat-hint
                   >
                 }
               </mat-form-field>
             </div>
           </div>
-          @if (user?.settings?.isExperimentalFeatures && !user?.subscription) {
+          @if (user?.settings?.isExperimentalFeatures) {
             <div class="d-flex mb-2">
-              <div class="align-items-center d-flex pt-1 pt-1 w-50">
+              <div class="align-items-center d-flex pe-1 pt-1 w-50">
                 <ng-container i18n>Performance Calculation</ng-container>
               </div>
-              <div class="pl-1 w-50">
+              <div class="ps-1 w-50">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-select
                     name="performanceCalculationType"
-                    [disabled]="true"
+                    [disabled]="
+                      hasImpersonationId || !hasPermissionToUpdateUserSettings
+                    "
                     [value]="user.settings.performanceCalculationType"
                     (selectionChange)="
                       onChangeUserSetting(
@@ -51,16 +53,19 @@
                     <mat-option value="ROAI"
                       >Return on Average Investment (ROAI)</mat-option
                     >
+                    <mat-option value="ROI"
+                      >Return on Investment (ROI)</mat-option
+                    >
                   </mat-select>
                 </mat-form-field>
               </div>
             </div>
           }
           <div class="align-items-center d-flex mb-2">
-            <div class="pr-1 w-50">
+            <div class="pe-1 w-50">
               <div i18n>Language</div>
               @if (isCommunityLanguage()) {
-                <div class="hint-text text-muted" i18n>
+                <div class="hint-text text-body-secondary" i18n>
                   If a translation is missing, kindly support us in extending it
                   <a
                     href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
@@ -72,7 +77,7 @@
                 </div>
               }
             </div>
-            <div class="pl-1 w-50">
+            <div class="ps-1 w-50">
               <mat-form-field appearance="outline" class="w-100 without-hint">
                 <mat-select
                   name="language"
@@ -152,13 +157,13 @@
             </div>
           </div>
           <div class="align-items-center d-flex mb-4">
-            <div class="pr-1 w-50">
+            <div class="pe-1 w-50">
               <div i18n>Locale</div>
-              <div class="hint-text text-muted">
+              <div class="hint-text text-body-secondary">
                 <ng-container i18n>Date and number format</ng-container>
               </div>
             </div>
-            <div class="pl-1 w-50">
+            <div class="ps-1 w-50">
               <mat-form-field
                 appearance="outline"
                 class="w-100 with-value-hint"
@@ -176,7 +181,7 @@
                     <mat-option [value]="locale">{{ locale }}</mat-option>
                   }
                 </mat-select>
-                <mat-hint class="d-flex mt-2 text-muted text-truncate">
+                <mat-hint class="d-flex mt-2 text-body-secondary text-truncate">
                   <gf-value
                     [deviceType]="deviceType()"
                     [isDate]="true"
@@ -197,10 +202,10 @@
             </div>
           </div>
           <div class="d-flex">
-            <div class="align-items-center d-flex pr-1 pt-1 w-50">
+            <div class="align-items-center d-flex pe-1 pt-1 w-50">
               <ng-container i18n>Appearance</ng-container>
             </div>
-            <div class="pl-1 w-50">
+            <div class="ps-1 w-50">
               <mat-form-field appearance="outline" class="w-100 without-hint">
                 <mat-select
                   class="with-placeholder-as-option"
@@ -222,14 +227,14 @@
         </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+        <div class="pe-1 w-50">
           <div i18n>Presenter View</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Protection for sensitive information like absolute performances and
             quantity values
           </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="ps-1 w-50">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -240,13 +245,13 @@
         </div>
       </div>
       <div class="d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+        <div class="pe-1 w-50">
           <div i18n>Zen Mode</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Distraction-free experience for turbulent times
           </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="ps-1 w-50">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -257,11 +262,13 @@
         </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+        <div class="pe-1 w-50">
           <div i18n>Biometric Authentication</div>
-          <div class="hint-text text-muted" i18n>Sign in with fingerprint</div>
+          <div class="hint-text text-body-secondary" i18n>
+            Sign in with fingerprint
+          </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="ps-1 w-50">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -274,13 +281,13 @@
         </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+        <div class="pe-1 w-50">
           <div i18n>Experimental Features</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Sneak peek at upcoming functionality
           </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="ps-1 w-50">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -290,13 +297,32 @@
           />
         </div>
       </div>
+      @if (deviceType() !== 'mobile' && hasPermissionToEnableGhostfolioAi) {
+        <div class="align-items-center d-flex mt-4 py-1">
+          <div class="pe-1 w-50">
+            <div>Ghostfolio AI</div>
+            <div class="hint-text text-body-secondary" i18n>
+              Powered by third-party AI providers
+            </div>
+          </div>
+          <div class="ps-1 w-50">
+            <mat-slide-toggle
+              color="primary"
+              hideIcon="true"
+              [checked]="user.settings.isGhostfolioAiEnabled"
+              [disabled]="!hasPermissionToUpdateUserSettings"
+              (change)="onGhostfolioAiChange($event)"
+            />
+          </div>
+        </div>
+      }
       <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+        <div class="pe-1 w-50">
           Ghostfolio <ng-container i18n>User ID</ng-container>
         </div>
-        <div class="pl-1 w-50">
+        <div class="ps-1 w-50">
           <gf-value
-            class="text-monospace"
+            class="font-monospace"
             [enableCopyToClipboardButton]="true"
             [isLoading]="isLoading"
             [value]="user?.id"
@@ -304,8 +330,8 @@
         </div>
       </div>
       <div class="align-items-center d-flex py-1">
-        <div class="pr-1 w-50"></div>
-        <div class="pl-1 text-monospace w-50">
+        <div class="pe-1 w-50"></div>
+        <div class="ps-1 w-50">
           <button color="primary" i18n mat-flat-button (click)="onExport()">
             Export Data
           </button>
@@ -316,9 +342,12 @@
       ) {
         <hr class="mt-5" />
         <div class="d-flex py-1">
-          <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
-          <div class="pl-1 w-50">
-            @if (hasPermissionToDeleteOwnUser) {
+          <div class="pe-1 text-danger w-50" i18n>Danger Zone</div>
+          <div class="ps-1 w-50">
+            @if (
+              hasPermissionToDeleteOwnUser &&
+              hasPermissionToUpdateOwnAccessToken
+            ) {
               <form
                 class="w-100"
                 [formGroup]="deleteOwnUserForm"
@@ -363,6 +392,15 @@
                   Close Account
                 </button>
               </form>
+            } @else if (hasPermissionToDeleteOwnUser && !hasImpersonationId) {
+              <button
+                color="warn"
+                i18n
+                mat-flat-button
+                (click)="onCloseAccount()"
+              >
+                Close Account
+              </button>
             } @else if (
               hasPermissionToRequestOwnUserDeletion &&
               (user?.accounts?.length > 0 || user?.activitiesCount > 0)
@@ -370,7 +408,7 @@
               <button color="warn" i18n mat-flat-button [disabled]="true">
                 Close Account
               </button>
-              <div class="hint-text mt-2 text-muted" i18n>
+              <div class="hint-text mt-2 text-body-secondary" i18n>
                 For security reasons, please delete all activities and accounts
                 first before your Ghostfolio account can be closed.
               </div>

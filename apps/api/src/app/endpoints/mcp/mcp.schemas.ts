@@ -11,6 +11,7 @@ import {
   SYMBOL_MAXIMUM_LENGTH
 } from '@ghostfolio/common/config';
 import {
+  isValidAccountBalanceDate,
   isValidCurrencyCode,
   isValidDateAfter1970
 } from '@ghostfolio/common/helper';
@@ -178,4 +179,23 @@ export const SEARCH_ASSET_PROFILES_PARAMETERS = z.object({
     .describe(
       'The name, ticker symbol or ISIN of the financial asset, for example Apple, AAPL, Bitcoin or US0378331005'
     )
+});
+
+export const UPDATE_ACCOUNT_BALANCE_PARAMETERS = z.object({
+  accountId: z.string().min(1).describe('The identifier of the account'),
+  balance: z
+    .number()
+    .describe('The cash balance of the account in the currency of the account'),
+  date: z.iso
+    .date({
+      abort: true,
+      error: 'The date must be an ISO 8601 date, for example 2024-01-01'
+    })
+    .refine(isValidDateAfter1970, {
+      error: 'The date must be after 1970-01-01'
+    })
+    .refine(isValidAccountBalanceDate, {
+      error: 'The date must not be in the future'
+    })
+    .describe('The date of the cash balance, as an ISO 8601 date')
 });

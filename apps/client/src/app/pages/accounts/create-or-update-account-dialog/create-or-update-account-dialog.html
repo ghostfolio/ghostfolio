@@ -38,21 +38,21 @@
           type="number"
           (keydown.enter)="$event.stopPropagation()"
         />
-        <span class="ml-2" matTextSuffix>{{
+        <span class="ms-2" matTextSuffix>{{
           accountForm.get('currency')?.value
         }}</span>
       </mat-form-field>
     </div>
-    <div [class.d-none]="platforms?.length < 1">
+    <div [class.d-none]="platforms.length < 1">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
         @if (selectedPlatform) {
           <gf-entity-logo
-            class="ml-3"
+            class="ms-3"
             matPrefix
             [hasPlaceholder]="true"
-            [tooltip]="selectedPlatform?.name"
-            [url]="selectedPlatform?.url"
+            [tooltip]="selectedPlatform.name ?? ''"
+            [url]="selectedPlatform.url"
           />
         }
         <input
@@ -71,9 +71,9 @@
             <mat-option [value]="platformEntry">
               <span class="d-flex">
                 <gf-entity-logo
-                  class="mr-1"
+                  class="me-1"
                   [hasPlaceholder]="true"
-                  [tooltip]="platformEntry.name"
+                  [tooltip]="platformEntry.name ?? ''"
                   [url]="platformEntry.url"
                 />
                 <span>{{ platformEntry.name }}</span>

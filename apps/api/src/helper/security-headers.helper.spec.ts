@@ -52,6 +52,12 @@ describe('getHelmetOptions', () => {
       );
     });
 
+    it('should allow connections to ghostfol.io for the status check of the Ghostfolio data provider', () => {
+      expect(headers.get('content-security-policy')).toContain(
+        "connect-src 'self' https://ghostfol.io"
+      );
+    });
+
     it('should not upgrade insecure requests', () => {
       expect(headers.get('content-security-policy')).not.toContain(
         'upgrade-insecure-requests'

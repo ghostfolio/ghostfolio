@@ -1,12 +1,12 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { HEADER_KEY_TOKEN } from '@ghostfolio/common/config';
 import { hasRole } from '@ghostfolio/common/permissions';
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { RequestClient } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 
@@ -18,7 +18,6 @@ export class ApiKeyStrategy extends PassportStrategy(
   public constructor(
     private readonly apiKeyService: ApiKeyService,
     private readonly configurationService: ConfigurationService,
-    private readonly prismaService: PrismaService,
     private readonly userService: UserService
   ) {
     super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, false);
@@ -42,13 +41,9 @@ export class ApiKeyStrategy extends PassportStrategy(
         );
       }
 
-      await this.prismaService.analytics.upsert({
-        create: { user: { connect: { id: user.id } } },
-        update: {
-          activityCount: { increment: 1 },
-          lastRequestAt: new Date()
-        },
-        where: { userId: user.id }
+      await this.userService.updateAnalytics({
+        requestClient: RequestClient.SELF_HOSTING,
+        userId: user.id
       });
     }
 

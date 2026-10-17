@@ -1,6 +1,6 @@
 @if (countryCodeOfSelectedCurrency) {
   <gf-entity-logo
-    class="flex-shrink-0 mr-1"
+    class="flex-shrink-0 me-1"
     [countryCode]="countryCodeOfSelectedCurrency"
   />
 }
@@ -20,10 +20,10 @@
   (optionSelected)="onUpdateCurrency($event)"
 >
   @for (currency of filteredCurrencies; track currency) {
-    <mat-option class="line-height-1" [value]="currency">
+    <mat-option [value]="currency">
       <span class="align-items-center d-flex">
         <gf-entity-logo
-          class="mr-1"
+          class="me-1"
           [countryCode]="getCountryCodeFromCurrency(currency)"
           [hasPlaceholder]="true"
         />

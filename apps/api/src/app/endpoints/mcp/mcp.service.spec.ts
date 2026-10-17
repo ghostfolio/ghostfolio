@@ -1,7 +1,10 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -12,7 +15,10 @@ import {
 } from '@ghostfolio/common/config';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { UserWithSettings } from '@ghostfolio/common/types';
+import type {
+  AccountWithBalance,
+  UserWithSettings
+} from '@ghostfolio/common/types';
 
 import { HttpException } from '@nestjs/common';
 import {
@@ -30,6 +36,8 @@ describe('McpService', () => {
   const userCurrency = 'USD';
   const userId = 'user-id';
 
+  let accountBalanceService: AccountBalanceService;
+  let accountService: AccountService;
   let apiService: ApiService;
   let configuration: Record<string, unknown>;
   let configurationService: ConfigurationService;
@@ -62,6 +70,12 @@ describe('McpService', () => {
       })
     } as unknown as ConfigurationService;
 
+    accountBalanceService = {
+      createOrUpdateAccountBalance: jest.fn()
+    } as unknown as AccountBalanceService;
+
+    accountService = { account: jest.fn() } as unknown as AccountService;
+
     apiService = {
       buildFiltersFromQueryParams: jest.fn().mockReturnValue(filters)
     } as unknown as ApiService;
@@ -85,6 +99,8 @@ describe('McpService', () => {
     userService = { user: jest.fn() } as unknown as UserService;
 
     mcpService = new McpService(
+      accountBalanceService,
+      accountService,
       apiService,
       configurationService,
       importService,
@@ -168,6 +184,14 @@ describe('McpService', () => {
         filters,
         userId
       });
+    });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getAccounts({ userId, withValues: true });
+
+      expect(portfolioTableService.getAccountsTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
     });
   });
 
@@ -272,6 +296,14 @@ describe('McpService', () => {
         types: [ActivityType.BUY]
       });
     });
+
+    it('Gives the values if the access reads them', async () => {
+      await getActivities({ withValues: true });
+
+      expect(portfolioTableService.getActivitiesTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
   });
 
   describe('getPerformance', () => {
@@ -350,6 +382,30 @@ describe('McpService', () => {
         dateRange: '2024'
       });
     });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getPerformance({
+        userId,
+        range: '2024',
+        withValues: true
+      });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
+
+    it('Gives the asset performance in base currency if the subscription permits it', async () => {
+      await mcpService.getPerformance({
+        userId,
+        range: '2024',
+        withAssetPerformanceInBaseCurrency: true
+      });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withAssetPerformanceInBaseCurrency: true })
+      );
+    });
   });
 
   describe('getPortfolio', () => {
@@ -363,6 +419,14 @@ describe('McpService', () => {
         languageCode: DEFAULT_LANGUAGE_CODE,
         withDataSource: true
       });
+    });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getPortfolio({ userId, withValues: true });
+
+      expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
     });
   });
 
@@ -586,6 +650,75 @@ describe('McpService', () => {
           activities: [createActivity()]
         })
       ).rejects.toBe(error);
+    });
+  });
+
+  describe('updateAccountBalance', () => {
+    const parameters = {
+      userId,
+      accountId: 'account-id',
+      balance: 1000,
+      date: '2024-01-01'
+    };
+
+    it('Refuses a user without the permission to create an account balance', async () => {
+      setupUser([]);
+
+      await expect(mcpService.updateAccountBalance(parameters)).rejects.toThrow(
+        HttpException
+      );
+
+      // The permission is checked first, hence the existence of the account
+      // stays hidden
+      expect(accountService.account).not.toHaveBeenCalled();
+
+      expect(
+        accountBalanceService.createOrUpdateAccountBalance
+      ).not.toHaveBeenCalled();
+    });
+
+    it('Refuses an account which does not belong to the user', async () => {
+      setupUser([permissions.createAccountBalance]);
+
+      jest.spyOn(accountService, 'account').mockResolvedValue(null);
+
+      await expect(mcpService.updateAccountBalance(parameters)).rejects.toThrow(
+        CallerFacingError
+      );
+
+      expect(accountService.account).toHaveBeenCalledWith({
+        id_userId: { userId, id: 'account-id' }
+      });
+
+      expect(
+        accountBalanceService.createOrUpdateAccountBalance
+      ).not.toHaveBeenCalled();
+    });
+
+    it('Updates the cash balance of the account of the user', async () => {
+      setupUser([permissions.createAccountBalance]);
+
+      jest
+        .spyOn(accountService, 'account')
+        .mockResolvedValue({ userId, id: 'account-id' } as AccountWithBalance);
+
+      expect(await mcpService.updateAccountBalance(parameters)).toEqual({
+        content: [
+          {
+            text: 'Updated the cash balance of the account at 2024-01-01',
+            type: 'text'
+          }
+        ]
+      });
+
+      expect(
+        accountBalanceService.createOrUpdateAccountBalance
+      ).toHaveBeenCalledWith({
+        userId,
+        accountId: 'account-id',
+        balance: 1000,
+        date: '2024-01-01'
+      });
     });
   });
 });

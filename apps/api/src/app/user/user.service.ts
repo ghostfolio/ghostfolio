@@ -14,6 +14,7 @@ import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
   DEFAULT_LOCALE,
+  DELETE_OWN_USER_PERIOD,
   PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_MAX_DAILY_REQUESTS,
@@ -44,8 +45,8 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectThrottlerStorage, ThrottlerStorage } from '@nestjs/throttler';
-import { Prisma, Role, User } from '@prisma/client';
-import { differenceInDays, subDays } from 'date-fns';
+import { Prisma, RequestClient, Role, User } from '@prisma/client';
+import { addMilliseconds, differenceInDays, isBefore, subDays } from 'date-fns';
 import { isNil, without } from 'lodash-es';
 import { createHmac } from 'node:crypto';
 
@@ -438,6 +439,17 @@ export class UserService {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
 
+        if (
+          !hasRole(user, Role.DEMO) &&
+          user.provider !== 'ANONYMOUS' &&
+          isBefore(
+            new Date(),
+            addMilliseconds(user.createdAt, DELETE_OWN_USER_PERIOD)
+          )
+        ) {
+          currentPermissions.push(permissions.deleteOwnUser);
+        }
+
         currentPermissions = without(
           currentPermissions,
           permissions.accessHoldingsChart,
@@ -457,12 +469,19 @@ export class UserService {
 
         // Reset holdings view mode
         user.settings.settings.holdingsViewMode = undefined;
+
+        // Reset Ghostfolio AI
+        user.settings.settings.isGhostfolioAiEnabled = undefined;
       } else if (user.subscription?.type === SubscriptionType.Premium) {
         if (!hasRole(user, Role.DEMO)) {
           currentPermissions.push(permissions.createApiKey);
           currentPermissions.push(permissions.enableDataProviderGhostfolio);
           currentPermissions.push(permissions.readMarketDataOfMarkets);
           currentPermissions.push(permissions.reportDataGlitch);
+
+          if ((user.settings.settings as UserSettings).isExperimentalFeatures) {
+            currentPermissions.push(permissions.enableGhostfolioAi);
+          }
         }
 
         currentPermissions = without(
@@ -511,6 +530,7 @@ export class UserService {
       if (isReadOnlyMode) {
         currentPermissions = currentPermissions.filter((permission) => {
           return !(
+            permission === permissions.enableGhostfolioAi ||
             permission.startsWith('create') ||
             permission.startsWith('delete') ||
             permission.startsWith('update')
@@ -666,6 +686,36 @@ export class UserService {
           gte: subDays(new Date(), 1)
         }
       }
+    });
+  }
+
+  /**
+   * Keeps the date and the client of the request of the user. The request is
+   * counted only if the analytics of the user exist already. The country is
+   * kept only if it is given.
+   */
+  public async updateAnalytics({
+    country,
+    requestClient,
+    userId
+  }: {
+    country?: string;
+    requestClient: RequestClient;
+    userId: string;
+  }) {
+    return this.prismaService.analytics.upsert({
+      create: {
+        country,
+        lastRequestClient: requestClient,
+        user: { connect: { id: userId } }
+      },
+      update: {
+        country,
+        activityCount: { increment: 1 },
+        lastRequestAt: new Date(),
+        lastRequestClient: requestClient
+      },
+      where: { userId }
     });
   }
 

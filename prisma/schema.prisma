@@ -65,19 +65,20 @@ model AccountBalance {
   userId    String
   value     Float
 
-  @@unique([accountId, date])
+  @@unique([accountId, userId, date])
   @@index([accountId])
   @@index([date])
 }
 
 model Analytics {
-  activityCount                       Int      @default(0)
+  activityCount                       Int            @default(0)
   country                             String?
-  dataProviderGhostfolioDailyRequests Int      @default(0)
-  lastRequestAt                       DateTime @default(now())
-  updatedAt                           DateTime @updatedAt
-  user                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
-  userId                              String   @id
+  dataProviderGhostfolioDailyRequests Int            @default(0)
+  lastRequestAt                       DateTime       @default(now())
+  lastRequestClient                   RequestClient?
+  updatedAt                           DateTime       @updatedAt
+  user                                User           @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId                              String         @id
 
   @@index([lastRequestAt])
   @@index([updatedAt])
@@ -174,7 +175,6 @@ model MarketData {
   symbol           String
 
   @@unique([dataSource, symbol, date])
-  @@index([dataSource])
   @@index([date])
   @@index([state])
   @@index([symbol])
@@ -394,6 +394,13 @@ enum Provider {
   GOOGLE
   INTERNET_IDENTITY
   OIDC
+}
+
+enum RequestClient {
+  API
+  MCP
+  SELF_HOSTING
+  WEB
 }
 
 enum Role {

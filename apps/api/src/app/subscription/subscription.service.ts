@@ -38,7 +38,7 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2026-08-26.dahlia'
+          apiVersion: '2026-09-30.endive'
         }
       );
     }
@@ -80,6 +80,7 @@ export class SubscriptionService {
 
     const stripeCheckoutSessionCreateParams: Stripe.Checkout.SessionCreateParams =
       {
+        allowed_payment_method_types: ['card'],
         cancel_url: `${this.configurationService.get('ROOT_URL')}/${
           user.settings.settings.language
         }/account`,
@@ -93,7 +94,6 @@ export class SubscriptionService {
         locale: this.getStripeLocale(user.settings?.settings?.language),
         metadata: { subscriptionOffer: JSON.stringify(subscriptionOffer) },
         mode: 'payment',
-        payment_method_types: ['card'],
         success_url: `${this.configurationService.get(
           'ROOT_URL'
         )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
@@ -268,7 +268,12 @@ export class SubscriptionService {
     const unsupportedLanguageCodes: Record<
       Exclude<
         (typeof SUPPORTED_LANGUAGE_CODES)[number],
-        Stripe.Checkout.SessionCreateParams.Locale
+        // Extract keeps only the Stripe locales that Ghostfolio supports.
+        // This also removes OtherString, which matches every string.
+        Extract<
+          Stripe.Checkout.SessionCreateParams.Locale,
+          (typeof SUPPORTED_LANGUAGE_CODES)[number]
+        >
       >,
       true
     > = {
