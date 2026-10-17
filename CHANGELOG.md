@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 
+### Fixed
+
+- Fixed a transaction timeout for presets in the historical market data table of the admin control panel
+
 ## 3.88.0 - 2026-10-17
 
 ### Added
