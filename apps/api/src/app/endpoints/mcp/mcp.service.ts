@@ -114,8 +114,8 @@ export class McpService {
 
   /**
    * Gives the currency, the data source, the ISIN, the name and the symbol of
-   * the asset profiles of the investment activities of the user, also of the
-   * closed positions and of the excluded accounts. It is not a tool: the
+   * the active asset profiles of the investment activities of the user, also
+   * of the closed positions and of the excluded accounts. It is not a tool: the
    * import of activities with Ghostfolio AI uses it to match the assets
    * without the portfolio calculation of the tool get-portfolio.
    */
