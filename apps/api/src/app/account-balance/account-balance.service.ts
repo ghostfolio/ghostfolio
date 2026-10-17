@@ -68,9 +68,9 @@ export class AccountBalanceService {
         value: balance
       },
       where: {
-        userId,
-        accountId_date: {
+        accountId_userId_date: {
           accountId,
+          userId,
           date: resetHours(parseISO(date))
         }
       }
