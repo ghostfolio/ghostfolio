@@ -538,12 +538,8 @@ export class FinancialModelingPrepService
   }
 
   /**
-   * Searches by ISIN, else by name and by symbol. A result of the search by
-   * ISIN has no currency and no asset class, thus they are taken from the
-   * profile of the symbol only, without the further requests of an asset
-   * profile, for example the holdings of an ETF. A failed request of a profile
-   * gives a result without a currency and without an asset class, which the
-   * caller removes unless indices are included.
+   * Financial Modeling Prep has no currency and no asset class in the search
+   * by ISIN, thus they are taken from the profile of the symbol.
    */
   public async search({
     includeIndices = false,
