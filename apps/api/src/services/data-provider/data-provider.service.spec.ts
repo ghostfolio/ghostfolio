@@ -73,6 +73,12 @@ describe('DataProviderService', () => {
       await dataProviderService.onModuleInit();
 
       expect(
+        dataProviderService
+          .getDataProvider(DataSource.EOD_HISTORICAL_DATA)
+          .getName()
+      ).toBe(DataSource.FINANCIAL_MODELING_PREP);
+
+      expect(
         dataProviderService.getDataProvider(DataSource.MANUAL).getName()
       ).toBe(DataSource.MANUAL);
 
