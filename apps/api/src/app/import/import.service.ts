@@ -761,7 +761,8 @@ export class ImportService {
       activitiesDto,
       assetProfilesWithMarketDataDto,
       maxActivitiesToImport,
-      subscription: user.subscription
+      subscription: user.subscription,
+      userId: user.id
     });
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({

@@ -233,6 +233,7 @@ export class ActivitiesController {
     try {
       await this.dataProviderService.validateActivities({
         subscription,
+        userId,
         activitiesDto: [
           {
             currency: data.currency,

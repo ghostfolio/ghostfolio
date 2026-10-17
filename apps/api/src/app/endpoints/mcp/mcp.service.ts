@@ -11,6 +11,7 @@ import {
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -37,6 +38,7 @@ export class McpService {
     private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
     private readonly portfolioTableService: PortfolioTableService,
+    private readonly symbolProfileService: SymbolProfileService,
     private readonly symbolService: SymbolService,
     private readonly userService: UserService
   ) {}
@@ -108,6 +110,33 @@ export class McpService {
     });
 
     return this.getTextResult(table);
+  }
+
+  /**
+   * Gives the currency, the data source, the ISIN, the name and the symbol of
+   * the active asset profiles of the investment activities of the user, also
+   * of the closed positions and of the excluded accounts. It is not a tool: the
+   * import of activities with Ghostfolio AI uses it to match the assets
+   * without the portfolio calculation of the tool get-portfolio.
+   */
+  public async getAssetProfilesOfUser({ userId }: { userId: string }) {
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfilesOfUser({ userId });
+
+    return symbolProfiles.map(
+      ({ currency, dataSource, isin, name, symbol }) => {
+        return {
+          currency,
+          isin,
+          name,
+          symbol,
+          dataSource: transformDataSourceInResponse({
+            dataSource,
+            configurationService: this.configurationService
+          })
+        };
+      }
+    );
   }
 
   public async getPerformance({

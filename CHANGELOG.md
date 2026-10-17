@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the accessibility of the _Buy me a coffee_ button on the about page
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
+- Improved the matching of assets in the import of activities with _Ghostfolio AI_ to include closed positions and excluded accounts (experimental)
+- Extended the creation and the import of activities to support the asset profiles of a premium data provider which the user already has
 
 ## 3.88.0 - 2026-10-17
 
