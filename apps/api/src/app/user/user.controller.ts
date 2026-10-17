@@ -242,6 +242,7 @@ export class UserController {
 
     if (!userSettings.isExperimentalFeatures) {
       delete userSettings.isGhostfolioAiEnabled;
+      delete userSettings.performanceCalculationType;
     }
 
     return this.userService.updateUserSetting({

@@ -65,7 +65,7 @@ model AccountBalance {
   userId    String
   value     Float
 
-  @@unique([accountId, date])
+  @@unique([accountId, userId, date])
   @@index([accountId])
   @@index([date])
 }
