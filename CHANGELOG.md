@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the accessibility of the _Google_ icon in the login with access token dialog
 - Improved the accessibility of the _Google_ icon on the registration page
 - Improved the search by ISIN number in the _Financial Modeling Prep_ service
+- Upgraded `bull-board` from version `9.10.1` to `9.10.4`
 
 ### Fixed
 
