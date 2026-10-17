@@ -244,6 +244,13 @@ export class UserController {
       delete userSettings.isGhostfolioAiEnabled;
     }
 
+    if (
+      !userSettings.isExperimentalFeatures ||
+      this.request.user.subscription
+    ) {
+      delete userSettings.performanceCalculationType;
+    }
+
     return this.userService.updateUserSetting({
       emitPortfolioChangedEvent,
       userSettings,

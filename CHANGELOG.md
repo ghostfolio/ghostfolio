@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the _Return on Investment_ (ROI) performance calculation type (experimental)
 - Added a tool to update the cash balance of an account to the server of the Model Context Protocol (MCP) (experimental)
 
 ### Changed
