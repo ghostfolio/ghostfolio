@@ -944,6 +944,66 @@ describe('AiService', () => {
       });
     });
 
+    it('Passes a holding with a data source which requires Premium to the model and gives an activity for a row whose asset match is such a holding', async () => {
+      jest
+        .mocked(dataProviderService.getDataSources)
+        .mockResolvedValue([
+          DataSource.EOD_HISTORICAL_DATA,
+          DataSource.MANUAL,
+          DataSource.YAHOO
+        ]);
+
+      const row = createActivityRow({
+        accountName: null,
+        isin: 'IE00BK5BQT80',
+        symbol: null
+      });
+
+      mockRowMatches({
+        assetProfilesOfSearch: [],
+        assets: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.EOD_HISTORICAL_DATA,
+            id: 0,
+            symbol: 'VWRA.SW'
+          }
+        ]
+      });
+
+      mockHoldings({ dataSource: DataSource.EOD_HISTORICAL_DATA });
+
+      await expect(
+        aiService.getActivitiesFromRows({
+          accounts,
+          userCurrency,
+          userId,
+          rows: [row]
+        })
+      ).resolves.toEqual({
+        activities: [
+          expect.objectContaining({
+            dataSource: DataSource.EOD_HISTORICAL_DATA,
+            symbol: 'VWRA.SW'
+          })
+        ],
+        rowsWithoutMatch: []
+      });
+
+      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
+
+      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', [
+        expect.objectContaining({
+          dataSource: DataSource.EOD_HISTORICAL_DATA,
+          symbol: 'VWRA.SW'
+        }),
+        expect.objectContaining({
+          dataSource: DataSource.EOD_HISTORICAL_DATA,
+          symbol: 'AAPL'
+        })
+      ]);
+    });
+
     it('Passes no holding with a data source which is not configured to the model and gives a row whose asset match is such a holding as a row without a match', async () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
