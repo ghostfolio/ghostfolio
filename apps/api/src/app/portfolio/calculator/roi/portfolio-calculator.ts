@@ -32,12 +32,21 @@ import {
 
 /**
  * Return on Investment (ROI): the gain divided by the invested capital, without
- * time weighting. The invested capital of a holding is the sum of its buy
- * amounts. The invested capital of a date range is the value at the start of
- * the range plus the buy amounts during the range.
+ * time weighting.
  *
- * The invested capital fills the average investment fields of the holding
- * performance, which the base class sums per date.
+ * The invested capital of a holding is the sum of its buy amounts. It fills the
+ * average investment fields of the holding performance.
+ *
+ * The invested capital of the portfolio is the sum of the positive net
+ * investment changes from date to date. Thus money which moves from one holding
+ * to another on the same date counts one time only, for example a buy with cash
+ * in a foreign currency. The invested capital of a date range is the value at
+ * the start of the range plus the positive net investment changes during the
+ * range.
+ *
+ * A sell amount does not reduce the invested capital, so that a sold holding
+ * keeps its share of the gain. Therefore money which moves from one holding to
+ * another on different dates counts two times.
  */
 export class RoiPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(
@@ -175,36 +184,69 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
   }: {
     accumulatedValuesByDate: { [date: string]: AccumulatedValues };
   }): { [date: string]: PerformancePercentages } {
+    let investedCapital = new Big(0);
+    let investedCapitalWithCurrencyEffect = new Big(0);
+    let previousTotalInvestmentValue = new Big(0);
+    let previousTotalInvestmentValueWithCurrencyEffect = new Big(0);
+
     const performancePercentagesByDate: {
       [date: string]: PerformancePercentages;
     } = {};
 
+    // The dates are in chronological order
     for (const [
       date,
       {
-        totalAverageInvestmentValue: totalInvestedCapital,
-        totalAverageInvestmentValueWithCurrencyEffect:
-          totalInvestedCapitalWithCurrencyEffect,
         totalDividendValueWithCurrencyEffect,
+        totalInvestmentValue,
+        totalInvestmentValueWithCurrencyEffect,
         totalNetPerformanceValue,
         totalNetPerformanceValueWithCurrencyEffect
       }
     ] of Object.entries(accumulatedValuesByDate)) {
+      // A positive net investment change of the portfolio increases the
+      // invested capital. A negative change does not reduce it, so that a sold
+      // holding keeps its share of the gain.
+      const investmentChange = totalInvestmentValue.minus(
+        previousTotalInvestmentValue
+      );
+
+      if (investmentChange.gt(0)) {
+        investedCapital = investedCapital.plus(investmentChange);
+      }
+
+      const investmentChangeWithCurrencyEffect =
+        totalInvestmentValueWithCurrencyEffect.minus(
+          previousTotalInvestmentValueWithCurrencyEffect
+        );
+
+      if (investmentChangeWithCurrencyEffect.gt(0)) {
+        investedCapitalWithCurrencyEffect =
+          investedCapitalWithCurrencyEffect.plus(
+            investmentChangeWithCurrencyEffect
+          );
+      }
+
+      previousTotalInvestmentValue = totalInvestmentValue;
+
+      previousTotalInvestmentValueWithCurrencyEffect =
+        totalInvestmentValueWithCurrencyEffect;
+
       performancePercentagesByDate[date] = {
         dividendInPercentageWithCurrencyEffect:
-          totalInvestedCapitalWithCurrencyEffect.eq(0)
+          investedCapitalWithCurrencyEffect.eq(0)
             ? 0
             : totalDividendValueWithCurrencyEffect
-                .div(totalInvestedCapitalWithCurrencyEffect)
+                .div(investedCapitalWithCurrencyEffect)
                 .toNumber(),
-        netPerformanceInPercentage: totalInvestedCapital.eq(0)
+        netPerformanceInPercentage: investedCapital.eq(0)
           ? 0
-          : totalNetPerformanceValue.div(totalInvestedCapital).toNumber(),
+          : totalNetPerformanceValue.div(investedCapital).toNumber(),
         netPerformanceInPercentageWithCurrencyEffect:
-          totalInvestedCapitalWithCurrencyEffect.eq(0)
+          investedCapitalWithCurrencyEffect.eq(0)
             ? 0
             : totalNetPerformanceValueWithCurrencyEffect
-                .div(totalInvestedCapitalWithCurrencyEffect)
+                .div(investedCapitalWithCurrencyEffect)
                 .toNumber()
       };
     }
@@ -232,9 +274,9 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
         investedCapitalWithCurrencyEffect =
           historicalDataItem.valueWithCurrencyEffect;
       } else {
-        // The buy amounts during the date range increase the invested capital.
-        // The sell amounts do not reduce it, so that a sold holding keeps its
-        // share of the gain.
+        // A positive net investment change of the portfolio increases the
+        // invested capital. A negative change does not reduce it, so that a
+        // sold holding keeps its share of the gain.
         const investmentChange =
           historicalDataItem.totalInvestment -
           historicalDataItems[index - 1].totalInvestment;
@@ -243,9 +285,13 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
           investedCapital += investmentChange;
         }
 
-        if (historicalDataItem.investmentValueWithCurrencyEffect > 0) {
+        const investmentChangeWithCurrencyEffect =
+          historicalDataItem.totalInvestmentValueWithCurrencyEffect -
+          historicalDataItems[index - 1].totalInvestmentValueWithCurrencyEffect;
+
+        if (investmentChangeWithCurrencyEffect > 0) {
           investedCapitalWithCurrencyEffect +=
-            historicalDataItem.investmentValueWithCurrencyEffect;
+            investmentChangeWithCurrencyEffect;
         }
       }
 

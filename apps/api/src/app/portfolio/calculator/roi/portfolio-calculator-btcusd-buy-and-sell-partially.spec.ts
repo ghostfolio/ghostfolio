@@ -13,6 +13,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { parseDate } from '@ghostfolio/common/helper';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
@@ -112,7 +113,7 @@ describe('PortfolioCalculator (ROI)', () => {
 
       const performanceByDateRange = await getPerformanceByDateRange({
         portfolioCalculator,
-        dateRanges: ['1d', 'max', 'ytd']
+        dateRanges: ['1d', '2017', 'max', 'ytd']
       });
 
       const investments = portfolioCalculator.getInvestments();
@@ -162,11 +163,13 @@ describe('PortfolioCalculator (ROI)', () => {
             netPerformancePercentage: new Big('42.40043067128546016291'),
             netPerformancePercentageWithCurrencyEffectMap: {
               '1d': new Big('-0.04016229506406263535'),
+              '2017': new Big('43.08868315035799522673'),
               max: new Big('41.62112555619955206456'),
               ytd: new Big('-0.04016229506406263535')
             },
             netPerformanceWithCurrencyEffectMap: {
               '1d': new Big('-556.443324'),
+              '2017': new Big('27081.23736'),
               max: new Big('26516.208701400000064086'),
               ytd: new Big('-556.443324')
             },
@@ -258,6 +261,15 @@ describe('PortfolioCalculator (ROI)', () => {
           totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
           valueWithCurrencyEffect: 13298.425356
         },
+        '2017': {
+          date: '2017-12-31',
+          netPerformance: 26957.033439,
+          netPerformanceInPercentage: 44.04821002386635,
+          netPerformanceInPercentageWithCurrencyEffect: 43.088683150357994,
+          netPerformanceWithCurrencyEffect: 27081.23736,
+          totalInvestmentValueWithCurrencyEffect: 318.54266729999995,
+          valueWithCurrencyEffect: 13854.86868
+        },
         max: {
           date: '2018-01-01',
           netPerformance: 26458.9121202,
@@ -277,6 +289,78 @@ describe('PortfolioCalculator (ROI)', () => {
           valueWithCurrencyEffect: 13298.425356
         }
       });
+
+      const { endDate, startDate } = getIntervalFromDateRange({
+        dateRange: '2017'
+      });
+
+      const { chart } = await portfolioCalculator.getPerformance({
+        end: endDate,
+        start: startDate
+      });
+
+      expect(chart[0].date).toBe('2016-12-31');
+    });
+
+    it.only('with BTCUSD buy and sell partially and fewer chart items', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2018-01-01').getTime());
+
+      const environmentConfigurationService = new ConfigurationService();
+
+      // Fewer chart items give fewer chart dates, which must not change the
+      // invested capital. The range 2017 starts with a gross performance and
+      // ends with the sell.
+      jest.spyOn(configurationService, 'get').mockImplementation((key) => {
+        return key === 'MAX_CHART_ITEMS'
+          ? 50
+          : environmentConfigurationService.get(key);
+      });
+
+      const { activities, userCurrency } = loadActivitiesFromExportFile(
+        'btcusd-buy-and-sell-partially.json'
+      );
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROI,
+        currency: userCurrency,
+        usePortfolioSnapshotCache: false,
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['2017', 'max']
+      });
+
+      expect(
+        portfolioSnapshot.positions[0]
+          .netPerformancePercentageWithCurrencyEffectMap
+      ).toMatchObject({
+        '2017': new Big('43.08868315035799522673'),
+        max: new Big('41.62112555619955206456')
+      });
+
+      // Other chart dates give another rounding of the floating point numbers
+      expect(
+        performanceByDateRange['2017'].netPerformanceInPercentage
+      ).toBeCloseTo(44.04821002386635, 10);
+
+      expect(
+        performanceByDateRange['2017']
+          .netPerformanceInPercentageWithCurrencyEffect
+      ).toBeCloseTo(43.088683150357994, 10);
+
+      expect(performanceByDateRange.max.netPerformanceInPercentage).toBeCloseTo(
+        42.400430671285456,
+        10
+      );
+
+      expect(
+        performanceByDateRange.max.netPerformanceInPercentageWithCurrencyEffect
+      ).toBeCloseTo(41.62112555619955, 10);
     });
   });
 });

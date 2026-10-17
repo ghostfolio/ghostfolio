@@ -39,6 +39,9 @@
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-select
                     name="performanceCalculationType"
+                    [disabled]="
+                      hasImpersonationId || !hasPermissionToUpdateUserSettings
+                    "
                     [value]="user.settings.performanceCalculationType"
                     (selectionChange)="
                       onChangeUserSetting(
