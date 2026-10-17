@@ -188,7 +188,8 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
                 `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
               ),
             borderDash: (context) => this.isInFuture(context, [2, 2])
-          }
+          },
+          type: 'line'
         }
       ]
     };
