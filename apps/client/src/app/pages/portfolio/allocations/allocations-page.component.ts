@@ -388,7 +388,7 @@ export class GfAllocationsPageComponent implements OnInit {
       [name: string]: { name: string; value: number };
     } = {};
 
-    let totalValueExcludingCashPositions = 0;
+    let totalValueExcludingCashAndCryptoPositions = 0;
     let totalValueInFunds = 0;
 
     for (const position of this.portfolioDetails.holdings) {
@@ -415,11 +415,18 @@ export class GfAllocationsPageComponent implements OnInit {
           : (position.valueInBaseCurrency ?? 0)
       };
 
-      if (!isCashPosition(position.assetProfile)) {
-        // Prepare analysis data by continents, countries, holdings and sectors
-        // except for cash
+      const isExcludedFromGeographicAnalysis =
+        isCashPosition(position.assetProfile) ||
+        position.assetProfile.assetSubClass === AssetSubClass.CRYPTOCURRENCY;
 
-        totalValueExcludingCashPositions += this.extractValue(position);
+      if (!isExcludedFromGeographicAnalysis) {
+        // Prepare analysis data by continents, countries, holdings and sectors
+        // except for cash and cryptocurrencies, which cannot be assigned to a
+        // specific continent
+
+        totalValueExcludingCashAndCryptoPositions += this.extractValue(
+          position
+        );
 
         if (position.assetProfile.countries.length > 0) {
           for (const country of position.assetProfile.countries) {
@@ -541,11 +548,11 @@ export class GfAllocationsPageComponent implements OnInit {
 
     if (this.showValuesInPercentage()) {
       // The values are percentages of the whole portfolio, but the analysis
-      // data does not contain the cash positions
+      // data does not contain the cash and cryptocurrency positions
       for (const values of [this.continents, this.countries, this.sectors]) {
         convertValuesToPercentagesOfTotal({
           values,
-          total: totalValueExcludingCashPositions
+          total: totalValueExcludingCashAndCryptoPositions
         });
       }
     }
