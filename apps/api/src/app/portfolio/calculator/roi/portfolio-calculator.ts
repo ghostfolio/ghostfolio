@@ -35,7 +35,9 @@ import {
  * time weighting.
  *
  * The invested capital of a holding is the sum of its buy amounts. It fills the
- * average investment fields of the holding performance.
+ * average investment of the holding performance. The average investment values
+ * per date stay empty, because the invested capital of the portfolio is not the
+ * sum of the holdings.
  *
  * The invested capital of the portfolio is the sum of the positive net
  * investment changes from date to date. Thus money which moves from one holding
@@ -333,9 +335,6 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
     };
     start: Date;
   } & AssetProfileIdentifier): HoldingPerformance {
-    const investedCapitalValues: { [date: string]: Big } = {};
-    const investedCapitalValuesWithCurrencyEffect: { [date: string]: Big } = {};
-
     const assetProfileIdentifier = getAssetProfileIdentifier({
       dataSource,
       symbol
@@ -454,11 +453,6 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
             item.transactionInvestmentWithCurrencyEffect
           );
       }
-
-      investedCapitalValues[item.date] = investedCapital;
-
-      investedCapitalValuesWithCurrencyEffect[item.date] =
-        investedCapitalWithCurrencyEffect;
     }
 
     const {
@@ -617,9 +611,8 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
       totalInvestmentWithCurrencyEffect,
       totalLiabilitiesInBaseCurrency,
       averageInvestment: investedCapital,
-      averageInvestmentValues: investedCapitalValues,
-      averageInvestmentValuesWithCurrencyEffect:
-        investedCapitalValuesWithCurrencyEffect,
+      averageInvestmentValues: {},
+      averageInvestmentValuesWithCurrencyEffect: {},
       averageInvestmentWithCurrencyEffect: investedCapitalWithCurrencyEffect,
       grossPerformance: totalGrossPerformance,
       grossPerformanceWithCurrencyEffect:
