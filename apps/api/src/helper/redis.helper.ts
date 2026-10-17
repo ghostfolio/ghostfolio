@@ -7,16 +7,17 @@ export function getRedisConnectionOptions(
     db: configurationService.get('REDIS_DB'),
     host: configurationService.get('REDIS_HOST'),
     password: configurationService.get('REDIS_PASSWORD'),
-    port: configurationService.get('REDIS_PORT')
+    port: configurationService.get('REDIS_PORT'),
+    tls: configurationService.get('REDIS_TLS') ? {} : undefined
   };
 }
 
 export function getRedisConnectionUrl(
   configurationService: ConfigurationService
 ): string {
-  const { db, host, password, port } =
+  const { db, host, password, port, tls } =
     getRedisConnectionOptions(configurationService);
   const encodedPassword = encodeURIComponent(password);
 
-  return `redis://${encodedPassword ? `:${encodedPassword}` : ''}@${host}:${port}/${db}`;
+  return `${tls ? 'rediss' : 'redis'}://${encodedPassword ? `:${encodedPassword}` : ''}@${host}:${port}/${db}`;
 }
