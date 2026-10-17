@@ -1,3 +1,5 @@
+import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
+import { AccountModule } from '@ghostfolio/api/app/account/account.module';
 import { ImportModule } from '@ghostfolio/api/app/import/import.module';
 import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
@@ -24,6 +26,8 @@ import { McpService } from './mcp.service';
   controllers: [GhostfolioMcpController],
   exports: [McpService],
   imports: [
+    AccountBalanceModule,
+    AccountModule,
     ApiModule,
     ConfigurationModule,
     ImportModule,
@@ -40,7 +44,7 @@ import { McpService } from './mcp.service';
         const { hostname } = new URL(configurationService.get('ROOT_URL'));
 
         const instructions = [
-          'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access and import activities into the portfolio. They give the quantities and the monetary values only if the access has the permission "View" or "View and manage", otherwise no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities, the access needs the permission "Restricted view and manage" or "View and manage".'
+          'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access, import activities into the portfolio and update the cash balances of the accounts. They give the quantities and the monetary values only if the access has the permission "View" or "View and manage", otherwise no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities or to update a cash balance, the access needs the permission "Restricted view and manage" or "View and manage".'
         ];
 
         if (configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {

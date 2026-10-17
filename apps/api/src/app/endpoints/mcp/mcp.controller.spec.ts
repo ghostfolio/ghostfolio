@@ -245,7 +245,8 @@ describe('GhostfolioMcpController', () => {
       'get-portfolio',
       'get-watchlist',
       'import-activities',
-      'search-asset-profiles'
+      'search-asset-profiles',
+      'update-account-balance'
     ]);
   });
 
@@ -287,7 +288,8 @@ describe('GhostfolioMcpController', () => {
       'get-portfolio',
       'get-watchlist',
       'import-activities',
-      'search-asset-profiles'
+      'search-asset-profiles',
+      'update-account-balance'
     ]);
   });
 
@@ -346,6 +348,12 @@ describe('GhostfolioMcpController', () => {
     expect(
       getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, 'searchAssetProfiles')
     ).toEqual([scopes.activityCreate]);
+  });
+
+  it('Requires the scope to update an account for the tool to update the account balance', () => {
+    expect(
+      getMetadataOfMethod<Scope[]>(REQUIRES_SCOPE_KEY, 'updateAccountBalance')
+    ).toEqual([scopes.accountUpdate]);
   });
 
   // The tools have no try and catch, hence the filter is the only guarantee

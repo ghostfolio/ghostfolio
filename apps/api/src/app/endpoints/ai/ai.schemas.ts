@@ -66,20 +66,20 @@ export const ROW_MATCHES_OUTPUT = z.object({
           .string()
           .nullable()
           .describe(
-            'The currency of the asset profile, as given in the asset profiles of the asset'
+            'The currency of the selected holding or asset profile, as given'
           ),
         dataSource: z
           .string()
           .nullable()
           .describe(
-            'The data source of the asset profile, as given in the asset profiles of the asset'
+            'The data source of the selected holding or asset profile, as given'
           ),
         id: z.number().describe('The id of the asset, as given'),
         symbol: z
           .string()
           .nullable()
           .describe(
-            'The symbol of the asset profile, as given in the asset profiles of the asset, or null if no asset profile matches'
+            'The symbol of the selected holding or asset profile, as given, or null if no holding and no asset profile matches'
           )
       })
     )

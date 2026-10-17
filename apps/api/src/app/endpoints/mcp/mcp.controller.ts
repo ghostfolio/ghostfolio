@@ -18,7 +18,8 @@ import {
   GET_ACTIVITIES_PARAMETERS,
   GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
-  SEARCH_ASSET_PROFILES_PARAMETERS
+  SEARCH_ASSET_PROFILES_PARAMETERS,
+  UPDATE_ACCOUNT_BALANCE_PARAMETERS
 } from './mcp.schemas';
 import { McpService } from './mcp.service';
 
@@ -93,7 +94,7 @@ export class GhostfolioMcpController {
       ', '
     )}. If the access reads the monetary values, these columns are given in addition: ${PortfolioTableService.getPerformanceTableValueColumnNames().join(
       ', '
-    )}. The value in base currency is the value at the end of the date range. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance is the return on average investment (ROAI) and includes the dividends (total return). The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
+    )}. The value in base currency is the value at the end of the date range. The asset performance excludes the effect of the exchange rates, the currency performance is that effect, and the net performance is the sum of both in the base currency of the user. Each performance uses the performance calculation type of the user (default: return on average investment, ROAI) and includes the dividends (total return). The accounts and the activities which are excluded from analysis are not part of the performance. The parameters limit the performance to the holdings of the accounts, of the asset classes or of the asset profile.`,
     name: 'get-performance',
     parameters: GET_PERFORMANCE_PARAMETERS
   })
@@ -191,6 +192,27 @@ export class GhostfolioMcpController {
     @Payload() parameters: z.infer<typeof SEARCH_ASSET_PROFILES_PARAMETERS>
   ) {
     return this.mcpService.searchAssetProfiles({ ...parameters, userId });
+  }
+
+  @RequiresScopeOfAccess(scopes.accountUpdate)
+  @Tool({
+    annotations: {
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: false,
+      readOnlyHint: false,
+      title: 'Update account balance'
+    },
+    description:
+      'Sets the cash balance of an account at a date. The balance is in the currency of the account, which get-accounts gives. A cash balance of the account at the same date is replaced. The cash balance at the most recent date is the current cash balance of the account. A date in the future is refused.',
+    name: 'update-account-balance',
+    parameters: UPDATE_ACCOUNT_BALANCE_PARAMETERS
+  })
+  public async updateAccountBalance(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload() parameters: z.infer<typeof UPDATE_ACCOUNT_BALANCE_PARAMETERS>
+  ) {
+    return this.mcpService.updateAccountBalance({ ...parameters, userId });
   }
 
   private hasScopeToReadValues(impersonationScopes: string[]) {

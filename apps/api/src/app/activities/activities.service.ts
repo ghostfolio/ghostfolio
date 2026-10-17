@@ -3,10 +3,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
-import {
-  isAccountBalanceInFuture,
-  WHERE_ACCOUNT_NOT_EXCLUDED
-} from '@ghostfolio/api/helper/account.helper';
+import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
 import {
   getTagsWithDraftTag,
   isActivityInFuture,
@@ -39,6 +36,7 @@ import {
   getAssetProfileIdentifier,
   getStartOfUtcDateOfTomorrow,
   hasGhostfolioPrefix,
+  isAccountBalanceInFuture,
   isDraftActivity
 } from '@ghostfolio/common/helper';
 import {
@@ -62,6 +60,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
+import { endOfDay, isAfter } from 'date-fns';
 import { groupBy, omit, uniqBy } from 'lodash-es';
 import { randomUUID } from 'node:crypto';
 
@@ -1046,7 +1045,11 @@ export class ActivitiesService {
     }
 
     if (startDate) {
-      andConditions.push({ date: { gt: startDate } });
+      andConditions.push({
+        date: {
+          gt: isAfter(startDate, new Date(0)) ? endOfDay(startDate) : startDate
+        }
+      });
     }
 
     const {

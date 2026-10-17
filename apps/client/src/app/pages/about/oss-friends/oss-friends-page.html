@@ -1,17 +1,17 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1 class="h3 line-height-1 mb-4 text-center">
+      <h1 class="h3 lh-1 mb-4 text-center">
         <span class="d-none d-sm-block"
           ><ng-container i18n>Our</ng-container> OSS Friends</span
         >
-        <small class="text-muted" i18n
+        <small class="text-body-secondary" i18n
           >Discover other exciting Open Source Software projects</small
         >
       </h1>
       <div class="row">
         @for (ossFriend of ossFriends; track ossFriend) {
-          <div class="col-xs-12 col-md-4" [class.mb-3]="!$last">
+          <div class="col-md-4" [class.mb-3]="!$last">
             <a target="_blank" [href]="ossFriend.href">
               <mat-card appearance="outlined" class="d-flex flex-column h-100">
                 <mat-card-header>
@@ -27,7 +27,7 @@
                     <span
                       ><ng-container i18n>Visit</ng-container>
                       {{ ossFriend.name }}</span
-                    ><ion-icon class="ml-1" name="arrow-forward-outline" />
+                    ><ion-icon class="ms-1" name="arrow-forward-outline" />
                   </a>
                 </mat-card-actions>
               </mat-card>

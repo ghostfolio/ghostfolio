@@ -1,7 +1,4 @@
-import {
-  getWhereAccountBalanceNotInFuture,
-  isAccountBalanceInFuture
-} from './account.helper';
+import { getWhereAccountBalanceNotInFuture } from './account.helper';
 
 // A user in a time zone ahead of the instance is already on the next day at
 // this moment. The expected limit is a moment in UTC, hence this suite must
@@ -24,32 +21,6 @@ describe('account.helper', () => {
       expect(getWhereAccountBalanceNotInFuture()).toEqual({
         date: { lte: START_OF_UTC_DATE_OF_TOMORROW }
       });
-    });
-  });
-
-  describe('isAccountBalanceInFuture', () => {
-    it('should accept the account balance of the current day', () => {
-      expect(
-        isAccountBalanceInFuture({ date: new Date('2026-09-03T00:00:00.000Z') })
-      ).toBe(false);
-    });
-
-    it('should accept the account balance of a user in a time zone ahead of the instance', () => {
-      expect(
-        isAccountBalanceInFuture({ date: START_OF_UTC_DATE_OF_TOMORROW })
-      ).toBe(false);
-    });
-
-    it('should reject an account balance after the start of the UTC date of tomorrow', () => {
-      expect(
-        isAccountBalanceInFuture({ date: new Date('2026-09-04T00:00:00.001Z') })
-      ).toBe(true);
-    });
-
-    it('should reject an account balance of the day after tomorrow', () => {
-      expect(
-        isAccountBalanceInFuture({ date: new Date('2026-09-05T00:00:00.000Z') })
-      ).toBe(true);
     });
   });
 });

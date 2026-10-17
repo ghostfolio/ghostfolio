@@ -10,14 +10,14 @@
       <div class="col introduction">
         <h4 i18n>Welcome to Ghostfolio</h4>
         <p i18n>Ready to take control of your personal finances?</p>
-        <ol class="font-weight-bold">
+        <ol class="fw-bold">
           <li
             class="mb-2"
-            [class.text-muted]="(user()?.accounts?.length ?? 0) > 1"
+            [class.text-body-secondary]="(user()?.accounts?.length ?? 0) > 1"
           >
             <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
-              <span class="font-weight-normal" i18n
+              <span class="fw-normal" i18n
                 >Get a comprehensive financial overview by adding your bank and
                 brokerage accounts.</span
               ></a
@@ -26,7 +26,7 @@
           <li class="mb-2">
             <a class="d-block" [routerLink]="routerLinkPortfolioActivities">
               <span i18n>Capture your activities</span><br />
-              <span class="font-weight-normal" i18n
+              <span class="fw-normal" i18n
                 >Record your investment activities to keep your portfolio up to
                 date.</span
               ></a
@@ -35,7 +35,7 @@
           <li class="mb-2">
             <a class="d-block" [routerLink]="routerLinkPortfolio">
               <span i18n>Monitor and analyze your portfolio</span><br />
-              <span class="font-weight-normal" i18n
+              <span class="fw-normal" i18n
                 >Track your progress in real-time with comprehensive analysis
                 and insights.</span
               >
@@ -70,7 +70,7 @@
           <gf-line-chart
             class="position-absolute"
             unit="%"
-            [class.pr-3]="deviceType() === 'mobile'"
+            [class.pe-3]="deviceType() === 'mobile'"
             [colorScheme]="user()?.settings?.colorScheme"
             [hidden]="historicalDataItems()?.length === 0"
             [historicalDataItems]="historicalDataItems()"
@@ -96,7 +96,7 @@
         </div>
       </div>
       @if (showExperimentalHoldings()) {
-        <div class="col-xl-4 d-none d-xl-block ml-5 p-0 position-relative">
+        <div class="col-xl-4 d-none d-xl-block ms-5 p-0 position-relative">
           <mat-card
             appearance="outlined"
             class="h-100 holdings position-absolute w-100"

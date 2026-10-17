@@ -123,7 +123,7 @@ export class GfImportActivitiesDialogComponent {
   protected details: any[] = [];
   protected dialogTitle = $localize`Import Activities`;
   protected errorMessages: string[] = [];
-  protected readonly ghostfolioAiTooltip = $localize`The content of your file will be processed by a third-party AI provider. Please remove any personal data before uploading.`;
+  protected readonly ghostfolioAiTooltip = $localize`The content of your file will be processed by third-party AI providers. Please remove any personal data before uploading.`;
 
   protected readonly hasPermissionToEnableGhostfolioAi = hasPermission(
     this.data.user?.permissions,
@@ -259,7 +259,7 @@ export class GfImportActivitiesDialogComponent {
     files: FileList;
     stepper: MatStepper;
   }) {
-    if (files.length === 0) {
+    if (files.length === 0 || this.importStep !== ImportStep.UPLOAD_FILE) {
       return;
     }
 

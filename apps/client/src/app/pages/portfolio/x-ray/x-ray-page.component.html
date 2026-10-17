@@ -19,7 +19,7 @@
           <div class="d-flex">
             <ngx-skeleton-loader
               animation="pulse"
-              class="mr-2"
+              class="me-2"
               [theme]="{
                 height: '2rem',
                 width: '2rem'
@@ -36,7 +36,7 @@
           </div>
         } @else {
           <div
-            class="align-items-center d-flex icon-container mr-2 px-2"
+            class="align-items-center d-flex icon-container me-2 px-2"
             [class]="{
               okay:
                 statistics?.rulesFulfilledCount ===
@@ -49,7 +49,10 @@
               statistics?.rulesActiveCount === 0 ||
               statistics?.rulesFulfilledCount === 0
             ) {
-              <ion-icon class="text-muted" name="remove-circle-outline" />
+              <ion-icon
+                class="text-body-secondary"
+                name="remove-circle-outline"
+              />
             } @else if (
               statistics?.rulesFulfilledCount === statistics?.rulesActiveCount
             ) {
@@ -71,7 +74,7 @@
           <h4 class="align-items-center d-flex m-0">
             <span>{{ category.name }}</span>
             @if (user?.subscription?.type === 'Basic') {
-              <gf-premium-indicator class="ml-1" />
+              <gf-premium-indicator class="ms-1" />
             }
           </h4>
           <gf-rules

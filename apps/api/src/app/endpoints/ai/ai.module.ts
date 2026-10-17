@@ -2,6 +2,7 @@ import { McpModule } from '@ghostfolio/api/app/endpoints/mcp/mcp.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
@@ -17,6 +18,7 @@ import { AiService } from './ai.service';
   imports: [
     ApiModule,
     ConfigurationModule,
+    DataProviderModule,
     ImpersonationModule,
     McpModule,
     PortfolioTableModule,

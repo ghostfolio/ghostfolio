@@ -11,6 +11,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced a cooldown of 12 hours for the asset profile and exchange rate gathering on activity creation by retaining the completed jobs
 
+## 3.88.0 - 2026-10-17
+
+### Added
+
+- Added the _Return on Investment_ (ROI) performance calculation type (experimental)
+- Added a tool to update the cash balance of an account to the server of the Model Context Protocol (MCP) (experimental)
+- Exposed the `REDIS_TLS` environment variable to enable the TLS connection to _Redis_
+
+### Changed
+
+- Improved the accessibility of the _Google_ icon in the login with access token dialog
+- Improved the accessibility of the _Google_ icon on the registration page
+- Improved the search by ISIN number in the _Financial Modeling Prep_ service
+- Upgraded `bull-board` from version `9.10.1` to `9.10.4`
+
+### Fixed
+
+- Fixed the alignment of the bars in the investment chart component
+- Fixed the data source mapping in the data provider service to apply only to the mapped data source
+
+## 3.87.0 - 2026-10-17
+
+### Added
+
+- Added a _Storybook_ story for the investment chart component
+
+### Changed
+
+- Highlighted the negative values in the performance timeline chart on the analysis page (experimental)
+- Moved the investment chart component to `@ghostfolio/ui`
+- Improved the matching of assets in the import of activities with _Ghostfolio AI_ to prefer the holdings of the user (experimental)
+- Extended the holdings table by the ISIN in the _Copy AI prompt to clipboard_ actions on the analysis page and in the tool to get the portfolio of the server of the Model Context Protocol (MCP) (experimental)
+- Hardened the validation of the date in the endpoint to create an account balance
+- Improved the language localization for German (`de`)
+- Upgraded `bootstrap` from version `4.6.2` to `5.3.8`
+- Upgraded `stripe` from version `22.6.2` to `23.0.0`
+
+### Fixed
+
+- Fixed an exception in the authentication interceptor when the time zone of the browser is not available
+- Fixed the missing `userId` in the unique constraint of the `AccountBalance` database schema
+
+## 3.86.0 - 2026-10-13
+
+### Added
+
+- Added support to paste a file in the import activities dialog
+
+### Changed
+
+- Improved the style of the stepper in the user account registration dialog
+- Improved the labels of the client of the last request in the users section of the admin control panel
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the missing platform icon in the preview step of the activities import
+- Fixed the start date of the date range filter on the activities page and in the dividend timeline chart on the analysis page
+- Fixed the link of the _Manage Asset Profile_ button in the holding detail dialog before the holding has loaded
+
 ## 3.85.0 - 2026-10-12
 
 ### Added

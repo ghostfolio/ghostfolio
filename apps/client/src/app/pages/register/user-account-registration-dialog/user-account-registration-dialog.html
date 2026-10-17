@@ -1,13 +1,14 @@
 <h1 mat-dialog-title>
   <span i18n>Create Account</span>
   @if (role === 'ADMIN') {
-    <span class="badge badge-light ml-2">{{ role }}</span>
+    <span class="badge bg-light ms-2 text-dark">{{ role }}</span>
   }
 </h1>
 <div class="px-0" mat-dialog-content>
   <mat-stepper
     #stepper
     animationDuration="0ms"
+    [disableRipple]="true"
     [linear]="true"
     [orientation]="data.deviceType === 'mobile' ? 'vertical' : 'horizontal'"
   >
@@ -33,7 +34,7 @@
           <ng-container i18n
             >and I agree to the
             <a
-              class="font-weight-bold"
+              class="fw-bold"
               target="_blank"
               [routerLink]="routerLinkAboutTermsOfService"
               >Terms of Service</a
@@ -55,7 +56,7 @@
             (click)="createAccount()"
           >
             <span i18n>Continue</span>
-            <ion-icon class="ml-1" name="arrow-forward-outline" />
+            <ion-icon class="ms-1" name="arrow-forward-outline" />
           </button>
         </div>
       </div>
@@ -77,14 +78,14 @@
           type="text"
           [value]="accessToken"
         ></textarea>
-        <div class="float-right mt-1">
+        <div class="float-end mt-1">
           <button
             color="secondary"
             mat-flat-button
             [cdkCopyToClipboard]="accessToken ?? ''"
             (click)="enableCreateAccountButton()"
           >
-            <ion-icon class="mr-1" name="copy-outline" />
+            <ion-icon class="me-1" name="copy-outline" />
             <span i18n>Copy to clipboard</span>
           </button>
         </div>

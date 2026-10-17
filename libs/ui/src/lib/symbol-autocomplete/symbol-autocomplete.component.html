@@ -15,17 +15,16 @@
   @if (!isLoading) {
     @for (lookupItem of lookupItems; track lookupItem) {
       <mat-option
-        class="line-height-1"
         [disabled]="lookupItem.dataProviderInfo.isPremium"
         [value]="lookupItem"
       >
-        <span class="align-items-center d-flex line-height-1"
+        <span class="align-items-center d-flex lh-1"
           ><span>{{ lookupItem.name }}</span>
           @if (lookupItem.dataProviderInfo.isPremium) {
-            <gf-premium-indicator class="ml-1" [enableLink]="false" />
+            <gf-premium-indicator class="ms-1" [enableLink]="false" />
           }
         </span>
-        <small class="text-muted"
+        <small class="text-body-secondary"
           >{{ lookupItem.symbol }}
           @if (lookupItem.currency) {
             · {{ lookupItem.currency }}
@@ -40,7 +39,7 @@
       </mat-option>
     } @empty {
       @if (control.value?.length > 1) {
-        <mat-option class="line-height-1" disabled="true" i18n
+        <mat-option disabled="true" i18n
           >Oops! Could not find any assets.</mat-option
         >
       }

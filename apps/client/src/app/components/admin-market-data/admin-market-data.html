@@ -87,15 +87,13 @@
             >
               <ng-container i18n>Name</ng-container>
             </th>
-            <td
-              *matCellDef="let element"
-              class="line-height-normal px-1"
-              mat-cell
-            >
+            <td *matCellDef="let element" class="lh-normal px-1" mat-cell>
               <div class="text-truncate">{{ element.name }}</div>
               @if (!isUUID(element.symbol)) {
                 <div>
-                  <small class="text-muted">{{ element.symbol }}</small>
+                  <small class="text-body-secondary">{{
+                    element.symbol
+                  }}</small>
                 </div>
               }
             </td>
@@ -108,7 +106,7 @@
             </th>
             <td
               *matCellDef="let element"
-              class="line-height-normal px-1 text-nowrap"
+              class="lh-normal px-1 text-nowrap"
               mat-cell
             >
               <div>
@@ -116,7 +114,9 @@
               </div>
               @if (element.dataProviderInfo?.name) {
                 <div>
-                  <small class="text-muted">{{ element.dataSource }}</small>
+                  <small class="text-body-secondary">{{
+                    element.dataSource
+                  }}</small>
                 </div>
               }
             </td>
@@ -128,13 +128,15 @@
             </th>
             <td
               *matCellDef="let element"
-              class="line-height-normal px-1 text-nowrap"
+              class="lh-normal px-1 text-nowrap"
               mat-cell
             >
               <div>{{ translate(element.assetClass) }}</div>
               @if (element.assetClass) {
                 <div>
-                  <small class="text-muted">{{ element.assetClass }}</small>
+                  <small class="text-body-secondary">{{
+                    element.assetClass
+                  }}</small>
                 </div>
               }
             </td>
@@ -146,13 +148,15 @@
             </th>
             <td
               *matCellDef="let element"
-              class="line-height-normal px-1 text-nowrap"
+              class="lh-normal px-1 text-nowrap"
               mat-cell
             >
               <div>{{ translate(element.assetSubClass) }}</div>
               @if (element.assetSubClass) {
                 <div>
-                  <small class="text-muted">{{ element.assetSubClass }}</small>
+                  <small class="text-body-secondary">{{
+                    element.assetSubClass
+                  }}</small>
                 </div>
               }
             </td>
@@ -192,7 +196,7 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Activities Count</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            <td *matCellDef="let element" class="px-1 text-end" mat-cell>
               {{ element.activitiesCount }}
             </td>
           </ng-container>
@@ -201,7 +205,7 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell>
               <ng-container i18n>Historical Data</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            <td *matCellDef="let element" class="px-1 text-end" mat-cell>
               {{ element.marketDataItemCount }}
             </td>
           </ng-container>
@@ -210,7 +214,7 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell>
               <ng-container i18n>Sectors Count</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            <td *matCellDef="let element" class="px-1 text-end" mat-cell>
               {{ element.sectorsCount }}
             </td>
           </ng-container>
@@ -219,7 +223,7 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell>
               <ng-container i18n>Countries Count</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            <td *matCellDef="let element" class="px-1 text-end" mat-cell>
               {{ element.countriesCount }}
             </td>
           </ng-container>
@@ -243,7 +247,7 @@
           </ng-container>
 
           <ng-container matColumnDef="actions" stickyEnd>
-            <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+            <th *matHeaderCellDef class="px-1 text-end" mat-header-cell>
               <button
                 class="mx-1 no-min-width px-2"
                 mat-button
@@ -291,7 +295,7 @@
                 </button>
               </mat-menu>
             </th>
-            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            <td *matCellDef="let element" class="px-1 text-end" mat-cell>
               <button
                 class="mx-1 no-min-width px-2"
                 mat-button
@@ -311,7 +315,7 @@
                   "
                 >
                   <span class="align-items-center d-flex">
-                    <ion-icon class="mr-2" name="create-outline" />
+                    <ion-icon class="me-2" name="create-outline" />
                     <span><ng-container i18n>Edit</ng-container>...</span>
                   </span>
                 </a>
@@ -334,7 +338,7 @@
                   "
                 >
                   <span class="align-items-center d-flex">
-                    <ion-icon class="mr-2" name="trash-outline" />
+                    <ion-icon class="me-2" name="trash-outline" />
                     <span i18n>Delete</span>
                   </span>
                 </button>

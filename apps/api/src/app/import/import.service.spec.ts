@@ -69,7 +69,7 @@ describe('ImportService', () => {
 
     importService = new ImportService(
       {
-        getAccounts: jest.fn().mockResolvedValue([])
+        accounts: jest.fn().mockResolvedValue([])
       } as unknown as AccountService,
       {
         createActivity,

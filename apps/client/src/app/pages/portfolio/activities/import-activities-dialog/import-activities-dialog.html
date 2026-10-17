@@ -38,7 +38,6 @@
                 }}</mat-select-trigger>
                 @for (holding of holdings; track holding) {
                   <mat-option
-                    class="line-height-1"
                     [value]="{
                       assetProfile: {
                         dataSource: holding.assetProfile.dataSource,
@@ -51,7 +50,7 @@
                       ><b>{{ holding.assetProfile.name }}</b></span
                     >
                     <br />
-                    <small class="text-muted"
+                    <small class="text-body-secondary"
                       >{{ holding.assetProfile.symbol }} ·
                       {{ holding.assetProfile.currency }}</small
                     >
@@ -77,14 +76,14 @@
           <div class="d-flex flex-column justify-content-center">
             @if (isLoading) {
               <div
-                class="align-items-center d-flex drop-area flex-column justify-content-center p-4 text-center text-muted"
+                class="align-items-center d-flex drop-area flex-column justify-content-center p-4 text-body-secondary text-center"
               >
                 <mat-spinner [diameter]="20" />
                 <span i18n>Ghostfolio AI is processing the file...</span>
               </div>
             } @else {
               <button
-                class="drop-area p-4 text-center text-muted"
+                class="drop-area p-4 text-body-secondary text-center"
                 gfFileDrop
                 (click)="onSelectFile(stepper)"
                 (filesDropped)="onFilesDropped({ stepper, files: $event })"
@@ -99,7 +98,7 @@
             }
             <p class="mb-0 mt-3 text-center">
               <small>
-                <span class="mr-1" i18n
+                <span class="me-1" i18n
                   >The following file formats are supported:</span
                 >
                 <a
@@ -108,7 +107,7 @@
                   >CSV</a
                 >
                 @if (isGhostfolioAiEnabled) {
-                  <span class="mr-1">, JPG,</span>
+                  <span class="me-1">, JPG,</span>
                 } @else {
                   <span class="mx-1" i18n>or</span>
                 }
@@ -134,14 +133,12 @@
                   [disabled]="isLoading"
                   (change)="onGhostfolioAiChange($event)"
                 >
-                  <ng-container i18n
-                    >Smart import with Ghostfolio AI</ng-container
-                  >
+                  <ng-container i18n>AI-assisted import</ng-container>
                 </mat-checkbox>
                 <span
                   class="align-items-center d-flex"
                   matTooltipPosition="above"
-                  [class.text-muted]="isLoading"
+                  [class.text-body-secondary]="isLoading"
                   [matTooltip]="ghostfolioAiTooltip"
                 >
                   <ion-icon name="information-circle-outline" />
@@ -167,9 +164,9 @@
             @if (rowsWithoutMatch.length > 0) {
               <mat-accordion class="d-block mb-3" displayMode="flat">
                 <mat-expansion-panel>
-                  <mat-expansion-panel-header class="pl-1">
+                  <mat-expansion-panel-header class="ps-1">
                     <mat-panel-title>
-                      <div class="align-items-center d-flex mr-2">
+                      <div class="align-items-center d-flex me-2">
                         <ion-icon name="warning-outline" />
                       </div>
                       <ng-container i18n>{rowsWithoutMatch.length, plural,
@@ -190,8 +187,8 @@
               </mat-accordion>
             }
             @if (isMaxActivitiesOfGhostfolioAiReached) {
-              <div class="align-items-center d-flex mb-3 pl-1">
-                <ion-icon class="mr-2" name="warning-outline" />
+              <div class="align-items-center d-flex mb-3 ps-1">
+                <ion-icon class="me-2" name="warning-outline" />
                 <span i18n
                   >Ghostfolio AI has processed the maximum of
                   {{ maxActivitiesOfGhostfolioAi }} activities. The file can
@@ -225,7 +222,7 @@
               <ng-container i18n>Back</ng-container>
             </button>
             <button
-              class="ml-1"
+              class="ms-1"
               color="primary"
               mat-flat-button
               [disabled]="!selectedActivities?.length"
@@ -239,10 +236,10 @@
             <mat-accordion displayMode="flat">
               @for (message of errorMessages; track message; let i = $index) {
                 <mat-expansion-panel [disabled]="!details[i]">
-                  <mat-expansion-panel-header class="pl-1">
+                  <mat-expansion-panel-header class="ps-1">
                     <mat-panel-title class="w-100">
                       <div class="d-flex w-100">
-                        <div class="align-items-center d-flex mr-2">
+                        <div class="align-items-center d-flex me-2">
                           <ion-icon name="warning-outline" />
                         </div>
                         <div class="text-truncate" title="{{ message }}">
@@ -263,7 +260,7 @@
               <ng-container i18n>Back</ng-container>
             </button>
             <button
-              class="ml-1"
+              class="ms-1"
               color="primary"
               mat-flat-button
               [disabled]="true"
