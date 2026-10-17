@@ -399,7 +399,7 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 
 ## Model Context Protocol (experimental)
 
-The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio and import activities into it.
+The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio, import activities into it and update the cash balances of your accounts.
 
 ### Prerequisites
 
@@ -407,7 +407,7 @@ The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio 
 - Set `ROOT_URL` to the public URL of your instance if a client calls the endpoint from a browser page. The host name of `ROOT_URL` is the only accepted origin.
 - Grant an access of the type _MCP_ in _My Ghostfolio_ under _Access_ and copy its token
 
-An _MCP_ access with the _Restricted view_ permission reads the portfolio without the monetary values. Grant the _View_ permission to let the client also read the monetary values. Grant the _Restricted view and manage_ or the _View and manage_ permission to let the client also import activities.
+An _MCP_ access with the _Restricted view_ permission reads the portfolio without the monetary values. Grant the _View_ permission to let the client also read the monetary values. Grant the _Restricted view and manage_ or the _View and manage_ permission to let the client also import activities and update the cash balances of your accounts.
 
 ### Connect a client
 
