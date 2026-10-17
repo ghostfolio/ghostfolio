@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `prettier` from version `3.9.9` to `3.9.10`
 
+### Fixed
+
+- Fixed a transaction timeout for presets in the historical market data table of the admin control panel
+
 ## 3.90.0 - 2026-10-21
 
 ### Changed
