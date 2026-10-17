@@ -1,6 +1,9 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import {
   transformDataSourceInRequest,
   transformDataSourceInResponse
@@ -21,12 +24,15 @@ import {
   GET_ACTIVITIES_PARAMETERS,
   GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
-  SEARCH_ASSET_PROFILES_PARAMETERS
+  SEARCH_ASSET_PROFILES_PARAMETERS,
+  UPDATE_ACCOUNT_BALANCE_PARAMETERS
 } from './mcp.schemas';
 
 @Injectable()
 export class McpService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
+    private readonly accountService: AccountService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
@@ -241,6 +247,42 @@ export class McpService {
     );
 
     return this.getTextResult(JSON.stringify({ assetProfiles }, null, 2));
+  }
+
+  public async updateAccountBalance({
+    accountId,
+    balance,
+    date,
+    userId
+  }: z.infer<typeof UPDATE_ACCOUNT_BALANCE_PARAMETERS> & { userId: string }) {
+    await this.getUserWithPermission({
+      userId,
+      permission: permissions.createAccountBalance
+    });
+
+    const account = await this.accountService.account({
+      id_userId: {
+        userId,
+        id: accountId
+      }
+    });
+
+    if (!account) {
+      throw new CallerFacingError(
+        'The account does not exist. Use get-accounts to get the identifier of the account.'
+      );
+    }
+
+    await this.accountBalanceService.createOrUpdateAccountBalance({
+      balance,
+      date,
+      accountId: account.id,
+      userId: account.userId
+    });
+
+    return this.getTextResult(
+      `Updated the cash balance of the account at ${date}`
+    );
   }
 
   private getHoldingFilterParameters({

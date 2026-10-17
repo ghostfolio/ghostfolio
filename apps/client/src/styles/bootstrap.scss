@@ -67,7 +67,6 @@ $unused-utilities: (
   'font-style',
   'gap',
   'gradient',
-  'line-height',
   'link-offset',
   'link-opacity',
   'link-underline',
@@ -105,6 +104,16 @@ $unused-utilities: (
 }
 
 $utilities: map.remove($utilities, $unused-utilities...);
+
+$utilities: map.set(
+  $utilities,
+  'line-height',
+  'values',
+  (
+    1: 1,
+    normal: normal
+  )
+);
 
 // Layout & components
 @import 'bootstrap/scss/root';

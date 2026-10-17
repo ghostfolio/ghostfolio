@@ -87,11 +87,7 @@
             >
               <ng-container i18n>Name</ng-container>
             </th>
-            <td
-              *matCellDef="let element"
-              class="line-height-normal px-1"
-              mat-cell
-            >
+            <td *matCellDef="let element" class="lh-normal px-1" mat-cell>
               <div class="text-truncate">{{ element.name }}</div>
               @if (!isUUID(element.symbol)) {
                 <div>
@@ -110,7 +106,7 @@
             </th>
             <td
               *matCellDef="let element"
-              class="line-height-normal px-1 text-nowrap"
+              class="lh-normal px-1 text-nowrap"
               mat-cell
             >
               <div>
@@ -132,7 +128,7 @@
             </th>
             <td
               *matCellDef="let element"
-              class="line-height-normal px-1 text-nowrap"
+              class="lh-normal px-1 text-nowrap"
               mat-cell
             >
               <div>{{ translate(element.assetClass) }}</div>
@@ -152,7 +148,7 @@
             </th>
             <td
               *matCellDef="let element"
-              class="line-height-normal px-1 text-nowrap"
+              class="lh-normal px-1 text-nowrap"
               mat-cell
             >
               <div>{{ translate(element.assetSubClass) }}</div>

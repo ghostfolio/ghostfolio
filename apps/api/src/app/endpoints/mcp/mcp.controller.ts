@@ -18,7 +18,8 @@ import {
   GET_ACTIVITIES_PARAMETERS,
   GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
-  SEARCH_ASSET_PROFILES_PARAMETERS
+  SEARCH_ASSET_PROFILES_PARAMETERS,
+  UPDATE_ACCOUNT_BALANCE_PARAMETERS
 } from './mcp.schemas';
 import { McpService } from './mcp.service';
 
@@ -191,6 +192,27 @@ export class GhostfolioMcpController {
     @Payload() parameters: z.infer<typeof SEARCH_ASSET_PROFILES_PARAMETERS>
   ) {
     return this.mcpService.searchAssetProfiles({ ...parameters, userId });
+  }
+
+  @RequiresScopeOfAccess(scopes.accountUpdate)
+  @Tool({
+    annotations: {
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: false,
+      readOnlyHint: false,
+      title: 'Update account balance'
+    },
+    description:
+      'Sets the cash balance of an account at a date. The balance is in the currency of the account, which get-accounts gives. A cash balance of the account at the same date is replaced. The cash balance at the most recent date is the current cash balance of the account. A date in the future is refused.',
+    name: 'update-account-balance',
+    parameters: UPDATE_ACCOUNT_BALANCE_PARAMETERS
+  })
+  public async updateAccountBalance(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Payload() parameters: z.infer<typeof UPDATE_ACCOUNT_BALANCE_PARAMETERS>
+  ) {
+    return this.mcpService.updateAccountBalance({ ...parameters, userId });
   }
 
   private hasScopeToReadValues(impersonationScopes: string[]) {
