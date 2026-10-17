@@ -1,4 +1,5 @@
 import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
+import { GfPortfolioPnlCalendarComponent } from '@ghostfolio/client/components/portfolio-pnl-calendar/portfolio-pnl-calendar.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -11,6 +12,7 @@ import {
 import { isCashPosition } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  HistoricalDataItem,
   LineChartItem,
   PortfolioPerformance,
   PortfolioPosition,
@@ -43,6 +45,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   imports: [
     GfHoldingsTableComponent,
     GfLineChartComponent,
+    GfPortfolioPnlCalendarComponent,
     GfPortfolioPerformanceComponent,
     MatButtonModule,
     MatCardModule,
@@ -56,10 +59,17 @@ export class GfHomeOverviewComponent implements OnInit {
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
   protected readonly hasImpersonationId = signal(false);
   protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
+  protected readonly pnlCalendarChart = signal<HistoricalDataItem[] | null>(
+    null
+  );
   protected readonly holdings = signal<PortfolioPosition[] | undefined>(
     undefined
   );
   protected readonly isLoadingPerformance = signal(true);
+
+  protected readonly baseCurrency = computed(() => {
+    return this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY;
+  });
 
   protected readonly locale = computed(() => {
     return this.user()?.settings?.locale ?? DEFAULT_LOCALE;
@@ -163,6 +173,7 @@ export class GfHomeOverviewComponent implements OnInit {
     const userSettings = this.user()?.settings;
 
     this.historicalDataItems.set(null);
+    this.pnlCalendarChart.set(null);
     this.isLoadingPerformance.set(true);
 
     if (this.showExperimentalHoldings()) {
@@ -198,6 +209,11 @@ export class GfHomeOverviewComponent implements OnInit {
         this.errors.set(errors ?? []);
         this.performance.set(performance);
 
+        // Reuse the overview request whenever it already covers all history.
+        if ((userSettings?.dateRange ?? DEFAULT_DATE_RANGE) === 'max') {
+          this.pnlCalendarChart.set(chart ?? []);
+        }
+
         this.historicalDataItems.set(
           chart?.map(
             ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
@@ -221,5 +237,19 @@ export class GfHomeOverviewComponent implements OnInit {
 
         this.isLoadingPerformance.set(false);
       });
+
+    if ((userSettings?.dateRange ?? DEFAULT_DATE_RANGE) !== 'max') {
+      this.dataService
+        .fetchPortfolioPerformance({ range: 'max' })
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: ({ chart }) => {
+            this.pnlCalendarChart.set(chart ?? []);
+          },
+          error: () => {
+            this.pnlCalendarChart.set([]);
+          }
+        });
+    }
   }
 }

@@ -1,5 +1,5 @@
 <div
-  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative px-xl-3"
+  class="align-items-center container d-flex flex-column justify-content-center overview p-0 position-relative px-xl-3"
 >
   @if (
     !hasImpersonationId() &&
@@ -116,5 +116,15 @@
         </div>
       }
     </div>
+    @if (user()?.settings?.viewMode !== 'ZEN') {
+      <div class="pnl-calendar-container w-100">
+        <gf-portfolio-pnl-calendar
+          [chart]="pnlCalendarChart()"
+          [currency]="baseCurrency()"
+          [locale]="locale()"
+          [showDetails]="showDetails()"
+        />
+      </div>
+    }
   }
 </div>
