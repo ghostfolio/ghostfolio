@@ -31,13 +31,6 @@ export const secondaryColorRgb = {
   b: 207
 };
 
-export const warnColorHex = '#dc3545';
-export const warnColorRgb = {
-  r: 220,
-  g: 53,
-  b: 69
-};
-
 export const AI_ACTIVITIES_FILE_MAXIMUM_SIZE = 10 * 1024 * 1024;
 export const AI_ACTIVITIES_TIMEOUT = ms('2 minutes');
 export const AI_MAX_ACTIVITIES = 25;
