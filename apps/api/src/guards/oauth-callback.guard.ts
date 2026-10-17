@@ -1,5 +1,7 @@
-import { Logger, mixin, Type } from '@nestjs/common';
-import { AuthGuard, IAuthGuard } from '@nestjs/passport';
+import type { Type } from '@nestjs/common';
+import { Logger, mixin } from '@nestjs/common';
+import type { IAuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 
 export function OAuthCallbackGuard(strategy: string): Type<IAuthGuard> {
   class OAuthCallbackGuardMixin extends AuthGuard(strategy) {

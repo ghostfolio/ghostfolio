@@ -1,4 +1,4 @@
-import { PortfolioReportRule } from '../portfolio-report-rule.interface';
+import type { PortfolioReportRule } from '../portfolio-report-rule.interface';
 
 export interface PortfolioReportResponse {
   xRay: {

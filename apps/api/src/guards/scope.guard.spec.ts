@@ -1,7 +1,8 @@
-import { Scope, scopes } from '@ghostfolio/common/scopes';
+import type { Scope } from '@ghostfolio/common/scopes';
+import { scopes } from '@ghostfolio/common/scopes';
 
 import { HttpException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import type { Reflector } from '@nestjs/core';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 
 import { ScopeGuard } from './scope.guard';

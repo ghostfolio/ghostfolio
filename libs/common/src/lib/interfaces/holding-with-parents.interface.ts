@@ -1,4 +1,4 @@
-import { Holding } from './holding.interface';
+import type { Holding } from './holding.interface';
 
 export interface HoldingWithParents extends Holding {
   parents?: Holding[];

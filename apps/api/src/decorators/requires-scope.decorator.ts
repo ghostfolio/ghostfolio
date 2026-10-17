@@ -1,7 +1,7 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ImpersonationGuard } from '@ghostfolio/api/guards/impersonation.guard';
 import { ScopeGuard } from '@ghostfolio/api/guards/scope.guard';
-import { Scope } from '@ghostfolio/common/scopes';
+import type { Scope } from '@ghostfolio/common/scopes';
 
 import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';

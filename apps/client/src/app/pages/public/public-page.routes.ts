@@ -1,6 +1,6 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { GfPublicPageComponent } from './public-page.component';
 

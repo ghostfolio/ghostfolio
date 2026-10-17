@@ -1,7 +1,7 @@
-import { Market, MarketAdvanced } from '@ghostfolio/common/types';
+import type { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import type { Tag } from '@ghostfolio/prisma/browser';
 
-import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
+import type { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 
 export interface PortfolioPosition {
   activitiesCount: number;

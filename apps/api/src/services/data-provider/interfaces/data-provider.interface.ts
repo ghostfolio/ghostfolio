@@ -1,13 +1,13 @@
-import {
+import type {
   DataProviderHistoricalResponse,
   DataProviderInfo,
   DataProviderResponse,
   LookupResponse,
   MarketDataOfMarketsResponse
 } from '@ghostfolio/common/interfaces';
-import { Granularity } from '@ghostfolio/common/types';
+import type { Granularity } from '@ghostfolio/common/types';
 
-import { DataSource, SymbolProfile } from '@prisma/client';
+import type { DataSource, SymbolProfile } from '@prisma/client';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;

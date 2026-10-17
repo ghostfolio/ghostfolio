@@ -17,26 +17,24 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  type ElementRef,
   Input,
   OnChanges,
   OnDestroy,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
+import type { ElementRef } from '@angular/core';
 import {
-  type AnimationsSpec,
   Chart,
-  type ChartData,
   Filler,
   LinearScale,
   LineController,
   LineElement,
   PointElement,
   TimeScale,
-  Tooltip,
-  type TooltipOptions
+  Tooltip
 } from 'chart.js';
+import type { AnimationsSpec, ChartData, TooltipOptions } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 

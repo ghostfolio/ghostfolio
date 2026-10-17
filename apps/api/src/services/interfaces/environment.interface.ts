@@ -1,4 +1,4 @@
-import { CleanedEnvAccessors } from 'envalid';
+import type { CleanedEnvAccessors } from 'envalid';
 
 export interface Environment extends CleanedEnvAccessors {
   ACCESS_TOKEN_SALT: string;

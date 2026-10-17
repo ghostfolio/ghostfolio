@@ -2,7 +2,7 @@ import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { PersonalFinanceToolsPageComponent } from './personal-finance-tools-page.component';
 

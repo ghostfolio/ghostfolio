@@ -1,4 +1,7 @@
-import { ProductCategory, ProductPlatform } from '@ghostfolio/common/types';
+import type {
+  ProductCategory,
+  ProductPlatform
+} from '@ghostfolio/common/types';
 
 export interface Product {
   alias?: string;

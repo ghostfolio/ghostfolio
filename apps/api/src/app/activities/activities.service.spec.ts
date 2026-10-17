@@ -1,30 +1,29 @@
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import type { AccountService } from '@ghostfolio/api/app/account/account.service';
 import {
   activityDummyData,
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { WHERE_ACTIVITY_NOT_DRAFT } from '@ghostfolio/api/helper/activity.helper';
-import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import type { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import type { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import type { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import type { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import type { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity, Filter } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
+import type { Activity, Filter } from '@ghostfolio/common/interfaces';
+import type { DateRange } from '@ghostfolio/common/types';
 
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import type { EventEmitter2 } from '@nestjs/event-emitter';
+import type { AssetProfileSplit, Prisma } from '@prisma/client';
 import {
   AssetClass,
-  AssetProfileSplit,
   AssetSubClass,
   DataSource,
-  Prisma,
   Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';

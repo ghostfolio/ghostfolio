@@ -1,11 +1,11 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accumulated-values.interface';
-import { AverageInvestmentItem } from '@ghostfolio/api/app/portfolio/interfaces/average-investment-item.interface';
-import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
-import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
-import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
-import { WeightedInvestment } from '@ghostfolio/api/app/portfolio/interfaces/weighted-investment.interface';
-import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
+import type { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accumulated-values.interface';
+import type { AverageInvestmentItem } from '@ghostfolio/api/app/portfolio/interfaces/average-investment-item.interface';
+import type { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import type { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
+import type { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
+import type { WeightedInvestment } from '@ghostfolio/api/app/portfolio/interfaces/weighted-investment.interface';
+import type { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
 import {
   getAnnualizedPerformancePercent,
   getIntervalFromDateRange
@@ -15,12 +15,12 @@ import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import {
+import type {
   AssetProfileIdentifier,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot } from '@ghostfolio/common/models';
-import { DateRange } from '@ghostfolio/common/types';
+import type { PortfolioSnapshot } from '@ghostfolio/common/models';
+import type { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';

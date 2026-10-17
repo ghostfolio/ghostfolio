@@ -1,5 +1,5 @@
-import { Activity, User } from '@ghostfolio/common/interfaces';
-import { AccountWithPlatform } from '@ghostfolio/common/types';
+import type { Activity, User } from '@ghostfolio/common/interfaces';
+import type { AccountWithPlatform } from '@ghostfolio/common/types';
 
 export interface CreateOrUpdateActivityDialogParams {
   accounts: AccountWithPlatform[];

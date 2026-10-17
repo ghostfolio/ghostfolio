@@ -1,6 +1,6 @@
-import { DateRange } from '@ghostfolio/common/types';
+import type { DateRange } from '@ghostfolio/common/types';
 
-import { Big } from 'big.js';
+import type { Big } from 'big.js';
 
 export interface HoldingPerformance {
   averageInvestment: Big;

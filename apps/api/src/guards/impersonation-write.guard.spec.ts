@@ -1,10 +1,11 @@
 import { ALLOW_DURING_IMPERSONATION_KEY } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { REQUIRES_SCOPE_KEY } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
-import { Scope, scopes } from '@ghostfolio/common/scopes';
+import type { Scope } from '@ghostfolio/common/scopes';
+import { scopes } from '@ghostfolio/common/scopes';
 
 import { HttpException } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import type { Reflector } from '@nestjs/core';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 
 import { ImpersonationWriteGuard } from './impersonation-write.guard';

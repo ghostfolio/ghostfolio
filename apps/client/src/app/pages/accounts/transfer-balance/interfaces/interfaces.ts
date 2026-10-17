@@ -1,6 +1,6 @@
-import { AccountWithPlatform } from '@ghostfolio/common/types';
+import type { AccountWithPlatform } from '@ghostfolio/common/types';
 
-import { FormControl, FormGroup } from '@angular/forms';
+import type { FormControl, FormGroup } from '@angular/forms';
 
 export interface TransferBalanceDialogParams {
   accounts: AccountWithPlatform[];

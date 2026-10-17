@@ -3,7 +3,7 @@ import {
   TAG_ID_DRAFT
 } from '@ghostfolio/common/config';
 
-import { Prisma, Type as ActivityType } from '@prisma/client';
+import type { Prisma, Type as ActivityType } from '@prisma/client';
 import { endOfToday, isAfter } from 'date-fns';
 import { uniqBy } from 'lodash-es';
 

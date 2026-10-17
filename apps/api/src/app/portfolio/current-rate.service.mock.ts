@@ -9,9 +9,9 @@ import {
   isSameDay
 } from 'date-fns';
 
-import { GetValueObject } from './interfaces/get-value-object.interface';
-import { GetValuesObject } from './interfaces/get-values-object.interface';
-import { GetValuesParams } from './interfaces/get-values-params.interface';
+import type { GetValueObject } from './interfaces/get-value-object.interface';
+import type { GetValuesObject } from './interfaces/get-values-object.interface';
+import type { GetValuesParams } from './interfaces/get-values-params.interface';
 
 function mockGetValue({
   dataSource,

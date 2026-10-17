@@ -1,4 +1,4 @@
-import { AdminUser } from '../admin-user.interface';
+import type { AdminUser } from '../admin-user.interface';
 
 export interface AdminUsersResponse {
   count: number;

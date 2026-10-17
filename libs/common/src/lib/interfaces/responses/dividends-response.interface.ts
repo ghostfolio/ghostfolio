@@ -1,4 +1,4 @@
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
+import type { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
 
 export interface DividendsResponse {
   dividends: {

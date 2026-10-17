@@ -1,7 +1,7 @@
 import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 
-import { Statistics } from './statistics.interface';
-import { SubscriptionOffer } from './subscription-offer.interface';
+import type { Statistics } from './statistics.interface';
+import type { SubscriptionOffer } from './subscription-offer.interface';
 
 export interface InfoItem {
   baseCurrency: string;

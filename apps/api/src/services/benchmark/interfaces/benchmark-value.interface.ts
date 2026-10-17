@@ -1,4 +1,4 @@
-import { BenchmarkResponse } from '@ghostfolio/common/interfaces';
+import type { BenchmarkResponse } from '@ghostfolio/common/interfaces';
 
 export interface BenchmarkValue {
   benchmarks: BenchmarkResponse['benchmarks'];

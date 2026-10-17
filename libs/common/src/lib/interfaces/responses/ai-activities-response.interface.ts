@@ -3,7 +3,7 @@ import type {
   CreateOrderDto
 } from '@ghostfolio/common/dtos';
 
-import { AiActivityRow } from '../ai-activity-row.interface';
+import type { AiActivityRow } from '../ai-activity-row.interface';
 
 export interface AiActivitiesResponse {
   activities: CreateOrderDto[];

@@ -41,11 +41,10 @@ import {
   BarElement,
   CategoryScale,
   Chart,
-  type ChartData,
-  type ChartDataset,
   LinearScale,
   Tooltip
 } from 'chart.js';
+import type { ChartData, ChartDataset } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import Color from 'color';
 import {

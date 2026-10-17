@@ -3,7 +3,7 @@ import type {
   ProductPlatform,
   SectorName
 } from '@ghostfolio/common/types';
-import { RequestClient } from '@ghostfolio/prisma/enums';
+import type { RequestClient } from '@ghostfolio/prisma/enums';
 
 import '@angular/localize/init';
 

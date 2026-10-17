@@ -1,7 +1,7 @@
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import type { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
-import { ScriptableContext } from 'chart.js';
-import { TreemapDataPoint } from 'chartjs-chart-treemap';
+import type { ScriptableContext } from 'chart.js';
+import type { TreemapDataPoint } from 'chartjs-chart-treemap';
 
 export interface GetColorParams {
   annualizedNetPerformancePercent: number;

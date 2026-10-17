@@ -1,6 +1,7 @@
 import { getTooltipPositionerMapTop } from '@ghostfolio/common/chart-helper';
 
-import { Chart, Tooltip, TooltipPositionerFunction, ChartType } from 'chart.js';
+import type { TooltipPositionerFunction, ChartType } from 'chart.js';
+import { Chart, Tooltip } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 interface VerticalHoverLinePluginOptions {

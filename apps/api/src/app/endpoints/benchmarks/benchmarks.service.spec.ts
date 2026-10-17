@@ -1,8 +1,8 @@
-import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
+import type { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import type { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import type { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import type { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { DataSource } from '@prisma/client';

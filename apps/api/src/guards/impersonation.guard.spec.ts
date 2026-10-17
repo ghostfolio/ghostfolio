@@ -1,4 +1,4 @@
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import type { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import {
   HEADER_KEY_IMPERSONATION,
   HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED

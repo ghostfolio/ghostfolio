@@ -1,6 +1,6 @@
 import type { AssetProfileSplit, MarketData } from '@ghostfolio/prisma/browser';
 
-import { EnhancedAssetProfile } from '../enhanced-asset-profile.interface';
+import type { EnhancedAssetProfile } from '../enhanced-asset-profile.interface';
 
 export interface AssetProfileResponse {
   assetProfile: Partial<EnhancedAssetProfile>;

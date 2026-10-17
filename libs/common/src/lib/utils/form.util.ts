@@ -1,5 +1,9 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
+import type {
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn
+} from '@angular/forms';
+import type { FormGroup } from '@angular/forms';
 import { plainToInstance } from 'class-transformer';
 import { isJSON, validate } from 'class-validator';
 

@@ -3,7 +3,7 @@ import { GfHomeOverviewComponent } from '@ghostfolio/client/components/home-over
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 
 import { GfZenPageComponent } from './zen-page.component';
 

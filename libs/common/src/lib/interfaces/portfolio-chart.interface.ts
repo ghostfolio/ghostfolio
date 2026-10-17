@@ -1,4 +1,4 @@
-import { HistoricalDataItem } from './historical-data-item.interface';
+import type { HistoricalDataItem } from './historical-data-item.interface';
 
 export interface PortfolioChart {
   hasError: boolean;

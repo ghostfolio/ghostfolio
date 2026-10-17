@@ -1,4 +1,4 @@
-import { ExecutionContext } from '@nestjs/common';
+import type { ExecutionContext } from '@nestjs/common';
 
 /**
  * Gives the underlying HTTP request of a request of any kind. A tool of the

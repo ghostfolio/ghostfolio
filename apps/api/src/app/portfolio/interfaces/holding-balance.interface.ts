@@ -1,5 +1,5 @@
-import { AssetSubClass, DataSource, Tag } from '@prisma/client';
-import { Big } from 'big.js';
+import type { AssetSubClass, DataSource, Tag } from '@prisma/client';
+import type { Big } from 'big.js';
 
 export interface HoldingBalance {
   activitiesCount: number;

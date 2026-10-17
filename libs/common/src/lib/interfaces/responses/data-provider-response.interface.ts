@@ -1,6 +1,6 @@
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
-import { MarketState } from '@ghostfolio/common/types';
-import { DataSource } from '@ghostfolio/prisma/enums';
+import type { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import type { MarketState } from '@ghostfolio/common/types';
+import type { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface DataProviderHistoricalResponse {
   marketPrice: number;

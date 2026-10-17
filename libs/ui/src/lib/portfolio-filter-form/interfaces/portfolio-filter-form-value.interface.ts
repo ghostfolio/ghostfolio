@@ -1,4 +1,4 @@
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import type { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 export interface PortfolioFilterFormValue {
   account: string | null;

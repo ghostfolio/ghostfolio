@@ -1,6 +1,6 @@
-import { BenchmarkTrend } from '@ghostfolio/common/types/';
+import type { BenchmarkTrend } from '@ghostfolio/common/types/';
 
-import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
+import type { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 
 export interface Benchmark {
   dataSource: EnhancedAssetProfile['dataSource'];

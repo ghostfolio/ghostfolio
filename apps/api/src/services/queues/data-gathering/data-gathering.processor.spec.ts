@@ -1,11 +1,11 @@
-import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import type { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
 
-import { DataSource } from '@prisma/client';
-import { Job } from 'bull';
+import type { DataSource } from '@prisma/client';
+import type { Job } from 'bull';
 
 import { DataGatheringProcessor } from './data-gathering.processor';
 

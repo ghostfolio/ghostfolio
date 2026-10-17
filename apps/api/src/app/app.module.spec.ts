@@ -1,9 +1,5 @@
-import {
-  DynamicModule,
-  ForwardReference,
-  RequestMethod,
-  Type
-} from '@nestjs/common';
+import type { DynamicModule, ForwardReference, Type } from '@nestjs/common';
+import { RequestMethod } from '@nestjs/common';
 import {
   GUARDS_METADATA,
   METHOD_METADATA,

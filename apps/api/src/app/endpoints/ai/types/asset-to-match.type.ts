@@ -1,4 +1,4 @@
-import { ActivityRow } from './activity-row.type';
+import type { ActivityRow } from './activity-row.type';
 
 export type AssetToMatch = Pick<
   ActivityRow,

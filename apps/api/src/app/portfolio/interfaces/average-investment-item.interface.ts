@@ -1,4 +1,4 @@
-import { Big } from 'big.js';
+import type { Big } from 'big.js';
 
 export interface AverageInvestmentItem {
   daysUntilNextItem: number;

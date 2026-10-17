@@ -13,7 +13,7 @@ import {
 } from 'date-fns';
 import { isFinite, isNumber } from 'lodash-es';
 
-import { DateRange } from './types';
+import type { DateRange } from './types';
 
 export function getAnnualizedPerformancePercent({
   daysInMarket,

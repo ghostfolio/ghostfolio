@@ -1,5 +1,5 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
+import type { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 
 import type { TooltipOptions } from 'chart.js';
 

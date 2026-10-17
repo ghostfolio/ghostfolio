@@ -1,7 +1,7 @@
-import { RuleSettingsConfiguration } from '@ghostfolio/api/models/interfaces/rule-settings-configuration.interface';
-import { XRayRuleKey } from '@ghostfolio/api/models/types/x-ray-rule-key.type';
+import type { RuleSettingsConfiguration } from '@ghostfolio/api/models/interfaces/rule-settings-configuration.interface';
+import type { XRayRuleKey } from '@ghostfolio/api/models/types/x-ray-rule-key.type';
 import { DEFAULT_CURRENCY, DEFAULT_LOCALE } from '@ghostfolio/common/config';
-import {
+import type {
   RuleSettings,
   UserSettings,
   XRayRulesSettings

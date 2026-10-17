@@ -1,4 +1,7 @@
-import { Activity, EnhancedAssetProfile } from '@ghostfolio/common/interfaces';
+import type {
+  Activity,
+  EnhancedAssetProfile
+} from '@ghostfolio/common/interfaces';
 
 export interface ActivitiesTableItem
   extends

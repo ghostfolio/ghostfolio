@@ -1,4 +1,4 @@
-import { DataProviderInfo } from './data-provider-info.interface';
+import type { DataProviderInfo } from './data-provider-info.interface';
 
 export interface AdminData {
   activitiesCount: number;

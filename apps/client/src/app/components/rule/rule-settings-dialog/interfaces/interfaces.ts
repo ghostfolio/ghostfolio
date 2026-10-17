@@ -1,4 +1,4 @@
-import {
+import type {
   PortfolioReportRule,
   XRayRulesSettings
 } from '@ghostfolio/common/interfaces';

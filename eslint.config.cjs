@@ -40,6 +40,14 @@ module.exports = [
     ],
     rules: {
       '@typescript-eslint/consistent-indexed-object-style': 'off',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          disallowTypeAnnotations: false,
+          prefer: 'type-imports',
+          fixStyle: 'separate-type-imports'
+        }
+      ],
       '@typescript-eslint/dot-notation': 'off',
       '@typescript-eslint/explicit-member-accessibility': [
         'off',
@@ -108,6 +116,7 @@ module.exports = [
       'guard-for-in': 'warn',
       'id-blacklist': 'off',
       'id-match': 'off',
+      'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
       'import/no-deprecated': 'warn',
       'no-bitwise': 'error',
       'no-caller': 'error',

@@ -23,7 +23,7 @@ import {
   getLocale,
   getTextColor
 } from './helper';
-import { ColorScheme, GroupBy } from './types';
+import type { ColorScheme, GroupBy } from './types';
 
 export function formatGroupedDate({
   date,

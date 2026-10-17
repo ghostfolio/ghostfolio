@@ -4,9 +4,10 @@ import {
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import * as commonHelper from '@ghostfolio/common/helper';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity } from '@ghostfolio/common/interfaces';
+import type { Activity } from '@ghostfolio/common/interfaces';
 
-import { AssetProfileSplit, DataSource } from '@prisma/client';
+import type { AssetProfileSplit } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 
 import { adjustActivityBySplits } from './asset-profile-split.helper';

@@ -1,6 +1,6 @@
-import { Big } from 'big.js';
+import type { Big } from 'big.js';
 
-import { PortfolioCalculatorActivityItem } from './portfolio-calculator-activity-item.interface';
+import type { PortfolioCalculatorActivityItem } from './portfolio-calculator-activity-item.interface';
 
 export interface HoldingValuationItem extends Pick<
   PortfolioCalculatorActivityItem,

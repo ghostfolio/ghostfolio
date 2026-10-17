@@ -1,4 +1,4 @@
-import {
+import type {
   AssetProfileIdentifier,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';

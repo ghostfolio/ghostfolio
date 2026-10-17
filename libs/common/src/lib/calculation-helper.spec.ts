@@ -6,7 +6,7 @@ import {
   getIntervalFromDateRange
 } from './calculation-helper';
 import { DATE_FORMAT } from './helper';
-import { DateRange } from './types';
+import type { DateRange } from './types';
 
 describe('CalculationHelper', () => {
   describe('interval from date range', () => {

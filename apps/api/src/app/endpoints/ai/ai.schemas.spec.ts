@@ -8,7 +8,7 @@ import { z } from 'zod';
 
 import { ACTIVITY_ROWS_OUTPUT, ROW_MATCHES_OUTPUT } from './ai.schemas';
 import { createActivityRow } from './ai.test-utils';
-import { ActivityRow } from './types/activity-row.type';
+import type { ActivityRow } from './types/activity-row.type';
 
 describe('ACTIVITY_ROWS_OUTPUT', () => {
   it('Accepts a row with null for the values which the file does not show', () => {

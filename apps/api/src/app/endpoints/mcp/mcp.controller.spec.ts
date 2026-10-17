@@ -3,10 +3,10 @@ import { McpToolExceptionFilter } from '@ghostfolio/api/filters/mcp-tool-excepti
 import { AccessGuard } from '@ghostfolio/api/guards/access.guard';
 import { getMcpUserOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import type { Scope } from '@ghostfolio/common/scopes';
 import {
   getScopesOfAccess,
   getScopesOfAccessLevel,
-  Scope,
   scopes
 } from '@ghostfolio/common/scopes';
 import type {
@@ -18,17 +18,16 @@ import {
   EXCEPTION_FILTERS_METADATA,
   GUARDS_METADATA
 } from '@nestjs/common/constants';
+import type { AccessMatchMode, ToolMetadata } from '@rekog/mcp-nest';
 import {
-  AccessMatchMode,
   MCP_SCOPES_MATCH_METADATA_KEY,
   MCP_SCOPES_METADATA_KEY,
   MCP_TOOL_METADATA_KEY,
-  ToolAuthorizationService,
-  ToolMetadata
+  ToolAuthorizationService
 } from '@rekog/mcp-nest';
 
 import { GhostfolioMcpController } from './mcp.controller';
-import { McpService } from './mcp.service';
+import type { McpService } from './mcp.service';
 
 /**
  * Gives the metadata which a decorator sets on the method of a tool. The

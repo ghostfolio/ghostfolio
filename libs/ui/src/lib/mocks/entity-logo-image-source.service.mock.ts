@@ -1,5 +1,5 @@
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { DataSource } from '@ghostfolio/prisma/enums';
 
 // Resolves like a logo of an unknown entity, but fails to load

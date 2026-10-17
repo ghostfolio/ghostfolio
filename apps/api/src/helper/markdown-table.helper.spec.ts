@@ -1,4 +1,4 @@
-import { TableColumnDefinition } from './interfaces/table-column-definition.interface';
+import type { TableColumnDefinition } from './interfaces/table-column-definition.interface';
 import { getTableInput } from './markdown-table.helper';
 
 interface Holding {

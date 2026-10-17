@@ -2,9 +2,9 @@
  * @jest-environment <rootDir>/jest-environment-tz.js
  * @jest-environment-options {"timeZone": "America/New_York"}
  */
-import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import type { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 
-import { Job } from 'bull';
+import type { Job } from 'bull';
 
 import { DataGatheringProcessor } from './data-gathering.processor';
 

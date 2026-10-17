@@ -1,7 +1,7 @@
 import { Rule } from '@ghostfolio/api/models/rule';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { RuleSettings } from '@ghostfolio/common/interfaces';
+import type { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import type { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
+import type { RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class BuyingPower extends Rule<Settings> {
   private buyingPower: number;

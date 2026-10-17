@@ -1,12 +1,12 @@
-import { SubscriptionType } from '@ghostfolio/common/enums';
-import { AccountWithPlatform } from '@ghostfolio/common/types';
+import type { SubscriptionType } from '@ghostfolio/common/enums';
+import type { AccountWithPlatform } from '@ghostfolio/common/types';
 import type { Access, Tag } from '@ghostfolio/prisma/browser';
-import { Type as ActivityType } from '@ghostfolio/prisma/enums';
+import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
-import { ReferralPartner } from './referral-partner.interface';
-import { SubscriptionOffer } from './subscription-offer.interface';
-import { SystemMessage } from './system-message.interface';
-import { UserSettings } from './user-settings.interface';
+import type { ReferralPartner } from './referral-partner.interface';
+import type { SubscriptionOffer } from './subscription-offer.interface';
+import type { SystemMessage } from './system-message.interface';
+import type { UserSettings } from './user-settings.interface';
 
 // TODO: Compare with UserWithSettings
 export interface User {

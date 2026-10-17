@@ -1,4 +1,4 @@
-import { ExchangeRateDataService } from './exchange-rate-data.service';
+import type { ExchangeRateDataService } from './exchange-rate-data.service';
 
 export const ExchangeRateDataServiceMock: Partial<ExchangeRateDataService> = {
   getExchangeRatesByCurrency: ({ targetCurrency }) => {

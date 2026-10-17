@@ -1,27 +1,28 @@
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
-import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import type { AccountService } from '@ghostfolio/api/app/account/account.service';
+import type { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import type { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import type { ApiService } from '@ghostfolio/api/services/api/api.service';
+import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import type { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import type { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import type { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import type { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import type { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import type { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { NON_INVESTMENT_ACTIVITY_TYPES } from '@ghostfolio/common/config';
-import {
+import type {
   CreateAssetProfileWithMarketDataDto,
   CreateOrderDto
 } from '@ghostfolio/common/dtos';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import {
+import type {
   Activity,
   AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
-import { UserWithSettings } from '@ghostfolio/common/types';
+import type { UserWithSettings } from '@ghostfolio/common/types';
 
-import { DataSource, SymbolProfile } from '@prisma/client';
+import type { SymbolProfile } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { parseISO } from 'date-fns';
 

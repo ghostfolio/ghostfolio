@@ -1,10 +1,10 @@
-import { McpService } from '@ghostfolio/api/app/endpoints/mcp/mcp.service';
+import type { McpService } from '@ghostfolio/api/app/endpoints/mcp/mcp.service';
 import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import type { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import type { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
+import type { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_LOCALE,
   PROPERTY_API_KEY_OPENROUTER,
@@ -20,14 +20,14 @@ import { Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { DataSource, Type as ActivityType } from '@prisma/client';
 import { generateText, NoObjectGeneratedError } from 'ai';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 import { ACTIVITY_ROWS_OUTPUT, ROW_MATCHES_OUTPUT } from './ai.schemas';
 import { AiService } from './ai.service';
 import { createActivityRow } from './ai.test-utils';
-import { AccountHint } from './types/account-hint.type';
-import { AccountToMatch } from './types/account-to-match.type';
-import { ActivityRow } from './types/activity-row.type';
+import type { AccountHint } from './types/account-hint.type';
+import type { AccountToMatch } from './types/account-to-match.type';
+import type { ActivityRow } from './types/activity-row.type';
 
 // The packages are ECMAScript modules, which Jest cannot load
 jest.mock('@openrouter/ai-sdk-provider', () => {

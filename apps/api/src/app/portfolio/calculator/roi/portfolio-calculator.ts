@@ -1,8 +1,8 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
-import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot } from '@ghostfolio/common/models';
+import type { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
+import type { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
+import type { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import type { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export class RoiPortfolioCalculator extends PortfolioCalculator {

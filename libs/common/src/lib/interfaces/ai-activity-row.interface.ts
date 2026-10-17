@@ -1,4 +1,4 @@
-import { Type as ActivityType } from '@ghostfolio/prisma/enums';
+import type { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
 /**
  * An activity as Ghostfolio AI reads it from a file, with the asset and the

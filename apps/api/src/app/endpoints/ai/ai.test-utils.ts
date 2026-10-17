@@ -1,6 +1,6 @@
 import { Type as ActivityType } from '@prisma/client';
 
-import { ActivityRow } from './types/activity-row.type';
+import type { ActivityRow } from './types/activity-row.type';
 
 export function createActivityRow(
   overrides: Partial<ActivityRow> = {}

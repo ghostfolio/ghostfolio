@@ -1,7 +1,7 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
-import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import type { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
+import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import type { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -12,7 +12,7 @@ import {
 } from '@ghostfolio/common/scopes';
 import type { UserWithSettings } from '@ghostfolio/common/types';
 
-import { Access } from '@prisma/client';
+import type { Access } from '@prisma/client';
 import { addDays, subDays } from 'date-fns';
 
 import { ImpersonationService } from './impersonation.service';

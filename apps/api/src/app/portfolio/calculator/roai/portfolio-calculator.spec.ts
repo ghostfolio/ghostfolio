@@ -2,7 +2,7 @@
  * @jest-environment <rootDir>/jest-environment-tz.js
  * @jest-environment-options {"timeZone": "America/New_York"}
  */
-import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import type { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
@@ -14,7 +14,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import type { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {

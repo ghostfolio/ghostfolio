@@ -2,7 +2,7 @@ import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.de
 import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import type { ApiService } from '@ghostfolio/api/services/api/api.service';
 import {
   AI_ACTIVITIES_TIMEOUT,
   AI_MAX_ACTIVITIES,
@@ -24,7 +24,7 @@ import { StatusCodes } from 'http-status-codes';
 import { EventEmitter } from 'node:events';
 
 import { AiController } from './ai.controller';
-import { AiService } from './ai.service';
+import type { AiService } from './ai.service';
 
 // The packages are ECMAScript modules, which Jest cannot load
 jest.mock('@openrouter/ai-sdk-provider', () => {

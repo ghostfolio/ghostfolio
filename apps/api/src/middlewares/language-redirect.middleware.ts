@@ -1,7 +1,7 @@
 import { environment } from '@ghostfolio/api/environments/environment';
 import { getLanguageCodeFromHeader } from '@ghostfolio/api/helper/language.helper';
 
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 export function languageRedirectMiddleware(

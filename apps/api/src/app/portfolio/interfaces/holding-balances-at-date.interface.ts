@@ -1,4 +1,4 @@
-import { HoldingBalance } from './holding-balance.interface';
+import type { HoldingBalance } from './holding-balance.interface';
 
 export interface HoldingBalancesAtDate {
   date: string;

@@ -1,9 +1,9 @@
-import {
+import type {
   EnhancedAssetProfile,
   PortfolioDetails,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { Market } from '@ghostfolio/common/types';
+import type { Market } from '@ghostfolio/common/types';
 import type { Order } from '@ghostfolio/prisma/browser';
 
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {

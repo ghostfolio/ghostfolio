@@ -1,10 +1,10 @@
-import {
+import type {
   AssetClass,
   AssetSubClass,
   DataSource
 } from '@ghostfolio/prisma/enums';
 
-import { DataProviderInfo } from './data-provider-info.interface';
+import type { DataProviderInfo } from './data-provider-info.interface';
 
 export interface LookupItem {
   assetClass: AssetClass;

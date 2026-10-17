@@ -9,14 +9,14 @@ import {
   DEFAULT_LANGUAGE_CODE,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
-import {
+import type {
   Activity,
   HistoricalDataItem,
   PortfolioPerformanceResponse,
   PortfolioPosition,
   WatchlistResponse
 } from '@ghostfolio/common/interfaces';
-import { AccountWithValue } from '@ghostfolio/common/types';
+import type { AccountWithValue } from '@ghostfolio/common/types';
 
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
