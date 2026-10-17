@@ -582,7 +582,7 @@ export class AssetProfilesService {
             isUsedByUsersWithSubscription: {
               compute: async ({ id }) => {
                 const { _count } =
-                  await this.prismaService.symbolProfile.findUnique({
+                  await this.prismaService.symbolProfile.findFirst({
                     select: {
                       _count: {
                         select: {
