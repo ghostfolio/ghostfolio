@@ -45,6 +45,7 @@ import {
   getAssetProfileIdentifier,
   getSum,
   isAccountExcluded,
+  isCashPosition,
   isDraftActivity,
   parseDate,
   resetHours,
@@ -1682,6 +1683,14 @@ export class PortfolioService {
     for (const position of holdings) {
       const value = position.valueInBaseCurrency;
 
+      if (
+        isCashPosition(position.assetProfile) ||
+        position.assetProfile.assetSubClass === AssetSubClass.CRYPTOCURRENCY
+      ) {
+        // Cash and cryptocurrencies do not belong to any specific market
+        continue;
+      }
+
       if (position.assetProfile.countries.length > 0) {
         markets.developedMarkets.valueInBaseCurrency +=
           position.markets.developedMarkets * value;
@@ -1714,14 +1723,28 @@ export class PortfolioService {
       })
     ).toNumber();
 
-    markets.developedMarkets.valueInPercentage =
-      markets.developedMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
-    markets.emergingMarkets.valueInPercentage =
-      markets.emergingMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
-    markets.otherMarkets.valueInPercentage =
-      markets.otherMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
-    markets[UNKNOWN_KEY].valueInPercentage =
-      markets[UNKNOWN_KEY].valueInBaseCurrency / marketsTotalInBaseCurrency;
+    // The total can be zero when the portfolio only holds cash and / or
+    // cryptocurrencies, which are not assigned to any market
+    const toPercentage = (valueInBaseCurrency: number, total: number) => {
+      return total ? valueInBaseCurrency / total : 0;
+    };
+
+    markets.developedMarkets.valueInPercentage = toPercentage(
+      markets.developedMarkets.valueInBaseCurrency,
+      marketsTotalInBaseCurrency
+    );
+    markets.emergingMarkets.valueInPercentage = toPercentage(
+      markets.emergingMarkets.valueInBaseCurrency,
+      marketsTotalInBaseCurrency
+    );
+    markets.otherMarkets.valueInPercentage = toPercentage(
+      markets.otherMarkets.valueInBaseCurrency,
+      marketsTotalInBaseCurrency
+    );
+    markets[UNKNOWN_KEY].valueInPercentage = toPercentage(
+      markets[UNKNOWN_KEY].valueInBaseCurrency,
+      marketsTotalInBaseCurrency
+    );
 
     const marketsAdvancedTotal =
       marketsAdvanced.asiaPacific.valueInBaseCurrency +
@@ -1732,21 +1755,34 @@ export class PortfolioService {
       marketsAdvanced.otherMarkets.valueInBaseCurrency +
       marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency;
 
-    marketsAdvanced.asiaPacific.valueInPercentage =
-      marketsAdvanced.asiaPacific.valueInBaseCurrency / marketsAdvancedTotal;
-    marketsAdvanced.emergingMarkets.valueInPercentage =
-      marketsAdvanced.emergingMarkets.valueInBaseCurrency /
-      marketsAdvancedTotal;
-    marketsAdvanced.europe.valueInPercentage =
-      marketsAdvanced.europe.valueInBaseCurrency / marketsAdvancedTotal;
-    marketsAdvanced.japan.valueInPercentage =
-      marketsAdvanced.japan.valueInBaseCurrency / marketsAdvancedTotal;
-    marketsAdvanced.northAmerica.valueInPercentage =
-      marketsAdvanced.northAmerica.valueInBaseCurrency / marketsAdvancedTotal;
-    marketsAdvanced.otherMarkets.valueInPercentage =
-      marketsAdvanced.otherMarkets.valueInBaseCurrency / marketsAdvancedTotal;
-    marketsAdvanced[UNKNOWN_KEY].valueInPercentage =
-      marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency / marketsAdvancedTotal;
+    marketsAdvanced.asiaPacific.valueInPercentage = toPercentage(
+      marketsAdvanced.asiaPacific.valueInBaseCurrency,
+      marketsAdvancedTotal
+    );
+    marketsAdvanced.emergingMarkets.valueInPercentage = toPercentage(
+      marketsAdvanced.emergingMarkets.valueInBaseCurrency,
+      marketsAdvancedTotal
+    );
+    marketsAdvanced.europe.valueInPercentage = toPercentage(
+      marketsAdvanced.europe.valueInBaseCurrency,
+      marketsAdvancedTotal
+    );
+    marketsAdvanced.japan.valueInPercentage = toPercentage(
+      marketsAdvanced.japan.valueInBaseCurrency,
+      marketsAdvancedTotal
+    );
+    marketsAdvanced.northAmerica.valueInPercentage = toPercentage(
+      marketsAdvanced.northAmerica.valueInBaseCurrency,
+      marketsAdvancedTotal
+    );
+    marketsAdvanced.otherMarkets.valueInPercentage = toPercentage(
+      marketsAdvanced.otherMarkets.valueInBaseCurrency,
+      marketsAdvancedTotal
+    );
+    marketsAdvanced[UNKNOWN_KEY].valueInPercentage = toPercentage(
+      marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency,
+      marketsAdvancedTotal
+    );
 
     return { markets, marketsAdvanced };
   }
