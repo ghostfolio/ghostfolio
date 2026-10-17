@@ -1,11 +1,14 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
 import { AccumulatedValues } from '@ghostfolio/api/app/portfolio/interfaces/accumulated-values.interface';
+import { DateRangeInterval } from '@ghostfolio/api/app/portfolio/interfaces/date-range-interval.interface';
 import { HoldingBalance } from '@ghostfolio/api/app/portfolio/interfaces/holding-balance.interface';
 import { HoldingBalancesAtDate } from '@ghostfolio/api/app/portfolio/interfaces/holding-balances-at-date.interface';
 import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/holding-performance.interface';
 import { HoldingValuationItem } from '@ghostfolio/api/app/portfolio/interfaces/holding-valuation-item.interface';
 import { HoldingValuation } from '@ghostfolio/api/app/portfolio/interfaces/holding-valuation.interface';
+import { InvestedCapital } from '@ghostfolio/api/app/portfolio/interfaces/invested-capital.interface';
+import { MethodIndependentHoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/method-independent-holding-performance.interface';
 import { PortfolioCalculatorActivityItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity-item.interface';
 import { PortfolioCalculatorActivity } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-activity.interface';
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
@@ -18,7 +21,10 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
-import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
+import {
+  getAnnualizedPerformancePercent,
+  getIntervalFromDateRange
+} from '@ghostfolio/common/calculation-helper';
 import {
   INVESTMENT_ACTIVITY_TYPES,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
@@ -47,7 +53,7 @@ import {
   PortfolioSnapshot,
   PortfolioSnapshotHolding
 } from '@ghostfolio/common/models';
-import { GroupBy } from '@ghostfolio/common/types';
+import { DateRange, GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
@@ -66,13 +72,14 @@ import {
   isBefore,
   isFuture,
   isPast,
+  isThisYear,
   isWithinInterval,
   min,
   startOfDay,
   startOfYear,
   subDays
 } from 'date-fns';
-import { groupBy, sortBy, uniqBy } from 'lodash-es';
+import { groupBy, mapValues, sortBy, uniqBy } from 'lodash-es';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -218,9 +225,13 @@ export abstract class PortfolioCalculator {
     this.snapshotPromise.catch(() => undefined);
   }
 
-  protected abstract calculateOverallPerformance(
-    positions: PortfolioCalculatorHolding[]
-  ): PortfolioSnapshot;
+  protected abstract calculateOverallPerformance({
+    accumulatedValuesByDate,
+    positions
+  }: {
+    accumulatedValuesByDate: { [date: string]: AccumulatedValues };
+    positions: PortfolioCalculatorHolding[];
+  }): PortfolioSnapshot;
 
   protected abstract calculatePerformancePercentages({
     accumulatedValuesByDate
@@ -727,7 +738,10 @@ export abstract class PortfolioCalculator {
       };
     });
 
-    const overall = this.calculateOverallPerformance(positions);
+    const overall = this.calculateOverallPerformance({
+      accumulatedValuesByDate,
+      positions
+    });
 
     return {
       ...overall,
@@ -964,6 +978,80 @@ export abstract class PortfolioCalculator {
     };
     start: Date;
   } & AssetProfileIdentifier): HoldingPerformance;
+
+  /**
+   * Adds the values which depend on the invested capital of the performance
+   * calculation type to the holding performance: the percentages and the
+   * dividend yield. The average investment fields keep their names and hold
+   * the invested capital of each type.
+   */
+  protected getHoldingPerformanceWithInvestedCapital({
+    daysInMarket,
+    holdingPerformance,
+    investedCapital,
+    investedCapitalByDateRange,
+    investedCapitalValues = {},
+    investedCapitalValuesWithCurrencyEffect = {},
+    investedCapitalWithCurrencyEffect
+  }: {
+    daysInMarket: number;
+    holdingPerformance: HoldingPerformance;
+    investedCapitalByDateRange: { [key: DateRange]: Big };
+    investedCapitalValues?: { [date: string]: Big };
+    investedCapitalValuesWithCurrencyEffect?: { [date: string]: Big };
+  } & InvestedCapital): HoldingPerformance {
+    const {
+      grossPerformance,
+      grossPerformanceWithCurrencyEffect,
+      netPerformance,
+      netPerformanceWithCurrencyEffectMap,
+      totalDividendInBaseCurrency
+    } = holdingPerformance;
+
+    const netPerformancePercentageWithCurrencyEffectMap = mapValues(
+      netPerformanceWithCurrencyEffectMap,
+      (netPerformanceOfDateRange, dateRange) => {
+        const investedCapitalOfDateRange =
+          investedCapitalByDateRange[dateRange] ?? new Big(0);
+
+        return investedCapitalOfDateRange.gt(0)
+          ? netPerformanceOfDateRange.div(investedCapitalOfDateRange)
+          : new Big(0);
+      }
+    );
+
+    return {
+      ...holdingPerformance,
+      netPerformancePercentageWithCurrencyEffectMap,
+      averageInvestment: investedCapital,
+      averageInvestmentValues: investedCapitalValues,
+      averageInvestmentValuesWithCurrencyEffect:
+        investedCapitalValuesWithCurrencyEffect,
+      averageInvestmentWithCurrencyEffect: investedCapitalWithCurrencyEffect,
+      dividendYieldPercent: this.getDividendYieldPercent({
+        daysInMarket,
+        investedCapital,
+        dividendInBaseCurrency: totalDividendInBaseCurrency
+      }),
+      dividendYieldPercentWithCurrencyEffect: this.getDividendYieldPercent({
+        daysInMarket,
+        dividendInBaseCurrency: totalDividendInBaseCurrency,
+        investedCapital: investedCapitalWithCurrencyEffect
+      }),
+      grossPerformancePercentage: investedCapital.gt(0)
+        ? grossPerformance.div(investedCapital)
+        : new Big(0),
+      grossPerformancePercentageWithCurrencyEffect:
+        investedCapitalWithCurrencyEffect.gt(0)
+          ? grossPerformanceWithCurrencyEffect.div(
+              investedCapitalWithCurrencyEffect
+            )
+          : new Big(0),
+      netPerformancePercentage: investedCapital.gt(0)
+        ? netPerformance.div(investedCapital)
+        : new Big(0)
+    };
+  }
 
   protected getHoldingValuation({
     activities,
@@ -1406,6 +1494,354 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
+  /**
+   * Returns the performance of a holding without the values which depend on
+   * the performance calculation type: the average investment, the percentages
+   * and the dividend yield. The valuation is missing if the holding has no
+   * activities or no market price.
+   */
+  protected getMethodIndependentHoldingPerformance({
+    chartDates,
+    dataSource,
+    end,
+    exchangeRates,
+    marketSymbolMap,
+    start,
+    symbol
+  }: {
+    chartDates: string[];
+    end: Date;
+    exchangeRates: { [dateString: string]: number };
+    marketSymbolMap: {
+      [date: string]: { [assetProfileIdentifier: string]: Big };
+    };
+    start: Date;
+  } & AssetProfileIdentifier): MethodIndependentHoldingPerformance {
+    const assetProfileIdentifier = getAssetProfileIdentifier({
+      dataSource,
+      symbol
+    });
+
+    let activities: PortfolioCalculatorActivityItem[] =
+      this.activitiesByAssetProfileIdentifier[assetProfileIdentifier] ?? [];
+
+    const isCash = activities[0]?.assetProfile?.assetSubClass === 'CASH';
+
+    if (activities.length <= 0) {
+      return { holdingPerformance: this.getEmptyHoldingPerformance() };
+    }
+
+    // The dividends, the interest and the liabilities are derived from the
+    // activities only. Accumulate them upfront so that they survive the bail
+    // out for symbols without a market price below.
+    const {
+      totalDividend,
+      totalDividendInBaseCurrency,
+      totalInterestInBaseCurrency,
+      totalLiabilitiesInBaseCurrency
+    } = this.getTotalsFromActivities({ activities, exchangeRates });
+
+    const dateOfFirstActivity = parseDate(activities[0].date);
+
+    const endDateString = format(end, DATE_FORMAT);
+    const startDateString = format(start, DATE_FORMAT);
+
+    const unitPriceAtStartDate =
+      marketSymbolMap[startDateString]?.[assetProfileIdentifier];
+
+    const unitPriceAtEndDate = this.getUnitPriceAtEndDate({
+      activities,
+      dataSource,
+      isCash,
+      marketPriceAtEndDate:
+        marketSymbolMap[endDateString]?.[assetProfileIdentifier]
+    });
+
+    if (
+      !unitPriceAtEndDate ||
+      (!unitPriceAtStartDate && isBefore(dateOfFirstActivity, start))
+    ) {
+      // A missing market price can only affect the quantity which is held. The
+      // dividends, the interest and the liabilities do not hold any quantity
+      // and are therefore not in error.
+      const hasActivitiesWithQuantity = activities.some(({ type }) => {
+        return ['BUY', 'SELL'].includes(type);
+      });
+
+      return {
+        holdingPerformance: {
+          ...this.getEmptyHoldingPerformance(),
+          totalDividend,
+          totalDividendInBaseCurrency,
+          totalInterestInBaseCurrency,
+          totalLiabilitiesInBaseCurrency,
+          hasErrors: hasActivitiesWithQuantity
+        }
+      };
+    }
+
+    activities = this.getActivitiesWithMarketPrices({
+      activities,
+      chartDates,
+      endDateString,
+      marketSymbolMap,
+      startDateString,
+      unitPriceAtEndDate,
+      unitPriceAtStartDate,
+      assetProfile: {
+        dataSource,
+        symbol,
+        assetSubClass: isCash ? 'CASH' : undefined
+      }
+    });
+
+    const holdingValuation = this.getHoldingValuation({
+      activities,
+      exchangeRates,
+      unitPriceAtStartDate
+    });
+
+    const {
+      currentValues,
+      currentValuesWithCurrencyEffect,
+      dividendValuesWithCurrencyEffect,
+      initialValue,
+      investmentValuesAccumulated,
+      investmentValuesAccumulatedWithCurrencyEffect,
+      investmentValuesWithCurrencyEffect,
+      items,
+      netPerformanceValues,
+      netPerformanceValuesWithCurrencyEffect
+    } = holdingValuation;
+
+    const indexOfStartActivity = items.findIndex(({ itemType }) => {
+      return itemType === 'start';
+    });
+
+    const indexOfEndActivity = items.findIndex(({ itemType }) => {
+      return itemType === 'end';
+    });
+
+    const {
+      fees: feesAtStartDate,
+      grossPerformance: grossPerformanceAtStartDate,
+      grossPerformanceWithCurrencyEffect:
+        grossPerformanceAtStartDateWithCurrencyEffect
+    } = items[indexOfStartActivity];
+
+    const {
+      fees,
+      grossPerformance,
+      grossPerformanceWithCurrencyEffect,
+      investment: totalInvestment,
+      investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
+      quantity: totalQuantity
+    } = items[indexOfEndActivity];
+
+    const totalGrossPerformance = grossPerformance.minus(
+      grossPerformanceAtStartDate
+    );
+
+    const totalGrossPerformanceWithCurrencyEffect =
+      grossPerformanceWithCurrencyEffect.minus(
+        grossPerformanceAtStartDateWithCurrencyEffect
+      );
+
+    const totalNetPerformance = totalGrossPerformance.minus(
+      fees.minus(feesAtStartDate)
+    );
+
+    const dateRanges = (
+      [
+        '1d',
+        '1y',
+        '5y',
+        'max',
+        'mtd',
+        'wtd',
+        'ytd',
+        ...eachYearOfInterval({ end, start })
+          .filter((date) => {
+            return !isThisYear(date);
+          })
+          .map((date) => {
+            return format(date, 'yyyy');
+          })
+      ] as DateRange[]
+    ).map((dateRange): DateRangeInterval => {
+      const dateInterval = getIntervalFromDateRange({ dateRange });
+      let startDateOfDateRange = dateInterval.startDate;
+
+      if (isBefore(startDateOfDateRange, start)) {
+        startDateOfDateRange = start;
+      }
+
+      return {
+        dateRange,
+        endDateString: format(dateInterval.endDate, DATE_FORMAT),
+        startDateString: format(startDateOfDateRange, DATE_FORMAT)
+      };
+    });
+
+    const netPerformanceWithCurrencyEffectMap: {
+      [key: DateRange]: Big;
+    } = {};
+
+    for (const {
+      dateRange,
+      endDateString: rangeEndDateString,
+      startDateString: rangeStartDateString
+    } of dateRanges) {
+      netPerformanceWithCurrencyEffectMap[dateRange] =
+        netPerformanceValuesWithCurrencyEffect[rangeEndDateString]?.minus(
+          // If the date range is 'max', take 0 as a start value. Otherwise,
+          // the value of the end of the day of the start date is taken which
+          // differs from the buying price.
+          dateRange === 'max'
+            ? new Big(0)
+            : (netPerformanceValuesWithCurrencyEffect[rangeStartDateString] ??
+                new Big(0))
+        ) ?? new Big(0);
+    }
+
+    return {
+      holdingPerformance: {
+        ...this.getEmptyHoldingPerformance(),
+        currentValues,
+        currentValuesWithCurrencyEffect,
+        dividendValuesWithCurrencyEffect,
+        investmentValuesAccumulated,
+        investmentValuesAccumulatedWithCurrencyEffect,
+        investmentValuesWithCurrencyEffect,
+        netPerformanceValues,
+        netPerformanceValuesWithCurrencyEffect,
+        netPerformanceWithCurrencyEffectMap,
+        totalDividend,
+        totalDividendInBaseCurrency,
+        totalInterestInBaseCurrency,
+        totalInvestment,
+        totalInvestmentWithCurrencyEffect,
+        totalLiabilitiesInBaseCurrency,
+        grossPerformance: totalGrossPerformance,
+        grossPerformanceWithCurrencyEffect:
+          totalGrossPerformanceWithCurrencyEffect,
+        hasErrors:
+          totalQuantity.gt(0) && (!initialValue || !unitPriceAtEndDate),
+        netPerformance: totalNetPerformance
+      },
+      valuation: {
+        ...holdingValuation,
+        activities,
+        dateRanges,
+        indexOfEndActivity,
+        indexOfStartActivity,
+        unitPriceAtEndDate,
+        daysInMarket: differenceInDays(new Date(), dateOfFirstActivity)
+      }
+    };
+  }
+
+  /**
+   * Returns the overall performance of the holdings. The invested capital of
+   * the performance calculation type is the denominator of the dividend yield.
+   */
+  protected getOverallPerformance({
+    investedCapital,
+    investedCapitalWithCurrencyEffect,
+    positions
+  }: {
+    positions: PortfolioCalculatorHolding[];
+  } & InvestedCapital): PortfolioSnapshot {
+    let currentValueInBaseCurrency = new Big(0);
+    let hasErrors = false;
+    let totalFeesWithCurrencyEffect = new Big(0);
+    let totalInvestment = new Big(0);
+    let totalInvestmentWithCurrencyEffect = new Big(0);
+
+    for (const {
+      feeInBaseCurrency,
+      grossPerformance,
+      includeInPerformance,
+      investment,
+      investmentWithCurrencyEffect,
+      quantity,
+      valueInBaseCurrency
+    } of positions) {
+      currentValueInBaseCurrency =
+        currentValueInBaseCurrency.plus(valueInBaseCurrency);
+
+      if (!includeInPerformance) {
+        continue;
+      }
+
+      totalFeesWithCurrencyEffect =
+        totalFeesWithCurrencyEffect.plus(feeInBaseCurrency);
+
+      totalInvestment = totalInvestment.plus(investment);
+
+      totalInvestmentWithCurrencyEffect =
+        totalInvestmentWithCurrencyEffect.plus(investmentWithCurrencyEffect);
+
+      if (!grossPerformance && !quantity.eq(0)) {
+        hasErrors = true;
+      }
+    }
+
+    const dateOfFirstActivity = this.getStartDate();
+
+    const daysInMarket = dateOfFirstActivity
+      ? differenceInDays(new Date(), dateOfFirstActivity)
+      : 0;
+
+    const totalDividendInBaseCurrency =
+      this.getDividendInBaseCurrencyOfHoldings(positions);
+
+    // A holding without a market price, and a holding which is excluded from
+    // the performance, gives a dividend but no invested capital. Such a
+    // holding makes the dividend yield too high. Therefore the dividend yield
+    // stays 0 in this case.
+    const hasDividendWithoutInvestedCapital = positions.some(
+      ({ averageInvestment, dividendInBaseCurrency, includeInPerformance }) => {
+        return (
+          !dividendInBaseCurrency.eq(0) &&
+          (!includeInPerformance || averageInvestment.eq(0))
+        );
+      }
+    );
+
+    return {
+      currentValueInBaseCurrency,
+      hasErrors,
+      positions,
+      totalFeesWithCurrencyEffect,
+      totalInvestment,
+      totalInvestmentWithCurrencyEffect,
+      activitiesCount: this.activities.filter(({ type }) => {
+        return ['BUY', 'SELL'].includes(type);
+      }).length,
+      createdAt: new Date(),
+      dividendYieldPercent: this.getDividendYieldPercent({
+        daysInMarket,
+        dividendInBaseCurrency: totalDividendInBaseCurrency,
+        investedCapital: hasDividendWithoutInvestedCapital
+          ? new Big(0)
+          : investedCapital
+      }),
+      dividendYieldPercentWithCurrencyEffect: this.getDividendYieldPercent({
+        daysInMarket,
+        dividendInBaseCurrency: totalDividendInBaseCurrency,
+        investedCapital: hasDividendWithoutInvestedCapital
+          ? new Big(0)
+          : investedCapitalWithCurrencyEffect
+      }),
+      errors: [],
+      historicalData: [],
+      totalCashInBaseCurrency: new Big(0),
+      totalInterestWithCurrencyEffect: new Big(0),
+      totalLiabilitiesWithCurrencyEffect: new Big(0)
+    };
+  }
+
   public async getPerformance({ end, start }: { end: Date; start: Date }) {
     await this.snapshotPromise;
 
@@ -1470,6 +1906,71 @@ export abstract class PortfolioCalculator {
   }
 
   protected abstract getPerformanceCalculationType(): PerformanceCalculationType;
+
+  /**
+   * Returns the performance percentages of a date of the snapshot chart with
+   * the invested capital of the performance calculation type
+   */
+  protected getPerformancePercentagesOfAccumulatedValues({
+    accumulatedValues: {
+      totalDividendValueWithCurrencyEffect,
+      totalNetPerformanceValue,
+      totalNetPerformanceValueWithCurrencyEffect
+    },
+    investedCapital,
+    investedCapitalWithCurrencyEffect
+  }: {
+    accumulatedValues: AccumulatedValues;
+  } & InvestedCapital): PerformancePercentages {
+    return {
+      dividendInPercentageWithCurrencyEffect:
+        investedCapitalWithCurrencyEffect.eq(0)
+          ? 0
+          : totalDividendValueWithCurrencyEffect
+              .div(investedCapitalWithCurrencyEffect)
+              .toNumber(),
+      netPerformanceInPercentage: investedCapital.eq(0)
+        ? 0
+        : totalNetPerformanceValue.div(investedCapital).toNumber(),
+      netPerformanceInPercentageWithCurrencyEffect:
+        investedCapitalWithCurrencyEffect.eq(0)
+          ? 0
+          : totalNetPerformanceValueWithCurrencyEffect
+              .div(investedCapitalWithCurrencyEffect)
+              .toNumber()
+    };
+  }
+
+  /**
+   * Returns the performance percentages of an item of a date range with the
+   * invested capital of the performance calculation type
+   */
+  protected getPerformancePercentagesOfHistoricalDataItem({
+    historicalDataItem: {
+      dividendInBaseCurrency,
+      netPerformance,
+      netPerformanceWithCurrencyEffect
+    },
+    investedCapital,
+    investedCapitalWithCurrencyEffect
+  }: {
+    historicalDataItem: HistoricalDataItem;
+    investedCapital: number;
+    investedCapitalWithCurrencyEffect: number;
+  }): PerformancePercentages {
+    return {
+      dividendInPercentageWithCurrencyEffect:
+        investedCapitalWithCurrencyEffect > 0
+          ? dividendInBaseCurrency / investedCapitalWithCurrencyEffect
+          : 0,
+      netPerformanceInPercentage:
+        investedCapital > 0 ? netPerformance / investedCapital : 0,
+      netPerformanceInPercentageWithCurrencyEffect:
+        investedCapitalWithCurrencyEffect > 0
+          ? netPerformanceWithCurrencyEffect / investedCapitalWithCurrencyEffect
+          : 0
+    };
+  }
 
   public async getSnapshot() {
     await this.snapshotPromise;
@@ -1816,6 +2317,23 @@ export abstract class PortfolioCalculator {
     }
 
     return chartDateMap;
+  }
+
+  private getDividendYieldPercent({
+    daysInMarket,
+    dividendInBaseCurrency,
+    investedCapital
+  }: {
+    daysInMarket: number;
+    dividendInBaseCurrency: Big;
+    investedCapital: Big;
+  }) {
+    return getAnnualizedPerformancePercent({
+      daysInMarket,
+      netPerformancePercentage: investedCapital.eq(0)
+        ? new Big(0)
+        : dividendInBaseCurrency.div(investedCapital)
+    });
   }
 
   @LogPerformance
