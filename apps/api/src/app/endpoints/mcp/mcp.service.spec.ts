@@ -668,6 +668,10 @@ describe('McpService', () => {
         HttpException
       );
 
+      // The permission is checked first, hence the existence of the account
+      // stays hidden
+      expect(accountService.account).not.toHaveBeenCalled();
+
       expect(
         accountBalanceService.createOrUpdateAccountBalance
       ).not.toHaveBeenCalled();

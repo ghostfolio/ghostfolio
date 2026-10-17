@@ -336,6 +336,11 @@ describe('UPDATE_ACCOUNT_BALANCE_PARAMETERS', () => {
     expect(parse({ date: '2026-09-03' })).toBe(true);
   });
 
+  // A user in a time zone east of UTC has already reached the next date
+  it('Accepts a cash balance of tomorrow in UTC', () => {
+    expect(parse({ date: '2026-09-04' })).toBe(true);
+  });
+
   it('Accepts a negative cash balance', () => {
     expect(parse({ balance: -1000 })).toBe(true);
   });
