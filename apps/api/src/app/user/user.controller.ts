@@ -242,12 +242,6 @@ export class UserController {
 
     if (!userSettings.isExperimentalFeatures) {
       delete userSettings.isGhostfolioAiEnabled;
-    }
-
-    if (
-      !userSettings.isExperimentalFeatures ||
-      this.request.user.subscription
-    ) {
       delete userSettings.performanceCalculationType;
     }
 
