@@ -16,6 +16,65 @@ export default {
 
 type Story = StoryObj<GfInvestmentChartComponent>;
 
+export const InvestmentsByMonth: Story = {
+  args: {
+    benchmarkDataItems: [
+      {
+        date: '2025-01-01',
+        investment: 1000
+      },
+      {
+        date: '2025-02-01',
+        investment: 1000
+      },
+      {
+        date: '2025-03-01',
+        investment: 500
+      },
+      {
+        date: '2025-04-01',
+        investment: 1500
+      },
+      {
+        date: '2025-05-01',
+        investment: -2500
+      },
+      {
+        date: '2025-06-01',
+        investment: 1000
+      },
+      {
+        date: '2025-07-01',
+        investment: 0
+      },
+      {
+        date: '2025-08-01',
+        investment: 2000
+      },
+      {
+        date: '2025-09-01',
+        investment: 1000
+      },
+      {
+        date: '2025-10-01',
+        investment: -800
+      },
+      {
+        date: '2025-11-01',
+        investment: 1000
+      },
+      {
+        date: '2025-12-01',
+        investment: 1200
+      }
+    ],
+    benchmarkDataLabel: 'Invested Capital',
+    currency: 'USD',
+    groupBy: 'month',
+    locale: 'en-US'
+  }
+};
+
 export const PerformanceByYear: Story = {
   args: {
     benchmarkDataItems: [
@@ -70,6 +129,7 @@ export const PerformanceByYear: Story = {
     ],
     benchmarkDataLabel: 'Net Performance',
     groupBy: 'year',
+    highlightNegativeValues: true,
     isInPercentage: true
   }
 };

@@ -32,6 +32,7 @@ import {
   LineController,
   LineElement,
   PointElement,
+  type ScriptableContext,
   type ScriptableLineSegmentContext,
   TimeScale,
   Tooltip,
@@ -41,12 +42,15 @@ import 'chartjs-adapter-date-fns';
 import { type AnnotationOptions } from 'chartjs-plugin-annotation';
 import { isFuture } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import OpenColor from 'open-color';
 
 import {
   getTimeSeriesTooltipOptions,
   onPrefersColorSchemeChange,
   registerChartConfiguration
 } from '../chart';
+
+const { orange } = OpenColor;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,6 +65,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() public colorScheme?: ColorScheme;
   @Input() public currency?: string;
   @Input() public groupBy?: GroupBy;
+  @Input() public highlightNegativeValues = false;
   @Input() public historicalDataItems: LineChartItem[] = [];
   @Input() public isInPercentage?: boolean = false;
   @Input() public isLoading = false;
@@ -117,6 +122,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     const isBarChart = !!this.groupBy;
 
     const benchmarkColorRgb = isBarChart ? primaryColorRgb : secondaryColorRgb;
+    const benchmarkColor = `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`;
 
     // Create clones of the input data
     this.investments = this.benchmarkDataItems.map((item) =>
@@ -133,8 +139,18 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       }),
       datasets: [
         {
-          backgroundColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
-          borderColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
+          backgroundColor: (context: ScriptableContext<'bar' | 'line'>) => {
+            if (
+              (context.parsed?.y ?? 0) < 0 &&
+              isBarChart &&
+              this.highlightNegativeValues
+            ) {
+              return orange[5];
+            }
+
+            return benchmarkColor;
+          },
+          borderColor: benchmarkColor,
           borderWidth: isBarChart ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {
             return {

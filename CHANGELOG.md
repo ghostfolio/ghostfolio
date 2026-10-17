@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Highlighted the negative values in the performance timeline chart on the analysis page (experimental)
 - Moved the investment chart component to `@ghostfolio/ui`
 - Improved the matching of assets in the import of activities with _Ghostfolio AI_ to prefer the holdings of the user (experimental)
 - Extended the holdings table by the ISIN in the _Copy AI prompt to clipboard_ actions on the analysis page and in the tool to get the portfolio of the server of the Model Context Protocol (MCP) (experimental)
