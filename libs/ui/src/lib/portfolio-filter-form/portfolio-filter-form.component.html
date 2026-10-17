@@ -21,10 +21,10 @@
         <mat-option [value]="null" />
         @for (holding of holdings(); track holding.assetProfile.name) {
           <mat-option [value]="holding">
-            <div class="line-height-1 text-truncate">
+            <div class="lh-1 text-truncate">
               <span>{{ holding.assetProfile.name }}</span>
               <br />
-              <small class="text-muted"
+              <small class="text-body-secondary"
                 >{{ holding.assetProfile.symbol }} ·
                 {{ holding.assetProfile.currency }}</small
               >

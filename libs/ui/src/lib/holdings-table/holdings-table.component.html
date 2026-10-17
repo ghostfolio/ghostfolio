@@ -36,7 +36,7 @@
       </th>
       <td
         *matCellDef="let element"
-        class="line-height-normal px-1"
+        class="lh-normal px-1"
         mat-cell
         [class.w-100]="mode() === 'simple'"
       >
@@ -53,7 +53,9 @@
         </div>
         @if (mode() === 'default') {
           <div>
-            <small class="text-muted">{{ element.assetProfile.symbol }}</small>
+            <small class="text-body-secondary">{{
+              element.assetProfile.symbol
+            }}</small>
           </div>
         }
       </td>

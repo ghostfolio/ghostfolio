@@ -3,12 +3,12 @@
     <span class="align-items-center d-flex justify-content-center">
       <span i18n>Watchlist</span>
       @if (user?.subscription?.type === 'Basic') {
-        <gf-premium-indicator class="ml-1" />
+        <gf-premium-indicator class="ms-1" />
       }
     </span>
   </h1>
   <div class="row">
-    <div class="col-xs-12 col-md-10 offset-md-1">
+    <div class="col-md-10 offset-md-1">
       <gf-benchmark
         [benchmarks]="watchlist"
         [deviceType]="deviceType()"

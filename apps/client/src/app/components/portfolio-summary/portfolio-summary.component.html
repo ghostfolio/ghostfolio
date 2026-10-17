@@ -1,5 +1,5 @@
 <div class="container p-0">
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Time in Market</div>
     <div class="justify-content-end">
       <gf-value
@@ -10,7 +10,7 @@
     </div>
   </div>
   @if (isLoading) {
-    <div class="flex-nowrap px-3 py-1 row">
+    <div class="d-flex py-1">
       <div class="d-flex flex-grow-1 indent-1 text-truncate">
         <ngx-skeleton-loader
           animation="pulse"
@@ -19,7 +19,7 @@
       </div>
     </div>
   } @else {
-    <div class="flex-nowrap px-3 py-1 row">
+    <div class="d-flex py-1">
       <div class="d-flex flex-grow-1 indent-1 text-truncate">
         {{ summary?.activityCount }}
         <ng-container i18n>{summary?.activityCount, plural,
@@ -27,7 +27,7 @@
           other {activities}
         }</ng-container>
         <span
-          class="align-items-center d-none d-sm-flex ml-1"
+          class="align-items-center d-none d-sm-flex ms-1"
           matTooltipPosition="above"
           [matTooltip]="buyAndSellActivitiesTooltip"
         >
@@ -39,7 +39,7 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Buy</div>
     <div class="justify-content-end">
       <gf-value
@@ -53,7 +53,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Sell</div>
     <div class="justify-content-end">
       <gf-value
@@ -70,7 +70,7 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Invested Capital</div>
     <div class="justify-content-end">
       <gf-value
@@ -84,7 +84,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Absolute Gross Performance</div>
     <div class="justify-content-end">
       <gf-value
@@ -98,7 +98,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row text-muted">
+  <div class="d-flex py-1 text-body-secondary">
     <div class="flex-grow-1 indent-1 text-truncate" i18n>thereof Dividend</div>
     <div class="justify-content-end">
       <gf-value
@@ -112,11 +112,11 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Fees</div>
     <div class="d-flex justify-content-end">
       @if (isNumber(summary?.fees)) {
-        <span class="mr-1">-</span>
+        <span class="me-1">-</span>
       }
       <gf-value
         class="justify-content-end"
@@ -132,7 +132,7 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Absolute Net Performance</div>
     <div class="justify-content-end">
       <gf-value
@@ -146,7 +146,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 indent-1 text-truncate">
       <ng-container i18n>Net Performance</ng-container>
       @if (
@@ -154,7 +154,7 @@
         PerformanceCalculationType.ROAI
       ) {
         <abbr
-          class="d-none d-sm-inline-block initialism ml-2 text-muted"
+          class="d-none d-sm-inline-block initialism ms-2 text-body-secondary"
           i18n-title
           title="Return on Average Investment (total return with dividends)"
           >(ROAI)</abbr
@@ -173,7 +173,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row text-muted">
+  <div class="d-flex py-1 text-body-secondary">
     <div class="flex-grow-1 indent-2 text-truncate">
       <ng-container i18n>thereof Dividend Performance</ng-container>
     </div>
@@ -191,7 +191,7 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Total Assets</div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value
@@ -206,7 +206,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div
       class="align-items-center d-flex flex-grow-1 indent-1"
       [class.cursor-pointer]="hasHoldingsBreakdown"
@@ -214,10 +214,10 @@
     >
       @if (hasHoldingsBreakdown) {
         <span
-          class="align-items-center caret-container d-inline-flex justify-content-center ml-n3"
+          class="align-items-center caret-container d-inline-flex justify-content-center"
         >
           <ion-icon
-            class="caret text-muted"
+            class="caret text-body-secondary"
             name="caret-forward-outline"
             [class.caret-expanded]="isHoldingsExpanded"
           />
@@ -230,7 +230,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -253,7 +253,7 @@
     </div>
   </div>
   @if (hasHoldingsBreakdown && isHoldingsExpanded) {
-    <div class="flex-nowrap px-3 py-1 row">
+    <div class="d-flex py-1">
       <div class="flex-grow-1 indent-2 text-truncate" i18n>Investments</div>
       <div class="flex-column flex-wrap justify-content-end">
         <gf-value
@@ -268,7 +268,7 @@
         />
       </div>
     </div>
-    <div class="flex-nowrap px-3 py-1 row">
+    <div class="d-flex py-1">
       <div class="flex-grow-1 indent-2 text-truncate" i18n>Emergency Fund</div>
       <div class="flex-column flex-wrap justify-content-end">
         <gf-value
@@ -284,7 +284,7 @@
       </div>
     </div>
   }
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div
       class="align-items-center d-flex flex-grow-1 indent-1"
       [class.cursor-pointer]="hasCashBreakdown"
@@ -292,10 +292,10 @@
     >
       @if (hasCashBreakdown) {
         <span
-          class="align-items-center caret-container d-inline-flex justify-content-center ml-n3"
+          class="align-items-center caret-container d-inline-flex justify-content-center"
         >
           <ion-icon
-            class="caret text-muted"
+            class="caret text-body-secondary"
             name="caret-forward-outline"
             [class.caret-expanded]="isCashExpanded"
           />
@@ -308,7 +308,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -331,7 +331,7 @@
     </div>
   </div>
   @if (hasCashBreakdown && isCashExpanded) {
-    <div class="flex-nowrap px-3 py-1 row">
+    <div class="d-flex py-1">
       <div class="flex-grow-1 indent-2 text-truncate" i18n>Buying Power</div>
       <div class="flex-column flex-wrap justify-content-end">
         <gf-value
@@ -346,7 +346,7 @@
         />
       </div>
     </div>
-    <div class="flex-nowrap px-3 py-1 row">
+    <div class="d-flex py-1">
       <div class="flex-grow-1 indent-2 text-truncate" i18n>Emergency Fund</div>
       <div class="flex-column flex-wrap justify-content-end">
         <gf-value
@@ -362,7 +362,7 @@
       </div>
     </div>
   }
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="align-items-center d-flex flex-grow-1">
       <ng-container i18n>Excluded from Analysis</ng-container>
       @if (
@@ -371,7 +371,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -394,11 +394,11 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Liabilities</div>
     <div class="d-flex justify-content-end">
       @if (isNumber(summary?.liabilitiesInBaseCurrency)) {
-        <span class="mr-1">-</span>
+        <span class="me-1">-</span>
       }
       <gf-value
         class="justify-content-end"
@@ -414,8 +414,8 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
-    <div class="flex-grow-1 font-weight-bold text-truncate" i18n>Net Worth</div>
+  <div class="d-flex py-1">
+    <div class="flex-grow-1 fw-bold text-truncate" i18n>Net Worth</div>
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
@@ -428,7 +428,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 indent-1 text-truncate">
       <ng-container i18n>Annualized Performance</ng-container>
     </div>
@@ -447,7 +447,7 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="align-items-center d-flex flex-grow-1">
       <ng-container i18n>Emergency Fund</ng-container>
       @if (
@@ -456,7 +456,7 @@
         user?.settings?.isExperimentalFeatures
       ) {
         <gf-value
-          class="d-lg-inline-block d-none ml-2 small text-muted"
+          class="d-lg-inline-block d-none ms-2 small text-body-secondary"
           [isLoading]="isLoading"
           [isPercent]="true"
           [locale]="locale"
@@ -486,7 +486,7 @@
         user?.subscription?.type !== 'Basic'
       ) {
         <ion-icon
-          class="mr-1 text-muted"
+          class="me-1 text-body-secondary"
           name="ellipsis-horizontal-circle-outline"
         />
       }
@@ -503,7 +503,7 @@
       />
     </div>
   </div>
-  <div class="flex-nowrap px-3 py-1 row">
+  <div class="d-flex py-1">
     <div class="flex-grow-1 text-truncate" i18n>Interest</div>
     <div class="justify-content-end">
       <gf-value

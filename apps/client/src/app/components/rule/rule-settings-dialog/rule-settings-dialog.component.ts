@@ -22,7 +22,6 @@ import { RuleSettingsDialogParams } from './interfaces/interfaces';
     ReactiveFormsModule
   ],
   selector: 'gf-rule-settings-dialog',
-  styleUrls: ['./rule-settings-dialog.scss'],
   templateUrl: './rule-settings-dialog.html'
 })
 export class GfRuleSettingsDialogComponent {
