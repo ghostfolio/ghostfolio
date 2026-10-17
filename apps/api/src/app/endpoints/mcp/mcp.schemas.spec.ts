@@ -15,7 +15,8 @@ import {
   GET_ACTIVITIES_PARAMETERS,
   GET_PERFORMANCE_PARAMETERS,
   IMPORT_ACTIVITIES_PARAMETERS,
-  SEARCH_ASSET_PROFILES_PARAMETERS
+  SEARCH_ASSET_PROFILES_PARAMETERS,
+  UPDATE_ACCOUNT_BALANCE_PARAMETERS
 } from './mcp.schemas';
 import { createActivity } from './mcp.test-utils';
 
@@ -310,5 +311,54 @@ describe('SEARCH_ASSET_PROFILES_PARAMETERS', () => {
     expect(
       SEARCH_ASSET_PROFILES_PARAMETERS.parse({ query: ' Apple ' }).query
     ).toBe('Apple');
+  });
+});
+
+describe('UPDATE_ACCOUNT_BALANCE_PARAMETERS', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-09-03T23:30:00.000Z'));
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
+  function parse(parameters: Record<string, unknown>) {
+    return UPDATE_ACCOUNT_BALANCE_PARAMETERS.safeParse({
+      accountId: 'account-id',
+      balance: 1000,
+      date: '2024-01-01',
+      ...parameters
+    }).success;
+  }
+
+  it('Accepts a cash balance of today', () => {
+    expect(parse({ date: '2026-09-03' })).toBe(true);
+  });
+
+  // A user in a time zone east of UTC has already reached the next date
+  it('Accepts a cash balance of tomorrow in UTC', () => {
+    expect(parse({ date: '2026-09-04' })).toBe(true);
+  });
+
+  it('Accepts a negative cash balance', () => {
+    expect(parse({ balance: -1000 })).toBe(true);
+  });
+
+  it('Refuses an empty identifier of the account', () => {
+    expect(parse({ accountId: '' })).toBe(false);
+  });
+
+  it('Refuses a date at or before the epoch', () => {
+    expect(parse({ date: '1969-12-31' })).toBe(false);
+    expect(parse({ date: '1970-01-01' })).toBe(false);
+  });
+
+  it('Refuses a date and time', () => {
+    expect(parse({ date: '2024-01-01T00:30:00+02:00' })).toBe(false);
+  });
+
+  it('Refuses a date in the future', () => {
+    expect(parse({ date: '2026-09-05' })).toBe(false);
   });
 });

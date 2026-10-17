@@ -157,26 +157,32 @@ export class DataProviderService implements OnModuleInit {
     return response;
   }
 
+  /**
+   * Gives the data provider of the data source, or the data provider which
+   * the data source mapping gives for this data source
+   */
   public getDataProvider(providerName: DataSource) {
-    for (const dataProviderInterface of this.dataProviderInterfaces) {
-      if (this.dataProviderMapping[dataProviderInterface.getName()]) {
-        const mappedDataProviderInterface = this.dataProviderInterfaces.find(
-          (currentDataProviderInterface) => {
-            return (
-              currentDataProviderInterface.getName() ===
-              this.dataProviderMapping[dataProviderInterface.getName()]
-            );
-          }
+    const mappedDataProviderInterface = this.dataProviderInterfaces.find(
+      (dataProviderInterface) => {
+        return (
+          dataProviderInterface.getName() ===
+          this.dataProviderMapping[providerName]
         );
-
-        if (mappedDataProviderInterface) {
-          return mappedDataProviderInterface;
-        }
       }
+    );
 
-      if (dataProviderInterface.getName() === providerName) {
-        return dataProviderInterface;
+    if (mappedDataProviderInterface) {
+      return mappedDataProviderInterface;
+    }
+
+    const dataProviderInterface = this.dataProviderInterfaces.find(
+      (currentDataProviderInterface) => {
+        return currentDataProviderInterface.getName() === providerName;
       }
+    );
+
+    if (dataProviderInterface) {
+      return dataProviderInterface;
     }
 
     throw new Error('No data provider has been found.');
@@ -267,17 +273,10 @@ export class DataProviderService implements OnModuleInit {
         );
       }
 
-      if (
-        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-        subscription?.type === SubscriptionType.Basic
-      ) {
-        const dataProvider = this.getDataProvider(DataSource[dataSource]);
-
-        if (dataProvider.getDataProviderInfo().isPremium) {
-          throw new ImportValidationError(
-            `${activityPath}.dataSource ("${maskedDataSource}") requires Ghostfolio Premium`
-          );
-        }
+      if (this.isPremiumRequired({ dataSource, subscription })) {
+        throw new ImportValidationError(
+          `${activityPath}.dataSource ("${maskedDataSource}") requires Ghostfolio Premium`
+        );
       }
 
       const assetProfileIdentifier = getAssetProfileIdentifier({
@@ -851,6 +850,26 @@ export class DataProviderService implements OnModuleInit {
     return !!(await this.propertyService.getByKey<string>(
       PROPERTY_API_KEY_GHOSTFOLIO
     ));
+  }
+
+  /**
+   * Checks if a data source requires Ghostfolio Premium for a subscription,
+   * which is the case for a premium data provider and the Basic subscription
+   * if the subscription is enabled
+   */
+  public isPremiumRequired({
+    dataSource,
+    subscription
+  }: {
+    dataSource: DataSource;
+    subscription: UserWithSettings['subscription'];
+  }) {
+    return (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      subscription?.type === SubscriptionType.Basic &&
+      this.getDataProvider(DataSource[dataSource]).getDataProviderInfo()
+        .isPremium
+    );
   }
 
   public async search({
