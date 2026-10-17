@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a _Storybook_ story for the investment chart component
+
 ### Changed
 
+- Moved the investment chart component to `@ghostfolio/ui`
 - Improved the matching of assets in the import of activities with _Ghostfolio AI_ to prefer the holdings of the user (experimental)
 - Extended the holdings table by the ISIN in the _Copy AI prompt to clipboard_ actions on the analysis page and in the tool to get the portfolio of the server of the Model Context Protocol (MCP) (experimental)
 - Hardened the validation of the date in the endpoint to create an account balance
@@ -18,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an exception in the authentication interceptor when the time zone of the browser is not available
+- Fixed the missing `userId` in the unique constraint of the `AccountBalance` database schema
 
 ## 3.86.0 - 2026-10-13
 
