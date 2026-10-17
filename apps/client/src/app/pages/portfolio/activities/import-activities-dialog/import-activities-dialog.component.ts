@@ -1,5 +1,6 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AI_ACTIVITIES_FILE_MAXIMUM_SIZE,
   AI_MAX_ACTIVITIES,
@@ -76,7 +77,10 @@ import ms from 'ms';
 import { from, switchMap } from 'rxjs';
 
 import { ImportStep } from './enums/import-step';
-import { ImportActivitiesDialogParams } from './interfaces/interfaces';
+import {
+  ImportActivitiesDialogParams,
+  ImportActivitiesDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -162,9 +166,15 @@ export class GfImportActivitiesDialogComponent {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
-    inject<MatDialogRef<GfImportActivitiesDialogComponent>>(MatDialogRef);
+    inject<
+      MatDialogRef<
+        GfImportActivitiesDialogComponent,
+        ImportActivitiesDialogResult
+      >
+    >(MatDialogRef);
   private readonly importActivitiesService = inject(ImportActivitiesService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
 
   public constructor() {
     addIcons({ cloudUploadOutline, informationCircleOutline, warningOutline });
@@ -248,7 +258,7 @@ export class GfImportActivitiesDialogComponent {
         }
       );
     } finally {
-      this.dialogRef.close();
+      this.dialogRef.close({ withRefresh: true });
     }
   }
 
@@ -272,7 +282,12 @@ export class GfImportActivitiesDialogComponent {
     this.dataService
       .putUserSetting({ isGhostfolioAiEnabled: checked })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe();
+      });
   }
 
   protected onImportStepChange(event: StepperSelectionEvent) {
