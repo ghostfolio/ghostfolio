@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Introduced a cooldown of 12 hours for the asset profile and exchange rate gathering on activity creation by retaining the completed jobs
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 
 ## 3.88.0 - 2026-10-17
