@@ -24,9 +24,7 @@ function createConfigurationService(overrides: Partial<Environment> = {}) {
 describe('redis.helper', () => {
   describe('getRedisConnectionOptions', () => {
     it('should return connection options without TLS when REDIS_TLS is false', () => {
-      const configurationService = createConfigurationService({
-        REDIS_TLS: false
-      });
+      const configurationService = createConfigurationService();
 
       const options = getRedisConnectionOptions(configurationService);
 
@@ -34,9 +32,9 @@ describe('redis.helper', () => {
         db: 0,
         host: 'localhost',
         password: '***',
-        port: 6379,
-        tls: undefined
+        port: 6379
       });
+      expect(options.tls).toBeUndefined();
     });
 
     it('should return connection options with tls object when REDIS_TLS is true', () => {
@@ -58,9 +56,7 @@ describe('redis.helper', () => {
 
   describe('getRedisConnectionUrl', () => {
     it('should return standard redis:// URL when REDIS_TLS is false', () => {
-      const configurationService = createConfigurationService({
-        REDIS_TLS: false
-      });
+      const configurationService = createConfigurationService();
 
       const url = getRedisConnectionUrl(configurationService);
 
@@ -79,8 +75,7 @@ describe('redis.helper', () => {
 
     it('should format URL correctly without password', () => {
       const configurationService = createConfigurationService({
-        REDIS_PASSWORD: '',
-        REDIS_TLS: false
+        REDIS_PASSWORD: ''
       });
 
       const url = getRedisConnectionUrl(configurationService);
