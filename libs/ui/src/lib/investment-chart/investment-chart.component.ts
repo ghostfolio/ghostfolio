@@ -62,10 +62,10 @@ const { orange } = OpenColor;
 export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() public benchmarkDataItems: InvestmentItem[] = [];
   @Input() public benchmarkDataLabel = '';
-  @Input() public colorizeSign = false;
   @Input() public colorScheme?: ColorScheme;
   @Input() public currency?: string;
   @Input() public groupBy?: GroupBy;
+  @Input() public highlightNegativeValues = false;
   @Input() public historicalDataItems: LineChartItem[] = [];
   @Input() public isInPercentage?: boolean = false;
   @Input() public isLoading = false;
@@ -122,6 +122,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
     const isBarChart = !!this.groupBy;
 
     const benchmarkColorRgb = isBarChart ? primaryColorRgb : secondaryColorRgb;
+    const benchmarkColor = `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`;
 
     // Create clones of the input data
     this.investments = this.benchmarkDataItems.map((item) =>
@@ -142,14 +143,14 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
             if (
               (context.parsed?.y ?? 0) < 0 &&
               isBarChart &&
-              this.colorizeSign
+              this.highlightNegativeValues
             ) {
               return orange[5];
             }
 
-            return `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`;
+            return benchmarkColor;
           },
-          borderColor: `rgb(${benchmarkColorRgb.r}, ${benchmarkColorRgb.g}, ${benchmarkColorRgb.b})`,
+          borderColor: benchmarkColor,
           borderWidth: isBarChart ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {
             return {
