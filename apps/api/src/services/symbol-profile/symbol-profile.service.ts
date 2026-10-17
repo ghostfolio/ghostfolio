@@ -187,12 +187,14 @@ export class SymbolProfileService {
 
   /**
    * Gives the currency, the data source, the ISIN, the name and the symbol of
-   * the asset profiles of the investment activities of the user, also of the
-   * closed positions and of the excluded accounts, with the overrides
+   * the active asset profiles of the investment activities of the user, also
+   * of the closed positions and of the excluded accounts, with the overrides.
+   * An inactive asset profile, for example a delisted one, is left out, as a
+   * data provider cannot resolve it.
    */
   public async getSymbolProfilesOfUser({ userId }: { userId: string }) {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }],
+      orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }],
       select: {
         assetProfileOverrides: true,
         currency: true,
@@ -204,7 +206,8 @@ export class SymbolProfileService {
       where: {
         activities: {
           some: { userId, type: { in: INVESTMENT_ACTIVITY_TYPES } }
-        }
+        },
+        isActive: true
       }
     });
 

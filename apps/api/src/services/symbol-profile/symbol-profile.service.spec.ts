@@ -29,7 +29,7 @@ describe('SymbolProfileService', () => {
       } as unknown as PrismaService);
     });
 
-    it('gives the asset profiles of the investment activities of the user', async () => {
+    it('gives the active asset profiles of the investment activities of the user', async () => {
       await expect(
         symbolProfileService.getSymbolProfilesOfUser({ userId })
       ).resolves.toEqual([
@@ -47,8 +47,19 @@ describe('SymbolProfileService', () => {
           where: {
             activities: {
               some: { userId, type: { in: INVESTMENT_ACTIVITY_TYPES } }
-            }
+            },
+            isActive: true
           }
+        })
+      );
+    });
+
+    it('sorts the asset profiles by the symbol and then by the data source', async () => {
+      await symbolProfileService.getSymbolProfilesOfUser({ userId });
+
+      expect(findManySymbolProfiles).toHaveBeenCalledWith(
+        expect.objectContaining({
+          orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }]
         })
       );
     });
