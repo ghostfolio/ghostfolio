@@ -159,6 +159,7 @@ export class GfImportActivitiesDialogComponent {
   private accounts: CreateAccountWithBalancesDto[] = [];
   private activities: Activity[] = [];
   private assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+  private hasChangedUserSettings = false;
   private platforms: CreatePlatformDto[] = [];
   private tags: CreateTagDto[] = [];
 
@@ -181,6 +182,12 @@ export class GfImportActivitiesDialogComponent {
   }
 
   public ngOnInit() {
+    this.dialogRef.afterClosed().subscribe((result) => {
+      if (this.hasChangedUserSettings && !result?.withRefresh) {
+        this.userService.get(true).subscribe();
+      }
+    });
+
     if (
       this.data?.activityTypes?.length === 1 &&
       this.data?.activityTypes?.[0] === 'DIVIDEND'
@@ -225,7 +232,7 @@ export class GfImportActivitiesDialogComponent {
   }
 
   protected onCancel() {
-    this.dialogRef.close();
+    this.dialogRef.close({ withRefresh: false });
   }
 
   protected async onImportActivities() {
@@ -277,17 +284,13 @@ export class GfImportActivitiesDialogComponent {
   }
 
   protected onGhostfolioAiChange({ checked }: MatCheckboxChange) {
+    this.hasChangedUserSettings = true;
     this.isGhostfolioAiEnabled = checked;
 
     this.dataService
       .putUserSetting({ isGhostfolioAiEnabled: checked })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe();
-      });
+      .subscribe();
   }
 
   protected onImportStepChange(event: StepperSelectionEvent) {
