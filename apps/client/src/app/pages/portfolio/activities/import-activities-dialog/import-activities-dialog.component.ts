@@ -182,6 +182,8 @@ export class GfImportActivitiesDialogComponent {
   }
 
   public ngOnInit() {
+    // No takeUntilDestroyed(), the component is already destroyed here
+    // The opener refreshes the user if withRefresh is true
     this.dialogRef.afterClosed().subscribe((result) => {
       if (this.hasChangedUserSettings && !result?.withRefresh) {
         this.userService.get(true).subscribe();
