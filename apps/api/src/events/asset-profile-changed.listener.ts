@@ -3,7 +3,10 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS
+} from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -91,6 +94,9 @@ export class AssetProfileChangedListener {
       await this.dataGatheringService.gatherSymbol({
         dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
         date: dateOfFirstActivity,
+        removeOnComplete: {
+          age: GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS / 1000
+        },
         symbol: `${DEFAULT_CURRENCY}${currency}`
       });
     }

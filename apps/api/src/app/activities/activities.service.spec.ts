@@ -7,10 +7,13 @@ import { WHERE_ACTIVITY_NOT_DRAFT } from '@ghostfolio/api/helper/activity.helper
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
+  GATHER_ASSET_PROFILE_COOLDOWN_IN_MS,
+  GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   INVESTMENT_ACTIVITY_TYPES,
   NON_INVESTMENT_ACTIVITY_TYPES
 } from '@ghostfolio/common/config';
@@ -81,6 +84,73 @@ describe('ActivitiesService', () => {
       const assetProfile = await getCreatedAssetProfile({ symbol });
 
       expect(assetProfile.symbol).toBe(symbol);
+    });
+
+    it('retains the completed asset profile job for the duration of the cooldown', async () => {
+      const addJobToQueue = jest.fn();
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        { addJobToQueue } as unknown as DataGatheringService,
+        null,
+        { emit: jest.fn() } as unknown as EventEmitter2,
+        null,
+        null,
+        {
+          order: {
+            create: jest.fn().mockResolvedValue({
+              SymbolProfile: {
+                currency: 'USD',
+                dataSource: DataSource.YAHOO,
+                symbol: 'VT'
+              },
+              userId: 'user-id'
+            })
+          }
+        } as unknown as PrismaService,
+        null,
+        { validateTagIds: jest.fn() } as unknown as TagService
+      );
+
+      await service.createActivity({
+        currency: 'USD',
+        date: parseDate('2026-10-01'),
+        fee: 0,
+        quantity: 1,
+        SymbolProfile: {
+          connectOrCreate: {
+            create: {
+              currency: 'USD',
+              dataSource: DataSource.YAHOO,
+              symbol: 'VT'
+            },
+            where: {
+              dataSource_symbol: {
+                dataSource: DataSource.YAHOO,
+                symbol: 'VT'
+              }
+            }
+          }
+        },
+        type: 'BUY',
+        unitPrice: 100,
+        user: { connect: { id: 'user-id' } },
+        userId: 'user-id'
+      });
+
+      expect(addJobToQueue).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
+          opts: expect.objectContaining({
+            removeOnComplete: {
+              age: GATHER_ASSET_PROFILE_COOLDOWN_IN_MS / 1000
+            }
+          })
+        })
+      );
     });
 
     async function getCreatedAssetProfile({
