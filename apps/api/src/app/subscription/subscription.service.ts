@@ -268,7 +268,12 @@ export class SubscriptionService {
     const unsupportedLanguageCodes: Record<
       Exclude<
         (typeof SUPPORTED_LANGUAGE_CODES)[number],
-        Stripe.Checkout.SessionCreateParams.Locale
+        // Extract keeps only the Stripe locales that Ghostfolio supports.
+        // This also removes OtherString, which matches every string.
+        Extract<
+          Stripe.Checkout.SessionCreateParams.Locale,
+          (typeof SUPPORTED_LANGUAGE_CODES)[number]
+        >
       >,
       true
     > = {

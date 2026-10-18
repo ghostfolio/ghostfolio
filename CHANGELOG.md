@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.88.0 - 2026-10-17
+
+### Added
+
+- Added the _Return on Investment_ (ROI) performance calculation type (experimental)
+- Added a tool to update the cash balance of an account to the server of the Model Context Protocol (MCP) (experimental)
+- Exposed the `REDIS_TLS` environment variable to enable the TLS connection to _Redis_
+
+### Changed
+
+- Improved the accessibility of the _Google_ icon in the login with access token dialog
+- Improved the accessibility of the _Google_ icon on the registration page
+- Improved the search by ISIN number in the _Financial Modeling Prep_ service
+- Upgraded `bull-board` from version `9.10.1` to `9.10.4`
+
+### Fixed
+
+- Fixed the alignment of the bars in the investment chart component
+- Fixed the data source mapping in the data provider service to apply only to the mapped data source
+
 ## 3.87.0 - 2026-10-17
 
 ### Added

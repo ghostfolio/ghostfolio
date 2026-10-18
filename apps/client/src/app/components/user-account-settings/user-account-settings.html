@@ -30,7 +30,7 @@
               </mat-form-field>
             </div>
           </div>
-          @if (user?.settings?.isExperimentalFeatures && !user?.subscription) {
+          @if (user?.settings?.isExperimentalFeatures) {
             <div class="d-flex mb-2">
               <div class="align-items-center d-flex pe-1 pt-1 w-50">
                 <ng-container i18n>Performance Calculation</ng-container>
@@ -39,7 +39,9 @@
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-select
                     name="performanceCalculationType"
-                    [disabled]="true"
+                    [disabled]="
+                      hasImpersonationId || !hasPermissionToUpdateUserSettings
+                    "
                     [value]="user.settings.performanceCalculationType"
                     (selectionChange)="
                       onChangeUserSetting(
@@ -50,6 +52,9 @@
                   >
                     <mat-option value="ROAI"
                       >Return on Average Investment (ROAI)</mat-option
+                    >
+                    <mat-option value="ROI"
+                      >Return on Investment (ROI)</mat-option
                     >
                   </mat-select>
                 </mat-form-field>
