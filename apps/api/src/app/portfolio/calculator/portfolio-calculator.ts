@@ -101,6 +101,9 @@ export abstract class PortfolioCalculator {
   private dataProviderInfos: DataProviderInfo[];
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
+  private exchangeRatesByCurrency: {
+    [currencyPair: string]: { [date: string]: number };
+  } = {};
   private filters: Filter[];
   private holdingBalancesByDate: HoldingBalancesAtDate[];
   private portfolioSnapshotService: PortfolioSnapshotService;
@@ -308,13 +311,15 @@ export abstract class PortfolioCalculator {
       currencies[getAssetProfileIdentifier({ dataSource, symbol })] = currency;
     }
 
-    const exchangeRatesByCurrency =
+    this.exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: Array.from(new Set(Object.values(currencies))),
         endDate: this.endDate,
         startDate: this.startDate,
         targetCurrency: this.currency
       });
+
+    const exchangeRatesByCurrency = this.exchangeRatesByCurrency;
 
     const {
       dataProviderInfos,
@@ -903,6 +908,14 @@ export abstract class PortfolioCalculator {
 
   public getDataProviderInfos() {
     return this.dataProviderInfos;
+  }
+
+  protected getBaseCurrency() {
+    return this.currency;
+  }
+
+  protected getExchangeRatesByCurrency() {
+    return this.exchangeRatesByCurrency;
   }
 
   protected getDividendInBaseCurrencyOfHoldings(
