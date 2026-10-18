@@ -208,6 +208,12 @@ export const DERIVED_CURRENCIES = [
 
 export const E_MAIL_LINE_BREAK = '%0D%0A';
 
+/**
+ * Keep equal to GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS: Bull removes the
+ * completed jobs of all job names by age, so the lower value applies to both.
+ */
+export const GATHER_ASSET_PROFILE_COOLDOWN_IN_MS = ms('12 hours');
+
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
   attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
@@ -220,7 +226,12 @@ export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
   timeout: ms('5 minutes')
 };
 
+/**
+ * Keep equal to GATHER_ASSET_PROFILE_COOLDOWN_IN_MS: Bull removes the
+ * completed jobs of all job names by age, so the lower value applies to both.
+ */
 export const GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS = ms('12 hours');
+
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
