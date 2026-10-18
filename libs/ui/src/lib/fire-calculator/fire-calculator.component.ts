@@ -29,6 +29,7 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { DateAdapter } from '@angular/material/core';
 import {
   MatDatepicker,
   MatDatepickerModule
@@ -131,6 +132,7 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private dateAdapter: DateAdapter<Date, string>,
     private destroyRef: DestroyRef,
     private fireCalculatorService: FireCalculatorService,
     private formBuilder: FormBuilder
@@ -234,6 +236,10 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.locale) {
+      this.dateAdapter.setLocale(this.locale ?? getLocale());
+    }
+
     if (changes.colorScheme && this.chart) {
       this.chart.destroy();
       this.chart = undefined;
