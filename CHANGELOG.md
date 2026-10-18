@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the accessibility of the _Buy me a coffee_ button on the about page
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
+- Upgraded `prettier` from version `3.9.9` to `3.9.10`
 
 ## 3.88.0 - 2026-10-17
 
