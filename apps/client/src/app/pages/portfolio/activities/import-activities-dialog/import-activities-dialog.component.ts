@@ -1,5 +1,6 @@
 import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AI_ACTIVITIES_FILE_MAXIMUM_SIZE,
   AI_MAX_ACTIVITIES,
@@ -76,7 +77,10 @@ import ms from 'ms';
 import { from, switchMap } from 'rxjs';
 
 import { ImportStep } from './enums/import-step';
-import { ImportActivitiesDialogParams } from './interfaces/interfaces';
+import {
+  ImportActivitiesDialogParams,
+  ImportActivitiesDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -155,6 +159,7 @@ export class GfImportActivitiesDialogComponent {
   private accounts: CreateAccountWithBalancesDto[] = [];
   private activities: Activity[] = [];
   private assetProfiles: CreateAssetProfileWithMarketDataDto[] = [];
+  private hasChangedUserSettings = false;
   private platforms: CreatePlatformDto[] = [];
   private tags: CreateTagDto[] = [];
 
@@ -162,15 +167,29 @@ export class GfImportActivitiesDialogComponent {
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
-    inject<MatDialogRef<GfImportActivitiesDialogComponent>>(MatDialogRef);
+    inject<
+      MatDialogRef<
+        GfImportActivitiesDialogComponent,
+        ImportActivitiesDialogResult
+      >
+    >(MatDialogRef);
   private readonly importActivitiesService = inject(ImportActivitiesService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly userService = inject(UserService);
 
   public constructor() {
     addIcons({ cloudUploadOutline, informationCircleOutline, warningOutline });
   }
 
   public ngOnInit() {
+    // No takeUntilDestroyed(), the component is already destroyed here
+    // The opener refreshes the user if withRefresh is true
+    this.dialogRef.afterClosed().subscribe((result) => {
+      if (this.hasChangedUserSettings && !result?.withRefresh) {
+        this.userService.get(true).subscribe();
+      }
+    });
+
     if (
       this.data?.activityTypes?.length === 1 &&
       this.data?.activityTypes?.[0] === 'DIVIDEND'
@@ -215,7 +234,7 @@ export class GfImportActivitiesDialogComponent {
   }
 
   protected onCancel() {
-    this.dialogRef.close();
+    this.dialogRef.close({ withRefresh: false });
   }
 
   protected async onImportActivities() {
@@ -248,7 +267,7 @@ export class GfImportActivitiesDialogComponent {
         }
       );
     } finally {
-      this.dialogRef.close();
+      this.dialogRef.close({ withRefresh: true });
     }
   }
 
@@ -267,6 +286,7 @@ export class GfImportActivitiesDialogComponent {
   }
 
   protected onGhostfolioAiChange({ checked }: MatCheckboxChange) {
+    this.hasChangedUserSettings = true;
     this.isGhostfolioAiEnabled = checked;
 
     this.dataService
