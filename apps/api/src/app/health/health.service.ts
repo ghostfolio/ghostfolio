@@ -1,7 +1,7 @@
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { DataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/data-enhancer.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
 import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
