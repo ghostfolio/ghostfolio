@@ -41,7 +41,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
@@ -119,7 +119,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
-  private readonly dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef =
     inject<MatDialogRef<GfCreateOrUpdateActivityDialogComponent>>(MatDialogRef);
@@ -145,8 +144,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
     this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
-
-    this.dateAdapter.setLocale(this.locale);
 
     const { currencies } = this.dataService.fetchInfo();
 

@@ -1,5 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_LOCALE, MCP_ENDPOINT } from '@ghostfolio/common/config';
+import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { canApplyFiltersToAccess } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
@@ -48,7 +48,6 @@ import {
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
@@ -108,7 +107,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
   private readonly data =
     inject<CreateOrUpdateAccessDialogParams>(MAT_DIALOG_DATA);
 
-  private readonly dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -188,8 +186,6 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         this.accounts = accounts;
         this.hasExperimentalFeatures = settings.isExperimentalFeatures ?? false;
         this.tags = getTagFilters(tags);
-
-        this.dateAdapter.setLocale(settings.locale ?? DEFAULT_LOCALE);
 
         this.changeDetectorRef.markForCheck();
       });

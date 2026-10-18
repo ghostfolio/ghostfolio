@@ -1,3 +1,4 @@
+import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getCssVariable,
@@ -25,6 +26,7 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DateAdapter } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
@@ -75,6 +77,7 @@ export class GfAppComponent implements OnInit {
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
+  private readonly dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
@@ -230,6 +233,12 @@ export class GfAppComponent implements OnInit {
             !!this.user.subscription?.offer?.durationExtension
           : !!this.info?.subscriptionOffer?.coupon ||
             !!this.info?.subscriptionOffer?.durationExtension;
+
+        if (this.user) {
+          this.dateAdapter.setLocale(
+            this.user.settings.locale ?? DEFAULT_LOCALE
+          );
+        }
 
         this.toggleTheme(this.user?.settings.colorScheme);
 
