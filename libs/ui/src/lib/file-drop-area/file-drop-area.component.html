@@ -1,13 +1,14 @@
 @if (isLoading()) {
-  <div
-    class="align-items-center d-flex drop-area flex-column justify-content-center p-4 text-body-secondary text-center"
-  >
-    <mat-spinner [diameter]="20" />
-    <span>{{ loadingText() }}</span>
+  <div class="aura">
+    <div
+      class="align-items-center d-flex drop-area flex-column justify-content-center rounded text-body-secondary text-center"
+    >
+      <span>{{ loadingText() }}</span>
+    </div>
   </div>
 } @else {
   <button
-    class="drop-area p-4 text-body-secondary text-center"
+    class="drop-area rounded text-body-secondary text-center"
     type="button"
     (click)="onSelectFile()"
     (dragenter)="onDragEnter($event)"

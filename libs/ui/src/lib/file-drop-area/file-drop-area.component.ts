@@ -7,7 +7,6 @@ import {
   input,
   output
 } from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cloudUploadOutline } from 'ionicons/icons';
@@ -20,7 +19,7 @@ import { FileFormat } from './interfaces/interfaces';
     '(document:paste)': 'onPaste($event)',
     class: 'd-flex flex-column'
   },
-  imports: [IonIcon, MatProgressSpinnerModule],
+  imports: [IonIcon],
   selector: 'gf-file-drop-area',
   styleUrls: ['./file-drop-area.component.scss'],
   templateUrl: './file-drop-area.component.html'
