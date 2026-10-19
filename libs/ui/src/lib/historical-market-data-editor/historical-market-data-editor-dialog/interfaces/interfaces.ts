@@ -1,4 +1,3 @@
-import { User } from '@ghostfolio/common/interfaces';
 import { DataSource } from '@ghostfolio/prisma/enums';
 
 export interface HistoricalMarketDataEditorDialogParams {
@@ -7,5 +6,4 @@ export interface HistoricalMarketDataEditorDialogParams {
   dateString: string;
   marketPrice?: number;
   symbol: string;
-  user: User;
 }
