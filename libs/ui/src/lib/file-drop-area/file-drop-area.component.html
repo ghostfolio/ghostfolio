@@ -1,5 +1,5 @@
 @if (isLoading()) {
-  <div class="aura">
+  <div class="aura" role="progressbar" [attr.aria-label]="loadingText()">
     <div
       class="align-items-center d-flex drop-area flex-column justify-content-center rounded text-body-secondary text-center"
     >

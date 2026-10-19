@@ -62,7 +62,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      animation-duration: calc(var(--aura-duration) * 4);
+      animation: none;
     }
   }
 
