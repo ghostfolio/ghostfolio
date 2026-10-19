@@ -1,4 +1,3 @@
-import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getCssVariable,
@@ -41,7 +40,7 @@ import { Chart } from 'chart.js';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
@@ -216,6 +215,20 @@ export class GfAppComponent implements OnInit {
       });
 
     this.userService.stateChanged
+      .pipe(
+        map(({ user }) => {
+          return user?.settings.locale;
+        }),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((locale) => {
+        if (locale) {
+          this.dateAdapter.setLocale(locale);
+        }
+      });
+
+    this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         this.user = state.user;
@@ -233,12 +246,6 @@ export class GfAppComponent implements OnInit {
             !!this.user.subscription?.offer?.durationExtension
           : !!this.info?.subscriptionOffer?.coupon ||
             !!this.info?.subscriptionOffer?.durationExtension;
-
-        if (this.user) {
-          this.dateAdapter.setLocale(
-            this.user.settings.locale ?? DEFAULT_LOCALE
-          );
-        }
 
         this.toggleTheme(this.user?.settings.colorScheme);
 

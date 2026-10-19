@@ -6,10 +6,7 @@ import {
   DEFAULT_LOCALE
 } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
-import {
-  getDateFormatString,
-  getStringOrNull
-} from '@ghostfolio/common/helper';
+import { getStringOrNull } from '@ghostfolio/common/helper';
 import {
   AssetClassSelectorOption,
   LookupItem
@@ -41,7 +38,6 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
@@ -102,7 +98,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
   protected currencies: string[] = [];
   protected currencyOfAssetProfile: string | undefined;
   protected currentMarketPrice: number | null = null;
-  protected defaultDateFormat: string;
   protected defaultLookupItems: LookupItem[] = [];
   protected hasPermissionToCreateOwnTag: boolean;
   protected isLoading = false;
@@ -126,7 +121,6 @@ export class GfCreateOrUpdateActivityDialogComponent {
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService
   );
-  private locale = inject<string>(MAT_DATE_LOCALE);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -142,13 +136,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
       !this.impersonationStorageService.getId() &&
       hasPermission(this.data.user?.permissions, permissions.createOwnTag);
 
-    this.locale = this.data.user.settings.locale ?? DEFAULT_LOCALE;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
     const { currencies } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
-    this.defaultDateFormat = getDateFormatString(this.locale);
 
     this.dataService
       .fetchPortfolioHoldings({
