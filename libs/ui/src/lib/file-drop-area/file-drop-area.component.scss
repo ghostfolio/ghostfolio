@@ -1,0 +1,45 @@
+@use '@angular/material' as mat;
+
+:host {
+  a {
+    color: rgba(var(--palette-primary-500), 1);
+  }
+
+  .drop-area {
+    background-color: rgba(var(--palette-foreground-base), 0.02);
+    border: 1px dashed
+      rgba(
+        var(--palette-foreground-divider),
+        var(--palette-foreground-divider-alpha)
+      );
+    border-radius: 0.25rem;
+
+    &:hover {
+      border-color: rgba(var(--palette-primary-500), 1) !important;
+      color: rgba(var(--palette-primary-500), 1);
+    }
+
+    .cloud-icon {
+      font-size: 2.5rem;
+    }
+
+    .mat-mdc-progress-spinner {
+      @include mat.progress-spinner-overrides(
+        (
+          active-indicator-color: var(--gf-theme-primary-500)
+        )
+      );
+
+      margin: 0.625rem 0;
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  .drop-area {
+    border-color: rgba(
+      var(--palette-foreground-divider-dark),
+      var(--palette-foreground-divider-dark-alpha)
+    );
+  }
+}

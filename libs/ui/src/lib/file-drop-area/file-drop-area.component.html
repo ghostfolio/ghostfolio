@@ -1,0 +1,35 @@
+@if (isLoading()) {
+  <div
+    class="align-items-center d-flex drop-area flex-column justify-content-center p-4 text-body-secondary text-center"
+  >
+    <mat-spinner [diameter]="20" />
+    <span>{{ loadingText() }}</span>
+  </div>
+} @else {
+  <button
+    class="drop-area p-4 text-body-secondary text-center"
+    (click)="onSelectFile()"
+    (dragenter)="onDragEnter($event)"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
+  >
+    <div class="align-items-center d-flex flex-column justify-content-center">
+      <ion-icon class="cloud-icon" name="cloud-upload-outline" />
+      <span i18n>Choose or drop a file here</span>
+    </div>
+  </button>
+}
+<p class="mb-0 mt-3 text-center">
+  <small>
+    <span class="me-1" i18n>The following file formats are supported:</span>
+    @for (fileFormatListPart of fileFormatListParts(); track $index) {
+      @if (fileFormatListPart.sampleUrl) {
+        <a target="_blank" [href]="fileFormatListPart.sampleUrl">{{
+          fileFormatListPart.value
+        }}</a>
+      } @else {
+        <span>{{ fileFormatListPart.value }}</span>
+      }
+    }
+  </small>
+</p>
