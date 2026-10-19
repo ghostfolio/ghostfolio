@@ -26,6 +26,9 @@ const FILE_FORMATS_WITH_GHOSTFOLIO_AI: FileFormat[] = [
 ];
 
 export default {
+  args: {
+    loadingText: 'Processing the file...'
+  },
   component: GfFileDropAreaComponent,
   title: 'File Drop Area'
 } as Meta<GfFileDropAreaComponent>;
@@ -41,8 +44,7 @@ export const Default: Story = {
 export const Loading: Story = {
   args: {
     fileFormats: FILE_FORMATS_WITH_GHOSTFOLIO_AI,
-    isLoading: true,
-    loadingText: 'Ghostfolio AI is processing the file...'
+    isLoading: true
   }
 };
 
