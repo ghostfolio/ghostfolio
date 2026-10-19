@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the activities import where global asset profiles were duplicated as custom asset profiles
 - Fixed the duplicate data point of today in the chart of the holding detail dialog
 
 ## 3.100.0 - 2026-11-15
