@@ -179,6 +179,7 @@ export class GfImportActivitiesDialogComponent {
 
   protected isLoading = false;
   protected isMaxActivitiesOfGhostfolioAiReached = false;
+  protected readonly language = document.documentElement.lang;
   protected readonly maxActivitiesOfGhostfolioAi = AI_MAX_ACTIVITIES;
   protected mode: 'DIVIDEND';
   protected pageIndex = 0;

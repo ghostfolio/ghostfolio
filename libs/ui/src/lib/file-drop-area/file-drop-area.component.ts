@@ -1,4 +1,4 @@
-import { getLocale } from '@ghostfolio/common/helper';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 
 import {
   ChangeDetectionStrategy,
@@ -28,13 +28,8 @@ import { FileFormat } from './interfaces/interfaces';
 export class GfFileDropAreaComponent {
   public readonly fileFormats = input.required<FileFormat[]>();
   public readonly isLoading = input(false);
-  public readonly loadingText = input<string>();
-
-  public readonly locale = input(getLocale(), {
-    transform: (value?: string) => {
-      return value ?? getLocale();
-    }
-  });
+  public readonly language = input(DEFAULT_LANGUAGE_CODE);
+  public readonly loadingText = input.required<string>();
 
   public readonly fileSelected = output<File>();
 
@@ -51,7 +46,7 @@ export class GfFileDropAreaComponent {
   protected readonly fileFormatListParts = computed(() => {
     const fileFormats = this.fileFormats();
 
-    return new Intl.ListFormat(this.locale(), { type: 'disjunction' })
+    return new Intl.ListFormat(this.language(), { type: 'disjunction' })
       .formatToParts(
         fileFormats.map(({ name }) => {
           return name;
@@ -109,12 +104,12 @@ export class GfFileDropAreaComponent {
   }
 
   protected onSelectFile() {
-    const input = document.createElement('input');
+    const fileInputElement = document.createElement('input');
 
-    input.accept = this.accept();
-    input.type = 'file';
+    fileInputElement.accept = this.accept();
+    fileInputElement.type = 'file';
 
-    input.onchange = (event) => {
+    fileInputElement.onchange = (event) => {
       const files = (event.target as HTMLInputElement).files;
 
       if (files) {
@@ -122,7 +117,7 @@ export class GfFileDropAreaComponent {
       }
     };
 
-    input.click();
+    fileInputElement.click();
   }
 
   private emitFirstFile(files: FileList) {

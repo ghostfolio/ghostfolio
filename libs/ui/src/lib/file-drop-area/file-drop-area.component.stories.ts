@@ -34,8 +34,7 @@ type Story = StoryObj<GfFileDropAreaComponent>;
 
 export const Default: Story = {
   args: {
-    fileFormats: [FILE_FORMAT_CSV, FILE_FORMAT_JSON],
-    locale: 'en-US'
+    fileFormats: [FILE_FORMAT_CSV, FILE_FORMAT_JSON]
   }
 };
 
@@ -43,14 +42,12 @@ export const Loading: Story = {
   args: {
     fileFormats: FILE_FORMATS_WITH_GHOSTFOLIO_AI,
     isLoading: true,
-    loadingText: 'Ghostfolio AI is processing the file...',
-    locale: 'en-US'
+    loadingText: 'Ghostfolio AI is processing the file...'
   }
 };
 
 export const WithGhostfolioAi: Story = {
   args: {
-    fileFormats: FILE_FORMATS_WITH_GHOSTFOLIO_AI,
-    locale: 'en-US'
+    fileFormats: FILE_FORMATS_WITH_GHOSTFOLIO_AI
   }
 };

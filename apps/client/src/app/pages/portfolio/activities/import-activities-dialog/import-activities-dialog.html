@@ -77,8 +77,8 @@
             <gf-file-drop-area
               [fileFormats]="fileFormats"
               [isLoading]="isLoading"
+              [language]="language"
               [loadingText]="ghostfolioAiLoadingText"
-              [locale]="data.user.settings.locale"
               (fileSelected)="onFileSelected({ stepper, file: $event })"
             />
             @if (
