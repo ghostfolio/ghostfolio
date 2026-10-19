@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 - Introduced a cooldown of 12 hours for the asset profile and exchange rate gathering on activity creation by retaining the completed jobs
 
+### Fixed
+
+- Fixed the historical currency conversion of derived currencies (e.g. `GBp`) by converting via their root currency
+
 ## 3.88.0 - 2026-10-17
 
 ### Added
