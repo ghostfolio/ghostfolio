@@ -1,4 +1,3 @@
-import { GfFileDropDirective } from '@ghostfolio/client/directives/file-drop/file-drop.directive';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -23,6 +22,10 @@ import { AssetClass } from '@ghostfolio/prisma/enums';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
+import {
+  FileFormat,
+  GfFileDropAreaComponent
+} from '@ghostfolio/ui/file-drop-area';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -67,11 +70,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import {
-  cloudUploadOutline,
-  informationCircleOutline,
-  warningOutline
-} from 'ionicons/icons';
+import { informationCircleOutline, warningOutline } from 'ionicons/icons';
 import { isArray, sortBy } from 'lodash-es';
 import ms from 'ms';
 import { from, switchMap } from 'rxjs';
@@ -90,7 +89,7 @@ import {
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
-    GfFileDropDirective,
+    GfFileDropAreaComponent,
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,
@@ -108,13 +107,48 @@ import {
   templateUrl: 'import-activities-dialog.html'
 })
 export class GfImportActivitiesDialogComponent {
-  private static readonly FILE_EXTENSIONS_OF_GHOSTFOLIO_AI = [
-    'csv',
-    'jpeg',
-    'jpg',
-    'pdf',
-    'png'
+  private static readonly FILE_FORMAT_CSV: FileFormat = {
+    extensions: ['csv'],
+    name: 'CSV',
+    sampleUrl:
+      'https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.csv'
+  };
+
+  private static readonly FILE_FORMAT_JSON: FileFormat = {
+    extensions: ['json'],
+    name: 'JSON',
+    sampleUrl:
+      'https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.json'
+  };
+
+  private static readonly FILE_FORMATS: FileFormat[] = [
+    GfImportActivitiesDialogComponent.FILE_FORMAT_CSV,
+    GfImportActivitiesDialogComponent.FILE_FORMAT_JSON
   ];
+
+  private static readonly FILE_FORMATS_OF_GHOSTFOLIO_AI: FileFormat[] = [
+    GfImportActivitiesDialogComponent.FILE_FORMAT_CSV,
+    { extensions: ['jpeg', 'jpg'], name: 'JPG' },
+    { extensions: ['pdf'], name: 'PDF' },
+    { extensions: ['png'], name: 'PNG' }
+  ];
+
+  private static readonly FILE_EXTENSIONS_OF_GHOSTFOLIO_AI =
+    GfImportActivitiesDialogComponent.FILE_FORMATS_OF_GHOSTFOLIO_AI.flatMap(
+      ({ extensions }) => {
+        return extensions;
+      }
+    );
+
+  private static readonly FILE_FORMATS_WITH_GHOSTFOLIO_AI = sortBy(
+    [
+      ...GfImportActivitiesDialogComponent.FILE_FORMATS_OF_GHOSTFOLIO_AI,
+      GfImportActivitiesDialogComponent.FILE_FORMAT_JSON
+    ],
+    ({ name }) => {
+      return name;
+    }
+  );
 
   protected readonly assetProfileForm = new FormGroup({
     assetProfileIdentifier: new FormControl<PortfolioPosition | null>(null, {
@@ -127,6 +161,7 @@ export class GfImportActivitiesDialogComponent {
   protected details: any[] = [];
   protected dialogTitle = $localize`Import Activities`;
   protected errorMessages: string[] = [];
+  protected readonly ghostfolioAiLoadingText = $localize`Ghostfolio AI is processing the file...`;
   protected readonly ghostfolioAiTooltip = $localize`The content of your file will be processed by third-party AI providers. Please remove any personal data before uploading.`;
 
   protected readonly hasPermissionToEnableGhostfolioAi = hasPermission(
@@ -144,6 +179,7 @@ export class GfImportActivitiesDialogComponent {
 
   protected isLoading = false;
   protected isMaxActivitiesOfGhostfolioAiReached = false;
+  protected readonly language = document.documentElement.lang;
   protected readonly maxActivitiesOfGhostfolioAi = AI_MAX_ACTIVITIES;
   protected mode: 'DIVIDEND';
   protected pageIndex = 0;
@@ -178,7 +214,13 @@ export class GfImportActivitiesDialogComponent {
   private readonly userService = inject(UserService);
 
   public constructor() {
-    addIcons({ cloudUploadOutline, informationCircleOutline, warningOutline });
+    addIcons({ informationCircleOutline, warningOutline });
+  }
+
+  protected get fileFormats() {
+    return this.isGhostfolioAiEnabled
+      ? GfImportActivitiesDialogComponent.FILE_FORMATS_WITH_GHOSTFOLIO_AI
+      : GfImportActivitiesDialogComponent.FILE_FORMATS;
   }
 
   public ngOnInit() {
@@ -271,18 +313,18 @@ export class GfImportActivitiesDialogComponent {
     }
   }
 
-  protected onFilesDropped({
-    files,
+  protected onFileSelected({
+    file,
     stepper
   }: {
-    files: FileList;
+    file: File;
     stepper: MatStepper;
   }) {
-    if (files.length === 0 || this.importStep !== ImportStep.UPLOAD_FILE) {
+    if (this.importStep !== ImportStep.UPLOAD_FILE) {
       return;
     }
 
-    this.handleFile({ stepper, file: files[0] });
+    this.handleFile({ file, stepper });
   }
 
   protected onGhostfolioAiChange({ checked }: MatCheckboxChange) {
@@ -346,33 +388,6 @@ export class GfImportActivitiesDialogComponent {
     this.assetProfileForm.controls.assetProfileIdentifier.enable();
 
     aStepper.reset();
-  }
-
-  protected onSelectFile(stepper: MatStepper) {
-    const input = document.createElement('input');
-
-    input.accept = this.isGhostfolioAiEnabled
-      ? [
-          'application/JSON',
-          ...GfImportActivitiesDialogComponent.FILE_EXTENSIONS_OF_GHOSTFOLIO_AI.map(
-            (fileExtension) => {
-              return `.${fileExtension}`;
-            }
-          )
-        ].join(', ')
-      : 'application/JSON, .csv';
-    input.type = 'file';
-
-    input.onchange = (event) => {
-      // Getting the file reference
-      const file = (event.target as HTMLInputElement).files?.[0];
-
-      if (file) {
-        this.handleFile({ file, stepper });
-      }
-    };
-
-    input.click();
   }
 
   protected updateSelection(activities: Activity[]) {
