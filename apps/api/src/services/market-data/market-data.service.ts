@@ -12,6 +12,7 @@ import {
   MarketDataState,
   Prisma
 } from '@prisma/client';
+import { groupBy } from 'lodash-es';
 
 @Injectable()
 export class MarketDataService {
@@ -95,12 +96,7 @@ export class MarketDataService {
       ],
       where: {
         date: dateQuery,
-        OR: assetProfileIdentifiers.map(({ dataSource, symbol }) => {
-          return {
-            dataSource,
-            symbol
-          };
-        })
+        OR: this.getAssetProfileIdentifiersCondition(assetProfileIdentifiers)
       }
     });
   }
@@ -115,12 +111,7 @@ export class MarketDataService {
     return this.prismaService.marketData.count({
       where: {
         date: dateQuery,
-        OR: assetProfileIdentifiers.map(({ dataSource, symbol }) => {
-          return {
-            dataSource,
-            symbol
-          };
-        })
+        OR: this.getAssetProfileIdentifiersCondition(assetProfileIdentifiers)
       }
     });
   }
@@ -259,5 +250,26 @@ export class MarketDataService {
     );
 
     return this.prismaService.$transaction(upsertPromises);
+  }
+
+  // One condition per data source with all its symbols, since a condition per
+  // asset profile identifier is slow to evaluate for many asset profiles
+  private getAssetProfileIdentifiersCondition(
+    aAssetProfileIdentifiers: AssetProfileIdentifier[]
+  ): Prisma.MarketDataWhereInput[] {
+    return Object.entries(
+      groupBy(aAssetProfileIdentifiers, ({ dataSource }) => {
+        return dataSource;
+      })
+    ).map(([dataSource, assetProfileIdentifiers]) => {
+      return {
+        dataSource: dataSource as DataSource,
+        symbol: {
+          in: assetProfileIdentifiers.map(({ symbol }) => {
+            return symbol;
+          })
+        }
+      };
+    });
   }
 }
