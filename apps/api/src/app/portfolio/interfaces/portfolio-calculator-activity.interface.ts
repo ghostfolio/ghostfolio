@@ -12,5 +12,7 @@ export interface PortfolioCalculatorActivity extends Pick<
   fee: Big;
   feeInBaseCurrency: Big;
   quantity: Big;
+  tax: Big;
+  taxInBaseCurrency: Big;
   unitPrice: Big;
 }

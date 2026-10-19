@@ -268,7 +268,7 @@ describe('AiService', () => {
       );
     });
 
-    it('Tells the vision model to add the fees of a buy or a sell to its row', async () => {
+    it('Tells the vision model to keep fees and taxes separate', async () => {
       await aiService.getActivityRowsFromFile({
         file: {
           buffer: Buffer.from('%PDF-1.7'),
@@ -280,7 +280,10 @@ describe('AiService', () => {
       const { instructions } = jest.mocked(generateText).mock.calls[0][0];
 
       expect(instructions).toContain(
-        'Add every fee, commission and tax of a buy or a sell, for example a commission, a stamp duty or an exchange fee, to the fee of its row.'
+        'Add every fee and commission of a buy or a sell, for example a commission or an exchange fee, to the fee of its row.'
+      );
+      expect(instructions).toContain(
+        'Give every tax or withholding tax of an activity, for example a stamp duty or a dividend withholding tax, separately as tax. Do not include it in the fee and do not give it as a separate row.'
       );
     });
 
@@ -369,6 +372,7 @@ describe('AiService', () => {
           date: '2026-01-15',
           fee: 1,
           quantity: 10,
+          tax: 0,
           symbol: 'AAPL',
           type: ActivityType.BUY,
           unitPrice: 230
@@ -414,6 +418,7 @@ describe('AiService', () => {
         date: '2026-01-15',
         fee: 5,
         quantity: 0,
+        tax: 0,
         symbol: 'Custody fee',
         type: ActivityType.FEE,
         unitPrice: 0
@@ -589,6 +594,7 @@ describe('AiService', () => {
             fee: row.fee,
             quantity: row.quantity,
             symbol: 'AAPL',
+            tax: row.tax,
             type: ActivityType.BUY,
             unitPrice: row.unitPrice
           }
@@ -620,7 +626,7 @@ describe('AiService', () => {
       expect(activities[0].currency).toBe('CHF');
     });
 
-    it('Gives the absolute values of a negative fee, quantity and unit price', async () => {
+    it('Gives the absolute values of a negative fee, tax, quantity and unit price', async () => {
       mockRowMatches({
         assets: [
           { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
@@ -636,6 +642,7 @@ describe('AiService', () => {
             accountName: null,
             fee: -1,
             quantity: -10,
+            tax: -2,
             type: ActivityType.SELL,
             unitPrice: -230
           })
@@ -645,6 +652,7 @@ describe('AiService', () => {
       expect(activities[0]).toMatchObject({
         fee: 1,
         quantity: 10,
+        tax: 2,
         unitPrice: 230
       });
     });

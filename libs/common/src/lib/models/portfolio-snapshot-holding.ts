@@ -54,6 +54,14 @@ export class PortfolioSnapshotHolding {
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
+  tax: Big;
+
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
+  taxInBaseCurrency: Big;
+
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
   grossPerformance: Big;
 
   @Transform(transformToBig, { toClassOnly: true })

@@ -175,6 +175,9 @@ export class ImportService {
             feeInAssetProfileCurrency: 0,
             feeInBaseCurrency: 0,
             id: assetProfile.id,
+            tax: 0,
+            taxInAssetProfileCurrency: 0,
+            taxInBaseCurrency: 0,
             symbolProfileId: assetProfile.id,
             type: 'DIVIDEND',
             unitPrice: marketPrice,
@@ -867,6 +870,7 @@ export class ImportService {
       const error = activity.error;
       const fee = activity.fee;
       const quantity = activity.quantity;
+      const tax = activity.tax ?? 0;
       const tagIds = activity.tagIds ?? [];
       const type = activity.type;
       const unitPrice = activity.unitPrice;
@@ -910,6 +914,7 @@ export class ImportService {
           date,
           fee,
           quantity,
+          tax,
           type,
           unitPrice,
           account: validatedAccount,
@@ -942,6 +947,7 @@ export class ImportService {
           date,
           fee,
           quantity,
+          tax,
           type,
           unitPrice,
           accountId: validatedAccount?.id,
@@ -1060,10 +1066,12 @@ export class ImportService {
         quantity,
         symbol,
         tags,
+        tax: taxInput,
         type,
         unitPrice
       }) => {
         const date = parseISO(dateString);
+        const tax = taxInput ?? 0;
 
         const isDuplicate = existingActivities.some((activity) => {
           return (
@@ -1073,6 +1081,7 @@ export class ImportService {
             activity.assetProfile.dataSource === dataSource &&
             isSameSecond(activity.date, date) &&
             activity.fee === fee &&
+            (activity.tax ?? 0) === tax &&
             activity.quantity === quantity &&
             activity.assetProfile.symbol === symbol &&
             activity.type === type &&
@@ -1092,6 +1101,7 @@ export class ImportService {
           error,
           fee,
           quantity,
+          tax,
           type,
           unitPrice,
           assetProfile: {

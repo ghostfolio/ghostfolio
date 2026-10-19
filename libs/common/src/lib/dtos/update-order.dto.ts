@@ -87,6 +87,11 @@ export class UpdateOrderDto {
   @IsString({ each: true })
   tags?: string[];
 
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  tax?: number;
+
   @IsString()
   type: Type;
 

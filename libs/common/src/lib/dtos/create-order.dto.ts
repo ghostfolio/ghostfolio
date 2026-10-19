@@ -86,6 +86,11 @@ export class CreateOrderDto {
   @IsString({ each: true })
   tags?: string[];
 
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  tax?: number;
+
   @IsEnum(Type)
   type: Type;
 

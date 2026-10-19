@@ -128,6 +128,7 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
             date: new Date(),
             fee: 0,
             id: null,
+            tax: 0,
             type: activity?.type ?? 'BUY',
             unitPrice: null
           },

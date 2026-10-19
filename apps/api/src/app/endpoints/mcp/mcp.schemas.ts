@@ -149,7 +149,7 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           .string()
           .refine(isValidCurrencyCode)
           .describe(
-            'The currency of the fee and of the unit price, as an ISO 4217 code in upper case'
+            'The currency of the fee, tax and unit price, as an ISO 4217 code in upper case'
           ),
         dataSource: DATA_SOURCE_PARAMETER.optional(),
         date: z
@@ -160,6 +160,7 @@ export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
           ),
         fee: z.number().min(0).describe('The fee of the activity'),
         quantity: z.number().min(0).describe('The quantity of the activity'),
+        tax: z.number().min(0).default(0).describe('The tax of the activity'),
         symbol: SYMBOL_PARAMETER,
         type: z.enum(ActivityType).describe('The type of the activity'),
         unitPrice: z.number().min(0).describe('The unit price of the activity')

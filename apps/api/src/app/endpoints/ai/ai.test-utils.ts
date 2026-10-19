@@ -14,6 +14,7 @@ export function createActivityRow(
     name: 'Apple Inc.',
     quantity: 10,
     symbol: 'AAPL',
+    tax: 0,
     type: ActivityType.BUY,
     unitPrice: 230,
     ...overrides

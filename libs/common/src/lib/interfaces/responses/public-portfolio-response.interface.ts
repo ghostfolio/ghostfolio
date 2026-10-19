@@ -20,7 +20,7 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   >[];
   latestActivities: (Pick<
     Order,
-    'currency' | 'date' | 'fee' | 'quantity' | 'type' | 'unitPrice'
+    'currency' | 'date' | 'fee' | 'quantity' | 'tax' | 'type' | 'unitPrice'
   > & {
     assetProfile: Pick<
       EnhancedAssetProfile,

@@ -5,6 +5,7 @@ import { PortfolioCalculatorActivity } from './portfolio-calculator-activity.int
 export interface PortfolioCalculatorActivityItem extends PortfolioCalculatorActivity {
   feeInBaseCurrencyWithCurrencyEffect?: Big;
   itemType?: 'end' | 'start';
+  taxInBaseCurrencyWithCurrencyEffect?: Big;
   unitPriceFromMarketData?: Big;
   unitPriceInBaseCurrency?: Big;
   unitPriceInBaseCurrencyWithCurrencyEffect?: Big;

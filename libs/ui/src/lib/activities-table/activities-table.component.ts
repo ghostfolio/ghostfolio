@@ -196,6 +196,7 @@ export class GfActivitiesTableComponent<
       'quantity',
       'unitPrice',
       'fee',
+      'tax',
       'value',
       'currency',
       'valueInBaseCurrency',

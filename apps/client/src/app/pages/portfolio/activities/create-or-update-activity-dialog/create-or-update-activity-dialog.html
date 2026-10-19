@@ -247,6 +247,26 @@
         </div>
       </mat-form-field>
     </div>
+    <div
+      class="mb-3"
+      [class.d-none]="
+        activityForm.get('type')?.value === 'FEE' ||
+        activityForm.get('type')?.value === 'LIABILITY' ||
+        activityForm.get('type')?.value === 'VALUABLE'
+      "
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Tax</mat-label>
+        <input formControlName="tax" matInput type="number" />
+        <div
+          class="ms-2"
+          matTextSuffix
+          [class.d-none]="!activityForm.get('currency')?.value"
+        >
+          {{ activityForm.get('currencyOfUnitPrice')?.value }}
+        </div>
+      </mat-form-field>
+    </div>
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Note</mat-label>

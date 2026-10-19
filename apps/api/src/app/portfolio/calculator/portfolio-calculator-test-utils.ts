@@ -21,6 +21,9 @@ export const activityDummyData = {
   feeInAssetProfileCurrency: undefined,
   feeInBaseCurrency: undefined,
   id: undefined,
+  tax: undefined,
+  taxInAssetProfileCurrency: undefined,
+  taxInBaseCurrency: undefined,
   symbolProfileId: undefined,
   unitPrice: undefined,
   unitPriceInAssetProfileCurrency: undefined,
@@ -103,6 +106,8 @@ export function loadActivitiesFromExportFile(fileName: string): {
       date: parseDate(activity.date),
       feeInAssetProfileCurrency: activity.fee,
       feeInBaseCurrency: activity.fee,
+      taxInAssetProfileCurrency: activity.tax ?? 0,
+      taxInBaseCurrency: activity.tax ?? 0,
       tags: [],
       unitPriceInAssetProfileCurrency: activity.unitPrice
     };

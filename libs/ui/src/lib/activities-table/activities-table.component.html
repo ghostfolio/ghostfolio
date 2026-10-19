@@ -305,6 +305,31 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="tax">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        mat-header-cell
+        mat-sort-header
+      >
+        <ng-container i18n>Tax</ng-container>
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [isLoading]="isLoading()"
+            [locale]="locale"
+            [value]="element.tax"
+          />
+        </div>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="value">
       <th
         *matHeaderCellDef

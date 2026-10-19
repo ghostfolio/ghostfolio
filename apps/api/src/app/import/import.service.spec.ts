@@ -33,6 +33,7 @@ describe('ImportService', () => {
   let addSymbolProfile: jest.Mock;
   let createActivity: jest.Mock;
   let gatherSymbols: jest.Mock;
+  let getActivities: jest.Mock;
   let importService: ImportService;
   let updateManyMarketData: jest.Mock;
 
@@ -46,6 +47,7 @@ describe('ImportService', () => {
     addSymbolProfile = jest.fn();
     createActivity = jest.fn();
     gatherSymbols = jest.fn();
+    getActivities = jest.fn().mockResolvedValue({ activities: [], count: 0 });
     updateManyMarketData = jest.fn();
 
     const validateActivities = jest.fn(
@@ -73,7 +75,7 @@ describe('ImportService', () => {
       } as unknown as AccountService,
       {
         createActivity,
-        getActivities: jest.fn().mockResolvedValue({ activities: [], count: 0 })
+        getActivities
       } as unknown as ActivitiesService,
       null,
       {
@@ -481,6 +483,108 @@ describe('ImportService', () => {
       ]);
     });
 
+    it('propagates tax when importing an activity', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          {
+            ...createActivityDto({
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL',
+              type: 'BUY'
+            }),
+            tax: 7
+          }
+        ]
+      });
+
+      expect(createActivity).toHaveBeenCalledTimes(1);
+      expect(createActivity.mock.calls[0][0]).toMatchObject({
+        fee: 0,
+        quantity: 1,
+        tax: 7,
+        type: 'BUY',
+        unitPrice: 100
+      });
+    });
+
+    it('includes tax when detecting duplicate activities', async () => {
+      getActivities.mockResolvedValue({
+        activities: [
+          {
+            assetProfile: {
+              currency: 'USD',
+              dataSource: DataSource.YAHOO,
+              symbol: 'AAPL'
+            },
+            comment: undefined,
+            currency: 'USD',
+            date: parseISO('2024-01-01T00:00:00.000Z'),
+            fee: 0,
+            quantity: 1,
+            tax: 7,
+            type: 'BUY',
+            unitPrice: 100
+          } as unknown as Activity,
+          {
+            assetProfile: {
+              currency: 'USD',
+              dataSource: DataSource.YAHOO,
+              symbol: 'AAPL'
+            },
+            comment: undefined,
+            currency: 'USD',
+            date: parseISO('2024-01-02T00:00:00.000Z'),
+            fee: 0,
+            quantity: 1,
+            type: 'BUY',
+            unitPrice: 100
+          } as unknown as Activity
+        ],
+        count: 2
+      });
+
+      const activities = await importActivities({
+        activitiesDto: [
+          {
+            ...createActivityDto({
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL',
+              type: 'BUY'
+            }),
+            tax: 8
+          },
+          {
+            ...createActivityDto({
+              dataSource: DataSource.YAHOO,
+              date: '2024-01-01T00:00:00.000Z',
+              symbol: 'AAPL',
+              type: 'BUY'
+            }),
+            tax: 7
+          },
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-02T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          })
+        ],
+        isDryRun: true
+      });
+
+      expect(activities[0].error).toBeUndefined();
+      expect(activities[1].error).toEqual({ code: 'IS_DUPLICATE' });
+      expect(activities[2].error).toEqual({ code: 'IS_DUPLICATE' });
+
+      expect(activities.map(({ tax }) => tax)).toEqual([8, 7, 0]);
+    });
+
     it('keeps the asset profiles of the activities in a dry run', async () => {
       const activities = await importActivities({
         activitiesDto: [
@@ -562,6 +666,7 @@ function createActivityDto({
     currency: 'USD',
     fee: 0,
     quantity: 1,
+    tax: 0,
     unitPrice: 100
   } as CreateOrderDto;
 }

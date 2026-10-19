@@ -318,7 +318,7 @@ export class ActivitiesService {
         amount = amount.mul(-1);
       }
 
-      amount = amount.minus(data.fee);
+      amount = amount.minus(data.fee).minus(data.tax ?? 0);
 
       await this.accountService.updateAccountBalance({
         accountId,
@@ -548,6 +548,9 @@ export class ActivitiesService {
           feeInAssetProfileCurrency: 0,
           feeInBaseCurrency: 0,
           id: balanceItem.id,
+          tax: 0,
+          taxInAssetProfileCurrency: 0,
+          taxInBaseCurrency: 0,
           quantity: 1,
           symbolProfileId: account.currency,
           type: ActivityType.BUY,
@@ -726,6 +729,8 @@ export class ActivitiesService {
         const [
           feeInAssetProfileCurrency = 0,
           feeInBaseCurrency = 0,
+          taxInAssetProfileCurrency = 0,
+          taxInBaseCurrency = 0,
           unitPriceInAssetProfileCurrency = 0,
           valueInBaseCurrency = 0
         ] = await Promise.all([
@@ -737,6 +742,18 @@ export class ActivitiesService {
           ),
           this.exchangeRateDataService.toCurrencyAtDate(
             order.fee,
+            order.currency ?? order.SymbolProfile.currency,
+            userCurrency,
+            order.date
+          ),
+          this.exchangeRateDataService.toCurrencyAtDate(
+            order.tax,
+            order.currency ?? order.SymbolProfile.currency,
+            order.SymbolProfile.currency,
+            order.date
+          ),
+          this.exchangeRateDataService.toCurrencyAtDate(
+            order.tax,
             order.currency ?? order.SymbolProfile.currency,
             userCurrency,
             order.date
@@ -760,6 +777,8 @@ export class ActivitiesService {
           assetProfile,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
+          taxInAssetProfileCurrency,
+          taxInBaseCurrency,
           unitPriceInAssetProfileCurrency,
           value,
           valueInBaseCurrency

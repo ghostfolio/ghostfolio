@@ -9,6 +9,8 @@ export interface HoldingValuationItem extends Pick<
   fees: Big;
   feesWithCurrencyEffect: Big;
   grossPerformance: Big;
+  taxes: Big;
+  taxesWithCurrencyEffect: Big;
   grossPerformanceWithCurrencyEffect: Big;
   investment: Big;
   investmentBeforeTransaction: Big;
