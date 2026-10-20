@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the usability of the activities page by eliminating the reload on canceling the import activities dialog
 - Improved the layout of the user account settings on mobile
+- Improved the usability of the activities page by eliminating the reload on canceling the import activities dialog
 - Improved the accessibility of the _Buy me a coffee_ button on the about page
 - Improved the accessibility of the entity logo component
 - Extracted the file drop area of the import activities dialog to a reusable component
