@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extracted the file drop area of the import activities dialog to a reusable component
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 - Introduced a cooldown of 12 hours for the asset profile and exchange rate gathering on activity creation by retaining the completed jobs
+- Deprecated the `api/v1/platform` endpoints in favor of the `api/v1/platforms` endpoints
 
 ### Fixed
 

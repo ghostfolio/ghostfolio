@@ -1,6 +1,7 @@
 import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { PlatformService } from '@ghostfolio/api/services/platform/platform.service';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
 
@@ -19,8 +20,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Platform } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { PlatformService } from './platform.service';
-
+/** @deprecated */
 @AllowDuringImpersonation()
 @Controller('platform')
 export class PlatformController {

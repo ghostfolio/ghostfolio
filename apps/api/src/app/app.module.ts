@@ -63,7 +63,6 @@ import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { LogoModule } from './logo/logo.module';
-import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
@@ -130,7 +129,6 @@ import { UserModule } from './user/user.module';
     LogoModule,
     MarketDataModule,
     McpModule,
-    PlatformModule,
     PlatformsModule,
     PortfolioModule,
     PortfolioSnapshotQueueModule,

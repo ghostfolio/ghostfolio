@@ -3,6 +3,7 @@ import {
   CreateAccountBalanceDto,
   CreateAccountDto,
   CreateOrderDto,
+  CreatePlatformDto,
   CreateTagDto,
   CreateUserDto,
   CreateWatchlistItemDto,
@@ -13,6 +14,7 @@ import {
   UpdateBulkMarketDataDto,
   UpdateOrderDto,
   UpdateOwnAccessTokenDto,
+  UpdatePlatformDto,
   UpdatePropertyDto,
   UpdateTagDto,
   UpdateUserSettingDto
@@ -46,6 +48,7 @@ import {
   LookupResponse,
   MarketDataOfMarketsResponse,
   OAuthResponse,
+  PlatformResponse,
   PlatformsResponse,
   PortfolioDetails,
   PortfolioDividendsResponse,
@@ -364,6 +367,10 @@ export class DataService {
 
   public deleteOwnUser(aData: DeleteOwnUserDto) {
     return this.http.delete<UserModel>(`/api/v1/user`, { body: aData });
+  }
+
+  public deletePlatform(aId: string) {
+    return this.http.delete<void>(`/api/v1/platforms/${aId}`);
   }
 
   public deleteTag(aId: string) {
@@ -914,6 +921,10 @@ export class DataService {
     return this.http.post<MarketData>(url, marketData);
   }
 
+  public postPlatform(aPlatform: CreatePlatformDto) {
+    return this.http.post<PlatformResponse>(`/api/v1/platforms`, aPlatform);
+  }
+
   public postTag(aTag: CreateTagDto) {
     return this.http.post<Tag>(`/api/v1/tags`, aTag);
   }
@@ -950,6 +961,13 @@ export class DataService {
     return this.http.put<void>(
       `/api/v1/portfolio/holding/${dataSource}/${encodeURIComponent(symbol)}/tags`,
       { tags }
+    );
+  }
+
+  public putPlatform(aPlatform: UpdatePlatformDto) {
+    return this.http.put<PlatformResponse>(
+      `/api/v1/platforms/${aPlatform.id}`,
+      aPlatform
     );
   }
 
