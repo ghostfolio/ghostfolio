@@ -30,7 +30,11 @@ export class AssetController {
     return {
       marketData,
       splits,
-      assetProfile: pick(assetProfile, ['dataSource', 'name', 'symbol'])
+      assetProfile: {
+        ...pick(assetProfile, ['dataSource', 'name', 'symbol']),
+        // An index has no asset class and its value has no currency
+        currency: assetProfile.assetClass ? assetProfile.currency : undefined
+      }
     };
   }
 }
