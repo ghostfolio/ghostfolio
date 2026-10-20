@@ -18,7 +18,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 @AllowDuringImpersonation()
-@Controller(['auth-devices', /** @deprecated */ 'auth-device'])
+@Controller([
+  'auth-devices',
+  /** @deprecated */
+  'auth-device'
+])
 export class AuthDevicesController {
   public constructor(
     private readonly authDeviceService: AuthDeviceService,

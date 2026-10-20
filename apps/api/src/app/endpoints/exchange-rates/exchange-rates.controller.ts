@@ -14,7 +14,11 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ExchangeRatesService } from './exchange-rates.service';
 
-@Controller(['exchange-rates', /** @deprecated */ 'exchange-rate'])
+@Controller([
+  'exchange-rates',
+  /** @deprecated */
+  'exchange-rate'
+])
 export class ExchangeRatesController {
   public constructor(
     private readonly exchangeRatesService: ExchangeRatesService
