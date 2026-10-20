@@ -58,6 +58,20 @@ export function buildApiPath({
   return `/api/v${tool.version ?? 1}${path}${queryString ? `?${queryString}` : ''}`;
 }
 
+/**
+ * A date without a time is read as midnight UTC, which the web client shows as
+ * the day before in every time zone west of UTC (the activity of 2026-10-20
+ * appeared as 2026-10-19 in Winnipeg). Noon UTC is the same calendar day from
+ * UTC-12 to UTC+11.
+ */
+export function normalizeActivityDate(date: unknown) {
+  if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date.trim())) {
+    return `${date.trim()}T12:00:00.000Z`;
+  }
+
+  return date;
+}
+
 export function buildApiBody({
   args,
   tool
@@ -68,9 +82,12 @@ export function buildApiBody({
   const pathParams = new Set(tool.pathParams ?? []);
 
   return Object.fromEntries(
-    Object.entries(args).filter(
-      ([name, value]) => !pathParams.has(name) && value !== undefined
-    )
+    Object.entries(args)
+      .filter(([name, value]) => !pathParams.has(name) && value !== undefined)
+      .map(([name, value]) => [
+        name,
+        name === 'date' ? normalizeActivityDate(value) : value
+      ])
   );
 }
 

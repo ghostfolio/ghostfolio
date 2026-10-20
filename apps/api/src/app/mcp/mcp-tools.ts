@@ -239,7 +239,11 @@ export const MCP_TOOLS: McpToolDefinition[] = [
         .describe(
           'Data source from lookup_symbol, e.g. YAHOO. Optional only for FEE, INTEREST and LIABILITY'
         ),
-      date: z.string().describe('ISO 8601 date of the trade, e.g. 2026-10-14'),
+      date: z
+        .string()
+        .describe(
+          'Date of the trade. A plain date such as 2026-10-14 is recorded at noon UTC, so it shows as that day in every time zone. With a time, give the offset, e.g. 2026-10-14T11:13:58-04:00'
+        ),
       fee: z.number().min(0).default(0).describe('Commission, 0 if none'),
       quantity: z.number().min(0),
       symbol: z.string().describe('Symbol from lookup_symbol, e.g. XEF.TO'),

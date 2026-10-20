@@ -6,7 +6,8 @@ import { AddressInfo } from 'node:net';
 import {
   assertRequestAllowed,
   buildApiBody,
-  buildApiPath
+  buildApiPath,
+  normalizeActivityDate
 } from './mcp-api-client';
 import { McpAuthService } from './mcp-auth.service';
 import { MCP_TOOLS } from './mcp-tools';
@@ -190,7 +191,11 @@ describe('McpService', () => {
     expect(received[0].url).toBe('/api/v1/activities');
     expect(received[0].headers.authorization).toBe('Bearer internal-jwt');
     expect(received[0].headers['content-type']).toBe('application/json');
-    expect(JSON.parse(body)).toEqual(args);
+    // A date without a time goes out at noon UTC, see normalizeActivityDate
+    expect(JSON.parse(body)).toEqual({
+      ...args,
+      date: '2026-10-14T12:00:00.000Z'
+    });
   });
 
   it('defaults the fee to 0 and rejects an invalid transaction before calling the API', async () => {
@@ -341,6 +346,63 @@ describe('write allowlist', () => {
       '/api/v1/activities'
     );
     expect(buildApiBody({ args, tool: tool('create_activity') })).toEqual(args);
+  });
+});
+
+describe('activity date', () => {
+  const tool = MCP_TOOLS.find(({ name }) => name === 'create_activity');
+
+  it('records a date without a time at noon UTC', () => {
+    expect(normalizeActivityDate('2026-10-20')).toBe(
+      '2026-10-20T12:00:00.000Z'
+    );
+    expect(normalizeActivityDate(' 2026-10-20 ')).toBe(
+      '2026-10-20T12:00:00.000Z'
+    );
+  });
+
+  it('keeps a date with a time and offset as it is', () => {
+    expect(normalizeActivityDate('2026-10-20T11:13:58-04:00')).toBe(
+      '2026-10-20T11:13:58-04:00'
+    );
+    expect(normalizeActivityDate('2026-10-20T00:00:00Z')).toBe(
+      '2026-10-20T00:00:00Z'
+    );
+  });
+
+  it('leaves anything else to the validation of the API', () => {
+    expect(normalizeActivityDate('tomorrow')).toBe('tomorrow');
+    expect(normalizeActivityDate(undefined)).toBeUndefined();
+  });
+
+  it('normalizes the date in the body of create_activity', () => {
+    const body = buildApiBody({
+      args: { date: '2026-10-20', symbol: 'XUS.TO' },
+      tool
+    });
+
+    expect(body).toEqual({
+      date: '2026-10-20T12:00:00.000Z',
+      symbol: 'XUS.TO'
+    });
+  });
+
+  it.each([
+    ['Pacific/Pago_Pago', -11],
+    ['America/Winnipeg', -5],
+    ['America/Toronto', -4],
+    ['UTC', 0],
+    ['Europe/Berlin', 2],
+    ['Asia/Shanghai', 8],
+    ['Pacific/Noumea', 11]
+  ])('shows the recorded day in %s as the day that was given', (zone) => {
+    const stored = new Date(normalizeActivityDate('2026-10-20') as string);
+    const shown = new Intl.DateTimeFormat('en-CA', {
+      timeZone: zone
+    }).format(stored);
+
+    // Noon UTC is the same calendar day from UTC-12 to UTC+11
+    expect(shown).toBe('2026-10-20');
   });
 });
 

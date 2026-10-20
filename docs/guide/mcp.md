@@ -77,6 +77,11 @@ description tells the client to confirm with you first and to check `list_activi
 for duplicates. The call is not idempotent, so a repeated call records the transaction
 twice. A wrong entry can only be corrected in the Ghostfolio UI.
 
+A date without a time (`2026-10-20`) is recorded at noon UTC, so the web client shows
+the same day in every time zone from UTC-12 to UTC+11. Midnight UTC would show as the
+day before west of UTC. With a time, the client should send the offset, for example
+`2026-10-20T11:13:58-04:00`.
+
 ### What is never returned
 
 Webhook URLs are reduced to their host (`discord.com/***`) and credential fields are
