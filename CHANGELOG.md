@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deprecated the `api/v1/auth-device` endpoint in favor of the `api/v1/auth-devices` endpoint
+- Deprecated the `api/v1/exchange-rate` endpoint in favor of the `api/v1/exchange-rates` endpoint
 - Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.0.0` to `2.3.1`
 - Upgraded `@modelcontextprotocol/node` from version `2.0.0` to `2.1.1`
 - Upgraded `@rekog/mcp-nest` from version `2.0.7` to `2.0.8`
