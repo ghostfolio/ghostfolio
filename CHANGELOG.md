@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the layout of the user account settings on mobile
 - Improved the usability of the activities page by eliminating the reload on canceling the import activities dialog
 - Improved the loading state of the file drop area component
 - Improved the accessibility of the _Buy me a coffee_ button on the about page
