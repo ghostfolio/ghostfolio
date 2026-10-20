@@ -7,16 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a _Storybook_ story for the file drop area component
+
 ### Changed
 
 - Improved the usability of the activities page by eliminating the reload on canceling the import activities dialog
 - Improved the accessibility of the _Buy me a coffee_ button on the about page
 - Improved the accessibility of the entity logo component
+- Extracted the file drop area of the import activities dialog to a reusable component
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 - Introduced a cooldown of 12 hours for the asset profile and exchange rate gathering on activity creation by retaining the completed jobs
 
 ### Fixed
 
+- Fixed the missing localization of the date picker in the _FIRE_ calculator
+- Fixed the missing localization of the date picker in the asset profile details dialog of the admin control panel
 - Fixed the missing tooltip of the client of the last request in the users table of the admin control panel
 
 ## 3.88.0 - 2026-10-17

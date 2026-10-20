@@ -74,55 +74,13 @@
           </form>
         } @else {
           <div class="d-flex flex-column justify-content-center">
-            @if (isLoading) {
-              <div
-                class="align-items-center d-flex drop-area flex-column justify-content-center p-4 text-body-secondary text-center"
-              >
-                <mat-spinner [diameter]="20" />
-                <span i18n>Ghostfolio AI is processing the file...</span>
-              </div>
-            } @else {
-              <button
-                class="drop-area p-4 text-body-secondary text-center"
-                gfFileDrop
-                (click)="onSelectFile(stepper)"
-                (filesDropped)="onFilesDropped({ stepper, files: $event })"
-              >
-                <div
-                  class="align-items-center d-flex flex-column justify-content-center"
-                >
-                  <ion-icon class="cloud-icon" name="cloud-upload-outline" />
-                  <span i18n>Choose or drop a file here</span>
-                </div>
-              </button>
-            }
-            <p class="mb-0 mt-3 text-center">
-              <small>
-                <span class="me-1" i18n
-                  >The following file formats are supported:</span
-                >
-                <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.csv"
-                  target="_blank"
-                  >CSV</a
-                >
-                @if (isGhostfolioAiEnabled) {
-                  <span class="me-1">, JPG,</span>
-                } @else {
-                  <span class="mx-1" i18n>or</span>
-                }
-                <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok/sample.json"
-                  target="_blank"
-                  >JSON</a
-                >
-                @if (isGhostfolioAiEnabled) {
-                  <span>, PDF</span>
-                  <span class="mx-1" i18n>or</span>
-                  <span>PNG</span>
-                }
-              </small>
-            </p>
+            <gf-file-drop-area
+              [fileFormats]="fileFormats"
+              [isLoading]="isLoading"
+              [language]="language"
+              [loadingText]="ghostfolioAiLoadingText"
+              (fileSelected)="onFileSelected({ stepper, file: $event })"
+            />
             @if (
               data.deviceType !== 'mobile' && hasPermissionToEnableGhostfolioAi
             ) {
