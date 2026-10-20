@@ -140,7 +140,8 @@ function getMetadataOfRoute<T>(
 /**
  * Gives the name of a guard or of an interceptor. The function mixin()
  * replaces the name of a class by a random one, hence the name is read from
- * the declaration of the class
+ * the declaration of the class. A guard which extends AuthGuard() is named
+ * with its strategy
  */
 function getName(enhancer: Type) {
   const authenticationStrategy = AUTHENTICATION_STRATEGIES.find((strategy) => {
@@ -151,7 +152,17 @@ function getName(enhancer: Type) {
     return `AuthGuard('${authenticationStrategy}')`;
   }
 
-  return /^class\s+([\w$]+)/.exec(enhancer.toString())?.[1] ?? enhancer.name;
+  const name = /^class\s+([\w$]+)/.exec(enhancer.toString())?.[1];
+
+  if (!name || name === 'MixinAuthGuard') {
+    throw new Error('The name of a guard or of an interceptor is unknown');
+  }
+
+  const parentStrategy = AUTHENTICATION_STRATEGIES.find((strategy) => {
+    return Object.getPrototypeOf(enhancer) === AuthGuard(strategy);
+  });
+
+  return parentStrategy ? `${name}('${parentStrategy}')` : name;
 }
 
 /**

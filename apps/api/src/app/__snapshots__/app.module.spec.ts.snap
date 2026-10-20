@@ -368,7 +368,7 @@ exports[`AppModule should keep the security of each route 1`] = `
   "GET /auth/google/callback (version neutral)": {
     "allowDuringImpersonation": true,
     "guards": [
-      "OAuthCallbackGuardMixin",
+      "OAuthCallbackGuardMixin('google')",
     ],
     "interceptors": [],
   },
@@ -382,7 +382,7 @@ exports[`AppModule should keep the security of each route 1`] = `
   "GET /auth/oidc/callback (version neutral)": {
     "allowDuringImpersonation": true,
     "guards": [
-      "OAuthCallbackGuardMixin",
+      "OAuthCallbackGuardMixin('oidc')",
     ],
     "interceptors": [],
   },
