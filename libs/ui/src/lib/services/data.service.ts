@@ -370,7 +370,7 @@ export class DataService {
   }
 
   public deletePlatform(aId: string) {
-    return this.http.delete<PlatformResponse>(`/api/v1/platforms/${aId}`);
+    return this.http.delete<void>(`/api/v1/platforms/${aId}`);
   }
 
   public deleteTag(aId: string) {

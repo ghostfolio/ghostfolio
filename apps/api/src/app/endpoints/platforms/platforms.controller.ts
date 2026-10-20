@@ -49,9 +49,7 @@ export class PlatformsController {
   @Delete(':id')
   @HasPermission(permissions.deletePlatform)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deletePlatform(
-    @Param('id') id: string
-  ): Promise<PlatformResponse> {
+  public async deletePlatform(@Param('id') id: string): Promise<void> {
     const originalPlatform = await this.platformService.getPlatform({
       id
     });
@@ -63,9 +61,7 @@ export class PlatformsController {
       );
     }
 
-    const platform = await this.platformService.deletePlatform({ id });
-
-    return pick(platform, ['id', 'name', 'url']);
+    await this.platformService.deletePlatform({ id });
   }
 
   @Get()
