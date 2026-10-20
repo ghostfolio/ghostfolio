@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the market price in the benchmark detail dialog by adding the currency and reducing the precision on mobile
 - Improved the style of the close button in the dialog footer component
 - Improved the style of the close button in the dialog header component
 - Upgraded `prettier` from version `3.9.9` to `3.9.10`
