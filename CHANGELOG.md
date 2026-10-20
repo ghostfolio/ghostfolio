@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the missing margin of the proportion of net worth on the allocations page
 - Fixed the missing padding of the base currency and performance calculation labels in the user account settings
 - Fixed an exception in the authentication interceptor when the time zone of the browser is not available
+- Fixed the date of an activity recorded via the MCP server showing as the day before in time zones west of UTC: a date without a time is recorded at noon UTC
 
 ## 3.86.0 - 2026-10-13
 
