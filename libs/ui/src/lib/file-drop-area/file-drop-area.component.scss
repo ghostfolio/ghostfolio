@@ -1,8 +1,69 @@
-@use '@angular/material' as mat;
+@property --aura-angle {
+  inherits: true;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}
 
 :host {
+  --aura-padding: 0.125rem;
+  --cloud-icon-size: 2.5rem;
+  --drop-area-padding: 1.5rem;
+
   a {
     color: rgba(var(--palette-primary-500), 1);
+  }
+
+  // Based on the aura component of daisyUI (https://daisyui.com/components/aura)
+  .aura {
+    --aura-duration: 4000ms;
+
+    animation: aura var(--aura-duration) linear infinite;
+    background-image: repeating-conic-gradient(
+      from var(--aura-angle),
+      transparent 0%,
+      transparent 40%,
+      rgba(var(--palette-primary-500), 1) 50%
+    );
+    border-radius: calc(var(--bs-border-radius) + var(--aura-padding));
+    padding: var(--aura-padding);
+    position: relative;
+
+    &::after,
+    &::before {
+      animation: inherit;
+      background-image: inherit;
+      border-radius: inherit;
+      content: '';
+      inset: 0;
+      position: absolute;
+    }
+
+    &::after {
+      filter: blur(1rem);
+      opacity: 0.3;
+    }
+
+    &::before {
+      filter: blur(0.25rem);
+      opacity: 0.7;
+    }
+
+    .drop-area {
+      background-color: var(--light-background);
+      border-style: solid;
+      margin: 0;
+      // Keep the height of the drop area with the cloud icon
+      padding-block: calc(
+        var(--drop-area-padding) + (var(--cloud-icon-size) / 2)
+      );
+      pointer-events: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
   }
 
   .drop-area {
@@ -12,7 +73,9 @@
         var(--palette-foreground-divider),
         var(--palette-foreground-divider-alpha)
       );
-    border-radius: 0.25rem;
+    // Reserve the space of the aura
+    margin: var(--aura-padding);
+    padding: var(--drop-area-padding);
 
     &:hover {
       border-color: rgba(var(--palette-primary-500), 1) !important;
@@ -20,26 +83,31 @@
     }
 
     .cloud-icon {
-      font-size: 2.5rem;
-    }
-
-    .mat-mdc-progress-spinner {
-      @include mat.progress-spinner-overrides(
-        (
-          active-indicator-color: var(--gf-theme-primary-500)
-        )
-      );
-
-      margin: 0.625rem 0;
+      font-size: var(--cloud-icon-size);
     }
   }
 }
 
 :host-context(.theme-dark) {
+  .aura {
+    .drop-area {
+      background-color: var(--dark-background);
+    }
+  }
+
   .drop-area {
     border-color: rgba(
       var(--palette-foreground-divider-dark),
       var(--palette-foreground-divider-dark-alpha)
     );
+  }
+}
+
+@keyframes aura {
+  to {
+    --aura-angle: 360deg;
+
+    // Force the GPU acceleration to prevent lags in Safari
+    transform: translateZ(1px);
   }
 }

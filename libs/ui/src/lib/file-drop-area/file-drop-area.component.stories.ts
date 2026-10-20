@@ -47,9 +47,3 @@ export const Loading: Story = {
     isLoading: true
   }
 };
-
-export const WithGhostfolioAi: Story = {
-  args: {
-    fileFormats: FILE_FORMATS_WITH_GHOSTFOLIO_AI
-  }
-};
