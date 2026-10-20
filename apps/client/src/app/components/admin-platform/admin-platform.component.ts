@@ -6,7 +6,7 @@ import { getLocale, getLowercase } from '@ghostfolio/common/helper';
 import type { Platform } from '@ghostfolio/prisma/browser';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
-import { AdminService, DataService } from '@ghostfolio/ui/services';
+import { DataService } from '@ghostfolio/ui/services';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
@@ -83,7 +83,6 @@ export class GfAdminPlatformComponent implements OnInit {
   private readonly paginator = viewChild.required(MatPaginator);
   private readonly sort = viewChild.required(MatSort);
 
-  private readonly adminService = inject(AdminService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
@@ -139,7 +138,7 @@ export class GfAdminPlatformComponent implements OnInit {
   }
 
   private deletePlatform(aId: string) {
-    this.adminService
+    this.dataService
       .deletePlatform(aId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -157,10 +156,10 @@ export class GfAdminPlatformComponent implements OnInit {
   private fetchPlatforms() {
     this.isLoading = true;
 
-    this.adminService
+    this.dataService
       .fetchPlatforms()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((platforms) => {
+      .subscribe(({ platforms }) => {
         this.platforms = platforms;
 
         this.dataSource = new MatTableDataSource(platforms);
@@ -191,7 +190,7 @@ export class GfAdminPlatformComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((platform: CreatePlatformDto | null) => {
         if (platform) {
-          this.adminService
+          this.dataService
             .postPlatform(platform)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
@@ -231,7 +230,7 @@ export class GfAdminPlatformComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((platform: UpdatePlatformDto | null) => {
         if (platform) {
-          this.adminService
+          this.dataService
             .putPlatform(platform)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
