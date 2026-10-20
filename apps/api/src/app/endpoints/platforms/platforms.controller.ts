@@ -74,13 +74,12 @@ export class PlatformsController {
         permissions.readPlatformsWithAccountCount
       )
     ) {
-      const platforms = await this.platformService.getPlatformsWithAccountCount(
-        {
+      const platformsWithAccountCount =
+        await this.platformService.getPlatformsWithAccountCount({
           orderBy: { name: 'asc' }
-        }
-      );
+        });
 
-      return { platforms };
+      return { platforms: platformsWithAccountCount };
     }
 
     const platforms = await this.platformService.getPlatforms({

@@ -3,6 +3,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { CreatePlatformDto, UpdatePlatformDto } from '@ghostfolio/common/dtos';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getLocale, getLowercase } from '@ghostfolio/common/helper';
+import { PlatformsResponse } from '@ghostfolio/common/interfaces';
 import type { Platform } from '@ghostfolio/prisma/browser';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
@@ -62,7 +63,9 @@ import { CreateOrUpdatePlatformDialogParams } from './create-or-update-platform-
 export class GfAdminPlatformComponent implements OnInit {
   public readonly locale = input(getLocale());
 
-  protected dataSource = new MatTableDataSource<Platform>();
+  protected dataSource = new MatTableDataSource<
+    PlatformsResponse['platforms'][0]
+  >();
 
   protected readonly displayedColumns = [
     'icon',
@@ -74,7 +77,7 @@ export class GfAdminPlatformComponent implements OnInit {
 
   protected isLoading = false;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
-  protected platforms: Platform[];
+  protected platforms: PlatformsResponse['platforms'];
 
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
