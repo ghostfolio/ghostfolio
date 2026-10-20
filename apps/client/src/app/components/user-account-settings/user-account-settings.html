@@ -5,14 +5,12 @@
       <div class="d-flex py-1">
         <div class="w-100">
           <div
-            class="g-0 row"
+            class="align-items-sm-baseline g-0 row"
             [class.mb-3]="!hasImpersonationId"
             [class.mb-4]="hasImpersonationId"
             [class.mb-sm-2]="!hasImpersonationId"
           >
-            <div
-              class="align-items-center col-sm-6 d-flex mb-1 mb-sm-0 pe-sm-1 pt-sm-1"
-            >
+            <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <ng-container i18n>Base Currency</ng-container>
             </div>
             <div class="col-sm-6 ps-sm-1" [formGroup]="baseCurrencyForm">
@@ -34,10 +32,8 @@
             </div>
           </div>
           @if (user?.settings?.isExperimentalFeatures) {
-            <div class="g-0 mb-3 mb-sm-2 row">
-              <div
-                class="align-items-center col-sm-6 d-flex mb-1 mb-sm-0 pe-sm-1 pt-sm-1"
-              >
+            <div class="align-items-sm-baseline g-0 mb-3 mb-sm-2 row">
+              <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
                 <ng-container i18n>Performance Calculation</ng-container>
               </div>
               <div class="col-sm-6 ps-sm-1">
@@ -66,7 +62,7 @@
               </div>
             </div>
           }
-          <div class="align-items-center g-0 mb-3 mb-sm-2 row">
+          <div class="align-items-sm-baseline g-0 mb-3 mb-sm-2 row">
             <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <div i18n>Language</div>
               @if (isCommunityLanguage()) {
@@ -161,7 +157,7 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="align-items-center g-0 mb-3 mb-sm-4 row">
+          <div class="align-items-sm-baseline g-0 mb-3 mb-sm-4 row">
             <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <div i18n>Locale</div>
               <div class="d-none d-sm-block hint-text text-body-secondary">
@@ -206,10 +202,8 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="g-0 row">
-            <div
-              class="align-items-center col-sm-6 d-flex mb-1 mb-sm-0 pe-sm-1 pt-sm-1"
-            >
+          <div class="align-items-sm-baseline g-0 row">
+            <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <ng-container i18n>Appearance</ng-container>
             </div>
             <div class="col-sm-6 ps-sm-1">
@@ -233,7 +227,7 @@
           </div>
         </div>
       </div>
-      <div class="align-items-center g-0 mt-4 py-1 row">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
         <div class="col col-sm-6 pe-1">
           <div i18n>Presenter View</div>
           <div class="hint-text text-body-secondary" i18n>
@@ -251,7 +245,7 @@
           />
         </div>
       </div>
-      <div class="align-items-center g-0 mt-4 py-1 row">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
         <div class="col col-sm-6 pe-1">
           <div i18n>Zen Mode</div>
           <div class="hint-text text-body-secondary" i18n>
@@ -268,7 +262,7 @@
           />
         </div>
       </div>
-      <div class="align-items-center g-0 mt-4 py-1 row">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
         <div class="col col-sm-6 pe-1">
           <div i18n>Biometric Authentication</div>
           <div class="hint-text text-body-secondary" i18n>
@@ -287,7 +281,7 @@
           />
         </div>
       </div>
-      <div class="align-items-center g-0 mt-4 py-1 row">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
         <div class="col col-sm-6 pe-1">
           <div i18n>Experimental Features</div>
           <div class="hint-text text-body-secondary" i18n>
@@ -305,7 +299,7 @@
         </div>
       </div>
       @if (deviceType() !== 'mobile' && hasPermissionToEnableGhostfolioAi) {
-        <div class="align-items-center g-0 mt-4 py-1 row">
+        <div class="align-items-baseline g-0 mt-4 py-1 row">
           <div class="col col-sm-6 pe-1">
             <div>Ghostfolio AI</div>
             <div class="hint-text text-body-secondary" i18n>
