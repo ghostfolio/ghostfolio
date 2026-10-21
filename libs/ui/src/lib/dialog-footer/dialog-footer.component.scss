@@ -1,3 +1,8 @@
 :host {
   display: block;
+
+  button[mat-icon-button] {
+    // Show the touch target of 48px, which the density of the theme hides
+    --mat-icon-button-touch-target-display: block;
+  }
 }

@@ -1,3 +1,18 @@
 :host {
   display: block;
+
+  button[mat-icon-button] {
+    // Move the button to the corner with the same distance to the top and to the right
+    margin-right: -0.8125rem;
+    // Center the button on the title
+    margin-top: 0.125rem;
+  }
+
+  .with-close-button {
+    .text-center {
+      // Compensate for the width of the button (1.75rem minus the negative
+      // margin) to center the title in the dialog
+      padding-left: 0.9375rem;
+    }
+  }
 }
