@@ -422,12 +422,18 @@ export const THROTTLE_DEFAULT_TTL = ms('1 minute');
 export const THROTTLE_SIGNUP_LIMIT = 5;
 export const THROTTLE_SIGNUP_TTL = ms('1 hour');
 
-export const TRY_SUBSCRIPTION_MAIL_HREF = `mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=${[
+export const TRY_SUBSCRIPTION_MAIL_HREF = `mailto:hi@ghostfol.io?subject=${encodeURIComponent(
+  'Ghostfolio Premium Trial'
+)}&body=${[
   'Hello',
   '',
   'I am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?',
   '',
   'Kind regards'
-].join(E_MAIL_LINE_BREAK)}`;
+]
+  .map((line) => {
+    return encodeURIComponent(line);
+  })
+  .join(E_MAIL_LINE_BREAK)}`;
 
 export const UNKNOWN_KEY = 'UNKNOWN';

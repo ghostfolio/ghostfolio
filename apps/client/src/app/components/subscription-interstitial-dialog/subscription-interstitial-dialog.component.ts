@@ -1,4 +1,5 @@
 import { TRY_SUBSCRIPTION_MAIL_HREF } from '@ghostfolio/common/config';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -61,7 +62,12 @@ export class GfSubscriptionInterstitialDialogComponent implements OnInit {
     private destroyRef: DestroyRef,
     public dialogRef: MatDialogRef<GfSubscriptionInterstitialDialogComponent>
   ) {
-    const isEligibleForTrial = !this.data.user?.subscription?.subscribedAt;
+    const isEligibleForTrial =
+      !this.data.user?.subscription?.subscribedAt &&
+      hasPermission(
+        this.data.user?.permissions,
+        permissions.updateUserSettings
+      );
 
     const variantsCount = isEligibleForTrial
       ? GfSubscriptionInterstitialDialogComponent.VARIANTS_COUNT + 1
