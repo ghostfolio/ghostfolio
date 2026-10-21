@@ -66,7 +66,7 @@ export class WebAuthnService {
     const deviceId = this.getDeviceId();
 
     return this.http
-      .delete<AuthDeviceDto>(`/api/v1/auth-device/${deviceId}`)
+      .delete<AuthDeviceDto>(`/api/v1/auth-devices/${deviceId}`)
       .pipe(
         catchError((error) => {
           console.warn(`Could not deregister device ${deviceId}`, error);

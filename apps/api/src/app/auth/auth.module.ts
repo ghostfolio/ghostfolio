@@ -1,9 +1,9 @@
-import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
+import { AuthDeviceModule } from '@ghostfolio/api/services/auth-device/auth-device.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { FetchModule } from '@ghostfolio/api/services/fetch/fetch.module';
@@ -29,6 +29,7 @@ import { OidcStrategy } from './oidc.strategy';
   controllers: [AuthController],
   imports: [
     ApiModule,
+    AuthDeviceModule,
     ConfigurationModule,
     FetchModule,
     JwtModule.register({
@@ -45,7 +46,6 @@ import { OidcStrategy } from './oidc.strategy';
   providers: [
     ApiKeyService,
     ApiKeyStrategy,
-    AuthDeviceService,
     AuthService,
     GoogleStrategy,
     JwtStrategy,

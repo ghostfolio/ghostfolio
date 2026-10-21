@@ -1,5 +1,5 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { DataProviderHistoricalResponse } from '@ghostfolio/common/interfaces';
+import { ExchangeRateResponse } from '@ghostfolio/common/interfaces';
 
 import {
   Controller,
@@ -12,12 +12,16 @@ import { AuthGuard } from '@nestjs/passport';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { ExchangeRateService } from './exchange-rate.service';
+import { ExchangeRatesService } from './exchange-rates.service';
 
-@Controller('exchange-rate')
-export class ExchangeRateController {
+@Controller([
+  'exchange-rates',
+  /** @deprecated */
+  'exchange-rate'
+])
+export class ExchangeRatesController {
   public constructor(
-    private readonly exchangeRateService: ExchangeRateService
+    private readonly exchangeRatesService: ExchangeRatesService
   ) {}
 
   @Get(':symbol/:dateString')
@@ -25,10 +29,10 @@ export class ExchangeRateController {
   public async getExchangeRate(
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
-  ): Promise<DataProviderHistoricalResponse> {
+  ): Promise<ExchangeRateResponse> {
     const date = parseISO(dateString);
 
-    const exchangeRate = await this.exchangeRateService.getExchangeRate({
+    const exchangeRate = await this.exchangeRatesService.getExchangeRate({
       date,
       symbol
     });

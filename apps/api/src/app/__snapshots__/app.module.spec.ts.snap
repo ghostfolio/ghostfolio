@@ -116,6 +116,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
     "permission": "deleteAuthDevice",
   },
+  "DELETE /auth-devices/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAuthDevice",
+  },
   "DELETE /benchmarks/:dataSource/:symbol": {
     "allowDuringImpersonation": true,
     "guards": [
@@ -483,6 +492,13 @@ exports[`AppModule should keep the security of each route 1`] = `
     "permission": "enableDataProviderGhostfolio",
   },
   "GET /exchange-rate/:symbol/:dateString": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /exchange-rates/:symbol/:dateString": {
     "guards": [
       "AuthGuard('jwt')",
       "HasPermissionGuard",
