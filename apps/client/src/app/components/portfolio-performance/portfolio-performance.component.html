@@ -3,6 +3,7 @@
     <div class="px-1 status-container text-body-secondary text-end">
       @if ((errors()?.length ?? 0) > 0 && !isLoading()) {
         <ion-icon
+          class="pe-auto"
           i18n-title
           name="time-outline"
           title="Oops! A data provider is experiencing the hiccups."

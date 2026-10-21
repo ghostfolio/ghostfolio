@@ -1,0 +1,1227 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AppModule should keep the security of each route 1`] = `
+{
+  "DELETE /access/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAccess",
+  },
+  "DELETE /account-balance/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "deleteAccountBalance",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "DELETE /account/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "deleteAccount",
+    "scopes": [
+      "account:delete",
+    ],
+  },
+  "DELETE /activities": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "deleteActivity",
+    "scopes": [
+      "activity:delete",
+    ],
+  },
+  "DELETE /activities/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "deleteActivity",
+    "scopes": [
+      "activity:delete",
+    ],
+  },
+  "DELETE /admin/profile-data/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "DELETE /admin/queue/job": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "DELETE /admin/queue/job/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "DELETE /asset-profiles/:dataSource/:symbol/splits/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "DELETE /auth-device/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAuthDevice",
+  },
+  "DELETE /auth-devices/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAuthDevice",
+  },
+  "DELETE /benchmarks/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "DELETE /platform/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deletePlatform",
+  },
+  "DELETE /platforms/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deletePlatform",
+  },
+  "DELETE /tags/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteTag",
+  },
+  "DELETE /user": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteOwnUser",
+  },
+  "DELETE /user/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteUser",
+  },
+  "DELETE /watchlist/:dataSource/:symbol": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "deleteWatchlistItem",
+    "scopes": [
+      "watchlist:delete",
+    ],
+  },
+  "GET /access": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /account": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+    ],
+  },
+  "GET /account/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+    ],
+  },
+  "GET /account/:id/balances": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+    ],
+  },
+  "GET /activities": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "activity:read",
+    ],
+  },
+  "GET /activities/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "activity:read",
+    ],
+  },
+  "GET /admin": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "GET /admin/demo-user/sync": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "syncDemoUserAccount",
+  },
+  "GET /admin/queue/job": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "GET /admin/queue/job/:id/execute": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "GET /admin/user": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "GET /admin/user/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "GET /ai/prompt/:mode": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "readAiPrompt",
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /asset-profiles": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "GET /asset-profiles/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /asset/:dataSource/:symbol": {
+    "guards": [],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /assets/:languageCode/site.webmanifest (version neutral)": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /auth/google": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('google')",
+    ],
+    "interceptors": [],
+  },
+  "GET /auth/google/callback (version neutral)": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "OAuthCallbackGuardMixin('google')",
+    ],
+    "interceptors": [],
+  },
+  "GET /auth/oidc (version neutral)": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('oidc')",
+    ],
+    "interceptors": [],
+  },
+  "GET /auth/oidc/callback (version neutral)": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "OAuthCallbackGuardMixin('oidc')",
+    ],
+    "interceptors": [],
+  },
+  "GET /auth/webauthn/generate-registration-options": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /benchmarks": {
+    "allowDuringImpersonation": true,
+    "guards": [],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /benchmarks/:dataSource/:symbol/:startDateString": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /data-providers/ghostfolio/asset-profile/:symbol": {
+    "guards": [
+      "AuthGuard('api-key')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "enableDataProviderGhostfolio",
+  },
+  "GET /data-providers/ghostfolio/dividends/:symbol (version 2)": {
+    "guards": [
+      "AuthGuard('api-key')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "enableDataProviderGhostfolio",
+  },
+  "GET /data-providers/ghostfolio/historical/:symbol (version 2)": {
+    "guards": [
+      "AuthGuard('api-key')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "enableDataProviderGhostfolio",
+  },
+  "GET /data-providers/ghostfolio/lookup (version 2)": {
+    "guards": [
+      "AuthGuard('api-key')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "enableDataProviderGhostfolio",
+  },
+  "GET /data-providers/ghostfolio/markets": {
+    "guards": [
+      "AuthGuard('api-key')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "enableDataProviderGhostfolio",
+  },
+  "GET /data-providers/ghostfolio/quotes (version 2)": {
+    "guards": [
+      "AuthGuard('api-key')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "enableDataProviderGhostfolio",
+  },
+  "GET /data-providers/ghostfolio/status (version 2)": {
+    "guards": [
+      "AuthGuard('api-key')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "enableDataProviderGhostfolio",
+  },
+  "GET /exchange-rate/:symbol/:dateString": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /exchange-rates/:symbol/:dateString": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /export": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /health": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /health/ai": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /health/data-enhancer/:name": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /health/data-provider/:dataSource": {
+    "guards": [],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /health/liveness": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /import/dividends/:dataSource/:symbol": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /info": {
+    "guards": [],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+    ],
+  },
+  "GET /logo": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /logo/:dataSource/:symbol": {
+    "guards": [],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /market-data/markets": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "readMarketDataOfMarkets",
+  },
+  "GET /platform": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "readPlatformsWithAccountCount",
+  },
+  "GET /platforms": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "readPlatforms",
+  },
+  "GET /portfolio/details": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /portfolio/dividends": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /portfolio/holding/:dataSource/:symbol": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /portfolio/holdings": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /portfolio/investments": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /portfolio/performance (version 2)": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+      "PerformanceLoggingInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /portfolio/report": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
+  "GET /public/:accessId/portfolio": {
+    "guards": [],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+  },
+  "GET /sitemap.xml (version neutral)": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /subscription/stripe/callback": {
+    "allowDuringImpersonation": true,
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /symbol/:dataSource/:symbol": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /symbol/:dataSource/:symbol/:dateString": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /symbol/lookup": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+    ],
+  },
+  "GET /tags": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "readTags",
+  },
+  "GET /user": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+  },
+  "GET /watchlist": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+    ],
+    "permission": "readWatchlist",
+    "scopes": [
+      "watchlist:read",
+    ],
+  },
+  "PATCH /admin/profile-data/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "PATCH /asset-profiles/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /access": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "createAccess",
+  },
+  "POST /account": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "createAccount",
+    "scopes": [
+      "account:create",
+    ],
+  },
+  "POST /account-balance": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "createAccountBalance",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "POST /account/transfer-balance": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "POST /activities": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "createActivity",
+    "scopes": [
+      "activity:create",
+    ],
+  },
+  "POST /admin/gather": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/gather/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/gather/:dataSource/:symbol/:dateString": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/gather/max": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/gather/profile-data": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/gather/profile-data/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/market-data/:dataSource/:symbol/test": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/profile-data/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "accessAdminControl",
+  },
+  "POST /admin/profile-data/:dataSource/:symbol/merge": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "accessAdminControl",
+  },
+  "POST /ai/activities": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "CustomThrottlerGuard",
+    ],
+    "interceptors": [
+      "MixinInterceptor",
+    ],
+    "permission": "enableGhostfolioAi",
+  },
+  "POST /api-keys": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "createApiKey",
+  },
+  "POST /asset-profiles/:dataSource/:symbol/splits": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "POST /auth/anonymous": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "CustomThrottlerGuard",
+    ],
+    "interceptors": [],
+  },
+  "POST /auth/webauthn/generate-authentication-options": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "CustomThrottlerGuard",
+    ],
+    "interceptors": [],
+  },
+  "POST /auth/webauthn/verify-attestation": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "POST /auth/webauthn/verify-authentication": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "CustomThrottlerGuard",
+    ],
+    "interceptors": [],
+  },
+  "POST /benchmarks": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /cache/flush": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /import": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "createActivity",
+  },
+  "POST /market-data/:dataSource/:symbol": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+    ],
+    "interceptors": [],
+  },
+  "POST /platform": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "createPlatform",
+  },
+  "POST /platforms": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "createPlatform",
+  },
+  "POST /subscription/redeem-coupon": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "CustomThrottlerGuard",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "POST /subscription/stripe/checkout-session": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "CustomThrottlerGuard",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "POST /tags": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+    ],
+    "interceptors": [],
+  },
+  "POST /user": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "CustomThrottlerGuard",
+    ],
+    "interceptors": [],
+  },
+  "POST /user/:id/access-token": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "POST /user/access-token": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "updateOwnAccessToken",
+  },
+  "POST /watchlist": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "createWatchlistItem",
+    "scopes": [
+      "watchlist:create",
+    ],
+  },
+  "PUT /access/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "updateAccess",
+  },
+  "PUT /account/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "PUT /activities/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateActivity",
+    "scopes": [
+      "activity:update",
+    ],
+  },
+  "PUT /admin/settings/:key": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "PUT /platform/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "updatePlatform",
+  },
+  "PUT /platforms/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "updatePlatform",
+  },
+  "PUT /portfolio/holding/:dataSource/:symbol/tags": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "updateActivity",
+    "scopes": [
+      "activity:update",
+    ],
+  },
+  "PUT /tags/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "updateTag",
+  },
+  "PUT /user/setting": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+    ],
+  },
+}
+`;

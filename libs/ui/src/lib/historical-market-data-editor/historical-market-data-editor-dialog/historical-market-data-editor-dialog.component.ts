@@ -6,7 +6,6 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  OnInit,
   inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -17,7 +16,6 @@ import {
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
@@ -50,7 +48,7 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   styleUrls: ['./historical-market-data-editor-dialog.scss'],
   templateUrl: 'historical-market-data-editor-dialog.html'
 })
-export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
+export class GfHistoricalMarketDataEditorDialogComponent {
   public readonly data =
     inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
 
@@ -60,21 +58,14 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
   });
 
   private readonly destroyRef = inject(DestroyRef);
-  private readonly locale =
-    this.data.user.settings.locale ?? inject<string>(MAT_DATE_LOCALE);
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    private dateAdapter: DateAdapter<Date, string>,
     public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>
   ) {
     addIcons({ calendarClearOutline, refreshOutline });
-  }
-
-  public ngOnInit() {
-    this.dateAdapter.setLocale(this.locale);
   }
 
   public onCancel() {

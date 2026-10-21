@@ -6,3 +6,7 @@ export interface ImportActivitiesDialogParams {
   deviceType: string;
   user: User;
 }
+
+export interface ImportActivitiesDialogResult {
+  withRefresh: boolean;
+}

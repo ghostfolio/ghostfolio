@@ -9,10 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deprecated the `api/v1/auth-device` endpoint in favor of the `api/v1/auth-devices` endpoint
+- Deprecated the `api/v1/exchange-rate` endpoint in favor of the `api/v1/exchange-rates` endpoint
+- Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.0.0` to `2.3.1`
+- Upgraded `@modelcontextprotocol/node` from version `2.0.0` to `2.1.1`
+- Upgraded `prettier` from version `3.9.9` to `3.9.10`
+- Upgraded `@rekog/mcp-nest` from version `2.0.7` to `2.0.8`
+
+## 3.89.0 - 2026-10-20
+
+### Added
+
+- Added a _Storybook_ story for the file drop area component
+
+### Changed
+
+- Improved the layout of the user account settings on mobile
+- Improved the usability of the activities page by eliminating the reload on canceling the import activities dialog
+- Improved the loading state of the file drop area component
 - Improved the accessibility of the _Buy me a coffee_ button on the about page
+- Improved the accessibility of the entity logo component
+- Extracted the file drop area of the import activities dialog to a reusable component
 - Improved the performance of the historical market data table of the admin control panel by loading only the latest market price per asset profile
 - Introduced a cooldown of 12 hours for the asset profile and exchange rate gathering on activity creation by retaining the completed jobs
-- Upgraded `prettier` from version `3.9.9` to `3.9.10`
+- Deprecated the `api/v1/platform` endpoints in favor of the `api/v1/platforms` endpoints
+
+### Fixed
+
+- Fixed the missing localization of the date picker in the _FIRE_ calculator
+- Fixed the missing localization of the date picker in the asset profile details dialog of the admin control panel
+- Fixed the missing tooltip of the client of the last request in the users table of the admin control panel
 
 ## 3.88.0 - 2026-10-17
 

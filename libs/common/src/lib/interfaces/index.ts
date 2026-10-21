@@ -67,6 +67,7 @@ import type {
 } from './responses/data-provider-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
+import type { ExchangeRateResponse } from './responses/exchange-rate-response.interface';
 import type { ExportResponse } from './responses/export-response.interface';
 import type { HistoricalResponse } from './responses/historical-response.interface';
 import type { ImportResponse } from './responses/import-response.interface';
@@ -75,6 +76,7 @@ import type { LivenessHealthResponse } from './responses/liveness-health-respons
 import type { LookupResponse } from './responses/lookup-response.interface';
 import type { MarketDataOfMarketsResponse } from './responses/market-data-of-markets-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
+import type { PlatformResponse } from './responses/platform-response.interface';
 import type { PlatformsResponse } from './responses/platforms-response.interface';
 import type { PortfolioDividendsResponse } from './responses/portfolio-dividends-response.interface';
 import type { PortfolioHoldingResponse } from './responses/portfolio-holding-response.interface';
@@ -149,6 +151,7 @@ export {
   DataProviderResponse,
   DividendsResponse,
   EnhancedAssetProfile,
+  ExchangeRateResponse,
   ExportResponse,
   Filter,
   FilterGroup,
@@ -170,6 +173,7 @@ export {
   MarketDataOfMarketsResponse,
   NullableLineChartItem,
   OAuthResponse,
+  PlatformResponse,
   PlatformsResponse,
   PortfolioChart,
   PortfolioDetails,

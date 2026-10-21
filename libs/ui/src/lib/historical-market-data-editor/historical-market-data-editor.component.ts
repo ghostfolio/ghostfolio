@@ -4,7 +4,7 @@ import {
   getDateFormatString,
   getLocale
 } from '@ghostfolio/common/helper';
-import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { LineChartItem } from '@ghostfolio/common/interfaces';
 import type { MarketData } from '@ghostfolio/prisma/browser';
 import { DataSource } from '@ghostfolio/prisma/enums';
 import { DataService } from '@ghostfolio/ui/services';
@@ -70,7 +70,6 @@ export class GfHistoricalMarketDataEditorComponent
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity?: Date;
   @Input() symbol: string;
-  @Input() user: User;
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
 
@@ -233,8 +232,7 @@ export class GfHistoricalMarketDataEditorComponent
         currency: this.currency,
         dataSource: this.dataSource,
         dateString: `${yearMonth}-${day}`,
-        symbol: this.symbol,
-        user: this.user
+        symbol: this.symbol
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'

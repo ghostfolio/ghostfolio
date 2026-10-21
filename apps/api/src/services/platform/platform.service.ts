@@ -49,9 +49,14 @@ export class PlatformService {
     });
   }
 
-  public async getPlatformsWithAccountCount() {
+  public async getPlatformsWithAccountCount({
+    orderBy
+  }: {
+    orderBy?: Prisma.PlatformOrderByWithRelationInput;
+  } = {}) {
     const platformsWithAccountCount =
       await this.prismaService.platform.findMany({
+        orderBy,
         include: {
           _count: {
             select: { accounts: true }

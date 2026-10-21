@@ -1,12 +1,12 @@
 import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
