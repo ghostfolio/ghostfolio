@@ -93,7 +93,7 @@
     "@openrouter/ai-sdk-provider": "3.1.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
-    "@rekog/mcp-nest": "2.0.7",
+    "@rekog/mcp-nest": "2.0.8",
     "@simplewebauthn/browser": "14.0.0",
     "@simplewebauthn/server": "14.0.3",
     "ai": "7.0.127",
