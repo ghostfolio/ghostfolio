@@ -1,5 +1,5 @@
-import type { Platform } from '@ghostfolio/prisma/browser';
+import type { PlatformResponse } from './platform-response.interface';
 
 export interface PlatformsResponse {
-  platforms: Platform[];
+  platforms: (PlatformResponse & { accountCount?: number })[];
 }

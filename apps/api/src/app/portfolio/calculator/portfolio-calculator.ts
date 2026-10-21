@@ -14,13 +14,13 @@ import { PortfolioCalculatorActivity } from '@ghostfolio/api/app/portfolio/inter
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
+import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
 import {
   getAnnualizedPerformancePercent,
   getIntervalFromDateRange
@@ -1863,10 +1863,8 @@ export abstract class PortfolioCalculator {
         // Take the values at the start date from the first day of the date
         // range
         if (historicalDataItemsOfDateRange.length === 0) {
-          // TODO: Remove the fallback to 0 with the next release, when each
-          // cached portfolio snapshot contains the dividend
           dividendInBaseCurrencyAtStartDate =
-            historicalDataItem.dividendInBaseCurrency ?? 0;
+            historicalDataItem.dividendInBaseCurrency;
 
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
@@ -1876,10 +1874,8 @@ export abstract class PortfolioCalculator {
 
         historicalDataItemsOfDateRange.push({
           ...historicalDataItem,
-          // TODO: Remove the fallback to 0 with the next release, when each
-          // cached portfolio snapshot contains the dividend
           dividendInBaseCurrency:
-            (historicalDataItem.dividendInBaseCurrency ?? 0) -
+            historicalDataItem.dividendInBaseCurrency -
             dividendInBaseCurrencyAtStartDate,
           netPerformance:
             historicalDataItem.netPerformance - netPerformanceAtStartDate,

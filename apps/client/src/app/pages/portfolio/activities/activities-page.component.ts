@@ -34,7 +34,10 @@ import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { GfImportActivitiesDialogComponent } from './import-activities-dialog/import-activities-dialog.component';
-import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
+import {
+  ImportActivitiesDialogParams,
+  ImportActivitiesDialogResult
+} from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -217,7 +220,8 @@ export class GfActivitiesPageComponent implements OnInit {
   protected onImport() {
     const dialogRef = this.dialog.open<
       GfImportActivitiesDialogComponent,
-      ImportActivitiesDialogParams
+      ImportActivitiesDialogParams,
+      ImportActivitiesDialogResult
     >(GfImportActivitiesDialogComponent, {
       data: {
         deviceType: this.deviceType,
@@ -230,22 +234,25 @@ export class GfActivitiesPageComponent implements OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe();
+      .subscribe(({ withRefresh } = { withRefresh: false }) => {
+        if (withRefresh) {
+          this.userService
+            .get(true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
 
-        this.fetchActivities();
+          this.fetchActivities();
 
-        this.changeDetectorRef.markForCheck();
+          this.changeDetectorRef.markForCheck();
+        }
       });
   }
 
   protected onImportDividends() {
     const dialogRef = this.dialog.open<
       GfImportActivitiesDialogComponent,
-      ImportActivitiesDialogParams
+      ImportActivitiesDialogParams,
+      ImportActivitiesDialogResult
     >(GfImportActivitiesDialogComponent, {
       data: {
         activityTypes: ['DIVIDEND'],
@@ -259,15 +266,17 @@ export class GfActivitiesPageComponent implements OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe();
+      .subscribe(({ withRefresh } = { withRefresh: false }) => {
+        if (withRefresh) {
+          this.userService
+            .get(true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe();
 
-        this.fetchActivities();
+          this.fetchActivities();
 
-        this.changeDetectorRef.markForCheck();
+          this.changeDetectorRef.markForCheck();
+        }
       });
   }
 

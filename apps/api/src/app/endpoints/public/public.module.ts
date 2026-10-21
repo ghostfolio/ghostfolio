@@ -6,7 +6,6 @@ import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calcul
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { RulesService } from '@ghostfolio/api/app/portfolio/rules.service';
-import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
@@ -17,6 +16,7 @@ import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impe
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
+import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 

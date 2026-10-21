@@ -1,9 +1,7 @@
 import { AccountModule } from '@ghostfolio/api/app/account/account.module';
 import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
-import { PlatformModule } from '@ghostfolio/api/app/platform/platform.module';
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
-import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -11,8 +9,10 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration/conf
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
+import { PlatformModule } from '@ghostfolio/api/services/platform/platform.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 

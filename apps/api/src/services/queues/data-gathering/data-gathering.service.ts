@@ -312,8 +312,11 @@ export class DataGatheringService {
     dataSource,
     date,
     force = true,
+    removeOnComplete,
     symbol
-  }: DataGatheringItem) {
+  }: DataGatheringItem & {
+    removeOnComplete?: JobOptions['removeOnComplete'];
+  }) {
     const dataGatheringItems = (await this.getSymbolsMax())
       .filter((dataGatheringItem) => {
         return (
@@ -329,6 +332,7 @@ export class DataGatheringService {
     return this.gatherSymbols({
       dataGatheringItems,
       force,
+      removeOnComplete,
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
   }
