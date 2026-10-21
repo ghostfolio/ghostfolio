@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated the `api/v1/exchange-rate` endpoint in favor of the `api/v1/exchange-rates` endpoint
 - Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.0.0` to `2.3.1`
 - Upgraded `@modelcontextprotocol/node` from version `2.0.0` to `2.1.1`
-- Upgraded `prettier` from version `3.9.9` to `3.9.10`
 - Upgraded `@rekog/mcp-nest` from version `2.0.7` to `2.0.8`
+- Upgraded `prettier` from version `3.9.9` to `3.9.10`
 
 ## 3.89.0 - 2026-10-20
 
