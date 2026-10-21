@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style of the close button in the dialog footer component
+- Improved the style of the close button in the dialog header component
 - Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.0.0` to `2.3.1`
 - Upgraded `@modelcontextprotocol/node` from version `2.0.0` to `2.1.1`
 
