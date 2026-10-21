@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the variations of the interstitials for the subscription by a trial
+- Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.0.0` to `2.3.1`
+- Upgraded `@modelcontextprotocol/node` from version `2.0.0` to `2.1.1`
+- Upgraded `@rekog/mcp-nest` from version `2.0.7` to `2.0.8`
 
 ## 3.89.0 - 2026-10-20
 
