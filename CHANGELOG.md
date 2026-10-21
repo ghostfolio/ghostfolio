@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the variations of the interstitials for the subscription by a trial
 - Deprecated the `api/v1/auth-device` endpoint in favor of the `api/v1/auth-devices` endpoint
 - Deprecated the `api/v1/exchange-rate` endpoint in favor of the `api/v1/exchange-rates` endpoint
 - Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.0.0` to `2.3.1`
