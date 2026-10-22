@@ -9,6 +9,7 @@ describe('MarketDataService', () => {
     marketData: {
       createMany: jest.Mock;
       deleteMany: jest.Mock;
+      findMany: jest.Mock;
       upsert: jest.Mock;
     };
   };
@@ -19,11 +20,32 @@ describe('MarketDataService', () => {
       marketData: {
         createMany: jest.fn(),
         deleteMany: jest.fn(),
+        findMany: jest.fn().mockResolvedValue([]),
         upsert: jest.fn().mockResolvedValue({})
       }
     };
 
     marketDataService = new MarketDataService(prismaService as any);
+  });
+
+  describe('getRange', () => {
+    it('queries the symbols grouped by data source', async () => {
+      await marketDataService.getRange({
+        assetProfileIdentifiers: [
+          { dataSource: 'YAHOO', symbol: 'AAPL' },
+          { dataSource: 'COINGECKO', symbol: 'bitcoin' },
+          { dataSource: 'YAHOO', symbol: 'MSFT' }
+        ],
+        dateQuery: { gte: parseDate('2026-01-01') }
+      });
+
+      expect(
+        prismaService.marketData.findMany.mock.calls[0][0].where.OR
+      ).toEqual([
+        { dataSource: 'YAHOO', symbol: { in: ['AAPL', 'MSFT'] } },
+        { dataSource: 'COINGECKO', symbol: { in: ['bitcoin'] } }
+      ]);
+    });
   });
 
   describe('updateMany', () => {
