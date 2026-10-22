@@ -583,7 +583,7 @@
       </trans-unit>
       <trans-unit id="6198142118219385733" datatype="html">
         <source>Request a free trial</source>
-        <target state="new">Request a free trial</target>
+        <target state="translated">Fordere eine kostenlose Testphase an</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">211</context>
@@ -907,7 +907,7 @@
       </trans-unit>
       <trans-unit id="5043328658660351895" datatype="html">
         <source>No credit card required. The trial ends automatically.</source>
-        <target state="new">No credit card required. The trial ends automatically.</target>
+        <target state="translated">Keine Kreditkarte erforderlich. Die Testphase endet automatisch.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">214</context>
@@ -4203,7 +4203,7 @@
       </trans-unit>
       <trans-unit id="5508103270863072482" datatype="html">
         <source>Return on Investment (total return with dividends)</source>
-        <target state="new">Return on Investment (total return with dividends)</target>
+        <target state="translated">Rendite auf die Investition (Gesamtrendite inklusive Dividenden)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">165</context>
@@ -8188,7 +8188,7 @@
       </trans-unit>
       <trans-unit id="1759593807459446546" datatype="html">
         <source>All in One Place</source>
-        <target state="new">All in One Place</target>
+        <target state="translated">Alles an einem Ort</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">142</context>
@@ -8944,7 +8944,7 @@
       </trans-unit>
       <trans-unit id="3946393485152934212" datatype="html">
         <source>Privacy First</source>
-        <target state="new">Privacy First</target>
+        <target state="translated">Fokus auf Datenschutz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">153</context>
