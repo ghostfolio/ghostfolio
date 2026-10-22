@@ -33,6 +33,7 @@ describe('ImportService', () => {
   let addSymbolProfile: jest.Mock;
   let createActivity: jest.Mock;
   let gatherSymbols: jest.Mock;
+  let getSymbolProfiles: jest.Mock;
   let importService: ImportService;
   let updateManyMarketData: jest.Mock;
 
@@ -46,6 +47,7 @@ describe('ImportService', () => {
     addSymbolProfile = jest.fn();
     createActivity = jest.fn();
     gatherSymbols = jest.fn();
+    getSymbolProfiles = jest.fn().mockResolvedValue([]);
     updateManyMarketData = jest.fn();
 
     const validateActivities = jest.fn(
@@ -94,8 +96,8 @@ describe('ImportService', () => {
       null,
       {
         add: addSymbolProfile,
-        getCustomSymbolProfilesByNames: jest.fn().mockResolvedValue([]),
-        getSymbolProfiles: jest.fn().mockResolvedValue([])
+        getSymbolProfiles,
+        getCustomSymbolProfilesByNames: jest.fn().mockResolvedValue([])
       } as unknown as SymbolProfileService,
       {
         getTagsForUser: jest.fn().mockResolvedValue([])
@@ -479,6 +481,82 @@ describe('ImportService', () => {
         { dataSource: DataSource.MANUAL, symbol: 'GF_COPX' },
         { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
       ]);
+    });
+
+    it('reuses a global asset profile without updating its market data', async () => {
+      getSymbolProfiles.mockResolvedValue([
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL', userId: null }
+      ]);
+
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.YAHOO,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'AAPL',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            marketData: [{ date: '2024-01-01', marketPrice: 1 }],
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]
+      });
+
+      expect(addSymbolProfile).not.toHaveBeenCalled();
+      expect(updateManyMarketData).not.toHaveBeenCalled();
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.create
+      ).toMatchObject({ dataSource: DataSource.YAHOO, symbol: 'AAPL' });
+    });
+
+    it('creates a custom asset profile with a UUID instead of the asset profile of another user', async () => {
+      getSymbolProfiles.mockResolvedValue([
+        {
+          dataSource: DataSource.MANUAL,
+          symbol: CUSTOM_ASSET_PROFILE_SYMBOL,
+          userId: 'other-user-id'
+        }
+      ]);
+
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL,
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [{ date: '2024-01-01', marketPrice: 100 }],
+            name: 'Gold',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+          }
+        ]
+      });
+
+      const { symbol } = addSymbolProfile.mock.calls[0][0];
+
+      expect(isUUID(symbol)).toBe(true);
+      expect(symbol).not.toBe(CUSTOM_ASSET_PROFILE_SYMBOL);
     });
 
     it('keeps the asset profiles of the activities in a dry run', async () => {
