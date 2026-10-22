@@ -38,14 +38,11 @@
         a[mat-icon-button] {
           --mat-icon-button-icon-size: 1rem;
 
-          // Align the tip of the arrow with the values of the table
           margin-right: -0.125rem;
-          // Compensate for the bottom margin of the title to center the button
           margin-top: -0.5rem;
         }
 
         mat-card-title {
-          // Align the title with the logos of the table
           padding-left: 0.1875rem;
         }
       }
