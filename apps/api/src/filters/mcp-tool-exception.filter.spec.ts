@@ -1,5 +1,5 @@
-import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
 import { PortfolioSnapshotComputationError } from '@ghostfolio/api/app/portfolio/errors/portfolio-snapshot-computation.error';
+import { ImportValidationError } from '@ghostfolio/api/services/import/errors/import-validation.error';
 
 import { ForbiddenException, Logger } from '@nestjs/common';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
