@@ -24,13 +24,14 @@ export const ACTIVITY_ROWS_OUTPUT = z.object({
           .string()
           .nullable()
           .describe(
-            'The currency of the fee and of the unit price, as an ISO 4217 code in upper case'
+            'The currency of the fee, tax and unit price, as an ISO 4217 code in upper case'
           ),
         date: z
           .string()
           .describe('The date of the activity, as an ISO 8601 date'),
         fee: z.number().describe('The fee of the activity'),
         isin: PRINTED_TEXT.describe('The ISIN of the asset, as printed'),
+        tax: z.number().describe('The tax of the activity'),
         name: PRINTED_TEXT.describe(
           'The name of the asset, or the description of a fee, an interest or a liability, as printed'
         ),

@@ -29,6 +29,7 @@ export interface PortfolioHoldingResponse {
   dividendYieldPercentWithCurrencyEffect: number;
   feeInBaseCurrency: number;
   grossPerformance: number;
+  taxInBaseCurrency: number;
   grossPerformancePercent: number;
   grossPerformancePercentWithCurrencyEffect: number;
   grossPerformanceWithCurrencyEffect: number;

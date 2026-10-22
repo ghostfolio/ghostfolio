@@ -240,6 +240,7 @@ export class ExportService {
           fee,
           id,
           quantity,
+          tax,
           tags: currentTags,
           type,
           unitPrice
@@ -250,6 +251,7 @@ export class ExportService {
             fee,
             id,
             quantity,
+            tax,
             type,
             unitPrice,
             currency: currency ?? assetProfile.currency,

@@ -29,6 +29,7 @@ export class ImportActivitiesService {
   private static DATA_SOURCE_KEYS = ['datasource'];
   private static DATE_KEYS = ['date', 'tradedate'];
   private static FEE_KEYS = ['commission', 'fee', 'ibcommission'];
+  private static TAX_KEYS = ['tax', 'withholding tax', 'withholdingtax'];
   private static QUANTITY_KEYS = ['qty', 'quantity', 'shares', 'units'];
   private static SYMBOL_KEYS = ['code', 'symbol', 'ticker'];
   private static TYPE_KEYS = ['action', 'buy/sell', 'type'];
@@ -135,6 +136,7 @@ export class ImportActivitiesService {
         date: this.parseDate({ content, index, item }),
         fee: this.parseFee({ content, index, item }),
         quantity: this.parseQuantity({ content, index, item }),
+        tax: this.parseTax({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
@@ -215,6 +217,7 @@ export class ImportActivitiesService {
     date,
     fee,
     quantity,
+    tax,
     tags,
     type,
     unitPrice,
@@ -223,6 +226,7 @@ export class ImportActivitiesService {
     return {
       fee,
       quantity,
+      tax,
       type,
       unitPrice,
       updateAccountBalance,
@@ -379,6 +383,37 @@ export class ImportActivitiesService {
       activities: content,
       message: `activities.${index}.fee is not valid`
     };
+  }
+
+  private parseTax({
+    content,
+    index,
+    item
+  }: {
+    content: Record<string, unknown>[];
+    index: number;
+    item: Record<string, unknown>;
+  }) {
+    item = this.lowercaseKeys(item);
+
+    for (const key of ImportActivitiesService.TAX_KEYS) {
+      if (!(key in item)) {
+        continue;
+      }
+
+      const value = item[key];
+
+      if (isNumber(value) && isFinite(value)) {
+        return Math.abs(value);
+      }
+
+      throw {
+        activities: content,
+        message: `activities.${index}.tax is not valid`
+      };
+    }
+
+    return 0;
   }
 
   private parseQuantity({

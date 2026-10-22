@@ -10,6 +10,7 @@ export function createActivity(
     date: '2024-01-01',
     fee: 0,
     quantity: 1,
+    tax: 0,
     symbol: 'AAPL',
     type: ActivityType.BUY,
     unitPrice: 100,

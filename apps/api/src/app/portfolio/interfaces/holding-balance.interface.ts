@@ -11,6 +11,8 @@ export interface HoldingBalance {
   fee: Big;
   feeInBaseCurrency: Big;
   includeInHoldings: boolean;
+  tax: Big;
+  taxInBaseCurrency: Big;
   investment: Big;
   quantity: Big;
   skipErrors: boolean;

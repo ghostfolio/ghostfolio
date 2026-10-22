@@ -215,6 +215,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       date: [this.data.activity?.date, Validators.required],
       fee: [this.data.activity?.fee, Validators.required],
       name: [this.data.activity?.assetProfile?.name, Validators.required],
+      tax: [this.data.activity?.tax ?? 0, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
       searchSymbol: [
         this.data.activity?.assetProfile
@@ -254,12 +255,14 @@ export class GfCreateOrUpdateActivityDialogComponent {
           this.total =
             this.activityForm.get('quantity')?.value *
               this.activityForm.get('unitPrice')?.value +
-            (this.activityForm.get('fee')?.value ?? 0);
+            (this.activityForm.get('fee')?.value ?? 0) +
+            (this.activityForm.get('tax')?.value ?? 0);
         } else {
           this.total =
             this.activityForm.get('quantity')?.value *
               this.activityForm.get('unitPrice')?.value -
-            (this.activityForm.get('fee')?.value ?? 0);
+            (this.activityForm.get('fee')?.value ?? 0) -
+            (this.activityForm.get('tax')?.value ?? 0);
         }
 
         this.changeDetectorRef.markForCheck();
@@ -376,6 +379,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
           if (type === 'VALUABLE') {
             this.activityForm.get('quantity')?.setValue(1);
+            this.activityForm.get('tax')?.setValue(0);
           }
 
           this.activityForm
@@ -398,6 +402,10 @@ export class GfCreateOrUpdateActivityDialogComponent {
 
           if (['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('fee')?.setValue(0);
+          }
+
+          if (['FEE', 'LIABILITY'].includes(type)) {
+            this.activityForm.get('tax')?.setValue(0);
           }
 
           this.activityForm.get('name')?.setValidators(Validators.required);
@@ -500,6 +508,7 @@ export class GfCreateOrUpdateActivityDialogComponent {
       date: this.activityForm.get('date')?.value,
       fee: this.activityForm.get('fee')?.value,
       quantity: this.activityForm.get('quantity')?.value,
+      tax: this.activityForm.get('tax')?.value,
       symbol:
         (['FEE', 'INTEREST', 'LIABILITY', 'VALUABLE'].includes(
           this.activityForm.get('type')?.value

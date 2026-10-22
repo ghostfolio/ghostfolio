@@ -494,6 +494,8 @@ describe('PortfolioService', () => {
         dividendInBaseCurrency: new Big(0),
         fee: new Big(0),
         feeInBaseCurrency: new Big(0),
+        tax: new Big(0),
+        taxInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),

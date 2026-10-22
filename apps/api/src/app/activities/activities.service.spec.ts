@@ -153,6 +153,120 @@ describe('ActivitiesService', () => {
       );
     });
 
+    it.each([
+      {
+        expectedAmount: -210,
+        fee: 3,
+        quantity: 2,
+        tax: 7,
+        type: 'BUY' as ActivityType,
+        unitPrice: 100
+      },
+      {
+        expectedAmount: 190,
+        fee: 3,
+        quantity: 2,
+        tax: 7,
+        type: 'SELL' as ActivityType,
+        unitPrice: 100
+      },
+      {
+        expectedAmount: 40,
+        fee: 0,
+        quantity: 10,
+        tax: 10,
+        type: 'DIVIDEND' as ActivityType,
+        unitPrice: 5
+      },
+      {
+        expectedAmount: 40,
+        fee: 0,
+        quantity: 1,
+        tax: 10,
+        type: 'INTEREST' as ActivityType,
+        unitPrice: 50
+      }
+    ])(
+      'updates the account balance including tax for $type activities',
+      async ({ expectedAmount, fee, quantity, tax, type, unitPrice }) => {
+        const updateAccountBalance = jest.fn();
+        const create = jest.fn(({ data }: Prisma.OrderCreateArgs) => {
+          return {
+            ...data,
+            SymbolProfile: data.SymbolProfile.connectOrCreate.create,
+            userId: 'user-id'
+          };
+        });
+
+        const service = new ActivitiesService(
+          null,
+          {
+            updateAccountBalance
+          } as unknown as AccountService,
+          null,
+          null,
+          {
+            addJobToQueue: jest.fn()
+          } as unknown as DataGatheringService,
+          null,
+          {
+            emit: jest.fn()
+          } as unknown as EventEmitter2,
+          null,
+          null,
+          {
+            order: { create },
+            symbolProfile: {
+              findUnique: jest.fn().mockResolvedValue(null)
+            }
+          } as unknown as PrismaService,
+          null,
+          {
+            validateTagIds: jest.fn()
+          } as unknown as TagService
+        );
+
+        await service.createActivity({
+          accountId: 'account-id',
+          currency: 'USD',
+          date: parseDate('2026-10-19'),
+          fee,
+          quantity,
+          tax,
+          type,
+          unitPrice,
+          SymbolProfile: {
+            connectOrCreate: {
+              create: {
+                currency: 'USD',
+                dataSource: DataSource.YAHOO,
+                name: 'Tax Test',
+                symbol: 'TAX_TEST'
+              },
+              where: {
+                dataSource_symbol: {
+                  dataSource: DataSource.YAHOO,
+                  symbol: 'TAX_TEST'
+                }
+              }
+            }
+          },
+          updateAccountBalance: true,
+          user: { connect: { id: 'user-id' } },
+          userId: 'user-id'
+        });
+
+        expect(updateAccountBalance).toHaveBeenCalledTimes(1);
+        expect(updateAccountBalance).toHaveBeenCalledWith({
+          accountId: 'account-id',
+          amount: expectedAmount,
+          currency: 'USD',
+          date: parseDate('2026-10-19'),
+          userId: 'user-id'
+        });
+      }
+    );
+
     async function getCreatedAssetProfile({
       existingAssetProfile,
       symbol
@@ -300,6 +414,102 @@ describe('ActivitiesService', () => {
       expect(activities).toHaveLength(1);
       expect(activities[0]).not.toHaveProperty('SymbolProfile');
       expect(activities[0].assetProfile).toBe(assetProfile);
+    });
+
+    it('converts tax to the asset profile and base currencies at the activity date', async () => {
+      const date = parseDate('2024-05-15');
+      const assetProfile = {
+        ...assetProfileDummyData,
+        currency: 'EUR',
+        dataSource: DataSource.YAHOO,
+        name: 'Tax Test',
+        symbol: 'TAX'
+      };
+
+      const findMany = jest.fn().mockResolvedValue([
+        {
+          ...activityDummyData,
+          account: null,
+          currency: 'CHF',
+          date,
+          fee: 1,
+          id: 'activity-id',
+          quantity: 2,
+          tax: 4,
+          SymbolProfile: {
+            currency: 'EUR',
+            dataSource: DataSource.YAHOO,
+            symbol: 'TAX'
+          },
+          tags: [],
+          type: 'BUY',
+          unitPrice: 100
+        }
+      ]);
+
+      const toCurrencyAtDate = jest
+        .fn()
+        .mockResolvedValueOnce(11)
+        .mockResolvedValueOnce(12)
+        .mockResolvedValueOnce(21)
+        .mockResolvedValueOnce(22)
+        .mockResolvedValueOnce(31)
+        .mockResolvedValueOnce(32);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          toCurrencyAtDate
+        } as unknown as ExchangeRateDataService,
+        null,
+        {
+          order: {
+            findMany,
+            count: jest.fn().mockResolvedValue(1)
+          }
+        } as unknown as PrismaService,
+        {
+          getSymbolProfiles: jest.fn().mockResolvedValue([assetProfile])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      const { activities } = await service.getActivities({
+        userCurrency: 'USD',
+        userId: 'user-id'
+      });
+
+      expect(activities[0]).toMatchObject({
+        fee: 1,
+        feeInAssetProfileCurrency: 11,
+        feeInBaseCurrency: 12,
+        tax: 4,
+        taxInAssetProfileCurrency: 21,
+        taxInBaseCurrency: 22,
+        unitPriceInAssetProfileCurrency: 31,
+        valueInBaseCurrency: 32
+      });
+
+      expect(toCurrencyAtDate).toHaveBeenNthCalledWith(
+        3,
+        4,
+        'CHF',
+        'EUR',
+        date
+      );
+      expect(toCurrencyAtDate).toHaveBeenNthCalledWith(
+        4,
+        4,
+        'CHF',
+        'USD',
+        date
+      );
     });
 
     it('excludes the activities of the start date of a date range', async () => {

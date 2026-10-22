@@ -193,6 +193,7 @@ model Order {
   quantity        Float
   symbolProfileId String
   tags            Tag[]
+  tax             Float         @default(0)
   type            Type
   unitPrice       Float
   updatedAt       DateTime      @updatedAt

@@ -10,6 +10,8 @@ export interface Activity extends Order {
   feeInBaseCurrency: number;
   tagIds?: string[];
   tags?: Tag[];
+  taxInAssetProfileCurrency: number;
+  taxInBaseCurrency: number;
   unitPriceInAssetProfileCurrency: number;
   updateAccountBalance?: boolean;
   value: number;

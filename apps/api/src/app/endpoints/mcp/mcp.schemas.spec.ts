@@ -201,6 +201,22 @@ describe('IMPORT_ACTIVITIES_PARAMETERS', () => {
     expect(parse([createActivity({ currency: 'USD' })])).toBe(true);
   });
 
+  it('Defaults tax to zero', () => {
+    expect(
+      IMPORT_ACTIVITIES_PARAMETERS.parse({
+        activities: [createActivity()]
+      }).activities[0].tax
+    ).toBe(0);
+  });
+
+  it('Accepts a non-negative tax', () => {
+    expect(parse([createActivity({ tax: 7.5 })])).toBe(true);
+  });
+
+  it('Refuses a negative tax', () => {
+    expect(parse([createActivity({ tax: -1 })])).toBe(false);
+  });
+
   it('Accepts an encoded data source', () => {
     expect(
       parse([
