@@ -29,6 +29,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
 import { GfValueComponent } from '../value/value.component';
 import { HoldingsTableItem } from './interfaces/interfaces';
+import { getHoldingQuantityPrecision } from './quantity-precision';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -142,6 +143,10 @@ export class GfHoldingsTableComponent {
     return isCashPosition(assetProfile)
       ? getCountryCodeFromCurrency(assetProfile.currency)
       : '';
+  }
+
+  protected getQuantityPrecision(holding: HoldingsTableItem): number {
+    return getHoldingQuantityPrecision(holding);
   }
 
   protected onOpenHoldingDialog({
