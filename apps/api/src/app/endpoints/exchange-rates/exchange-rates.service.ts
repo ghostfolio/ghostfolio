@@ -3,7 +3,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ExchangeRateService {
+export class ExchangeRatesService {
   public constructor(
     private readonly exchangeRateDataService: ExchangeRateDataService
   ) {}

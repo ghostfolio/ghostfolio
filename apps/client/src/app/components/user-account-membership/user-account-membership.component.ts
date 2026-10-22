@@ -1,5 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { E_MAIL_LINE_BREAK } from '@ghostfolio/common/config';
+import { TRY_SUBSCRIPTION_MAIL_HREF } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
@@ -49,13 +49,7 @@ export class GfUserAccountMembershipComponent {
   protected hasPermissionToCreateApiKey: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected price: number;
-  protected readonly trySubscriptionMailHref = `mailto:hi@ghostfol.io?subject=Ghostfolio Premium Trial&body=${[
-    'Hello',
-    '',
-    'I am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?',
-    '',
-    'Kind regards'
-  ].join(E_MAIL_LINE_BREAK)}`;
+  protected readonly trySubscriptionMailHref = TRY_SUBSCRIPTION_MAIL_HREF;
   protected user: User;
 
   private couponId: string | undefined;

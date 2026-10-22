@@ -1,7 +1,7 @@
-import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { AuthDeviceService } from '@ghostfolio/api/services/auth-device/auth-device.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';

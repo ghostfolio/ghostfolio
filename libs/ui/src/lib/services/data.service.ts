@@ -40,7 +40,6 @@ import {
   CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
-  DataProviderHistoricalResponse,
   ExportResponse,
   Filter,
   ImportResponse,
@@ -306,18 +305,6 @@ export class DataService {
   public fetchDividendsImport({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.get<ImportResponse>(
       `/api/v1/import/dividends/${dataSource}/${encodeURIComponent(symbol)}`
-    );
-  }
-
-  public fetchExchangeRateForDate({
-    date,
-    symbol
-  }: {
-    date: Date;
-    symbol: string;
-  }) {
-    return this.http.get<DataProviderHistoricalResponse>(
-      `/api/v1/exchange-rate/${encodeURIComponent(symbol)}/${format(date, DATE_FORMAT, { in: utc })}`
     );
   }
 
