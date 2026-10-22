@@ -596,7 +596,7 @@ export class ImportService {
           return name;
         });
 
-      const [existingAssetProfiles, existingCustomAssetProfilesOfUser] =
+      const [existingAssetProfiles, existingCustomAssetProfiles] =
         await Promise.all([
           this.symbolProfileService.getSymbolProfiles(
             assetProfilesWithMarketDataDto.map(({ dataSource, symbol }) => {
@@ -624,27 +624,42 @@ export class ImportService {
           }
         );
 
-        // If there is no asset profile or if the asset profile belongs to a
-        // different user, then reuse the custom asset profile of the user or
-        // create a new asset profile
-        if (existingAssetProfile?.userId !== user.id) {
-          // Check if the user has a custom asset profile with the same name.
+        // An asset profile is reusable if it belongs to the user or if it is a
+        // global asset profile. Only profiles of other users must not be reused.
+        const isReusableAssetProfile =
+          existingAssetProfile !== undefined &&
+          (existingAssetProfile.userId === user.id ||
+            existingAssetProfile.userId === null);
+
+        // If there is no reusable asset profile, then reuse a custom asset
+        // profile with the same name or create a new asset profile
+        if (!isReusableAssetProfile) {
+          // Check if there is a custom asset profile with the same name. Prefer
+          // the profile of the user over a global asset profile.
           // Skip asset profiles with a legacy free-text symbol as they would
           // fail the symbol validation on a future import.
-          const existingCustomAssetProfileOfUser =
+          const matchingCustomAssetProfiles =
             assetProfileWithMarketData.dataSource === DataSource.MANUAL
-              ? existingCustomAssetProfilesOfUser.find((customAssetProfile) => {
+              ? existingCustomAssetProfiles.filter((customAssetProfile) => {
                   return (
                     customAssetProfile.name ===
                       assetProfileWithMarketData.name &&
                     isValidCustomAssetProfileSymbol(customAssetProfile.symbol)
                   );
                 })
-              : undefined;
+              : [];
 
-          if (existingCustomAssetProfileOfUser) {
-            // Reuse the custom asset profile of the user instead of creating a duplicate
-            symbol = existingCustomAssetProfileOfUser.symbol;
+          const existingCustomAssetProfileToReuse =
+            matchingCustomAssetProfiles.find(({ userId }) => {
+              return userId === user.id;
+            }) ??
+            matchingCustomAssetProfiles.find(({ userId }) => {
+              return userId === null;
+            });
+
+          if (existingCustomAssetProfileToReuse) {
+            // Reuse the custom asset profile instead of creating a duplicate
+            symbol = existingCustomAssetProfileToReuse.symbol;
           } else {
             const assetProfile: CreateAssetProfileDto = omit(
               assetProfileWithMarketData,

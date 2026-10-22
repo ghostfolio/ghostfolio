@@ -33,6 +33,8 @@ describe('ImportService', () => {
   let addSymbolProfile: jest.Mock;
   let createActivity: jest.Mock;
   let gatherSymbols: jest.Mock;
+  let getCustomSymbolProfilesByNames: jest.Mock;
+  let getSymbolProfiles: jest.Mock;
   let importService: ImportService;
   let updateManyMarketData: jest.Mock;
 
@@ -46,6 +48,8 @@ describe('ImportService', () => {
     addSymbolProfile = jest.fn();
     createActivity = jest.fn();
     gatherSymbols = jest.fn();
+    getCustomSymbolProfilesByNames = jest.fn().mockResolvedValue([]);
+    getSymbolProfiles = jest.fn().mockResolvedValue([]);
     updateManyMarketData = jest.fn();
 
     const validateActivities = jest.fn(
@@ -94,8 +98,8 @@ describe('ImportService', () => {
       null,
       {
         add: addSymbolProfile,
-        getCustomSymbolProfilesByNames: jest.fn().mockResolvedValue([]),
-        getSymbolProfiles: jest.fn().mockResolvedValue([])
+        getCustomSymbolProfilesByNames,
+        getSymbolProfiles
       } as unknown as SymbolProfileService,
       {
         getTagsForUser: jest.fn().mockResolvedValue([])
@@ -479,6 +483,204 @@ describe('ImportService', () => {
         { dataSource: DataSource.MANUAL, symbol: 'GF_COPX' },
         { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
       ]);
+    });
+
+    it('reuses a global custom asset profile by symbol', async () => {
+      getSymbolProfiles.mockResolvedValue([
+        {
+          dataSource: DataSource.MANUAL,
+          name: 'Global X Copper Miners ETF',
+          symbol: 'GF_COPX',
+          userId: null
+        }
+      ]);
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: 'GF_COPX' }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_COPX',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            name: 'Global X Copper Miners ETF',
+            symbol: 'GF_COPX'
+          }
+        ]
+      });
+
+      expect(addSymbolProfile).not.toHaveBeenCalled();
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.where
+      ).toEqual({
+        dataSource_symbol: {
+          dataSource: DataSource.MANUAL,
+          symbol: 'GF_COPX'
+        }
+      });
+    });
+
+    it('reuses a global custom asset profile by name', async () => {
+      getCustomSymbolProfilesByNames.mockResolvedValue([
+        {
+          name: 'Global X Copper Miners ETF',
+          symbol: 'GF_COPX',
+          userId: null
+        }
+      ]);
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: 'GF_COPX' }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL,
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            name: 'Global X Copper Miners ETF',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+          }
+        ]
+      });
+
+      expect(addSymbolProfile).not.toHaveBeenCalled();
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.where
+      ).toEqual({
+        dataSource_symbol: {
+          dataSource: DataSource.MANUAL,
+          symbol: 'GF_COPX'
+        }
+      });
+    });
+
+    it('prefers the custom asset profile of the user over a global profile with the same name', async () => {
+      getCustomSymbolProfilesByNames.mockResolvedValue([
+        {
+          name: 'Global X Copper Miners ETF',
+          symbol: 'GF_GLOBAL',
+          userId: null
+        },
+        {
+          name: 'Global X Copper Miners ETF',
+          symbol: 'GF_USER',
+          userId: 'user-id'
+        }
+      ]);
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: 'GF_USER' }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL,
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            name: 'Global X Copper Miners ETF',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+          }
+        ]
+      });
+
+      expect(addSymbolProfile).not.toHaveBeenCalled();
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.where
+      ).toEqual({
+        dataSource_symbol: {
+          dataSource: DataSource.MANUAL,
+          symbol: 'GF_USER'
+        }
+      });
+    });
+
+    it('does not reuse a custom asset profile of another user', async () => {
+      getSymbolProfiles.mockResolvedValue([
+        {
+          dataSource: DataSource.MANUAL,
+          name: 'Global X Copper Miners ETF',
+          symbol: 'GF_OTHER',
+          userId: 'other-user-id'
+        }
+      ]);
+      addSymbolProfile.mockImplementation((assetProfile) => {
+        return assetProfile;
+      });
+      createActivity.mockImplementationOnce(({ date, SymbolProfile, type }) => {
+        return {
+          date,
+          type,
+          SymbolProfile: {
+            dataSource: SymbolProfile.connectOrCreate.create.dataSource,
+            symbol: SymbolProfile.connectOrCreate.create.symbol
+          }
+        };
+      });
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: 'GF_OTHER',
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            name: 'Global X Copper Miners ETF',
+            symbol: 'GF_OTHER'
+          }
+        ]
+      });
+
+      expect(addSymbolProfile).toHaveBeenCalledTimes(1);
+
+      const { symbol } = addSymbolProfile.mock.calls[0][0];
+
+      expect(symbol).not.toBe('GF_OTHER');
+      expect(isUUID(symbol)).toBe(true);
+
+      expect(
+        createActivity.mock.calls[0][0].SymbolProfile.connectOrCreate.where
+      ).toEqual({
+        dataSource_symbol: {
+          dataSource: DataSource.MANUAL,
+          symbol
+        }
+      });
     });
 
     it('keeps the asset profiles of the activities in a dry run', async () => {

@@ -111,17 +111,19 @@ export class SymbolProfileService {
   }: {
     names: string[];
     userId: string;
-  }): Promise<Pick<SymbolProfile, 'name' | 'symbol'>[]> {
+  }): Promise<Pick<SymbolProfile, 'name' | 'symbol' | 'userId'>[]> {
     if (names.length === 0) {
       return [];
     }
 
     return this.prismaService.symbolProfile.findMany({
-      select: { name: true, symbol: true },
+      select: { name: true, symbol: true, userId: true },
       where: {
-        userId,
         dataSource: DataSource.MANUAL,
-        name: { in: names }
+        name: { in: names },
+        // Include manual asset profiles created by an admin, which are global
+        // and therefore not owned by a specific user
+        OR: [{ userId }, { userId: null }]
       }
     });
   }
