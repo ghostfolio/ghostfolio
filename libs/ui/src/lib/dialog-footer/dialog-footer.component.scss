@@ -1,3 +1,7 @@
 :host {
   display: block;
+
+  button[mat-icon-button] {
+    --mat-icon-button-touch-target-display: block;
+  }
 }

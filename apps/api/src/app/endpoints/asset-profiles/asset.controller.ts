@@ -1,4 +1,3 @@
-import { AssetProfilesService } from '@ghostfolio/api/app/endpoints/asset-profiles/asset-profiles.service';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import type { AssetResponse } from '@ghostfolio/common/interfaces';
@@ -6,6 +5,8 @@ import type { AssetResponse } from '@ghostfolio/common/interfaces';
 import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { pick } from 'lodash-es';
+
+import { AssetProfilesService } from './asset-profiles.service';
 
 @Controller('asset')
 export class AssetController {

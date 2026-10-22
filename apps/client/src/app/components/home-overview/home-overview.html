@@ -101,8 +101,20 @@
             appearance="outlined"
             class="h-100 holdings position-absolute w-100"
           >
-            <mat-card-header>
+            <mat-card-header class="align-items-center">
               <mat-card-title i18n>Holdings</mat-card-title>
+              <a
+                class="ms-auto"
+                i18n-title
+                mat-icon-button
+                title="View Details"
+                [routerLink]="routerLinkHomeHoldings"
+              >
+                <ion-icon
+                  class="d-block text-body-secondary"
+                  name="arrow-forward-outline"
+                />
+              </a>
             </mat-card-header>
             <mat-card-content class="overflow-auto">
               <gf-holdings-table

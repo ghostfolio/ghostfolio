@@ -1,6 +1,5 @@
 import { AccountModule } from '@ghostfolio/api/app/account/account.module';
 import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
-import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
@@ -28,7 +27,6 @@ import { ImportService } from './import.service';
     AccountModule,
     ActivitiesModule,
     ApiModule,
-    CacheModule,
     ConfigurationModule,
     DataGatheringQueueModule,
     DataProviderModule,
