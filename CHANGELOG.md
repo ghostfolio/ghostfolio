@@ -7,14 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a link to the holdings tab in the holdings table on the overview tab of the home page (experimental)
+
 ### Changed
 
 - Extended the account detail dialog to include the change and the performance
+- Improved the style of the close button in the dialog footer component
+- Improved the style of the close button in the dialog header component
+
+## 3.90.0 - 2026-10-21
+
+### Changed
+
+- Extended the variations of the interstitials for the subscription by a trial
 - Deprecated the `api/v1/auth-device` endpoint in favor of the `api/v1/auth-devices` endpoint
 - Deprecated the `api/v1/exchange-rate` endpoint in favor of the `api/v1/exchange-rates` endpoint
+- Upgraded the `Node.js` engine from version `>=22.22.3` to `>=22.23.4` (`package.json`)
 - Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.0.0` to `2.3.1`
 - Upgraded `@modelcontextprotocol/node` from version `2.0.0` to `2.1.1`
 - Upgraded `@rekog/mcp-nest` from version `2.0.7` to `2.0.8`
+- Upgraded `undici` from version `8.11.2` to `8.12.2`
 
 ## 3.89.0 - 2026-10-20
 

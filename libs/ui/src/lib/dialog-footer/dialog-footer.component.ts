@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { close } from 'ionicons/icons';
+import { closeOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +25,7 @@ export class GfDialogFooterComponent {
   @Output() closeButtonClicked = new EventEmitter<void>();
 
   public constructor() {
-    addIcons({ close });
+    addIcons({ closeOutline });
   }
 
   public onClickCloseButton() {
