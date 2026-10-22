@@ -15,9 +15,10 @@ import { Module } from '@nestjs/common';
 
 import { AssetProfilesController } from './asset-profiles.controller';
 import { AssetProfilesService } from './asset-profiles.service';
+import { AssetController } from './asset.controller';
 
 @Module({
-  controllers: [AssetProfilesController],
+  controllers: [AssetController, AssetProfilesController],
   exports: [AssetProfilesService],
   imports: [
     ActivitiesModule,

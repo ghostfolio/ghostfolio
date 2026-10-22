@@ -67,6 +67,7 @@ import type {
 } from './responses/data-provider-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
+import type { ExchangeRateResponse } from './responses/exchange-rate-response.interface';
 import type { ExportResponse } from './responses/export-response.interface';
 import type { HistoricalResponse } from './responses/historical-response.interface';
 import type { ImportResponse } from './responses/import-response.interface';
@@ -150,6 +151,7 @@ export {
   DataProviderResponse,
   DividendsResponse,
   EnhancedAssetProfile,
+  ExchangeRateResponse,
   ExportResponse,
   Filter,
   FilterGroup,
