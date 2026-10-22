@@ -394,22 +394,6 @@ export abstract class PortfolioCalculator {
       [date: string]: AccumulatedValues;
     } = {};
 
-    const valuesByAssetProfileIdentifier: {
-      [assetProfileIdentifier: string]: {
-        averageInvestmentValues: { [date: string]: Big };
-        averageInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
-        currentValues: { [date: string]: Big };
-        currentValuesWithCurrencyEffect: { [date: string]: Big };
-        dividendValuesWithCurrencyEffect: { [date: string]: Big };
-        investmentValuesAccumulated: { [date: string]: Big };
-        investmentValuesAccumulatedWithCurrencyEffect: { [date: string]: Big };
-        investmentValuesWithCurrencyEffect: { [date: string]: Big };
-        netPerformanceValues: { [date: string]: Big };
-        netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
-        netWorthValuesWithCurrencyEffect: { [date: string]: Big };
-      };
-    } = {};
-
     for (const item of latestHoldingBalances.holdings) {
       const assetProfileIdentifier = getAssetProfileIdentifier(item);
 
@@ -478,34 +462,33 @@ export abstract class PortfolioCalculator {
       // contributes nothing but its balance to the performance calculation. It
       // is therefore excluded from the value and the investment, while still
       // contributing to the net worth.
-      valuesByAssetProfileIdentifier[assetProfileIdentifier] =
-        isCashInBaseCurrency
-          ? {
-              averageInvestmentValues: {},
-              averageInvestmentValuesWithCurrencyEffect: {},
-              currentValues: {},
-              currentValuesWithCurrencyEffect: {},
-              dividendValuesWithCurrencyEffect: {},
-              investmentValuesAccumulated: {},
-              investmentValuesAccumulatedWithCurrencyEffect: {},
-              investmentValuesWithCurrencyEffect: {},
-              netPerformanceValues: {},
-              netPerformanceValuesWithCurrencyEffect: {},
-              netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect
-            }
-          : {
-              averageInvestmentValues,
-              averageInvestmentValuesWithCurrencyEffect,
-              currentValues,
-              currentValuesWithCurrencyEffect,
-              dividendValuesWithCurrencyEffect,
-              investmentValuesAccumulated,
-              investmentValuesAccumulatedWithCurrencyEffect,
-              investmentValuesWithCurrencyEffect,
-              netPerformanceValues,
-              netPerformanceValuesWithCurrencyEffect,
-              netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect
-            };
+      const assetProfileValues = isCashInBaseCurrency
+        ? {
+            averageInvestmentValues: {},
+            averageInvestmentValuesWithCurrencyEffect: {},
+            currentValues: {},
+            currentValuesWithCurrencyEffect: {},
+            dividendValuesWithCurrencyEffect: {},
+            investmentValuesAccumulated: {},
+            investmentValuesAccumulatedWithCurrencyEffect: {},
+            investmentValuesWithCurrencyEffect: {},
+            netPerformanceValues: {},
+            netPerformanceValuesWithCurrencyEffect: {},
+            netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect
+          }
+        : {
+            averageInvestmentValues,
+            averageInvestmentValuesWithCurrencyEffect,
+            currentValues,
+            currentValuesWithCurrencyEffect,
+            dividendValuesWithCurrencyEffect,
+            investmentValuesAccumulated,
+            investmentValuesAccumulatedWithCurrencyEffect,
+            investmentValuesWithCurrencyEffect,
+            netPerformanceValues,
+            netPerformanceValuesWithCurrencyEffect,
+            netWorthValuesWithCurrencyEffect: currentValuesWithCurrencyEffect
+          };
 
       positions.push({
         averageInvestment,
@@ -580,15 +563,10 @@ export abstract class PortfolioCalculator {
       ) {
         errors.push({ dataSource: item.dataSource, symbol: item.symbol });
       }
-    }
 
-    const assetProfileIdentifiers = Object.keys(valuesByAssetProfileIdentifier);
-
-    for (const dateString of chartDates) {
-      for (const assetProfileIdentifier of assetProfileIdentifiers) {
-        const assetProfileValues =
-          valuesByAssetProfileIdentifier[assetProfileIdentifier];
-
+      // Accumulate each holding right away, so that its values by date do not
+      // have to be kept for all holdings at once
+      for (const dateString of chartDates) {
         const currentValue =
           assetProfileValues.currentValues?.[dateString] ?? new Big(0);
 
