@@ -40,17 +40,18 @@ import { AccountModule } from './account/account.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
-import { AssetModule } from './asset/asset.module';
 import { AuthModule } from './auth/auth.module';
-import { CacheModule } from './cache/cache.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
 import { AssetProfilesModule } from './endpoints/asset-profiles/asset-profiles.module';
 import { AssetsModule } from './endpoints/assets/assets.module';
 import { AuthDevicesModule } from './endpoints/auth-devices/auth-devices.module';
 import { BenchmarksModule } from './endpoints/benchmarks/benchmarks.module';
+import { CacheModule } from './endpoints/cache/cache.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { ExchangeRatesModule } from './endpoints/exchange-rates/exchange-rates.module';
+import { InfoModule } from './endpoints/info/info.module';
+import { LogoModule } from './endpoints/logo/logo.module';
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
 import { McpModule } from './endpoints/mcp/mcp.module';
 import { PlatformsModule } from './endpoints/platforms/platforms.module';
@@ -61,8 +62,6 @@ import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
 import { ExportModule } from './export/export.module';
 import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
-import { InfoModule } from './info/info.module';
-import { LogoModule } from './logo/logo.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
@@ -78,7 +77,6 @@ import { UserModule } from './user/user.module';
     AiModule,
     ApiKeysModule,
     AssetProfilesModule,
-    AssetModule,
     AssetsModule,
     AuthDevicesModule,
     AuthModule,

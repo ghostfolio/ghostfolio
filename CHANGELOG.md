@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a link to the holdings tab in the holdings table on the overview tab of the home page (experimental)
 
+### Changed
+
+- Improved the style of the close button in the dialog footer component
+- Improved the style of the close button in the dialog header component
+
 ## 3.90.0 - 2026-10-21
 
 ### Changed
