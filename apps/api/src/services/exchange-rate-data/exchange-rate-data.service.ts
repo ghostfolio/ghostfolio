@@ -39,6 +39,10 @@ export class ExchangeRateDataService {
   private currencyPairs: DataGatheringItem[] = [];
   private derivedCurrencyFactors: { [currencyPair: string]: number } = {};
   private exchangeRates: { [currencyPair: string]: number } = {};
+  private marketPricesBySymbol = new Map<
+    string,
+    { expiresAt: number; marketPrices: Promise<Float64Array> }
+  >();
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
@@ -309,18 +313,13 @@ export class ExchangeRateDataService {
     } else if (derivedCurrencyFactor) {
       factor = derivedCurrencyFactor;
     } else {
-      const dataSource =
-        this.dataProviderService.getDataSourceForExchangeRates();
-      const symbol = `${aFromCurrency}${aToCurrency}`;
-
-      const marketData = await this.marketDataService.get({
-        dataSource,
-        symbol,
-        date: aDate
+      const marketPrice = await this.getMarketPriceAtDate({
+        date: aDate,
+        symbol: `${aFromCurrency}${aToCurrency}`
       });
 
-      if (marketData?.marketPrice) {
-        factor = marketData?.marketPrice;
+      if (marketPrice) {
+        factor = marketPrice;
       } else {
         // Calculate indirectly via base currency
 
@@ -331,13 +330,11 @@ export class ExchangeRateDataService {
           if (aFromCurrency === DEFAULT_CURRENCY) {
             marketPriceBaseCurrencyFromCurrency = 1;
           } else {
-            marketPriceBaseCurrencyFromCurrency = (
-              await this.marketDataService.get({
-                dataSource,
+            marketPriceBaseCurrencyFromCurrency =
+              await this.getMarketPriceAtDate({
                 date: aDate,
                 symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
-              })
-            )?.marketPrice;
+              });
           }
         } catch {}
 
@@ -345,13 +342,12 @@ export class ExchangeRateDataService {
           if (aToCurrency === DEFAULT_CURRENCY) {
             marketPriceBaseCurrencyToCurrency = 1;
           } else {
-            marketPriceBaseCurrencyToCurrency = (
-              await this.marketDataService.get({
-                dataSource,
+            marketPriceBaseCurrencyToCurrency = await this.getMarketPriceAtDate(
+              {
                 date: aDate,
                 symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
-              })
-            )?.marketPrice;
+              }
+            );
           }
         } catch {}
 
@@ -513,6 +509,68 @@ export class ExchangeRateDataService {
     }
 
     return factors;
+  }
+
+  /**
+   * Looks up the market price of a currency pair in its full history, which is
+   * loaded once per minute instead of querying the database for every date
+   */
+  private async getMarketPriceAtDate({
+    date,
+    symbol
+  }: {
+    date: Date;
+    symbol: string;
+  }) {
+    let item = this.marketPricesBySymbol.get(symbol);
+
+    if (!item || item.expiresAt < Date.now()) {
+      item = {
+        expiresAt: Date.now() + ms('1 minute'),
+        marketPrices: this.loadMarketPrices(symbol)
+      };
+
+      this.marketPricesBySymbol.set(symbol, item);
+
+      item.marketPrices.catch(() => {
+        if (this.marketPricesBySymbol.get(symbol) === item) {
+          this.marketPricesBySymbol.delete(symbol);
+        }
+      });
+    }
+
+    const marketPrices = await item.marketPrices;
+
+    // Days without market data are 0 or out of bounds
+    return marketPrices[this.getUtcDaysSinceEpoch(date)] || undefined;
+  }
+
+  private getUtcDaysSinceEpoch(aDate: Date) {
+    return Math.floor(aDate.getTime() / ms('1 day'));
+  }
+
+  private async loadMarketPrices(aSymbol: string) {
+    const marketData = await this.marketDataService.getRange({
+      assetProfileIdentifiers: [
+        {
+          dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
+          symbol: aSymbol
+        }
+      ],
+      dateQuery: { lt: new Date() }
+    });
+
+    const marketPrices = new Float64Array(
+      marketData.length > 0
+        ? this.getUtcDaysSinceEpoch(marketData.at(-1).date) + 1
+        : 0
+    );
+
+    for (const { date, marketPrice } of marketData) {
+      marketPrices[this.getUtcDaysSinceEpoch(date)] = marketPrice;
+    }
+
+    return marketPrices;
   }
 
   private async prepareCurrencies(): Promise<string[]> {
