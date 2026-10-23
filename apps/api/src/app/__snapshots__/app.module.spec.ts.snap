@@ -548,6 +548,7 @@ exports[`AppModule should keep the security of each route 1`] = `
       "TransformDataSourceInResponseInterceptor",
       "TransformDataSourceInRequestInterceptor",
     ],
+    "permission": "createActivity",
   },
   "GET /info": {
     "guards": [],

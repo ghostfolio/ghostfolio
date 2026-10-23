@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed a transaction timeout for presets in the historical market data table of the admin control panel
+- Added the missing permission check in the `GET api/v1/import/dividends/:dataSource/:symbol` endpoint
 
 ## 3.90.0 - 2026-10-21
 
