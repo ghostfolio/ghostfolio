@@ -52,7 +52,7 @@
       <gf-benchmark
         [benchmarks]="benchmarks()"
         [deviceType]="deviceType()"
-        [hasPermissionToOpenDetails]="!!user"
+        [hasPermissionToOpenDetails]="hasPermissionToOpenBenchmarkDetails"
         [locale]="user?.settings?.locale ?? DEFAULT_LOCALE"
         [showSymbol]="false"
         [user]="user"
