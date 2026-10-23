@@ -54,8 +54,6 @@ import { McpService } from './mcp.service';
         )}.`;
 
         return new McpStrategy({
-          // The instructions are resolved for each request, hence only a user
-          // with the Basic subscription gets the note on its limits
           instructions: ({ request }) => {
             return hasLimitsOfBasicSubscriptionOfBearerToken(request)
               ? instructionsOfBasicSubscription
