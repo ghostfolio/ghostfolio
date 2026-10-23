@@ -4,8 +4,8 @@ import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { environment } from '@ghostfolio/api/environments/environment';
 import {
-  getActiveImpersonationOfBearerToken,
-  getMcpUserOfBearerToken
+  getMcpUserOfBearerToken,
+  hasLimitsOfBasicSubscriptionOfBearerToken
 } from '@ghostfolio/api/helper/bearer-token.helper';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -14,7 +14,6 @@ import { ImportModule } from '@ghostfolio/api/services/import/import.module';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
-import { SubscriptionType } from '@ghostfolio/common/enums';
 
 import { Module } from '@nestjs/common';
 import {
@@ -50,22 +49,15 @@ import { McpService } from './mcp.service';
         const instructions =
           'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access, import activities into the portfolio and update the cash balances of the accounts. They give the quantities and the monetary values only if the access has the permission "View" or "View and manage", otherwise no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities or to update a cash balance, the access needs the permission "Restricted view and manage" or "View and manage".';
 
-        const instructionsOfBasicSubscription = [
-          instructions,
-          `The user who granted the access has the Basic subscription, hence the tool get-performance does not give these columns: ${PortfolioTableService.getAssetPerformanceInBaseCurrencyColumnNames().join(
-            ', '
-          )}.`
-        ].join(' ');
+        const instructionsOfBasicSubscription = `${instructions} The user who granted the access has the Basic subscription, hence the tool get-performance does not give these columns: ${PortfolioTableService.getAssetPerformanceInBaseCurrencyColumnNames().join(
+          ', '
+        )}.`;
 
         return new McpStrategy({
           // The instructions are resolved for each request, hence only a user
           // with the Basic subscription gets the note on its limits
           instructions: ({ request }) => {
-            const isBasicSubscription =
-              getActiveImpersonationOfBearerToken(request)?.userSubscription
-                ?.type === SubscriptionType.Basic;
-
-            return isBasicSubscription
+            return hasLimitsOfBasicSubscriptionOfBearerToken(request)
               ? instructionsOfBasicSubscription
               : instructions;
           },
