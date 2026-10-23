@@ -49,35 +49,6 @@
               <gf-value
                 i18n
                 size="medium"
-                [colorizeSign]="true"
-                [isCurrency]="true"
-                [isLoading]="isLoadingChart"
-                [locale]="user?.settings?.locale"
-                [precision]="netPerformanceWithCurrencyEffectPrecision"
-                [unit]="user?.settings?.baseCurrency"
-                [value]="netPerformanceWithCurrencyEffect"
-                >Change</gf-value
-              >
-            </div>
-            <div class="col-6 mb-3">
-              <gf-value
-                i18n
-                size="medium"
-                [colorizeSign]="true"
-                [isLoading]="isLoadingChart"
-                [isPercent]="true"
-                [locale]="user?.settings?.locale"
-                [precision]="
-                  netPerformancePercentageWithCurrencyEffectPrecision
-                "
-                [value]="netPerformancePercentageWithCurrencyEffect"
-                >Performance</gf-value
-              >
-            </div>
-            <div class="col-6 mb-3">
-              <gf-value
-                i18n
-                size="medium"
                 [isCurrency]="true"
                 [isLoading]="isLoading"
                 [locale]="user?.settings?.locale"
@@ -100,6 +71,37 @@
                 >Equity</gf-value
               >
             </div>
+            @if (user?.settings?.isExperimentalFeatures) {
+              <div class="col-6 mb-3">
+                <gf-value
+                  i18n
+                  size="medium"
+                  [colorizeSign]="true"
+                  [isCurrency]="true"
+                  [isLoading]="isLoadingChart"
+                  [locale]="user?.settings?.locale"
+                  [precision]="netPerformanceWithCurrencyEffectPrecision"
+                  [unit]="user?.settings?.baseCurrency"
+                  [value]="netPerformanceWithCurrencyEffect"
+                  >Change</gf-value
+                >
+              </div>
+              <div class="col-6 mb-3">
+                <gf-value
+                  i18n
+                  size="medium"
+                  [colorizeSign]="true"
+                  [isLoading]="isLoadingChart"
+                  [isPercent]="true"
+                  [locale]="user?.settings?.locale"
+                  [precision]="
+                    netPerformancePercentageWithCurrencyEffectPrecision
+                  "
+                  [value]="netPerformancePercentageWithCurrencyEffect"
+                  >Performance</gf-value
+                >
+              </div>
+            }
             <div class="col-6 mb-3">
               <gf-value
                 i18n

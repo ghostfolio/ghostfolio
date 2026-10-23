@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Extended the account detail dialog to include the change and the performance
+- Extended the account detail dialog to include the change and the performance (experimental)
 - Improved the market price in the benchmark detail dialog by adding the currency and reducing the precision on mobile
 - Improved the style of the close button in the dialog footer component
 - Improved the style of the close button in the dialog header component
