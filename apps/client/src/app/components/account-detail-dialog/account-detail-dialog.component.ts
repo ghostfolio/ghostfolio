@@ -2,6 +2,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
   DEFAULT_PAGE_SIZE,
+  NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
   NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
 } from '@ghostfolio/common/config';
 import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
@@ -104,6 +105,10 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected isLoading = true;
   protected isLoadingChart: boolean;
   protected name: string | null;
+  protected netPerformancePercentageWithCurrencyEffect: number;
+  protected netPerformancePercentageWithCurrencyEffectPrecision = 2;
+  protected netPerformanceWithCurrencyEffect: number;
+  protected netPerformanceWithCurrencyEffectPrecision = 2;
   protected pageIndex = 0;
   protected pageSize = DEFAULT_PAGE_SIZE;
   protected platformName: string;
@@ -354,9 +359,38 @@ export class GfAccountDetailDialogComponent implements OnInit {
     }).subscribe({
       error: () => {
         this.isLoadingChart = false;
+
+        this.changeDetectorRef.markForCheck();
       },
       next: ({ accountBalances, portfolioPerformance }) => {
         this.accountBalances = accountBalances.balances;
+
+        const {
+          netPerformancePercentageWithCurrencyEffect,
+          netPerformanceWithCurrencyEffect
+        } = portfolioPerformance.performance;
+
+        this.netPerformancePercentageWithCurrencyEffect =
+          netPerformancePercentageWithCurrencyEffect;
+
+        if (
+          this.data.deviceType === 'mobile' &&
+          this.netPerformancePercentageWithCurrencyEffect >=
+            NUMERICAL_PRECISION_THRESHOLD_3_FIGURES
+        ) {
+          this.netPerformancePercentageWithCurrencyEffectPrecision = 0;
+        }
+
+        this.netPerformanceWithCurrencyEffect =
+          netPerformanceWithCurrencyEffect;
+
+        if (
+          this.data.deviceType === 'mobile' &&
+          this.netPerformanceWithCurrencyEffect >=
+            NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+        ) {
+          this.netPerformanceWithCurrencyEffectPrecision = 0;
+        }
 
         if (
           portfolioPerformance.chart &&
