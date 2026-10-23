@@ -1,13 +1,13 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
-import { ImportService } from '@ghostfolio/api/app/import/import.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ImportValidationError } from '@ghostfolio/api/services/import/errors/import-validation.error';
+import { ImportService } from '@ghostfolio/api/services/import/import.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import {
   DEFAULT_LANGUAGE_CODE,
