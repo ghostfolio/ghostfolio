@@ -359,6 +359,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
     }).subscribe({
       error: () => {
         this.isLoadingChart = false;
+
+        this.changeDetectorRef.markForCheck();
       },
       next: ({ accountBalances, portfolioPerformance }) => {
         this.accountBalances = accountBalances.balances;
