@@ -1,6 +1,5 @@
 import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
 import { AccountModule } from '@ghostfolio/api/app/account/account.module';
-import { ImportModule } from '@ghostfolio/api/app/import/import.module';
 import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { environment } from '@ghostfolio/api/environments/environment';
@@ -11,6 +10,7 @@ import {
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ImportModule } from '@ghostfolio/api/services/import/import.module';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
