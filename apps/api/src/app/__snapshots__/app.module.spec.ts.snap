@@ -366,7 +366,9 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
   },
   "GET /asset/:dataSource/:symbol": {
-    "guards": [],
+    "guards": [
+      "AuthGuard('jwt')",
+    ],
     "interceptors": [
       "TransformDataSourceInResponseInterceptor",
       "TransformDataSourceInRequestInterceptor",

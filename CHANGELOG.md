@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the market price in the benchmark detail dialog by adding the currency and reducing the precision on mobile
 - Improved the style of the close button in the dialog footer component
 - Improved the style of the close button in the dialog header component
-- Improved the instructions of the server of the Model Context Protocol (MCP) to give the limits of the Basic subscription only to a user with the Basic subscription (experimental)
+- Restricted the asset endpoint (`GET api/v1/asset/:dataSource/:symbol`) to authenticated users
+- Refined the MCP server instructions based on the user’s subscription (experimental)
 - Improved the language localization for German (`de`)
 - Upgraded `prettier` from version `3.9.9` to `3.9.10`
 
