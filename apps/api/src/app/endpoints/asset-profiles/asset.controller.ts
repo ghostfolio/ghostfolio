@@ -2,7 +2,14 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import type { AssetResponse } from '@ghostfolio/common/interfaces';
 
-import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { pick } from 'lodash-es';
 
@@ -15,6 +22,7 @@ export class AssetController {
   ) {}
 
   @Get(':dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAsset(

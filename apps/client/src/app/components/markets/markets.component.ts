@@ -66,6 +66,7 @@ export class GfMarketsComponent implements OnInit {
   protected fearAndGreedIndex: number | undefined;
   protected fearAndGreedIndexMode: FearAndGreedIndexMode = 'STOCKS';
   protected hasPermissionToAccessFearAndGreedIndex: boolean;
+  protected hasPermissionToOpenBenchmarkDetails = false;
   protected hasPermissionToReadMarketDataOfMarkets: boolean;
   protected historicalDataItems: LineChartItem[];
   protected isLoadingFearAndGreedIndex = true;
@@ -98,6 +99,8 @@ export class GfMarketsComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToOpenBenchmarkDetails = true;
 
           this.hasPermissionToReadMarketDataOfMarkets = hasPermission(
             this.user.permissions,
