@@ -1,3 +1,4 @@
+import { GfDateRangeSelectorComponent } from '@ghostfolio/client/components/date-range-selector/date-range-selector.component';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -43,6 +44,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfActivitiesTableComponent,
+    GfDateRangeSelectorComponent,
     GfFabComponent,
     MatSnackBarModule,
     RouterModule
