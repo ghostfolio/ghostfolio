@@ -226,6 +226,8 @@ describe('DataProviderService', () => {
       ).rejects.toThrow(
         'activity.dataSource ("EOD_HISTORICAL_DATA") requires Ghostfolio Premium'
       );
+
+      expect(eodHistoricalDataService.getAssetProfile).not.toHaveBeenCalled();
     });
 
     it('resolves the asset profile of a premium data provider with the data provider for the Premium subscription', async () => {
