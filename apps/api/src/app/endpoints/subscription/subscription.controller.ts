@@ -3,13 +3,15 @@ import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.gu
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { SubscriptionService } from '@ghostfolio/api/services/subscription/subscription.service';
 import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_COUPONS
 } from '@ghostfolio/common/config';
 import {
   Coupon,
-  CreateStripeCheckoutSessionResponse
+  CreateStripeCheckoutSessionResponse,
+  RedeemCouponResponse
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -31,8 +33,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { SubscriptionService } from './subscription.service';
-
 @AllowDuringImpersonation()
 @Controller('subscription')
 export class SubscriptionController {
@@ -48,7 +48,9 @@ export class SubscriptionController {
   @Post('redeem-coupon')
   @HttpCode(StatusCodes.OK)
   @UseGuards(AuthGuard('jwt'), CustomThrottlerGuard, HasPermissionGuard)
-  public async redeemCoupon(@Body() { couponCode }: { couponCode: string }) {
+  public async redeemCoupon(
+    @Body() { couponCode }: { couponCode: string }
+  ): Promise<RedeemCouponResponse> {
     if (!this.request.user) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

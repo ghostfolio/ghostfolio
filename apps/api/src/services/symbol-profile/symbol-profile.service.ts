@@ -1,5 +1,8 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import {
+  INVESTMENT_ACTIVITY_TYPES,
+  UNKNOWN_KEY
+} from '@ghostfolio/common/config';
 import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -180,6 +183,41 @@ export class SymbolProfileService {
       .then((symbolProfiles) => {
         return this.enhanceSymbolProfiles(symbolProfiles);
       });
+  }
+
+  /**
+   * Gives the currency, the data source, the ISIN, the name and the symbol of
+   * the active asset profiles of the investment activities of the user, also
+   * of the closed positions and of the excluded accounts, with the overrides.
+   * An inactive asset profile is left out, for example a delisted one, which a
+   * data provider cannot resolve, or one whose data gathering an admin has
+   * disabled.
+   */
+  public async getSymbolProfilesOfUser({ userId }: { userId: string }) {
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }],
+      select: {
+        assetProfileOverrides: true,
+        currency: true,
+        dataSource: true,
+        isin: true,
+        name: true,
+        symbol: true
+      },
+      where: {
+        activities: {
+          some: { userId, type: { in: INVESTMENT_ACTIVITY_TYPES } }
+        },
+        isActive: true
+      }
+    });
+
+    return symbolProfiles.map(({ assetProfileOverrides, ...symbolProfile }) => {
+      const { currency, dataSource, isin, name, symbol } =
+        applyAssetProfileOverrides(symbolProfile, assetProfileOverrides);
+
+      return { currency, dataSource, isin, name, symbol };
+    });
   }
 
   public updateAssetProfileIdentifier(
