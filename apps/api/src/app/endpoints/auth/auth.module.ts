@@ -1,4 +1,3 @@
-import { WebAuthService } from '@ghostfolio/api/app/endpoints/auth/web-auth.service';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -23,6 +22,7 @@ import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { getOidcDiscoveryUrl } from './oidc.helper';
 import { OidcStrategy } from './oidc.strategy';
+import { WebAuthService } from './web-auth.service';
 
 @Module({
   controllers: [AuthController],

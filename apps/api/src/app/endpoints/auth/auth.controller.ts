@@ -1,4 +1,3 @@
-import { WebAuthService } from '@ghostfolio/api/app/endpoints/auth/web-auth.service';
 import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
@@ -34,6 +33,7 @@ import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
 import { GenerateAuthenticationOptionsDto } from './generate-authentication-options.dto';
+import { WebAuthService } from './web-auth.service';
 
 @AllowDuringImpersonation()
 @Controller('auth')
