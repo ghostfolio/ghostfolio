@@ -287,10 +287,8 @@ export class AssetProfilesService {
       }
     }
 
-    const extendedPrismaClient = this.getExtendedPrismaClient();
-
     const symbolProfileResult = await Promise.all([
-      extendedPrismaClient.symbolProfile.findMany({
+      this.prismaService.symbolProfile.findMany({
         skip,
         take,
         where,
@@ -317,7 +315,6 @@ export class AssetProfilesService {
           id: true,
           isin: true,
           isActive: true,
-          isUsedByUsersWithSubscription: true,
           name: true,
           scraperConfiguration: true,
           sectors: true,
@@ -328,6 +325,17 @@ export class AssetProfilesService {
     ]);
     const symbolProfiles = symbolProfileResult[0];
     let count = symbolProfileResult[1];
+
+    const symbolProfileIdsUsedByUsersWithSubscription =
+      await this.getSymbolProfileIdsUsedByUsersWithSubscription(
+        symbolProfiles
+          .filter(({ _count }) => {
+            return _count.activities > 0;
+          })
+          .map(({ id }) => {
+            return id;
+          })
+      );
 
     const dataProviderInfoMap = new Map<DataSource, DataProviderInfo>(
       [
@@ -357,7 +365,6 @@ export class AssetProfilesService {
           id,
           isin,
           isActive,
-          isUsedByUsersWithSubscription,
           symbol
         } = assetProfile;
 
@@ -400,7 +407,8 @@ export class AssetProfilesService {
           activitiesCount: _count.activities,
           dataProviderInfo: dataProviderInfoMap.get(dataSource),
           date: activities?.[0]?.date,
-          isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription,
+          isUsedByUsersWithSubscription:
+            symbolProfileIdsUsedByUsersWithSubscription.has(id),
           watchedByCount: _count.watchedBy
         };
       })
@@ -562,47 +570,41 @@ export class AssetProfilesService {
     return { assetProfiles, count: assetProfiles.length };
   }
 
-  private getExtendedPrismaClient() {
-    const symbolProfileExtension = Prisma.defineExtension((client) => {
-      return client.$extends({
-        result: {
-          symbolProfile: {
-            isUsedByUsersWithSubscription: {
-              compute: async ({ id }) => {
-                const { _count } =
-                  await this.prismaService.symbolProfile.findFirst({
-                    select: {
-                      _count: {
-                        select: {
-                          activities: {
-                            where: {
-                              user: {
-                                subscriptions: {
-                                  some: {
-                                    expiresAt: {
-                                      gt: new Date()
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    where: {
-                      id
-                    }
-                  });
+  private async getSymbolProfileIdsUsedByUsersWithSubscription(
+    symbolProfileIds: string[]
+  ): Promise<Set<string>> {
+    if (symbolProfileIds.length === 0) {
+      return new Set();
+    }
 
-                return _count.activities > 0;
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      select: {
+        id: true
+      },
+      where: {
+        activities: {
+          some: {
+            user: {
+              subscriptions: {
+                some: {
+                  expiresAt: {
+                    gt: new Date()
+                  }
+                }
               }
             }
           }
+        },
+        id: {
+          in: symbolProfileIds
         }
-      });
+      }
     });
 
-    return this.prismaService.$extends(symbolProfileExtension);
+    return new Set(
+      symbolProfiles.map(({ id }) => {
+        return id;
+      })
+    );
   }
 }
