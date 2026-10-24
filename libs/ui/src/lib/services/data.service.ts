@@ -1,3 +1,4 @@
+import { saveStoredDateRange } from '@ghostfolio/common/date-range.helper';
 import {
   CreateAccessDto,
   CreateAccountBalanceDto,
@@ -89,7 +90,7 @@ import { utc } from '@date-fns/utc';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash-es';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Service()
 export class DataService {
@@ -964,7 +965,13 @@ export class DataService {
   }
 
   public putUserSetting(aData: UpdateUserSettingDto) {
-    return this.http.put<User>('/api/v1/user/setting', aData);
+    return this.http.put<User>('/api/v1/user/setting', aData).pipe(
+      tap(() => {
+        if (aData.dateRange) {
+          saveStoredDateRange(aData.dateRange);
+        }
+      })
+    );
   }
 
   public redeemCoupon(couponCode: string) {
