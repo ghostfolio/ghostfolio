@@ -303,6 +303,8 @@ describe('AiService', () => {
         })
       ).rejects.toThrow(CallerFacingError);
 
+      expect(generateText).toHaveBeenCalledTimes(1);
+
       expect(Logger.prototype.warn).toHaveBeenCalled();
     });
 
@@ -329,10 +331,59 @@ describe('AiService', () => {
       expect(Logger.prototype.warn).toHaveBeenCalled();
     });
 
-    it('Passes on every other error of the vision model', async () => {
+    it('Requests the rows one more time if the output does not agree with the schema', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockRejectedValueOnce(
+        new NoObjectGeneratedError({
+          finishReason: 'stop'
+        } as ConstructorParameters<typeof NoObjectGeneratedError>[0])
+      );
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).resolves.toEqual({ broker: 'Swissquote', rows });
+
+      expect(generateText).toHaveBeenCalledTimes(2);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        expect.stringContaining('one more time')
+      );
+    });
+
+    it('Passes on the error if the output does not agree with the schema a second time', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
       const error = new NoObjectGeneratedError({
         finishReason: 'stop'
       } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
+
+      jest
+        .mocked(generateText)
+        .mockRejectedValueOnce(error)
+        .mockRejectedValueOnce(error);
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).rejects.toBe(error);
+
+      expect(generateText).toHaveBeenCalledTimes(2);
+    });
+
+    it('Passes on every other error of the vision model', async () => {
+      const error = new Error('Provider failed');
 
       jest.mocked(generateText).mockRejectedValueOnce(error);
 
@@ -345,6 +396,8 @@ describe('AiService', () => {
           locale: 'de-CH'
         })
       ).rejects.toBe(error);
+
+      expect(generateText).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -1557,6 +1610,33 @@ describe('AiService', () => {
       expect(jest.mocked(generateText).mock.calls[0][0]).not.toHaveProperty(
         'tools'
       );
+    });
+
+    it('Requests the matches one more time if the output does not agree with the schema', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockRejectedValueOnce(
+        new NoObjectGeneratedError({
+          finishReason: 'stop'
+        } as ConstructorParameters<typeof NoObjectGeneratedError>[0])
+      );
+
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow({ accountName: null })]
+      });
+
+      expect(activities).toEqual([expect.objectContaining({ symbol: 'AAPL' })]);
+
+      expect(generateText).toHaveBeenCalledTimes(2);
     });
 
     it('Falls back to the general model if no agent model is set', async () => {
