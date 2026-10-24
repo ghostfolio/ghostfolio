@@ -199,6 +199,12 @@ export class GfLineChartComponent
       };
 
       if (this.chart) {
+        // A refresh of the same series (e.g. a background refresh) only moves
+        // the line, the drawing animation is kept for a new series
+        const isRefresh =
+          this.chart.data.labels?.length === labels.length &&
+          this.chart.data.labels?.[0] === labels[0];
+
         this.chart.data = data;
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
@@ -207,7 +213,7 @@ export class GfLineChartComponent
           ? animations
           : undefined;
 
-        this.chart.update();
+        this.chart.update(isRefresh ? 'none' : undefined);
       } else {
         this.chart = new Chart<'line'>(this.chartCanvas.nativeElement, {
           data,

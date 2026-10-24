@@ -7,12 +7,14 @@ import {
   PortfolioPerformance,
   ResponseError
 } from '@ghostfolio/common/interfaces';
+import { GfFlashOnChangeDirective } from '@ghostfolio/ui/flash-on-change';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   ElementRef,
   inject,
@@ -28,7 +30,12 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GfValueComponent, IonIcon, NgxSkeletonLoaderModule],
+  imports: [
+    GfFlashOnChangeDirective,
+    GfValueComponent,
+    IonIcon,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-portfolio-performance',
   styleUrls: ['./portfolio-performance.component.scss'],
   templateUrl: './portfolio-performance.component.html'
@@ -49,6 +56,21 @@ export class GfPortfolioPerformanceComponent {
   private readonly value =
     viewChild.required<ElementRef<HTMLSpanElement>>('value');
 
+  protected readonly displayedValue = computed(() => {
+    const performance = this.performance();
+
+    if (isNumber(performance?.currentValueInBaseCurrency)) {
+      return performance.currentValueInBaseCurrency;
+    }
+
+    return this.showDetails() === false && performance
+      ? performance.netPerformancePercentageWithCurrencyEffect * 100
+      : undefined;
+  });
+
+  private countUp?: CountUp;
+  private countUpTarget?: number;
+
   private readonly notificationService = inject(NotificationService);
 
   public constructor() {
@@ -56,6 +78,9 @@ export class GfPortfolioPerformanceComponent {
 
     effect(() => {
       if (this.isLoading()) {
+        this.countUp = undefined;
+        this.countUpTarget = undefined;
+
         if (this.value().nativeElement) {
           this.value().nativeElement.innerHTML = '';
         }
@@ -63,28 +88,56 @@ export class GfPortfolioPerformanceComponent {
         const performance = this.performance();
 
         if (isNumber(performance?.currentValueInBaseCurrency)) {
-          new CountUp('value', performance.currentValueInBaseCurrency, {
-            decimal: getNumberFormatDecimal(this.locale()),
+          this.showValue({
             decimalPlaces: this.precision(),
-            duration: 1,
-            separator: getNumberFormatGroup(this.locale())
-          }).start();
+            value: performance.currentValueInBaseCurrency
+          });
         } else if (this.showDetails() === false && performance) {
-          new CountUp(
-            'value',
-            performance.netPerformancePercentageWithCurrencyEffect * 100,
-            {
-              decimal: getNumberFormatDecimal(this.locale()),
-              decimalPlaces: 2,
-              duration: 1,
-              separator: getNumberFormatGroup(this.locale())
-            }
-          ).start();
+          this.showValue({
+            decimalPlaces: 2,
+            value: performance.netPerformancePercentageWithCurrencyEffect * 100
+          });
         } else {
+          this.countUp = undefined;
+          this.countUpTarget = undefined;
           this.value().nativeElement.innerHTML = '*****';
         }
       }
     });
+  }
+
+  /**
+   * Counts up from zero on the initial load and after a reload (e.g. a changed
+   * date range). A background refresh swaps the number without any counting
+   * animation. Nothing happens if the number is unchanged.
+   */
+  private showValue({
+    decimalPlaces,
+    value
+  }: {
+    decimalPlaces: number;
+    value: number;
+  }) {
+    if (this.countUp && this.countUpTarget === value) {
+      return;
+    }
+
+    const isRefresh = this.countUpTarget !== undefined;
+
+    this.countUp = new CountUp('value', value, {
+      decimalPlaces,
+      decimal: getNumberFormatDecimal(this.locale()),
+      duration: 1,
+      separator: getNumberFormatGroup(this.locale())
+    });
+
+    if (isRefresh) {
+      this.value().nativeElement.textContent = this.countUp.formatNumber(value);
+    } else {
+      this.countUp.start();
+    }
+
+    this.countUpTarget = value;
   }
 
   protected onShowErrors() {
