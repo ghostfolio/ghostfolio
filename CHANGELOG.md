@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the performance of the historical market data table of the admin control panel by counting the market data per asset profile
 - Improved the performance of the historical market data table of the admin control panel by querying subscription usage in a single database query
 - Hardened the `POST api/v1/import` endpoint by hiding internal error messages
+- Upgraded `zod` from version `4.6.5` to `4.6.7`
 
 ### Fixed
 
