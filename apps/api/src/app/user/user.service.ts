@@ -12,7 +12,7 @@ import { SubscriptionService } from '@ghostfolio/api/services/subscription/subsc
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_DATE_RANGE,
+  DEFAULT_USER_DATE_RANGE,
   DEFAULT_LOCALE,
   DELETE_OWN_USER_PERIOD,
   PROPERTY_API_KEY_GHOSTFOLIO,
@@ -362,7 +362,7 @@ export class UserService {
       (user.settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
         : ((user.settings.settings as UserSettings)?.dateRange ??
-          DEFAULT_DATE_RANGE);
+          DEFAULT_USER_DATE_RANGE);
 
     // Set default value for performance calculation type
     if (!(user.settings.settings as UserSettings)?.performanceCalculationType) {
