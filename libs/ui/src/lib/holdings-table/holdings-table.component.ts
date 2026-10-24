@@ -27,6 +27,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfEntityLogoComponent } from '../entity-logo/entity-logo.component';
+import { GfPersistSortDirective } from '../persist-sort/persist-sort.directive';
 import { GfValueComponent } from '../value/value.component';
 import { HoldingsTableItem } from './interfaces/interfaces';
 
@@ -34,6 +35,7 @@ import { HoldingsTableItem } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfEntityLogoComponent,
+    GfPersistSortDirective,
     GfValueComponent,
     MatButtonModule,
     MatDialogModule,
@@ -101,15 +103,8 @@ export class GfHoldingsTableComponent {
     return !this.holdings();
   });
 
-  protected readonly sortActive = computed(() => {
-    return this.mode() === 'default'
-      ? 'allocationInPercentage'
-      : 'assetProfile.name';
-  });
-
-  protected readonly sortDirection = computed<SortDirection>(() => {
-    return this.mode() === 'default' ? 'desc' : 'asc';
-  });
+  protected readonly sortActive = 'netPerformancePercentWithCurrencyEffect';
+  protected readonly sortDirection: SortDirection = 'desc';
 
   public constructor() {
     this.dataSource.sortingDataAccessor = (holding, path) => {

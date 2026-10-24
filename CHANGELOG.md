@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the holdings table of the home overview by adding the sorting by name and performance
+- Changed the default sorting of the holdings table to the performance in descending order
+- Persisted the sorting of the holdings and accounts tables on the device
+
 ## 3.92.0 - 2026-10-24
 
 ### Changed
