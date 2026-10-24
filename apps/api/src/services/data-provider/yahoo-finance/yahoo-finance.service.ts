@@ -38,6 +38,12 @@ import type {
 } from 'yahoo-finance2/modules/quoteSummary';
 import type { SearchQuoteNonYahoo } from 'yahoo-finance2/modules/search';
 
+export interface IntradayTradingPeriod {
+  end: Date;
+  start: Date;
+  type: 'post' | 'pre' | 'regular';
+}
+
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
   private static readonly DELISTED_ERROR_MESSAGE =
@@ -194,6 +200,100 @@ export class YahooFinanceService implements DataProviderInterface {
         );
       }
     }
+  }
+
+  /**
+   * Returns the intraday prices (including the pre-market and the
+   * post-market) and the trading periods of a symbol
+   */
+  public async getIntraday({
+    from,
+    interval,
+    symbol
+  }: {
+    from: Date;
+    interval: '5m' | '15m' | '60m';
+    symbol: string;
+  }): Promise<{
+    prices: { date: Date; price: number }[];
+    tradingPeriods: IntradayTradingPeriod[];
+  }> {
+    const { meta, quotes } = await this.yahooFinance.chart(
+      this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(symbol),
+      { interval, includePrePost: true, period1: from }
+    );
+
+    const prices = quotes
+      .filter(({ close }) => {
+        return typeof close === 'number' && Number.isFinite(close);
+      })
+      .map(({ close, date }) => {
+        return { date, price: close };
+      });
+
+    // Depending on the exchange, the times are dates or Unix timestamps
+    const toDate = (aTime: unknown) => {
+      return typeof aTime === 'number'
+        ? new Date(aTime < 1e12 ? aTime * 1000 : aTime)
+        : new Date(aTime as Date | string);
+    };
+
+    const toPeriod = (aPeriod?: { end: unknown; start: unknown }) => {
+      return aPeriod?.start && aPeriod?.end
+        ? { end: toDate(aPeriod.end), start: toDate(aPeriod.start) }
+        : undefined;
+    };
+
+    // The trading periods are an array of days (each an array of regular
+    // periods), or an object with the arrays of the pre-market, regular and
+    // post-market periods
+    const tradingPeriods: IntradayTradingPeriod[] = [];
+
+    const collect = (
+      aValue: unknown,
+      aType: IntradayTradingPeriod['type'] = 'regular'
+    ) => {
+      if (Array.isArray(aValue)) {
+        for (const item of aValue) {
+          collect(item, aType);
+        }
+      } else if (aValue && typeof aValue === 'object') {
+        const period = toPeriod(aValue as { end: unknown; start: unknown });
+
+        if (period) {
+          tradingPeriods.push({ ...period, type: aType });
+        } else {
+          for (const [key, item] of Object.entries(aValue)) {
+            collect(item, key === 'pre' || key === 'post' ? key : 'regular');
+          }
+        }
+      }
+    };
+
+    collect(meta.tradingPeriods);
+
+    // The trading periods of the current (or next) trading day
+    for (const [type, period] of Object.entries(
+      meta.currentTradingPeriod ?? {}
+    )) {
+      const currentPeriod = toPeriod(
+        period as { end: unknown; start: unknown }
+      );
+
+      if (
+        currentPeriod &&
+        !tradingPeriods.some(({ start }) => {
+          return start.getTime() === currentPeriod.start.getTime();
+        })
+      ) {
+        tradingPeriods.push({
+          ...currentPeriod,
+          type: type === 'pre' || type === 'post' ? type : 'regular'
+        });
+      }
+    }
+
+    return { prices, tradingPeriods };
   }
 
   public getMaxNumberOfSymbolsPerRequest() {
