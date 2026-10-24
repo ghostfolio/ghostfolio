@@ -1,4 +1,3 @@
-import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -7,6 +6,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
+import { SubscriptionService } from '@ghostfolio/api/services/subscription/subscription.service';
 import {
   DEFAULT_CURRENCY,
   ghostfolioFearAndGreedIndexSymbolStocks,

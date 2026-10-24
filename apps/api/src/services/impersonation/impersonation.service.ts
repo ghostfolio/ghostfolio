@@ -1,7 +1,7 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
-import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { SubscriptionService } from '@ghostfolio/api/services/subscription/subscription.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';

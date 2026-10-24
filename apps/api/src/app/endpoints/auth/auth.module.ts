@@ -1,5 +1,3 @@
-import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
-import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -24,6 +22,7 @@ import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { getOidcDiscoveryUrl } from './oidc.helper';
 import { OidcStrategy } from './oidc.strategy';
+import { WebAuthService } from './web-auth.service';
 
 @Module({
   controllers: [AuthController],
@@ -40,7 +39,6 @@ import { OidcStrategy } from './oidc.strategy';
     PrismaModule,
     PropertyModule,
     RedisCacheModule,
-    SubscriptionModule,
     UserModule
   ],
   providers: [

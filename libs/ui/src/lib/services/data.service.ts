@@ -57,6 +57,7 @@ import {
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
   PublicPortfolioResponse,
+  RedeemCouponResponse,
   SymbolItem,
   User,
   UserItem,
@@ -967,9 +968,12 @@ export class DataService {
   }
 
   public redeemCoupon(couponCode: string) {
-    return this.http.post('/api/v1/subscription/redeem-coupon', {
-      couponCode
-    });
+    return this.http.post<RedeemCouponResponse>(
+      '/api/v1/subscription/redeem-coupon',
+      {
+        couponCode
+      }
+    );
   }
 
   public transferAccountBalance({
