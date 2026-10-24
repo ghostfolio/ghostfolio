@@ -189,8 +189,9 @@ export class SymbolProfileService {
    * Gives the currency, the data source, the ISIN, the name and the symbol of
    * the active asset profiles of the investment activities of the user, also
    * of the closed positions and of the excluded accounts, with the overrides.
-   * An inactive asset profile, for example a delisted one, is left out, as a
-   * data provider cannot resolve it.
+   * An inactive asset profile is left out, for example a delisted one, which a
+   * data provider cannot resolve, or one whose data gathering an admin has
+   * disabled.
    */
   public async getSymbolProfilesOfUser({ userId }: { userId: string }) {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
