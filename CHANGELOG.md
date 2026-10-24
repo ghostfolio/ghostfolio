@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added a periodic refresh of the numbers on the home, analysis and accounts pages while the page is visible, briefly coloring changed values green or red, moving the chart of the home page without redrawing it, with a live indicator in the header
+
+### Changed
+
+- Colored the changes of the performance of a holding in green or red only while its market is open (in gray while it is closed), colored the whole change and performance of the portfolio in green or red, and highlighted a change in percent together with its absolute change
+- Highlighted the tiles of the holdings chart whose value changed on a refresh and faded the tiles of the holdings whose market is closed
+
 ## 3.92.0 - 2026-10-24
 
 ### Changed

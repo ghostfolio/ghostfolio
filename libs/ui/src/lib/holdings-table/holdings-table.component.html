@@ -7,6 +7,7 @@
     [dataSource]="dataSource"
     [matSortActive]="sortActive()"
     [matSortDirection]="sortDirection()"
+    [trackBy]="trackByHolding"
   >
     <ng-container matColumnDef="icon" [sticky]="mode() === 'default'">
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
@@ -172,6 +173,7 @@
             [colorizeSign]="true"
             [isCurrency]="true"
             [isLoading]="isLoading()"
+            [isMarketOpen]="element.marketState === 'open'"
             [locale]="locale()"
             [value]="element.netPerformanceWithCurrencyEffect"
           />
@@ -199,9 +201,12 @@
         [class.text-nowrap]="mode() === 'simple'"
       >
         <div class="d-flex justify-content-end">
+          <!-- Highlighted together with the absolute change -->
           <gf-value
             [colorizeSign]="true"
+            [flashValue]="element.netPerformanceWithCurrencyEffect"
             [isLoading]="isLoading()"
+            [isMarketOpen]="element.marketState === 'open'"
             [isPercent]="true"
             [locale]="locale()"
             [value]="element.netPerformancePercentWithCurrencyEffect"
