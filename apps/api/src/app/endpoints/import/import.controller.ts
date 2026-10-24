@@ -1,4 +1,5 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
@@ -73,7 +74,7 @@ export class ImportController {
       throw new HttpException(
         {
           error: getReasonPhrase(StatusCodes.BAD_REQUEST),
-          message: [error.message]
+          message: [this.getMessageOfError(error)]
         },
         StatusCodes.BAD_REQUEST
       );
@@ -100,6 +101,20 @@ export class ImportController {
       userId: this.request.user.id
     });
 
-    return { activities: activities.slice(0, maxActivitiesToImport) };
+    return {
+      activities: activities.slice(0, maxActivitiesToImport)
+    };
+  }
+
+  private getMessageOfError(error: unknown) {
+    if (error instanceof CallerFacingError) {
+      return error.message;
+    }
+
+    if (error instanceof HttpException) {
+      return getReasonPhrase(error.getStatus());
+    }
+
+    return getReasonPhrase(StatusCodes.BAD_REQUEST);
   }
 }
