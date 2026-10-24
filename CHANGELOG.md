@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the performance of the historical market data table of the admin control panel by querying subscription usage in a single database query
 - Improved the matching of assets in the import of activities with _Ghostfolio AI_ to include closed positions and excluded accounts (experimental)
 - Hardened the `POST api/v1/import` endpoint by hiding internal error messages
+- Upgraded `Nx` from version `23.2.1` to `23.3.1`
 - Upgraded `zod` from version `4.6.5` to `4.6.7`
 
 ### Fixed
