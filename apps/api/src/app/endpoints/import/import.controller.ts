@@ -74,11 +74,7 @@ export class ImportController {
       throw new HttpException(
         {
           error: getReasonPhrase(StatusCodes.BAD_REQUEST),
-          message: [
-            error instanceof CallerFacingError
-              ? error.message
-              : getReasonPhrase(StatusCodes.BAD_REQUEST)
-          ]
+          message: [this.getMessageOfError(error)]
         },
         StatusCodes.BAD_REQUEST
       );
@@ -105,6 +101,20 @@ export class ImportController {
       userId: this.request.user.id
     });
 
-    return { activities: activities.slice(0, maxActivitiesToImport) };
+    return {
+      activities: activities.slice(0, maxActivitiesToImport)
+    };
+  }
+
+  private getMessageOfError(error: unknown) {
+    if (error instanceof CallerFacingError) {
+      return error.message;
+    }
+
+    if (error instanceof HttpException) {
+      return getReasonPhrase(error.getStatus());
+    }
+
+    return getReasonPhrase(StatusCodes.BAD_REQUEST);
   }
 }
