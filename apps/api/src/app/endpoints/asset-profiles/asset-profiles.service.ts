@@ -256,11 +256,6 @@ export class AssetProfilesService {
       return type;
     });
 
-    const marketDataItems = await this.prismaService.marketData.groupBy({
-      _count: true,
-      by: ['dataSource', 'symbol']
-    });
-
     if (filterByAssetSubClass) {
       where.assetSubClass = AssetSubClass[filterByAssetSubClass.id];
     }
@@ -378,13 +373,12 @@ export class AssetProfilesService {
           await this.marketDataService.getLatest({ dataSource, symbol })
         )?.marketPrice;
 
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
+        const marketDataItemCount = await this.prismaService.marketData.count({
+          where: {
+            dataSource,
+            symbol
+          }
+        });
 
         const sectorsCount = sectors ? Object.keys(sectors).length : 0;
 
@@ -521,11 +515,6 @@ export class AssetProfilesService {
   private async getAssetProfilesForCurrencies(): Promise<AssetProfilesResponse> {
     const currencyPairs = this.exchangeRateDataService.getCurrencyPairs();
 
-    const marketDataItems = await this.prismaService.marketData.groupBy({
-      _count: true,
-      by: ['dataSource', 'symbol']
-    });
-
     const assetProfilePromises: Promise<AssetProfileItem>[] = currencyPairs.map(
       async ({ dataSource, symbol }) => {
         let activitiesCount: EnhancedAssetProfile['activitiesCount'] = 0;
@@ -542,13 +531,12 @@ export class AssetProfilesService {
           await this.marketDataService.getLatest({ dataSource, symbol })
         )?.marketPrice;
 
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
+        const marketDataItemCount = await this.prismaService.marketData.count({
+          where: {
+            dataSource,
+            symbol
+          }
+        });
 
         return {
           activitiesCount,
@@ -582,7 +570,7 @@ export class AssetProfilesService {
             isUsedByUsersWithSubscription: {
               compute: async ({ id }) => {
                 const { _count } =
-                  await this.prismaService.symbolProfile.findUnique({
+                  await this.prismaService.symbolProfile.findFirst({
                     select: {
                       _count: {
                         select: {

@@ -86,6 +86,7 @@ export class ImportController {
   }
 
   @Get('dividends/:dataSource/:symbol')
+  @HasPermission(permissions.createActivity)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)

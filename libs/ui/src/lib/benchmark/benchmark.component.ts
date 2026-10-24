@@ -16,6 +16,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  OnInit,
   computed,
   effect,
   inject,
@@ -62,10 +63,11 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   styleUrls: ['./benchmark.component.scss'],
   templateUrl: './benchmark.component.html'
 })
-export class GfBenchmarkComponent {
+export class GfBenchmarkComponent implements OnInit {
   public readonly benchmarks = input<Benchmark[]>();
   public readonly deviceType = input.required<string>();
   public readonly hasPermissionToDeleteItem = input<boolean>();
+  public readonly hasPermissionToOpenDetails = input(true);
   public readonly locale = input(getLocale());
   public readonly showIcon = input(false);
   public readonly showSymbol = input(true);
@@ -120,10 +122,15 @@ export class GfBenchmarkComponent {
       }
     });
 
+    addIcons({ ellipsisHorizontal, trashOutline });
+  }
+
+  public ngOnInit() {
     this.route.queryParams
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((params) => {
         if (
+          this.hasPermissionToOpenDetails() &&
           params['benchmarkDetailDialog'] &&
           params['dataSource'] &&
           params['symbol']
@@ -134,8 +141,6 @@ export class GfBenchmarkComponent {
           });
         }
       });
-
-    addIcons({ ellipsisHorizontal, trashOutline });
   }
 
   protected onDeleteItem({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -152,9 +157,11 @@ export class GfBenchmarkComponent {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    this.router.navigate([], {
-      queryParams: { dataSource, symbol, benchmarkDetailDialog: true }
-    });
+    if (this.hasPermissionToOpenDetails()) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, benchmarkDetailDialog: true }
+      });
+    }
   }
 
   private openBenchmarkDetailDialog({

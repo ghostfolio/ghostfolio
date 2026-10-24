@@ -200,8 +200,8 @@
     <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"
-      class="cursor-pointer"
       mat-row
+      [class.cursor-pointer]="hasPermissionToOpenDetails()"
       (click)="
         onOpenBenchmarkDialog({
           dataSource: row.dataSource,

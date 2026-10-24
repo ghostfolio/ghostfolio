@@ -3,7 +3,10 @@ import { AccountModule } from '@ghostfolio/api/app/account/account.module';
 import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { environment } from '@ghostfolio/api/environments/environment';
-import { getMcpUserOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
+import {
+  getMcpUserOfBearerToken,
+  hasLimitsOfBasicSubscriptionOfBearerToken
+} from '@ghostfolio/api/helper/bearer-token.helper';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -43,20 +46,19 @@ import { McpService } from './mcp.service';
       useFactory: (configurationService: ConfigurationService) => {
         const { hostname } = new URL(configurationService.get('ROOT_URL'));
 
-        const instructions = [
-          'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access, import activities into the portfolio and update the cash balances of the accounts. They give the quantities and the monetary values only if the access has the permission "View" or "View and manage", otherwise no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities or to update a cash balance, the access needs the permission "Restricted view and manage" or "View and manage".'
-        ];
+        const instructions =
+          'Ghostfolio is a wealth management application. The tools read the portfolio and the watchlist of the user who granted the access, import activities into the portfolio and update the cash balances of the accounts. They give the quantities and the monetary values only if the access has the permission "View" or "View and manage", otherwise no quantity and no monetary value (except the unit price of an activity). Only the tools which the permission of the access covers are listed. To import activities or to update a cash balance, the access needs the permission "Restricted view and manage" or "View and manage".';
 
-        if (configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-          instructions.push(
-            `With the Basic subscription, the tool get-performance does not give these columns: ${PortfolioTableService.getAssetPerformanceInBaseCurrencyColumnNames().join(
-              ', '
-            )}.`
-          );
-        }
+        const instructionsOfBasicSubscription = `${instructions} The user who granted the access has the Basic subscription, hence the tool get-performance does not give these columns: ${PortfolioTableService.getAssetPerformanceInBaseCurrencyColumnNames().join(
+          ', '
+        )}.`;
 
         return new McpStrategy({
-          instructions: instructions.join(' '),
+          instructions: ({ request }) => {
+            return hasLimitsOfBasicSubscriptionOfBearerToken(request)
+              ? instructionsOfBasicSubscription
+              : instructions;
+          },
           name: 'ghostfolio',
           resolveUser: getMcpUserOfBearerToken,
           title: 'Ghostfolio',
