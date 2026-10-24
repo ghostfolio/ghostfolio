@@ -11,6 +11,7 @@ import type { AssetClassSelectorOption } from './asset-class-selector-option.int
 import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { AssetProfileItem } from './asset-profile-item.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
+import type { BenchmarkSeries } from './benchmark-series.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
@@ -81,6 +82,10 @@ import type { PlatformsResponse } from './responses/platforms-response.interface
 import type { PortfolioDividendsResponse } from './responses/portfolio-dividends-response.interface';
 import type { PortfolioHoldingResponse } from './responses/portfolio-holding-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
+import type {
+  PortfolioIntradayItem,
+  PortfolioIntradayResponse
+} from './responses/portfolio-intraday-response.interface';
 import type { PortfolioInvestmentsResponse } from './responses/portfolio-investments.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import type { PortfolioReportResponse } from './responses/portfolio-report.interface';
@@ -140,6 +145,7 @@ export {
   BenchmarkMarketDataDetailsResponse,
   BenchmarkProperty,
   BenchmarkResponse,
+  BenchmarkSeries,
   Coupon,
   CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
@@ -181,6 +187,8 @@ export {
   PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
+  PortfolioIntradayItem,
+  PortfolioIntradayResponse,
   PortfolioInvestmentsResponse,
   PortfolioPerformance,
   PortfolioPerformanceResponse,
