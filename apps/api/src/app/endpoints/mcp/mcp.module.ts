@@ -13,6 +13,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ImportModule } from '@ghostfolio/api/services/import/import.module';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 
 import { Module } from '@nestjs/common';
@@ -36,6 +37,7 @@ import { McpService } from './mcp.service';
     ImportModule,
     PortfolioTableModule,
     SymbolModule,
+    SymbolProfileModule,
     UserModule
   ],
   providers: [
