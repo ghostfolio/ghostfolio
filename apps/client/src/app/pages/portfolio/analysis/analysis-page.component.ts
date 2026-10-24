@@ -1,7 +1,7 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  DEFAULT_DATE_RANGE,
+  DEFAULT_USER_DATE_RANGE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
@@ -249,12 +249,12 @@ export class GfAnalysisPageComponent implements OnInit {
       dividends: this.dataService.fetchDividends({
         filters: this.userService.getFilters(),
         groupBy: this.mode(),
-        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+        range: this.user?.settings?.dateRange ?? DEFAULT_USER_DATE_RANGE
       }),
       investments: this.dataService.fetchInvestments({
         filters: this.userService.getFilters(),
         groupBy: this.mode(),
-        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+        range: this.user?.settings?.dateRange ?? DEFAULT_USER_DATE_RANGE
       })
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -323,7 +323,7 @@ export class GfAnalysisPageComponent implements OnInit {
       .fetchPortfolioPerformance({
         filters: this.userService.getFilters(),
         groupBy: 'year',
-        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+        range: this.user?.settings?.dateRange ?? DEFAULT_USER_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart }) => {
@@ -353,7 +353,7 @@ export class GfAnalysisPageComponent implements OnInit {
     this.dataService
       .fetchPortfolioPerformance({
         filters: this.userService.getFilters(),
-        range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+        range: this.user?.settings?.dateRange ?? DEFAULT_USER_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, dateOfFirstActivity, performance }) => {
@@ -482,7 +482,7 @@ export class GfAnalysisPageComponent implements OnInit {
             dataSource,
             symbol,
             filters: this.userService.getFilters(),
-            range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE,
+            range: this.user?.settings?.dateRange ?? DEFAULT_USER_DATE_RANGE,
             startDate: this.dateOfFirstActivity
           })
           .pipe(takeUntilDestroyed(this.destroyRef))
