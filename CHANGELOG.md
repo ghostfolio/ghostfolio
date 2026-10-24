@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the performance of the historical market data table of the admin control panel by counting the market data per asset profile
-- Improved the performance of the historical market data table of the admin control panel by determining the usage by users with a subscription in a single query
+- Improved the performance of the historical market data table of the admin control panel by determining the usage by users with a subscription in a single database query
 
 ## 3.91.0 - 2026-10-23
 
