@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the width of the content in the overview tab of the account detail dialog, the asset profile dialog of the admin control panel and the holding detail dialog
+- Fixed the width of the content in the overview tab of the account detail dialog, the asset profile details dialog of the admin control panel and the holding detail dialog
 - Fixed the state of the market data in the historical market data gathering endpoint for a specific date
 
 ## 3.91.0 - 2026-10-23
