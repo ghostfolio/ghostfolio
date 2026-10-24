@@ -1,5 +1,4 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
-import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { getSupportedLanguageCode } from '@ghostfolio/api/helper/language.helper';
@@ -9,6 +8,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { SubscriptionService } from '@ghostfolio/api/services/subscription/subscription.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,

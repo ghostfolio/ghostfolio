@@ -1,5 +1,4 @@
-import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
-import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
+import { WebAuthService } from '@ghostfolio/api/app/endpoints/auth/web-auth.service';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -40,7 +39,6 @@ import { OidcStrategy } from './oidc.strategy';
     PrismaModule,
     PropertyModule,
     RedisCacheModule,
-    SubscriptionModule,
     UserModule
   ],
   providers: [

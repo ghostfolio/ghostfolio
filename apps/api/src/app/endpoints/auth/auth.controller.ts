@@ -1,10 +1,11 @@
-import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
+import { WebAuthService } from '@ghostfolio/api/app/endpoints/auth/web-auth.service';
 import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { OAuthCallbackGuard } from '@ghostfolio/api/guards/oauth-callback.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
+import { AuthDeviceDto } from '@ghostfolio/common/dtos';
 import {
   AssertionCredentialJSON,
   AttestationCredentialJSON,
@@ -24,6 +25,10 @@ import {
   VERSION_NEUTRAL
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import type {
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON
+} from '@simplewebauthn/server';
 import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
@@ -124,13 +129,13 @@ export class AuthController {
   @UseGuards(CustomThrottlerGuard)
   public async generateAuthenticationOptions(
     @Body() body: GenerateAuthenticationOptionsDto
-  ) {
+  ): Promise<PublicKeyCredentialRequestOptionsJSON> {
     return this.webAuthService.generateAuthenticationOptions(body.deviceId);
   }
 
   @Get('webauthn/generate-registration-options')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async generateRegistrationOptions() {
+  public async generateRegistrationOptions(): Promise<PublicKeyCredentialCreationOptionsJSON> {
     return this.webAuthService.generateRegistrationOptions();
   }
 
@@ -138,7 +143,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async verifyAttestation(
     @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
-  ) {
+  ): Promise<AuthDeviceDto> {
     return this.webAuthService.verifyAttestation(body.credential);
   }
 
@@ -146,7 +151,7 @@ export class AuthController {
   @UseGuards(CustomThrottlerGuard)
   public async verifyAuthentication(
     @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
-  ) {
+  ): Promise<OAuthResponse> {
     try {
       const authToken = await this.webAuthService.verifyAuthentication(
         body.deviceId,
