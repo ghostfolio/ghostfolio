@@ -1,6 +1,9 @@
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 
 import { NotFoundException } from '@nestjs/common';
@@ -13,6 +16,7 @@ describe('AssetProfilesService', () => {
   let assetProfilesService: AssetProfilesService;
   let deleteById: jest.Mock;
   let emit: jest.Mock;
+  let findMany: jest.Mock;
   let finished: jest.Mock;
   let gatherSymbol: jest.Mock;
   let getUserIdsBySymbolProfileId: jest.Mock;
@@ -21,6 +25,7 @@ describe('AssetProfilesService', () => {
   beforeEach(() => {
     deleteById = jest.fn();
     emit = jest.fn();
+    findMany = jest.fn();
     finished = jest.fn().mockResolvedValue(undefined);
     gatherSymbol = jest.fn().mockResolvedValue([{ finished }]);
     getUserIdsBySymbolProfileId = jest.fn().mockResolvedValue([]);
@@ -34,11 +39,25 @@ describe('AssetProfilesService', () => {
       } as unknown as AssetProfileSplitService,
       null,
       { gatherSymbol } as unknown as DataGatheringService,
-      null,
+      {
+        getDataProvider: jest.fn().mockReturnValue({
+          getDataProviderInfo: jest.fn()
+        })
+      } as unknown as DataProviderService,
       { emit } as unknown as EventEmitter2,
       null,
-      null,
-      null,
+      {
+        getLatest: jest.fn().mockResolvedValue(undefined)
+      } as unknown as MarketDataService,
+      {
+        marketData: {
+          count: jest.fn().mockResolvedValue(0)
+        },
+        symbolProfile: {
+          findMany,
+          count: jest.fn().mockResolvedValue(0)
+        }
+      } as unknown as PrismaService,
       null
     );
   });
@@ -126,6 +145,48 @@ describe('AssetProfilesService', () => {
     });
   });
 
+  describe('getAssetProfiles', () => {
+    it('flags the asset profiles used by users with a subscription', async () => {
+      findMany
+        .mockResolvedValueOnce([
+          createSymbolProfile({ activitiesCount: 2, id: 'profile-id-1' }),
+          createSymbolProfile({ activitiesCount: 1, id: 'profile-id-2' }),
+          createSymbolProfile({ activitiesCount: 0, id: 'profile-id-3' })
+        ])
+        .mockResolvedValueOnce([{ id: 'profile-id-1' }]);
+
+      const { assetProfiles } = await assetProfilesService.getAssetProfiles({});
+
+      expect(findMany).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({
+            id: { in: ['profile-id-1', 'profile-id-2'] }
+          })
+        })
+      );
+      expect(
+        assetProfiles.map(({ id, isUsedByUsersWithSubscription }) => {
+          return { id, isUsedByUsersWithSubscription };
+        })
+      ).toEqual([
+        { id: 'profile-id-1', isUsedByUsersWithSubscription: true },
+        { id: 'profile-id-2', isUsedByUsersWithSubscription: false },
+        { id: 'profile-id-3', isUsedByUsersWithSubscription: false }
+      ]);
+    });
+
+    it('skips the subscription query when no asset profile has activities', async () => {
+      findMany.mockResolvedValueOnce([
+        createSymbolProfile({ activitiesCount: 0, id: 'profile-id-1' })
+      ]);
+
+      const { assetProfiles } = await assetProfilesService.getAssetProfiles({});
+
+      expect(findMany).toHaveBeenCalledTimes(1);
+      expect(assetProfiles[0].isUsedByUsersWithSubscription).toBe(false);
+    });
+  });
+
   describe('deleteSplit', () => {
     it('throws NotFoundException when the scoped split does not exist', async () => {
       deleteById.mockResolvedValue(false);
@@ -173,6 +234,23 @@ describe('AssetProfilesService', () => {
     });
   });
 });
+
+function createSymbolProfile({
+  activitiesCount,
+  id
+}: {
+  activitiesCount: number;
+  id: string;
+}) {
+  return {
+    id,
+    _count: { activities: activitiesCount, watchedBy: 0 },
+    activities: [],
+    assetProfileOverrides: null,
+    dataSource: DataSource.YAHOO,
+    symbol: 'AAPL'
+  };
+}
 
 function flushPendingPromises() {
   return new Promise((resolve) => {

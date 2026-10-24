@@ -328,9 +328,13 @@ export class AssetProfilesService {
 
     const symbolProfileIdsUsedByUsersWithSubscription =
       await this.getSymbolProfileIdsUsedByUsersWithSubscription(
-        symbolProfiles.map(({ id }) => {
-          return id;
-        })
+        symbolProfiles
+          .filter(({ _count }) => {
+            return _count.activities > 0;
+          })
+          .map(({ id }) => {
+            return id;
+          })
       );
 
     const dataProviderInfoMap = new Map<DataSource, DataProviderInfo>(
@@ -569,6 +573,10 @@ export class AssetProfilesService {
   private async getSymbolProfileIdsUsedByUsersWithSubscription(
     symbolProfileIds: string[]
   ): Promise<Set<string>> {
+    if (symbolProfileIds.length === 0) {
+      return new Set();
+    }
+
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
       select: {
         id: true
