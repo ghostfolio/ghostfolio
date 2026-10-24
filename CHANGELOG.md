@@ -71,6 +71,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the missing localization of the date picker in the asset profile details dialog of the admin control panel
 - Fixed the missing tooltip of the client of the last request in the users table of the admin control panel
 
+### Fixed
+
+- Fixed an issue with the query parameter limit of the database in the activities of users with many activities
+
 ## 3.88.0 - 2026-10-17
 
 ### Added
