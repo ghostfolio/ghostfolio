@@ -721,6 +721,17 @@ export class DataService {
       );
   }
 
+  public fetchPortfolioCalendarPercentages(
+    periods: {
+      startDate: string;
+      endDate: string;
+    }[]
+  ): Observable<{ startDate: string; endDate: string; percentage?: number }[]> {
+    return this.http.post<
+      { startDate: string; endDate: string; percentage?: number }[]
+    >('/api/v2/portfolio/performance/calendar', { periods });
+  }
+
   public fetchPortfolioPerformance({
     filters,
     groupBy,

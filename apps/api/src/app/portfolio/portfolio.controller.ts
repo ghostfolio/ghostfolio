@@ -38,9 +38,12 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
+  HttpStatus,
   Inject,
   Param,
+  Post,
   Put,
   Query,
   UseInterceptors,
@@ -51,6 +54,7 @@ import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { GetCalendarPerformanceDto } from './get-calendar-performance.dto';
 import { GetDetailsDto } from './get-details.dto';
 import { GetDividendsDto } from './get-dividends.dto';
 import { GetHoldingsDto } from './get-holdings.dto';
@@ -480,6 +484,30 @@ export class PortfolioController {
     }
 
     return { investments, savingsRate, streaks };
+  }
+
+  @Post('performance/calendar')
+  @HttpCode(HttpStatus.OK)
+  @RequiresScope(scopes.portfolioRead)
+  @Version('2')
+  public async getCalendarPerformance(
+    @Impersonation()
+    { scopes: impersonationScopes, userId }: ImpersonationContext,
+    @Body() { periods }: GetCalendarPerformanceDto
+  ): Promise<{ startDate: string; endDate: string; percentage?: number }[]> {
+    // Do not disclose return information through the calendar in restricted views.
+    if (
+      !hasScope(impersonationScopes, scopes.portfolioReadValues) ||
+      isRestrictedView(this.request.user) ||
+      this.request.user.settings.settings.viewMode === 'ZEN'
+    ) {
+      return periods.map(({ startDate, endDate }) => ({ startDate, endDate }));
+    }
+
+    return this.portfolioService.getCalendarPerformancePercentages({
+      periods,
+      userId
+    });
   }
 
   @Get('performance')
