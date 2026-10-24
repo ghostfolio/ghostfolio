@@ -12,6 +12,7 @@ import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-b
 import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
 
 import { Logger, Module } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 import { CronService } from './cron.service';
 
@@ -30,6 +31,7 @@ import { CronService } from './cron.service';
         ConfigurationService,
         DataGatheringService,
         PropertyService,
+        SchedulerRegistry,
         StatisticsGatheringService,
         TwitterBotService,
         UserService
@@ -39,6 +41,7 @@ import { CronService } from './cron.service';
         configurationService: ConfigurationService,
         dataGatheringService: DataGatheringService,
         propertyService: PropertyService,
+        schedulerRegistry: SchedulerRegistry,
         statisticsGatheringService: StatisticsGatheringService,
         twitterBotService: TwitterBotService,
         userService: UserService
@@ -53,6 +56,7 @@ import { CronService } from './cron.service';
           configurationService,
           dataGatheringService,
           propertyService,
+          schedulerRegistry,
           statisticsGatheringService,
           twitterBotService,
           userService
