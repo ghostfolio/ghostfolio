@@ -336,7 +336,7 @@
         <target state="translated">平台</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">152</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -352,7 +352,7 @@
         <target state="translated">现金余额</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">178</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9011425576088183078" datatype="html">
@@ -3576,7 +3576,7 @@
         <target state="translated">持仓</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
@@ -4308,11 +4308,11 @@
         <target state="translated">活动</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">141</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">177</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -4828,7 +4828,7 @@
         <target state="translated">股息</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -5925,7 +5925,7 @@
         <target state="translated">利息</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
@@ -6966,7 +6966,7 @@
         <target state="translated">活动</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -8319,6 +8319,10 @@
         <source>Change</source>
         <target state="translated">涨跌</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">167</context>
         </context-group>
@@ -8346,6 +8350,10 @@
       <trans-unit id="1322586333669103999" datatype="html">
         <source>Performance</source>
         <target state="translated">表现</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.html</context>
           <context context-type="linenumber">6</context>
@@ -8637,7 +8645,7 @@
         <target state="translated">您确定要删除此项目吗？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6278975207599702712" datatype="html">
@@ -8665,7 +8673,7 @@
         <target state="translated">计算基于延迟的市场数据，可能无法实时显示。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="routes.about.changelog" datatype="html">
