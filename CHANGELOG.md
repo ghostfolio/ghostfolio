@@ -9,14 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the intraday prices to the benchmark comparator of the analysis page for the current day, week and month, and a time axis which only contains the trading days
 - Added the endpoint `GET api/v1/portfolio/intraday` to draw the performance chart of the current day (5 minutes), week (15 minutes) and month (60 minutes) on the overview page from the intraday prices of _Yahoo Finance_, including the pre-market and the post-market
 - Added a time axis to the performance chart on the overview page which only contains the trading days, spans the whole current year and uses hours, days, months or years as unit according to the selected date range
+- Added support for comparing the performance with multiple benchmarks in the benchmark comparator of the analysis page
 
 ### Changed
 
 - Hid the performance chart on the overview page if it has less than three data points
 - Reduced the performance chart on the overview page to one point per week above 400 trading days
-- Added support for comparing the performance with multiple benchmarks in the benchmark comparator of the analysis page
 
 ## 3.92.0 - 2026-10-24
 

@@ -3,20 +3,25 @@ import {
   getChartBorderColor,
   getChartElementsOptions,
   getTimeAxisOptions,
+  getTimeAxisUnit,
   getValueAxisOptions,
   getVerticalHoverLinePlugin,
   getZeroLineAnnotation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
-import { getLocale, parseDate } from '@ghostfolio/common/helper';
+import {
+  getLocale,
+  isIntradayDateRange,
+  parseDate
+} from '@ghostfolio/common/helper';
 import {
   BenchmarkSeries,
-  LineChartItem,
+  NullableLineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { ColorScheme } from '@ghostfolio/common/types';
+import { ColorScheme, DateRange } from '@ghostfolio/common/types';
 import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 import {
   getTimeSeriesTooltipOptions,
@@ -48,6 +53,7 @@ import {
   LineElement,
   PointElement,
   TimeScale,
+  TimeSeriesScale,
   Tooltip,
   type TooltipOptions
 } from 'chart.js';
@@ -75,6 +81,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   public readonly benchmarkSeries = input<BenchmarkSeries[]>([]);
   public readonly benchmarks = input<Partial<SymbolProfile>[]>();
   public readonly colorScheme = input<ColorScheme>();
+  public readonly dateRange = input<DateRange>();
   public readonly isLoading = input<boolean>();
 
   public readonly locale = input(getLocale(), {
@@ -83,7 +90,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   });
 
-  public readonly performanceDataItems = input.required<LineChartItem[]>();
+  public readonly performanceDataItems =
+    input.required<NullableLineChartItem[]>();
   public readonly selectedBenchmarkIds = input<string[]>([]);
   public readonly user = input<User>();
 
@@ -104,6 +112,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
       LineElement,
       PointElement,
       TimeScale,
+      TimeSeriesScale,
       Tooltip
     );
 
@@ -157,14 +166,14 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           data: this.performanceDataItems().map(({ date, value }) => {
             return {
               x: parseDate(date)?.getTime() ?? null,
-              y: value * 100
+              y: value === null ? null : value * 100
             };
           }),
           label: $localize`Portfolio`
         },
         ...this.benchmarkSeries().map(({ items, name }, index) => {
           const color = getBenchmarkColor(index);
-          const valuesByDate: Record<string, number> = {};
+          const valuesByDate: Record<string, number | null> = {};
 
           for (const { date, value } of items) {
             valuesByDate[date] = value;
@@ -177,7 +186,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
             data: this.performanceDataItems().map(({ date }) => {
               return {
                 x: parseDate(date)?.getTime() ?? null,
-                y: valuesByDate[date]
+                // The benchmarks are already in percent
+                y: valuesByDate[date] ?? null
               };
             }),
             label: name ?? $localize`Benchmark`
@@ -192,6 +202,10 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+
+        // The date range can change while the chart stays alive
+        this.chart.options.scales ??= {};
+        this.chart.options.scales['x'] = this.getTimeAxisConfiguration();
 
         this.chart.update();
       } else {
@@ -219,10 +233,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
             },
             responsive: true,
             scales: {
-              x: getTimeAxisOptions({
-                colorScheme: this.colorScheme(),
-                locale: this.locale()
-              }),
+              x: this.getTimeAxisConfiguration(),
               y: getValueAxisOptions({
                 colorScheme: this.colorScheme(),
                 tickCallback: (tickValue) => {
@@ -238,6 +249,19 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
         });
       }
     }
+  }
+
+  private getTimeAxisConfiguration() {
+    const dateRange = this.dateRange();
+
+    return getTimeAxisOptions({
+      colorScheme: this.colorScheme(),
+      locale: this.locale(),
+      // Equidistant points: the closed markets (nights, weekends) are skipped
+      type: dateRange ? 'timeseries' : 'time',
+      unit: getTimeAxisUnit(dateRange),
+      withTime: isIntradayDateRange(dateRange)
+    });
   }
 
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {

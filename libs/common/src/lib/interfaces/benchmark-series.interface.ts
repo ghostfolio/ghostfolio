@@ -1,7 +1,7 @@
-import { LineChartItem } from './line-chart-item.interface';
+import { NullableLineChartItem } from './line-chart-item.interface';
 
 export interface BenchmarkSeries {
   id: string;
-  items: LineChartItem[];
+  items: NullableLineChartItem[];
   name: string;
 }
