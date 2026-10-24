@@ -14,6 +14,7 @@ import type {
 import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { addDays, format, startOfWeek } from 'date-fns';
 
+import { secondaryColorRgb } from './config';
 import {
   DATE_FORMAT,
   DATE_FORMAT_MONTHLY,
@@ -40,6 +41,22 @@ export function formatGroupedDate({
   }
 
   return format(date, DATE_FORMAT);
+}
+
+// Colors for the lines of the compared benchmarks, the portfolio uses the
+// primary color
+// Without green and red, which stand for a gain and a loss, and without the
+// primary color of the portfolio. Orange (close to red) comes last
+const BENCHMARK_COLORS = [
+  `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+  'rgb(153, 102, 255)',
+  'rgb(201, 162, 39)',
+  'rgb(160, 160, 170)',
+  'rgb(255, 159, 64)'
+];
+
+export function getBenchmarkColor(index: number) {
+  return BENCHMARK_COLORS[index % BENCHMARK_COLORS.length];
 }
 
 export function getChartBorderColor(colorScheme?: ColorScheme) {

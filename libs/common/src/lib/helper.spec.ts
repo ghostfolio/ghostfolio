@@ -10,6 +10,7 @@ import {
   getEmojiFlag,
   getHoldingName,
   getNumberFormatGroup,
+  getSelectedBenchmarkIds,
   getStringOrNull,
   getStringOrUndefined,
   isAccountBalanceInFuture,
@@ -855,6 +856,50 @@ describe('Helper', () => {
         locale: 'de-CH',
         viewMode: 'DEFAULT'
       });
+    });
+  });
+
+  describe('getSelectedBenchmarkIds', () => {
+    const availableIds = ['a', 'b', 'c'];
+
+    it('returns an empty list without any setting', () => {
+      expect(getSelectedBenchmarkIds({ availableIds })).toEqual([]);
+      expect(getSelectedBenchmarkIds({ availableIds, settings: {} })).toEqual(
+        []
+      );
+    });
+
+    it('falls back to the legacy single benchmark', () => {
+      expect(
+        getSelectedBenchmarkIds({ availableIds, settings: { benchmark: 'b' } })
+      ).toEqual(['b']);
+    });
+
+    it('prefers the list over the legacy single benchmark', () => {
+      expect(
+        getSelectedBenchmarkIds({
+          availableIds,
+          settings: { benchmark: 'b', benchmarks: ['a', 'c'] }
+        })
+      ).toEqual(['a', 'c']);
+    });
+
+    it('keeps the order and ignores benchmarks which are not available anymore', () => {
+      expect(
+        getSelectedBenchmarkIds({
+          availableIds,
+          settings: { benchmarks: ['c', 'x', 'a'] }
+        })
+      ).toEqual(['c', 'a']);
+    });
+
+    it('returns an empty list for an explicitly emptied list', () => {
+      expect(
+        getSelectedBenchmarkIds({
+          availableIds,
+          settings: { benchmark: 'b', benchmarks: [] }
+        })
+      ).toEqual([]);
     });
   });
 });

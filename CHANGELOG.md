@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hid the performance chart on the overview page if it has less than three data points
 - Reduced the performance chart on the overview page to one point per week above 400 trading days
+- Added support for comparing the performance with multiple benchmarks in the benchmark comparator of the analysis page
 
 ## 3.92.0 - 2026-10-24
 
