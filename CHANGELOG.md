@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.91.0 - 2026-10-23
+
+### Added
+
+- Added a link to the holdings tab in the holdings table on the overview tab of the home page (experimental)
+
+### Changed
+
+- Extended the account detail dialog to include the change and the performance (experimental)
+- Improved the market price in the benchmark detail dialog by adding the currency and reducing the precision on mobile
+- Improved the style of the close button in the dialog footer component
+- Improved the style of the close button in the dialog header component
+- Restricted the asset endpoint (`GET api/v1/asset/:dataSource/:symbol`) to authenticated users
+- Refined the MCP server instructions based on the user’s subscription (experimental)
+- Improved the language localization for German (`de`)
+- Upgraded `prettier` from version `3.9.9` to `3.9.10`
+
+### Fixed
+
+- Fixed a transaction timeout for presets in the historical market data table of the admin control panel
+- Added the missing permission check in the `GET api/v1/import/dividends/:dataSource/:symbol` endpoint
+
 ## 3.90.0 - 2026-10-21
 
 ### Changed

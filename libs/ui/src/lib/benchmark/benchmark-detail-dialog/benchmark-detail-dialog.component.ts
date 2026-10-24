@@ -1,3 +1,4 @@
+import { NUMERICAL_PRECISION_THRESHOLD_4_FIGURES } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -47,6 +48,7 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
   public assetProfile?: AdminMarketDataDetails['assetProfile'];
   public historicalDataItems: LineChartItem[];
   public isLoading = true;
+  public precision = 2;
   public value: number;
 
   public constructor(
@@ -79,6 +81,13 @@ export class GfBenchmarkDetailDialogComponent implements OnInit {
             };
           }
         );
+
+        if (
+          this.data.deviceType === 'mobile' &&
+          this.value >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
+        ) {
+          this.precision = 0;
+        }
 
         this.isLoading = false;
 

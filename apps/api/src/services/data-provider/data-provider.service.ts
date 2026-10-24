@@ -1,8 +1,8 @@
-import { ImportValidationError } from '@ghostfolio/api/app/import/errors/import-validation.error';
-import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
 import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { ImportValidationError } from '@ghostfolio/api/services/import/errors/import-validation.error';
+import { ImportDataDto } from '@ghostfolio/api/services/import/import-data.dto';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';

@@ -2,6 +2,8 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { ImportDataDto } from '@ghostfolio/api/services/import/import-data.dto';
+import { ImportService } from '@ghostfolio/api/services/import/import.service';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -23,9 +25,6 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-
-import { ImportDataDto } from './import-data.dto';
-import { ImportService } from './import.service';
 
 @Controller('import')
 export class ImportController {
@@ -82,6 +81,7 @@ export class ImportController {
   }
 
   @Get('dividends/:dataSource/:symbol')
+  @HasPermission(permissions.createActivity)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)

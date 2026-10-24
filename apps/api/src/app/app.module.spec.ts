@@ -52,7 +52,6 @@ const AUTHENTICATION_STRATEGIES = ['api-key', 'google', 'jwt', 'oidc'];
  * are not served by a controller
  */
 const PUBLIC_ROUTES = [
-  'GET /asset/:dataSource/:symbol',
   'GET /assets/:languageCode/site.webmanifest',
   'GET /auth/google',
   'GET /auth/google/callback',
