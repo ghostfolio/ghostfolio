@@ -289,7 +289,7 @@ export class AiService {
    * name of the file is passed as well, as it can name the broker. The
    * reasoning is disabled, as it can add thousands of output tokens even for a
    * single row. The temperature is 0, so that the same file gives the same
-   * rows. An output which does not agree with the schema is requested one more
+   * rows. An output which does not agree with the schema is generated one more
    * time. A row above the maximum number of activities is left out. An
    * output which reaches the maximum number of output tokens is cut, hence it
    * gives an error for the caller. A cut output without any text is not parsed
@@ -315,7 +315,7 @@ export class AiService {
         : { data: file.buffer, mediaType: file.mediaType, type: 'file' }
     ];
 
-    const result = await this.runWithRetryOnInvalidOutput(async () => {
+    const result = await this.generateWithRetry(async () => {
       return generateText({
         abortSignal,
         instructions: [
@@ -412,6 +412,33 @@ export class AiService {
       'Conclusion: Provide a concise summary highlighting key insights.',
       `Provide your answer in the following language: ${languageCode}.`
     ].join('\n');
+  }
+
+  /**
+   * Generates the output of a model and generates it one more time if it does
+   * not agree with the schema, as a provider can give an output which does not
+   * agree with the schema although OpenRouter lists the structured outputs for
+   * it, for example with a code block around the JSON. An output which reaches
+   * the maximum number of output tokens is not generated again, as the second
+   * output would be cut as well.
+   */
+  private async generateWithRetry<T>(generate: () => Promise<T>) {
+    try {
+      return await generate();
+    } catch (error) {
+      if (
+        !NoObjectGeneratedError.isInstance(error) ||
+        error.finishReason === 'length'
+      ) {
+        throw error;
+      }
+
+      this.logger.warn(
+        `Generating the output of a model one more time, as it does not agree with the schema: ${error.message}`
+      );
+
+      return generate();
+    }
   }
 
   /**
@@ -557,7 +584,7 @@ export class AiService {
    * If the holdings or the data sources cannot be got, the model gets no
    * holdings. The reasoning is disabled, as it can add thousands of output
    * tokens. The temperature is 0, so that the same assets give the same
-   * matches. An output which does not agree with the schema is requested one
+   * matches. An output which does not agree with the schema is generated one
    * more time. An asset match is left out if neither the search of its own asset
    * nor the holdings gave its asset profile, or if its holding has another ISIN
    * than its own asset, as the import refuses a symbol which the data source
@@ -612,8 +639,8 @@ export class AiService {
       return assetProfiles;
     });
 
-    const { output, steps, totalUsage } =
-      await this.runWithRetryOnInvalidOutput(async () => {
+    const { output, steps, totalUsage } = await this.generateWithRetry(
+      async () => {
         return generateText({
           abortSignal,
           instructions: [
@@ -644,7 +671,8 @@ export class AiService {
           }),
           temperature: 0
         });
-      });
+      }
+    );
 
     const assetMatches = output.assets.filter(({ dataSource, id, symbol }) => {
       const assetProfileIdentifier = getAssetProfileIdentifier({
@@ -718,33 +746,6 @@ export class AiService {
         configurationService: this.configurationService
       })
     );
-  }
-
-  /**
-   * Runs a request to a model and runs it one more time if its output does not
-   * agree with the schema, as a provider can give an output which does not
-   * agree with the schema although OpenRouter lists the structured outputs for
-   * it, for example with a code block around the JSON. An output which reaches
-   * the maximum number of output tokens is not requested again, as the second
-   * output would be cut as well.
-   */
-  private async runWithRetryOnInvalidOutput<T>(request: () => Promise<T>) {
-    try {
-      return await request();
-    } catch (error) {
-      if (
-        !NoObjectGeneratedError.isInstance(error) ||
-        error.finishReason === 'length'
-      ) {
-        throw error;
-      }
-
-      this.logger.warn(
-        `Requested the output of a model one more time, as it does not agree with the schema: ${error.message}`
-      );
-
-      return request();
-    }
   }
 
   /**
