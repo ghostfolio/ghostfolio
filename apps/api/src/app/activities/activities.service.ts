@@ -916,6 +916,12 @@ export class ActivitiesService {
     userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
+    const requestedFeeName = data.type === 'FEE' ? data.symbol : undefined;
+    const requestedAssetClass = data.assetClass;
+    const requestedAssetSubClass = data.assetSubClass;
+    const shouldProcessFeeProfile =
+      data.type === 'FEE' && requestedFeeName !== undefined;
+
     const areTagsProvided = data.tags !== undefined;
     const tags = data.tags ?? [];
 
@@ -942,7 +948,9 @@ export class ActivitiesService {
         where
       });
 
-      if (activityToUpdate?.SymbolProfile.userId === userId) {
+      if (shouldProcessFeeProfile) {
+        delete data.SymbolProfile;
+      } else if (activityToUpdate?.SymbolProfile.userId === userId) {
         data.SymbolProfile.update = {
           data: {
             assetClass: data.assetClass,
@@ -1002,13 +1010,125 @@ export class ActivitiesService {
       tagsToUpdate = { connect: { id: TAG_ID_DRAFT } };
     }
 
-    const activity = await this.prismaService.order.update({
-      where,
-      data: {
-        ...data,
-        tags: tagsToUpdate
+    const updateRenamedFee = async (): Promise<Order> => {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          return await this.prismaService.$transaction(
+            async (prisma) => {
+              const current = await prisma.order.findUnique({
+                select: {
+                  symbolProfileId: true,
+                  SymbolProfile: {
+                    select: {
+                      assetClass: true,
+                      assetSubClass: true,
+                      currency: true,
+                      dataSource: true,
+                      name: true,
+                      userId: true
+                    }
+                  }
+                },
+                where
+              });
+
+              if (!current) {
+                throw new Error('Activity not found during fee rename');
+              }
+
+              const profile = current.SymbolProfile;
+              const ownsProfile = profile.userId === userId;
+
+              let symbolProfileUpdate: Prisma.OrderUpdateInput['SymbolProfile'];
+
+              if (
+                profile.dataSource !== 'MANUAL' ||
+                profile.name === requestedFeeName
+              ) {
+                symbolProfileUpdate = ownsProfile
+                  ? {
+                      update: {
+                        data: {
+                          assetClass: requestedAssetClass,
+                          assetSubClass: requestedAssetSubClass
+                        },
+                        where: { userId }
+                      }
+                    }
+                  : undefined;
+              } else {
+                const activitiesCount = ownsProfile
+                  ? await prisma.order.count({
+                      where: {
+                        symbolProfileId: current.symbolProfileId
+                      }
+                    })
+                  : 0;
+
+                symbolProfileUpdate =
+                  ownsProfile && activitiesCount === 1
+                    ? {
+                        update: {
+                          data: {
+                            assetClass: requestedAssetClass,
+                            assetSubClass: requestedAssetSubClass,
+                            name: requestedFeeName
+                          },
+                          where: { userId }
+                        }
+                      }
+                    : {
+                        create: {
+                          assetClass: requestedAssetClass ?? profile.assetClass,
+                          assetSubClass:
+                            requestedAssetSubClass ?? profile.assetSubClass,
+                          currency: profile.currency,
+                          dataSource: 'MANUAL',
+                          name: requestedFeeName,
+                          symbol: randomUUID(),
+                          userId
+                        }
+                      };
+              }
+
+              return prisma.order.update({
+                where,
+                data: {
+                  ...data,
+                  ...(symbolProfileUpdate !== undefined
+                    ? { SymbolProfile: symbolProfileUpdate }
+                    : {}),
+                  tags: tagsToUpdate
+                }
+              });
+            },
+            {
+              isolationLevel: Prisma.TransactionIsolationLevel.Serializable
+            }
+          );
+        } catch (error) {
+          if (!(
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === 'P2034' &&
+            attempt < 2
+          )) {
+            throw error;
+          }
+        }
       }
-    });
+
+      throw new Error('Fee rename transaction retries exhausted');
+    };
+
+    const activity = shouldProcessFeeProfile
+      ? await updateRenamedFee()
+      : await this.prismaService.order.update({
+          where,
+          data: {
+            ...data,
+            tags: tagsToUpdate
+          }
+        });
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
