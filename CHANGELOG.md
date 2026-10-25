@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the double submission of forms in the account detail dialog, the create or update access dialog, the historical market data editor, the import activities dialog, the coupon system and the create asset profile dialog of the admin control panel
+- Fixed the handling of an output of the model which does not agree with the schema in the import of activities with _Ghostfolio AI_ (experimental)
 
 ## 3.92.0 - 2026-10-24
 
