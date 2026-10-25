@@ -11,6 +11,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
     "permission": "deleteAccess",
   },
+  "DELETE /accesses/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAccess",
+  },
   "DELETE /account-balance/:id": {
     "guards": [
       "AuthGuard('jwt')",
@@ -196,6 +205,14 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
   },
   "GET /access": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /accesses": {
     "allowDuringImpersonation": true,
     "guards": [
       "AuthGuard('jwt')",
@@ -802,6 +819,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
     "permission": "createAccess",
   },
+  "POST /accesses": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "createAccess",
+  },
   "POST /account": {
     "guards": [
       "AuthGuard('jwt')",
@@ -1125,6 +1151,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
   },
   "PUT /access/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "updateAccess",
+  },
+  "PUT /accesses/:id": {
     "allowDuringImpersonation": true,
     "guards": [
       "AuthGuard('jwt')",
