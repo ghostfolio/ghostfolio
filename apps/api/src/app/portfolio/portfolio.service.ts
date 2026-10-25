@@ -1,6 +1,3 @@
-import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
@@ -21,6 +18,9 @@ import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models
 import { RegionalMarketClusterRiskEurope } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/europe';
 import { RegionalMarketClusterRiskJapan } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/japan';
 import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/north-america';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { CashDetails } from '@ghostfolio/api/services/account/interfaces/cash-details.interface';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';

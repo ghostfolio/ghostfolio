@@ -1,10 +1,11 @@
-import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import {
   CreateAccountDto,
@@ -35,7 +36,6 @@ import {
 import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { AccountService } from './account.service';
 import { GetAllAccountsDto } from './get-all-accounts.dto';
 
 @Controller('account')

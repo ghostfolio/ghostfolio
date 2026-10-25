@@ -1,8 +1,8 @@
-import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
+import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
+import { AccountModule } from '@ghostfolio/api/services/account/account.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { AssetProfileSplitModule } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
@@ -25,6 +25,8 @@ import { ActivitiesService } from './activities.service';
   controllers: [ActivitiesController],
   exports: [ActivitiesService],
   imports: [
+    AccountBalanceModule,
+    AccountModule,
     ApiModule,
     AssetProfileSplitModule,
     BenchmarkModule,
@@ -41,6 +43,6 @@ import { ActivitiesService } from './activities.service';
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
   ],
-  providers: [AccountBalanceService, AccountService, ActivitiesService]
+  providers: [ActivitiesService]
 })
 export class ActivitiesModule {}
