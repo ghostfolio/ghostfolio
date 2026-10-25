@@ -82,21 +82,31 @@
               (fileSelected)="onFileSelected({ stepper, file: $event })"
             />
             @if (
-              data.deviceType !== 'mobile' && hasPermissionToEnableGhostfolioAi
+              data.deviceType !== 'mobile' &&
+              (hasPermissionToEnableGhostfolioAi ||
+                (data.user?.subscription?.type === 'Basic' &&
+                  data.user?.settings?.isExperimentalFeatures))
             ) {
               <div class="align-items-center d-flex mt-4">
                 <mat-checkbox
                   color="primary"
                   [checked]="isGhostfolioAiEnabled"
-                  [disabled]="isLoading"
+                  [disabled]="isLoading || !hasPermissionToEnableGhostfolioAi"
                   (change)="onGhostfolioAiChange($event)"
                 >
-                  <ng-container i18n>AI-assisted import</ng-container>
+                  <span class="align-items-center d-flex">
+                    <ng-container i18n>AI-assisted import</ng-container>
+                    @if (data.user?.subscription?.type === 'Basic') {
+                      <gf-premium-indicator class="ms-1" [enableLink]="false" />
+                    }
+                  </span>
                 </mat-checkbox>
                 <span
                   class="align-items-center d-flex ms-1"
                   matTooltipPosition="above"
-                  [class.text-body-secondary]="isLoading"
+                  [class.text-body-secondary]="
+                    isLoading || !hasPermissionToEnableGhostfolioAi
+                  "
                   [matTooltip]="ghostfolioAiTooltip"
                 >
                   <ion-icon name="information-circle-outline" />
