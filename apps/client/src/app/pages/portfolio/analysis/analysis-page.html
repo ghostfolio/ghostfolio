@@ -87,9 +87,34 @@
             [locale]="user?.settings?.locale"
             [precision]="precision"
             [unit]="user?.settings?.baseCurrency"
-            [value]="performance?.currentValueInBaseCurrency"
-            >Total amount</gf-value
+            [value]="
+              performance?.currentNetWorth ??
+              performance?.currentValueInBaseCurrency
+            "
+            >Portfolio value including cash</gf-value
           >
+          <div class="d-flex justify-content-between small mt-2">
+            <span i18n>Investment positions</span>
+            <gf-value
+              [isCurrency]="true"
+              [locale]="user?.settings?.locale"
+              [unit]="user?.settings?.baseCurrency"
+              [value]="
+                (performance?.currentNetWorth ??
+                  performance?.currentValueInBaseCurrency ??
+                  0) - (performance?.totalCashInBaseCurrency ?? 0)
+              "
+            />
+          </div>
+          <div class="d-flex justify-content-between small">
+            <span i18n>Cash</span>
+            <gf-value
+              [isCurrency]="true"
+              [locale]="user?.settings?.locale"
+              [unit]="user?.settings?.baseCurrency"
+              [value]="performance?.totalCashInBaseCurrency"
+            />
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
@@ -191,7 +216,7 @@
             <div
               class="align-items-center d-flex flex-grow-1 me-2 text-truncate"
             >
-              <span i18n>Absolute Currency Performance</span>
+              <span i18n>Currency effect on performance</span>
               @if (user?.subscription?.type === 'Basic') {
                 <gf-premium-indicator class="ms-1" />
               }
@@ -478,17 +503,38 @@
             <gf-premium-indicator class="ms-1" />
           }
         </div>
+        @if (!showValuesInPercentage()) {
+          <mat-checkbox
+            i18n
+            [checked]="includeCashInValueChart()"
+            (change)="includeCashInValueChart.set($event.checked)"
+            >Include cash</mat-checkbox
+          >
+        }
       </div>
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
-          [benchmarkDataItems]="investments"
-          [benchmarkDataLabel]="portfolioEvolutionDataLabel"
+          [benchmarkDataItems]="
+            includeCashInValueChart() ? adjustedCapitalDataItems : investments
+          "
+          [benchmarkDataLabel]="
+            includeCashInValueChart()
+              ? adjustedCapitalLabel
+              : portfolioEvolutionDataLabel
+          "
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
-          [historicalDataItems]="performanceDataItems"
+          [historicalDataItems]="
+            showValuesInPercentage()
+              ? performanceDataItems
+              : includeCashInValueChart()
+                ? portfolioValueDataItems
+                : investmentsOnlyDataItems
+          "
           [isInPercentage]="showValuesInPercentage()"
           [isLoading]="isLoadingInvestmentChart"
+          [isValueStepped]="true"
           [locale]="user?.settings?.locale"
         />
       </div>

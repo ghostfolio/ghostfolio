@@ -1,0 +1,160 @@
+Accounts entry points: Import JSON restores a portfolio; Import CSV opens the
+cash CSV destination selector. The latter can use an existing account or create
+a new one using SourceAccountName and Currency from the file, with an editable
+name. Preview never creates an account. Confirmation creates the account and
+its ledger in one transaction, using the same CSV validator as Cash Balances.
+CSV activity links must already resolve in the selected account; use the JSON
+restore for a complete portfolio transfer. A CSV alone does not create trades.
+
+Complete portfolio transfer (JSON)
+
+User settings offer Import Data beside Export Data; Accounts offers Import JSON
+for the same restore procedure. This is the complete restore path for the exported JSON.
+It previews account creation or explicit association, activities and cash balances.
+Both sides of a transfer must be included. All financial writes share one database
+transaction. Existing cash ledgers are protected, never replaced. A compatible
+account with already-imported activities and no cash ledger can be selected;
+unmatched activities or conflicting balances block cash restoration.
+Source activity IDs are retained in JSON exports when cash links require them,
+and remapped to fresh destination IDs. Old JSON files without cash ledgers remain
+supported. Files with cash links but no source activity IDs must be exported again.
+JSON exports include cashManagement only for a persisted AccountCashState.
+Legacy accounts retain balances and remain unmanaged after restoration. A null
+legacy account currency is preserved when no cash ledger is present; choose a
+currency explicitly before enabling cash management. No historical accounts are
+converted merely by exporting or restoring a backup. Already-produced backups
+cannot reveal whether their embedded ledger was virtual: export again from the
+updated source to preserve the original management mode.
+POST /api/v1/import rejects backups containing cashManagement before any write,
+including dry runs. Such files must use POST /api/v1/import/restore/preview and
+POST /api/v1/import/restore. Legacy activity-only import remains available.
+Partial CSV import/export below remains separate. Do not load a cash CSV again
+after a full JSON restore; its movements are already present.
+
+Cash Balances CSV import and export
+
+Open Accounts, select an account, then Cash Balances. Export CSV downloads the
+whole cash journal, including references to financial activities. Import CSV
+previews the file before the user confirms Insert movements.
+The existing financial-activities CSV importer is unchanged.
+
+Hand-written files can use this minimal header:
+Date,Operation,Amount,Currency
+Optional columns: Fee,Sequence,Note,Reference.
+Italian aliases: Data,Operazione,Importo,Valuta,Commissione,Sequenza,Nota,Riferimento.
+Operation aliases: DEPOSITO,PRELIEVO,RICONCILIAZIONE.
+
+Use YYYY-MM-DD civil dates, a decimal point, and no thousands separators. Cash
+dates support years 0001 through 9999, including historical dates before 1970;
+year zero and future event dates are rejected. Financial activity date rules are
+unchanged.
+Manual DEPOSIT and WITHDRAWAL rows require positive Amount. Version 1 exported
+EVENT rows with a Reference may restore zero Amount, preserving fee-only and
+zero-effect historical movements. Fee reduces cash in both cases.
+RECONCILIATION uses Amount as the actual balance, which can be zero or negative;
+its Fee must be zero. It replaces the computed balance, not adds to it.
+Negative cash balances require an explicit confirmation.
+
+Sequence orders events on the same date. Sequence zero is reserved for a
+RECONCILIATION when the journal uses the automatic opening, including migrated
+opening checkpoints. Other events require a strictly positive sequence. It is required when inserting next to
+a reconciliation; an occupied position is an error. Export retains the sequence.
+Reference identifies the source event, scoped to the destination account. An
+identical existing reference is ignored; changed content is a conflict. Without
+a reference, a possible duplicate is reported rather than silently skipped.
+Existing events are never overwritten or removed by CSV import.
+
+Exported version 1 files also contain one Record=META row for opening metadata.
+This is not a transaction and does not reintroduce an opening-amount field in Add
+Account. Opening metadata can only be adopted by an empty account; conflicting
+existing opening history is protected. Account preferences are not overwritten.
+SourceAccount is informational; the selected destination account is always the
+target, including a new account confirmed through Accounts.
+Currency must match it. No implicit currency conversion occurs during import.
+
+ACTIVITY rows link to existing financial activities. Their Amount is the signed
+NET cash effect; Fee must be zero because activity costs are already included.
+ActivityFee belongs to the financial activity fingerprint, not a second cash fee.
+The Activity* columns, DataSource, Symbol, Quantity and UnitPrice identify the
+activity. Existing IDs are verified, never trusted without checking the account
+and financial contents. Otherwise an unambiguous matching activity is sought.
+Manual asset names are supported when their imported symbols have changed.
+If several activities match, select the intended one in the preview. Missing
+activities must be imported first through the existing financial importer.
+An unresolved activity is never converted into an independent cash withdrawal.
+
+TRANSFER rows preserve the source reference on export. A transfer already present
+and identical can be recognized. A new transfer cannot be recreated by importing
+one account alone; the preview blocks it rather than creating half a transfer.
+Cross-account transfer restoration is outside this first CSV version.
+
+Preview performs no writes. Commit validates the account revision and a digest
+covering the file, associations and linked activity data again, locks the account,
+and writes the complete accepted plan and balance projection in one transaction.
+Any row error, stale preview or write failure prevents partial imports.
+Only the account owner with cash-update and value-reading scopes can import;
+exports also require value-reading access. Files contain no credentials.
+
+Limits: 2 MB UTF-8 and 5000 records including META. Over-limit exports are rejected
+explicitly; use the full JSON backup for those histories. Numbers remain decimal
+strings until the legacy float balance projection. Text fields in exports escape
+spreadsheet formula prefixes reversibly. Readonly transfers, missing dependencies,
+conflicts and ambiguous same-day ordering are reported in the preview.
+
+New API routes under /api/v1/account/:accountId/cash:
+GET export
+POST import/preview {csv, activityLinks?}
+POST import {csv, activityLinks?, expectedRevision, digest, confirmNegativeBalance?}
+
+Database migration 20261021020000_cash_csv_references adds one nullable source
+reference and a per-account uniqueness constraint. Historical cash events are
+unchanged. The JSON backup includes the optional reference when present.
+
+Performance and transfer information
+------------------------------------
+Deposits, withdrawals and absolute reconciliations change the cash balance;
+they are not investment gains or losses in the account's own currency.
+A reconciliation declares the actual balance and is not investment income.
+A same-currency internal transfer preserves aggregate wealth in the absence
+of fees. Exchange-rate movements may affect foreign-currency cash values.
+
+Bank fees are deducted once from account cash and are reported as fees.
+Ghostfolio's existing investment performance excludes standalone FEE
+activities; therefore investment performance and the change in total wealth
+net of external deposits/withdrawals can differ by bank fees. This feature
+does not redefine the upstream performance formulas.
+
+Transfer information in Cash Balances shows this account's signed movement,
+date, amount, fee and transfer reference as information, not as an error.
+It does not allow editing a linked transfer leg independently. An opposite
+transfer reverses its effect. Separate outgoing and incoming transfer fees
+are not supported by the current transfer API or CSV import.
+
+Known backup limitation
+-----------------------
+The upstream exporter includes custom asset profiles owned by the user. Metadata
+and historical prices of shared MANUAL profiles with no owner may be omitted,
+even when their activities are exported. Verify those instruments and prices
+before treating a JSON transfer as a complete backup. This Cash feature does
+not change the upstream ownership rule.
+
+Cash PostgreSQL validation
+--------------------------
+Run node -r dotenv/config scripts/test-cash-postgres.mjs with a migrated disposable
+cash_test_ database in CASH_TEST_DATABASE_URL and TEST_TZ=UTC or Europe/Rome.
+The command fails if the destination is absent or if any required suite/test is
+skipped. The Cash PostgreSQL workflow supplies its own PostgreSQL 15 database
+and applies migrations without seeding. DATABASE_URL and DIRECT_URL must point
+to that same disposable destination for migration commands.
+
+Snapshot cache
+--------------
+Normal snapshots retain the official cache key. Views that explicitly include
+hidden account cash use a separate cash-all variant, computed by the same worker.
+Portfolio changes invalidate both variants for the user. No performance formulas
+are changed, and standard Home charts retain upstream behavior.
+The official portfolio-change debounce (5 seconds) is preserved. Immediately
+after a change, a chart may temporarily show the previous cached snapshot until
+invalidation and recomputation complete. This port does not promise synchronous
+chart refresh. The two-view cache adds at most one extra snapshot per otherwise
+identical key; cold computation still uses the official background worker.

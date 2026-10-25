@@ -1,4 +1,5 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { CashManagementService } from '@ghostfolio/api/app/account-balance/cash-management.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
@@ -35,6 +36,10 @@ import {
 import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import {
+  CashCsvPreviewDto,
+  NewAccountCashCsvDto
+} from '../account-balance/cash-management.dto';
 import { AccountService } from './account.service';
 import { GetAllAccountsDto } from './get-all-accounts.dto';
 
@@ -44,8 +49,36 @@ export class AccountController {
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly apiService: ApiService,
-    private readonly portfolioService: PortfolioService
+    private readonly portfolioService: PortfolioService,
+    private readonly cashManagementService?: CashManagementService
   ) {}
+
+  @Post('cash-csv/inspect')
+  @HasPermission(permissions.createAccount)
+  @RequiresScope(scopes.accountCreate, scopes.portfolioReadValues)
+  public inspectCashCsv(@Body() data: CashCsvPreviewDto) {
+    return this.cashManagementService.inspectAccountCsv(data.csv);
+  }
+
+  @Post('cash-csv/new/preview')
+  @HasPermission(permissions.createAccount)
+  @RequiresScope(scopes.accountCreate, scopes.portfolioReadValues)
+  public previewNewCashCsv(
+    @Body() data: NewAccountCashCsvDto,
+    @Impersonation() { userId }: ImpersonationContext
+  ) {
+    return this.cashManagementService.newAccountFromCsv(userId, data, true);
+  }
+
+  @Post('cash-csv/new/import')
+  @HasPermission(permissions.createAccount)
+  @RequiresScope(scopes.accountCreate, scopes.portfolioReadValues)
+  public importNewCashCsv(
+    @Body() data: NewAccountCashCsvDto,
+    @Impersonation() { userId }: ImpersonationContext
+  ) {
+    return this.cashManagementService.newAccountFromCsv(userId, data, false);
+  }
 
   @Delete(':id')
   @HasPermission(permissions.deleteAccount)
@@ -186,7 +219,13 @@ export class AccountController {
   @Post('transfer-balance')
   @RequiresScope(scopes.accountUpdate)
   public async transferAccountBalance(
-    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto,
+    @Body()
+    {
+      accountIdFrom,
+      accountIdTo,
+      balance,
+      ...confirmation
+    }: TransferBalanceDto,
     @Impersonation() { userId }: ImpersonationContext
   ) {
     const accountsOfUser = await this.accountService.getAccounts(userId);
@@ -213,11 +252,21 @@ export class AccountController {
       );
     }
 
-    if (accountFrom.balance < balance) {
+    if (accountFrom.balance < balance && !accountFrom.cashManagement) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
       );
+    }
+
+    if (this.cashManagementService) {
+      return this.cashManagementService.transfer({
+        accountIdFrom,
+        accountIdTo,
+        balance,
+        userId,
+        ...confirmation
+      });
     }
 
     await this.accountService.updateAccountBalance({

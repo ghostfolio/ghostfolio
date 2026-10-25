@@ -337,145 +337,150 @@ describe('PortfolioCalculator', () => {
       });
     });
 
-    it('should exclude cash in the base currency from the performance calculation', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());
+    it.each([2000, -50])(
+      'excludes base-currency cash from performance with a closing balance of %s',
+      async (closingBalance) => {
+        jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());
 
-      const accountId = randomUUID();
+        const accountId = randomUUID();
 
-      jest
-        .spyOn(accountBalanceService, 'getAccountBalances')
-        .mockResolvedValue({
-          balances: [
+        jest
+          .spyOn(accountBalanceService, 'getAccountBalances')
+          .mockResolvedValue({
+            balances: [
+              {
+                accountId,
+                date: parseDate('2023-12-31'),
+                id: randomUUID(),
+                value: 1000,
+                valueInBaseCurrency: 1000
+              },
+              {
+                accountId,
+                date: parseDate('2024-12-31'),
+                id: randomUUID(),
+                value: closingBalance,
+                valueInBaseCurrency: closingBalance
+              }
+            ]
+          });
+
+        jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+          accounts: [
             {
-              accountId,
-              date: parseDate('2023-12-31'),
-              id: randomUUID(),
-              value: 1000,
-              valueInBaseCurrency: 1000
-            },
-            {
-              accountId,
-              date: parseDate('2024-12-31'),
-              id: randomUUID(),
-              value: 2000,
-              valueInBaseCurrency: 2000
+              balance: closingBalance,
+              comment: null,
+              createdAt: parseDate('2023-12-31'),
+              currency: 'CHF',
+              id: accountId,
+              name: 'CHF',
+              platformId: null,
+              updatedAt: parseDate('2023-12-31'),
+              userId: userDummyData.id
             }
-          ]
+          ],
+          balanceInBaseCurrency: closingBalance
         });
 
-      jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
-        accounts: [
+        jest
+          .spyOn(dataProviderService, 'getDataSourceForExchangeRates')
+          .mockReturnValue(DataSource.YAHOO);
+
+        jest.spyOn(activitiesService, 'getActivities').mockResolvedValue({
+          activities: [],
+          count: 0
+        });
+
+        const { activities } =
+          await activitiesService.getActivitiesForPortfolioCalculator({
+            userCurrency: 'CHF',
+            userId: userDummyData.id,
+            withCash: true
+          });
+
+        jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
+          dataProviderInfos: [],
+          errors: [],
+          values: []
+        });
+
+        const accountBalanceItems =
+          await accountBalanceService.getAccountBalanceItems({
+            userCurrency: 'CHF',
+            userId: userDummyData.id
+          });
+
+        const portfolioCalculator = portfolioCalculatorFactory.createCalculator(
           {
-            balance: 2000,
-            comment: null,
-            createdAt: parseDate('2023-12-31'),
+            accountBalanceItems,
+            activities,
+            calculationType: PerformanceCalculationType.ROAI,
             currency: 'CHF',
-            id: accountId,
-            name: 'CHF',
-            platformId: null,
-            updatedAt: parseDate('2023-12-31'),
             userId: userDummyData.id
           }
-        ],
-        balanceInBaseCurrency: 2000
-      });
+        );
 
-      jest
-        .spyOn(dataProviderService, 'getDataSourceForExchangeRates')
-        .mockReturnValue(DataSource.YAHOO);
+        const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      jest.spyOn(activitiesService, 'getActivities').mockResolvedValue({
-        activities: [],
-        count: 0
-      });
-
-      const { activities } =
-        await activitiesService.getActivitiesForPortfolioCalculator({
-          userCurrency: 'CHF',
-          userId: userDummyData.id,
-          withCash: true
+        const position = portfolioSnapshot.positions.find(({ symbol }) => {
+          return symbol === 'CHF';
         });
 
-      jest.spyOn(currentRateService, 'getValues').mockResolvedValue({
-        dataProviderInfos: [],
-        errors: [],
-        values: []
-      });
-
-      const accountBalanceItems =
-        await accountBalanceService.getAccountBalanceItems({
-          userCurrency: 'CHF',
-          userId: userDummyData.id
+        /**
+         * The holding itself keeps its investment and value so that it remains
+         * visible in the holdings table
+         */
+        expect(position).toMatchObject<Partial<PortfolioSnapshotHolding>>({
+          currency: 'CHF',
+          grossPerformance: new Big(0),
+          grossPerformanceWithCurrencyEffect: new Big(0),
+          investment: new Big(closingBalance),
+          investmentWithCurrencyEffect: new Big(closingBalance),
+          netPerformance: new Big(0),
+          quantity: new Big(closingBalance),
+          symbol: 'CHF',
+          valueInBaseCurrency: new Big(closingBalance)
         });
 
-      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        accountBalanceItems,
-        activities,
-        calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
-        userId: userDummyData.id
-      });
+        /**
+         * Total investment: 0 CHF (cash in the base currency cannot generate a
+         * currency effect and would only dilute the performance)
+         * Current value in base currency: closingBalance CHF (the cash still counts
+         * towards the net worth)
+         */
+        expect(portfolioSnapshot).toMatchObject({
+          currentValueInBaseCurrency: new Big(closingBalance),
+          hasErrors: false,
+          totalCashInBaseCurrency: new Big(closingBalance),
+          totalFeesWithCurrencyEffect: new Big(0),
+          totalInterestWithCurrencyEffect: new Big(0),
+          totalInvestment: new Big(0),
+          totalLiabilitiesWithCurrencyEffect: new Big(0)
+        });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
-
-      const position = portfolioSnapshot.positions.find(({ symbol }) => {
-        return symbol === 'CHF';
-      });
-
-      /**
-       * The holding itself keeps its investment and value so that it remains
-       * visible in the holdings table
-       */
-      expect(position).toMatchObject<Partial<PortfolioSnapshotHolding>>({
-        currency: 'CHF',
-        grossPerformance: new Big(0),
-        grossPerformanceWithCurrencyEffect: new Big(0),
-        investment: new Big(2000),
-        investmentWithCurrencyEffect: new Big(2000),
-        netPerformance: new Big(0),
-        quantity: new Big(2000),
-        symbol: 'CHF',
-        valueInBaseCurrency: new Big(2000)
-      });
-
-      /**
-       * Total investment: 0 CHF (cash in the base currency cannot generate a
-       * currency effect and would only dilute the performance)
-       * Current value in base currency: 2000 CHF (the cash still counts
-       * towards the net worth)
-       */
-      expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big(2000),
-        hasErrors: false,
-        totalCashInBaseCurrency: new Big(2000),
-        totalFeesWithCurrencyEffect: new Big(0),
-        totalInterestWithCurrencyEffect: new Big(0),
-        totalInvestment: new Big(0),
-        totalLiabilitiesWithCurrencyEffect: new Big(0)
-      });
-
-      /**
-       * Value: 0 CHF (the cash is excluded from the performance calculation
-       * and therefore from the value it is measured against)
-       * Net worth: 2000 CHF (the cash still counts towards the net worth)
-       */
-      expect(portfolioSnapshot.historicalData.at(-1)).toEqual({
-        date: '2025-01-01',
-        dividendInBaseCurrency: 0,
-        dividendInPercentageWithCurrencyEffect: 0,
-        investmentValueWithCurrencyEffect: 0,
-        netPerformance: 0,
-        netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: 0,
-        netPerformanceWithCurrencyEffect: 0,
-        netWorth: 2000,
-        totalCashInBaseCurrency: 2000,
-        totalInvestment: 0,
-        totalInvestmentValueWithCurrencyEffect: 0,
-        value: 0,
-        valueWithCurrencyEffect: 0
-      });
-    });
+        /**
+         * Value: 0 CHF (the cash is excluded from the performance calculation
+         * and therefore from the value it is measured against)
+         * Net worth: closingBalance CHF (the cash still counts towards the net worth)
+         */
+        expect(portfolioSnapshot.historicalData.at(-1)).toEqual({
+          date: '2025-01-01',
+          dividendInBaseCurrency: 0,
+          dividendInPercentageWithCurrencyEffect: 0,
+          investmentValueWithCurrencyEffect: 0,
+          netPerformance: 0,
+          netPerformanceInPercentage: 0,
+          netPerformanceInPercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
+          netWorth: closingBalance,
+          totalCashInBaseCurrency: closingBalance,
+          totalInvestment: 0,
+          totalInvestmentValueWithCurrencyEffect: 0,
+          value: 0,
+          valueWithCurrencyEffect: 0
+        });
+      }
+    );
 
     it('should add cash in the base currency to the net worth of a portfolio with holdings', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2025-01-01').getTime());

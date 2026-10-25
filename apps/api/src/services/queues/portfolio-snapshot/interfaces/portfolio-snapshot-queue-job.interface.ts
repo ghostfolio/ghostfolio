@@ -6,4 +6,5 @@ export interface PortfolioSnapshotQueueJob {
   filters: Filter[];
   userCurrency: string;
   userId: string;
+  withHiddenCash?: boolean;
 }

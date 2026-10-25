@@ -208,20 +208,16 @@
           <ion-icon name="cash-outline" />
           <div class="d-none d-sm-block ms-2" i18n>Cash Balances</div>
         </ng-template>
-        <gf-account-balances
-          [accountBalances]="accountBalances"
-          [accountCurrency]="currency"
-          [accountId]="data.accountId"
-          [currentBalance]="balance"
-          [locale]="user?.settings?.locale"
-          [showActions]="
-            hasPermissionToDeleteAccountBalance &&
-            !data.impersonationId &&
-            !user.settings.isRestrictedView
-          "
-          (accountBalanceCreated)="onAddAccountBalance($event)"
-          (accountBalanceDeleted)="onDeleteAccountBalance($event)"
-        />
+        @if (!showValuesInPercentage()) {
+          <gf-cash-management
+            [accountId]="data.accountId"
+            [accountName]="name"
+            [canWrite]="canManageCash && !data.impersonationId"
+            [currency]="currency"
+            [currentBalance]="balance"
+            (changed)="onCashChanged()"
+          />
+        }
       </mat-tab>
     </mat-tab-group>
   </div>

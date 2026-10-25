@@ -29,20 +29,6 @@
         />
       </mat-form-field>
     </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Cash Balance</mat-label>
-        <input
-          formControlName="balance"
-          matInput
-          type="number"
-          (keydown.enter)="$event.stopPropagation()"
-        />
-        <span class="ms-2" matTextSuffix>{{
-          accountForm.get('currency')?.value
-        }}</span>
-      </mat-form-field>
-    </div>
     <div [class.d-none]="platforms.length < 1">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>

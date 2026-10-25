@@ -1,5 +1,6 @@
 import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { CashManagementModule } from '@ghostfolio/api/app/account-balance/cash-management.module';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
@@ -34,6 +35,7 @@ import { RulesService } from './rules.service';
   controllers: [PortfolioController],
   exports: [PortfolioService],
   imports: [
+    CashManagementModule,
     AccessModule,
     ActivitiesModule,
     ApiModule,

@@ -65,3 +65,5 @@ export {
   UpdateTagDto,
   UpdateUserSettingDto
 };
+
+export { CashConfirmationDto } from './cash-confirmation.dto';

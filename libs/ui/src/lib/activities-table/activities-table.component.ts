@@ -115,6 +115,8 @@ export class GfActivitiesTableComponent<
   @Input() public hasPermissionToImportActivities: boolean;
   @Input() public hasPermissionToOpenDetails = true;
   @Input() public hasPermissionToUpdateActivity: boolean;
+  @Input() public hasPermissionToManageCash = false;
+  public readonly cashTransactionsIncluded = input(false);
   @Input() public locale?: string = getLocale();
   @Input() public pageIndex: number;
   @Input() public pageSize = DEFAULT_PAGE_SIZE;
@@ -126,6 +128,9 @@ export class GfActivitiesTableComponent<
 
   @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
+  @Output() cashTransactionEdited = new EventEmitter<
+    Activity['cashTransaction']
+  >();
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
@@ -293,7 +298,8 @@ export class GfActivitiesTableComponent<
 
   public canDeleteActivities() {
     return (
-      (this.dataSource()?.data.length ?? 0) > 0 &&
+      (this.dataSource()?.data.some((activity) => !activity.cashTransaction) ??
+        false) &&
       this.hasPermissionToDeleteActivity
     );
   }
@@ -328,8 +334,9 @@ export class GfActivitiesTableComponent<
         this.activitiesDeleted.emit();
       },
       confirmType: ConfirmationDialogType.Warn,
-      title:
-        this.totalItems === 1
+      title: this.cashTransactionsIncluded()
+        ? $localize`Delete investment activities? Cash transactions will remain in the account history.`
+        : this.totalItems === 1
           ? $localize`Do you really want to delete this activity?`
           : $localize`Do you really want to delete these ${this.totalItems}:count: activities?`
     });

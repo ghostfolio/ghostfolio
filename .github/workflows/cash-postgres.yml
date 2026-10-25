@@ -1,0 +1,45 @@
+name: Cash PostgreSQL
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cash-postgres:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        timezone: [UTC, Europe/Rome]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: cash_ci
+          POSTGRES_PASSWORD: cash_ci_disposable
+          POSTGRES_DB: cash_test_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://cash_ci:cash_ci_disposable@127.0.0.1:5432/cash_test_ci
+      DIRECT_URL: postgresql://cash_ci:cash_ci_disposable@127.0.0.1:5432/cash_test_ci
+      CASH_TEST_DATABASE_URL: postgresql://cash_ci:cash_ci_disposable@127.0.0.1:5432/cash_test_ci
+      TEST_TZ: ${{ matrix.timezone }}
+      TZ: ${{ matrix.timezone }}
+      NX_DAEMON: 'false'
+      HUSKY: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.23.4
+          cache: npm
+      - run: npm ci
+      - run: npx prisma migrate deploy --config .config/prisma.ts
+      - run: node --test scripts/cash-test-report.test.mjs
+      - run: node -r dotenv/config scripts/test-cash-postgres.mjs

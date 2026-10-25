@@ -19,7 +19,14 @@ import {
   UpdateTagDto,
   UpdateUserSettingDto
 } from '@ghostfolio/common/dtos';
+import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  CashConfirmation,
+  CashCsvPreview,
+  CashEventInput,
+  CashManagementSnapshot
+} from '@ghostfolio/common/interfaces';
 import {
   Access,
   AccessTokenResponse,
@@ -81,6 +88,7 @@ import type {
 } from '@ghostfolio/prisma/browser';
 import { DataSource } from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
+import { NotificationService } from '@ghostfolio/ui/notifications';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
@@ -88,12 +96,15 @@ import { SortDirection } from '@angular/material/sort';
 import { utc } from '@date-fns/utc';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash-es';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Service()
 export class DataService {
   private readonly http = inject(HttpClient);
+  private readonly notificationService = inject(NotificationService, {
+    optional: true
+  });
 
   public buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
     let params = new HttpParams();
@@ -340,11 +351,15 @@ export class DataService {
       params = params.append('range', range);
     }
 
-    return this.http.delete<number>('/api/v1/activities', { params });
+    return this.withCashConfirmation((body) =>
+      this.http.delete<number>('/api/v1/activities', { params, body })
+    );
   }
 
   public deleteActivity(aId: string) {
-    return this.http.delete<Order>(`/api/v1/activities/${aId}`);
+    return this.withCashConfirmation((body) =>
+      this.http.delete<Order>(`/api/v1/activities/${aId}`, { body })
+    );
   }
 
   public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -501,7 +516,11 @@ export class DataService {
       })
       .pipe(
         map((exportResponse) => {
-          if (!withActivityIds) {
+          // Cash ledger links must survive every unfiltered JSON export.
+          const hasCashLinks = exportResponse.accounts?.some((account) =>
+            account.cashManagement?.events?.some((event) => !!event.orderId)
+          );
+          if (!withActivityIds && !hasCashLinks) {
             for (const activity of exportResponse.activities) {
               delete (activity as Omit<typeof activity, 'id'> & { id?: string })
                 .id;
@@ -877,7 +896,12 @@ export class DataService {
   }
 
   public postActivity(aOrder: CreateOrderDto) {
-    return this.http.post<CreateActivityResponse>('/api/v1/activities', aOrder);
+    return this.withCashConfirmation((confirmation) =>
+      this.http.post<CreateActivityResponse>('/api/v1/activities', {
+        ...aOrder,
+        ...confirmation
+      })
+    );
   }
 
   public postAiActivities(file: File) {
@@ -934,7 +958,12 @@ export class DataService {
   }
 
   public putActivity(aOrder: UpdateOrderDto) {
-    return this.http.put<UserItem>(`/api/v1/activities/${aOrder.id}`, aOrder);
+    return this.withCashConfirmation((confirmation) =>
+      this.http.put<UserItem>(`/api/v1/activities/${aOrder.id}`, {
+        ...aOrder,
+        ...confirmation
+      })
+    );
   }
 
   public putAdminSetting(key: string, aData: UpdatePropertyDto) {
@@ -981,11 +1010,14 @@ export class DataService {
     accountIdTo,
     balance
   }: TransferBalanceDto) {
-    return this.http.post('/api/v1/account/transfer-balance', {
-      accountIdFrom,
-      accountIdTo,
-      balance
-    });
+    return this.withCashConfirmation((confirmation) =>
+      this.http.post('/api/v1/account/transfer-balance', {
+        accountIdFrom,
+        accountIdTo,
+        balance,
+        ...confirmation
+      })
+    );
   }
 
   public updateOwnAccessToken(aAccessToken: UpdateOwnAccessTokenDto) {
@@ -1014,5 +1046,148 @@ export class DataService {
 
       (window as any).info = info;
     });
+  }
+  public exportCashCsv(accountId: string) {
+    return this.http.get<{ csv: string }>(
+      `/api/v1/account/${accountId}/cash/export`
+    );
+  }
+
+  public previewCashCsv(
+    accountId: string,
+    csv: string,
+    activityLinks: Record<string, string> = {}
+  ) {
+    return this.http.post<CashCsvPreview>(
+      `/api/v1/account/${accountId}/cash/import/preview`,
+      { csv, activityLinks }
+    );
+  }
+
+  public importCashCsv(
+    accountId: string,
+    csv: string,
+    preview: CashCsvPreview,
+    activityLinks: Record<string, string> = {}
+  ) {
+    return this.withCashConfirmation(({ confirmNegativeBalance }) =>
+      this.http.post<CashManagementSnapshot>(
+        `/api/v1/account/${accountId}/cash/import`,
+        {
+          csv,
+          activityLinks,
+          digest: preview.digest,
+          expectedRevision: preview.revision,
+          confirmNegativeBalance
+        }
+      )
+    );
+  }
+
+  public fetchCashManagement(accountId: string) {
+    return this.http.get<CashManagementSnapshot | null>(
+      `/api/v1/account/${accountId}/cash`
+    );
+  }
+
+  public openCashManagement(
+    accountId: string,
+    data: { date: string; balance: string }
+  ) {
+    return this.withCashConfirmation(({ confirmNegativeBalance }) =>
+      this.http.post<CashManagementSnapshot>(
+        `/api/v1/account/${accountId}/cash/open`,
+        { ...data, confirmNegativeBalance }
+      )
+    );
+  }
+
+  public saveCashEvent(
+    accountId: string,
+    event: CashEventInput,
+    expectedRevision: number,
+    eventId?: string
+  ) {
+    return this.withCashConfirmation(({ confirmNegativeBalance }) => {
+      const body = { event, expectedRevision, confirmNegativeBalance };
+      return eventId
+        ? this.http.put<CashManagementSnapshot>(
+            `/api/v1/account/${accountId}/cash/events/${eventId}`,
+            body
+          )
+        : this.http.post<CashManagementSnapshot>(
+            `/api/v1/account/${accountId}/cash/events`,
+            body
+          );
+    });
+  }
+
+  public deleteCashEvent(
+    accountId: string,
+    eventId: string,
+    expectedRevision: number
+  ) {
+    return this.withCashConfirmation(({ confirmNegativeBalance }) =>
+      this.http.delete<CashManagementSnapshot>(
+        `/api/v1/account/${accountId}/cash/events/${eventId}`,
+        { body: { expectedRevision, confirmNegativeBalance } }
+      )
+    );
+  }
+
+  public updateCashPreferences(
+    accountId: string,
+    expectedRevision: number,
+    defaultUpdateCash?: boolean,
+    includeCashInPortfolio?: boolean
+  ) {
+    return this.http.put<CashManagementSnapshot>(
+      `/api/v1/account/${accountId}/cash/preferences`,
+      { expectedRevision, defaultUpdateCash, includeCashInPortfolio }
+    );
+  }
+
+  /** A rejected preview leaves no writes. Confirmation retries against the server's revision. */
+  private withCashConfirmation<T>(
+    request: (confirmation: CashConfirmation) => Observable<T>,
+    confirmation: CashConfirmation = {}
+  ): Observable<T> {
+    return request(confirmation).pipe(
+      catchError((error) => {
+        const warning = error.error;
+        const notificationService = this.notificationService;
+        if (
+          warning?.code !== 'CASH_CONFIRMATION_REQUIRED' ||
+          confirmation.confirmNegativeBalance ||
+          !notificationService
+        ) {
+          return throwError(() => error);
+        }
+        return new Observable<T>((observer) => {
+          let operation: Subscription | undefined;
+          const dialog = notificationService.confirm({
+            title: $localize`This change would create or worsen a negative cash balance. Continue?`,
+            confirmType: ConfirmationDialogType.Warn,
+            disableClose: true,
+            confirmFn: () => {
+              operation = this.withCashConfirmation(request, {
+                confirmNegativeBalance: true,
+                cashRevisions: {
+                  ...confirmation.cashRevisions,
+                  ...(typeof warning.revision === 'number'
+                    ? { [warning.accountId]: warning.revision }
+                    : {})
+                }
+              }).subscribe(observer);
+            },
+            discardFn: () => observer.complete()
+          });
+          return () => {
+            dialog.unsubscribe();
+            operation?.unsubscribe();
+          };
+        });
+      })
+    );
   }
 }

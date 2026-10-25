@@ -132,6 +132,11 @@ export class PortfolioController {
       isRestrictedView(this.request.user)
     ) {
       convertValuesToPercentages({ accounts, holdings, platforms });
+      for (const group of [
+        ...Object.values(accounts),
+        ...Object.values(platforms)
+      ])
+        delete group.cashValueInBaseCurrency;
     }
 
     if (
@@ -569,6 +574,7 @@ export class PortfolioController {
         performanceInformation.performance,
         [
           'currentNetWorth',
+          'totalCashInBaseCurrency',
           'currentValueInBaseCurrency',
           'dividendInBaseCurrency',
           'grossPerformance',

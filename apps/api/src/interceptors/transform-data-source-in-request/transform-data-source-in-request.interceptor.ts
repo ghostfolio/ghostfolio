@@ -28,8 +28,9 @@ export class TransformDataSourceInRequestInterceptor<
     const http = context.switchToHttp();
     const request = http.getRequest();
 
-    if (request.body?.activities) {
-      request.body.activities = request.body.activities.map((activity) => {
+    for (const payload of [request.body, request.body?.backup]) {
+      if (!Array.isArray(payload?.activities)) continue;
+      payload.activities = payload.activities.map((activity) => {
         return {
           ...activity,
           dataSource: transformDataSourceInRequest({

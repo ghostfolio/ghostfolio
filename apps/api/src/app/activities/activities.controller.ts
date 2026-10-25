@@ -12,6 +12,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
+import { CashConfirmationDto } from '@ghostfolio/common/dtos';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
@@ -59,6 +60,7 @@ export class ActivitiesController {
   @RequiresScope(scopes.activityDelete)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteActivities(
+    @Body() confirmation: CashConfirmationDto,
     @Impersonation() { userId }: ImpersonationContext,
     @Query()
     {
@@ -93,7 +95,8 @@ export class ActivitiesController {
       filters,
       startDate,
       userId,
-      types: activityTypes
+      types: activityTypes,
+      confirmation
     });
   }
 
@@ -102,6 +105,7 @@ export class ActivitiesController {
   @RequiresScope(scopes.activityDelete)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async deleteActivity(
+    @Body() confirmation: CashConfirmationDto,
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<Order> {
@@ -117,9 +121,7 @@ export class ActivitiesController {
       );
     }
 
-    return this.activitiesService.deleteActivity({
-      id
-    });
+    return this.activitiesService.deleteActivity({ id, userId }, confirmation);
   }
 
   @Get()

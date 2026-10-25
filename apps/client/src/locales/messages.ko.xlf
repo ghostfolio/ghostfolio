@@ -9648,6 +9648,10 @@
           <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="910340284649270207" datatype="html">
+        <source>This change would create or worsen a negative cash balance. Continue?</source>
+        <target state="translated">이 변경으로 현금 잔액이 마이너스가 되거나 이미 마이너스인 잔액이 더 악화됩니다. 계속하시겠습니까?</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

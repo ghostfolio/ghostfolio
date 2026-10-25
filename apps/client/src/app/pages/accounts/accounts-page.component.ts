@@ -19,13 +19,23 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { filter, switchMap, tap } from 'rxjs';
+
+import { GfAccountCsvImportDialogComponent } from '../../components/account-csv-import-dialog/account-csv-import-dialog.component';
+import { GfPortfolioRestoreDialogComponent } from '../../components/portfolio-restore-dialog/portfolio-restore-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
-  imports: [GfAccountsTableComponent, GfFabComponent, RouterModule],
+  imports: [
+    GfAccountsTableComponent,
+    GfFabComponent,
+    RouterModule,
+    MatButtonModule
+  ],
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
@@ -52,6 +62,25 @@ export class GfAccountsPageComponent implements OnInit {
     ImpersonationStorageService
   );
   private readonly router = inject(Router);
+  private readonly restoreDialog = inject(MatDialog);
+
+  protected onImportCsv() {
+    this.restoreDialog.open(GfAccountCsvImportDialogComponent, {
+      data: { accounts: this.accounts ?? [] },
+      width: '58rem',
+      maxWidth: '96vw',
+      disableClose: true
+    });
+  }
+
+  protected onImportData() {
+    this.restoreDialog.open(GfPortfolioRestoreDialogComponent, {
+      width: '52rem',
+      maxWidth: '96vw',
+      disableClose: true
+    });
+  }
+
   private readonly userService = inject(UserService);
 
   public ngOnInit() {

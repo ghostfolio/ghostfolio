@@ -1,0 +1,28 @@
+.cash-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  mat-form-field {
+    flex: 1 1 9rem;
+    min-width: 0;
+  }
+}
+.cash-history {
+  width: 100%;
+  border-collapse: collapse;
+  th,
+  td {
+    padding: 0.65rem 0.5rem;
+    border-bottom: 1px solid var(--mat-sys-outline-variant, #ddd);
+  }
+  th {
+    text-align: left;
+  }
+}
+
+.cash-csv-activity {
+  display: block;
+  min-width: 12rem;
+  width: 100%;
+  margin-top: 0.75rem;
+}

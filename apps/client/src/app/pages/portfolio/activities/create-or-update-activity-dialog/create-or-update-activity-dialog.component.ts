@@ -48,7 +48,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { IonIcon } from '@ionic/angular/standalone';
-import { isAfter, isToday } from 'date-fns';
+import { format, isAfter, isToday } from 'date-fns';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { EMPTY } from 'rxjs';
@@ -235,7 +235,11 @@ export class GfCreateOrUpdateActivityDialogComponent {
       ],
       type: [undefined, Validators.required], // Set after value changes subscription
       unitPrice: [this.data.activity?.unitPrice, Validators.required],
-      updateAccountBalance: [false]
+      updateAccountBalance: [
+        this.mode === 'update'
+          ? !!this.data.activity?.updateAccountBalance
+          : false
+      ]
     });
 
     this.activityForm.valueChanges
@@ -497,7 +501,9 @@ export class GfCreateOrUpdateActivityDialogComponent {
       )
         ? 'MANUAL'
         : this.activityForm.get('dataSource')?.value,
-      date: this.activityForm.get('date')?.value,
+      date: this.isCashManaged
+        ? format(this.activityForm.get('date')?.value, 'yyyy-MM-dd')
+        : this.activityForm.get('date')?.value,
       fee: this.activityForm.get('fee')?.value,
       quantity: this.activityForm.get('quantity')?.value,
       symbol:
@@ -514,6 +520,12 @@ export class GfCreateOrUpdateActivityDialogComponent {
         this.activityForm.get('type')?.value === 'VALUABLE'
           ? 'BUY'
           : this.activityForm.get('type')?.value,
+      updateAccountBalance:
+        this.mode === 'create' ||
+        this.isCashManaged ||
+        this.data.activity?.updateAccountBalance
+          ? this.activityForm.get('updateAccountBalance')?.value
+          : undefined,
       unitPrice: this.activityForm.get('unitPrice')?.value
     };
 
@@ -554,6 +566,12 @@ export class GfCreateOrUpdateActivityDialogComponent {
     }
   }
 
+  protected get isCashManaged() {
+    return !!this.data.accounts.find(
+      ({ id }) => id === this.activityForm?.get('accountId')?.value
+    )?.cashManagement;
+  }
+
   private syncUpdateAccountBalanceControl() {
     const accountBalanceControl = this.activityForm.get('updateAccountBalance');
     const accountId = this.activityForm.get('accountId')?.value;
@@ -561,17 +579,30 @@ export class GfCreateOrUpdateActivityDialogComponent {
     const date = this.activityForm.get('date')?.value;
     const type = this.activityForm.get('type')?.value;
 
+    const cashManagement = this.data.accounts.find(
+      ({ id }) => id === accountId
+    )?.cashManagement;
+    const isManagedDate =
+      !!cashManagement &&
+      !!date &&
+      format(date, 'yyyy-MM-dd') >= cashManagement.openingDate &&
+      date <= new Date();
     const isEligible =
       !!accountId &&
-      isToday(date) &&
+      (isManagedDate || isToday(date)) &&
       !['LIABILITY', 'VALUABLE'].includes(type) &&
-      !(dataSource === 'MANUAL' && type === 'BUY');
+      (isManagedDate || !(dataSource === 'MANUAL' && type === 'BUY'));
 
     if (isEligible) {
-      accountBalanceControl?.enable();
+      accountBalanceControl?.enable({ emitEvent: false });
+      if (this.mode === 'create' && accountBalanceControl?.pristine) {
+        accountBalanceControl.setValue(!!cashManagement?.defaultUpdateCash, {
+          emitEvent: false
+        });
+      }
     } else {
-      accountBalanceControl?.disable();
-      accountBalanceControl?.setValue(false);
+      accountBalanceControl?.disable({ emitEvent: false });
+      accountBalanceControl?.setValue(false, { emitEvent: false });
     }
   }
 

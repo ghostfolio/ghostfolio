@@ -9648,6 +9648,422 @@
           <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="1117462812167292254" datatype="html">
+        <source>Transfer information</source>
+        <target state="translated">Informazioni sul trasferimento</target>
+      </trans-unit>
+      <trans-unit id="1283895920974679461" datatype="html">
+        <source>Operation</source>
+        <target state="translated">Operazione</target>
+      </trans-unit>
+      <trans-unit id="1314795394712571903" datatype="html">
+        <source>Selected account</source>
+        <target state="translated">Conto selezionato</target>
+      </trans-unit>
+      <trans-unit id="1389365686493259931" datatype="html">
+        <source>Cash and CSV guide (opens in a new tab)</source>
+        <target state="translated">Guida alla liquidità e al CSV (si apre in una nuova scheda)</target>
+      </trans-unit>
+      <trans-unit id="1407560924967345762" datatype="html">
+        <source>Page</source>
+        <target state="translated">Pagina</target>
+      </trans-unit>
+      <trans-unit id="1528785906944905722" datatype="html">
+        <source>Currency not set</source>
+        <target state="translated">Valuta non impostata</target>
+      </trans-unit>
+      <trans-unit id="1715853014853355323" datatype="html">
+        <source>The name and currency are proposed from the CSV. No account is created until you confirm a valid preview. If the file references financial activities, import those into an existing account first or use the full JSON restore.</source>
+        <target state="translated">Il nome e la valuta sono proposti dal CSV. Il conto viene creato solo dopo la conferma di un’anteprima valida. Se il file contiene riferimenti ad attività finanziarie, importale prima in un conto esistente oppure usa il ripristino JSON completo.</target>
+      </trans-unit>
+      <trans-unit id="1764971482765200566" datatype="html">
+        <source>Include cash</source>
+        <target state="translated">Includi liquidità</target>
+      </trans-unit>
+      <trans-unit id="1784286428578141467" datatype="html">
+        <source>Cash movements:</source>
+        <target state="translated">Movimenti di liquidità:</target>
+      </trans-unit>
+      <trans-unit id="1802392088130455634" datatype="html">
+        <source>Existing data is retained. Restore cash into a new or empty account, or an account whose activities match the backup and has no cash ledger. Transfers require both accounts. Nothing is saved during preview.</source>
+        <target state="translated">I dati esistenti vengono conservati. Ripristina la liquidità in un conto nuovo o vuoto, oppure in un conto con attività corrispondenti al backup e senza un registro della liquidità. I trasferimenti richiedono entrambi i conti. L’anteprima non salva alcun dato.</target>
+      </trans-unit>
+      <trans-unit id="185723189276109603" datatype="html">
+        <source>Enter a positive amount.</source>
+        <target state="translated">Inserisci un importo positivo.</target>
+      </trans-unit>
+      <trans-unit id="1947187602289377594" datatype="html">
+        <source>Import adds new cash movements to this account. Existing movements and financial activities are not overwritten. Import linked financial activities first.</source>
+        <target state="translated">L’importazione inserisce nuovi movimenti di liquidità in questo conto. I movimenti e le attività finanziarie esistenti non vengono sovrascritti. Importa prima le attività finanziarie collegate.</target>
+      </trans-unit>
+      <trans-unit id="2014694668412418346" datatype="html">
+        <source>Export CSV</source>
+        <target state="translated">Esporta CSV</target>
+      </trans-unit>
+      <trans-unit id="2099926152201934495" datatype="html">
+        <source>Row</source>
+        <target state="translated">Riga</target>
+      </trans-unit>
+      <trans-unit id="2223700828915661260" datatype="html">
+        <source>New movements:</source>
+        <target state="translated">Nuovi movimenti:</target>
+      </trans-unit>
+      <trans-unit id="2330577642930707695" datatype="html">
+        <source>Cancel</source>
+        <target state="translated">Annulla</target>
+      </trans-unit>
+      <trans-unit id="2412614725070327775" datatype="html">
+        <source>No cash transactions yet.</source>
+        <target state="translated">Nessun movimento di liquidità presente.</target>
+      </trans-unit>
+      <trans-unit id="2455479180943655680" datatype="html">
+        <source>Unable to load cash transactions.</source>
+        <target state="translated">Impossibile caricare i movimenti di liquidità.</target>
+      </trans-unit>
+      <trans-unit id="2486732028739751975" datatype="html">
+        <source>Processing data…</source>
+        <target state="translated">Elaborazione dei dati…</target>
+      </trans-unit>
+      <trans-unit id="2774868576744554132" datatype="html">
+        <source>Import summary</source>
+        <target state="translated">Riepilogo dell’importazione</target>
+      </trans-unit>
+      <trans-unit id="2869636265596901063" datatype="html">
+        <source>Actual cash balance</source>
+        <target state="translated">Saldo effettivo della liquidità</target>
+      </trans-unit>
+      <trans-unit id="2928157094104449368" datatype="html">
+        <source>Import failed. Preview the file again.</source>
+        <target state="translated">Importazione non riuscita. Genera nuovamente l’anteprima del file.</target>
+      </trans-unit>
+      <trans-unit id="3115037951715864221" datatype="html">
+        <source>I confirm the negative cash balance shown in the preview</source>
+        <target state="translated">Confermo il saldo di liquidità negativo mostrato nell’anteprima</target>
+      </trans-unit>
+      <trans-unit id="3193976279273491157" datatype="html">
+        <source>Actions</source>
+        <target state="translated">Azioni</target>
+      </trans-unit>
+      <trans-unit id="3200342440195656274" datatype="html">
+        <source>Insert</source>
+        <target state="translated">Inserisci</target>
+      </trans-unit>
+      <trans-unit id="3251054269066691027" datatype="html">
+        <source>Cash balance:</source>
+        <target state="translated">Saldo della liquidità:</target>
+      </trans-unit>
+      <trans-unit id="3428153135769985599" datatype="html">
+        <source>Import JSON</source>
+        <target state="translated">Importa JSON</target>
+      </trans-unit>
+      <trans-unit id="3507084280003273564" datatype="html">
+        <source>Consider this account&#x27;s cash in analyses and allocations</source>
+        <target state="translated">Considera la liquidità di questo conto nelle analisi e nelle allocazioni</target>
+      </trans-unit>
+      <trans-unit id="3510368925425726029" datatype="html">
+        <source>Confirm only after checking the selected accounts. All accepted data is saved together; an error cancels the whole restore.</source>
+        <target state="translated">Conferma solo dopo aver verificato i conti selezionati. Tutti i dati accettati vengono salvati insieme; un errore annulla l’intero ripristino.</target>
+      </trans-unit>
+      <trans-unit id="3716680654015576467" datatype="html">
+        <source>Create an account before inserting a cash transaction.</source>
+        <target state="translated">Crea un conto prima di inserire un movimento di liquidità.</target>
+      </trans-unit>
+      <trans-unit id="3883598964234233440" datatype="html">
+        <source>View linked operation</source>
+        <target state="translated">Visualizza l’operazione collegata</target>
+      </trans-unit>
+      <trans-unit id="3971100408152984961" datatype="html">
+        <source>Next</source>
+        <target state="translated">Successiva</target>
+      </trans-unit>
+      <trans-unit id="4241376129761716710" datatype="html">
+        <source>Reconciliation</source>
+        <target state="translated">Riconciliazione</target>
+      </trans-unit>
+      <trans-unit id="4285804789642395818" datatype="html">
+        <source>Unable to process the cash CSV.</source>
+        <target state="translated">Impossibile elaborare il CSV della liquidità.</target>
+      </trans-unit>
+      <trans-unit id="4305948505187761990" datatype="html">
+        <source>Unable to reload cash transactions. Reload the page and try again.</source>
+        <target state="translated">Impossibile ricaricare i movimenti di liquidità. Ricarica la pagina e riprova.</target>
+      </trans-unit>
+      <trans-unit id="4386920621005005841" datatype="html">
+        <source>Existing account</source>
+        <target state="translated">Conto esistente</target>
+      </trans-unit>
+      <trans-unit id="4474222713366070999" datatype="html">
+        <source>Choose a destination for each source account. Accounts are never matched automatically by name.</source>
+        <target state="translated">Scegli una destinazione per ogni conto di origine. I conti non vengono mai associati automaticamente in base al nome.</target>
+      </trans-unit>
+      <trans-unit id="466863011947044750" datatype="html">
+        <source>Further errors are listed beside the affected rows below.</source>
+        <target state="translated">Gli altri errori sono elencati accanto alle righe interessate qui sotto.</target>
+      </trans-unit>
+      <trans-unit id="4668958435641699719" datatype="html">
+        <source>The JSON backup must not exceed 10 MB.</source>
+        <target state="translated">Il backup JSON non deve superare 10 MB.</target>
+      </trans-unit>
+      <trans-unit id="4809416382909447437" datatype="html">
+        <source>Import CSV</source>
+        <target state="translated">Importa CSV</target>
+      </trans-unit>
+      <trans-unit id="4810522151834649957" datatype="html">
+        <source>Already present</source>
+        <target state="translated">Già presente</target>
+      </trans-unit>
+      <trans-unit id="4815532365267521652" datatype="html">
+        <source>New account</source>
+        <target state="translated">Nuovo conto</target>
+      </trans-unit>
+      <trans-unit id="5008175190726097996" datatype="html">
+        <source>New activities:</source>
+        <target state="translated">Nuove attività:</target>
+      </trans-unit>
+      <trans-unit id="5035936718591395188" datatype="html">
+        <source>Cash CSV exceeds the 2 MB limit.</source>
+        <target state="translated">Il CSV della liquidità supera il limite di 2 MB.</target>
+      </trans-unit>
+      <trans-unit id="5060707085902051182" datatype="html">
+        <source>Portfolio value including cash</source>
+        <target state="translated">Valore del portafoglio comprensivo della liquidità</target>
+      </trans-unit>
+      <trans-unit id="5252749665666437793" datatype="html">
+        <source>Import Data</source>
+        <target state="translated">Importa dati</target>
+      </trans-unit>
+      <trans-unit id="5280218112746407598" datatype="html">
+        <source>New</source>
+        <target state="translated">Nuovo</target>
+      </trans-unit>
+      <trans-unit id="5377078063439833222" datatype="html">
+        <source>Edit</source>
+        <target state="translated">Modifica</target>
+      </trans-unit>
+      <trans-unit id="5382993007441749473" datatype="html">
+        <source>Cash CSV preview</source>
+        <target state="translated">Anteprima del CSV della liquidità</target>
+      </trans-unit>
+      <trans-unit id="5547981558491672240" datatype="html">
+        <source>Close</source>
+        <target state="translated">Chiudi</target>
+      </trans-unit>
+      <trans-unit id="5646035883377382015" datatype="html">
+        <source>Destination:</source>
+        <target state="translated">Destinazione:</target>
+      </trans-unit>
+      <trans-unit id="5668201086160127531" datatype="html">
+        <source>Currency effect on performance</source>
+        <target state="translated">Effetto del cambio sul rendimento</target>
+      </trans-unit>
+      <trans-unit id="5724807861422435890" datatype="html">
+        <source>Import cash CSV</source>
+        <target state="translated">Importa CSV della liquidità</target>
+      </trans-unit>
+      <trans-unit id="5815563916448873642" datatype="html">
+        <source>Already present:</source>
+        <target state="translated">Già presenti:</target>
+      </trans-unit>
+      <trans-unit id="5848799802788400848" datatype="html">
+        <source>Unable to save. Reload the account and try again.</source>
+        <target state="translated">Impossibile salvare. Ricarica il conto e riprova.</target>
+      </trans-unit>
+      <trans-unit id="5901666886780057753" datatype="html">
+        <source>Insert movements</source>
+        <target state="translated">Inserisci movimenti</target>
+      </trans-unit>
+      <trans-unit id="5939582729698953478" datatype="html">
+        <source>Investment performance</source>
+        <target state="translated">Rendimento degli investimenti</target>
+      </trans-unit>
+      <trans-unit id="5967865088189507862" datatype="html">
+        <source>Unable to import the cash CSV.</source>
+        <target state="translated">Impossibile importare il CSV della liquidità.</target>
+      </trans-unit>
+      <trans-unit id="6388120834312159849" datatype="html">
+        <source>Imported cash account</source>
+        <target state="translated">Conto con liquidità importato</target>
+      </trans-unit>
+      <trans-unit id="6533918067030990396" datatype="html">
+        <source>Amount</source>
+        <target state="translated">Importo</target>
+      </trans-unit>
+      <trans-unit id="6575164270960732036" datatype="html">
+        <source>Previous</source>
+        <target state="translated">Precedente</target>
+      </trans-unit>
+      <trans-unit id="6622331332719930606" datatype="html">
+        <source>Minimum cash balance</source>
+        <target state="translated">Saldo minimo della liquidità</target>
+      </trans-unit>
+      <trans-unit id="6635136898822365582" datatype="html">
+        <source>Update Cash Balance by default for new activities</source>
+        <target state="translated">Aggiorna il saldo della liquidità per impostazione predefinita nelle nuove attività</target>
+      </trans-unit>
+      <trans-unit id="6660925946511264619" datatype="html">
+        <source>Delete</source>
+        <target state="translated">Elimina</target>
+      </trans-unit>
+      <trans-unit id="6691810268713581510" datatype="html">
+        <source>Withdrawal</source>
+        <target state="translated">Prelievo</target>
+      </trans-unit>
+      <trans-unit id="6715381200666611312" datatype="html">
+        <source>First affected date</source>
+        <target state="translated">Prima data interessata</target>
+      </trans-unit>
+      <trans-unit id="674128348870464219" datatype="html">
+        <source>Enter a positive amount. Withdrawals are subtracted automatically.</source>
+        <target state="translated">Inserisci un importo positivo. I prelievi vengono sottratti automaticamente.</target>
+      </trans-unit>
+      <trans-unit id="6884089523183972489" datatype="html">
+        <source>Restore base currency and performance method when the destination portfolio is empty</source>
+        <target state="translated">Ripristina la valuta di base e il metodo di calcolo del rendimento se il portafoglio di destinazione è vuoto</target>
+      </trans-unit>
+      <trans-unit id="6894774542036311047" datatype="html">
+        <source>Enter the actual balance at this date. A reconciliation replaces the calculated balance; it is not an additional deposit.</source>
+        <target state="translated">Inserisci il saldo effettivo a questa data. Una riconciliazione sostituisce il saldo calcolato e non costituisce un deposito aggiuntivo.</target>
+      </trans-unit>
+      <trans-unit id="6969445338945867053" datatype="html">
+        <source>Create a new account</source>
+        <target state="translated">Crea un nuovo conto</target>
+      </trans-unit>
+      <trans-unit id="6975029879144544698" datatype="html">
+        <source>This transfer has a matching entry in the other account. Use a new transfer to reverse it.</source>
+        <target state="translated">Questo trasferimento ha un movimento corrispondente nell’altro conto. Per annullarne l’effetto, effettua un nuovo trasferimento in senso inverso.</target>
+      </trans-unit>
+      <trans-unit id="7000649363168371045" datatype="html">
+        <source>Save changes</source>
+        <target state="translated">Salva modifiche</target>
+      </trans-unit>
+      <trans-unit id="7071426059085343634" datatype="html">
+        <source>Cash transaction</source>
+        <target state="translated">Movimento di liquidità</target>
+      </trans-unit>
+      <trans-unit id="7241677841926471699" datatype="html">
+        <source>Restore a JSON file created with Export Data. Accounts, financial activities and account cash are restored together. Your login credentials are not imported.</source>
+        <target state="translated">Ripristina un file JSON creato con Esporta dati. Conti, attività finanziarie e liquidità vengono ripristinati insieme. Le credenziali di accesso non vengono importate.</target>
+      </trans-unit>
+      <trans-unit id="7264838797878508480" datatype="html">
+        <source>Import Data</source>
+        <target state="translated">Importa dati</target>
+      </trans-unit>
+      <trans-unit id="7376690044124691144" datatype="html">
+        <source>New movements</source>
+        <target state="translated">Nuovi movimenti</target>
+      </trans-unit>
+      <trans-unit id="7507454494204582076" datatype="html">
+        <source>Show cash</source>
+        <target state="translated">Mostra liquidità</target>
+      </trans-unit>
+      <trans-unit id="7577584799230303691" datatype="html">
+        <source>Destination account</source>
+        <target state="translated">Conto di destinazione</target>
+      </trans-unit>
+      <trans-unit id="7729298162050391480" datatype="html">
+        <source>Choose a Ghostfolio Export Data JSON file.</source>
+        <target state="translated">Scegli un file JSON creato con Esporta dati di Ghostfolio.</target>
+      </trans-unit>
+      <trans-unit id="7848756452109947727" datatype="html">
+        <source>Linked activity</source>
+        <target state="translated">Attività collegata</target>
+      </trans-unit>
+      <trans-unit id="7923700420698430993" datatype="html">
+        <source>Expected cash balance</source>
+        <target state="translated">Saldo di liquidità previsto</target>
+      </trans-unit>
+      <trans-unit id="8073098442107520381" datatype="html">
+        <source>More errors are present. Fix the file and preview it again.</source>
+        <target state="translated">Sono presenti altri errori. Correggi il file e genera nuovamente l’anteprima.</target>
+      </trans-unit>
+      <trans-unit id="8151462925194582415" datatype="html">
+        <source>Transfer reference</source>
+        <target state="translated">Riferimento del trasferimento</target>
+      </trans-unit>
+      <trans-unit id="8227572950444391837" datatype="html">
+        <source>Expected cash balance:</source>
+        <target state="translated">Saldo di liquidità previsto:</target>
+      </trans-unit>
+      <trans-unit id="8539689055164073311" datatype="html">
+        <source>Cash Transactions</source>
+        <target state="translated">Movimenti di liquidità</target>
+      </trans-unit>
+      <trans-unit id="8865575846450943799" datatype="html">
+        <source>Investment positions</source>
+        <target state="translated">Posizioni investite</target>
+      </trans-unit>
+      <trans-unit id="8914004681377217867" datatype="html">
+        <source>For manual CSV files use Date, Operation, Amount, Currency and optionally Fee, Sequence, Note and Reference. Use positive amounts for DEPOSIT and WITHDRAWAL; RECONCILIATION sets the balance. Use YYYY-MM-DD dates and a decimal point.</source>
+        <target state="translated">Per i CSV manuali usa Date, Operation, Amount, Currency e, facoltativamente, Fee, Sequence, Note e Reference. Usa importi positivi per DEPOSIT e WITHDRAWAL; RECONCILIATION imposta il saldo. Usa date nel formato YYYY-MM-DD e il punto come separatore decimale.</target>
+      </trans-unit>
+      <trans-unit id="9042753203304665653" datatype="html">
+        <source>Exclude this account</source>
+        <target state="translated">Escludi questo conto</target>
+      </trans-unit>
+      <trans-unit id="9088692615869676510" datatype="html">
+        <source>Preview import</source>
+        <target state="translated">Anteprima dell’importazione</target>
+      </trans-unit>
+      <trans-unit id="910340284649270207" datatype="html">
+        <source>This change would create or worsen a negative cash balance. Continue?</source>
+        <target state="translated">Questa modifica renderebbe negativo il saldo della liquidità o peggiorerebbe un saldo già negativo. Vuoi continuare?</target>
+      </trans-unit>
+      <trans-unit id="9180299238162026813" datatype="html">
+        <source>For CSV files, use Import Activities or Import CSV in the account&#x27;s Cash Balances.</source>
+        <target state="translated">Per i file CSV usa Importa attività oppure Importa CSV nella sezione Saldi di liquidità del conto.</target>
+      </trans-unit>
+      <trans-unit id="9183163733233783857" datatype="html">
+        <source>Loading cash transactions…</source>
+        <target state="translated">Caricamento dei movimenti di liquidità…</target>
+      </trans-unit>
+      <trans-unit id="952149109787160538" datatype="html">
+        <source>New account name</source>
+        <target state="translated">Nome del nuovo conto</target>
+      </trans-unit>
+      <trans-unit id="982799871758493197" datatype="html">
+        <source>Import a cash journal into an existing account or create a new account from the CSV. Financial activities are not created by this importer. Use Import Data JSON to move an entire portfolio.</source>
+        <target state="translated">Importa un registro della liquidità in un conto esistente oppure crea un nuovo conto dal CSV. Questa importazione non crea attività finanziarie. Per trasferire un intero portafoglio usa Importa dati in formato JSON.</target>
+      </trans-unit>
+      <trans-unit id="1394702343871692063" datatype="html">
+        <source>Adjusted capital reference</source>
+        <target state="translated">Capitale di riferimento rettificato</target>
+      </trans-unit>
+      <trans-unit id="3752741644727048956" datatype="html">
+        <source>Portfolio value</source>
+        <target state="translated">Valore del portafoglio</target>
+      </trans-unit>
+      <trans-unit id="4033244709678279560" datatype="html">
+        <source>Portfolio data (JSON)</source>
+        <target state="translated">Dati del portafoglio (JSON)</target>
+      </trans-unit>
+      <trans-unit id="4957048586790684223" datatype="html">
+        <source>Delete investment activities? Cash transactions will remain in the account history.</source>
+        <target state="translated">Eliminare le attività di investimento? I movimenti di liquidità rimarranno nella cronologia del conto.</target>
+      </trans-unit>
+      <trans-unit id="5214883642943193877" datatype="html">
+        <source>Insert cash transaction</source>
+        <target state="translated">Inserisci movimento di liquidità</target>
+      </trans-unit>
+      <trans-unit id="529261375582544700" datatype="html">
+        <source>Positions</source>
+        <target state="translated">Posizioni</target>
+      </trans-unit>
+      <trans-unit id="7232422873359250454" datatype="html">
+        <source>Portfolio composition</source>
+        <target state="translated">Composizione del portafoglio</target>
+      </trans-unit>
+      <trans-unit id="7476272024604715851" datatype="html">
+        <source>Delete investment activities</source>
+        <target state="translated">Elimina attività di investimento</target>
+      </trans-unit>
+      <trans-unit id="7724404677351000053" datatype="html">
+        <source>Portfolio composition</source>
+        <target state="translated">Composizione del portafoglio</target>
+      </trans-unit>
+      <trans-unit id="8192659182584513450" datatype="html">
+        <source>Net invested capital</source>
+        <target state="translated">Capitale investito netto</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

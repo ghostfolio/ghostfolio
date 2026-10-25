@@ -16,6 +16,7 @@ import {
   ArrayUnique,
   IsArray,
   IsBoolean,
+  IsObject,
   IsEnum,
   IsISO8601,
   IsNotEmpty,
@@ -29,6 +30,10 @@ import {
 import { isString } from 'lodash-es';
 
 export class CreateOrderDto {
+  @IsString()
+  @IsOptional()
+  @MaxLength(128)
+  id?: string;
   @IsOptional()
   @IsString()
   accountId?: string;
@@ -96,4 +101,12 @@ export class CreateOrderDto {
   @IsBoolean()
   @IsOptional()
   updateAccountBalance?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  confirmNegativeBalance?: boolean;
+
+  @IsObject()
+  @IsOptional()
+  cashRevisions?: Record<string, number>;
 }

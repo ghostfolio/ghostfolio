@@ -1,4 +1,11 @@
-import { IsNumber, IsPositive, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsObject,
+  IsOptional,
+  IsNumber,
+  IsPositive,
+  IsString
+} from 'class-validator';
 
 export class TransferBalanceDto {
   @IsString()
@@ -10,4 +17,12 @@ export class TransferBalanceDto {
   @IsNumber()
   @IsPositive()
   balance: number;
+
+  @IsBoolean()
+  @IsOptional()
+  confirmNegativeBalance?: boolean;
+
+  @IsObject()
+  @IsOptional()
+  cashRevisions?: Record<string, number>;
 }
