@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the style of the menu button in the user detail dialog of the admin control panel
 - Improved the consistency of the import of activities with _Ghostfolio AI_ (experimental)
 
+### Fixed
+
+- Fixed the double submission of forms in the account detail dialog, the create or update access dialog, the historical market data editor, the import activities dialog, the coupon system and the create asset profile dialog of the admin control panel
+
 ## 3.92.0 - 2026-10-24
 
 ### Changed
