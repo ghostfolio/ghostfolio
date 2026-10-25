@@ -288,7 +288,8 @@ export class AiService {
    * the rows still have to be matched to asset profiles and accounts. The
    * name of the file is passed as well, as it can name the broker. The
    * reasoning is disabled, as it can add thousands of output tokens even for a
-   * single row. A row above the maximum number of activities is left out. An
+   * single row. The temperature is 0, so that the same file gives the same
+   * rows. A row above the maximum number of activities is left out. An
    * output which reaches the maximum number of output tokens is cut, hence it
    * gives an error for the caller. A cut output without any text is not parsed
    * at all, hence the finish reason is checked as well.
@@ -343,7 +344,8 @@ export class AiService {
           usage: { include: true }
         }
       }),
-      output: Output.object({ schema: ACTIVITY_ROWS_OUTPUT })
+      output: Output.object({ schema: ACTIVITY_ROWS_OUTPUT }),
+      temperature: 0
     }).catch((error: unknown) => {
       if (
         NoObjectGeneratedError.isInstance(error) &&
@@ -551,7 +553,8 @@ export class AiService {
    * the model gets no accounts, so that only the account hints have no match.
    * If the holdings or the data sources cannot be got, the model gets no
    * holdings. The reasoning is disabled, as it can add thousands of output
-   * tokens. An asset match is left out if neither the search of its own asset
+   * tokens. The temperature is 0, so that the same assets give the same
+   * matches. An asset match is left out if neither the search of its own asset
    * nor the holdings gave its asset profile, or if its holding has another ISIN
    * than its own asset, as the import refuses a symbol which the data source
    * cannot resolve and as the model can mix up the ids of the assets. The ISINs
@@ -632,7 +635,8 @@ export class AiService {
         assets: assets.map((asset, index) => {
           return { ...asset, assetProfiles: searches[index].assetProfiles };
         })
-      })
+      }),
+      temperature: 0
     });
 
     const assetMatches = output.assets.filter(({ dataSource, id, symbol }) => {

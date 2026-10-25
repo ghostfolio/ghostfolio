@@ -202,7 +202,7 @@ describe('AiService', () => {
       );
     });
 
-    it('Restricts the routing to endpoints with zero data retention, disables the reasoning and passes a PDF file to the model itself', async () => {
+    it('Restricts the routing to endpoints with zero data retention, disables the reasoning, sets the temperature to 0 and passes a PDF file to the model itself', async () => {
       await aiService.getActivityRowsFromFile({
         file: { buffer: Buffer.from('%PDF-1.7'), mediaType: 'application/pdf' },
         locale: 'de-CH'
@@ -214,6 +214,10 @@ describe('AiService', () => {
         reasoning: { effort: 'none' },
         usage: { include: true }
       });
+
+      expect(generateText).toHaveBeenCalledWith(
+        expect.objectContaining({ temperature: 0 })
+      );
     });
 
     it('Falls back to the general model if no vision model is set', async () => {
@@ -1524,7 +1528,7 @@ describe('AiService', () => {
       );
     });
 
-    it('Restricts the routing to endpoints with zero data retention, disables the reasoning and gives the model no tools', async () => {
+    it('Restricts the routing to endpoints with zero data retention, disables the reasoning, sets the temperature to 0 and gives the model no tools', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
@@ -1545,7 +1549,8 @@ describe('AiService', () => {
         expect.objectContaining({
           abortSignal,
           model,
-          output: { schema: ROW_MATCHES_OUTPUT }
+          output: { schema: ROW_MATCHES_OUTPUT },
+          temperature: 0
         })
       );
 
