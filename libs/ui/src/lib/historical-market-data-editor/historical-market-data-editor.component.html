@@ -62,7 +62,8 @@
           !historicalDataForm.controls.historicalData.controls.csvString
             .touched ||
           historicalDataForm.controls.historicalData.controls.csvString
-            .value === ''
+            .value === '' ||
+          isSubmitting()
         "
         (click)="onImportHistoricalData()"
       >

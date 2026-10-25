@@ -22,7 +22,8 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output
+  Output,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -46,7 +47,7 @@ import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 import { GfHistoricalMarketDataEditorDialogComponent } from './historical-market-data-editor-dialog/historical-market-data-editor-dialog.component';
 import { HistoricalMarketDataEditorDialogParams } from './historical-market-data-editor-dialog/interfaces/interfaces';
@@ -95,6 +96,7 @@ export class GfHistoricalMarketDataEditorComponent
   protected readonly defaultDateFormat = computed(() =>
     getDateFormatString(this.locale())
   );
+  protected readonly isSubmitting = signal(false);
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -258,6 +260,8 @@ export class GfHistoricalMarketDataEditorComponent
         }
       ).data;
 
+      this.isSubmitting.set(true);
+
       this.dataService
         .postMarketData({
           dataSource: this.dataSource,
@@ -272,6 +276,9 @@ export class GfHistoricalMarketDataEditorComponent
               duration: ms('3 seconds')
             });
             return EMPTY;
+          }),
+          finalize(() => {
+            this.isSubmitting.set(false);
           }),
           takeUntilDestroyed(this.destroyRef)
         )

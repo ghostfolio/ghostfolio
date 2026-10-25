@@ -159,9 +159,9 @@
       mat-flat-button
       type="submit"
       [disabled]="
-        mode === 'create'
+        (mode === 'create'
           ? !(accessForm.dirty && accessForm.valid)
-          : !accessForm.valid
+          : !accessForm.valid) || isSubmitting()
       "
     >
       <ng-container i18n>Save</ng-container>

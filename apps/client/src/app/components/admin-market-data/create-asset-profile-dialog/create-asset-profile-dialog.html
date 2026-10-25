@@ -63,7 +63,9 @@
       color="primary"
       mat-flat-button
       type="submit"
-      [disabled]="createAssetProfileForm.hasError('atLeastOneValid')"
+      [disabled]="
+        createAssetProfileForm.hasError('atLeastOneValid') || isSubmitting()
+      "
     >
       <ng-container i18n>Save</ng-container>
     </button>
