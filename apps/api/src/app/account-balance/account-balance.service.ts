@@ -51,17 +51,13 @@ export class AccountBalanceService {
   }: CreateAccountBalanceDto & {
     userId: string;
   }): Promise<AccountBalance> {
+    const dateOfBalance = resetHours(parseISO(date));
+
     const accountBalance = await this.prismaService.accountBalance.upsert({
       create: {
-        account: {
-          connect: {
-            id_userId: {
-              userId,
-              id: accountId
-            }
-          }
-        },
-        date: resetHours(parseISO(date)),
+        accountId,
+        userId,
+        date: dateOfBalance,
         value: balance
       },
       update: {
@@ -71,7 +67,7 @@ export class AccountBalanceService {
         accountId_userId_date: {
           accountId,
           userId,
-          date: resetHours(parseISO(date))
+          date: dateOfBalance
         }
       }
     });
