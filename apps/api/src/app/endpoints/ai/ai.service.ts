@@ -418,23 +418,42 @@ export class AiService {
    * Generates the output of a model and generates it one more time if it does
    * not agree with the schema, as a provider can give an output which does not
    * agree with the schema although OpenRouter lists the structured outputs for
-   * it, for example with a code block around the JSON. An output which reaches
-   * the maximum number of output tokens is not generated again, as the second
-   * output would be cut as well.
+   * it, for example with a code block around the JSON. An empty output is not
+   * parsed if the model does not stop normally, hence it is checked here. Only
+   * an output which stops normally or for another reason is generated again,
+   * as the second output would be the same, for example if it reaches the
+   * maximum number of output tokens or if the content filter stops it.
    */
-  private async generateWithRetry<T>(generate: () => Promise<T>) {
+  private async generateWithRetry<
+    T extends Pick<
+      Awaited<ReturnType<typeof generateText>>,
+      'finishReason' | 'response' | 'text' | 'usage'
+    >
+  >(generate: () => Promise<T>) {
     try {
-      return await generate();
+      const result = await generate();
+
+      if (result.finishReason === 'other' && result.text === '') {
+        throw new NoObjectGeneratedError({
+          finishReason: result.finishReason,
+          message: 'No object generated: the response is empty.',
+          response: result.response,
+          text: result.text,
+          usage: result.usage
+        });
+      }
+
+      return result;
     } catch (error) {
       if (
         !NoObjectGeneratedError.isInstance(error) ||
-        error.finishReason === 'length'
+        (error.finishReason !== 'other' && error.finishReason !== 'stop')
       ) {
         throw error;
       }
 
       this.logger.warn(
-        `Generating the output of a model one more time, as it does not agree with the schema: ${error.message}`
+        `Generating the output of the model ${error.response?.modelId} one more time after ${error.usage?.totalTokens} tokens, as it does not agree with the schema: ${error.message}`
       );
 
       return generate();

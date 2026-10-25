@@ -37,11 +37,23 @@ jest.mock('ai', () => {
     generateText: jest.fn(),
     NoObjectGeneratedError: class MockNoObjectGeneratedError extends Error {
       public readonly finishReason: string;
+      public readonly response?: { modelId: string };
+      public readonly usage?: { totalTokens: number };
 
-      public constructor({ finishReason }: { finishReason: string }) {
+      public constructor({
+        finishReason,
+        response,
+        usage
+      }: {
+        finishReason: string;
+        response?: { modelId: string };
+        usage?: { totalTokens: number };
+      }) {
         super('No object generated');
 
         this.finishReason = finishReason;
+        this.response = response;
+        this.usage = usage;
       }
 
       public static isInstance(error: unknown) {
@@ -336,9 +348,50 @@ describe('AiService', () => {
 
       jest.mocked(generateText).mockRejectedValueOnce(
         new NoObjectGeneratedError({
-          finishReason: 'stop'
+          finishReason: 'stop',
+          response: { modelId: 'vision-model' },
+          usage: { totalTokens: 1000 }
         } as ConstructorParameters<typeof NoObjectGeneratedError>[0])
       );
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          abortSignal,
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).resolves.toEqual({ broker: 'Swissquote', rows });
+
+      expect(generateText).toHaveBeenCalledTimes(2);
+
+      const [[firstOptions], [secondOptions]] =
+        jest.mocked(generateText).mock.calls;
+
+      expect(secondOptions).toEqual(firstOptions);
+      expect(secondOptions.abortSignal).toBe(abortSignal);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'the model vision-model one more time after 1000 tokens'
+        )
+      );
+    });
+
+    it('Requests the rows one more time if the output is empty', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockResolvedValueOnce({
+        finishReason: 'other',
+        response: { modelId: 'vision-model' },
+        text: '',
+        usage: { totalTokens: 10 },
+        get output() {
+          throw new Error('No output generated');
+        }
+      } as unknown as Awaited<ReturnType<typeof generateText>>);
 
       await expect(
         aiService.getActivityRowsFromFile({
@@ -353,7 +406,9 @@ describe('AiService', () => {
       expect(generateText).toHaveBeenCalledTimes(2);
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        expect.stringContaining('one more time')
+        expect.stringContaining(
+          'the model vision-model one more time after 10 tokens'
+        )
       );
     });
 
@@ -380,6 +435,26 @@ describe('AiService', () => {
       ).rejects.toBe(error);
 
       expect(generateText).toHaveBeenCalledTimes(2);
+    });
+
+    it('Passes on the error if the content filter stops the output', async () => {
+      const error = new NoObjectGeneratedError({
+        finishReason: 'content-filter'
+      } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
+
+      jest.mocked(generateText).mockRejectedValueOnce(error);
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).rejects.toBe(error);
+
+      expect(generateText).toHaveBeenCalledTimes(1);
     });
 
     it('Passes on every other error of the vision model', async () => {
@@ -1617,7 +1692,9 @@ describe('AiService', () => {
 
       jest.mocked(generateText).mockRejectedValueOnce(
         new NoObjectGeneratedError({
-          finishReason: 'stop'
+          finishReason: 'stop',
+          response: { modelId: 'agent-model' },
+          usage: { totalTokens: 1000 }
         } as ConstructorParameters<typeof NoObjectGeneratedError>[0])
       );
 
@@ -1628,6 +1705,7 @@ describe('AiService', () => {
       });
 
       const { activities } = await aiService.getActivitiesFromRows({
+        abortSignal,
         accounts,
         userCurrency,
         userId,
@@ -1637,6 +1715,18 @@ describe('AiService', () => {
       expect(activities).toEqual([expect.objectContaining({ symbol: 'AAPL' })]);
 
       expect(generateText).toHaveBeenCalledTimes(2);
+
+      const [[firstOptions], [secondOptions]] =
+        jest.mocked(generateText).mock.calls;
+
+      expect(secondOptions).toEqual(firstOptions);
+      expect(secondOptions.abortSignal).toBe(abortSignal);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'the model agent-model one more time after 1000 tokens'
+        )
+      );
     });
 
     it('Falls back to the general model if no agent model is set', async () => {
