@@ -415,35 +415,46 @@ export class AiService {
   }
 
   /**
+   * Gives the result of a model, or an error if its output is empty, as an
+   * empty output is not parsed if the model does not stop normally
+   */
+  private checkOutput<
+    T extends Pick<
+      Awaited<ReturnType<typeof generateText>>,
+      'finalStep' | 'finishReason' | 'text' | 'usage'
+    >
+  >(result: T) {
+    if (result.finishReason === 'other' && result.text === '') {
+      throw new NoObjectGeneratedError({
+        finishReason: result.finishReason,
+        message: 'No object generated: the response is empty.',
+        response: result.finalStep.response,
+        text: result.text,
+        usage: result.usage
+      });
+    }
+
+    return result;
+  }
+
+  /**
    * Generates the output of a model and generates it one more time if it does
    * not agree with the schema, as a provider can give an output which does not
    * agree with the schema although OpenRouter lists the structured outputs for
-   * it, for example with a code block around the JSON. An empty output is not
-   * parsed if the model does not stop normally, hence it is checked here. Only
-   * an output which stops normally or for another reason is generated again,
-   * as the second output would be the same, for example if it reaches the
-   * maximum number of output tokens or if the content filter stops it.
+   * it, for example with a code block around the JSON. An empty output is
+   * generated one more time as well. Only an output which stops normally or for
+   * another reason is generated again, as the second output would be the same,
+   * for example if it reaches the maximum number of output tokens or if the
+   * content filter stops it.
    */
   private async generateWithRetry<
     T extends Pick<
       Awaited<ReturnType<typeof generateText>>,
-      'finishReason' | 'response' | 'text' | 'usage'
+      'finalStep' | 'finishReason' | 'text' | 'usage'
     >
   >(generate: () => Promise<T>) {
     try {
-      const result = await generate();
-
-      if (result.finishReason === 'other' && result.text === '') {
-        throw new NoObjectGeneratedError({
-          finishReason: result.finishReason,
-          message: 'No object generated: the response is empty.',
-          response: result.response,
-          text: result.text,
-          usage: result.usage
-        });
-      }
-
-      return result;
+      return this.checkOutput(await generate());
     } catch (error) {
       if (
         !NoObjectGeneratedError.isInstance(error) ||
@@ -456,7 +467,7 @@ export class AiService {
         `Generating the output of the model ${error.response?.modelId} one more time after ${error.usage?.totalTokens} tokens, as it does not agree with the schema: ${error.message}`
       );
 
-      return generate();
+      return this.checkOutput(await generate());
     }
   }
 

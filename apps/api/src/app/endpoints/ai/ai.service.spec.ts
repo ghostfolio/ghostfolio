@@ -384,8 +384,8 @@ describe('AiService', () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
       jest.mocked(generateText).mockResolvedValueOnce({
+        finalStep: { response: { modelId: 'vision-model' } },
         finishReason: 'other',
-        response: { modelId: 'vision-model' },
         text: '',
         usage: { totalTokens: 10 },
         get output() {
@@ -415,14 +415,18 @@ describe('AiService', () => {
     it('Passes on the error if the output does not agree with the schema a second time', async () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
-      const error = new NoObjectGeneratedError({
+      const firstError = new NoObjectGeneratedError({
+        finishReason: 'stop'
+      } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
+
+      const secondError = new NoObjectGeneratedError({
         finishReason: 'stop'
       } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
 
       jest
         .mocked(generateText)
-        .mockRejectedValueOnce(error)
-        .mockRejectedValueOnce(error);
+        .mockRejectedValueOnce(firstError)
+        .mockRejectedValueOnce(secondError);
 
       await expect(
         aiService.getActivityRowsFromFile({
@@ -432,7 +436,7 @@ describe('AiService', () => {
           },
           locale: 'de-CH'
         })
-      ).rejects.toBe(error);
+      ).rejects.toBe(secondError);
 
       expect(generateText).toHaveBeenCalledTimes(2);
     });
