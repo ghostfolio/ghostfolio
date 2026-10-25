@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the style of the menu button in the user detail dialog of the admin control panel
 - Improved the consistency of the import of activities with _Ghostfolio AI_ (experimental)
 
+### Fixed
+
+- Fixed a race condition in the creation of an account balance
+
 ## 3.92.0 - 2026-10-24
 
 ### Changed
