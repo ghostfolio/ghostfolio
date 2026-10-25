@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the support for filtering by activity type on the activities page from experimental to general availability
 - Improved the style of the menu button in the asset profile details dialog of the admin control panel
 - Improved the style of the menu button in the user detail dialog of the admin control panel
 - Improved the consistency of the import of activities with _Ghostfolio AI_ (experimental)
