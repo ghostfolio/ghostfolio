@@ -53,14 +53,8 @@ export class AccountBalanceService {
   }): Promise<AccountBalance> {
     const accountBalance = await this.prismaService.accountBalance.upsert({
       create: {
-        account: {
-          connect: {
-            id_userId: {
-              userId,
-              id: accountId
-            }
-          }
-        },
+        accountId,
+        userId,
         date: resetHours(parseISO(date)),
         value: balance
       },
