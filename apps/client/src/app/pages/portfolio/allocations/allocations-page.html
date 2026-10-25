@@ -4,6 +4,14 @@
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Allocations</h1>
     </div>
   </div>
+  <div class="mb-3">
+    <mat-checkbox
+      i18n
+      [checked]="showCash"
+      (change)="toggleCash($event.checked)"
+      >Show cash</mat-checkbox
+    >
+  </div>
   <div class="row">
     <div class="col">
       <mat-card appearance="outlined" class="mb-3">
@@ -16,18 +24,14 @@
             size="medium"
             [isLoading]="isLoading"
             [isPercent]="true"
-            [value]="portfolioDetails?.summary?.filteredValueInPercentage"
+            [value]="displayedProportion"
           />
         </mat-card-header>
         <mat-card-content>
           <mat-progress-bar
             mode="determinate"
-            [title]="`${(
-              (portfolioDetails?.summary?.filteredValueInPercentage ?? 0) * 100
-            ).toFixed(2)}%`"
-            [value]="
-              (portfolioDetails?.summary?.filteredValueInPercentage ?? 0) * 100
-            "
+            [title]="`${((displayedProportion ?? 0) * 100).toFixed(2)}%`"
+            [value]="(displayedProportion ?? 0) * 100"
           />
         </mat-card-content>
       </mat-card>

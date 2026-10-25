@@ -37,12 +37,18 @@ export function convertValuesToPercentages({
   }
 
   for (const account of Object.values(accounts)) {
+    account.cashValueInPercentage = totalValue
+      ? (account.cashValueInBaseCurrency ?? 0) / totalValue
+      : 0;
     account.valueInPercentage = totalValue
       ? account.valueInBaseCurrency / totalValue
       : 0;
   }
 
   for (const platform of Object.values(platforms)) {
+    platform.cashValueInPercentage = totalValue
+      ? (platform.cashValueInBaseCurrency ?? 0) / totalValue
+      : 0;
     platform.valueInPercentage = totalValue
       ? platform.valueInBaseCurrency / totalValue
       : 0;

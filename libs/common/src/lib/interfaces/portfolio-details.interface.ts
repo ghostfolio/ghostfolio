@@ -8,6 +8,8 @@ export interface PortfolioDetails {
   accounts: {
     [id: string]: {
       balance: number;
+      cashValueInBaseCurrency?: number;
+      cashValueInPercentage?: number;
       currency: string;
       name: string;
       /** Only set if the activities are filtered by a single holding */
@@ -35,6 +37,8 @@ export interface PortfolioDetails {
   platforms: {
     [id: string]: {
       balance: number;
+      cashValueInBaseCurrency?: number;
+      cashValueInPercentage?: number;
       currency: string;
       name: string;
       valueInBaseCurrency: number;

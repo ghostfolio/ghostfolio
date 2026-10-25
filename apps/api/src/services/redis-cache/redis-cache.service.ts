@@ -55,11 +55,13 @@ export class RedisCacheService {
   public getPortfolioSnapshotKey({
     calculationType,
     filters,
-    userId
+    userId,
+    withHiddenCash = false
   }: {
     calculationType: PerformanceCalculationType;
     filters?: Filter[];
     userId: string;
+    withHiddenCash?: boolean;
   }) {
     let portfolioSnapshotKey = `${this.getPortfolioSnapshotKeyPrefix({ userId })}-${calculationType}`;
 
@@ -71,7 +73,9 @@ export class RedisCacheService {
       portfolioSnapshotKey = `${portfolioSnapshotKey}-${filtersHash}`;
     }
 
-    return portfolioSnapshotKey;
+    return withHiddenCash
+      ? `${portfolioSnapshotKey}-cash-all`
+      : portfolioSnapshotKey;
   }
 
   public getQuoteKey({ dataSource, symbol }: AssetProfileIdentifier) {

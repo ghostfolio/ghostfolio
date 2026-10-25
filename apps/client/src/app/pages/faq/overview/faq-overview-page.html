@@ -11,6 +11,61 @@
         information you need in one place.
       </p>
       <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header
+          ><mat-card-title i18n
+            >Where can I restore an Export Data JSON file?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content i18n
+          >Choose Import Data beside Export Data in your user settings, or on
+          the Accounts page. Preview and restore the accounts, activities and
+          cash together. For a partial restore, select only the required
+          accounts; both sides of a transfer must be included. CSV files use the
+          separate activities and Cash Balances importers.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header
+          ><mat-card-title i18n
+            >Which CSV should I use for cash movements?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content i18n
+          >Use Import CSV and Export CSV in Accounts → Cash Balances for
+          deposits, withdrawals, reconciliations and linked cash entries. The
+          activities CSV remains for financial activities. When restoring both,
+          import financial activities first, then the cash
+          journal.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header
+          ><mat-card-title i18n
+            >Does reconciliation add money to my account?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content i18n
+          >No. Reconciliation sets the cash balance to the actual amount on the
+          selected date. Enter 380 to set the balance to 380, even if a
+          different balance was previously calculated. Its fee must be
+          zero.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header
+          ><mat-card-title i18n
+            >Why can cash differ between portfolio charts?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content i18n
+          >The account preference for including cash in portfolio analysis is
+          separate from Update Cash Balance, which controls activity cash
+          effects by default. A chart may also hide cash. A value explicitly
+          labelled Cash still shows recorded cash. Deposits and withdrawals do
+          not themselves represent investment performance.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
           <mat-card-title>What is Ghostfolio?</mat-card-title>
         </mat-card-header>

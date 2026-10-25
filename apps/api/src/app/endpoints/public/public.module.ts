@@ -1,5 +1,6 @@
 import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { CashManagementModule } from '@ghostfolio/api/app/account-balance/cash-management.module';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -28,6 +29,7 @@ import { PublicService } from './public.service';
 @Module({
   controllers: [PublicController],
   imports: [
+    CashManagementModule,
     AccessModule,
     ActivitiesModule,
     BenchmarkModule,

@@ -45,6 +45,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -69,6 +70,7 @@ import { forkJoin } from 'rxjs';
     IonIcon,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatMenuModule,
     MatProgressSpinnerModule,
     NgxSkeletonLoaderModule,
@@ -81,6 +83,11 @@ import { forkJoin } from 'rxjs';
 export class GfAnalysisPageComponent implements OnInit {
   protected benchmark?: Partial<SymbolProfile>;
   protected benchmarkDataItems: LineChartItem[] = [];
+  protected readonly includeCashInValueChart = signal(true);
+  protected portfolioValueDataItems: LineChartItem[] = [];
+  protected investmentsOnlyDataItems: LineChartItem[] = [];
+  protected adjustedCapitalDataItems: InvestmentItem[] = [];
+  protected readonly adjustedCapitalLabel = $localize`Adjusted capital reference`;
   protected readonly benchmarks: Partial<SymbolProfile>[];
   protected bottom3: PortfolioPosition[];
   protected dividendsByGroup: InvestmentItem[];
@@ -107,7 +114,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected performanceDataItemsInPercentage: LineChartItem[];
   protected performancePercentagesByYear: InvestmentItem[];
   protected readonly performanceTimelineDataLabel = $localize`Net Performance`;
-  protected readonly portfolioEvolutionDataLabel = $localize`Invested Capital`;
+  protected readonly portfolioEvolutionDataLabel = $localize`Net invested capital`;
   protected precision = 2;
   protected savingsRatePerMonth: number | undefined;
   protected streaks: PortfolioInvestmentsResponse['streaks'];
@@ -362,6 +369,9 @@ export class GfAnalysisPageComponent implements OnInit {
         this.investments = [];
         this.performance = performance;
         this.performanceDataItems = [];
+        this.adjustedCapitalDataItems = [];
+        this.portfolioValueDataItems = [];
+        this.investmentsOnlyDataItems = [];
         this.performanceDataItemsInPercentage = [];
 
         for (const {
@@ -369,19 +379,37 @@ export class GfAnalysisPageComponent implements OnInit {
           dividendInPercentageWithCurrencyEffect,
           netPerformanceInPercentageWithCurrencyEffect,
           totalInvestmentValueWithCurrencyEffect,
+          netWorth,
+          netPerformanceWithCurrencyEffect,
+          totalCashInBaseCurrency,
           valueInPercentage,
           valueWithCurrencyEffect
         } of chart ?? []) {
           if (totalInvestmentValueWithCurrencyEffect !== undefined) {
             this.investments.push({
               date,
-              investment: totalInvestmentValueWithCurrencyEffect
+              investment:
+                (netWorth ?? valueWithCurrencyEffect ?? 0) -
+                (totalCashInBaseCurrency ?? 0) -
+                (netPerformanceWithCurrencyEffect ?? 0)
             });
           }
 
           const value = isNumber(valueWithCurrencyEffect)
             ? valueWithCurrencyEffect
             : valueInPercentage;
+
+          if (isNumber(netWorth)) {
+            this.portfolioValueDataItems.push({ date, value: netWorth });
+            this.adjustedCapitalDataItems.push({
+              date,
+              investment: netWorth - (netPerformanceWithCurrencyEffect ?? 0)
+            });
+            this.investmentsOnlyDataItems.push({
+              date,
+              value: netWorth - (totalCashInBaseCurrency ?? 0)
+            });
+          }
 
           if (isNumber(value)) {
             this.performanceDataItems.push({

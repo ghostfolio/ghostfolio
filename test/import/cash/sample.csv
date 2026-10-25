@@ -1,0 +1,4 @@
+Data;Operazione;Importo;Commissione;Valuta;Sequenza;Nota;Riferimento
+2026-10-01;Deposito;1000;0;EUR;1;Esempio bonifico;esempio-deposito-1
+2026-10-02;Prelievo;100;0;EUR;2;Esempio prelievo;esempio-prelievo-1
+2026-10-03;Riconciliazione;380;0;EUR;3;Esempio saldo effettivo;esempio-riconciliazione-1

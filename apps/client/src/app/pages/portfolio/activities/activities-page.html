@@ -2,23 +2,33 @@
   <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Activities</h1>
+      @if (canManageCash) {
+        <div class="d-flex justify-content-end mb-3">
+          <button i18n mat-stroked-button (click)="onCashTransactionEdited()">
+            Insert cash transaction
+          </button>
+        </div>
+      }
       <gf-activities-table
         [activityTypes]="user?.activityTypes"
         [baseCurrency]="user?.settings?.baseCurrency"
+        [cashTransactionsIncluded]="true"
         [dataSource]="dataSource"
         [deviceType]="deviceType"
-        [hasActivities]="user?.activitiesCount > 0"
+        [hasActivities]="(totalItems ?? 0) > 0"
         [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
         [hasPermissionToFilterByType]="user?.settings?.isExperimentalFeatures"
         [hasPermissionToImportActivities]="hasPermissionToImportActivities"
+        [hasPermissionToManageCash]="canManageCash"
         [hasPermissionToUpdateActivity]="hasPermissionToUpdateActivity"
         [locale]="user?.settings?.locale"
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [showActions]="
-          (hasPermissionToCreateActivity ||
+          (canManageCash ||
+            hasPermissionToCreateActivity ||
             hasPermissionToDeleteActivity ||
             hasPermissionToUpdateActivity) &&
           !user.settings.isRestrictedView
@@ -29,6 +39,7 @@
         (activitiesDeleted)="onDeleteActivities()"
         (activityClicked)="onClickActivity($event)"
         (activityDeleted)="onDeleteActivity($event)"
+        (cashTransactionEdited)="onCashTransactionEdited($event)"
         (export)="onExport()"
         (exportDrafts)="onExportDrafts($event)"
         (import)="onImport()"

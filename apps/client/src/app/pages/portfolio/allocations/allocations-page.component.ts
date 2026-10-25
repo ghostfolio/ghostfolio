@@ -51,6 +51,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -69,6 +70,7 @@ import { AllocationsPageParams } from './interfaces/interfaces';
     GfValueComponent,
     GfWorldMapChartComponent,
     MatCardModule,
+    MatCheckboxModule,
     MatProgressBarModule
   ],
   selector: 'gf-allocations-page',
@@ -76,6 +78,24 @@ import { AllocationsPageParams } from './interfaces/interfaces';
   templateUrl: './allocations-page.html'
 })
 export class GfAllocationsPageComponent implements OnInit {
+  protected showCash = true;
+  protected get displayedProportion() {
+    const base = this.portfolioDetails?.summary?.filteredValueInPercentage ?? 1;
+    if (this.showCash) return base;
+    const holdings = this.portfolioDetails?.holdings ?? [];
+    const total = holdings.reduce((sum, p) => sum + this.extractValue(p), 0);
+    const cash = holdings
+      .filter((p) => isCashPosition(p.assetProfile))
+      .reduce((sum, p) => sum + this.extractValue(p), 0);
+    return total ? (base * (total - cash)) / total : base;
+  }
+  protected toggleCash(checked: boolean) {
+    const details = this.portfolioDetails;
+    this.showCash = checked;
+    this.initialize();
+    this.portfolioDetails = details;
+    this.initializeAllocationsData();
+  }
   protected accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;
@@ -367,7 +387,13 @@ export class GfAllocationsPageComponent implements OnInit {
   private initializeAllocationsData() {
     for (const [
       id,
-      { name, valueInBaseCurrency, valueInPercentage }
+      {
+        name,
+        valueInBaseCurrency,
+        valueInPercentage,
+        cashValueInBaseCurrency,
+        cashValueInPercentage
+      }
     ] of Object.entries(this.portfolioDetails.accounts)) {
       let value = 0;
 
@@ -377,6 +403,11 @@ export class GfAllocationsPageComponent implements OnInit {
         value = valueInBaseCurrency;
       }
 
+      value -= this.showCash
+        ? 0
+        : this.showValuesInPercentage()
+          ? (cashValueInPercentage ?? 0)
+          : (cashValueInBaseCurrency ?? 0);
       this.accounts[id] = {
         id,
         name,
@@ -392,6 +423,7 @@ export class GfAllocationsPageComponent implements OnInit {
     let totalValueInFunds = 0;
 
     for (const position of this.portfolioDetails.holdings) {
+      if (!this.showCash && isCashPosition(position.assetProfile)) continue;
       const assetProfileIdentifier = getAssetProfileIdentifier(
         position.assetProfile
       );
@@ -564,7 +596,13 @@ export class GfAllocationsPageComponent implements OnInit {
 
     for (const [
       id,
-      { name, valueInBaseCurrency, valueInPercentage }
+      {
+        name,
+        valueInBaseCurrency,
+        valueInPercentage,
+        cashValueInBaseCurrency,
+        cashValueInPercentage
+      }
     ] of Object.entries(this.portfolioDetails.platforms)) {
       let value = 0;
 
@@ -574,6 +612,11 @@ export class GfAllocationsPageComponent implements OnInit {
         value = valueInBaseCurrency;
       }
 
+      value -= this.showCash
+        ? 0
+        : this.showValuesInPercentage()
+          ? (cashValueInPercentage ?? 0)
+          : (cashValueInBaseCurrency ?? 0);
       this.platforms[id] = {
         id,
         name,

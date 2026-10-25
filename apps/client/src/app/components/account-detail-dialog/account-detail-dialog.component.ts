@@ -17,7 +17,6 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import type { Tag } from '@ghostfolio/prisma/browser';
-import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDialogFooterComponent } from '@ghostfolio/ui/dialog-footer';
 import { GfDialogHeaderComponent } from '@ghostfolio/ui/dialog-header';
@@ -59,6 +58,7 @@ import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { filter, forkJoin } from 'rxjs';
 
+import { GfCashManagementComponent } from '../cash-management/cash-management.component';
 import {
   AccountDetailDialogParams,
   AccountDetailDialogResult
@@ -68,7 +68,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    GfAccountBalancesComponent,
+    GfCashManagementComponent,
     GfActivitiesTableComponent,
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
@@ -90,6 +90,8 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected accountBalances: AccountBalancesResponse['balances'];
   protected activitiesCount: number;
   protected balance: number;
+  protected canManageCash = false;
+  protected isCashManaged = false;
   protected balancePrecision = 2;
   protected currency: string | null;
   protected dataSource: MatTableDataSource<Activity>;
@@ -149,6 +151,9 @@ export class GfAccountDetailDialogComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          this.canManageCash =
+            hasPermission(this.user.permissions, permissions.updateAccount) &&
+            hasScope(this.user.scopes, scopes.accountUpdate);
           this.hasPermissionToDeleteAccountBalance = hasPermission(
             this.user.permissions,
             permissions.deleteAccountBalance
@@ -179,6 +184,11 @@ export class GfAccountDetailDialogComponent implements OnInit {
 
         this.refreshUser();
       });
+  }
+
+  protected onCashChanged() {
+    this.initialize();
+    this.refreshUser();
   }
 
   protected onChangePage(page: PageEvent) {
@@ -246,6 +256,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
         ({
           activitiesCount,
           balance,
+          cashManagement,
           currency,
           dividendInBaseCurrency,
           interestInBaseCurrency,
@@ -257,6 +268,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
         }) => {
           this.activitiesCount = activitiesCount;
           this.balance = balance;
+          this.isCashManaged = !!cashManagement;
 
           if (
             this.balance >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES &&

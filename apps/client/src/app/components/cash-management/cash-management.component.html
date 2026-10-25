@@ -1,0 +1,412 @@
+<section aria-labelledby="cash-transactions-heading" class="my-3">
+  <h3 class="h5" i18n id="cash-transactions-heading">Cash Transactions</h3>
+  @if (error()) {
+    <p class="text-danger" role="alert">{{ error() }}</p>
+  }
+  @if (transferInformation(); as transfer) {
+    <section
+      aria-labelledby="cash-transfer-heading"
+      class="border rounded p-3 mb-3"
+      role="status"
+    >
+      <h4 i18n id="cash-transfer-heading">Transfer information</h4>
+      <dl>
+        <dt i18n>Account</dt>
+        <dd>{{ accountName() || unnamedAccount }}</dd>
+        <dt i18n>Date</dt>
+        <dd>{{ transfer.date }}</dd>
+        <dt i18n>Amount</dt>
+        <dd>{{ eventAmount(transfer) }} {{ currency() }}</dd>
+        <dt i18n>Fee</dt>
+        <dd>{{ transfer.fee ?? 0 }} {{ currency() }}</dd>
+        <dt i18n>Transfer reference</dt>
+        <dd class="text-break">{{ transfer.transferId }}</dd>
+      </dl>
+      <p i18n>
+        This transfer has a matching entry in the other account. Use a new
+        transfer to reverse it.
+      </p>
+      <button
+        i18n
+        mat-button
+        type="button"
+        (click)="transferInformation.set(null)"
+      >
+        Close
+      </button>
+    </section>
+  }
+  @if (snapshot(); as state) {
+    <p class="small">
+      <a
+        fragment="cash-csv"
+        i18n
+        rel="noopener"
+        target="_blank"
+        [routerLink]="cashGuideLink"
+        >Cash and CSV guide (opens in a new tab)</a
+      >
+    </p>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <button
+        i18n
+        mat-stroked-button
+        type="button"
+        [disabled]="busy()"
+        (click)="exportCsv()"
+      >
+        Export CSV
+      </button>
+      @if (canWrite()) {
+        <button
+          i18n
+          mat-stroked-button
+          type="button"
+          [disabled]="busy()"
+          (click)="csvFile.click()"
+        >
+          Import CSV
+        </button>
+        <input
+          #csvFile
+          accept=".csv,text/csv"
+          hidden
+          type="file"
+          (change)="previewFile($event)"
+        />
+      }
+    </div>
+    @if (canWrite()) {
+      <p class="small" i18n>
+        For manual CSV files use Date, Operation, Amount, Currency and
+        optionally Fee, Sequence, Note and Reference. Use positive amounts for
+        DEPOSIT and WITHDRAWAL; RECONCILIATION sets the balance. Use YYYY-MM-DD
+        dates and a decimal point.
+      </p>
+    }
+    @if (csvPreview(); as preview) {
+      <section aria-live="polite" class="border rounded p-3 mb-3">
+        <h4 i18n>Cash CSV preview</h4>
+        <p>{{ selectedFile() }}</p>
+        <p>
+          <span i18n>Destination account</span>:
+          {{ accountName() || unnamedAccount }} ·
+          {{ preview.currency }}
+        </p>
+        <p>
+          <span i18n>New movements</span>: {{ preview.newCount }} ·
+          <span i18n>Already present</span>: {{ preview.existingCount }}
+        </p>
+        @if (preview.errors.length === 0) {
+          <p>
+            <span i18n>Expected cash balance</span>: {{ preview.finalBalance }}
+            {{ preview.currency }}
+          </p>
+          <p>
+            <span i18n>Minimum cash balance</span>: {{ preview.minimumBalance }}
+            {{ preview.currency }}
+          </p>
+          @if (preview.firstAffectedDate) {
+            <p>
+              <span i18n>First affected date</span>:
+              {{ preview.firstAffectedDate }}
+            </p>
+          }
+        }
+        @for (warning of preview.warnings; track $index) {
+          <p class="text-warning">{{ warning }}</p>
+        }
+        @for (issue of preview.errors.slice(0, 50); track $index) {
+          <p class="text-danger">{{ issue }}</p>
+        }
+        @if (preview.errors.length > 50) {
+          <p i18n>
+            More errors are present. Fix the file and preview it again.
+          </p>
+        }
+        <div class="table-responsive">
+          <table class="cash-history">
+            <thead>
+              <tr>
+                <th i18n>Row</th>
+                <th i18n>Date</th>
+                <th i18n>Operation</th>
+                <th i18n>Amount</th>
+                <th i18n>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (
+                row of preview.rows.slice(
+                  csvPage() * 100,
+                  (csvPage() + 1) * 100
+                );
+                track row.line
+              ) {
+                <tr>
+                  <td>{{ row.line }}</td>
+                  <td>{{ row.date }}</td>
+                  <td>{{ row.operation }}</td>
+                  <td>{{ row.amount }}</td>
+                  <td>
+                    {{ csvStatus(row.status) }} {{ row.message }}
+                    @if (row.candidates?.length) {
+                      <mat-form-field
+                        appearance="outline"
+                        class="cash-csv-activity"
+                        floatLabel="always"
+                      >
+                        <mat-label i18n>Linked activity</mat-label>
+                        <mat-select
+                          [disabled]="busy()"
+                          (selectionChange)="
+                            resolveCsvActivity(row.line, $event.value)
+                          "
+                        >
+                          @for (
+                            candidate of row.candidates;
+                            track candidate.id
+                          ) {
+                            <mat-option [value]="candidate.id">{{
+                              candidate.label
+                            }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        @if (preview.rows.length > 100) {
+          <div class="d-flex gap-2 align-items-center my-2">
+            <button
+              i18n
+              mat-button
+              type="button"
+              [disabled]="busy() || csvPage() === 0"
+              (click)="csvPage.set(csvPage() - 1)"
+            >
+              Previous
+            </button>
+            <span><span i18n>Page</span> {{ csvPage() + 1 }}</span>
+            <button
+              i18n
+              mat-button
+              type="button"
+              [disabled]="
+                busy() || (csvPage() + 1) * 100 >= preview.rows.length
+              "
+              (click)="csvPage.set(csvPage() + 1)"
+            >
+              Next
+            </button>
+          </div>
+        }
+        <p i18n>
+          Import adds new cash movements to this account. Existing movements and
+          financial activities are not overwritten. Import linked financial
+          activities first.
+        </p>
+        <button
+          i18n
+          mat-flat-button
+          type="button"
+          [disabled]="
+            busy() ||
+            preview.errors.length > 0 ||
+            (preview.newCount === 0 && preview.existingCount > 0)
+          "
+          (click)="confirmCsvImport()"
+        >
+          Insert movements
+        </button>
+        <button
+          i18n
+          mat-button
+          type="button"
+          [disabled]="busy()"
+          (click)="cancelCsvImport()"
+        >
+          Cancel
+        </button>
+      </section>
+    }
+    @if (canWrite()) {
+      <div class="d-flex flex-column mb-3">
+        <mat-checkbox
+          i18n
+          [checked]="state.defaultUpdateCash"
+          [disabled]="busy()"
+          (change)="preferences({ defaultUpdateCash: $event.checked })"
+          >Update Cash Balance by default for new activities</mat-checkbox
+        >
+        <mat-checkbox
+          i18n
+          [checked]="state.includeCashInPortfolio !== false"
+          [disabled]="busy()"
+          (change)="preferences({ includeCashInPortfolio: $event.checked })"
+          >Consider this account's cash in analyses and
+          allocations</mat-checkbox
+        >
+      </div>
+      <form class="cash-form" [formGroup]="form" (ngSubmit)="save()">
+        <mat-form-field appearance="outline">
+          <mat-label i18n>Date</mat-label>
+          <input formControlName="date" matInput type="date" [max]="today" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label i18n>Operation</mat-label>
+          <mat-select formControlName="operation">
+            <mat-option i18n value="DEPOSIT">Deposit</mat-option>
+            <mat-option i18n value="WITHDRAWAL">Withdrawal</mat-option>
+            <mat-option i18n value="CHECKPOINT">Reconciliation</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          @if (form.controls.operation.value === 'CHECKPOINT') {
+            <mat-label i18n>Actual cash balance</mat-label>
+          } @else {
+            <mat-label i18n>Amount</mat-label>
+          }
+          <input formControlName="amount" inputmode="decimal" matInput />
+          <span matTextSuffix>{{ currency() }}</span>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label i18n>Fee</mat-label>
+          <input
+            formControlName="fee"
+            inputmode="decimal"
+            matInput
+            [readonly]="form.controls.operation.value === 'CHECKPOINT'"
+          />
+          <span matTextSuffix>{{ currency() }}</span>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label i18n>Note</mat-label>
+          <input
+            formControlName="comment"
+            matInput
+            [maxlength]="COMMENT_MAXIMUM_LENGTH"
+          />
+        </mat-form-field>
+        <button
+          class="align-self-center"
+          mat-flat-button
+          type="submit"
+          [disabled]="form.invalid || busy()"
+        >
+          @if (editing()) {
+            <ng-container i18n>Save changes</ng-container>
+          } @else {
+            <ng-container i18n>Insert</ng-container>
+          }
+        </button>
+        @if (editing()) {
+          <button i18n mat-button type="button" (click)="cancelEdit()">
+            Cancel
+          </button>
+        }
+      </form>
+      @if (form.controls.operation.value === 'CHECKPOINT') {
+        <p class="small" i18n>
+          Enter the actual balance at this date. A reconciliation replaces the
+          calculated balance; it is not an additional deposit.
+        </p>
+      } @else {
+        <p class="small" i18n>
+          Enter a positive amount. Withdrawals are subtracted automatically.
+        </p>
+      }
+    }
+    <div class="table-responsive">
+      <table class="cash-history">
+        <thead>
+          <tr>
+            <th i18n>Date</th>
+            <th i18n>Operation</th>
+            <th class="text-end" i18n>Amount</th>
+            <th class="text-end" i18n>Fee</th>
+            <th class="text-end" i18n>Cash Balance</th>
+            <th i18n>Note</th>
+            <th><span class="visually-hidden" i18n>Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (event of orderedEvents(); track event.id) {
+            <tr>
+              <td class="text-nowrap">{{ event.date }}</td>
+              <td>{{ eventLabel(event) }}</td>
+              <td class="text-end text-nowrap">
+                {{ eventAmount(event) }} {{ currency() }}
+              </td>
+              <td class="text-end text-nowrap">
+                {{ event.fee ?? 0 }} {{ currency() }}
+              </td>
+              <td class="text-end text-nowrap">
+                {{ balanceAfter(event) }} {{ currency() }}
+              </td>
+              <td>{{ event.comment }}</td>
+              <td>
+                @if (canWrite()) {
+                  <button
+                    aria-label="Actions"
+                    i18n-aria-label
+                    mat-icon-button
+                    type="button"
+                    [disabled]="busy()"
+                    [matMenuTriggerFor]="actions"
+                  >
+                    <ion-icon name="ellipsis-vertical" />
+                  </button>
+                  <mat-menu #actions="matMenu">
+                    @if (event.orderId || event.transferId) {
+                      <button
+                        mat-menu-item
+                        type="button"
+                        (click)="openSource(event)"
+                      >
+                        @if (event.orderId) {
+                          <ng-container i18n
+                            >View linked operation</ng-container
+                          >
+                        } @else {
+                          <ng-container i18n>Transfer information</ng-container>
+                        }
+                      </button>
+                    } @else {
+                      <button
+                        i18n
+                        mat-menu-item
+                        type="button"
+                        (click)="edit(event)"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        i18n
+                        mat-menu-item
+                        type="button"
+                        (click)="remove(event)"
+                      >
+                        Delete
+                      </button>
+                    }
+                  </mat-menu>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" i18n>No cash transactions yet.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p i18n>Loading cash transactions…</p>
+  }
+</section>

@@ -1,4 +1,5 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { CashManagementService } from '@ghostfolio/api/app/account-balance/cash-management.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AssetProfileChangedEvent } from '@ghostfolio/api/events/asset-profile-changed.event';
@@ -39,6 +40,7 @@ import {
   isAccountBalanceInFuture,
   isDraftActivity
 } from '@ghostfolio/common/helper';
+import { CashConfirmation } from '@ghostfolio/common/interfaces';
 import {
   ActivitiesResponse,
   Activity,
@@ -48,7 +50,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
@@ -78,7 +80,8 @@ export class ActivitiesService {
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+    private readonly cashManagementService?: CashManagementService
   ) {}
 
   public areCashActivitiesExcludedByFilters(filters: Filter[] = []) {
@@ -178,6 +181,8 @@ export class ActivitiesService {
       symbol?: string;
       tags?: { id: string }[];
       updateAccountBalance?: boolean;
+      confirmNegativeBalance?: boolean;
+      cashRevisions?: Record<string, number>;
       userId: string;
     }
   ): Promise<Prisma.OrderGetPayload<{ include: { SymbolProfile: true } }>> {
@@ -205,7 +210,11 @@ export class ActivitiesService {
     }
 
     const accountId = data.accountId;
-    const updateAccountBalance = data.updateAccountBalance ?? false;
+    const updateAccountBalance = data.updateAccountBalance;
+    const confirmation = {
+      confirmNegativeBalance: data.confirmNegativeBalance,
+      cashRevisions: data.cashRevisions
+    };
     const userId = data.userId;
 
     if (
@@ -289,6 +298,8 @@ export class ActivitiesService {
     delete data.symbol;
     delete data.tags;
     delete data.updateAccountBalance;
+    delete data.confirmNegativeBalance;
+    delete data.cashRevisions;
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
@@ -300,18 +311,35 @@ export class ActivitiesService {
       type: data.type
     });
 
-    const activity = await this.prismaService.order.create({
-      data: {
-        ...orderData,
-        account,
-        tags: {
-          connect: tagsToConnect
-        }
-      },
-      include: { SymbolProfile: true }
-    });
+    const write = async (transaction: Prisma.TransactionClient) => {
+      const created = await transaction.order.create({
+        data: {
+          ...orderData,
+          account,
+          tags: {
+            connect: tagsToConnect
+          }
+        },
+        include: { SymbolProfile: true }
+      });
+      await this.cashManagementService?.synchronizeOrder(transaction, created, {
+        enabled: updateAccountBalance,
+        ...confirmation
+      });
+      return created;
+    };
+    const activity = this.cashManagementService
+      ? await this.cashManagementService.runInAccounts(
+          { accountIds: [accountId], userId },
+          write
+        )
+      : await write(this.prismaService);
 
-    if (accountId && updateAccountBalance === true) {
+    if (
+      !this.cashManagementService &&
+      accountId &&
+      updateAccountBalance === true
+    ) {
       let amount = new Big(data.unitPrice).mul(data.quantity);
 
       if (['BUY', 'FEE'].includes(data.type)) {
@@ -349,11 +377,29 @@ export class ActivitiesService {
   }
 
   public async deleteActivity(
-    where: Prisma.OrderWhereUniqueInput
+    where: Prisma.OrderWhereUniqueInput,
+    confirmation: CashConfirmation = {}
   ): Promise<Order> {
-    const activity = await this.prismaService.order.delete({
-      where
-    });
+    const original = this.cashManagementService
+      ? await this.prismaService.order.findUnique({ where })
+      : null;
+    const activity = original
+      ? await this.cashManagementService.runInAccounts(
+          { accountIds: [original.accountId], userId: original.userId },
+          async (transaction) => {
+            const current = await transaction.order.findUnique({ where });
+            if (current.accountId !== original.accountId) {
+              throw new ConflictException('The activity changed; reload it');
+            }
+            await this.cashManagementService.removeOrderEffects(
+              transaction,
+              [current],
+              confirmation
+            );
+            return transaction.order.delete({ where });
+          }
+        )
+      : await this.prismaService.order.delete({ where });
 
     const [symbolProfile] =
       await this.symbolProfileService.getSymbolProfilesByIds([
@@ -398,8 +444,10 @@ export class ActivitiesService {
     filters,
     startDate,
     types,
-    userId
+    userId,
+    confirmation = {}
   }: {
+    confirmation?: CashConfirmation;
     endDate?: Date;
     filters?: Filter[];
     startDate?: Date;
@@ -422,7 +470,39 @@ export class ActivitiesService {
       select: { symbolProfileId: true }
     });
 
-    const { count } = await this.prismaService.order.deleteMany({ where });
+    const selected = this.cashManagementService
+      ? await this.prismaService.order.findMany({ where })
+      : [];
+    const { count } = this.cashManagementService
+      ? await this.cashManagementService.runInAccounts(
+          { accountIds: selected.map(({ accountId }) => accountId), userId },
+          async (transaction) => {
+            const ids = selected.map(({ id }) => id);
+            const current = await transaction.order.findMany({
+              where: { id: { in: ids }, userId }
+            });
+            if (
+              current.some(
+                (order) =>
+                  order.accountId !==
+                  selected.find(({ id }) => id === order.id)?.accountId
+              )
+            ) {
+              throw new ConflictException(
+                'An activity changed; reload the selection'
+              );
+            }
+            await this.cashManagementService.removeOrderEffects(
+              transaction,
+              current,
+              confirmation
+            );
+            return transaction.order.deleteMany({
+              where: { id: { in: ids }, userId }
+            });
+          }
+        )
+      : await this.prismaService.order.deleteMany({ where });
 
     const [benchmarkAssetProfiles, symbolProfiles] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
@@ -520,6 +600,7 @@ export class ActivitiesService {
         }
 
         const syntheticActivityTemplate: Activity = {
+          isCashBalanceProjection: true,
           userId,
           accountId: account.id,
           accountUserId: account.userId,
@@ -676,7 +757,8 @@ export class ActivitiesService {
               symbol: true
             }
           },
-          tags: true
+          tags: true,
+          cashEvent: { select: { id: true } }
         },
         orderBy: [...orderBy, { id: sortDirection }]
       }),
@@ -756,7 +838,8 @@ export class ActivitiesService {
         ]);
 
         return {
-          ...omit(order, ['SymbolProfile']),
+          ...omit(order, ['SymbolProfile', 'cashEvent']),
+          updateAccountBalance: !!order.cashEvent,
           assetProfile,
           feeInAssetProfileCurrency,
           feeInBaseCurrency,
@@ -780,6 +863,7 @@ export class ActivitiesService {
     userCurrency,
     userId,
     withCash = false,
+    withHiddenCash = false,
     withExcludedAccountsAndActivities = false
   }: {
     /** Optional filters to apply to the activities. */
@@ -790,6 +874,7 @@ export class ActivitiesService {
     userId: string;
     /** Whether to include cash activities in the result. */
     withCash?: boolean;
+    withHiddenCash?: boolean;
     /** Whether to include activities that are excluded from analysis. */
     withExcludedAccountsAndActivities?: boolean;
   }) {
@@ -818,7 +903,8 @@ export class ActivitiesService {
       const cashDetails = await this.accountService.getCashDetails({
         filters,
         userId,
-        currency: userCurrency
+        currency: userCurrency,
+        withHiddenCash
       });
 
       const cashActivities = await this.getCashActivities({
@@ -832,6 +918,79 @@ export class ActivitiesService {
       activities.count += cashActivities.count;
     }
 
+    if (
+      this.cashManagementService &&
+      !this.areCashActivitiesExcludedByFilters(filters)
+    ) {
+      const accountIds = (filters ?? [])
+        .filter(({ type }) => type === 'ACCOUNT')
+        .map(({ id }) => id);
+      const events = await this.prismaService.cashEvent.findMany({
+        where: {
+          userId,
+          fee: { gt: 0 },
+          orderId: null,
+          transferId: null,
+          ...(accountIds.length ? { accountId: { in: accountIds } } : {}),
+          ...(!withExcludedAccountsAndActivities
+            ? { state: { account: WHERE_ACCOUNT_NOT_EXCLUDED } }
+            : {})
+        },
+        include: { state: { include: { account: true } } }
+      });
+      for (const event of events) {
+        const currency = event.state.currency;
+        const fee = Number(event.fee);
+        const feeInBaseCurrency =
+          await this.exchangeRateDataService.toCurrencyAtDate(
+            fee,
+            currency,
+            userCurrency,
+            event.date
+          );
+        const syntheticFee = {
+          id: `cash-fee:${event.id}`,
+          userId,
+          accountId: event.accountId,
+          accountUserId: userId,
+          account: event.state.account,
+          comment: event.comment,
+          date: event.date,
+          createdAt: event.createdAt,
+          updatedAt: event.updatedAt,
+          currency,
+          fee,
+          feeInAssetProfileCurrency: fee,
+          feeInBaseCurrency,
+          quantity: 0,
+          unitPrice: 0,
+          unitPriceInAssetProfileCurrency: 0,
+          value: 0,
+          valueInBaseCurrency: 0,
+          type: ActivityType.FEE,
+          symbolProfileId: `cash-fee:${currency}`,
+          assetProfile: {
+            id: `cash-fee:${currency}`,
+            symbol: `cash-fee:${currency}`,
+            name: 'Cash transaction fee',
+            currency,
+            dataSource: DataSource.MANUAL,
+            userId,
+            assetClass: null,
+            assetSubClass: null,
+            countries: [],
+            sectors: [],
+            holdings: [],
+            isActive: true,
+            activitiesCount: 0,
+            createdAt: event.createdAt,
+            updatedAt: event.updatedAt
+          }
+        } as Activity;
+        activities.activities.push(syntheticFee);
+        activities.count++;
+      }
+    }
     return activities;
   }
 
@@ -905,6 +1064,9 @@ export class ActivitiesService {
     where
   }: {
     data: Prisma.OrderUpdateInput & {
+      updateAccountBalance?: boolean;
+      confirmNegativeBalance?: boolean;
+      cashRevisions?: Record<string, number>;
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       currency?: string;
@@ -916,6 +1078,24 @@ export class ActivitiesService {
     userId: string;
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
+    const enabled = data.updateAccountBalance;
+    const confirmation = {
+      confirmNegativeBalance: data.confirmNegativeBalance,
+      cashRevisions: data.cashRevisions
+    };
+    delete data.updateAccountBalance;
+    delete data.confirmNegativeBalance;
+    delete data.cashRevisions;
+    const original = this.cashManagementService
+      ? await this.prismaService.order.findUnique({
+          where: { ...where, userId }
+        })
+      : null;
+    if (this.cashManagementService && !original) {
+      throw new ConflictException(
+        'The activity no longer exists; reload the account'
+      );
+    }
     const areTagsProvided = data.tags !== undefined;
     const tags = data.tags ?? [];
 
@@ -1002,13 +1182,55 @@ export class ActivitiesService {
       tagsToUpdate = { connect: { id: TAG_ID_DRAFT } };
     }
 
-    const activity = await this.prismaService.order.update({
-      where,
-      data: {
-        ...data,
-        tags: tagsToUpdate
+    const write = async (transaction: Prisma.TransactionClient) => {
+      if (this.cashManagementService) {
+        const current = await transaction.order.findUnique({
+          where: { ...where, userId }
+        });
+        if (
+          current?.accountId !== original?.accountId ||
+          current.updatedAt.getTime() !== original.updatedAt.getTime() ||
+          [
+            'currency',
+            'fee',
+            'quantity',
+            'type',
+            'unitPrice',
+            'symbolProfileId',
+            'comment'
+          ].some((key) => current[key] !== original[key]) ||
+          current.date.getTime() !== original.date.getTime()
+        ) {
+          throw new ConflictException('The activity changed; reload it');
+        }
       }
-    });
+      const updated = await transaction.order.update({
+        where: { ...where, userId },
+        include: { SymbolProfile: { select: { currency: true } } },
+        data: {
+          ...data,
+          tags: tagsToUpdate
+        }
+      });
+      await this.cashManagementService?.synchronizeOrder(transaction, updated, {
+        original,
+        enabled,
+        ...confirmation
+      });
+      return updated;
+    };
+    const activity = this.cashManagementService
+      ? await this.cashManagementService.runInAccounts(
+          {
+            accountIds: [
+              original?.accountId,
+              data.account?.connect?.id_userId?.id
+            ],
+            userId
+          },
+          write
+        )
+      : await write(this.prismaService);
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),

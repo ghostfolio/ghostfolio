@@ -8723,6 +8723,909 @@
           <context context-type="linenumber">122</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="1117462812167292254" datatype="html">
+        <source>Transfer information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">376</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1283895920974679461" datatype="html">
+        <source>Operation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">133</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">261</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">329</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1314795394712571903" datatype="html">
+        <source>Selected account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1389365686493259931" datatype="html">
+        <source>Cash and CSV guide (opens in a new tab)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1394702343871692063" datatype="html">
+        <source>Adjusted capital reference</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1407560924967345762" datatype="html">
+        <source>Page</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1528785906944905722" datatype="html">
+        <source>Currency not set</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">217</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1715853014853355323" datatype="html">
+        <source>The name and currency are proposed from the CSV. No account is created until you confirm a valid preview. If the file references financial activities, import those into an existing account first or use the full JSON restore.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">116</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1764971482765200566" datatype="html">
+        <source>Include cash</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">511</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1784286428578141467" datatype="html">
+        <source>Cash movements:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1802392088130455634" datatype="html">
+        <source>Existing data is retained. Restore cash into a new or empty account, or an account whose activities match the backup and has no cash ledger. Transfers require both accounts. Nothing is saved during preview.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="185723189276109603" datatype="html">
+        <source>Enter a positive amount.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">147</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1947187602289377594" datatype="html">
+        <source>Import adds new cash movements to this account. Existing movements and financial activities are not overwritten. Import linked financial activities first.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2014694668412418346" datatype="html">
+        <source>Export CSV</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2099926152201934495" datatype="html">
+        <source>Row</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2223700828915661260" datatype="html">
+        <source>New movements:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2330577642930707695" datatype="html">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">244</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">309</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2412614725070327775" datatype="html">
+        <source>No cash transactions yet.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">403</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2455479180943655680" datatype="html">
+        <source>Unable to load cash transactions.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2486732028739751975" datatype="html">
+        <source>Processing data…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">239</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2774868576744554132" datatype="html">
+        <source>Import summary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">149</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2869636265596901063" datatype="html">
+        <source>Actual cash balance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">270</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2928157094104449368" datatype="html">
+        <source>Import failed. Preview the file again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">332</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3115037951715864221" datatype="html">
+        <source>I confirm the negative cash balance shown in the preview</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3193976279273491157" datatype="html">
+        <source>Actions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">334</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">356</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3200342440195656274" datatype="html">
+        <source>Insert</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">304</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3251054269066691027" datatype="html">
+        <source>Cash balance:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3507084280003273564" datatype="html">
+        <source>Consider this account's cash in analyses and allocations</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">251</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3510368925425726029" datatype="html">
+        <source>Confirm only after checking the selected accounts. All accepted data is saved together; an error cancels the whole restore.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3716680654015576467" datatype="html">
+        <source>Create an account before inserting a cash transaction.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/cash-activity-dialog.component.ts</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3883598964234233440" datatype="html">
+        <source>View linked operation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">373</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3971100408152984961" datatype="html">
+        <source>Next</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">227</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4241376129761716710" datatype="html">
+        <source>Reconciliation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">265</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">248</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/activities-page.component.ts</context>
+          <context context-type="linenumber">457</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/glossary/resources-glossary.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">223</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4285804789642395818" datatype="html">
+        <source>Unable to process the cash CSV.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">411</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4305948505187761990" datatype="html">
+        <source>Unable to reload cash transactions. Reload the page and try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">445</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4386920621005005841" datatype="html">
+        <source>Existing account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4474222713366070999" datatype="html">
+        <source>Choose a destination for each source account. Accounts are never matched automatically by name.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="466863011947044750" datatype="html">
+        <source>Further errors are listed beside the affected rows below.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4668958435641699719" datatype="html">
+        <source>The JSON backup must not exceed 10 MB.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">255</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4809416382909447437" datatype="html">
+        <source>Import CSV</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">257</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4810522151834649957" datatype="html">
+        <source>Already present</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">292</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4815532365267521652" datatype="html">
+        <source>New account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5008175190726097996" datatype="html">
+        <source>New activities:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5035936718591395188" datatype="html">
+        <source>Cash CSV exceeds the 2 MB limit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">309</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">330</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5060707085902051182" datatype="html">
+        <source>Portfolio value including cash</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5252749665666437793" datatype="html">
+        <source>Import Data</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
+          <context context-type="linenumber">347</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5280218112746407598" datatype="html">
+        <source>New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">290</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5377078063439833222" datatype="html">
+        <source>Edit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">386</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5382993007441749473" datatype="html">
+        <source>Cash CSV preview</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5508103270863072482" datatype="html">
+        <source>Return on Investment (total return with dividends)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">295</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5547981558491672240" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/cash-activity-dialog.component.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5646035883377382015" datatype="html">
+        <source>Destination:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5668201086160127531" datatype="html">
+        <source>Currency effect on performance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">219</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5724807861422435890" datatype="html">
+        <source>Import cash CSV</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5815563916448873642" datatype="html">
+        <source>Already present:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5848799802788400848" datatype="html">
+        <source>Unable to save. Reload the account and try again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">435</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5901666886780057753" datatype="html">
+        <source>Insert movements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">224</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5939582729698953478" datatype="html">
+        <source>Investment performance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5967865088189507862" datatype="html">
+        <source>Unable to import the cash CSV.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">420</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6388120834312159849" datatype="html">
+        <source>Imported cash account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">317</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6533918067030990396" datatype="html">
+        <source>Amount</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">166</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">272</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">330</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6575164270960732036" datatype="html">
+        <source>Previous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">213</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">192</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6622331332719930606" datatype="html">
+        <source>Minimum cash balance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6635136898822365582" datatype="html">
+        <source>Update Cash Balance by default for new activities</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">244</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6660925946511264619" datatype="html">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">394</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6691810268713581510" datatype="html">
+        <source>Withdrawal</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">264</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.ts</context>
+          <context context-type="linenumber">251</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/activities-page.component.ts</context>
+          <context context-type="linenumber">459</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6715381200666611312" datatype="html">
+        <source>First affected date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="674128348870464219" datatype="html">
+        <source>Enter a positive amount. Withdrawals are subtracted automatically.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">320</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6884089523183972489" datatype="html">
+        <source>Restore base currency and performance method when the destination portfolio is empty</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">126</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6894774542036311047" datatype="html">
+        <source>Enter the actual balance at this date. A reconciliation replaces the calculated balance; it is not an additional deposit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">315</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6969445338945867053" datatype="html">
+        <source>Create a new account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6975029879144544698" datatype="html">
+        <source>This transfer has a matching entry in the other account. Use a new transfer to reverse it.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7000649363168371045" datatype="html">
+        <source>Save changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">302</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7071426059085343634" datatype="html">
+        <source>Cash transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/cash-activity-dialog.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7241677841926471699" datatype="html">
+        <source>Restore a JSON file created with Export Data. Accounts, financial activities and account cash are restored together. Your login credentials are not imported.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7264838797878508480" datatype="html">
+        <source>Import Data</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7376690044124691144" datatype="html">
+        <source>New movements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7507454494204582076" datatype="html">
+        <source>Show cash</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7577584799230303691" datatype="html">
+        <source>Destination account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7729298162050391480" datatype="html">
+        <source>Choose a Ghostfolio Export Data JSON file.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">263</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7848756452109947727" datatype="html">
+        <source>Linked activity</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7923700420698430993" datatype="html">
+        <source>Expected cash balance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8073098442107520381" datatype="html">
+        <source>More errors are present. Fix the file and preview it again.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8151462925194582415" datatype="html">
+        <source>Transfer reference</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8192659182584513450" datatype="html">
+        <source>Net invested capital</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8227572950444391837" datatype="html">
+        <source>Expected cash balance:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">146</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8539689055164073311" datatype="html">
+        <source>Cash Transactions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8865575846450943799" datatype="html">
+        <source>Investment positions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8914004681377217867" datatype="html">
+        <source>For manual CSV files use Date, Operation, Amount, Currency and optionally Fee, Sequence, Note and Reference. Use positive amounts for DEPOSIT and WITHDRAWAL; RECONCILIATION sets the balance. Use YYYY-MM-DD dates and a decimal point.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9042753203304665653" datatype="html">
+        <source>Exclude this account</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9088692615869676510" datatype="html">
+        <source>Preview import</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">128</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">141</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="910340284649270207" datatype="html">
+        <source>This change would create or worsen a negative cash balance. Continue?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/services/data.service.ts</context>
+          <context context-type="linenumber">1164</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9180299238162026813" datatype="html">
+        <source>For CSV files, use Import Activities or Import CSV in the account's Cash Balances.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-restore-dialog/portfolio-restore-dialog.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9183163733233783857" datatype="html">
+        <source>Loading cash transactions…</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/cash-management/cash-management.component.html</context>
+          <context context-type="linenumber">410</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="952149109787160538" datatype="html">
+        <source>New account name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="982799871758493197" datatype="html">
+        <source>Import a cash journal into an existing account or create a new account from the CSV. Financial activities are not created by this importer. Use Import Data JSON to move an entire portfolio.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-csv-import-dialog/account-csv-import-dialog.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="3428153135769985599" datatype="html">
+        <source>Import JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="3752741644727048956" datatype="html">
+        <source>Portfolio value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="4033244709678279560" datatype="html">
+        <source>Portfolio data (JSON)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
+          <context context-type="linenumber">334</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="4957048586790684223" datatype="html">
+        <source>Delete investment activities? Cash transactions will remain in the account history.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
+          <context context-type="linenumber">338</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="5214883642943193877" datatype="html">
+        <source>Insert cash transaction</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/activities-page.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="529261375582544700" datatype="html">
+        <source>Positions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/glossary/resources-glossary.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="7232422873359250454" datatype="html">
+        <source>Portfolio composition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">243</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="7476272024604715851" datatype="html">
+        <source>Delete investment activities</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
+      </trans-unit>
+<trans-unit id="7724404677351000053" datatype="html">
+        <source>Portfolio composition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

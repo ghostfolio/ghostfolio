@@ -3,6 +3,14 @@ import { AccountWithPlatform } from '@ghostfolio/common/types';
 import type { Order, Tag } from '@ghostfolio/prisma/browser';
 
 export interface Activity extends Order {
+  isCashBalanceProjection?: boolean;
+  cashTransaction?: {
+    accountId: string;
+    eventId: string;
+    operation: 'DEPOSIT' | 'WITHDRAWAL' | 'CHECKPOINT';
+    revision: number;
+  };
+
   account?: AccountWithPlatform;
   assetProfile: EnhancedAssetProfile;
   error?: ActivityError;

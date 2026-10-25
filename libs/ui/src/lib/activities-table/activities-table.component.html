@@ -105,7 +105,9 @@
           >
             <span class="align-items-center d-flex">
               <ion-icon class="me-2" name="trash-outline" />
-              @if (canDeleteActivities()) {
+              @if (cashTransactionsIncluded()) {
+                <span i18n>Delete investment activities</span>
+              } @else if (canDeleteActivities()) {
                 <span i18n
                   >Delete {{ (totalItems ?? 0) > 1 ? totalItems : '' }}
                   {totalItems, plural, =1 {Activity} other {Activities}}</span
@@ -209,7 +211,21 @@
         <ng-container i18n>Type</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
-        <gf-activity-type [activityType]="element.type" />
+        @if (element.cashTransaction) {
+          @switch (element.cashTransaction.operation) {
+            @case ('DEPOSIT') {
+              <span i18n>Deposit</span>
+            }
+            @case ('WITHDRAWAL') {
+              <span i18n>Withdrawal</span>
+            }
+            @case ('CHECKPOINT') {
+              <span i18n>Reconciliation</span>
+            }
+          }
+        } @else {
+          <gf-activity-type [activityType]="element.type" />
+        }
       </td>
     </ng-container>
 
@@ -245,12 +261,16 @@
         mat-cell
       >
         <div class="d-flex justify-content-end">
-          <gf-value
-            [isCurrency]="true"
-            [isLoading]="isLoading()"
-            [locale]="locale"
-            [value]="element.quantity"
-          />
+          @if (element.cashTransaction) {
+            <span aria-label="Not applicable">—</span>
+          } @else {
+            <gf-value
+              [isCurrency]="true"
+              [isLoading]="isLoading()"
+              [locale]="locale"
+              [value]="element.quantity"
+            />
+          }
         </div>
       </td>
     </ng-container>
@@ -270,12 +290,16 @@
         mat-cell
       >
         <div class="d-flex justify-content-end">
-          <gf-value
-            [isCurrency]="true"
-            [isLoading]="isLoading()"
-            [locale]="locale"
-            [value]="element.unitPrice"
-          />
+          @if (element.cashTransaction) {
+            <span aria-label="Not applicable">—</span>
+          } @else {
+            <gf-value
+              [isCurrency]="true"
+              [isLoading]="isLoading()"
+              [locale]="locale"
+              [value]="element.unitPrice"
+            />
+          }
         </div>
       </td>
     </ng-container>
@@ -505,7 +529,16 @@
               </span>
             </button>
           }
-          @if (hasPermissionToUpdateActivity) {
+          @if (hasPermissionToManageCash && element.cashTransaction) {
+            <button
+              mat-menu-item
+              [disabled]="!hasPermissionToManageCash"
+              (click)="cashTransactionEdited.emit(element.cashTransaction)"
+            >
+              <span i18n>Edit</span>
+            </button>
+          }
+          @if (hasPermissionToUpdateActivity && !element.cashTransaction) {
             <a
               mat-menu-item
               [routerLink]="activityDialogRouterLinks().get(element.id)?.update"
@@ -516,7 +549,7 @@
               </span>
             </a>
           }
-          @if (hasPermissionToCreateActivity) {
+          @if (hasPermissionToCreateActivity && !element.cashTransaction) {
             <a
               mat-menu-item
               [routerLink]="activityDialogRouterLinks().get(element.id)?.clone"
@@ -530,7 +563,9 @@
           @if (hasPermissionToExportActivities) {
             <button
               mat-menu-item
-              [disabled]="!isDraftActivity(element)"
+              [disabled]="
+                !!element.cashTransaction || !isDraftActivity(element)
+              "
               (click)="onExportDraft(element.id)"
             >
               <span class="align-items-center d-flex">
@@ -542,7 +577,11 @@
           }
           <button
             mat-menu-item
-            [disabled]="!hasPermissionToDeleteActivity"
+            [disabled]="
+              element.cashTransaction
+                ? !hasPermissionToManageCash
+                : !hasPermissionToDeleteActivity
+            "
             (click)="onDeleteActivity(element.id)"
           >
             <span class="align-items-center d-flex">

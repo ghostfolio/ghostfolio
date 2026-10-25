@@ -2,6 +2,16 @@
   <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Accounts</h1>
+      @if (hasPermissionToCreateAccount && !user.settings.isRestrictedView) {
+        <div class="d-flex flex-wrap gap-2 justify-content-end mb-3">
+          <button i18n mat-stroked-button (click)="onImportData()">
+            Import JSON
+          </button>
+          <button i18n mat-stroked-button (click)="onImportCsv()">
+            Import CSV
+          </button>
+        </div>
+      }
       <gf-accounts-table
         [accounts]="accounts"
         [activitiesCount]="activitiesCount"

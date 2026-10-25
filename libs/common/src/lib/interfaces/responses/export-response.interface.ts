@@ -14,6 +14,7 @@ import { UserSettings } from '../user-settings.interface';
 export interface ExportResponse {
   accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {
     balances: AccountBalance[];
+    cashManagement?: import('../cash-management.interface').CashManagementExport;
     tags?: string[];
   })[];
   activities: (Omit<

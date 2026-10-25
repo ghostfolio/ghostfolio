@@ -1,4 +1,5 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { CashManagementModule } from '@ghostfolio/api/app/account-balance/cash-management.module';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -33,6 +34,7 @@ import { BenchmarksService } from './benchmarks.service';
 @Module({
   controllers: [BenchmarksController],
   imports: [
+    CashManagementModule,
     ActivitiesModule,
     ApiModule,
     ConfigurationModule,

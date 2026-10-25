@@ -118,7 +118,6 @@ export class GfCreateOrUpdateAccountDialogComponent {
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],
-      balance: [this.data.account.balance, Validators.required],
       comment: [this.data.account.comment],
       currency: [this.data.account.currency, Validators.required],
       name: [this.data.account.name, Validators.required],
@@ -132,6 +131,10 @@ export class GfCreateOrUpdateAccountDialogComponent {
         })
       ]
     });
+
+    if (this.data.account.cashManagement) {
+      this.accountForm.get('currency')?.disable({ emitEvent: false });
+    }
 
     this.accountForm
       .get('tags')
@@ -214,7 +217,6 @@ export class GfCreateOrUpdateAccountDialogComponent {
 
   protected async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
-      balance: this.accountForm.get('balance')?.value,
       comment: getStringOrNull(this.accountForm.get('comment')?.value),
       currency: this.accountForm.get('currency')?.value,
       id: this.accountForm.get('accountId')?.value,

@@ -34,6 +34,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './portfolio-performance.component.html'
 })
 export class GfPortfolioPerformanceComponent {
+  public readonly includeCash = input<boolean | undefined>(undefined);
   public readonly errors = input<ResponseError['errors']>();
   public readonly isLoading = input<boolean>(false);
   public readonly locale = input<string>(getLocale());
@@ -63,12 +64,23 @@ export class GfPortfolioPerformanceComponent {
         const performance = this.performance();
 
         if (isNumber(performance?.currentValueInBaseCurrency)) {
-          new CountUp('value', performance.currentValueInBaseCurrency, {
-            decimal: getNumberFormatDecimal(this.locale()),
-            decimalPlaces: this.precision(),
-            duration: 1,
-            separator: getNumberFormatGroup(this.locale())
-          }).start();
+          new CountUp(
+            'value',
+            this.includeCash() === undefined
+              ? performance.currentValueInBaseCurrency
+              : this.includeCash()
+                ? (performance.currentNetWorth ??
+                  performance.currentValueInBaseCurrency)
+                : (performance.currentNetWorth ??
+                    performance.currentValueInBaseCurrency) -
+                  (performance.totalCashInBaseCurrency ?? 0),
+            {
+              decimal: getNumberFormatDecimal(this.locale()),
+              decimalPlaces: this.precision(),
+              duration: 1,
+              separator: getNumberFormatGroup(this.locale())
+            }
+          ).start();
         } else if (this.showDetails() === false && performance) {
           new CountUp(
             'value',

@@ -2,6 +2,220 @@
   <div class="row">
     <div class="col">
       <h1 class="h3 mb-4 text-center" i18n>Guides</h1>
+      <section class="mb-5" id="import-data">
+        <h2 class="h4" i18n>Moving your portfolio to another instance</h2>
+        <ol>
+          <li i18n>
+            On the source instance, open your user settings and choose Export
+            Data. Keep the JSON file private: it contains your financial
+            history.
+          </li>
+          <li i18n>
+            On the destination instance, sign in and choose Import Data beside
+            Export Data, or choose Import JSON on the Accounts page. Select the
+            JSON file.
+          </li>
+          <li i18n>
+            Choose Create a new account, an existing destination account, or
+            Exclude for each source account. Names are not matched
+            automatically. To restore cash history, choose a new or empty
+            account, or a compatible account whose activities have already been
+            imported and which has no cash ledger.
+          </li>
+          <li i18n>
+            Preview the accounts, new activities, existing activities, cash
+            balances and warnings. Transfers require both accounts. Confirm
+            Import Data only when the plan is correct.
+          </li>
+        </ol>
+        <p i18n>
+          Accounts, activities, custom instruments and their exported prices,
+          platforms, tags and cash ledgers are saved together. An error rolls
+          back the entire restore. Existing data is retained. Base currency and
+          performance method can optionally be restored when the destination
+          portfolio is empty. Login credentials, server configuration and other
+          user preferences are not transferred.
+        </p>
+        <p i18n>
+          Older JSON exports without cash ledgers remain supported. They cannot
+          reconstruct cash history they do not contain. If a cash ledger refers
+          to activity IDs missing from the file, export again from the updated
+          source instance; the importer cannot safely guess those links.
+        </p>
+        <p i18n>
+          Import Data accepts JSON. For partial CSV imports, use Import
+          Activities for financial activities, or Import CSV on Accounts or in
+          Cash Balances for account cash. Import activities first, then the
+          linked cash journal. A full JSON restore already includes cash: do not
+          import its cash CSV again.
+        </p>
+        <p i18n>
+          Shared MANUAL instruments with no owner may be missing their metadata
+          and historical prices in the upstream export. Verify these instruments
+          after restoring; this cash feature does not change that export limit.
+        </p>
+      </section>
+      <p i18n>
+        Exporting and restoring does not activate cash management on historical
+        accounts that only have legacy balance snapshots. Their original
+        balances and any unset currency are preserved. Choose a currency before
+        enabling cash management. To preserve this distinction, create a fresh
+        export from the updated source instance.
+      </p>
+      <section class="mb-5" id="cash-management">
+        <h2 class="h4" i18n>Managing account cash</h2>
+        <p i18n>
+          Create an account in Accounts, then open Cash Balances. A new account
+          starts at zero. Enter the first deposit on the date the money arrived;
+          creating an account does not create a cash transaction.
+        </p>
+        <ul>
+          <li i18n>
+            Deposit: enter the amount received as a positive number. Any fee
+            reduces the cash credited.
+          </li>
+          <li i18n>
+            Withdrawal: enter a positive amount. The amount and any fee are
+            deducted from cash.
+          </li>
+          <li i18n>
+            Reconciliation: enter the actual cash balance on the selected date,
+            including zero or a negative balance. This sets the balance rather
+            than adding money. The fee must be zero.
+          </li>
+        </ul>
+        <p i18n>
+          For example, a deposit of 1,000 EUR followed by a withdrawal of 100
+          EUR leaves 900 EUR before fees. Reconciling to 380 EUR then sets cash
+          to 380 EUR, not 1,280 EUR.
+        </p>
+        <p i18n>
+          Select the date, operation and amount, then choose Insert. Use the
+          transaction menu to edit or delete a manual entry. For cash linked to
+          a financial activity, edit the original activity instead.
+        </p>
+        <p i18n>
+          Update Cash Balance controls whether financial activities affect
+          account cash by default. Check the setting on each activity: purchases
+          reduce cash, sales increase it, and activity fees must be counted only
+          once.
+        </p>
+        <p i18n>
+          Including cash in portfolio analysis is a separate account preference.
+          Chart controls can also hide cash. Positions are investments excluding
+          cash; total portfolio value includes positions and cash. Values
+          explicitly labelled Cash show the recorded cash balance. Deposits and
+          withdrawals are cash flows, not investment gains or losses.
+        </p>
+        <p i18n>
+          When starting with an older account, reconcile to a known balance on a
+          known date. A reconciliation does not reconstruct the cash history
+          before that date.
+        </p>
+      </section>
+      <section class="mb-5" id="cash-csv">
+        <p i18n>
+          On Accounts, Import JSON restores a portfolio backup; Import CSV
+          imports an account cash journal. With Import CSV, select an existing
+          account or Create a new account. The exported CSV proposes the account
+          name and currency; for a hand-written file, supply the account name.
+          Previewing and cancelling do not create an account. Confirmation
+          creates the new account and its cash movements together.
+        </p>
+        <p i18n>
+          A CSV containing linked financial activities requires those activities
+          to be present in the selected account. It cannot create them in a new
+          account. For a complete transfer to an empty user, use Export Data and
+          Import Data JSON instead. A new transfer between accounts still
+          requires the complete JSON restore.
+        </p>
+        <h2 class="h4" i18n>Importing and exporting account cash</h2>
+        <p i18n>
+          Open Accounts, select the destination account and open Cash Balances.
+          Export CSV downloads the whole cash journal. Import CSV opens a
+          preview; nothing is saved until you confirm Insert movements.
+        </p>
+        <p i18n>
+          The activities CSV and the cash CSV serve different purposes. When
+          restoring both, import financial activities first using the activities
+          importer, then import the cash CSV into the corresponding account.
+          Check the preview to avoid counting cash effects twice.
+        </p>
+        <h3 class="h5" i18n>Preparing a file</h3>
+        <p i18n>
+          The required columns are Date, Operation, Amount and Currency.
+          Optional columns are Fee, Sequence, Note and Reference. Italian
+          headings Data, Operazione, Importo, Valuta, Commissione, Sequenza,
+          Nota and Riferimento are also accepted.
+        </p>
+        <pre aria-label="Cash CSV example" class="border p-3 overflow-auto">
+Date;Operation;Amount;Fee;Currency;Sequence;Note;Reference
+2026-10-01;DEPOSIT;1000;0;EUR;1;First deposit;deposit-1
+2026-10-02;WITHDRAWAL;100;0;EUR;2;Withdrawal;withdrawal-1
+2026-10-03;RECONCILIATION;380;0;EUR;3;Actual balance;balance-1</pre>
+        <p i18n>
+          Use dates in YYYY-MM-DD format, a decimal point and no thousands
+          separators. Save as UTF-8 CSV with commas or semicolons. Currency must
+          match the destination account; importing does not convert currencies.
+          Future dates are not accepted.
+        </p>
+        <p i18n>
+          Operation accepts DEPOSIT, WITHDRAWAL and RECONCILIATION, or Deposito,
+          Prelievo and Riconciliazione. Amount is positive for deposits and
+          withdrawals. For reconciliation, Amount is the actual balance and Fee
+          is zero.
+        </p>
+        <p i18n>
+          Sequence determines the order of entries on the same day. Supply it
+          when entries share a date with a reconciliation: setting a balance
+          before or after a withdrawal gives different results. Existing
+          sequence conflicts must be resolved before importing.
+        </p>
+        <p i18n>
+          Versioned exports may include zero-amount historical movements,
+          including movements whose only effect is a fee. Those rows are
+          restored without losing their fees. Sequence zero is reserved for
+          reconciliations with an automatic opening, including migrated opening
+          balances. Historical cash dates before 1970 are supported; financial
+          activity date rules are unchanged.
+        </p>
+        <h3 class="h5" i18n>Checking the preview</h3>
+        <p i18n>
+          Check the destination account, currency, new and existing entries,
+          final balance and warnings. An identical Reference already present in
+          this account is skipped. The same Reference with different contents is
+          a conflict. Without a Reference, possible duplicates require review.
+          Use distinct references for genuinely separate identical deposits.
+        </p>
+        <p i18n>
+          Exported activity-linked entries must match financial activities
+          already present in the destination account. If several activities
+          match, choose the correct one in the preview. Missing activities must
+          be imported first. Activity-linked amounts already include their cash
+          effect and costs; do not enter those costs again as a cash fee.
+        </p>
+        <p i18n>
+          An error blocks the entire import. Existing entries are never
+          overwritten or deleted. If data changes after previewing, preview the
+          file again. A new or worsened negative cash balance requires explicit
+          confirmation.
+        </p>
+        <h3 class="h5" i18n>Limits and exported files</h3>
+        <p i18n>
+          Files are limited to 2 MB and 5,000 records, including the metadata
+          row. Keep metadata, references and activity columns unchanged when
+          restoring an export. The source account is informational: the account
+          open in Cash Balances is always the destination. Account preferences
+          are not imported.
+        </p>
+        <p i18n>
+          A new transfer between accounts cannot be restored by importing one
+          side alone. Such entries block the import; identical transfers already
+          present can be recognized. A cash CSV is not a complete portfolio
+          backup. Use the full JSON backup for a complete backup or histories
+          exceeding these limits.
+        </p>
+      </section>
       <div class="mb-5">
         <div class="mb-4">
           <div>

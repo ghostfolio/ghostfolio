@@ -36,6 +36,7 @@ export class PortfolioCalculatorFactory {
     currency,
     filters = [],
     usePortfolioSnapshotCache = true,
+    withHiddenCash = false,
     subscriptionType,
     userId
   }: {
@@ -45,6 +46,7 @@ export class PortfolioCalculatorFactory {
     currency: string;
     filters?: Filter[];
     usePortfolioSnapshotCache?: boolean;
+    withHiddenCash?: boolean;
     subscriptionType?: SubscriptionType;
     userId: string;
   }): PortfolioCalculator {
@@ -56,6 +58,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           usePortfolioSnapshotCache,
+          withHiddenCash,
           subscriptionType,
           userId,
           configurationService: this.configurationService,
@@ -72,6 +75,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           usePortfolioSnapshotCache,
+          withHiddenCash,
           subscriptionType,
           userId,
           configurationService: this.configurationService,
@@ -88,6 +92,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           usePortfolioSnapshotCache,
+          withHiddenCash,
           subscriptionType,
           userId,
           configurationService: this.configurationService,
@@ -104,6 +109,7 @@ export class PortfolioCalculatorFactory {
           currency,
           filters,
           usePortfolioSnapshotCache,
+          withHiddenCash,
           subscriptionType,
           userId,
           configurationService: this.configurationService,

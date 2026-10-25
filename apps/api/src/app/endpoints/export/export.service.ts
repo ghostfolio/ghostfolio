@@ -1,3 +1,4 @@
+import { CashManagementService } from '@ghostfolio/api/app/account-balance/cash-management.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { environment } from '@ghostfolio/api/environments/environment';
@@ -19,7 +20,8 @@ export class ExportService {
     private readonly accountService: AccountService,
     private readonly activitiesService: ActivitiesService,
     private readonly marketDataService: MarketDataService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+    private readonly cashManagementService?: CashManagementService
   ) {}
 
   public async export({
@@ -130,6 +132,26 @@ export class ExportService {
           };
         }
       );
+
+    if (this.cashManagementService && !isFilteredExport) {
+      for (const account of accounts) {
+        const snapshot = await this.cashManagementService.getPersisted({
+          accountId: account.id,
+          userId
+        });
+        if (snapshot) {
+          account.cashManagement = {
+            version: 1,
+            currency: snapshot.currency,
+            defaultUpdateCash: snapshot.defaultUpdateCash,
+            includeCashInPortfolio: snapshot.includeCashInPortfolio,
+            isAutomaticOpening: snapshot.isAutomaticOpening,
+            openingBalance: snapshot.openingBalance,
+            events: snapshot.events
+          };
+        }
+      }
+    }
 
     const customAssetProfiles = uniqBy(
       activities

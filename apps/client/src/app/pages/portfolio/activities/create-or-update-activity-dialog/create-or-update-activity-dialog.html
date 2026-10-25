@@ -86,7 +86,14 @@
         [label]="labelAccount"
       />
     </div>
-    <div class="mb-3" [class.d-none]="mode === 'update'">
+    <div
+      class="mb-3"
+      [class.d-none]="
+        mode === 'update' &&
+        !isCashManaged &&
+        !data.activity?.updateAccountBalance
+      "
+    >
       <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n
         >Update Cash Balance</mat-checkbox
       >

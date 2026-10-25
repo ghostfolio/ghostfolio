@@ -1,4 +1,5 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { CashManagementModule } from '@ghostfolio/api/app/account-balance/cash-management.module';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
@@ -25,6 +26,7 @@ import { ActivitiesService } from './activities.service';
   controllers: [ActivitiesController],
   exports: [ActivitiesService],
   imports: [
+    CashManagementModule,
     ApiModule,
     AssetProfileSplitModule,
     BenchmarkModule,

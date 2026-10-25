@@ -32,6 +32,41 @@ describe('ImportDataDto', () => {
     ).resolves.toBeInstanceOf(ImportDataDto);
   });
 
+  it('preserves null currency only for historical accounts without a ledger', async () => {
+    const data = {
+      accounts: [
+        {
+          id: 'legacy',
+          name: 'Legacy account',
+          currency: null,
+          platformId: null,
+          balances: []
+        }
+      ],
+      activities: []
+    };
+    const result = await validationPipe.transform(data, {
+      metatype: ImportDataDto,
+      type: 'body'
+    });
+    expect(result.accounts[0].currency).toBeNull();
+    await expect(
+      validationPipe.transform(
+        {
+          ...data,
+          accounts: [{ ...data.accounts[0], cashManagement: { version: 1 } }]
+        },
+        { metatype: ImportDataDto, type: 'body' }
+      )
+    ).rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      validationPipe.transform(
+        { ...data, accounts: [{ ...data.accounts[0], currency: 'INVALID' }] },
+        { metatype: ImportDataDto, type: 'body' }
+      )
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+
   it.each([
     {
       fileName: 'invalid-data-source.json',

@@ -40,6 +40,7 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -57,6 +58,8 @@ import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { GfPortfolioRestoreDialogComponent } from '../portfolio-restore-dialog/portfolio-restore-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -327,6 +330,16 @@ export class GfUserAccountSettingsComponent implements OnInit {
             this.changeDetectorRef.markForCheck();
           });
       });
+  }
+
+  private readonly restoreDialog = inject(MatDialog);
+
+  protected onImportData() {
+    this.restoreDialog.open(GfPortfolioRestoreDialogComponent, {
+      width: '52rem',
+      maxWidth: '96vw',
+      disableClose: true
+    });
   }
 
   protected onExport() {

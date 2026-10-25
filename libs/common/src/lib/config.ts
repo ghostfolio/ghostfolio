@@ -116,6 +116,11 @@ export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT =
   ms('30 seconds');
 
 export const DEFAULT_REDACTED_PATHS = [
+  'openingBalance.balance',
+  'minimumBalance.value',
+  'events[*].amount',
+  'events[*].balance',
+  'events[*].comment',
   'account.comment',
   'accounts[*].balance',
   'accounts[*].balanceInBaseCurrency',

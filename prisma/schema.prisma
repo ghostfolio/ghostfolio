@@ -34,19 +34,21 @@ model Access {
 }
 
 model Account {
-  activities Order[]
-  balances   AccountBalance[]
-  comment    String?
-  createdAt  DateTime         @default(now())
-  currency   String?
-  id         String           @default(uuid())
-  name       String?
-  platform   Platform?        @relation(fields: [platformId], references: [id])
-  platformId String?
-  tags       TagsOnAccounts[]
-  updatedAt  DateTime         @updatedAt
-  user       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
-  userId     String
+  activities                    Order[]
+  balances                      AccountBalance[]
+  cashState                     AccountCashState?
+  cashTransferCounterpartEvents CashEvent[]       @relation("CashTransferCounterparty")
+  comment                       String?
+  createdAt                     DateTime          @default(now())
+  currency                      String?
+  id                            String            @default(uuid())
+  name                          String?
+  platform                      Platform?         @relation(fields: [platformId], references: [id])
+  platformId                    String?
+  tags                          TagsOnAccounts[]
+  updatedAt                     DateTime          @updatedAt
+  user                          User              @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId                        String
 
   @@id([id, userId])
   @@index([currency])
@@ -56,18 +58,38 @@ model Account {
 }
 
 model AccountBalance {
-  account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
-  accountId String
-  createdAt DateTime @default(now())
-  date      DateTime @default(now())
-  id        String   @id @default(uuid())
-  updatedAt DateTime @updatedAt
-  userId    String
-  value     Float
+  account                    Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
+  accountId                  String
+  createdAt                  DateTime @default(now())
+  date                       DateTime @default(now())
+  id                         String   @id @default(uuid())
+  isCashManagementProjection Boolean  @default(false)
+  updatedAt                  DateTime @updatedAt
+  userId                     String
+  value                      Float
 
   @@unique([accountId, userId, date])
   @@index([accountId])
   @@index([date])
+}
+
+model AccountCashState {
+  account                Account     @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
+  accountId              String
+  createdAt              DateTime    @default(now())
+  currency               String
+  defaultUpdateCash      Boolean     @default(false)
+  includeCashInPortfolio Boolean     @default(true)
+  isAutomaticOpening     Boolean     @default(false)
+  events                 CashEvent[]
+  lastSequence           Int         @default(0)
+  openingBalance         Decimal     @db.Decimal(65, 30)
+  openingDate            DateTime    @db.Date
+  revision               Int         @default(0)
+  updatedAt              DateTime    @updatedAt
+  userId                 String
+
+  @@id([accountId, userId])
 }
 
 model Analytics {
@@ -164,6 +186,33 @@ model AuthDevice {
   @@index([userId])
 }
 
+model CashEvent {
+  importReference               String?
+  fee                           Decimal                       @default(0) @db.Decimal(65, 30)
+  accountId                     String
+  comment                       String?
+  createdAt                     DateTime                      @default(now())
+  date                          DateTime                      @db.Date
+  id                            String                        @id @default(uuid())
+  sequence                      Int
+  orderId                       String?                       @unique
+  order                         Order?                        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  transferId                    String?
+  transferCounterpartyAccountId String?
+  transferCounterpartyMode      CashTransferCounterpartyMode?
+  transferCounterpartyAmount    Decimal?                      @db.Decimal(65, 30)
+  transferCounterpartyCurrency  String?
+  transferCounterpartyAccount   Account?                      @relation("CashTransferCounterparty", fields: [transferCounterpartyAccountId, userId], references: [id, userId], onDelete: Restrict)
+  state                         AccountCashState              @relation(fields: [accountId, userId], onDelete: Cascade, references: [accountId, userId])
+  type                          CashEventType
+  updatedAt                     DateTime                      @updatedAt
+  userId                        String
+  value                         Decimal                       @db.Decimal(65, 30)
+
+  @@unique([accountId, userId, importReference])
+  @@unique([accountId, userId, date, sequence])
+}
+
 model MarketData {
   createdAt        DateTime        @default(now())
   dataSource       DataSource
@@ -183,6 +232,7 @@ model MarketData {
 model Order {
   account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   accountId       String?
+  cashEvent       CashEvent?
   accountUserId   String?
   comment         String?
   createdAt       DateTime      @default(now())
@@ -367,6 +417,11 @@ enum AssetSubClass {
   STOCK
 }
 
+enum CashEventType {
+  CHECKPOINT
+  MOVEMENT
+}
+
 enum DataGatheringFrequency {
   DAILY
   HOURLY
@@ -422,4 +477,9 @@ enum Type {
 enum ViewMode {
   DEFAULT
   ZEN
+}
+
+enum CashTransferCounterpartyMode {
+  CASH
+  LEGACY
 }

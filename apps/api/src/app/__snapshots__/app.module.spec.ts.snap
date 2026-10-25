@@ -26,6 +26,22 @@ exports[`AppModule should keep the security of each route 1`] = `
       "account:update",
     ],
   },
+  "DELETE /account/:accountId/cash/events/:eventId": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
   "DELETE /account/:id": {
     "guards": [
       "AuthGuard('jwt')",
@@ -216,6 +232,36 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
     "scopes": [
       "account:read",
+    ],
+  },
+  "GET /account/:accountId/cash": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+      "portfolio:read:values",
+    ],
+  },
+  "GET /account/:accountId/cash/export": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+      "portfolio:read:values",
     ],
   },
   "GET /account/:id": {
@@ -832,6 +878,112 @@ exports[`AppModule should keep the security of each route 1`] = `
       "account:update",
     ],
   },
+  "POST /account/:accountId/cash/events": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
+  "POST /account/:accountId/cash/import": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
+  "POST /account/:accountId/cash/import/preview": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
+  "POST /account/:accountId/cash/open": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
+  "POST /account/cash-csv/inspect": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "permission": "createAccount",
+    "scopes": [
+      "account:create",
+      "portfolio:read:values",
+    ],
+  },
+  "POST /account/cash-csv/new/import": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "permission": "createAccount",
+    "scopes": [
+      "account:create",
+      "portfolio:read:values",
+    ],
+  },
+  "POST /account/cash-csv/new/preview": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "permission": "createAccount",
+    "scopes": [
+      "account:create",
+      "portfolio:read:values",
+    ],
+  },
   "POST /account/transfer-balance": {
     "guards": [
       "AuthGuard('jwt')",
@@ -1034,6 +1186,42 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
     "permission": "createActivity",
   },
+  "POST /import/restore": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "createActivity",
+    "scopes": [
+      "account:create",
+      "activity:create",
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
+  "POST /import/restore/preview": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+    ],
+    "permission": "createActivity",
+    "scopes": [
+      "account:create",
+      "activity:create",
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
   "POST /market-data/:dataSource/:symbol": {
     "allowDuringImpersonation": true,
     "guards": [
@@ -1132,6 +1320,38 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
     "interceptors": [],
     "permission": "updateAccess",
+  },
+  "PUT /account/:accountId/cash/events/:eventId": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+      "portfolio:read:values",
+    ],
+  },
+  "PUT /account/:accountId/cash/preferences": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+      "portfolio:read:values",
+    ],
   },
   "PUT /account/:id": {
     "guards": [
