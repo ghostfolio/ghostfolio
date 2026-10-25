@@ -14,4 +14,10 @@
       top: 0;
     }
   }
+
+  .mat-mdc-dialog-title {
+    button[mat-icon-button] {
+      --mat-icon-button-icon-size: 1rem;
+    }
+  }
 }
