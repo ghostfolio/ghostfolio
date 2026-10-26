@@ -20,6 +20,7 @@ import {
 import { VersionValue } from '@nestjs/common/interfaces';
 import { MetadataScanner } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { Test } from '@nestjs/testing';
 import { isUndefined, omitBy } from 'lodash-es';
 
 import { AppModule } from './app.module';
@@ -30,6 +31,13 @@ jest.mock('@openrouter/ai-sdk-provider', () => {
 });
 jest.mock('ai', () => {
   return {};
+});
+
+// A queue of Bull connects to Redis on its creation
+jest.mock('bull', () => {
+  return jest.fn().mockImplementation(() => {
+    return { close: jest.fn() };
+  });
 });
 
 type ModuleDefinition =
@@ -333,5 +341,15 @@ describe('AppModule', () => {
     // The snapshot is an object, which would hide a route declared twice
     expect(new Set(routes).size).toBe(routes.length);
     expect(Object.fromEntries(routesWithSecurity)).toMatchSnapshot();
+  });
+
+  it('should resolve the dependencies of each provider', async () => {
+    const testingModule = await Test.createTestingModule({
+      imports: [AppModule]
+    }).compile();
+
+    expect(testingModule.get(AppModule)).toBeInstanceOf(AppModule);
+
+    await testingModule.close();
   });
 });
