@@ -207,7 +207,7 @@ export class AccessesController {
     try {
       const access = await this.accessService.updateAccess({
         data: {
-          alias: data.alias,
+          alias: data.alias || null,
           expiresAt: new Date(data.expiresAt),
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }
