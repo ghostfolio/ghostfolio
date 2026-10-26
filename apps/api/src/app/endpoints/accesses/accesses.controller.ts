@@ -75,7 +75,13 @@ export class AccessesController {
       );
     }
 
-    if (!isValidGranteeOfAccess({ granteeUserId: data.granteeUserId, type })) {
+    if (
+      !isValidGranteeOfAccess({
+        type,
+        granteeUserId: data.granteeUserId,
+        userId: this.request.user.id
+      })
+    ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
@@ -185,7 +191,8 @@ export class AccessesController {
     if (
       !isValidGranteeOfAccess({
         granteeUserId: data.granteeUserId,
-        type: originalAccess.type
+        type: originalAccess.type,
+        userId: this.request.user.id
       })
     ) {
       throw new HttpException(

@@ -766,15 +766,22 @@ export function isValidDateAfter1970(aDate: Date | string) {
  * A private access is granted to a user, while a public access and an access
  * of a client of the model context protocol are credentials on their own and
  * have no grantee. A row which mixes both is neither, hence it is rejected.
+ * The owner of an access cannot be its grantee.
  */
 export function isValidGranteeOfAccess({
   granteeUserId,
-  type
+  type,
+  userId
 }: {
   granteeUserId?: string | null;
   type: AccessType;
+  userId: string;
 }) {
-  return type === 'PRIVATE' ? !!granteeUserId : !granteeUserId;
+  if (type === 'PRIVATE') {
+    return !!granteeUserId && granteeUserId !== userId;
+  }
+
+  return !granteeUserId;
 }
 
 export function isValidSearchQuery(aQuery: string) {
