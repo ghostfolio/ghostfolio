@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Deprecated the `api/v1/symbol` endpoints in favor of the `api/v1/symbols` endpoints
+- Localized the number formatting in the tooltip of the chart components
 
 ## 3.94.0 - 2026-10-28
 

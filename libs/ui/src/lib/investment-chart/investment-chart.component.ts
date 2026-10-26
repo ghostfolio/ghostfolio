@@ -287,7 +287,7 @@ export class GfInvestmentChartComponent implements OnChanges, OnDestroy {
       colorScheme: this.colorScheme,
       currency: this.isInPercentage ? undefined : this.currency,
       groupBy: this.groupBy,
-      locale: this.isInPercentage ? undefined : this.locale,
+      locale: this.locale,
       unit: this.isInPercentage ? '%' : undefined
     });
   }
