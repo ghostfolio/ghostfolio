@@ -193,6 +193,16 @@ export class AccessController {
     }
 
     if (
+      originalAccess.type === 'MCP' &&
+      !this.configurationService.get('ENABLE_FEATURE_MCP')
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (
       !isValidGranteeOfAccess({
         granteeUserId: data.granteeUserId,
         type: originalAccess.type
