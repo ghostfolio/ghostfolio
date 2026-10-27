@@ -35,6 +35,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
 
+import { AccountBalanceModule } from './account-balance/account-balance.module';
 import { AccountModule } from './account/account.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AdminModule } from './admin/admin.module';
@@ -72,6 +73,7 @@ import { UserModule } from './user/user.module';
   imports: [
     AdminModule,
     AccessesModule,
+    AccountBalanceModule,
     AccountModule,
     ActivitiesModule,
     AiModule,
