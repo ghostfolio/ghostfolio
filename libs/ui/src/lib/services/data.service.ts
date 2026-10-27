@@ -21,8 +21,9 @@ import {
 } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
-  Access,
+  AccessResponse,
   AccessTokenResponse,
+  AccessesResponse,
   AccountBalancesResponse,
   AccountResponse,
   AccountsResponse,
@@ -310,7 +311,7 @@ export class DataService {
   }
 
   public deleteAccess(aId: string) {
-    return this.http.delete<void>(`/api/v1/access/${aId}`);
+    return this.http.delete<void>(`/api/v1/accesses/${aId}`);
   }
 
   public deleteAccount(aId: string) {
@@ -376,7 +377,7 @@ export class DataService {
   }
 
   public fetchAccesses() {
-    return this.http.get<Access[]>('/api/v1/access');
+    return this.http.get<AccessesResponse>('/api/v1/accesses');
   }
 
   public fetchAsset({
@@ -862,7 +863,7 @@ export class DataService {
   }
 
   public postAccess(aAccess: CreateAccessDto) {
-    return this.http.post<Access>('/api/v1/access', aAccess);
+    return this.http.post<AccessResponse>('/api/v1/accesses', aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {
@@ -926,7 +927,10 @@ export class DataService {
   }
 
   public putAccess(aAccess: UpdateAccessDto) {
-    return this.http.put<Access>(`/api/v1/access/${aAccess.id}`, aAccess);
+    return this.http.put<AccessResponse>(
+      `/api/v1/accesses/${aAccess.id}`,
+      aAccess
+    );
   }
 
   public putAccount(aAccount: UpdateAccountDto) {
