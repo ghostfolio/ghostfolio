@@ -348,8 +348,10 @@ describe('AppModule', () => {
       imports: [AppModule]
     }).compile();
 
-    expect(testingModule.get(AppModule)).toBeInstanceOf(AppModule);
-
-    await testingModule.close();
+    try {
+      expect(testingModule.get(AppModule)).toBeInstanceOf(AppModule);
+    } finally {
+      await testingModule.close();
+    }
   });
 });
