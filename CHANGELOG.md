@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the data source filter in the historical market data table of the admin control panel to only list the data providers in use
 - Deprecated the `api/v1/access` endpoints in favor of the `api/v1/accesses` endpoints
 
 ## 3.93.0 - 2026-10-25
