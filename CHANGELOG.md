@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deprecated the `api/v1/access` endpoints in favor of the `api/v1/accesses` endpoints
 
+### Fixed
+
+- Fixed an issue where users could grant a private access to themselves
+
 ## 3.93.0 - 2026-10-25
 
 ### Changed
