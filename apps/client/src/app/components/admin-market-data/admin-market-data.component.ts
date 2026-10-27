@@ -11,7 +11,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import type { SymbolProfile } from '@ghostfolio/prisma/browser';
-import { AssetSubClass, DataSource } from '@ghostfolio/prisma/enums';
+import { AssetSubClass } from '@ghostfolio/prisma/enums';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -95,7 +95,7 @@ import { AdminMarketDataService } from './admin-market-data.service';
 export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected readonly adminMarketDataService = inject(AdminMarketDataService);
 
-  protected readonly allFilters: Filter[] = [
+  protected allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
         return assetSubClass !== 'CASH';
@@ -107,13 +107,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
           type: 'ASSET_SUB_CLASS' as Filter['type']
         };
       }),
-    ...Object.keys(DataSource).map((dataSource) => {
-      return {
-        id: dataSource.toString(),
-        label: dataSource,
-        type: 'DATA_SOURCE' as Filter['type']
-      };
-    }),
     {
       id: 'BENCHMARKS',
       label: $localize`Benchmarks`,
@@ -202,6 +195,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     this.adminMarketDataService.refresh$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
+        this.loadDataSourceFilters();
         this.reloadData();
       });
 
@@ -250,6 +244,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     const { benchmarks } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
+
+    this.loadDataSourceFilters();
   }
 
   protected onChangePage(page: PageEvent) {
@@ -268,6 +264,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .deleteAssetProfile({ dataSource, symbol })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
+        this.loadDataSourceFilters();
         this.reloadData();
       });
   }
@@ -281,6 +278,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
+        this.loadDataSourceFilters();
         this.reloadData();
       });
   }
@@ -377,6 +375,36 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         this.dataSource.sort = this.sort();
 
         this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private loadDataSourceFilters() {
+    this.adminService
+      .fetchAdminData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ dataProviders }) => {
+        this.allFilters = [
+          ...this.allFilters.filter(({ type }) => {
+            return type !== 'DATA_SOURCE';
+          }),
+          ...dataProviders.flatMap(
+            ({ assetProfileCount, dataSource, name }) => {
+              if (assetProfileCount === 0 || !dataSource) {
+                return [];
+              }
+
+              return [
+                {
+                  id: dataSource,
+                  label: name ?? translate(dataSource),
+                  type: 'DATA_SOURCE' as Filter['type']
+                }
+              ];
+            }
+          )
+        ];
 
         this.changeDetectorRef.markForCheck();
       });
