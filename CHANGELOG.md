@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deprecated the `api/v1/access` endpoints in favor of the `api/v1/accesses` endpoints
 
+### Fixed
+
+- Fixed the double submission of forms in the account detail dialog, the create or update access dialog, the historical market data editor, the import activities dialog, the coupon system and the create asset profile dialog of the admin control panel
+
 ## 3.93.0 - 2026-10-25
 
 ### Changed
