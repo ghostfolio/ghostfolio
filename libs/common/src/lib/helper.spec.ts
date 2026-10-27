@@ -691,41 +691,54 @@ describe('Helper', () => {
 
   describe('Is valid grantee of access', () => {
     const granteeUserId = 'ffb08949-2f8a-4b6e-88fd-0f1e6b6b5f5d';
+    const userId = '6b5d4e2a-7c1f-4a3b-9e8d-2f0c1a5b7d3e';
 
     it('A private access with a grantee', () => {
       expect(
-        isValidGranteeOfAccess({ granteeUserId, type: 'PRIVATE' })
+        isValidGranteeOfAccess({ granteeUserId, userId, type: 'PRIVATE' })
       ).toEqual(true);
     });
 
     it('A private access without a grantee', () => {
-      expect(isValidGranteeOfAccess({ type: 'PRIVATE' })).toEqual(false);
+      expect(isValidGranteeOfAccess({ userId, type: 'PRIVATE' })).toEqual(
+        false
+      );
     });
 
     it('A private access with an empty grantee', () => {
       expect(
-        isValidGranteeOfAccess({ granteeUserId: null, type: 'PRIVATE' })
+        isValidGranteeOfAccess({ userId, granteeUserId: null, type: 'PRIVATE' })
+      ).toEqual(false);
+    });
+
+    it('A private access with its owner as grantee', () => {
+      expect(
+        isValidGranteeOfAccess({
+          userId,
+          granteeUserId: userId,
+          type: 'PRIVATE'
+        })
       ).toEqual(false);
     });
 
     it('A public access without a grantee', () => {
-      expect(isValidGranteeOfAccess({ type: 'PUBLIC' })).toEqual(true);
+      expect(isValidGranteeOfAccess({ userId, type: 'PUBLIC' })).toEqual(true);
     });
 
     it('A public access with a grantee', () => {
-      expect(isValidGranteeOfAccess({ granteeUserId, type: 'PUBLIC' })).toEqual(
-        false
-      );
+      expect(
+        isValidGranteeOfAccess({ granteeUserId, userId, type: 'PUBLIC' })
+      ).toEqual(false);
     });
 
     it('An access of the model context protocol without a grantee', () => {
-      expect(isValidGranteeOfAccess({ type: 'MCP' })).toEqual(true);
+      expect(isValidGranteeOfAccess({ userId, type: 'MCP' })).toEqual(true);
     });
 
     it('An access of the model context protocol with a grantee', () => {
-      expect(isValidGranteeOfAccess({ granteeUserId, type: 'MCP' })).toEqual(
-        false
-      );
+      expect(
+        isValidGranteeOfAccess({ granteeUserId, userId, type: 'MCP' })
+      ).toEqual(false);
     });
   });
 
