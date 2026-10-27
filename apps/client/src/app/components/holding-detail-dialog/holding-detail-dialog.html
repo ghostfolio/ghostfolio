@@ -18,6 +18,22 @@
           [value]="value"
         />
       </div>
+      @if (assetProfile?.symbol) {
+        <div
+          class="col-12 d-flex flex-wrap justify-content-center mb-3 small text-body-secondary"
+        >
+          <span class="mx-2">{{ assetProfile?.symbol }}</span>
+          @if (assetProfile?.dataSource) {
+            <span class="mx-2">{{ assetProfile?.dataSource }}</span>
+          }
+          @if (assetProfile?.isin) {
+            <span class="mx-2">ISIN {{ assetProfile?.isin }}</span>
+          }
+          @if (assetProfile?.currency) {
+            <span class="mx-2">{{ assetProfile?.currency }}</span>
+          }
+        </div>
+      }
     </div>
 
     <gf-line-chart

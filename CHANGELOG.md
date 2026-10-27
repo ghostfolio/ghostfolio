@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Added a line with the symbol, data source, ISIN and currency below the value in the holding detail dialog
 - Upgraded `bootstrap` from version `4.6.2` to `5.3.8` (taken from the upstream commits `c169311fa` to `28713505f`) and migrated the classes of the pages of this fork (investment plan, portfolio summary, allocations, home overview, tables)
 - Changed the email language of the investment signal emails to the language of the account (_Settings → Language_) and the body to the table of the signals
 - Changed the holdings of the portfolio details from a map to a list in the rebalancing of the investment plan (`toHoldingValuesBySymbol`)
