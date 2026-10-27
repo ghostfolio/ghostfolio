@@ -135,7 +135,7 @@ export class GfAccessDialogHostComponent implements OnDestroy, OnInit {
 
   private fetchAccess(aAccessId: string) {
     return this.dataService.fetchAccesses().pipe(
-      map((accesses) => {
+      map(({ accesses }) => {
         return accesses.find(({ id }) => {
           return id === aAccessId;
         });

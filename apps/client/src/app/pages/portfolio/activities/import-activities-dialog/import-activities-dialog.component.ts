@@ -26,6 +26,7 @@ import {
   FileFormat,
   GfFileDropAreaComponent
 } from '@ghostfolio/ui/file-drop-area';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 
 import {
@@ -91,6 +92,7 @@ import {
     GfDialogFooterComponent,
     GfDialogHeaderComponent,
     GfFileDropAreaComponent,
+    GfPremiumIndicatorComponent,
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,

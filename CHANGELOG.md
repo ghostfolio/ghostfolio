@@ -9,13 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deprecated the `api/v1/access` endpoints in favor of the `api/v1/accesses` endpoints
+
+### Fixed
+
+- Fixed the double submission of forms in the account detail dialog, the create or update access dialog, the historical market data editor, the import activities dialog, the coupon system and the create asset profile dialog of the admin control panel
+
+## 3.93.0 - 2026-10-25
+
+### Changed
+
+- Moved the support for filtering by activity type on the activities page from experimental to general availability
+- Moved the allocation in the accounts tab of the holding detail dialog from experimental to general availability
+- Moved the quantity in the accounts tab of the holding detail dialog from experimental to general availability
 - Improved the style of the menu button in the asset profile details dialog of the admin control panel
 - Improved the style of the menu button in the user detail dialog of the admin control panel
 - Improved the consistency of the import of activities with _Ghostfolio AI_ (experimental)
 
 ### Fixed
 
-- Fixed the double submission of forms in the account detail dialog, the create or update access dialog, the historical market data editor, the import activities dialog, the coupon system and the create asset profile dialog of the admin control panel
+- Fixed a race condition in the creation of an account balance
 - Fixed the handling of an output of the model which does not agree with the schema in the import of activities with _Ghostfolio AI_ (experimental)
 
 ## 3.92.0 - 2026-10-24

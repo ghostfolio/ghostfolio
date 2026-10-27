@@ -1,6 +1,7 @@
 import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { AccessService } from '@ghostfolio/api/services/access/access.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
@@ -8,7 +9,11 @@ import {
   canApplyFiltersToAccess,
   isValidGranteeOfAccess
 } from '@ghostfolio/common/helper';
-import { Access, AccessSettings } from '@ghostfolio/common/interfaces';
+import {
+  AccessResponse,
+  AccessSettings,
+  AccessesResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { getScopesOfAccess } from '@ghostfolio/common/scopes';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -30,53 +35,21 @@ import { AuthGuard } from '@nestjs/passport';
 import { Access as AccessModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { AccessService } from './access.service';
-
 @AllowDuringImpersonation()
-@Controller('access')
-export class AccessController {
+@Controller('accesses')
+export class AccessesController {
   public constructor(
     private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getAllAccesses(): Promise<Access[]> {
-    const accessesWithGranteeUser = await this.accessService.accesses({
-      include: {
-        granteeUser: true
-      },
-      orderBy: [{ granteeUserId: 'desc' }, { createdAt: 'asc' }],
-      where: { userId: this.request.user.id }
-    });
-
-    return accessesWithGranteeUser.map((accessItem) => {
-      const { alias, expiresAt, granteeUser, id, lastUsedAt, settings, type } =
-        accessItem;
-
-      const { filters } = (settings ?? {}) as AccessSettings;
-
-      return {
-        alias,
-        expiresAt,
-        id,
-        lastUsedAt,
-        type,
-        grantee: granteeUser?.id,
-        scopes: getScopesOfAccess(accessItem),
-        settings: canApplyFiltersToAccess({ type }) ? { filters } : {}
-      };
-    });
-  }
-
   @HasPermission(permissions.createAccess)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createAccess(
     @Body() data: CreateAccessDto
-  ): Promise<AccessModel> {
+  ): Promise<AccessResponse> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription?.type === SubscriptionType.Basic
@@ -117,7 +90,7 @@ export class AccessController {
     }
 
     try {
-      return await this.accessService.createAccess({
+      const access = await this.accessService.createAccess({
         type,
         alias: data.alias || undefined,
         expiresAt: new Date(data.expiresAt),
@@ -131,6 +104,8 @@ export class AccessController {
         settings: this.accessService.buildSettings(data.filters),
         user: { connect: { id: this.request.user.id } }
       });
+
+      return this.getAccessResponse(access);
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
@@ -163,13 +138,28 @@ export class AccessController {
     });
   }
 
+  @Get()
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getAllAccesses(): Promise<AccessesResponse> {
+    const accesses = await this.accessService.accesses({
+      orderBy: [{ granteeUserId: 'desc' }, { createdAt: 'asc' }],
+      where: { userId: this.request.user.id }
+    });
+
+    return {
+      accesses: accesses.map((access) => {
+        return this.getAccessResponse(access);
+      })
+    };
+  }
+
   @HasPermission(permissions.updateAccess)
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateAccess(
     @Body() data: UpdateAccessDto,
     @Param('id') id: string
-  ): Promise<AccessModel> {
+  ): Promise<AccessResponse> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription?.type === SubscriptionType.Basic
@@ -215,7 +205,7 @@ export class AccessController {
     }
 
     try {
-      return await this.accessService.updateAccess({
+      const access = await this.accessService.updateAccess({
         data: {
           alias: data.alias,
           expiresAt: new Date(data.expiresAt),
@@ -230,11 +220,31 @@ export class AccessController {
         },
         where: { id }
       });
+
+      return this.getAccessResponse(access);
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  private getAccessResponse(access: AccessModel): AccessResponse {
+    const { alias, expiresAt, granteeUserId, id, lastUsedAt, settings, type } =
+      access;
+
+    const { filters } = (settings ?? {}) as AccessSettings;
+
+    return {
+      alias,
+      expiresAt,
+      id,
+      lastUsedAt,
+      type,
+      grantee: granteeUserId ?? undefined,
+      scopes: getScopesOfAccess(access),
+      settings: canApplyFiltersToAccess({ type }) ? { filters } : {}
+    };
   }
 }
