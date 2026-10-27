@@ -213,6 +213,7 @@
           [accountCurrency]="currency"
           [accountId]="data.accountId"
           [currentBalance]="balance"
+          [isSubmitting]="isSubmitting()"
           [locale]="user?.settings?.locale"
           [showActions]="
             hasPermissionToDeleteAccountBalance &&

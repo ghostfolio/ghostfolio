@@ -199,6 +199,16 @@ export class AccessController {
     }
 
     if (
+      originalAccess.type === 'MCP' &&
+      !this.configurationService.get('ENABLE_FEATURE_MCP')
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (
       !isValidGranteeOfAccess({
         granteeUserId: data.granteeUserId,
         type: originalAccess.type,
@@ -224,7 +234,7 @@ export class AccessController {
     try {
       return await this.accessService.updateAccess({
         data: {
-          alias: data.alias,
+          alias: data.alias || null,
           expiresAt: new Date(data.expiresAt),
           granteeUser: data.granteeUserId
             ? { connect: { id: data.granteeUserId } }

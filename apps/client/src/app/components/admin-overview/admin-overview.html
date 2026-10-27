@@ -286,6 +286,7 @@
                 class="h-auto rounded"
                 color="primary"
                 mat-flat-button
+                [disabled]="isSavingCoupons()"
                 (click)="onAddCoupon()"
               >
                 <ng-container i18n>Add</ng-container>

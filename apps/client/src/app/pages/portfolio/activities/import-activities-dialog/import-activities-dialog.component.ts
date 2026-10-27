@@ -40,7 +40,8 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  inject
+  inject,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -181,6 +182,7 @@ export class GfImportActivitiesDialogComponent {
 
   protected isLoading = false;
   protected isMaxActivitiesOfGhostfolioAiReached = false;
+  protected readonly isSubmitting = signal(false);
   protected readonly language = document.documentElement.lang;
   protected readonly maxActivitiesOfGhostfolioAi = AI_MAX_ACTIVITIES;
   protected mode: 'DIVIDEND';
@@ -282,6 +284,8 @@ export class GfImportActivitiesDialogComponent {
   }
 
   protected async onImportActivities() {
+    this.isSubmitting.set(true);
+
     try {
       this.snackBar.open('⏳ ' + $localize`Importing data...`);
 

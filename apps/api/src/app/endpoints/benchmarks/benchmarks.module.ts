@@ -1,5 +1,3 @@
-import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
@@ -9,6 +7,8 @@ import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
+import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
+import { AccountModule } from '@ghostfolio/api/services/account/account.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -23,7 +23,6 @@ import { PropertyModule } from '@ghostfolio/api/services/property/property.modul
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
-import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
@@ -33,6 +32,8 @@ import { BenchmarksService } from './benchmarks.service';
 @Module({
   controllers: [BenchmarksController],
   imports: [
+    AccountBalanceModule,
+    AccountModule,
     ActivitiesModule,
     ApiModule,
     ConfigurationModule,
@@ -47,14 +48,11 @@ import { BenchmarksService } from './benchmarks.service';
     RedisCacheModule,
     SymbolModule,
     SymbolProfileModule,
-    TagModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule,
     UserModule
   ],
   providers: [
-    AccountBalanceService,
-    AccountService,
     BenchmarkService,
     BenchmarksService,
     CurrentRateService,
