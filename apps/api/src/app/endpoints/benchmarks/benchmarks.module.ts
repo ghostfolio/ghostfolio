@@ -1,5 +1,4 @@
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
-import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -8,6 +7,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration/conf
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
+import { SymbolModule } from '@ghostfolio/api/services/symbol/symbol.module';
 
 import { Module } from '@nestjs/common';
 

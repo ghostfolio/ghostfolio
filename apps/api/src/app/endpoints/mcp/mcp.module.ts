@@ -1,4 +1,3 @@
-import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { environment } from '@ghostfolio/api/environments/environment';
 import {
@@ -14,6 +13,7 @@ import { ImportModule } from '@ghostfolio/api/services/import/import.module';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { SymbolModule } from '@ghostfolio/api/services/symbol/symbol.module';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 
 import { Module } from '@nestjs/common';

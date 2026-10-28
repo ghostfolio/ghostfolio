@@ -59,7 +59,7 @@ import {
   PortfolioReportResponse,
   PublicPortfolioResponse,
   RedeemCouponResponse,
-  SymbolItem,
+  SymbolResponse,
   User,
   UserItem,
   WatchlistResponse
@@ -818,8 +818,8 @@ export class DataService {
       params = params.append('includeHistoricalData', includeHistoricalData);
     }
 
-    return this.http.get<SymbolItem>(
-      `/api/v1/symbol/${dataSource}/${encodeURIComponent(symbol)}`,
+    return this.http.get<SymbolResponse>(
+      `/api/v1/symbols/${dataSource}/${encodeURIComponent(symbol)}`,
       {
         params
       }
@@ -840,7 +840,7 @@ export class DataService {
     }
 
     return this.http
-      .get<LookupResponse>('/api/v1/symbol/lookup', { params })
+      .get<LookupResponse>('/api/v1/symbols/lookup', { params })
       .pipe(
         map(({ items }) => {
           return items;

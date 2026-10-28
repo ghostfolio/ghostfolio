@@ -172,7 +172,7 @@ export class AdminService {
     dateString,
     symbol
   }: { dateString: string } & AssetProfileIdentifier) {
-    const url = `/api/v1/symbol/${dataSource}/${encodeURIComponent(symbol)}/${dateString}`;
+    const url = `/api/v1/symbols/${dataSource}/${encodeURIComponent(symbol)}/${dateString}`;
 
     return this.http.get<DataProviderHistoricalResponse>(url);
   }

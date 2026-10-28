@@ -3,10 +3,10 @@
  * @jest-environment-options {"timeZone": "America/New_York"}
  */
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { SymbolService } from '@ghostfolio/api/services/symbol/symbol.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { DataSource } from '@prisma/client';
