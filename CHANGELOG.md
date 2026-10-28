@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increased the timeout in the health check endpoint of the AI service to 30 seconds
 - Deprecated the `api/v1/access` endpoints in favor of the `api/v1/accesses` endpoints
 - Improved the performance of the code style check in the build workflow by skipping the warning-level rules of _ESLint_
+- Refreshed the cryptocurrencies list
 
 ### Fixed
 
