@@ -844,6 +844,32 @@ exports[`AppModule should keep the security of each route 1`] = `
       "TransformDataSourceInResponseInterceptor",
     ],
   },
+  "GET /symbols/:dataSource/:symbol": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+      "TransformDataSourceInRequestInterceptor",
+    ],
+  },
+  "GET /symbols/:dataSource/:symbol/:dateString": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
+  "GET /symbols/lookup": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInResponseInterceptor",
+    ],
+  },
   "GET /tags": {
     "allowDuringImpersonation": true,
     "guards": [

@@ -1,4 +1,3 @@
-import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
 import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
@@ -10,6 +9,7 @@ import { ImportValidationError } from '@ghostfolio/api/services/import/errors/im
 import { ImportService } from '@ghostfolio/api/services/import/import.service';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { SymbolService } from '@ghostfolio/api/services/symbol/symbol.service';
 import {
   DEFAULT_LANGUAGE_CODE,
   MCP_MAX_ACTIVITIES
