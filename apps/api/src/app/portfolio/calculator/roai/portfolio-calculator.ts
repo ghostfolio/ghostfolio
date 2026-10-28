@@ -5,7 +5,7 @@ import { HoldingPerformance } from '@ghostfolio/api/app/portfolio/interfaces/hol
 import { PortfolioCalculatorHolding } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator-holding.interface';
 import { WeightedInvestment } from '@ghostfolio/api/app/portfolio/interfaces/weighted-investment.interface';
 import { PerformancePercentages } from '@ghostfolio/api/app/portfolio/types/performance-percentages.type';
-import { getSum, parseDate } from '@ghostfolio/common/helper';
+import { getSum } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HistoricalDataItem
@@ -15,8 +15,9 @@ import { DateRange } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
-import { differenceInDays } from 'date-fns';
 import { mapValues, sortedIndex } from 'lodash-es';
+
+import { differenceInAccountingDays } from './accounting-days';
 
 export class RoaiPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance({
@@ -78,12 +79,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       return performancePercentagesByDate;
     }
 
-    const parsedDates = historicalDataItems.map(({ date }) => {
-      return parseDate(date);
-    });
+    const dates = historicalDataItems.map(({ date }) => date);
 
-    const daysUntilNextItem = parsedDates.slice(1).map((nextDate, index) => {
-      return differenceInDays(nextDate, parsedDates[index]);
+    const daysUntilNextItem = dates.slice(1).map((nextDate, index) => {
+      return differenceInAccountingDays(nextDate, dates[index]);
     });
 
     // Take the values at the start date from the first day of the date range
@@ -213,12 +212,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           ['BUY', 'SELL'].includes(item.type)
         ) {
           // Calculate the number of days since the previous activity
-          const activityDate = new Date(item.date);
-          const previousActivityDate = new Date(items[i - 1].date);
-
-          let daysSinceLastActivity = differenceInDays(
-            activityDate,
-            previousActivityDate
+          let daysSinceLastActivity = differenceInAccountingDays(
+            item.date,
+            items[i - 1].date
           );
           if (daysSinceLastActivity <= 0) {
             // The time between two activities on the same day is unknown
