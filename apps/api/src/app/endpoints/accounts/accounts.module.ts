@@ -2,20 +2,21 @@ import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module'
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
-import { AccountModule as AccountServiceModule } from '@ghostfolio/api/services/account/account.module';
+import { AccountModule } from '@ghostfolio/api/services/account/account.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 
 import { Module } from '@nestjs/common';
 
-import { AccountController } from './account.controller';
+import { AccountBalanceController } from './account-balance.controller';
+import { AccountsController } from './accounts.controller';
 
 @Module({
-  controllers: [AccountController],
+  controllers: [AccountBalanceController, AccountsController],
   imports: [
     AccountBalanceModule,
-    AccountServiceModule,
+    AccountModule,
     ApiModule,
     ConfigurationModule,
     ImpersonationModule,
@@ -24,4 +25,4 @@ import { AccountController } from './account.controller';
     UserModule
   ]
 })
-export class AccountModule {}
+export class AccountsModule {}

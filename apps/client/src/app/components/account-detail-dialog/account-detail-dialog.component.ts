@@ -176,7 +176,10 @@ export class GfAccountDetailDialogComponent implements OnInit {
     this.isSubmitting.set(true);
 
     this.dataService
-      .postAccountBalance(accountBalance)
+      .postAccountBalance({
+        accountBalance,
+        accountId: this.data.accountId
+      })
       .pipe(
         finalize(() => {
           this.isSubmitting.set(false);
@@ -202,7 +205,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
 
   protected onDeleteAccountBalance(aId: string) {
     this.dataService
-      .deleteAccountBalance(aId)
+      .deleteAccountBalance({ accountId: this.data.accountId, id: aId })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.initialize();

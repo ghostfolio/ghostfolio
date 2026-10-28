@@ -49,6 +49,7 @@ export class AccountBalanceService {
     date,
     userId
   }: CreateAccountBalanceDto & {
+    accountId: string;
     userId: string;
   }): Promise<AccountBalance> {
     const dateOfBalance = resetHours(parseISO(date));
