@@ -31,6 +31,17 @@ export class PortfolioSnapshot {
 
   historicalData: HistoricalDataItem[];
 
+  calculationMetadata?: {
+    roi?: {
+      investedCapitalAdjustmentsByDate: {
+        [date: string]: {
+          investedCapital: number;
+          investedCapitalWithCurrencyEffect: number;
+        };
+      };
+    };
+  };
+
   @Type(() => PortfolioSnapshotHolding)
   positions: PortfolioSnapshotHolding[];
 
