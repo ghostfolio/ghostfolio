@@ -301,7 +301,7 @@
       </trans-unit>
       <trans-unit id="8264632476919693099" datatype="html">
         <source>Any person who has the link can view the data.</source>
-        <target state="new">Any person who has the link can view the data.</target>
+        <target state="translated">リンクを知っている人は誰でもこのデータを閲覧できます。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">42</context>
@@ -945,7 +945,7 @@
       </trans-unit>
       <trans-unit id="6198142118219385733" datatype="html">
         <source>Request a free trial</source>
-        <target state="new">Request a free trial</target>
+        <target state="translated">無料トライアルを申し込む</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">211</context>
@@ -953,7 +953,7 @@
       </trans-unit>
       <trans-unit id="641154803270226443" datatype="html">
         <source>Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about the fully managed Ghostfolio cloud offering in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">フルマネージドの Ghostfolio クラウド版について、よくある質問（FAQ）のセクションで素早く答えを見つけられます。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/saas/saas-page.html</context>
           <context context-type="linenumber">8</context>
@@ -1065,7 +1065,7 @@
       </trans-unit>
       <trans-unit id="7194017842579795231" datatype="html">
         <source>Healthcare</source>
-        <target state="new">Healthcare</target>
+        <target state="translated">ヘルスケア</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">100</context>
@@ -1225,7 +1225,7 @@
       </trans-unit>
       <trans-unit id="5918319622596548216" datatype="html">
         <source>Financial Advisor</source>
-        <target state="new">Financial Advisor</target>
+        <target state="translated">ファイナンシャルアドバイザー</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">112</context>
@@ -1285,7 +1285,7 @@
       </trans-unit>
       <trans-unit id="4581276194280068721" datatype="html">
         <source>Industrials</source>
-        <target state="new">Industrials</target>
+        <target state="translated">資本財</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">101</context>
@@ -1417,7 +1417,7 @@
       </trans-unit>
       <trans-unit id="6249687295240367729" datatype="html">
         <source>Explore our guides to help you get started with investing and managing your finances.</source>
-        <target state="new">Explore our guides to help you get started with investing and managing your finances.</target>
+        <target state="translated">投資や資産管理を始めるのに役立つガイドをご覧ください。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">21</context>
@@ -1501,7 +1501,7 @@
       </trans-unit>
       <trans-unit id="8308132509772582313" datatype="html">
         <source>Adjust the rules below and set custom thresholds to align with a personal investment strategy.</source>
-        <target state="new">Adjust the rules below and set custom thresholds to align with a personal investment strategy.</target>
+        <target state="translated">下記のルールを調整し、ご自身の投資戦略に合わせてカスタムのしきい値を設定してください。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">12</context>
@@ -1565,7 +1565,7 @@
       </trans-unit>
       <trans-unit id="4344577155823592293" datatype="html">
         <source>Cache has been flushed.</source>
-        <target state="new">Cache has been flushed.</target>
+        <target state="translated">キャッシュをクリアしました。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">264</context>
@@ -1705,7 +1705,7 @@
       </trans-unit>
       <trans-unit id="735924103945447056" datatype="html">
         <source>Compare with...</source>
-        <target state="new">Compare with...</target>
+        <target state="translated">比較対象…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.html</context>
           <context context-type="linenumber">18</context>
@@ -1813,7 +1813,7 @@
       </trans-unit>
       <trans-unit id="5043328658660351895" datatype="html">
         <source>No credit card required. The trial ends automatically.</source>
-        <target state="new">No credit card required. The trial ends automatically.</target>
+        <target state="translated">クレジットカードは不要です。トライアルは自動的に終了します。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">214</context>
@@ -1829,7 +1829,7 @@
       </trans-unit>
       <trans-unit id="504959340312049745" datatype="html">
         <source>Split Ratio</source>
-        <target state="new">Split Ratio</target>
+        <target state="translated">分割比率</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">531</context>
@@ -1849,7 +1849,7 @@
       </trans-unit>
       <trans-unit id="6844699413925472826" datatype="html">
         <source>Greed</source>
-        <target state="new">Greed</target>
+        <target state="translated">強欲</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">63</context>
@@ -1861,7 +1861,7 @@
       </trans-unit>
       <trans-unit id="1022809987579838138" datatype="html">
         <source>Last Used</source>
-        <target state="new">Last Used</target>
+        <target state="translated">最終使用</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">31</context>
@@ -2053,7 +2053,7 @@
       </trans-unit>
       <trans-unit id="6623155069376115284" datatype="html">
         <source>Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Ghostfolio について、よくある質問（FAQ）のセクションで素早く答えを見つけられます。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">16</context>
@@ -2493,7 +2493,7 @@
       </trans-unit>
       <trans-unit id="8793726805339626615" datatype="html">
         <source>Ghostfolio in Numbers: Monthly Active Users (MAU)</source>
-        <target state="new">Ghostfolio in Numbers: Monthly Active Users (MAU)</target>
+        <target state="translated">数字で見る Ghostfolio：月間アクティブユーザー数（MAU）</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">63</context>
@@ -2533,7 +2533,7 @@
       </trans-unit>
       <trans-unit id="4037247308022519888" datatype="html">
         <source>The value has been copied to the clipboard</source>
-        <target state="new">The value has been copied to the clipboard</target>
+        <target state="translated">値をクリップボードにコピーしました</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/notifications/alert-dialog/alert-dialog.component.ts</context>
           <context context-type="linenumber">46</context>
@@ -2749,7 +2749,7 @@
       </trans-unit>
       <trans-unit id="8664947843178872012" datatype="html">
         <source>Close Account</source>
-        <target state="new">Close Account</target>
+        <target state="translated">アカウントを閉鎖</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">393</context>
@@ -2773,7 +2773,7 @@
       </trans-unit>
       <trans-unit id="4102764207131986196" datatype="html">
         <source>Contributors to Ghostfolio</source>
-        <target state="new">Contributors to Ghostfolio</target>
+        <target state="translated">Ghostfolio のコントリビューター</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">54</context>
@@ -2789,7 +2789,7 @@
       </trans-unit>
       <trans-unit id="3885497195825665706" datatype="html">
         <source>Next</source>
-        <target state="new">Next</target>
+        <target state="translated">次へ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">426</context>
@@ -2825,7 +2825,7 @@
       </trans-unit>
       <trans-unit id="6342682425862972636" datatype="html">
         <source>Investments</source>
-        <target state="new">Investments</target>
+        <target state="translated">投資</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">264</context>
@@ -3137,7 +3137,7 @@
       </trans-unit>
       <trans-unit id="8643034887919513109" datatype="html">
         <source>Financial Planning</source>
-        <target state="new">Financial Planning</target>
+        <target state="translated">ファイナンシャルプランニング</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">113</context>
@@ -3445,7 +3445,7 @@
       </trans-unit>
       <trans-unit id="659291745893337969" datatype="html">
         <source>Invalid API key</source>
-        <target state="new">Invalid API key</target>
+        <target state="translated">API キーが無効です</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">119</context>
@@ -3489,7 +3489,7 @@
       </trans-unit>
       <trans-unit id="4489207161748215824" datatype="html">
         <source>For security reasons, please delete all activities and accounts first before your Ghostfolio account can be closed.</source>
-        <target state="new">For security reasons, please delete all activities and accounts first before your Ghostfolio account can be closed.</target>
+        <target state="translated">セキュリティ上の理由から、Ghostfolio アカウントを閉鎖する前に、すべてのアクティビティと口座を削除してください。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">413</context>
@@ -3665,7 +3665,7 @@
       </trans-unit>
       <trans-unit id="472895619516205802" datatype="html">
         <source>This action cannot be undone.</source>
-        <target state="new">This action cannot be undone.</target>
+        <target state="translated">この操作は取り消せません。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">965</context>
@@ -3673,7 +3673,7 @@
       </trans-unit>
       <trans-unit id="4733690367258997247" datatype="html">
         <source>just now</source>
-        <target state="new">just now</target>
+        <target state="translated">たった今</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/util/date.util.ts</context>
           <context context-type="linenumber">24</context>
@@ -3733,7 +3733,7 @@
       </trans-unit>
       <trans-unit id="assetClass.ALTERNATIVE_INVESTMENT" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">オルタナティブ投資</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
@@ -3741,7 +3741,7 @@
       </trans-unit>
       <trans-unit id="assetClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">コモディティ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">55</context>
@@ -3749,7 +3749,7 @@
       </trans-unit>
       <trans-unit id="assetClass.EQUITY" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">株式</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">56</context>
@@ -3757,7 +3757,7 @@
       </trans-unit>
       <trans-unit id="assetClass.FIXED_INCOME" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">債券</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">57</context>
@@ -3765,7 +3765,7 @@
       </trans-unit>
       <trans-unit id="assetClass.LIQUIDITY" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">現金・流動資産</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">58</context>
@@ -3773,7 +3773,7 @@
       </trans-unit>
       <trans-unit id="assetClass.REAL_ESTATE" datatype="html">
         <source>Real Estate</source>
-        <target state="new">Real Estate</target>
+        <target state="translated">不動産</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">59</context>
@@ -3781,7 +3781,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.BOND" datatype="html">
         <source>Bond</source>
-        <target state="new">Bond</target>
+        <target state="translated">債券</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">62</context>
@@ -3789,7 +3789,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CASH" datatype="html">
         <source>Cash</source>
-        <target state="new">Cash</target>
+        <target state="translated">現金</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">63</context>
@@ -3797,7 +3797,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COLLECTIBLE" datatype="html">
         <source>Collectible</source>
-        <target state="new">Collectible</target>
+        <target state="translated">コレクティブル</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">64</context>
@@ -3805,7 +3805,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">コモディティ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">5</context>
@@ -3813,7 +3813,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.CRYPTOCURRENCY" datatype="html">
         <source>Cryptocurrency</source>
-        <target state="new">Cryptocurrency</target>
+        <target state="translated">暗号資産</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">65</context>
@@ -3821,7 +3821,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.ETF" datatype="html">
         <source>ETF</source>
-        <target state="new">ETF</target>
+        <target state="translated">ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">66</context>
@@ -3829,7 +3829,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.LOAN" datatype="html">
         <source>Loan</source>
-        <target state="new">Loan</target>
+        <target state="translated">ローン</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">67</context>
@@ -3837,7 +3837,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.MUTUALFUND" datatype="html">
         <source>Mutual Fund</source>
-        <target state="new">Mutual Fund</target>
+        <target state="translated">投資信託</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">68</context>
@@ -3845,7 +3845,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRECIOUS_METAL" datatype="html">
         <source>Precious Metal</source>
-        <target state="new">Precious Metal</target>
+        <target state="translated">貴金属</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">69</context>
@@ -3853,7 +3853,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.PRIVATE_EQUITY" datatype="html">
         <source>Private Equity</source>
-        <target state="new">Private Equity</target>
+        <target state="translated">プライベート・エクイティ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">70</context>
@@ -3861,7 +3861,7 @@
       </trans-unit>
       <trans-unit id="assetSubClass.STOCK" datatype="html">
         <source>Stock</source>
-        <target state="new">Stock</target>
+        <target state="translated">株式</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">71</context>
@@ -3993,7 +3993,7 @@
       </trans-unit>
       <trans-unit id="6952711292901447467" datatype="html">
         <source>Learn key financial terms and concepts in our comprehensive glossary.</source>
-        <target state="new">Learn key financial terms and concepts in our comprehensive glossary.</target>
+        <target state="translated">包括的な用語集で、重要な金融用語や概念を学べます。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/overview/resources-overview.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -4017,7 +4017,7 @@
       </trans-unit>
       <trans-unit id="8984201769958269296" datatype="html">
         <source>Get access to 80’000+ tickers from over 50 exchanges</source>
-        <target state="new">50以上の取引所から80,000以上のティッカーにアクセスできます</target>
+        <target state="translated">50 を超える取引所の 80,000 以上のティッカーにアクセスできます</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">84</context>
@@ -4257,7 +4257,7 @@
       </trans-unit>
       <trans-unit id="4272904080612853299" datatype="html">
         <source>Do you really want to merge this asset profile into it?</source>
-        <target state="new">Do you really want to merge this asset profile into it?</target>
+        <target state="translated">このアセットプロファイルをこれに統合してもよろしいですか？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">969</context>
@@ -4345,7 +4345,7 @@
       </trans-unit>
       <trans-unit id="6075566839446502414" datatype="html">
         <source>Available on</source>
-        <target state="new">Available on</target>
+        <target state="translated">入手先</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">151</context>
@@ -4481,7 +4481,7 @@
       </trans-unit>
       <trans-unit id="5176578390795646240" datatype="html">
         <source>thereof Dividend Performance</source>
-        <target state="new">thereof Dividend Performance</target>
+        <target state="translated">うち配当パフォーマンス</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">185</context>
@@ -4649,7 +4649,7 @@
       </trans-unit>
       <trans-unit id="6718883297275862532" datatype="html">
         <source>Shares After</source>
-        <target state="new">Shares After</target>
+        <target state="translated">分割後株数</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">589</context>
@@ -4917,7 +4917,7 @@
       </trans-unit>
       <trans-unit id="7771702342975481710" datatype="html">
         <source>Add your first activity</source>
-        <target state="new">Add your first activity</target>
+        <target state="translated">最初のアクティビティを追加</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/no-activities-info/no-activities-info.component.html</context>
           <context context-type="linenumber">12</context>
@@ -5069,7 +5069,7 @@
       </trans-unit>
       <trans-unit id="6962264495000055621" datatype="html">
         <source>Do you really want to remove this received access?</source>
-        <target state="new">Do you really want to remove this received access?</target>
+        <target state="translated">受け取ったこのアクセス権を削除してもよろしいですか？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
           <context context-type="linenumber">152</context>
@@ -5245,7 +5245,7 @@
       </trans-unit>
       <trans-unit id="749104632257292438" datatype="html">
         <source>Powered by third-party AI providers</source>
-        <target state="new">Powered by third-party AI providers</target>
+        <target state="translated">サードパーティの AI プロバイダーを利用しています</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">306</context>
@@ -5265,7 +5265,7 @@
       </trans-unit>
       <trans-unit id="8289257900569435140" datatype="html">
         <source>It’s free.</source>
-        <target state="new">無料です。</target>
+        <target state="translated">無料です。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">348</context>
@@ -5410,7 +5410,7 @@
       </trans-unit>
       <trans-unit id="5106905229162288681" datatype="html">
         <source>Expiration Date</source>
-        <target state="new">Expiration Date</target>
+        <target state="translated">有効期限</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">54</context>
@@ -5534,7 +5534,7 @@
       </trans-unit>
       <trans-unit id="237127378624497814" datatype="html">
         <source>Upgrade to Ghostfolio Premium</source>
-        <target state="new">Upgrade to Ghostfolio Premium</target>
+        <target state="translated">Ghostfolio Premium にアップグレード</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/premium-indicator/premium-indicator.component.html</context>
           <context context-type="linenumber">4</context>
@@ -5622,7 +5622,7 @@
       </trans-unit>
       <trans-unit id="2191562378582791940" datatype="html">
         <source>Stock Tracking</source>
-        <target state="new">Stock Tracking</target>
+        <target state="translated">株式トラッキング</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">116</context>
@@ -5662,7 +5662,7 @@
       </trans-unit>
       <trans-unit id="3430061313424019324" datatype="html">
         <source>Data gathering has been started.</source>
-        <target state="new">Data gathering has been started.</target>
+        <target state="translated">データ収集を開始しました。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
           <context context-type="linenumber">419</context>
@@ -5922,7 +5922,7 @@
       </trans-unit>
       <trans-unit id="5508103270863072482" datatype="html">
         <source>Return on Investment (total return with dividends)</source>
-        <target state="new">Return on Investment (total return with dividends)</target>
+        <target state="translated">投資収益率（配当を含むトータルリターン）</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">165</context>
@@ -6074,7 +6074,7 @@
       </trans-unit>
       <trans-unit id="2075160647498894947" datatype="html">
         <source>Asia-Pacific</source>
-        <target state="new">Asia-Pacific</target>
+        <target state="translated">アジア太平洋</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">12</context>
@@ -6254,7 +6254,7 @@
       </trans-unit>
       <trans-unit id="6300009182465422833" datatype="html">
         <source>Ghostfolio in Numbers: Pulls on Docker Hub</source>
-        <target state="new">Ghostfolio in Numbers: Pulls on Docker Hub</target>
+        <target state="translated">数字で見る Ghostfolio：Docker Hub でのプル数</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">101</context>
@@ -6494,7 +6494,7 @@
       </trans-unit>
       <trans-unit id="3358797625330883274" datatype="html">
         <source>Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</source>
-        <target state="new">Find quick answers to commonly asked questions about self-hosting Ghostfolio in our Frequently Asked Questions (FAQ) section.</target>
+        <target state="translated">Ghostfolio のセルフホスティングについて、よくある質問（FAQ）のセクションで素早く答えを見つけられます。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/self-hosting/self-hosting-page.html</context>
           <context context-type="linenumber">8</context>
@@ -6542,7 +6542,7 @@
       </trans-unit>
       <trans-unit id="5940479294111486613" datatype="html">
         <source>Invested Capital</source>
-        <target state="new">Invested Capital</target>
+        <target state="translated">投資元本</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">183</context>
@@ -6578,7 +6578,7 @@
       </trans-unit>
       <trans-unit id="2634398159221205491" datatype="html">
         <source>Extreme Greed</source>
-        <target state="new">Extreme Greed</target>
+        <target state="translated">極度の強欲</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">87</context>
@@ -6834,7 +6834,7 @@
       </trans-unit>
       <trans-unit id="4602065467346820556" datatype="html">
         <source>Oops! A data provider is experiencing the hiccups.</source>
-        <target state="new">Oops! A data provider is experiencing the hiccups.</target>
+        <target state="translated">おっと！データプロバイダーで問題が発生しているようです。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.html</context>
           <context context-type="linenumber">9</context>
@@ -6850,7 +6850,7 @@
       </trans-unit>
       <trans-unit id="251113330629316982" datatype="html">
         <source>Date must be in the future.</source>
-        <target state="new">Date must be in the future.</target>
+        <target state="translated">日付は未来の日付を指定してください。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">70</context>
@@ -6858,7 +6858,7 @@
       </trans-unit>
       <trans-unit id="2522011507610634749" datatype="html">
         <source>Fetch market price</source>
-        <target state="new">Fetch market price</target>
+        <target state="translated">市場価格を取得</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
           <context context-type="linenumber">32</context>
@@ -6906,7 +6906,7 @@
       </trans-unit>
       <trans-unit id="7671845130083878280" datatype="html">
         <source>Ghostfolio AI is processing the file...</source>
-        <target state="new">Ghostfolio AI is processing the file...</target>
+        <target state="translated">Ghostfolio AI がファイルを処理しています…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">167</context>
@@ -6999,7 +6999,7 @@
       </trans-unit>
       <trans-unit id="2998033970178753887" datatype="html">
         <source>Oops! It looks like you’re making too many requests. Please slow down a bit.</source>
-        <target state="new">おっと！リクエストの回数が多すぎるようです。少しペースを落としてください。</target>
+        <target state="translated">リクエストが多すぎるようです。少し時間をおいてからお試しください。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">122</context>
@@ -7075,7 +7075,7 @@
       </trans-unit>
       <trans-unit id="8903954975609359428" datatype="html">
         <source>Buy and sell</source>
-        <target state="new">Buy and sell</target>
+        <target state="translated">売買</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">15</context>
@@ -7139,7 +7139,7 @@
       </trans-unit>
       <trans-unit id="2678116732907988505" datatype="html">
         <source>Approximation based on the top holdings of each ETF</source>
-        <target state="new">Approximation based on the top holdings of each ETF</target>
+        <target state="translated">各 ETF の上位保有銘柄に基づく概算値</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">337</context>
@@ -7147,7 +7147,7 @@
       </trans-unit>
       <trans-unit id="4931386094893319473" datatype="html">
         <source>By ETF Holding</source>
-        <target state="new">By ETF Holding</target>
+        <target state="translated">ETF 保有別</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">330</context>
