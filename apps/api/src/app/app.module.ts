@@ -35,12 +35,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
 
-import { AccountBalanceModule } from './account-balance/account-balance.module';
-import { AccountModule } from './account/account.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AccessesModule } from './endpoints/accesses/accesses.module';
+import { AccountsModule } from './endpoints/accounts/accounts.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
 import { AssetProfilesModule } from './endpoints/asset-profiles/asset-profiles.module';
@@ -73,8 +72,7 @@ import { UserModule } from './user/user.module';
   imports: [
     AdminModule,
     AccessesModule,
-    AccountBalanceModule,
-    AccountModule,
+    AccountsModule,
     ActivitiesModule,
     AiModule,
     ApiKeysModule,

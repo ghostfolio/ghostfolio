@@ -41,6 +41,7 @@ import type { ReferralPartner } from './referral-partner.interface';
 import type { AccessResponse } from './responses/access-response.interface';
 import type { AccessTokenResponse } from './responses/access-token-response.interface';
 import type { AccessesResponse } from './responses/accesses-response.interface';
+import type { AccountBalanceResponse } from './responses/account-balance-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { AccountResponse } from './responses/account-response.interface';
 import type { AccountsResponse } from './responses/accounts-response.interface';
@@ -114,6 +115,7 @@ export {
   AccessTokenResponse,
   AccessesResponse,
   AccountBalance,
+  AccountBalanceResponse,
   AccountBalancesResponse,
   AccountResponse,
   AccountsResponse,

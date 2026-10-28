@@ -24,6 +24,7 @@ import {
   AccessResponse,
   AccessTokenResponse,
   AccessesResponse,
+  AccountBalanceResponse,
   AccountBalancesResponse,
   AccountResponse,
   AccountsResponse,
@@ -73,7 +74,6 @@ import type {
 } from '@ghostfolio/common/types';
 import type {
   Account,
-  AccountBalance,
   MarketData,
   Order,
   SymbolProfile,
@@ -199,19 +199,19 @@ export class DataService {
   }
 
   public fetchAccount(aAccountId: string) {
-    return this.http.get<AccountResponse>(`/api/v1/account/${aAccountId}`);
+    return this.http.get<AccountResponse>(`/api/v1/accounts/${aAccountId}`);
   }
 
   public fetchAccountBalances(aAccountId: string) {
     return this.http.get<AccountBalancesResponse>(
-      `/api/v1/account/${aAccountId}/balances`
+      `/api/v1/accounts/${aAccountId}/balances`
     );
   }
 
   public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
     const params = this.buildFiltersAsQueryParams({ filters });
 
-    return this.http.get<AccountsResponse>('/api/v1/account', { params });
+    return this.http.get<AccountsResponse>('/api/v1/accounts', { params });
   }
 
   public fetchActivities({
@@ -315,11 +315,19 @@ export class DataService {
   }
 
   public deleteAccount(aId: string) {
-    return this.http.delete<Account>(`/api/v1/account/${aId}`);
+    return this.http.delete<Account>(`/api/v1/accounts/${aId}`);
   }
 
-  public deleteAccountBalance(aId: string) {
-    return this.http.delete<AccountBalance>(`/api/v1/account-balance/${aId}`);
+  public deleteAccountBalance({
+    accountId,
+    id
+  }: {
+    accountId: string;
+    id: string;
+  }) {
+    return this.http.delete<void>(
+      `/api/v1/accounts/${accountId}/balances/${id}`
+    );
   }
 
   public deleteActivities({
@@ -867,13 +875,19 @@ export class DataService {
   }
 
   public postAccount(aAccount: CreateAccountDto) {
-    return this.http.post<Account>('/api/v1/account', aAccount);
+    return this.http.post<Account>('/api/v1/accounts', aAccount);
   }
 
-  public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
-    return this.http.post<AccountBalance>(
-      '/api/v1/account-balance',
-      aAccountBalance
+  public postAccountBalance({
+    accountBalance,
+    accountId
+  }: {
+    accountBalance: CreateAccountBalanceDto;
+    accountId: string;
+  }) {
+    return this.http.post<AccountBalanceResponse>(
+      `/api/v1/accounts/${accountId}/balances`,
+      accountBalance
     );
   }
 
@@ -934,7 +948,7 @@ export class DataService {
   }
 
   public putAccount(aAccount: UpdateAccountDto) {
-    return this.http.put<UserItem>(`/api/v1/account/${aAccount.id}`, aAccount);
+    return this.http.put<UserItem>(`/api/v1/accounts/${aAccount.id}`, aAccount);
   }
 
   public putActivity(aOrder: UpdateOrderDto) {
@@ -985,7 +999,7 @@ export class DataService {
     accountIdTo,
     balance
   }: TransferBalanceDto) {
-    return this.http.post('/api/v1/account/transfer-balance', {
+    return this.http.post('/api/v1/accounts/transfer-balance', {
       accountIdFrom,
       accountIdTo,
       balance
