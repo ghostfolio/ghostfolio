@@ -335,5 +335,7 @@ export class BenchmarkService {
       key: PROPERTY_BENCHMARKS,
       value: JSON.stringify(benchmarks)
     });
+
+    await this.redisCacheService.remove(this.CACHE_KEY_BENCHMARKS);
   }
 }
