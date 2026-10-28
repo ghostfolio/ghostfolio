@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the data source filter in the historical market data table of the admin control panel to only list the data providers in use
 - Restricted the health check endpoint of the AI service (`GET api/v1/health/ai`) to administrators
 - Increased the timeout in the health check endpoint of the AI service to 30 seconds
 - Deprecated the `api/v1/access` endpoints in favor of the `api/v1/accesses` endpoints
