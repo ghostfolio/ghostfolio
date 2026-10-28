@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the double submission of forms in the account detail dialog, the create or update access dialog, the historical market data editor, the import activities dialog, the coupon system and the create asset profile dialog of the admin control panel
+- Fixed an issue where the benchmarks in the markets overview were not updated after adding or deleting a benchmark
 - Fixed an issue where users could grant a private access to themselves
 - Fixed the status code of the endpoints to add and delete a benchmark if the asset profile does not exist
 - Fixed the git-hook via `husky` to lint and check the formatting of the uncommitted changes before a commit
