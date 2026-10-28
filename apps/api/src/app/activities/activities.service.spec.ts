@@ -668,6 +668,91 @@ describe('ActivitiesService', () => {
       });
     });
 
+    it('updates the name of a fee owned by the user', async () => {
+      const data = await getUpdatedActivityData({
+        symbol: 'Updated fee name',
+        type: ActivityType.FEE,
+        userId: 'user-id'
+      });
+
+      expect(data.SymbolProfile).toEqual({
+        update: {
+          data: {
+            assetClass: AssetClass.COMMODITY,
+            assetSubClass: AssetSubClass.PRECIOUS_METAL,
+            name: 'Updated fee name'
+          },
+          where: { userId: 'user-id' }
+        }
+      });
+    });
+
+    it('creates a separate profile when renaming a shared fee', async () => {
+      const data = await getUpdatedActivityData({
+        activitiesCount: 2,
+        symbol: 'Updated fee name',
+        type: ActivityType.FEE,
+        userId: 'user-id'
+      });
+
+      expect(data.SymbolProfile).toEqual({
+        create: expect.objectContaining({
+          currency: 'EUR',
+          dataSource: DataSource.MANUAL,
+          name: 'Updated fee name',
+          symbol: expect.any(String),
+          userId: 'user-id'
+        })
+      });
+
+      expect(data.SymbolProfile.create.symbol).not.toBe(
+        'original-profile-symbol'
+      );
+    });
+
+    it('does not create a profile when the fee name is unchanged', async () => {
+      const data = await getUpdatedActivityData({
+        activitiesCount: 2,
+        symbol: 'Original fee name',
+        type: ActivityType.FEE,
+        userId: 'user-id'
+      });
+
+      expect(data.SymbolProfile).not.toHaveProperty('create');
+      expect(data.SymbolProfile).not.toHaveProperty('update.data.name');
+    });
+
+    it('creates a personal profile when renaming a fee with an admin profile', async () => {
+      const data = await getUpdatedActivityData({
+        symbol: 'Updated fee name',
+        type: ActivityType.FEE,
+        userId: null
+      });
+
+      expect(data.SymbolProfile).toEqual({
+        create: expect.objectContaining({
+          currency: 'EUR',
+          dataSource: DataSource.MANUAL,
+          name: 'Updated fee name',
+          symbol: expect.any(String),
+          userId: 'user-id'
+        })
+      });
+    });
+
+    it('does not update the original profile when renaming a shared fee', async () => {
+      const data = await getUpdatedActivityData({
+        activitiesCount: 2,
+        symbol: 'Updated fee name',
+        type: ActivityType.FEE,
+        userId: 'user-id'
+      });
+
+      expect(data.SymbolProfile).toHaveProperty('create');
+      expect(data.SymbolProfile).not.toHaveProperty('update');
+      expect(data.SymbolProfile).not.toHaveProperty('connect');
+    });
+
     it.each([
       { owner: 'the admin', userId: null },
       { owner: 'another user', userId: 'other-user-id' }
@@ -688,18 +773,261 @@ describe('ActivitiesService', () => {
       expect(data).not.toHaveProperty('SymbolProfile');
     });
 
+    it('uses the current profile name when a fee changes concurrently', async () => {
+      const profile = {
+        symbolProfileId: 'asset-profile-id',
+        SymbolProfile: {
+          assetClass: AssetClass.COMMODITY,
+          assetSubClass: AssetSubClass.PRECIOUS_METAL,
+          currency: 'EUR',
+          dataSource: DataSource.MANUAL,
+          name: 'Original fee name',
+          userId: 'user-id'
+        }
+      };
+
+      const findUnique = jest
+        .fn()
+        .mockResolvedValueOnce(profile)
+        .mockResolvedValueOnce({
+          ...profile,
+          SymbolProfile: {
+            ...profile.SymbolProfile,
+            name: 'Concurrent rename'
+          }
+        });
+
+      const update = jest.fn().mockResolvedValue({
+        userId: 'user-id'
+      });
+      const count = jest.fn().mockResolvedValue(1);
+
+      const transaction = jest.fn((callback) =>
+        callback({
+          order: { count, findUnique, update }
+        })
+      );
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        { emit: jest.fn() } as unknown as EventEmitter2,
+        null,
+        null,
+        {
+          order: { count, findUnique, update },
+          $transaction: transaction
+        } as unknown as PrismaService,
+        null,
+        { validateTagIds: jest.fn() } as unknown as TagService
+      );
+
+      await service.updateActivity({
+        data: {
+          symbol: 'Original fee name',
+          type: ActivityType.FEE,
+          date: parseDate('2024-01-01'),
+          SymbolProfile: {
+            connect: {
+              dataSource_symbol: {
+                dataSource: DataSource.MANUAL,
+                symbol: 'original-profile-symbol'
+              }
+            },
+            update: {
+              name: 'Original fee name'
+            }
+          }
+        },
+        originalDate: parseDate('2024-01-01'),
+        userId: 'user-id',
+        where: { id: 'activity-id' }
+      });
+
+      expect(transaction).toHaveBeenCalledTimes(1);
+      expect(findUnique).toHaveBeenCalledTimes(2);
+      expect(update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            SymbolProfile: {
+              update: {
+                data: expect.objectContaining({
+                  name: 'Original fee name'
+                }),
+                where: { userId: 'user-id' }
+              }
+            }
+          })
+        })
+      );
+    });
+
+    it.each([
+      {
+        description: 'retries twice and commits on the third attempt',
+        errorCode: 'P2034',
+        failures: 2,
+        expectedAttempts: 3,
+        succeeds: true
+      },
+      {
+        description: 'stops after three serialization conflicts',
+        errorCode: 'P2034',
+        failures: 3,
+        expectedAttempts: 3,
+        succeeds: false
+      },
+      {
+        description: 'does not retry other Prisma errors',
+        errorCode: 'P2002',
+        failures: 1,
+        expectedAttempts: 1,
+        succeeds: false
+      }
+    ])(
+      '$description',
+      async ({ errorCode, failures, expectedAttempts, succeeds }) => {
+        const operations: string[] = [];
+        const emit = jest.fn(() => {
+          operations.push('emit');
+        });
+
+        const update = jest.fn().mockResolvedValue({
+          userId: 'user-id'
+        });
+
+        const findUnique = jest.fn().mockResolvedValue({
+          symbolProfileId: 'asset-profile-id',
+          SymbolProfile: {
+            assetClass: AssetClass.COMMODITY,
+            assetSubClass: AssetSubClass.PRECIOUS_METAL,
+            currency: 'EUR',
+            dataSource: DataSource.MANUAL,
+            name: 'Original fee name',
+            userId: 'user-id'
+          }
+        });
+
+        const count = jest.fn().mockResolvedValue(1);
+
+        let attempts = 0;
+
+        const transaction = jest.fn(async (callback) => {
+          attempts++;
+
+          if (attempts <= failures) {
+            throw new Prisma.PrismaClientKnownRequestError(
+              'Simulated Prisma transaction conflict',
+              {
+                clientVersion: '7.10.0',
+                code: errorCode
+              }
+            );
+          }
+
+          const result = await callback({
+            order: { count, findUnique, update }
+          });
+
+          operations.push('commit');
+
+          return result;
+        });
+
+        const service = new ActivitiesService(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          { emit } as unknown as EventEmitter2,
+          null,
+          null,
+          {
+            order: { count, findUnique, update },
+            $transaction: transaction
+          } as unknown as PrismaService,
+          null,
+          { validateTagIds: jest.fn() } as unknown as TagService
+        );
+
+        const operation = service.updateActivity({
+          data: {
+            symbol: 'Updated fee name',
+            type: ActivityType.FEE,
+            date: parseDate('2024-01-01'),
+            SymbolProfile: {
+              connect: {
+                dataSource_symbol: {
+                  dataSource: DataSource.MANUAL,
+                  symbol: 'original-profile-symbol'
+                }
+              },
+              update: {
+                name: 'Updated fee name'
+              }
+            }
+          },
+          originalDate: parseDate('2024-01-01'),
+          userId: 'user-id',
+          where: { id: 'activity-id' }
+        });
+
+        if (succeeds) {
+          await expect(operation).resolves.toMatchObject({
+            userId: 'user-id'
+          });
+
+          expect(update).toHaveBeenCalledTimes(1);
+          expect(operations).toEqual(['commit', 'emit']);
+          expect(emit).toHaveBeenCalledTimes(1);
+        } else {
+          await expect(operation).rejects.toMatchObject({
+            code: errorCode
+          });
+
+          expect(update).not.toHaveBeenCalled();
+          expect(operations).toEqual([]);
+          expect(emit).not.toHaveBeenCalled();
+        }
+
+        expect(transaction).toHaveBeenCalledTimes(expectedAttempts);
+      }
+    );
+
     async function getUpdatedActivityData({
+      activitiesCount = 1,
       dataSource = DataSource.MANUAL,
       symbol = 'GF_GOLD',
       type = ActivityType.BUY,
       userId
     }: {
+      activitiesCount?: number;
       dataSource?: DataSource;
       symbol?: string;
       type?: ActivityType;
       userId: string | null;
     }) {
       const update = jest.fn().mockResolvedValue({ userId: 'user-id' });
+
+      const findUnique = jest.fn().mockResolvedValue({
+        symbolProfileId: 'asset-profile-id',
+        SymbolProfile: {
+          id: 'asset-profile-id',
+          userId,
+          name: 'Original fee name',
+          currency: 'EUR',
+          dataSource,
+          symbol: 'original-profile-symbol'
+        }
+      });
+
+      const count = jest.fn().mockResolvedValue(activitiesCount);
 
       const service = new ActivitiesService(
         null,
@@ -714,10 +1042,14 @@ describe('ActivitiesService', () => {
         {
           order: {
             update,
-            findUnique: jest
-              .fn()
-              .mockResolvedValue({ SymbolProfile: { userId } })
-          }
+            count,
+            findUnique
+          },
+          $transaction: jest.fn((callback) =>
+            callback({
+              order: { update, count, findUnique }
+            })
+          )
         } as unknown as PrismaService,
         null,
         { validateTagIds: jest.fn() } as unknown as TagService
@@ -725,6 +1057,7 @@ describe('ActivitiesService', () => {
 
       await service.updateActivity({
         data: {
+          symbol,
           type,
           assetClass: AssetClass.COMMODITY,
           assetSubClass: AssetSubClass.PRECIOUS_METAL,
