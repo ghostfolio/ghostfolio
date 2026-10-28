@@ -67,7 +67,6 @@ const PUBLIC_ROUTES = [
   'GET /auth/oidc/callback',
   'GET /benchmarks',
   'GET /health',
-  'GET /health/ai',
   'GET /health/data-enhancer/:name',
   'GET /health/data-provider/:dataSource',
   'GET /health/liveness',
