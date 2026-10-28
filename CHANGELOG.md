@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated the `api/v1/account` and `api/v1/account-balance` endpoints in favor of the `api/v1/accounts` endpoints
 - Improved the performance of the code style check in the build workflow by skipping the warning-level rules of _ESLint_
 - Refreshed the cryptocurrencies list
+- Upgraded `countries-and-timezones` from version `3.10.0` to `3.11.0`
 
 ### Fixed
 
