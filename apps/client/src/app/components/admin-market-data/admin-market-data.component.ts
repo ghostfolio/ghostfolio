@@ -61,6 +61,7 @@ import {
   ellipsisVertical,
   trashOutline
 } from 'ionicons/icons';
+import { isEqual } from 'lodash-es';
 import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
@@ -208,7 +209,10 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       });
 
     this.filters$
-      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        distinctUntilChanged<Filter[]>(isEqual),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((filters) => {
         this.activeFilters = filters;
 
