@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restricted the health check endpoint of the AI service (`GET api/v1/health/ai`) to administrators
 - Increased the timeout in the health check endpoint of the AI service to 30 seconds
 - Deprecated the `api/v1/access` endpoints in favor of the `api/v1/accesses` endpoints
+- Improved the performance of the code style check in the build workflow by skipping the warning-level rules of _ESLint_
 - Refreshed the cryptocurrencies list
 
 ### Fixed
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the double submission of forms in the account detail dialog, the create or update access dialog, the historical market data editor, the import activities dialog, the coupon system and the create asset profile dialog of the admin control panel
 - Fixed an issue where users could grant a private access to themselves
 - Fixed the status code of the endpoints to add and delete a benchmark if the asset profile does not exist
+- Fixed the git-hook via `husky` to lint and check the formatting of the uncommitted changes before a commit
 
 ## 3.93.0 - 2026-10-25
 
