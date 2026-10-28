@@ -37,7 +37,8 @@ import {
   Component,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -62,7 +63,7 @@ import { addDays, endOfDay, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline } from 'ionicons/icons';
-import { EMPTY, catchError } from 'rxjs';
+import { EMPTY, catchError, finalize } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
@@ -95,6 +96,7 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   protected accessForm: FormGroup;
   protected readonly baseUrl = window.location.origin;
+  protected readonly isSubmitting = signal(false);
   protected minExpiresAt: Date;
   protected readonly mode: 'create' | 'update';
   protected readonly today = startOfDay(new Date());
@@ -307,6 +309,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         object: access
       });
 
+      this.isSubmitting.set(true);
+
       this.dataService
         .postAccess(access)
         .pipe(
@@ -318,6 +322,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
             }
 
             return EMPTY;
+          }),
+          finalize(() => {
+            this.isSubmitting.set(false);
           }),
           takeUntilDestroyed(this.destroyRef)
         )
@@ -407,6 +414,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         object: access
       });
 
+      this.isSubmitting.set(true);
+
       this.dataService
         .putAccess(access)
         .pipe(
@@ -418,6 +427,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
             }
 
             return EMPTY;
+          }),
+          finalize(() => {
+            this.isSubmitting.set(false);
           }),
           takeUntilDestroyed(this.destroyRef)
         )

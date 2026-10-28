@@ -72,6 +72,7 @@ export class GfAccountBalancesComponent implements OnChanges {
   public readonly accountId = input.required<string>();
   public readonly currentBalance = input<number | null>();
   public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
+  public readonly isSubmitting = input(false);
 
   public readonly locale = input(getLocale(), {
     transform: (value?: string) => {

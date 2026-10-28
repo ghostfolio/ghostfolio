@@ -1,6 +1,6 @@
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {

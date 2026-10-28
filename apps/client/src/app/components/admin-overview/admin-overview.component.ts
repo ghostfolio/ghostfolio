@@ -32,7 +32,8 @@ import {
   Component,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -59,7 +60,7 @@ import {
 } from 'ionicons/icons';
 import ms, { StringValue } from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { catchError, of, switchMap } from 'rxjs';
+import { catchError, finalize, of, switchMap } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,6 +103,7 @@ export class GfAdminOverviewComponent implements OnInit {
   protected isDataGatheringEnabled: boolean;
   protected isLoading = false;
   protected isReadOnlyMode: boolean;
+  protected readonly isSavingCoupons = signal(false);
   protected isUserSignupEnabled: boolean;
   protected readonly permissions = permissions;
   protected systemMessage: SystemMessage;
@@ -391,11 +393,18 @@ export class GfAdminOverviewComponent implements OnInit {
     coupons: Coupon[];
     snackBarMessage?: string;
   }) {
+    this.isSavingCoupons.set(true);
+
     this.dataService
       .putAdminSetting(PROPERTY_COUPONS, {
         value: JSON.stringify(coupons)
       })
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        finalize(() => {
+          this.isSavingCoupons.set(false);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => {
         this.couponsDataSource.data = coupons;
 
