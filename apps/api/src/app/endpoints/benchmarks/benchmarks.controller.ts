@@ -30,7 +30,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarksService } from './benchmarks.service';
@@ -51,26 +51,28 @@ export class BenchmarksController {
   public async addBenchmark(
     @Body() { dataSource, symbol }: AssetProfileIdentifier
   ) {
+    let benchmark: Partial<SymbolProfile> | null;
+
     try {
-      const benchmark = await this.benchmarkService.addBenchmark({
+      benchmark = await this.benchmarkService.addBenchmark({
         dataSource,
         symbol
       });
-
-      if (!benchmark) {
-        throw new HttpException(
-          getReasonPhrase(StatusCodes.NOT_FOUND),
-          StatusCodes.NOT_FOUND
-        );
-      }
-
-      return benchmark;
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
+
+    if (!benchmark) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return benchmark;
   }
 
   @Delete(':dataSource/:symbol')
@@ -80,26 +82,28 @@ export class BenchmarksController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
+    let benchmark: Partial<SymbolProfile> | null;
+
     try {
-      const benchmark = await this.benchmarkService.deleteBenchmark({
+      benchmark = await this.benchmarkService.deleteBenchmark({
         dataSource,
         symbol
       });
-
-      if (!benchmark) {
-        throw new HttpException(
-          getReasonPhrase(StatusCodes.NOT_FOUND),
-          StatusCodes.NOT_FOUND
-        );
-      }
-
-      return benchmark;
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
+
+    if (!benchmark) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return benchmark;
   }
 
   @Get()
