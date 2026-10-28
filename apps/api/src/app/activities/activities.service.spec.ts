@@ -267,6 +267,7 @@ describe('ActivitiesService', () => {
         } as unknown as ExchangeRateDataService,
         null,
         {
+          account: { findMany: jest.fn().mockResolvedValue([]) },
           order: {
             findMany,
             count: jest.fn().mockResolvedValue(1)
@@ -302,6 +303,87 @@ describe('ActivitiesService', () => {
       expect(activities[0].assetProfile).toBe(assetProfile);
     });
 
+    it('returns the activities with their account without including it in the query of the activities', async () => {
+      const findMany = jest.fn().mockResolvedValue([
+        {
+          ...activityDummyData,
+          accountId: 'account-id',
+          accountUserId: 'user-id',
+          currency: 'USD',
+          quantity: 1,
+          unitPrice: 100,
+          SymbolProfile: {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            symbol: 'AAPL'
+          },
+          tags: []
+        },
+        {
+          ...activityDummyData,
+          accountId: null,
+          accountUserId: null,
+          currency: 'USD',
+          quantity: 1,
+          unitPrice: 100,
+          SymbolProfile: {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            symbol: 'AAPL'
+          },
+          tags: []
+        }
+      ]);
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          toCurrencyAtDate: jest.fn().mockResolvedValue(0)
+        } as unknown as ExchangeRateDataService,
+        null,
+        {
+          account: {
+            findMany: jest.fn().mockResolvedValue([
+              {
+                id: 'account-id',
+                name: 'Brokerage',
+                platform: { id: 'platform-id', name: 'Broker' },
+                tags: [{ tag: { id: 'tag-id', name: 'Tag' } }],
+                userId: 'user-id'
+              }
+            ])
+          },
+          order: {
+            findMany,
+            count: jest.fn().mockResolvedValue(2)
+          }
+        } as unknown as PrismaService,
+        {
+          getSymbolProfiles: jest.fn().mockResolvedValue([])
+        } as unknown as SymbolProfileService,
+        null
+      );
+
+      const { activities } = await service.getActivities({
+        userCurrency: 'USD',
+        userId: 'user-id'
+      });
+
+      expect(findMany.mock.calls[0][0].include).not.toHaveProperty('account');
+      expect(activities[0].account).toMatchObject({
+        id: 'account-id',
+        platform: { id: 'platform-id', name: 'Broker' },
+        tags: [{ id: 'tag-id', name: 'Tag' }]
+      });
+      expect(activities[1].account).toBeNull();
+    });
+
     it('excludes the activities of the start date of a date range', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2024-06-15').getTime());
 
@@ -333,6 +415,7 @@ describe('ActivitiesService', () => {
         null,
         null,
         {
+          account: { findMany: jest.fn().mockResolvedValue([]) },
           order: {
             findMany,
             count: jest.fn().mockResolvedValue(0)

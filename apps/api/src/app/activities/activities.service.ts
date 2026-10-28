@@ -652,22 +652,12 @@ export class ActivitiesService {
       withExcludedAccountsAndActivities
     });
 
-    const [orders, count] = await Promise.all([
+    const [orders, count, accounts] = await Promise.all([
       this.orders({
         skip,
         take,
         where,
         include: {
-          account: {
-            include: {
-              platform: true,
-              tags: {
-                include: {
-                  tag: true
-                }
-              }
-            }
-          },
           // eslint-disable-next-line @typescript-eslint/naming-convention
           SymbolProfile: {
             select: {
@@ -680,17 +670,35 @@ export class ActivitiesService {
         },
         orderBy: [...orderBy, { id: sortDirection }]
       }),
-      this.prismaService.order.count({ where })
+      this.prismaService.order.count({ where }),
+      // Loaded separately, since including the account (composite key) in the
+      // query above exceeds the query parameter limit for many activities
+      this.prismaService.account.findMany({
+        include: {
+          platform: true,
+          tags: {
+            include: {
+              tag: true
+            }
+          }
+        },
+        where: { userId }
+      })
     ]);
 
     for (const order of orders) {
-      if (order.account) {
-        order.account.tags = (
-          order.account.tags as unknown as { tag: Tag }[]
-        ).map(({ tag }) => {
-          return tag;
-        });
-      }
+      const account = accounts.find(({ id, userId: accountUserId }) => {
+        return id === order.accountId && accountUserId === order.accountUserId;
+      });
+
+      order.account = account
+        ? {
+            ...account,
+            tags: account.tags.map(({ tag }) => {
+              return tag;
+            })
+          }
+        : null;
     }
 
     const assetProfileIdentifiers = uniqBy(
