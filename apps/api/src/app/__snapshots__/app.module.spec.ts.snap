@@ -539,8 +539,12 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
   },
   "GET /health/ai": {
-    "guards": [],
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
     "interceptors": [],
+    "permission": "accessAdminControl",
   },
   "GET /health/data-enhancer/:name": {
     "guards": [],
