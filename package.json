@@ -150,7 +150,7 @@
     "twitter-api-v2": "1.29.1",
     "undici": "8.12.2",
     "uuid": "14.0.2",
-    "yahoo-finance2": "4.0.2",
+    "yahoo-finance2": "4.0.5",
     "zod": "4.6.7",
     "zone.js": "0.16.3"
   },
