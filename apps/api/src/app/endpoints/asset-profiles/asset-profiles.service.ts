@@ -1,5 +1,5 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';

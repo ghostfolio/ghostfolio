@@ -1,8 +1,8 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { getTagsWithDraftTag } from '@ghostfolio/api/helper/activity.helper';
 import { getMaskedGhostfolioDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';

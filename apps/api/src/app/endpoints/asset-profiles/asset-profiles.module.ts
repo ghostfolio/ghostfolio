@@ -1,6 +1,6 @@
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
+import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { AssetProfileSplitModule } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';

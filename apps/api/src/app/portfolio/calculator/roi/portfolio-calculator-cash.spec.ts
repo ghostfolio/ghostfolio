@@ -1,4 +1,3 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import {
   activityDummyData,
   assetProfileDummyData,
@@ -10,6 +9,7 @@ import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.s
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
