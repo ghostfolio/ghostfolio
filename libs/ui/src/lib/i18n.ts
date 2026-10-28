@@ -27,6 +27,7 @@ const locales = {
   HIGHER_RISK: $localize`Higher Risk`,
   IMPORT_ACTIVITY_ERROR_IS_DUPLICATE: $localize`This activity already exists.`,
   LOWER_RISK: $localize`Lower Risk`,
+  MANUAL: $localize`Manual`,
   MONTH: $localize`Month`,
   MONTHS: $localize`Months`,
   OTHER: $localize`Other`,

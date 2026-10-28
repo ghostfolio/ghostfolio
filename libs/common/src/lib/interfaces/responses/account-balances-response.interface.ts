@@ -1,7 +1,7 @@
-import type { AccountBalance } from '@ghostfolio/prisma/browser';
+import type { AccountBalanceResponse } from './account-balance-response.interface';
 
 export interface AccountBalancesResponse {
-  balances: (Pick<AccountBalance, 'accountId' | 'date' | 'id' | 'value'> & {
+  balances: (AccountBalanceResponse & {
     valueInBaseCurrency: number;
   })[];
 }

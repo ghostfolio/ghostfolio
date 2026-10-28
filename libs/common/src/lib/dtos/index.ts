@@ -1,6 +1,7 @@
 import { AuthDeviceDto } from './auth-device.dto';
 import { CountryDto } from './country.dto';
 import { CreateAccessDto } from './create-access.dto';
+import { CreateAccountBalanceWithAccountIdDto } from './create-account-balance-with-account-id.dto';
 import { CreateAccountBalanceDto } from './create-account-balance.dto';
 import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto';
 import { CreateAccountDto } from './create-account.dto';
@@ -36,6 +37,7 @@ export {
   CountryDto,
   CreateAccessDto,
   CreateAccountBalanceDto,
+  CreateAccountBalanceWithAccountIdDto,
   CreateAccountDto,
   CreateAccountWithBalancesDto,
   CreateAssetProfileDto,
