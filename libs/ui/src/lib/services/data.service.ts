@@ -21,8 +21,10 @@ import {
 } from '@ghostfolio/common/dtos';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
-  Access,
+  AccessResponse,
   AccessTokenResponse,
+  AccessesResponse,
+  AccountBalanceResponse,
   AccountBalancesResponse,
   AccountResponse,
   AccountsResponse,
@@ -72,7 +74,6 @@ import type {
 } from '@ghostfolio/common/types';
 import type {
   Account,
-  AccountBalance,
   MarketData,
   Order,
   SymbolProfile,
@@ -198,19 +199,19 @@ export class DataService {
   }
 
   public fetchAccount(aAccountId: string) {
-    return this.http.get<AccountResponse>(`/api/v1/account/${aAccountId}`);
+    return this.http.get<AccountResponse>(`/api/v1/accounts/${aAccountId}`);
   }
 
   public fetchAccountBalances(aAccountId: string) {
     return this.http.get<AccountBalancesResponse>(
-      `/api/v1/account/${aAccountId}/balances`
+      `/api/v1/accounts/${aAccountId}/balances`
     );
   }
 
   public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
     const params = this.buildFiltersAsQueryParams({ filters });
 
-    return this.http.get<AccountsResponse>('/api/v1/account', { params });
+    return this.http.get<AccountsResponse>('/api/v1/accounts', { params });
   }
 
   public fetchActivities({
@@ -310,15 +311,23 @@ export class DataService {
   }
 
   public deleteAccess(aId: string) {
-    return this.http.delete<void>(`/api/v1/access/${aId}`);
+    return this.http.delete<void>(`/api/v1/accesses/${aId}`);
   }
 
   public deleteAccount(aId: string) {
-    return this.http.delete<Account>(`/api/v1/account/${aId}`);
+    return this.http.delete<Account>(`/api/v1/accounts/${aId}`);
   }
 
-  public deleteAccountBalance(aId: string) {
-    return this.http.delete<AccountBalance>(`/api/v1/account-balance/${aId}`);
+  public deleteAccountBalance({
+    accountId,
+    id
+  }: {
+    accountId: string;
+    id: string;
+  }) {
+    return this.http.delete<void>(
+      `/api/v1/accounts/${accountId}/balances/${id}`
+    );
   }
 
   public deleteActivities({
@@ -376,7 +385,7 @@ export class DataService {
   }
 
   public fetchAccesses() {
-    return this.http.get<Access[]>('/api/v1/access');
+    return this.http.get<AccessesResponse>('/api/v1/accesses');
   }
 
   public fetchAsset({
@@ -862,17 +871,23 @@ export class DataService {
   }
 
   public postAccess(aAccess: CreateAccessDto) {
-    return this.http.post<Access>('/api/v1/access', aAccess);
+    return this.http.post<AccessResponse>('/api/v1/accesses', aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {
-    return this.http.post<Account>('/api/v1/account', aAccount);
+    return this.http.post<Account>('/api/v1/accounts', aAccount);
   }
 
-  public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
-    return this.http.post<AccountBalance>(
-      '/api/v1/account-balance',
-      aAccountBalance
+  public postAccountBalance({
+    accountBalance,
+    accountId
+  }: {
+    accountBalance: CreateAccountBalanceDto;
+    accountId: string;
+  }) {
+    return this.http.post<AccountBalanceResponse>(
+      `/api/v1/accounts/${accountId}/balances`,
+      accountBalance
     );
   }
 
@@ -926,11 +941,14 @@ export class DataService {
   }
 
   public putAccess(aAccess: UpdateAccessDto) {
-    return this.http.put<Access>(`/api/v1/access/${aAccess.id}`, aAccess);
+    return this.http.put<AccessResponse>(
+      `/api/v1/accesses/${aAccess.id}`,
+      aAccess
+    );
   }
 
   public putAccount(aAccount: UpdateAccountDto) {
-    return this.http.put<UserItem>(`/api/v1/account/${aAccount.id}`, aAccount);
+    return this.http.put<UserItem>(`/api/v1/accounts/${aAccount.id}`, aAccount);
   }
 
   public putActivity(aOrder: UpdateOrderDto) {
@@ -981,7 +999,7 @@ export class DataService {
     accountIdTo,
     balance
   }: TransferBalanceDto) {
-    return this.http.post('/api/v1/account/transfer-balance', {
+    return this.http.post('/api/v1/accounts/transfer-balance', {
       accountIdFrom,
       accountIdTo,
       balance

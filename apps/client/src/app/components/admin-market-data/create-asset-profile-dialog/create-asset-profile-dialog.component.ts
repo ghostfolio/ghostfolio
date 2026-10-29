@@ -14,7 +14,8 @@ import {
   Component,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -33,7 +34,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { isISO4217CurrencyCode } from 'class-validator';
-import { switchMap } from 'rxjs';
+import { finalize, switchMap } from 'rxjs';
 
 import type {
   CreateAssetProfileDialogMode,
@@ -60,6 +61,7 @@ import type {
 export class GfCreateAssetProfileDialogComponent implements OnInit {
   protected createAssetProfileForm: CreateAssetProfileForm;
   protected readonly ghostfolioPrefix = `${ghostfolioPrefix}_`;
+  protected readonly isSubmitting = signal(false);
   protected mode: CreateAssetProfileDialogMode;
 
   private customCurrencies: string[];
@@ -130,6 +132,8 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
         new Set([...this.customCurrencies, currency])
       ).sort();
 
+      this.isSubmitting.set(true);
+
       this.dataService
         .putAdminSetting(PROPERTY_CURRENCIES, {
           value: JSON.stringify(currencies)
@@ -140,6 +144,9 @@ export class GfCreateAssetProfileDialogComponent implements OnInit {
               dataSource: this.dataSourceForExchangeRates,
               symbol: `${DEFAULT_CURRENCY}${currency}`
             });
+          }),
+          finalize(() => {
+            this.isSubmitting.set(false);
           }),
           takeUntilDestroyed(this.destroyRef)
         )

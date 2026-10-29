@@ -93,7 +93,7 @@
           color="primary"
           mat-flat-button
           type="submit"
-          [disabled]="accountBalanceForm.invalid"
+          [disabled]="accountBalanceForm.invalid || isSubmitting()"
         >
           <span i18n>Add</span>
         </button>

@@ -11,6 +11,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
     "permission": "deleteAccess",
   },
+  "DELETE /accesses/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAccess",
+  },
   "DELETE /account-balance/:id": {
     "guards": [
       "AuthGuard('jwt')",
@@ -39,6 +48,47 @@ exports[`AppModule should keep the security of each route 1`] = `
     "permission": "deleteAccount",
     "scopes": [
       "account:delete",
+    ],
+  },
+  "DELETE /account/:id/balances/:balanceId": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAccountBalance",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "DELETE /accounts/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "deleteAccount",
+    "scopes": [
+      "account:delete",
+    ],
+  },
+  "DELETE /accounts/:id/balances/:balanceId": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteAccountBalance",
+    "scopes": [
+      "account:update",
     ],
   },
   "DELETE /activities": {
@@ -203,6 +253,14 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
     "interceptors": [],
   },
+  "GET /accesses": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+  },
   "GET /account": {
     "guards": [
       "AuthGuard('jwt')",
@@ -233,6 +291,49 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
   },
   "GET /account/:id/balances": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+    ],
+  },
+  "GET /accounts": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "TransformDataSourceInRequestInterceptor",
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+    ],
+  },
+  "GET /accounts/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "scopes": [
+      "account:read",
+    ],
+  },
+  "GET /accounts/:id/balances": {
     "guards": [
       "AuthGuard('jwt')",
       "HasPermissionGuard",
@@ -522,8 +623,12 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
   },
   "GET /health/ai": {
-    "guards": [],
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
     "interceptors": [],
+    "permission": "accessAdminControl",
   },
   "GET /health/data-enhancer/:name": {
     "guards": [],
@@ -802,6 +907,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
     "permission": "createAccess",
   },
+  "POST /accesses": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "createAccess",
+  },
   "POST /account": {
     "guards": [
       "AuthGuard('jwt')",
@@ -832,7 +946,65 @@ exports[`AppModule should keep the security of each route 1`] = `
       "account:update",
     ],
   },
+  "POST /account/:id/balances": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "createAccountBalance",
+    "scopes": [
+      "account:update",
+    ],
+  },
   "POST /account/transfer-balance": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "POST /accounts": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "createAccount",
+    "scopes": [
+      "account:create",
+    ],
+  },
+  "POST /accounts/:id/balances": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "createAccountBalance",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "POST /accounts/transfer-balance": {
     "guards": [
       "AuthGuard('jwt')",
       "HasPermissionGuard",
@@ -1133,7 +1305,31 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
     "permission": "updateAccess",
   },
+  "PUT /accesses/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "updateAccess",
+  },
   "PUT /account/:id": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "RedactValuesInResponseInterceptor",
+    ],
+    "permission": "updateAccount",
+    "scopes": [
+      "account:update",
+    ],
+  },
+  "PUT /accounts/:id": {
     "guards": [
       "AuthGuard('jwt')",
       "HasPermissionGuard",

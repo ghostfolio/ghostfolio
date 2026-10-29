@@ -1,17 +1,20 @@
-import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import {
+  CreateAccountBalanceDto,
   CreateAccountDto,
   TransferBalanceDto,
   UpdateAccountDto
 } from '@ghostfolio/common/dtos';
 import {
+  AccountBalanceResponse,
   AccountBalancesResponse,
   AccountResponse,
   AccountsResponse
@@ -34,12 +37,16 @@ import {
 } from '@nestjs/common';
 import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { pick } from 'lodash-es';
 
-import { AccountService } from './account.service';
 import { GetAllAccountsDto } from './get-all-accounts.dto';
 
-@Controller('account')
-export class AccountController {
+@Controller([
+  'accounts',
+  /** @deprecated */
+  'account'
+])
+export class AccountsController {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
@@ -77,6 +84,33 @@ export class AccountController {
         id,
         userId
       }
+    });
+  }
+
+  @Delete(':id/balances/:balanceId')
+  @HasPermission(permissions.deleteAccountBalance)
+  @RequiresScope(scopes.accountUpdate)
+  public async deleteAccountBalance(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('balanceId') balanceId: string,
+    @Param('id') id: string
+  ): Promise<void> {
+    const accountBalance = await this.accountBalanceService.accountBalance({
+      userId,
+      accountId: id,
+      id: balanceId
+    });
+
+    if (!accountBalance) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    await this.accountBalanceService.deleteAccountBalance({
+      id: accountBalance.id,
+      userId: accountBalance.userId
     });
   }
 
@@ -180,6 +214,40 @@ export class AccountController {
         }
       });
     }
+  }
+
+  @HasPermission(permissions.createAccountBalance)
+  @Post(':id/balances')
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async createAccountBalance(
+    @Body() { balance, date }: CreateAccountBalanceDto,
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ): Promise<AccountBalanceResponse> {
+    const account = await this.accountService.account({
+      id_userId: {
+        id,
+        userId
+      }
+    });
+
+    if (!account) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const accountBalance =
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        balance,
+        date,
+        accountId: account.id,
+        userId: account.userId
+      });
+
+    return pick(accountBalance, ['accountId', 'date', 'id', 'value']);
   }
 
   @HasPermission(permissions.updateAccount)

@@ -190,7 +190,7 @@
               class="ms-1"
               color="primary"
               mat-flat-button
-              [disabled]="!selectedActivities?.length"
+              [disabled]="!selectedActivities?.length || isSubmitting()"
               (click)="onImportActivities()"
             >
               <ng-container i18n>Import</ng-container>

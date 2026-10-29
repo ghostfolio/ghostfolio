@@ -1,7 +1,7 @@
 <form
   class="d-flex flex-column h-100"
   [formGroup]="createAssetProfileForm"
-  (keyup.enter)="createAssetProfileForm.valid && onSubmit()"
+  (keyup.enter)="createAssetProfileForm.valid && !isSubmitting() && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
   <h1 i18n mat-dialog-title>Add Asset Profile</h1>
@@ -63,7 +63,9 @@
       color="primary"
       mat-flat-button
       type="submit"
-      [disabled]="createAssetProfileForm.hasError('atLeastOneValid')"
+      [disabled]="
+        createAssetProfileForm.hasError('atLeastOneValid') || isSubmitting()
+      "
     >
       <ng-container i18n>Save</ng-container>
     </button>

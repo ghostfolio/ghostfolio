@@ -34,7 +34,8 @@ import {
   Component,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -57,7 +58,7 @@ import {
 } from 'ionicons/icons';
 import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { filter, forkJoin } from 'rxjs';
+import { filter, finalize, forkJoin } from 'rxjs';
 
 import {
   AccountDetailDialogParams,
@@ -104,6 +105,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
   protected interestInBaseCurrencyPrecision = 2;
   protected isLoading = true;
   protected isLoadingChart: boolean;
+  protected readonly isSubmitting = signal(false);
   protected name: string | null;
   protected netPerformancePercentageWithCurrencyEffect: number;
   protected netPerformancePercentageWithCurrencyEffectPrecision = 2;
@@ -171,9 +173,19 @@ export class GfAccountDetailDialogComponent implements OnInit {
   }
 
   protected onAddAccountBalance(accountBalance: CreateAccountBalanceDto) {
+    this.isSubmitting.set(true);
+
     this.dataService
-      .postAccountBalance(accountBalance)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .postAccountBalance({
+        accountBalance,
+        accountId: this.data.accountId
+      })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.set(false);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => {
         this.initialize();
 
@@ -193,7 +205,7 @@ export class GfAccountDetailDialogComponent implements OnInit {
 
   protected onDeleteAccountBalance(aId: string) {
     this.dataService
-      .deleteAccountBalance(aId)
+      .deleteAccountBalance({ accountId: this.data.accountId, id: aId })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.initialize();
