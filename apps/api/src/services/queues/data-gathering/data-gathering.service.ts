@@ -33,7 +33,14 @@ import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job, JobOptions, Queue } from 'bull';
-import { format, min, subDays, subMilliseconds, subYears } from 'date-fns';
+import {
+  format,
+  isBefore,
+  min,
+  subDays,
+  subMilliseconds,
+  subYears
+} from 'date-fns';
 import { isEmpty } from 'lodash-es';
 import ms, { StringValue } from 'ms';
 
@@ -358,6 +365,10 @@ export class DataGatheringService {
         ]?.marketPrice;
 
       if (marketPrice) {
+        const state = isBefore(startOfUtcDate, getStartOfUtcDate(new Date()))
+          ? 'CLOSE'
+          : 'INTRADAY';
+
         return await this.prismaService.marketData.upsert({
           create: {
             dataSource,
@@ -366,7 +377,7 @@ export class DataGatheringService {
             date: startOfUtcDate,
             isCarriedForward: false
           },
-          update: { marketPrice, isCarriedForward: false },
+          update: { marketPrice, state, isCarriedForward: false },
           where: {
             dataSource_symbol_date: {
               dataSource,

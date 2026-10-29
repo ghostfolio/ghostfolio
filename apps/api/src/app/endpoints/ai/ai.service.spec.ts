@@ -12,7 +12,6 @@ import {
   PROPERTY_OPENROUTER_MODEL_AGENT,
   PROPERTY_OPENROUTER_MODEL_VISION
 } from '@ghostfolio/common/config';
-import { SubscriptionType } from '@ghostfolio/common/enums';
 import { isValidCustomAssetProfileSymbol } from '@ghostfolio/common/helper';
 import type { UserWithSettings } from '@ghostfolio/common/types';
 
@@ -100,17 +99,14 @@ describe('AiService', () => {
     dataProviderService = {
       getDataSources: jest
         .fn()
-        .mockResolvedValue([DataSource.MANUAL, DataSource.YAHOO]),
-      isPremiumRequired: jest.fn().mockReturnValue(false)
+        .mockResolvedValue([DataSource.MANUAL, DataSource.YAHOO])
     } as unknown as DataProviderService;
 
     mcpService = {
       getAccounts: jest.fn().mockResolvedValue({
         content: [{ text: '## Accounts', type: 'text' }]
       }),
-      getPortfolio: jest.fn().mockResolvedValue({
-        content: [{ text: '## Holdings', type: 'text' }]
-      }),
+      getAssetProfilesOfUser: jest.fn().mockResolvedValue([]),
       searchAssetProfiles: jest.fn().mockResolvedValue({
         content: [{ text: '{ "assetProfiles": [] }', type: 'text' }]
       })
@@ -357,8 +353,7 @@ describe('AiService', () => {
     const user = {
       accounts: [{ currency: 'CHF', id: 'account-id', name: 'Brokerage' }],
       id: 'user-id',
-      settings: { settings: { baseCurrency: 'EUR', locale: 'de-CH' } },
-      subscription: { type: SubscriptionType.Basic }
+      settings: { settings: { baseCurrency: 'EUR', locale: 'de-CH' } }
     } as unknown as UserWithSettings;
 
     it('Reads the rows of the file and matches them with the accounts, the base currency and the id of the user', async () => {
@@ -402,7 +397,6 @@ describe('AiService', () => {
         rows,
         accounts: user.accounts,
         broker: 'Swissquote',
-        subscription: user.subscription,
         userCurrency: 'EUR',
         userId: 'user-id'
       });
@@ -542,24 +536,22 @@ describe('AiService', () => {
     function mockHoldings({
       dataSource = 'YAHOO'
     }: { dataSource?: string } = {}) {
-      jest.mocked(mcpService.getPortfolio).mockResolvedValue({
-        content: [
-          {
-            text: [
-              '## Holdings',
-              '',
-              '| Name                              | ISIN         | Symbol  | Data Source | Currency | Asset Class | Asset Sub Class | Date of First Activity | Activities Count | Allocation in Percentage |',
-              '| :-------------------------------- | :----------- | :------ | :---------- | :------- | :---------- | :-------------- | :--------------------- | ---------------: | -----------------------: |',
-              '| Vanguard FTSE All-World UCITS ETF | IE00BK5BQT80 | VWRA.SW | YAHOO       | USD      | Equity      | ETF             | 2021-03-15             |                4 |                  70.000% |',
-              '| Apple Inc.                        |              | AAPL    | YAHOO       | USD      | Equity      | Stock           | 2022-06-01             |                2 |                  20.000% |',
-              '| US Dollar                         |              | USD     |             | USD      | Liquidity   | Cash            | 2021-03-15             |                1 |                  10.000% |'
-            ]
-              .join('\n')
-              .replaceAll('| YAHOO       |', `| ${dataSource.padEnd(11)} |`),
-            type: 'text'
-          }
-        ]
-      });
+      jest.mocked(mcpService.getAssetProfilesOfUser).mockResolvedValue([
+        {
+          dataSource,
+          currency: 'USD',
+          isin: 'IE00BK5BQT80',
+          name: 'Vanguard FTSE All-World UCITS ETF',
+          symbol: 'VWRA.SW'
+        },
+        {
+          dataSource,
+          currency: 'USD',
+          isin: null,
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        }
+      ]);
     }
 
     it('Gives an activity for each row whose asset matches an asset profile', async () => {
@@ -878,31 +870,6 @@ describe('AiService', () => {
       ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
     });
 
-    it('Gives a row whose asset match has the symbol in the currency column of a holding as a row without a match', async () => {
-      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
-
-      const row = createActivityRow({
-        accountName: null,
-        isin: 'IE00BK5BQT80'
-      });
-
-      mockRowMatches({
-        assetProfilesOfSearch: [],
-        assets: [{ currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'USD' }]
-      });
-
-      mockHoldings();
-
-      await expect(
-        aiService.getActivitiesFromRows({
-          accounts,
-          userCurrency,
-          userId,
-          rows: [row]
-        })
-      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
-    });
-
     it('Gives a row whose asset match is a holding with another ISIN as a row without a match and logs the left out match', async () => {
       jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
@@ -975,55 +942,6 @@ describe('AiService', () => {
         ],
         rowsWithoutMatch: []
       });
-
-      expect(dataProviderService.isPremiumRequired).toHaveBeenCalledWith({
-        dataSource: DataSource.YAHOO,
-        subscription: undefined
-      });
-    });
-
-    it('Passes no holding with a data source which requires Premium to the model and gives a row whose asset match is such a holding as a row without a match', async () => {
-      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
-
-      jest.mocked(dataProviderService.isPremiumRequired).mockReturnValue(true);
-
-      const row = createActivityRow({
-        accountName: null,
-        isin: 'IE00BK5BQT80',
-        symbol: null
-      });
-
-      const subscription = {
-        type: SubscriptionType.Basic
-      } as UserWithSettings['subscription'];
-
-      mockRowMatches({
-        assetProfilesOfSearch: [],
-        assets: [
-          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'VWRA.SW' }
-        ]
-      });
-
-      mockHoldings();
-
-      await expect(
-        aiService.getActivitiesFromRows({
-          accounts,
-          subscription,
-          userCurrency,
-          userId,
-          rows: [row]
-        })
-      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
-
-      expect(dataProviderService.isPremiumRequired).toHaveBeenCalledWith({
-        subscription,
-        dataSource: DataSource.YAHOO
-      });
-
-      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
-
-      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', []);
     });
 
     it('Passes no holding with a data source which is not configured to the model and gives a row whose asset match is such a holding as a row without a match', async () => {
@@ -1060,28 +978,6 @@ describe('AiService', () => {
       const { prompt } = jest.mocked(generateText).mock.calls[0][0];
 
       expect(JSON.parse(prompt as string)).toHaveProperty('holdings', []);
-    });
-
-    it('Gives a row whose asset match is a cash position of the holdings as a row without a match', async () => {
-      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
-
-      const row = createActivityRow({ accountName: null });
-
-      mockRowMatches({
-        assetProfilesOfSearch: [],
-        assets: [{ currency: 'USD', dataSource: '', id: 0, symbol: 'USD' }]
-      });
-
-      mockHoldings();
-
-      await expect(
-        aiService.getActivitiesFromRows({
-          accounts,
-          userCurrency,
-          userId,
-          rows: [row]
-        })
-      ).resolves.toEqual({ activities: [], rowsWithoutMatch: [row] });
     });
 
     it('Matches a row without an account name by the broker of the file', async () => {
@@ -1491,7 +1387,7 @@ describe('AiService', () => {
       );
     });
 
-    it('Gets the holdings with the tool of the server of the Model Context Protocol without values', async () => {
+    it('Gets the holdings of the user from the server of the Model Context Protocol', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
@@ -1501,13 +1397,12 @@ describe('AiService', () => {
         rows: [createActivityRow()]
       });
 
-      expect(mcpService.getPortfolio).toHaveBeenCalledWith({
-        userId,
-        withValues: false
+      expect(mcpService.getAssetProfilesOfUser).toHaveBeenCalledWith({
+        userId
       });
     });
 
-    it('Passes the currency, the data source, the ISIN, the name and the symbol of each holding without the cash position to the model', async () => {
+    it('Passes the currency, the data source, the ISIN, the name and the symbol of each holding to the model', async () => {
       mockRowMatches({});
 
       mockHoldings();
@@ -1539,44 +1434,6 @@ describe('AiService', () => {
       ]);
     });
 
-    it('Restores an escaped pipe in a value of the holdings', async () => {
-      mockRowMatches({});
-
-      jest.mocked(mcpService.getPortfolio).mockResolvedValue({
-        content: [
-          {
-            text: [
-              '## Holdings',
-              '',
-              '| Name        | ISIN | Symbol | Data Source | Currency |',
-              '| :---------- | :--- | :----- | :---------- | :------- |',
-              '| Fund A \\| B |      | FAB    | YAHOO       | USD      |'
-            ].join('\n'),
-            type: 'text'
-          }
-        ]
-      });
-
-      await aiService.getActivitiesFromRows({
-        accounts,
-        userCurrency,
-        userId,
-        rows: [createActivityRow()]
-      });
-
-      const { prompt } = jest.mocked(generateText).mock.calls[0][0];
-
-      expect(JSON.parse(prompt as string)).toHaveProperty('holdings', [
-        {
-          currency: 'USD',
-          dataSource: 'YAHOO',
-          isin: null,
-          name: 'Fund A | B',
-          symbol: 'FAB'
-        }
-      ]);
-    });
-
     it('Does not get the holdings without an asset', async () => {
       mockRowMatches({});
 
@@ -1595,7 +1452,7 @@ describe('AiService', () => {
         ]
       });
 
-      expect(mcpService.getPortfolio).not.toHaveBeenCalled();
+      expect(mcpService.getAssetProfilesOfUser).not.toHaveBeenCalled();
       expect(dataProviderService.getDataSources).not.toHaveBeenCalled();
 
       const { prompt } = jest.mocked(generateText).mock.calls[0][0];
@@ -1613,8 +1470,8 @@ describe('AiService', () => {
       });
 
       jest
-        .mocked(mcpService.getPortfolio)
-        .mockRejectedValueOnce(new Error('Calculation failed'));
+        .mocked(mcpService.getAssetProfilesOfUser)
+        .mockRejectedValueOnce(new Error('Query failed'));
 
       const { activities } = await aiService.getActivitiesFromRows({
         accounts,
@@ -1630,7 +1487,7 @@ describe('AiService', () => {
       expect(JSON.parse(prompt as string)).not.toHaveProperty('holdings');
 
       expect(Logger.prototype.warn).toHaveBeenCalledWith(
-        'Could not get the holdings: Calculation failed'
+        'Could not get the holdings: Query failed'
       );
     });
 
