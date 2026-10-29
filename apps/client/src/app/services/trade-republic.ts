@@ -12,8 +12,8 @@ import {
   Type as ActivityType
 } from '@ghostfolio/prisma/enums';
 
-import { format } from 'date-fns';
 import { isDate, isFinite, isNumber, isString } from 'lodash-es';
+import ms from 'ms';
 import { parse as csvToJson } from 'papaparse';
 
 const ACCOUNT_NAME = 'Trade Republic';
@@ -140,59 +140,71 @@ export function convertTradeRepublicCsv({
  * Marks activities as duplicates if they match an existing activity, including
  * those imported with day-only dates, rounded prices and dividends with the
  * total amount as unit price. Activities of instruments without existing
- * activities are skipped if they predate the latest existing activity of the
- * export.
+ * activities are skipped if they predate the latest duplicate.
  */
 export function reconcileTradeRepublicActivities({
   activities,
+  convertedActivities,
   existingActivities
 }: {
   activities: Activity[];
+  convertedActivities: CreateOrderDto[];
   existingActivities: Activity[];
 }): Activity[] {
-  const symbols = new Set(
-    activities.map(({ assetProfile }) => {
-      return assetProfile?.symbol;
+  // The dry run can replace the symbol of an asset profile owned by another user
+  const convertedSymbols = new Map(
+    convertedActivities.map(({ comment, symbol }) => {
+      return [comment, symbol];
     })
   );
-
-  const relatedActivities = existingActivities.filter(({ assetProfile }) => {
-    return symbols.has(assetProfile?.symbol);
-  });
 
   const trackedSymbols = new Set(
-    relatedActivities.map(({ assetProfile }) => {
+    existingActivities.map(({ assetProfile }) => {
       return assetProfile?.symbol;
     })
   );
 
-  const latestDate = Math.max(
-    ...relatedActivities.map(({ date }) => {
-      return toDate(date).getTime();
-    })
-  );
+  const getSymbols = ({ assetProfile, comment }: Activity) => {
+    return [assetProfile?.symbol, convertedSymbols.get(comment ?? undefined)];
+  };
+
+  let latestDuplicateDate = -Infinity;
 
   return activities
-    .filter(({ assetProfile, date }) => {
-      return (
-        trackedSymbols.has(assetProfile?.symbol) ||
-        toDate(date).getTime() > latestDate
-      );
-    })
     .map((activity) => {
-      const isDuplicate = existingActivities.some((existingActivity) => {
-        return isSameTradeRepublicActivity(existingActivity, activity);
+      const symbols = getSymbols(activity);
+
+      const duplicate = existingActivities.find((existingActivity) => {
+        return (
+          symbols.includes(existingActivity.assetProfile?.symbol) &&
+          isSameTradeRepublicActivity(existingActivity, activity)
+        );
       });
 
-      return isDuplicate
-        ? { ...activity, error: { code: 'IS_DUPLICATE' } }
-        : activity;
+      if (!duplicate) {
+        return activity;
+      }
+
+      latestDuplicateDate = Math.max(
+        latestDuplicateDate,
+        toDate(duplicate.date).getTime()
+      );
+
+      return { ...activity, error: { code: 'IS_DUPLICATE' as const } };
+    })
+    .filter((activity) => {
+      return (
+        Boolean(activity.error) ||
+        getSymbols(activity).some((symbol) => {
+          return symbol && trackedSymbols.has(symbol);
+        }) ||
+        toDate(activity.date).getTime() > latestDuplicateDate
+      );
     });
 }
 
 function isSameTradeRepublicActivity(existing: Activity, activity: Activity) {
   if (
-    existing.assetProfile?.symbol !== activity.assetProfile?.symbol ||
     existing.type !== activity.type ||
     Math.abs(existing.quantity - activity.quantity) >
       1e-6 * Math.max(1, activity.quantity)
@@ -203,11 +215,18 @@ function isSameTradeRepublicActivity(existing: Activity, activity: Activity) {
   const date = toDate(activity.date);
   const existingDate = toDate(existing.date);
 
+  const startOfDay = Date.UTC(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate()
+  );
+
   // Day-only dates were stored as midnight in the timezone of the browser
-  if (
-    Math.abs(existingDate.getTime() - date.getTime()) >= 1000 &&
-    format(existingDate, 'yyyy-MM-dd') !== date.toISOString().slice(0, 10)
-  ) {
+  const isDayOnly =
+    existingDate.getTime() % ms('15 minutes') === 0 &&
+    Math.abs(existingDate.getTime() - startOfDay) <= ms('14 hours');
+
+  if (Math.abs(existingDate.getTime() - date.getTime()) >= 1000 && !isDayOnly) {
     return false;
   }
 

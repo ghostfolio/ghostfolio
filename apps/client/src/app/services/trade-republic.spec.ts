@@ -1,3 +1,4 @@
+import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import { Activity } from '@ghostfolio/common/interfaces';
 import type { Account } from '@ghostfolio/prisma/browser';
 
@@ -21,9 +22,11 @@ describe('TradeRepublic', () => {
     type: Activity['type'],
     quantity: number,
     unitPrice: number,
-    symbol = 'GF_US0378331005'
+    symbol = 'GF_US0378331005',
+    comment?: string
   ) => {
     return {
+      comment,
       date,
       quantity,
       type,
@@ -78,8 +81,10 @@ describe('TradeRepublic', () => {
       activity('2024-02-01T13:26:26.799Z', 'DIVIDEND', 25, 6.41 / 25),
       activity('2024-03-01T13:26:26.799Z', 'DIVIDEND', 25, 6.5 / 25),
       activity('2026-04-02T07:18:13.532Z', 'BUY', 71.316502, 7.011),
+      activity('2026-04-02T15:18:13.532Z', 'BUY', 71.316502, 7.02),
       activity('2026-05-04T07:18:13.532Z', 'BUY', 71.316502, 7.011),
-      activity('2026-06-02T07:18:13.532Z', 'BUY', 10, 7.011)
+      activity('2026-06-02T07:18:13.532Z', 'BUY', 10, 7.011),
+      activity('2026-07-02T07:18:13.532Z', 'BUY', 3, 7, 'uuid', 't1')
     ];
 
     const existingActivities = [
@@ -88,47 +93,60 @@ describe('TradeRepublic', () => {
       activity(new Date(2024, 2, 1), 'DIVIDEND', 25, 0.26),
       activity('2026-04-02T07:18:13.532Z', 'BUY', 71.316502, 7.011),
       activity(new Date(2026, 4, 5), 'BUY', 71.316502, 7.011),
-      activity('2026-06-02T07:18:13.532Z', 'BUY', 10, 7.011, 'GF_OTHER')
+      activity('2026-06-02T07:18:13.532Z', 'BUY', 10, 7.011, 'GF_OTHER'),
+      activity('2026-07-02T07:18:13.532Z', 'BUY', 3, 7, 'GF_X')
     ];
 
     expect(
-      reconcileTradeRepublicActivities({ activities, existingActivities }).map(
-        ({ error }) => {
-          return error?.code;
-        }
-      )
+      reconcileTradeRepublicActivities({
+        activities,
+        existingActivities,
+        convertedActivities: [
+          { comment: 't1', symbol: 'GF_X' } as CreateOrderDto
+        ]
+      }).map(({ error }) => {
+        return error?.code;
+      })
     ).toEqual([
       'IS_DUPLICATE',
       'IS_DUPLICATE',
       'IS_DUPLICATE',
       'IS_DUPLICATE',
       undefined,
-      undefined
+      undefined,
+      undefined,
+      'IS_DUPLICATE'
     ]);
   });
 
-  it('skips earlier activities of instruments without existing activities', () => {
+  it('skips activities of untracked instruments before the latest duplicate', () => {
     const activities = [
       activity('2025-01-02T10:00:00.000Z', 'BUY', 1, 10, 'GF_OLD'),
-      activity('2026-09-02T10:00:00.000Z', 'BUY', 1, 10, 'GF_NEW'),
-      activity('2022-05-26T10:00:00.000Z', 'DIVIDEND', 1, 0.2)
+      activity('2026-08-30T10:00:00.000Z', 'BUY', 2, 10),
+      activity('2026-09-02T10:00:00.000Z', 'BUY', 1, 10, 'GF_NEW')
     ];
 
     const existingActivities = [
       activity('2026-08-30T10:00:00.000Z', 'BUY', 2, 10),
-      activity('2027-01-01T10:00:00.000Z', 'BUY', 2, 10, 'GF_OTHER')
+      activity('2026-09-10T10:00:00.000Z', 'BUY', 5, 10)
     ];
 
     expect(
-      reconcileTradeRepublicActivities({ activities, existingActivities }).map(
-        ({ assetProfile }) => {
-          return assetProfile.symbol;
-        }
-      )
-    ).toEqual(['GF_NEW', 'GF_US0378331005']);
+      reconcileTradeRepublicActivities({
+        activities,
+        existingActivities,
+        convertedActivities: []
+      }).map(({ assetProfile }) => {
+        return assetProfile.symbol;
+      })
+    ).toEqual(['GF_US0378331005', 'GF_NEW']);
 
     expect(
-      reconcileTradeRepublicActivities({ activities, existingActivities: [] })
+      reconcileTradeRepublicActivities({
+        activities,
+        convertedActivities: [],
+        existingActivities: []
+      })
     ).toHaveLength(3);
   });
 });

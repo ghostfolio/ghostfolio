@@ -539,7 +539,8 @@ export class ImportActivitiesService {
       assetProfiles,
       activities: reconcileTradeRepublicActivities({
         existingActivities,
-        activities: result.activities
+        activities: result.activities,
+        convertedActivities: activities
       })
     };
   }
