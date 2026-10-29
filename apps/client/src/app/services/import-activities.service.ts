@@ -21,6 +21,12 @@ import { parse as csvToJson } from 'papaparse';
 import { firstValueFrom } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
+import {
+  convertTradeRepublicCsv,
+  isTradeRepublicCsv,
+  reconcileTradeRepublicActivities
+} from './trade-republic';
+
 @Service()
 export class ImportActivitiesService {
   private static ACCOUNT_KEYS = ['account', 'accountid'];
@@ -65,6 +71,14 @@ export class ImportActivitiesService {
     activities: Activity[];
     assetProfiles: CreateAssetProfileWithMarketDataDto[];
   }> {
+    if (isTradeRepublicCsv(fileContent)) {
+      return this.importTradeRepublicCsv({
+        fileContent,
+        isDryRun,
+        userAccounts
+      });
+    }
+
     const content = csvToJson<Record<string, unknown>>(fileContent, {
       dynamicTyping: true,
       header: true,
@@ -493,6 +507,40 @@ export class ImportActivitiesService {
     throw {
       activities: content,
       message: `activities.${index}.unitPrice is not valid`
+    };
+  }
+
+  private async importTradeRepublicCsv({
+    fileContent,
+    isDryRun,
+    userAccounts
+  }: {
+    fileContent: string;
+    isDryRun: boolean;
+    userAccounts: Account[];
+  }) {
+    const { activities, assetProfiles } = convertTradeRepublicCsv({
+      fileContent,
+      userAccounts
+    });
+
+    const [result, existingActivities] = await Promise.all([
+      this.importJson({ activities, assetProfiles, isDryRun }),
+      isDryRun
+        ? firstValueFrom(
+            this.http.get<{ activities: Activity[] }>('/api/v1/activities')
+          ).then((response) => {
+            return response.activities;
+          })
+        : []
+    ]);
+
+    return {
+      assetProfiles,
+      activities: reconcileTradeRepublicActivities({
+        existingActivities,
+        activities: result.activities
+      })
     };
   }
 
