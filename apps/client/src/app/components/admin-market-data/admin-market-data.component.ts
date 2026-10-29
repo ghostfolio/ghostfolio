@@ -1,22 +1,17 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  DEFAULT_COLOR_SCHEME,
-  DEFAULT_PAGE_SIZE,
-  locale
-} from '@ghostfolio/common/config';
-import {
-  canDeleteAssetProfile,
-  getDateFormatString
-} from '@ghostfolio/common/helper';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { canDeleteAssetProfile } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  AssetProfileItem,
   Filter,
   InfoItem,
   User
 } from '@ghostfolio/common/interfaces';
-import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import type { SymbolProfile } from '@ghostfolio/prisma/browser';
+import { AssetSubClass } from '@ghostfolio/prisma/enums';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { GfFabComponent } from '@ghostfolio/ui/fab';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -31,7 +26,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
   DestroyRef,
   inject,
   OnInit,
@@ -40,13 +34,13 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import {
   MatPaginator,
   MatPaginatorModule,
   PageEvent
 } from '@angular/material/paginator';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import {
   MatSort,
   MatSortModule,
@@ -54,9 +48,8 @@ import {
   SortDirection
 } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { addIcons } from 'ionicons';
 import {
@@ -68,16 +61,13 @@ import {
   ellipsisVertical,
   trashOutline
 } from 'ionicons/icons';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { isEqual } from 'lodash-es';
+import ms from 'ms';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
-import { GfAssetProfileDialogComponent } from './asset-profile-dialog/asset-profile-dialog.component';
-import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
-import { GfCreateAssetProfileDialogComponent } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
-import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -86,13 +76,13 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
     GfActivitiesFilterComponent,
     GfFabComponent,
     GfPremiumIndicatorComponent,
-    GfSymbolPipe,
     GfValueComponent,
     IonIcon,
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatSnackBarModule,
     MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
@@ -106,7 +96,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
 export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   protected readonly adminMarketDataService = inject(AdminMarketDataService);
 
-  protected readonly allFilters: Filter[] = [
+  protected allFilters: Filter[] = [
     ...Object.keys(AssetSubClass)
       .filter((assetSubClass) => {
         return assetSubClass !== 'CASH';
@@ -118,13 +108,6 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
           type: 'ASSET_SUB_CLASS' as Filter['type']
         };
       }),
-    ...Object.keys(DataSource).map((dataSource) => {
-      return {
-        id: dataSource.toString(),
-        label: dataSource,
-        type: 'DATA_SOURCE' as Filter['type']
-      };
-    }),
     {
       id: 'BENCHMARKS',
       label: $localize`Benchmarks`,
@@ -152,23 +135,21 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     }
   ];
   protected readonly canDeleteAssetProfile = canDeleteAssetProfile;
-  protected dataSource = new MatTableDataSource<AdminMarketDataItem>();
-  protected defaultDateFormat: string;
+  protected dataSource = new MatTableDataSource<AssetProfileItem>();
   protected readonly displayedColumns: string[] = [];
   protected readonly filters$ = new Subject<Filter[]>();
   protected isLoading = true;
+  protected readonly internalRoutes = internalRoutes;
   protected readonly isUUID = isUUID;
   protected pageSize = DEFAULT_PAGE_SIZE;
   protected placeholder = '';
-  protected readonly selection = new SelectionModel<AdminMarketDataItem>(true);
+  protected readonly selection = new SelectionModel<AssetProfileItem>(true);
   protected totalItems = 0;
+  protected readonly translate = translate;
   protected user: User;
 
   private activeFilters: Filter[] = [];
   private benchmarks: Partial<SymbolProfile>[];
-  private readonly deviceType = computed(
-    () => this.deviceDetectorService.deviceInfo().deviceType
-  );
   private readonly hasPermissionForSubscription: boolean;
   private readonly info: InfoItem;
   private readonly paginator = viewChild.required(MatPaginator);
@@ -178,10 +159,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly deviceDetectorService = inject(DeviceDetectorService);
-  private readonly dialog = inject(MatDialog);
-  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly userService = inject(UserService);
 
   public constructor() {
@@ -214,21 +193,11 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     this.displayedColumns.push('comment');
     this.displayedColumns.push('actions');
 
-    this.route.queryParams
+    this.adminMarketDataService.refresh$
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((params) => {
-        if (
-          params['assetProfileDialog'] &&
-          params['dataSource'] &&
-          params['symbol']
-        ) {
-          this.openAssetProfileDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
-        } else if (params['createAssetProfileDialog']) {
-          this.openCreateAssetProfileDialog();
-        }
+      .subscribe(() => {
+        this.loadDataSourceFilters();
+        this.reloadData();
       });
 
     this.userService.stateChanged
@@ -236,19 +205,18 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.defaultDateFormat = getDateFormatString(
-            this.user.settings.locale
-          );
         }
       });
 
     this.filters$
-      .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        distinctUntilChanged<Filter[]>(isEqual),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe((filters) => {
         this.activeFilters = filters;
 
-        this.loadData();
+        this.reloadData({ pageIndex: 0 });
       });
 
     addIcons({
@@ -280,6 +248,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     const { benchmarks } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
+
+    this.loadDataSourceFilters();
   }
 
   protected onChangePage(page: PageEvent) {
@@ -294,25 +264,26 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
+    this.adminMarketDataService
+      .deleteAssetProfile({ dataSource, symbol })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadDataSourceFilters();
+        this.reloadData();
+      });
   }
 
   protected onDeleteAssetProfiles() {
-    this.adminMarketDataService.deleteAssetProfiles(
-      this.selection.selected.map(({ dataSource, symbol }) => {
-        return { dataSource, symbol };
-      })
-    );
-  }
-
-  protected onGather7Days() {
-    this.adminService
-      .gather7Days()
+    this.adminMarketDataService
+      .deleteAssetProfiles(
+        this.selection.selected.map(({ dataSource, symbol }) => {
+          return { dataSource, symbol };
+        })
+      )
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
+        this.loadDataSourceFilters();
+        this.reloadData();
       });
   }
 
@@ -321,9 +292,7 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       .gatherMax()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
+        this.notifyDataGatheringHasBeenStarted();
       });
   }
 
@@ -331,20 +300,30 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
     this.adminService
       .gatherProfileData()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe();
+      .subscribe(() => {
+        this.notifyDataGatheringHasBeenStarted();
+      });
+  }
+
+  protected onGatherRecentMarketData() {
+    this.adminService
+      .gatherRecentMarketData()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.notifyDataGatheringHasBeenStarted();
+      });
   }
 
   protected onOpenAssetProfileDialog({
     dataSource,
     symbol
   }: AssetProfileIdentifier) {
-    this.router.navigate([], {
-      queryParams: {
+    void this.router.navigate(
+      internalRoutes.adminControl.subRoutes.marketData.subRoutes.update.routerLink(
         dataSource,
-        symbol,
-        assetProfileDialog: true
-      }
-    });
+        symbol
+      )
+    );
   }
 
   private loadData(
@@ -375,8 +354,8 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
 
     this.selection.clear();
 
-    this.adminService
-      .fetchAdminMarketData({
+    this.dataService
+      .fetchAssetProfiles({
         sortColumn,
         sortDirection,
         filters: this.activeFilters,
@@ -384,15 +363,15 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
         take: this.pageSize
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ count, marketData }) => {
+      .subscribe(({ assetProfiles, count }) => {
         this.totalItems = count;
 
         this.dataSource = new MatTableDataSource(
-          marketData.map((marketDataItem) => {
+          assetProfiles.map((assetProfile) => {
             return {
-              ...marketDataItem,
+              ...assetProfile,
               isBenchmark: this.benchmarks.some(({ id }) => {
-                return id === marketDataItem.id;
+                return id === assetProfile.id;
               })
             };
           })
@@ -405,95 +384,53 @@ export class GfAdminMarketDataComponent implements AfterViewInit, OnInit {
       });
   }
 
-  private openAssetProfileDialog({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    this.userService
-      .get()
+  private loadDataSourceFilters() {
+    this.adminService
+      .fetchAdminData()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((user) => {
-        this.user = user;
-
-        const dialogRef = this.dialog.open<
-          GfAssetProfileDialogComponent,
-          AssetProfileDialogParams
-        >(GfAssetProfileDialogComponent, {
-          autoFocus: false,
-          data: {
-            dataSource,
-            symbol,
-            colorScheme:
-              this.user?.settings.colorScheme ?? DEFAULT_COLOR_SCHEME,
-            deviceType: this.deviceType(),
-            locale: this.user?.settings?.locale ?? locale
-          } satisfies AssetProfileDialogParams,
-          height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
-          width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
-        });
-
-        dialogRef
-          .afterClosed()
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(
-            (newAssetProfileIdentifier: AssetProfileIdentifier | undefined) => {
-              if (newAssetProfileIdentifier) {
-                this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
-              } else {
-                this.router.navigate(['.'], { relativeTo: this.route });
+      .subscribe(({ dataProviders }) => {
+        this.allFilters = [
+          ...this.allFilters.filter(({ type }) => {
+            return type !== 'DATA_SOURCE';
+          }),
+          ...dataProviders.flatMap(
+            ({ assetProfileCount, dataSource, name }) => {
+              if (assetProfileCount === 0 || !dataSource) {
+                return [];
               }
+
+              return [
+                {
+                  id: dataSource,
+                  label: name ?? translate(dataSource),
+                  type: 'DATA_SOURCE' as Filter['type']
+                }
+              ];
             }
-          );
+          )
+        ];
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
-  private openCreateAssetProfileDialog() {
-    this.userService
-      .get()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((user) => {
-        this.user = user;
+  private notifyDataGatheringHasBeenStarted() {
+    this.snackBar.open(
+      '✅ ' + $localize`Data gathering has been started.`,
+      undefined,
+      {
+        duration: ms('3 seconds')
+      }
+    );
+  }
 
-        const dialogRef = this.dialog.open<
-          GfCreateAssetProfileDialogComponent,
-          CreateAssetProfileDialogParams
-        >(GfCreateAssetProfileDialogComponent, {
-          autoFocus: false,
-          data: {
-            deviceType: this.deviceType(),
-            locale: this.user?.settings?.locale ?? locale
-          } satisfies CreateAssetProfileDialogParams,
-          width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
-        });
-
-        dialogRef
-          .afterClosed()
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe((result) => {
-            if (!result) {
-              this.router.navigate(['.'], { relativeTo: this.route });
-
-              return;
-            }
-
-            const { addAssetProfile, dataSource, symbol } = result;
-
-            if (addAssetProfile && dataSource && symbol) {
-              this.adminService
-                .addAssetProfile({ dataSource, symbol })
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                  this.loadData();
-                });
-            } else {
-              this.loadData();
-            }
-
-            this.onOpenAssetProfileDialog({ dataSource, symbol });
-          });
-      });
+  private reloadData({
+    pageIndex = this.paginator().pageIndex
+  }: { pageIndex?: number } = {}) {
+    this.loadData({
+      pageIndex,
+      sortColumn: this.sort().active,
+      sortDirection: this.sort().direction
+    });
   }
 }

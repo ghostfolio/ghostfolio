@@ -16,29 +16,33 @@
               class="mat-mdc-cell px-1 py-2"
               mat-cell
             >
-              <div class="d-flex align-items-center">
+              <div class="align-items-center d-flex text-nowrap">
                 <span
-                  class="d-none d-sm-inline-block text-monospace"
-                  [class.text-line-through]="element.role === 'INACTIVE'"
+                  class="d-none d-sm-inline-block font-monospace"
+                  [class.text-decoration-line-through]="
+                    element.role === 'INACTIVE'
+                  "
                   >{{ element.id }}</span
                 >
                 <span
-                  class="d-inline-block d-sm-none text-monospace"
-                  [class.text-line-through]="element.role === 'INACTIVE'"
+                  class="d-inline-block d-sm-none font-monospace"
+                  [class.text-decoration-line-through]="
+                    element.role === 'INACTIVE'
+                  "
                   >{{ `${(element.id | slice: 0 : 5)}...` }}</span
                 >
                 @if (element.subscription?.expiresAt) {
                   <gf-premium-indicator
-                    class="ml-1"
+                    class="ms-1"
                     i18n-title
-                    title="{{
-                      `Expires ${formatDistanceToNow(
-                        element.subscription.expiresAt
-                      )} (${
-                        (element.subscription.expiresAt
-                        | date: defaultDateFormat)
-                      })`
-                    }}"
+                    title="Expires {{
+                      formatRelativeTime({
+                        date: element.subscription.expiresAt,
+                        language: user?.settings?.language
+                      })
+                    }} ({{
+                      element.subscription.expiresAt | date: defaultDateFormat
+                    }})"
                     [enableLink]="false"
                   />
                 }
@@ -60,9 +64,11 @@
                 class="mat-mdc-cell px-1 py-2"
                 mat-cell
               >
-                <span class="h5" [title]="element.country">{{
-                  getEmojiFlag(element.country)
-                }}</span>
+                <span
+                  class="h5"
+                  [title]="getCountryName({ code: element.country })"
+                  >{{ getEmojiFlag(element.country) }}</span
+                >
               </td>
             </ng-container>
           }
@@ -77,24 +83,29 @@
             </th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2"
+              class="mat-mdc-cell px-1 py-2 text-nowrap"
               mat-cell
             >
-              {{ formatDistanceToNow(element.createdAt) }}
+              {{
+                formatRelativeTime({
+                  date: element.createdAt,
+                  language: user?.settings?.language
+                })
+              }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="accounts">
             <th
               *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
+              class="mat-mdc-header-cell px-1 py-2 text-end"
               mat-header-cell
             >
               <ng-container i18n>Accounts</ng-container>
             </th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2 text-right"
+              class="mat-mdc-cell px-1 py-2 text-end"
               mat-cell
             >
               <gf-value
@@ -108,14 +119,14 @@
           <ng-container matColumnDef="activities">
             <th
               *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
+              class="mat-mdc-header-cell px-1 py-2 text-end"
               mat-header-cell
             >
               <ng-container i18n>Activities</ng-container>
             </th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2 text-right"
+              class="mat-mdc-cell px-1 py-2 text-end"
               mat-cell
             >
               <gf-value
@@ -130,14 +141,14 @@
             <ng-container matColumnDef="engagementPerDay">
               <th
                 *matHeaderCellDef
-                class="mat-mdc-header-cell px-1 py-2 text-right"
+                class="mat-mdc-header-cell px-1 py-2 text-end"
                 mat-header-cell
               >
                 <ng-container i18n>Engagement per Day</ng-container>
               </th>
               <td
                 *matCellDef="let element"
-                class="mat-mdc-cell px-1 py-2 text-right"
+                class="mat-mdc-cell px-1 py-2 text-end"
                 mat-cell
               >
                 <gf-value
@@ -151,14 +162,14 @@
             <ng-container matColumnDef="dailyApiRequests">
               <th
                 *matHeaderCellDef
-                class="mat-mdc-header-cell px-1 py-2 text-right"
+                class="mat-mdc-header-cell px-1 py-2 text-end"
                 mat-header-cell
               >
                 <ng-container i18n>API Requests Today</ng-container>
               </th>
               <td
                 *matCellDef="let element"
-                class="mat-mdc-cell px-1 py-2 text-right"
+                class="mat-mdc-cell px-1 py-2 text-end"
                 mat-cell
               >
                 <gf-value
@@ -176,17 +187,32 @@
               <th
                 *matHeaderCellDef
                 class="mat-mdc-header-cell px-1 py-2"
-                i18n
                 mat-header-cell
               >
-                Last Request
+                <ng-container i18n>Last Request</ng-container>
               </th>
               <td
                 *matCellDef="let element"
-                class="mat-mdc-cell px-1 py-2"
+                class="mat-mdc-cell px-1 py-2 text-nowrap"
                 mat-cell
               >
-                {{ formatDistanceToNow(element.lastActivity) }}
+                <div class="align-items-center d-flex">
+                  @if (element.lastRequestClient) {
+                    <ion-icon
+                      class="me-1 pe-auto"
+                      [name]="requestClientIcons[element.lastRequestClient]"
+                      [title]="translate(element.lastRequestClient)"
+                    />
+                  } @else {
+                    <ion-icon class="invisible me-1" />
+                  }
+                  {{
+                    formatRelativeTime({
+                      date: element.lastActivity,
+                      language: user?.settings?.language
+                    })
+                  }}
+                </div>
               </td>
             </ng-container>
           }
@@ -194,12 +220,12 @@
           <ng-container matColumnDef="actions" stickyEnd>
             <th
               *matHeaderCellDef
-              class="mat-mdc-header-cell px-1 py-2 text-right"
+              class="mat-mdc-header-cell px-1 py-2 text-end"
               mat-header-cell
             ></th>
             <td
               *matCellDef="let element"
-              class="mat-mdc-cell px-1 py-2 text-right"
+              class="mat-mdc-cell px-1 py-2 text-end"
               mat-cell
             >
               <button
@@ -216,7 +242,7 @@
                   [routerLink]="routerLinkAdminControlUsers.concat(element.id)"
                 >
                   <span class="align-items-center d-flex">
-                    <ion-icon class="mr-2" name="person-outline" />
+                    <ion-icon class="me-2" name="person-outline" />
                     <span
                       ><ng-container i18n>View Details</ng-container>...</span
                     >
@@ -225,7 +251,7 @@
                 @if (hasPermissionToImpersonateAllUsers) {
                   <button mat-menu-item (click)="onImpersonateUser(element.id)">
                     <span class="align-items-center d-flex">
-                      <ion-icon class="mr-2" name="contract-outline" />
+                      <ion-icon class="me-2" name="contract-outline" />
                       <span i18n>Impersonate User</span>
                     </span>
                   </button>
@@ -235,19 +261,24 @@
                   (click)="onGenerateAccessToken(element.id)"
                 >
                   <span class="align-items-center d-flex">
-                    <ion-icon class="mr-2" name="key-outline" />
+                    <ion-icon class="me-2" name="key-outline" />
                     <span i18n>Generate Security Token</span>
                   </span>
                 </button>
                 <hr class="m-0" />
                 <button
                   mat-menu-item
-                  [disabled]="element.id === user?.id"
+                  [disabled]="
+                    !canDeleteUser({
+                      currentUserId: user?.id,
+                      userId: element.id
+                    })
+                  "
                   (click)="onDeleteUser(element.id)"
                 >
                   <span class="align-items-center d-flex">
-                    <ion-icon class="mr-2" name="trash-outline" />
-                    <span i18n>Delete User</span>
+                    <ion-icon class="me-2" name="trash-outline" />
+                    <span i18n>Delete</span>
                   </span>
                 </button>
               </mat-menu>

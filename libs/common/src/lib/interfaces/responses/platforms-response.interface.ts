@@ -1,5 +1,5 @@
-import { Platform } from '@prisma/client';
+import type { PlatformResponse } from './platform-response.interface';
 
 export interface PlatformsResponse {
-  platforms: Platform[];
+  platforms: (PlatformResponse & { accountCount?: number })[];
 }

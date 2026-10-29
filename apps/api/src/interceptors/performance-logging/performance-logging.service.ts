@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class PerformanceLoggingService {
-  private readonly logger = new Logger(PerformanceLoggingService.name);
+  private readonly logger = new Logger();
 
   public logPerformance({
     className,

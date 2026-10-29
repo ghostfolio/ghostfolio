@@ -3,7 +3,7 @@ import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 export const holdings: PortfolioPosition[] = [
   {
     activitiesCount: 1,
-    allocationInPercentage: 0.042990776363386086,
+    allocationInPercentage: 0.06447799495516787,
     assetProfile: {
       assetClass: 'EQUITY',
       assetClassLabel: 'Equity',
@@ -48,7 +48,7 @@ export const holdings: PortfolioPosition[] = [
   },
   {
     activitiesCount: 2,
-    allocationInPercentage: 0.02377401948293552,
+    allocationInPercentage: 0.03565651141834935,
     assetProfile: {
       assetClass: 'EQUITY',
       assetClassLabel: 'Equity',
@@ -93,7 +93,7 @@ export const holdings: PortfolioPosition[] = [
   },
   {
     activitiesCount: 1,
-    allocationInPercentage: 0.08038536990007467,
+    allocationInPercentage: 0.12056277911976934,
     assetProfile: {
       assetClass: 'EQUITY',
       assetClassLabel: 'Equity',
@@ -138,7 +138,7 @@ export const holdings: PortfolioPosition[] = [
   },
   {
     activitiesCount: 1,
-    allocationInPercentage: 0.19216416482928922,
+    allocationInPercentage: 0.28820973005222217,
     assetProfile: {
       assetClass: 'LIQUIDITY',
       assetClassLabel: 'Liquidity',
@@ -171,7 +171,7 @@ export const holdings: PortfolioPosition[] = [
   },
   {
     activitiesCount: 1,
-    allocationInPercentage: 0.04307127421937313,
+    allocationInPercentage: 0.06459872644204223,
     assetProfile: {
       assetClass: 'EQUITY',
       assetClassLabel: 'Equity',
@@ -216,7 +216,7 @@ export const holdings: PortfolioPosition[] = [
   },
   {
     activitiesCount: 1,
-    allocationInPercentage: 0.18762679306394897,
+    allocationInPercentage: 0.28140453464652826,
     assetProfile: {
       assetClass: 'EQUITY',
       assetClassLabel: 'Equity',
@@ -261,7 +261,7 @@ export const holdings: PortfolioPosition[] = [
   },
   {
     activitiesCount: 5,
-    allocationInPercentage: 0.053051250766657634,
+    allocationInPercentage: 0.0795667947557967,
     assetProfile: {
       assetClass: 'EQUITY',
       assetClassLabel: 'Equity',
@@ -303,5 +303,37 @@ export const holdings: PortfolioPosition[] = [
     quantity: 50,
     tags: [],
     valueInBaseCurrency: 15092
+  },
+  {
+    activitiesCount: 3,
+    allocationInPercentage: 0.06552292861012407,
+    assetProfile: {
+      assetClass: 'LIQUIDITY',
+      assetClassLabel: 'Liquidity',
+      assetSubClass: 'CASH',
+      assetSubClassLabel: 'Cash',
+      countries: [],
+      currency: 'USD',
+      dataSource: 'YAHOO',
+      holdings: [],
+      name: 'USD',
+      sectors: [],
+      symbol: 'USD'
+    },
+    dateOfFirstActivity: new Date('2024-01-01T00:00:00.000Z'),
+    dividend: 0,
+    grossPerformance: 0,
+    grossPerformancePercent: 0,
+    grossPerformancePercentWithCurrencyEffect: 0,
+    grossPerformanceWithCurrencyEffect: 0,
+    investment: 12428.2,
+    marketPrice: 1,
+    netPerformance: 0,
+    netPerformancePercent: 0,
+    netPerformancePercentWithCurrencyEffect: 0,
+    netPerformanceWithCurrencyEffect: 0,
+    quantity: 12428.2,
+    tags: [],
+    valueInBaseCurrency: 12428.2
   }
 ];

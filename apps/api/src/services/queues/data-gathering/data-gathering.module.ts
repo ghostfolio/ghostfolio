@@ -28,7 +28,8 @@ import { DataGatheringProcessor } from './data-gathering.processor';
     }),
     BullModule.registerQueue({
       limiter: {
-        duration: ms('4 seconds'),
+        duration: ms('3 seconds'),
+        groupKey: 'dataSource',
         max: 1
       },
       name: DATA_GATHERING_QUEUE

@@ -1,7 +1,6 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import {
   GfPageTabsComponent,
@@ -9,6 +8,7 @@ import {
 } from '@ghostfolio/ui/page-tabs';
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -25,6 +25,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-home-page',
@@ -71,23 +72,13 @@ export class GfHomePageComponent implements OnInit {
             },
             {
               iconName: 'newspaper-outline',
-              label: hasPermission(
-                this.user?.permissions,
-                permissions.readMarketDataOfMarkets
-              )
-                ? internalRoutes.home.subRoutes.marketsPremium.title
-                : internalRoutes.home.subRoutes.markets.title,
-              routerLink: hasPermission(
-                this.user?.permissions,
-                permissions.readMarketDataOfMarkets
-              )
-                ? internalRoutes.home.subRoutes.marketsPremium.routerLink
-                : internalRoutes.home.subRoutes.markets.routerLink
+              label: internalRoutes.home.subRoutes.markets.title,
+              routerLink: internalRoutes.home.subRoutes.markets.routerLink
             }
           ];
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({

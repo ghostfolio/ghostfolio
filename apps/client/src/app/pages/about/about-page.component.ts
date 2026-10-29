@@ -8,7 +8,12 @@ import {
 } from '@ghostfolio/ui/page-tabs';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { ChangeDetectorRef, Component, DestroyRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { addIcons } from 'ionicons';
 import {
@@ -21,6 +26,7 @@ import {
 } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [GfPageTabsComponent],
   selector: 'gf-about-page',
@@ -83,8 +89,6 @@ export class AboutPageComponent {
           });
 
           this.user = state.user;
-
-          this.changeDetectorRef.markForCheck();
         }
 
         this.tabs.push({
@@ -92,6 +96,8 @@ export class AboutPageComponent {
           label: publicRoutes.about.subRoutes.ossFriends.title,
           routerLink: publicRoutes.about.subRoutes.ossFriends.routerLink
         });
+
+        this.changeDetectorRef.markForCheck();
       });
 
     addIcons({

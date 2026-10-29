@@ -1,8 +1,9 @@
 <div class="container p-0">
-  <div class="no-gutters row">
-    <div class="status-container text-muted text-right">
-      @if (errors?.length > 0 && !isLoading) {
+  <div class="d-flex flex-wrap">
+    <div class="px-1 status-container text-body-secondary text-end">
+      @if ((errors()?.length ?? 0) > 0 && !isLoading()) {
         <ion-icon
+          class="pe-auto"
           i18n-title
           name="time-outline"
           title="Oops! A data provider is experiencing the hiccups."
@@ -10,7 +11,7 @@
         />
       }
     </div>
-    @if (isLoading) {
+    @if (isLoading()) {
       <div class="align-items-center d-flex">
         <ngx-skeleton-loader
           animation="pulse"
@@ -23,39 +24,33 @@
       </div>
     }
     <div
-      class="display-4 font-weight-bold m-0 text-center value-container"
-      [hidden]="isLoading"
+      class="display-4 fw-bold m-0 text-center value-container"
+      [hidden]="isLoading()"
     >
       <span #value id="value"></span>
     </div>
     <div class="currency-container flex-grow-1 px-1">
-      {{ unit }}
+      {{ unit() }}
     </div>
   </div>
-  @if (showDetails) {
-    <div class="row">
+  @if (showDetails()) {
+    <div class="mx-0 row">
       <div class="d-flex col justify-content-end">
         <gf-value
           [colorizeSign]="true"
           [isCurrency]="true"
-          [locale]="locale"
-          [value]="
-            isLoading
-              ? undefined
-              : performance?.netPerformanceWithCurrencyEffect
-          "
+          [isLoading]="isLoading()"
+          [locale]="locale()"
+          [value]="performance()?.netPerformanceWithCurrencyEffect"
         />
       </div>
       <div class="col">
         <gf-value
           [colorizeSign]="true"
+          [isLoading]="isLoading()"
           [isPercent]="true"
-          [locale]="locale"
-          [value]="
-            isLoading
-              ? undefined
-              : performance?.netPerformancePercentageWithCurrencyEffect
-          "
+          [locale]="locale()"
+          [value]="performance()?.netPerformancePercentageWithCurrencyEffect"
         />
       </div>
     </div>

@@ -1,11 +1,9 @@
 <div class="container p-0">
-  <div class="row no-gutters">
+  <div class="g-0 row">
     <div class="col">
       @if (isLoading) {
         <gf-rule [isLoading]="true" />
-      }
-
-      @if (rules !== null && rules !== undefined) {
+      } @else if (rules) {
         @for (rule of rules; track rule.key) {
           <gf-rule
             [categoryName]="categoryName"

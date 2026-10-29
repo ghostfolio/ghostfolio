@@ -1,9 +1,9 @@
-import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
 import {
   CACHE_TTL_INFINITE,
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY,
@@ -82,13 +82,12 @@ export class PortfolioSnapshotProcessor {
 
       const expiration = addMilliseconds(
         new Date(),
-        (snapshot?.errors?.length ?? 0) === 0
-          ? this.configurationService.get('CACHE_QUOTES_TTL')
-          : 0
+        this.configurationService.get('CACHE_QUOTES_TTL')
       );
 
-      this.redisCacheService.set(
+      await this.redisCacheService.set(
         this.redisCacheService.getPortfolioSnapshotKey({
+          calculationType: job.data.calculationType,
           filters: job.data.filters,
           userId: job.data.userId
         }),
@@ -101,7 +100,9 @@ export class PortfolioSnapshotProcessor {
 
       return snapshot;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(
+        `Portfolio snapshot calculation of user '${job.data.userId}' has failed: ${error.message}`
+      );
 
       throw new Error(error);
     }

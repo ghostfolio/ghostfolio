@@ -1,23 +1,443 @@
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
+import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UpdateAssetProfileDataDto } from '@ghostfolio/common/dtos';
 import {
+  applyAssetProfileOverrides,
+  getAssetProfileIdentifier,
+  getCurrencyFromSymbol,
+  isCurrency
+} from '@ghostfolio/common/helper';
+import {
+  AdminMarketDataDetails,
   AssetProfileIdentifier,
-  EnhancedSymbolProfile
+  AssetProfileItem,
+  AssetProfilesResponse,
+  DataProviderInfo,
+  EnhancedAssetProfile,
+  Filter
 } from '@ghostfolio/common/interfaces';
+import { MarketDataPreset } from '@ghostfolio/common/types';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import { groupBy } from 'lodash-es';
 
 @Injectable()
 export class AssetProfilesService {
+  private readonly logger = new Logger(AssetProfilesService.name);
+
   public constructor(
+    private readonly activitiesService: ActivitiesService,
+    private readonly assetProfileSplitService: AssetProfileSplitService,
+    private readonly benchmarkService: BenchmarkService,
+    private readonly dataGatheringService: DataGatheringService,
+    private readonly dataProviderService: DataProviderService,
+    private readonly eventEmitter: EventEmitter2,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly marketDataService: MarketDataService,
+    private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async createSplit({
+    dataSource,
+    date,
+    denominator,
+    numerator,
+    symbol,
+    symbolProfileId
+  }: {
+    date: Date;
+    denominator: number;
+    numerator: number;
+    symbolProfileId: string;
+  } & AssetProfileIdentifier) {
+    const assetProfileSplit = await this.assetProfileSplitService.upsert({
+      date,
+      denominator,
+      numerator,
+      symbolProfileId
+    });
+
+    await this.gatherSymbolAndEmitPortfolioChangedEvents({
+      dataSource,
+      symbol,
+      symbolProfileId
+    });
+
+    return assetProfileSplit;
+  }
+
+  public async deleteSplit({
+    dataSource,
+    id,
+    symbol,
+    symbolProfileId
+  }: {
+    id: string;
+    symbolProfileId: string;
+  } & AssetProfileIdentifier) {
+    const isDeleted = await this.assetProfileSplitService.deleteById({
+      id,
+      symbolProfileId
+    });
+
+    if (!isDeleted) {
+      throw new NotFoundException();
+    }
+
+    await this.gatherSymbolAndEmitPortfolioChangedEvents({
+      dataSource,
+      symbol,
+      symbolProfileId
+    });
+  }
+
+  /**
+   * Gathers the market data of the given asset profile and invalidates the
+   * portfolio snapshots of the affected users as soon as it is available.
+   * Emitting the events earlier would recompute the snapshots from
+   * split-adjusted quantities and not yet split-adjusted market prices.
+   *
+   * With withImmediateInvalidation the snapshots are invalidated a second
+   * time, before the gathering. This is necessary if the snapshots are already
+   * wrong without new market data, because the invalidation after the
+   * gathering is held in memory and is therefore lost if the process restarts.
+   */
+  public async gatherSymbolAndEmitPortfolioChangedEvents({
+    dataSource,
+    force = true,
+    symbol,
+    symbolProfileId,
+    withImmediateInvalidation = false
+  }: {
+    force?: boolean;
+    symbolProfileId: string;
+    withImmediateInvalidation?: boolean;
+  } & AssetProfileIdentifier) {
+    if (withImmediateInvalidation) {
+      await this.emitPortfolioChangedEvents(symbolProfileId);
+    }
+
+    const jobs = await this.dataGatheringService.gatherSymbol({
+      dataSource,
+      force,
+      symbol
+    });
+
+    void Promise.allSettled(
+      jobs.map((job) => {
+        return job.finished();
+      })
+    )
+      .then(() => {
+        return this.emitPortfolioChangedEvents(symbolProfileId);
+      })
+      .catch((error) => {
+        this.logger.error(
+          `Could not emit the portfolio changed events of the asset profile ${getAssetProfileIdentifier({ dataSource, symbol })}`,
+          error.stack
+        );
+      });
+  }
+
+  public async getAssetProfile({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {
+    let activitiesCount: EnhancedAssetProfile['activitiesCount'] = 0;
+    let currency: EnhancedAssetProfile['currency'] = '-';
+    let dateOfFirstActivity: EnhancedAssetProfile['dateOfFirstActivity'];
+
+    const isCurrencyAssetProfile = isCurrency(getCurrencyFromSymbol(symbol));
+
+    if (isCurrencyAssetProfile) {
+      currency = getCurrencyFromSymbol(symbol);
+      ({ activitiesCount, dateOfFirstActivity } =
+        await this.activitiesService.getStatisticsByCurrency(currency));
+    }
+
+    const [[assetProfile], marketData, splits] = await Promise.all([
+      this.symbolProfileService.getSymbolProfiles([
+        {
+          dataSource,
+          symbol
+        }
+      ]),
+      this.marketDataService.marketDataItems({
+        orderBy: {
+          date: 'asc'
+        },
+        where: {
+          dataSource,
+          symbol
+        }
+      }),
+      this.assetProfileSplitService.getSplits({ dataSource, symbol })
+    ]);
+
+    if (assetProfile) {
+      assetProfile.dataProviderInfo = this.dataProviderService
+        .getDataProvider(assetProfile.dataSource)
+        .getDataProviderInfo();
+    }
+
+    return {
+      marketData,
+      splits,
+      assetProfile: assetProfile ?? {
+        activitiesCount,
+        currency,
+        dataSource,
+        dateOfFirstActivity,
+        symbol,
+        assetClass: isCurrencyAssetProfile ? AssetClass.LIQUIDITY : undefined,
+        assetSubClass: isCurrencyAssetProfile ? AssetSubClass.CASH : undefined,
+        isActive: true
+      }
+    };
+  }
+
+  public async getAssetProfiles({
+    filters = [],
+    presetId,
+    sortColumn,
+    sortDirection = 'asc',
+    skip,
+    take = Number.MAX_SAFE_INTEGER
+  }: {
+    filters?: Filter[];
+    presetId?: MarketDataPreset;
+    skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
+    take?: number;
+  }): Promise<AssetProfilesResponse> {
+    let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
+      [{ symbol: 'asc' }];
+    const where: Prisma.SymbolProfileWhereInput = {};
+
+    if (presetId === 'BENCHMARKS') {
+      const benchmarkAssetProfiles =
+        await this.benchmarkService.getBenchmarkAssetProfiles();
+
+      where.id = {
+        in: benchmarkAssetProfiles.map(({ id }) => {
+          return id;
+        })
+      };
+    } else if (presetId === 'CURRENCIES') {
+      return this.getAssetProfilesForCurrencies();
+    } else if (
+      presetId === 'ETF_WITHOUT_COUNTRIES' ||
+      presetId === 'ETF_WITHOUT_SECTORS'
+    ) {
+      filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
+    } else if (presetId === 'NO_ACTIVITIES') {
+      where.activities = {
+        none: {}
+      };
+    }
+
+    const {
+      ASSET_SUB_CLASS: [filterByAssetSubClass] = [],
+      DATA_SOURCE: [filterByDataSource] = [],
+      SEARCH_QUERY: [filterBySearchQuery] = []
+    } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+
+    if (filterByAssetSubClass) {
+      where.assetSubClass = AssetSubClass[filterByAssetSubClass.id];
+    }
+
+    if (filterByDataSource) {
+      where.dataSource = DataSource[filterByDataSource.id];
+    }
+
+    if (filterBySearchQuery) {
+      where.OR = [
+        { id: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { isin: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { name: { mode: 'insensitive', startsWith: filterBySearchQuery.id } },
+        { symbol: { mode: 'insensitive', startsWith: filterBySearchQuery.id } }
+      ];
+    }
+
+    if (sortColumn) {
+      orderBy = [{ [sortColumn]: sortDirection }];
+
+      if (sortColumn === 'activitiesCount') {
+        orderBy = [
+          {
+            activities: {
+              _count: sortDirection
+            }
+          }
+        ];
+      }
+    }
+
+    const symbolProfileResult = await Promise.all([
+      this.prismaService.symbolProfile.findMany({
+        skip,
+        take,
+        where,
+        orderBy: [...orderBy, { id: sortDirection }],
+        select: {
+          _count: {
+            select: {
+              activities: true,
+              watchedBy: true
+            }
+          },
+          activities: {
+            orderBy: [{ date: 'asc' }],
+            select: { date: true },
+            take: 1
+          },
+          assetClass: true,
+          assetProfileOverrides: true,
+          assetSubClass: true,
+          comment: true,
+          countries: true,
+          currency: true,
+          dataSource: true,
+          id: true,
+          isin: true,
+          isActive: true,
+          name: true,
+          scraperConfiguration: true,
+          sectors: true,
+          symbol: true
+        }
+      }),
+      this.prismaService.symbolProfile.count({ where })
+    ]);
+    const symbolProfiles = symbolProfileResult[0];
+    let count = symbolProfileResult[1];
+
+    const symbolProfileIdsUsedByUsersWithSubscription =
+      await this.getSymbolProfileIdsUsedByUsersWithSubscription(
+        symbolProfiles
+          .filter(({ _count }) => {
+            return _count.activities > 0;
+          })
+          .map(({ id }) => {
+            return id;
+          })
+      );
+
+    const dataProviderInfoMap = new Map<DataSource, DataProviderInfo>(
+      [
+        ...new Set(
+          symbolProfiles.map(({ dataSource }) => {
+            return dataSource;
+          })
+        )
+      ].map((dataSource) => {
+        return [
+          dataSource,
+          this.dataProviderService
+            .getDataProvider(dataSource)
+            .getDataProviderInfo()
+        ];
+      })
+    );
+
+    let assetProfiles: AssetProfileItem[] = await Promise.all(
+      symbolProfiles.map(async (assetProfile) => {
+        const {
+          _count,
+          activities,
+          comment,
+          currency,
+          dataSource,
+          id,
+          isin,
+          isActive,
+          symbol
+        } = assetProfile;
+
+        const { assetClass, assetSubClass, countries, name, sectors } =
+          applyAssetProfileOverrides(
+            assetProfile,
+            assetProfile.assetProfileOverrides
+          );
+
+        const countriesCount = countries ? Object.keys(countries).length : 0;
+
+        const lastMarketPrice = (
+          await this.marketDataService.getLatest({ dataSource, symbol })
+        )?.marketPrice;
+
+        const marketDataItemCount = await this.prismaService.marketData.count({
+          where: {
+            dataSource,
+            symbol
+          }
+        });
+
+        const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+
+        return {
+          assetClass,
+          assetSubClass,
+          comment,
+          countriesCount,
+          currency,
+          dataSource,
+          id,
+          isActive,
+          isin,
+          lastMarketPrice,
+          marketDataItemCount,
+          name,
+          sectorsCount,
+          symbol,
+          activitiesCount: _count.activities,
+          dataProviderInfo: dataProviderInfoMap.get(dataSource),
+          date: activities?.[0]?.date,
+          isUsedByUsersWithSubscription:
+            symbolProfileIdsUsedByUsersWithSubscription.has(id),
+          watchedByCount: _count.watchedBy
+        };
+      })
+    );
+
+    if (presetId) {
+      if (presetId === 'ETF_WITHOUT_COUNTRIES') {
+        assetProfiles = assetProfiles.filter(({ countriesCount }) => {
+          return countriesCount === 0;
+        });
+      } else if (presetId === 'ETF_WITHOUT_SECTORS') {
+        assetProfiles = assetProfiles.filter(({ sectorsCount }) => {
+          return sectorsCount === 0;
+        });
+      }
+
+      count = assetProfiles.length;
+    }
+
+    return {
+      assetProfiles,
+      count
+    };
+  }
 
   public async updateAssetProfileData(
     { dataSource, symbol }: AssetProfileIdentifier,
     assetProfileData: UpdateAssetProfileDataDto
-  ): Promise<EnhancedSymbolProfile> {
+  ): Promise<EnhancedAssetProfile> {
     const notFoundMessage = `Could not find the asset profile for ${symbol} (${dataSource})`;
 
     const data = this.getAssetProfileDataUpdate(assetProfileData);
@@ -60,6 +480,18 @@ export class AssetProfilesService {
     return assetProfile;
   }
 
+  private async emitPortfolioChangedEvents(symbolProfileId: string) {
+    const userIds =
+      await this.activitiesService.getUserIdsBySymbolProfileId(symbolProfileId);
+
+    for (const userId of userIds) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({ userId })
+      );
+    }
+  }
+
   private getAssetProfileDataUpdate({
     countries,
     holdings,
@@ -86,5 +518,93 @@ export class AssetProfilesService {
     }
 
     return data;
+  }
+
+  private async getAssetProfilesForCurrencies(): Promise<AssetProfilesResponse> {
+    const currencyPairs = this.exchangeRateDataService.getCurrencyPairs();
+
+    const assetProfilePromises: Promise<AssetProfileItem>[] = currencyPairs.map(
+      async ({ dataSource, symbol }) => {
+        let activitiesCount: EnhancedAssetProfile['activitiesCount'] = 0;
+        let currency: EnhancedAssetProfile['currency'] = '-';
+        let dateOfFirstActivity: EnhancedAssetProfile['dateOfFirstActivity'];
+
+        if (isCurrency(getCurrencyFromSymbol(symbol))) {
+          currency = getCurrencyFromSymbol(symbol);
+          ({ activitiesCount, dateOfFirstActivity } =
+            await this.activitiesService.getStatisticsByCurrency(currency));
+        }
+
+        const lastMarketPrice = (
+          await this.marketDataService.getLatest({ dataSource, symbol })
+        )?.marketPrice;
+
+        const marketDataItemCount = await this.prismaService.marketData.count({
+          where: {
+            dataSource,
+            symbol
+          }
+        });
+
+        return {
+          activitiesCount,
+          currency,
+          dataSource,
+          lastMarketPrice,
+          marketDataItemCount,
+          symbol,
+          assetClass: AssetClass.LIQUIDITY,
+          assetSubClass: AssetSubClass.CASH,
+          countriesCount: 0,
+          date: dateOfFirstActivity,
+          id: undefined,
+          isActive: true,
+          name: symbol,
+          sectorsCount: 0,
+          watchedByCount: 0
+        };
+      }
+    );
+
+    const assetProfiles = await Promise.all(assetProfilePromises);
+    return { assetProfiles, count: assetProfiles.length };
+  }
+
+  private async getSymbolProfileIdsUsedByUsersWithSubscription(
+    symbolProfileIds: string[]
+  ): Promise<Set<string>> {
+    if (symbolProfileIds.length === 0) {
+      return new Set();
+    }
+
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      select: {
+        id: true
+      },
+      where: {
+        activities: {
+          some: {
+            user: {
+              subscriptions: {
+                some: {
+                  expiresAt: {
+                    gt: new Date()
+                  }
+                }
+              }
+            }
+          }
+        },
+        id: {
+          in: symbolProfileIds
+        }
+      }
+    });
+
+    return new Set(
+      symbolProfiles.map(({ id }) => {
+        return id;
+      })
+    );
   }
 }

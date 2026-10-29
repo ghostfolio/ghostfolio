@@ -1,8 +1,35 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 import { CreateAccessDto, UpdateAccessDto } from '@ghostfolio/common/dtos';
+import { canApplyFiltersToAccess } from '@ghostfolio/common/helper';
+import { Filter, PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  Scope,
+  canGrantRestrictedWriteAccess,
+  canGrantUnrestrictedReadAccess,
+  getAccessLevel,
+  getScopesOfAccess,
+  getScopesOfAccessLevel,
+  hasScope,
+  scopes
+} from '@ghostfolio/common/scopes';
+import { AccessLevel, AccountWithPlatform } from '@ghostfolio/common/types';
 import { validateObjectForForm } from '@ghostfolio/common/utils';
+import { AccessType } from '@ghostfolio/prisma/enums';
+import { GfAccessLevelIconComponent } from '@ghostfolio/ui/access-level-icon';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import {
+  GfPortfolioFilterFormComponent,
+  getAssetClassFilters,
+  getFiltersFromPortfolioFilterFormValue,
+  getHoldingsForFilter,
+  getPortfolioFilterFormValue,
+  getTagFilters
+} from '@ghostfolio/ui/portfolio-filter-form';
 import { DataService } from '@ghostfolio/ui/services';
 
+import { JsonPipe } from '@angular/common';
 import type { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
@@ -10,7 +37,8 @@ import {
   Component,
   DestroyRef,
   inject,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -21,6 +49,7 @@ import {
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -29,9 +58,12 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { AccessPermission } from '@prisma/client';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addDays, endOfDay, isValid, startOfDay } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
-import { EMPTY, catchError } from 'rxjs';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline } from 'ionicons/icons';
+import { EMPTY, catchError, finalize } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
 
@@ -40,7 +72,12 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   imports: [
     FormsModule,
+    GfAccessLevelIconComponent,
+    GfPortfolioFilterFormComponent,
+    IonIcon,
+    JsonPipe,
     MatButtonModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -52,8 +89,20 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-access-dialog.html'
 })
 export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
+  public accounts: AccountWithPlatform[] = [];
+  public assetClasses: Filter[] = [];
+  public holdings: PortfolioPosition[] = [];
+  public tags: Filter[] = [];
+
   protected accessForm: FormGroup;
+  protected readonly baseUrl = window.location.origin;
+  protected readonly isSubmitting = signal(false);
+  protected minExpiresAt: Date;
   protected readonly mode: 'create' | 'update';
+  protected readonly today = startOfDay(new Date());
+
+  private hasExperimentalFeatures = false;
+  private hasPermissionToEnableMcp = false;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -68,24 +117,59 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
+  private readonly userService = inject(UserService);
 
   public constructor() {
     this.mode = this.data.access ? 'update' : 'create';
+
+    addIcons({ calendarClearOutline });
+  }
+
+  public get canApplyFilters() {
+    return (
+      canApplyFiltersToAccess({ type: this.accessType }) &&
+      this.hasExperimentalFeatures
+    );
+  }
+
+  public get canGrantMcpAccess() {
+    return this.hasExperimentalFeatures && this.hasPermissionToEnableMcp;
+  }
+
+  public get canGrantRestrictedWriteAccess() {
+    return canGrantRestrictedWriteAccess({ type: this.accessType });
+  }
+
+  public get canGrantUnrestrictedReadAccess() {
+    return canGrantUnrestrictedReadAccess({ type: this.accessType });
+  }
+
+  public get canGrantWriteAccess() {
+    return this.hasExperimentalFeatures;
   }
 
   public ngOnInit() {
     const access = this.data?.access;
-    const isPublic = access?.type === 'PUBLIC';
+    const isPrivate = (access?.type ?? 'PRIVATE') === 'PRIVATE';
+
+    const { globalPermissions } = this.dataService.fetchInfo();
+
+    this.hasPermissionToEnableMcp = hasPermission(
+      globalPermissions,
+      permissions.enableMcp
+    );
 
     this.accessForm = this.formBuilder.group({
+      accessLevel: getAccessLevel(access?.scopes),
       alias: [access?.alias ?? ''],
-      granteeUserId: [
-        access?.grantee ?? null,
-        isPublic ? null : Validators.required
-      ],
-      permissions: [
-        access?.permissions[0] ?? AccessPermission.READ_RESTRICTED,
+      expiresAt: [
+        access?.expiresAt ? new Date(access.expiresAt) : addDays(this.today, 1),
         Validators.required
+      ],
+      filters: [null],
+      granteeUserId: [
+        isPrivate ? (access?.grantee ?? null) : null,
+        isPrivate ? Validators.required : null
       ],
       type: [
         { disabled: this.mode === 'update', value: access?.type ?? 'PRIVATE' },
@@ -93,27 +177,101 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
       ]
     });
 
+    this.assetClasses = getAssetClassFilters();
+
+    this.minExpiresAt = addDays(this.today, 1);
+
+    this.userService
+      .get()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ accounts, settings, tags }) => {
+        this.accounts = accounts;
+        this.hasExperimentalFeatures = settings.isExperimentalFeatures ?? false;
+        this.tags = getTagFilters(tags);
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.accessForm
       .get('type')
       ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((accessType) => {
+      .subscribe((accessType: AccessType) => {
         const granteeUserIdControl = this.accessForm.get('granteeUserId');
-        const permissionsControl = this.accessForm.get('permissions');
 
         if (accessType === 'PRIVATE') {
           granteeUserIdControl?.setValidators(Validators.required);
         } else {
           granteeUserIdControl?.clearValidators();
           granteeUserIdControl?.setValue(null);
-          permissionsControl?.setValue(
-            access?.permissions[0] ?? AccessPermission.READ_RESTRICTED
-          );
+        }
+
+        // Narrow the permission to the scopes which the type permits and drop
+        // the monetary values, which have to be granted after the type
+        this.accessForm.get('accessLevel')?.setValue(
+          getAccessLevel(
+            getScopesOfAccess({
+              scopes: getScopesOfAccessLevel(this.accessLevel).filter(
+                (scope) => {
+                  return scope !== scopes.portfolioReadValues;
+                }
+              ),
+              type: accessType
+            })
+          )
+        );
+
+        if (!canApplyFiltersToAccess({ type: accessType })) {
+          this.accessForm.get('filters')?.setValue(null);
         }
 
         granteeUserIdControl?.updateValueAndValidity();
 
         this.changeDetectorRef.markForCheck();
       });
+
+    this.loadHoldings();
+  }
+
+  protected get accessId() {
+    return this.data.access?.id;
+  }
+
+  protected get accessLevel(): AccessLevel {
+    return this.accessForm?.get('accessLevel')?.value as AccessLevel;
+  }
+
+  protected get accessType(): AccessType {
+    return this.accessForm?.get('type')?.value as AccessType;
+  }
+
+  protected get isPublicAccess() {
+    return this.accessType === 'PUBLIC';
+  }
+
+  protected get mcpConfiguration() {
+    return {
+      headers: {
+        Authorization: `Bearer ${this.accessId}`
+      },
+      type: 'http',
+      url: `${this.baseUrl}${MCP_ENDPOINT}`
+    };
+  }
+
+  protected get showExpiresAtErrorMessage() {
+    return this.accessForm?.get('expiresAt')?.invalid === true;
+  }
+
+  protected get showMcpDetails() {
+    return this.canGrantMcpAccess && this.isMcpAccess && this.mode === 'update';
+  }
+
+  protected get showPublicDetails() {
+    return (
+      this.hasExperimentalFeatures &&
+      this.isPublicAccess &&
+      this.mode === 'update'
+    );
   }
 
   protected onCancel() {
@@ -128,11 +286,20 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  private get isMcpAccess() {
+    return this.accessType === 'MCP';
+  }
+
   private async createAccess() {
+    const filters = this.getFilters();
+
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
+      expiresAt: this.getExpiresAt(),
+      filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
-      permissions: [this.accessForm.get('permissions')?.value]
+      scopes: this.getScopes(),
+      type: this.accessForm.get('type')?.value
     };
 
     try {
@@ -141,6 +308,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         form: this.accessForm,
         object: access
       });
+
+      this.isSubmitting.set(true);
 
       this.dataService
         .postAccess(access)
@@ -154,6 +323,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
             return EMPTY;
           }),
+          finalize(() => {
+            this.isSubmitting.set(false);
+          }),
           takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
@@ -164,18 +336,75 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     }
   }
 
+  private getExpiresAt() {
+    const expiresAtControl = this.accessForm.get('expiresAt');
+    const expiresAtOfAccess = this.data.access?.expiresAt;
+
+    if (
+      this.mode === 'update' &&
+      !expiresAtControl?.dirty &&
+      expiresAtOfAccess
+    ) {
+      return new Date(expiresAtOfAccess).toISOString();
+    }
+
+    const expiresAt = expiresAtControl?.value as Date;
+
+    return isValid(expiresAt) ? endOfDay(expiresAt).toISOString() : '';
+  }
+
+  private getFilters(): Filter[] {
+    return getFiltersFromPortfolioFilterFormValue(
+      this.accessForm.get('filters')?.value
+    );
+  }
+
+  private getScopes(): Scope[] {
+    const scopesOfAccess = this.data.access?.scopes ?? [];
+
+    if (
+      scopesOfAccess.length > 0 &&
+      this.accessLevel === getAccessLevel(scopesOfAccess)
+    ) {
+      return Object.values(scopes).filter((scope) => {
+        return hasScope(scopesOfAccess, scope);
+      });
+    }
+
+    return getScopesOfAccessLevel(this.accessLevel);
+  }
+
+  private loadHoldings() {
+    this.dataService
+      .fetchPortfolioHoldings({
+        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ holdings }) => {
+        this.holdings = getHoldingsForFilter(holdings);
+
+        this.updateFiltersFormControl(this.data.access?.settings?.filters);
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private async updateAccess() {
-    const accessId = this.data.access?.id;
+    const accessId = this.accessId;
 
     if (!accessId) {
       return;
     }
 
+    const filters = this.getFilters();
+
     const access: UpdateAccessDto = {
       alias: this.accessForm.get('alias')?.value,
+      expiresAt: this.getExpiresAt(),
+      filters: filters.length > 0 ? filters : undefined,
       granteeUserId: this.accessForm.get('granteeUserId')?.value,
       id: accessId,
-      permissions: [this.accessForm.get('permissions')?.value]
+      scopes: this.getScopes()
     };
 
     try {
@@ -184,6 +413,8 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
         form: this.accessForm,
         object: access
       });
+
+      this.isSubmitting.set(true);
 
       this.dataService
         .putAccess(access)
@@ -197,6 +428,9 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
 
             return EMPTY;
           }),
+          finalize(() => {
+            this.isSubmitting.set(false);
+          }),
           takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
@@ -205,5 +439,15 @@ export class GfCreateOrUpdateAccessDialogComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private updateFiltersFormControl(filters: Filter[] | undefined) {
+    if (!filters?.length) {
+      return;
+    }
+
+    this.accessForm
+      .get('filters')
+      ?.setValue(getPortfolioFilterFormValue(filters, this.holdings));
   }
 }

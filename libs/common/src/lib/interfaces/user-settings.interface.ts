@@ -6,8 +6,7 @@ import {
   ViewMode
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
-
-import { AssetClass } from '@prisma/client';
+import { AssetClass } from '@ghostfolio/prisma/enums';
 
 export interface UserSettings {
   annualInterestRate?: number;
@@ -23,6 +22,7 @@ export interface UserSettings {
   'filters.tags'?: string[];
   holdingsViewMode?: HoldingsViewMode;
   isExperimentalFeatures?: boolean;
+  isGhostfolioAiEnabled?: boolean;
   isRestrictedView?: boolean;
   language?: string;
   locale?: string;

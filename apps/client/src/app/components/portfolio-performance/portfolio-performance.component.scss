@@ -4,15 +4,10 @@
   .currency-container,
   .status-container {
     flex: 1;
-    min-width: 2.5rem;
   }
 
   .status-container {
     font-size: 1.33rem;
-
-    ion-icon {
-      pointer-events: all;
-    }
   }
 
   .value-container {

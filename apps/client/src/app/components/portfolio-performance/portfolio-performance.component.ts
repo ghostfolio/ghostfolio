@@ -13,16 +13,17 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
-  Input,
-  OnChanges,
-  ViewChild
+  inject,
+  input,
+  viewChild
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { CountUp } from 'countup.js';
 import { addIcons } from 'ionicons';
 import { timeOutline } from 'ionicons/icons';
-import { isNumber } from 'lodash';
+import { isNumber } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
@@ -32,58 +33,70 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   styleUrls: ['./portfolio-performance.component.scss'],
   templateUrl: './portfolio-performance.component.html'
 })
-export class GfPortfolioPerformanceComponent implements OnChanges {
-  @Input() deviceType: string;
-  @Input() errors: ResponseError['errors'];
-  @Input() isLoading: boolean;
-  @Input() locale = getLocale();
-  @Input() performance: PortfolioPerformance;
-  @Input() precision: number;
-  @Input() showDetails: boolean;
-  @Input() unit: string;
-
-  @ViewChild('value') value: ElementRef;
-
-  public constructor(private notificationService: NotificationService) {
-    addIcons({ timeOutline });
-  }
-
-  public ngOnChanges() {
-    this.precision = this.precision >= 0 ? this.precision : 2;
-
-    if (this.isLoading) {
-      if (this.value?.nativeElement) {
-        this.value.nativeElement.innerHTML = '';
-      }
-    } else {
-      if (isNumber(this.performance?.currentValueInBaseCurrency)) {
-        new CountUp('value', this.performance?.currentValueInBaseCurrency, {
-          decimal: getNumberFormatDecimal(this.locale),
-          decimalPlaces: this.precision,
-          duration: 1,
-          separator: getNumberFormatGroup(this.locale)
-        }).start();
-      } else if (this.showDetails === false) {
-        new CountUp(
-          'value',
-          this.performance?.netPerformancePercentageWithCurrencyEffect * 100,
-          {
-            decimal: getNumberFormatDecimal(this.locale),
-            decimalPlaces: 2,
-            duration: 1,
-            separator: getNumberFormatGroup(this.locale)
-          }
-        ).start();
-      } else {
-        this.value.nativeElement.innerHTML = '*****';
-      }
+export class GfPortfolioPerformanceComponent {
+  public readonly errors = input<ResponseError['errors']>();
+  public readonly isLoading = input<boolean>(false);
+  public readonly locale = input<string>(getLocale());
+  public readonly performance = input.required<PortfolioPerformance | null>();
+  public readonly precision = input.required<number, number>({
+    transform: (value) => {
+      return value >= 0 ? value : 2;
     }
+  });
+  public readonly showDetails = input<boolean>(false);
+  public readonly unit = input.required<string | undefined>();
+
+  private readonly value =
+    viewChild.required<ElementRef<HTMLSpanElement>>('value');
+
+  private readonly notificationService = inject(NotificationService);
+
+  public constructor() {
+    addIcons({ timeOutline });
+
+    effect(() => {
+      if (this.isLoading()) {
+        if (this.value().nativeElement) {
+          this.value().nativeElement.innerHTML = '';
+        }
+      } else {
+        const performance = this.performance();
+
+        if (isNumber(performance?.currentValueInBaseCurrency)) {
+          new CountUp('value', performance.currentValueInBaseCurrency, {
+            decimal: getNumberFormatDecimal(this.locale()),
+            decimalPlaces: this.precision(),
+            duration: 1,
+            separator: getNumberFormatGroup(this.locale())
+          }).start();
+        } else if (this.showDetails() === false && performance) {
+          new CountUp(
+            'value',
+            performance.netPerformancePercentageWithCurrencyEffect * 100,
+            {
+              decimal: getNumberFormatDecimal(this.locale()),
+              decimalPlaces: 2,
+              duration: 1,
+              separator: getNumberFormatGroup(this.locale())
+            }
+          ).start();
+        } else {
+          this.value().nativeElement.innerHTML = '*****';
+        }
+      }
+    });
   }
 
-  public onShowErrors() {
-    const errorMessageParts = [];
+  protected onShowErrors() {
+    const errors = this.errors();
 
-    for (const error of this.errors) {
+    if (!errors?.length) {
+      return;
+    }
+
+    const errorMessageParts: string[] = [];
+
+    for (const error of errors) {
       errorMessageParts.push(`${error.symbol} (${error.dataSource})`);
     }
 

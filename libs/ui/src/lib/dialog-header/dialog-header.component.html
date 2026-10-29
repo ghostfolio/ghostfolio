@@ -1,12 +1,19 @@
-<div class="d-flex" mat-dialog-title>
+<div
+  class="d-flex"
+  mat-dialog-title
+  [class.with-close-button]="deviceType() !== 'mobile'"
+>
   <span
     class="flex-grow-1 text-truncate"
-    [class.text-center]="position === 'center'"
-    >{{ title }}</span
+    [class.text-center]="position() === 'center'"
+    >{{ title() }}</span
   >
-  @if (deviceType !== 'mobile') {
-    <button class="no-min-width px-0" mat-button (click)="onClickCloseButton()">
-      <ion-icon name="close" size="large" />
+  @if (deviceType() !== 'mobile') {
+    <button mat-icon-button (click)="onClickCloseButton()">
+      <ion-icon
+        class="d-block mat-icon text-body-secondary"
+        name="close-outline"
+      />
     </button>
   }
 </div>

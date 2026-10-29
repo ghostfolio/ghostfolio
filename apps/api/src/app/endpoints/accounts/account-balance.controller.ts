@@ -1,0 +1,87 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
+import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { CreateAccountBalanceWithAccountIdDto } from '@ghostfolio/common/dtos';
+import { permissions } from '@ghostfolio/common/permissions';
+import { scopes } from '@ghostfolio/common/scopes';
+import type { ImpersonationContext } from '@ghostfolio/common/types';
+
+import {
+  Controller,
+  Body,
+  Post,
+  Delete,
+  HttpException,
+  Param,
+  UseInterceptors
+} from '@nestjs/common';
+import { AccountBalance } from '@prisma/client';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
+/** @deprecated */
+@Controller('account-balance')
+export class AccountBalanceController {
+  public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
+    private readonly accountService: AccountService
+  ) {}
+
+  @HasPermission(permissions.createAccountBalance)
+  @Post()
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async createAccountBalance(
+    @Body() data: CreateAccountBalanceWithAccountIdDto,
+    @Impersonation() { userId }: ImpersonationContext
+  ): Promise<AccountBalance> {
+    const account = await this.accountService.account({
+      id_userId: {
+        userId,
+        id: data.accountId
+      }
+    });
+
+    if (!account) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accountBalanceService.createOrUpdateAccountBalance({
+      accountId: account.id,
+      balance: data.balance,
+      date: data.date,
+      userId: account.userId
+    });
+  }
+
+  @HasPermission(permissions.deleteAccountBalance)
+  @Delete(':id')
+  @RequiresScope(scopes.accountUpdate)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async deleteAccountBalance(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Param('id') id: string
+  ): Promise<AccountBalance> {
+    const accountBalance = await this.accountBalanceService.accountBalance({
+      id,
+      userId
+    });
+
+    if (!accountBalance) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accountBalanceService.deleteAccountBalance({
+      id: accountBalance.id,
+      userId: accountBalance.userId
+    });
+  }
+}

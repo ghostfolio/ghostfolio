@@ -1,19 +1,18 @@
 import {
-  activityDummyData,
-  symbolProfileDummyData,
+  getPerformanceByDateRange,
+  loadActivitiesFromExportFile,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
+import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
+import { RedisCacheServiceMock } from '@ghostfolio/api/services/redis-cache/redis-cache.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
-import { Activity } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
@@ -37,7 +36,7 @@ jest.mock(
   }
 );
 
-jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
+jest.mock('@ghostfolio/api/services/redis-cache/redis-cache.service', () => {
   return {
     RedisCacheService: jest.fn().mockImplementation(() => {
       return RedisCacheServiceMock;
@@ -54,9 +53,12 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -65,7 +67,7 @@ describe('PortfolioCalculator', () => {
       null
     );
 
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    portfolioSnapshotService = new PortfolioSnapshotService(null, null);
 
     redisCacheService = new RedisCacheService(null, null);
 
@@ -82,49 +84,24 @@ describe('PortfolioCalculator', () => {
     it.only('with BALN.SW buy and sell', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          date: new Date('2021-11-22'),
-          feeInAssetProfileCurrency: 1.55,
-          feeInBaseCurrency: 1.55,
-          quantity: 2,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          type: 'BUY',
-          unitPriceInAssetProfileCurrency: 142.9
-        },
-        {
-          ...activityDummyData,
-          date: new Date('2021-11-30'),
-          feeInAssetProfileCurrency: 1.65,
-          feeInBaseCurrency: 1.65,
-          quantity: 2,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Bâloise Holding AG',
-            symbol: 'BALN.SW'
-          },
-          type: 'SELL',
-          unitPriceInAssetProfileCurrency: 136.6
-        }
-      ];
+      const { activities, userCurrency } = loadActivitiesFromExportFile(
+        'baln-buy-and-sell.json'
+      );
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'CHF',
+        currency: userCurrency,
+        usePortfolioSnapshotCache: false,
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+
+      const performanceByDateRange = await getPerformanceByDateRange({
+        portfolioCalculator,
+        dateRanges: ['1d', 'max', 'ytd']
+      });
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -145,6 +122,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 2,
+            averageInvestment: new Big('285.8'),
+            averageInvestmentWithCurrencyEffect: new Big('285.8'),
             averagePrice: new Big('0'),
             currency: 'CHF',
             dataSource: 'YAHOO',
@@ -174,8 +153,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('0'),
             symbol: 'BALN.SW',
             tags: [],
-            timeWeightedInvestment: new Big('285.8'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('285.8'),
             valueInBaseCurrency: new Big('0')
           }
         ],
@@ -210,6 +187,36 @@ describe('PortfolioCalculator', () => {
       expect(investmentsByYear).toEqual([
         { date: '2021-01-01', investment: 0 }
       ]);
+
+      expect(performanceByDateRange).toMatchObject({
+        '1d': {
+          date: '2021-12-18',
+          netPerformance: 0,
+          netPerformanceInPercentage: 0,
+          netPerformanceInPercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
+          totalInvestmentValueWithCurrencyEffect: 0,
+          valueWithCurrencyEffect: 0
+        },
+        max: {
+          date: '2021-12-18',
+          netPerformance: -15.8,
+          netPerformanceInPercentage: -0.05528341497550735,
+          netPerformanceInPercentageWithCurrencyEffect: -0.05528341497550735,
+          netPerformanceWithCurrencyEffect: -15.8,
+          totalInvestmentValueWithCurrencyEffect: 0,
+          valueWithCurrencyEffect: 0
+        },
+        ytd: {
+          date: '2021-12-18',
+          netPerformance: -15.8,
+          netPerformanceInPercentage: -0.05528341497550735,
+          netPerformanceInPercentageWithCurrencyEffect: -0.05528341497550735,
+          netPerformanceWithCurrencyEffect: -15.8,
+          totalInvestmentValueWithCurrencyEffect: 0,
+          valueWithCurrencyEffect: 0
+        }
+      });
     });
   });
 });

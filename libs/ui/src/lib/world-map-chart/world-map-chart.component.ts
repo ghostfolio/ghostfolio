@@ -23,10 +23,12 @@ import svgMap from 'svgmap';
   templateUrl: './world-map-chart.component.html'
 })
 export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
-  @Input() countries: { [code: string]: { name?: string; value: number } };
-  @Input() format: string;
-  @Input() isInPercentage = false;
-  @Input() locale = getLocale();
+  @Input() public countries: {
+    [code: string]: { name?: string; value: number };
+  };
+  @Input() public format: string;
+  @Input() public isInPercentage?: boolean = false;
+  @Input() public locale?: string = getLocale();
 
   public isLoading = true;
   public svgMapElement: any;
@@ -95,7 +97,7 @@ export class GfWorldMapChartComponent implements OnChanges, OnDestroy {
     this.svgMapElement.options.countryNames = Object.keys(
       this.svgMapElement.countries
     ).reduce<{ [code: string]: string }>((names, code) => {
-      names[code] = getCountryName({ code, locale: this.locale });
+      names[code] = getCountryName({ code });
 
       return names;
     }, {});

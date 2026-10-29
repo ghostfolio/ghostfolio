@@ -1,0 +1,788 @@
+import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
+import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ImportValidationError } from '@ghostfolio/api/services/import/errors/import-validation.error';
+import { ImportService } from '@ghostfolio/api/services/import/import.service';
+import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { SymbolService } from '@ghostfolio/api/services/symbol/symbol.service';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  MCP_MAX_ACTIVITIES
+} from '@ghostfolio/common/config';
+import { Activity, Filter } from '@ghostfolio/common/interfaces';
+import { permissions } from '@ghostfolio/common/permissions';
+import type {
+  AccountWithBalance,
+  UserWithSettings
+} from '@ghostfolio/common/types';
+
+import { HttpException } from '@nestjs/common';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Type as ActivityType
+} from '@prisma/client';
+
+import { McpService } from './mcp.service';
+import { createActivity } from './mcp.test-utils';
+
+describe('McpService', () => {
+  const filters: Filter[] = [{ id: 'account-id', type: 'ACCOUNT' }];
+  const userCurrency = 'USD';
+  const userId = 'user-id';
+
+  let accountBalanceService: AccountBalanceService;
+  let accountService: AccountService;
+  let apiService: ApiService;
+  let configuration: Record<string, unknown>;
+  let configurationService: ConfigurationService;
+  let importService: ImportService;
+  let mcpService: McpService;
+  let portfolioTableService: PortfolioTableService;
+  let symbolProfileService: SymbolProfileService;
+  let symbolService: SymbolService;
+  let userService: UserService;
+
+  function setupUser(userPermissions: string[]) {
+    const user = {
+      id: userId,
+      permissions: userPermissions
+    } as UserWithSettings;
+
+    jest.spyOn(userService, 'user').mockResolvedValue(user);
+
+    return user;
+  }
+
+  beforeEach(() => {
+    configuration = {
+      DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: [],
+      ENABLE_FEATURE_SUBSCRIPTION: false
+    };
+
+    configurationService = {
+      get: jest.fn().mockImplementation((key: string) => {
+        return configuration[key];
+      })
+    } as unknown as ConfigurationService;
+
+    accountBalanceService = {
+      createOrUpdateAccountBalance: jest.fn()
+    } as unknown as AccountBalanceService;
+
+    accountService = { account: jest.fn() } as unknown as AccountService;
+
+    apiService = {
+      buildFiltersFromQueryParams: jest.fn().mockReturnValue(filters)
+    } as unknown as ApiService;
+
+    importService = {
+      import: jest.fn().mockResolvedValue([])
+    } as unknown as ImportService;
+
+    portfolioTableService = {
+      getAccountsTable: jest.fn().mockResolvedValue('## Accounts'),
+      getActivitiesTable: jest.fn().mockResolvedValue('## Activities'),
+      getHoldingsTable: jest.fn().mockResolvedValue('## Holdings'),
+      getPerformanceTable: jest.fn().mockResolvedValue('## Performance'),
+      getWatchlistTable: jest.fn().mockResolvedValue('## Watchlist')
+    } as unknown as PortfolioTableService;
+
+    symbolProfileService = {
+      getSymbolProfilesOfUser: jest.fn().mockResolvedValue([])
+    } as unknown as SymbolProfileService;
+
+    symbolService = {
+      lookup: jest.fn().mockResolvedValue({ items: [] })
+    } as unknown as SymbolService;
+
+    userService = { user: jest.fn() } as unknown as UserService;
+
+    mcpService = new McpService(
+      accountBalanceService,
+      accountService,
+      apiService,
+      configurationService,
+      importService,
+      portfolioTableService,
+      symbolProfileService,
+      symbolService,
+      userService
+    );
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe('getAccounts', () => {
+    it('Maps the parameters of the tool to the filters', async () => {
+      await mcpService.getAccounts({
+        userId,
+        accountIds: ['account-id'],
+        assetClasses: [AssetClass.EQUITY],
+        holding: { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith({
+        filterByAccounts: ['account-id'],
+        filterByAssetClasses: [AssetClass.EQUITY],
+        filterByDataSource: DataSource.YAHOO,
+        filterBySymbol: 'AAPL'
+      });
+    });
+
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Decodes an encoded data source', async () => {
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await mcpService.getAccounts({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
+    it('Gives the table of the accounts of the filters', async () => {
+      expect(await mcpService.getAccounts({ userId })).toEqual({
+        content: [{ text: '## Accounts', type: 'text' }]
+      });
+
+      expect(portfolioTableService.getAccountsTable).toHaveBeenCalledWith({
+        filters,
+        userId
+      });
+    });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getAccounts({ userId, withValues: true });
+
+      expect(portfolioTableService.getAccountsTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
+  });
+
+  describe('getActivities', () => {
+    function getActivities(
+      parameters: Partial<Parameters<McpService['getActivities']>[0]> = {}
+    ) {
+      return mcpService.getActivities({
+        userCurrency,
+        userId,
+        take: MCP_MAX_ACTIVITIES,
+        ...parameters
+      });
+    }
+
+    it('Maps the parameters of the tool to the filters', async () => {
+      await getActivities({
+        assetClasses: [AssetClass.EQUITY],
+        holding: { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith({
+        filterByAssetClasses: [AssetClass.EQUITY],
+        filterByDataSource: DataSource.YAHOO,
+        filterBySymbol: 'AAPL'
+      });
+    });
+
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await getActivities({
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Decodes an encoded data source', async () => {
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await getActivities({
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await getActivities({
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' }
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
+    it('Changes the range into the start date and the end date', async () => {
+      await getActivities({ range: '2024' });
+
+      expect(portfolioTableService.getActivitiesTable).toHaveBeenCalledWith(
+        expect.objectContaining({
+          endDate: new Date('2024-12-31T23:59:59.999Z'),
+          startDate: new Date('2023-12-31T23:59:59.999Z')
+        })
+      );
+    });
+
+    it('Gives no date if the range is absent', async () => {
+      await getActivities();
+
+      expect(portfolioTableService.getActivitiesTable).toHaveBeenCalledWith(
+        expect.objectContaining({ endDate: undefined, startDate: undefined })
+      );
+    });
+
+    it('Gives the table of the activities of the filters', async () => {
+      expect(
+        await getActivities({ activityTypes: [ActivityType.BUY], skip: 10 })
+      ).toEqual({ content: [{ text: '## Activities', type: 'text' }] });
+
+      expect(portfolioTableService.getActivitiesTable).toHaveBeenCalledWith({
+        filters,
+        userCurrency,
+        userId,
+        endDate: undefined,
+        skip: 10,
+        startDate: undefined,
+        take: MCP_MAX_ACTIVITIES,
+        types: [ActivityType.BUY]
+      });
+    });
+
+    it('Gives the values if the access reads them', async () => {
+      await getActivities({ withValues: true });
+
+      expect(portfolioTableService.getActivitiesTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
+  });
+
+  describe('getAssetProfilesOfUser', () => {
+    it('Gives the currency, the data source, the ISIN, the name and the symbol of the asset profiles of the user', async () => {
+      jest
+        .spyOn(symbolProfileService, 'getSymbolProfilesOfUser')
+        .mockResolvedValue([
+          {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            isin: 'US0378331005',
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]);
+
+      await expect(
+        mcpService.getAssetProfilesOfUser({ userId })
+      ).resolves.toEqual([
+        {
+          currency: 'USD',
+          dataSource: DataSource.YAHOO,
+          isin: 'US0378331005',
+          name: 'Apple Inc.',
+          symbol: 'AAPL'
+        }
+      ]);
+
+      expect(symbolProfileService.getSymbolProfilesOfUser).toHaveBeenCalledWith(
+        { userId }
+      );
+    });
+
+    it('Encodes the data source if the subscription is enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      jest
+        .spyOn(symbolProfileService, 'getSymbolProfilesOfUser')
+        .mockResolvedValue([
+          {
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            isin: 'US0378331005',
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]);
+
+      await expect(
+        mcpService.getAssetProfilesOfUser({ userId })
+      ).resolves.toEqual([
+        expect.objectContaining({
+          dataSource: encodeDataSource(DataSource.YAHOO)
+        })
+      ]);
+    });
+  });
+
+  describe('getPerformance', () => {
+    it('Maps the parameters of the tool to the filters', async () => {
+      await mcpService.getPerformance({
+        userId,
+        accountIds: ['account-id'],
+        assetClasses: [AssetClass.EQUITY],
+        holding: { dataSource: DataSource.YAHOO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith({
+        filterByAccounts: ['account-id'],
+        filterByAssetClasses: [AssetClass.EQUITY],
+        filterByDataSource: DataSource.YAHOO,
+        filterBySymbol: 'AAPL'
+      });
+    });
+
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Decodes an encoded data source', async () => {
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: {
+          dataSource: encodeDataSource(DataSource.YAHOO),
+          symbol: 'AAPL'
+        },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.YAHOO })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await mcpService.getPerformance({
+        userId,
+        holding: { dataSource: DataSource.GHOSTFOLIO, symbol: 'AAPL' },
+        range: 'max'
+      });
+
+      expect(apiService.buildFiltersFromQueryParams).toHaveBeenCalledWith(
+        expect.objectContaining({ filterByDataSource: DataSource.GHOSTFOLIO })
+      );
+    });
+
+    it('Gives the table of the performance of the filters in the range', async () => {
+      expect(
+        await mcpService.getPerformance({ userId, range: '2024' })
+      ).toEqual({ content: [{ text: '## Performance', type: 'text' }] });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith({
+        filters,
+        userId,
+        dateRange: '2024'
+      });
+    });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getPerformance({
+        userId,
+        range: '2024',
+        withValues: true
+      });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
+
+    it('Gives the asset performance in base currency if the subscription permits it', async () => {
+      await mcpService.getPerformance({
+        userId,
+        range: '2024',
+        withAssetPerformanceInBaseCurrency: true
+      });
+
+      expect(portfolioTableService.getPerformanceTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withAssetPerformanceInBaseCurrency: true })
+      );
+    });
+  });
+
+  describe('getPortfolio', () => {
+    it('Gives the table of the holdings with the data source in the default language', async () => {
+      expect(await mcpService.getPortfolio({ userId })).toEqual({
+        content: [{ text: '## Holdings', type: 'text' }]
+      });
+
+      expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith({
+        userId,
+        languageCode: DEFAULT_LANGUAGE_CODE,
+        withDataSource: true
+      });
+    });
+
+    it('Gives the values if the access reads them', async () => {
+      await mcpService.getPortfolio({ userId, withValues: true });
+
+      expect(portfolioTableService.getHoldingsTable).toHaveBeenCalledWith(
+        expect.objectContaining({ withValues: true })
+      );
+    });
+  });
+
+  describe('getWatchlist', () => {
+    it('Gives the table of the watchlist', async () => {
+      expect(await mcpService.getWatchlist({ userId })).toEqual({
+        content: [{ text: '## Watchlist', type: 'text' }]
+      });
+
+      expect(portfolioTableService.getWatchlistTable).toHaveBeenCalledWith({
+        userId
+      });
+    });
+  });
+
+  describe('searchAssetProfiles', () => {
+    it('Refuses a user without the permission to create an activity', async () => {
+      setupUser([]);
+
+      await expect(
+        mcpService.searchAssetProfiles({ query: 'Apple', userId })
+      ).rejects.toThrow(HttpException);
+
+      expect(symbolService.lookup).not.toHaveBeenCalled();
+    });
+
+    it('Gives the import-ready asset profiles available to the user', async () => {
+      const user = setupUser([permissions.createActivity]);
+
+      jest.spyOn(symbolService, 'lookup').mockResolvedValue({
+        items: [
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataProviderInfo: { isPremium: false },
+            dataSource: DataSource.YAHOO,
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          },
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataProviderInfo: { isPremium: true },
+            dataSource: DataSource.GHOSTFOLIO,
+            name: 'Premium asset',
+            symbol: 'PREMIUM'
+          }
+        ]
+      });
+
+      const result = await mcpService.searchAssetProfiles({
+        query: 'Apple',
+        userId
+      });
+
+      expect(symbolService.lookup).toHaveBeenCalledWith({
+        query: 'Apple',
+        user
+      });
+      expect(JSON.parse(result.content[0].text)).toEqual({
+        assetProfiles: [
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataSource: DataSource.YAHOO,
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]
+      });
+    });
+
+    it('Encodes the data source if the subscription is enabled', async () => {
+      setupUser([permissions.createActivity]);
+
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      jest.spyOn(symbolService, 'lookup').mockResolvedValue({
+        items: [
+          {
+            assetClass: AssetClass.EQUITY,
+            assetSubClass: AssetSubClass.STOCK,
+            currency: 'USD',
+            dataProviderInfo: { isPremium: false },
+            dataSource: DataSource.YAHOO,
+            name: 'Apple Inc.',
+            symbol: 'AAPL'
+          }
+        ]
+      });
+
+      const result = await mcpService.searchAssetProfiles({
+        query: 'Apple',
+        userId
+      });
+
+      expect(JSON.parse(result.content[0].text)).toEqual({
+        assetProfiles: [
+          expect.objectContaining({
+            dataSource: encodeDataSource(DataSource.YAHOO)
+          })
+        ]
+      });
+    });
+  });
+
+  describe('importActivities', () => {
+    it('Refuses a user without the permission to create an activity', async () => {
+      setupUser([]);
+
+      await expect(
+        mcpService.importActivities({
+          userId,
+          activities: [createActivity()]
+        })
+      ).rejects.toThrow(HttpException);
+
+      expect(importService.import).not.toHaveBeenCalled();
+    });
+
+    it('Gives the number of the imported and of the skipped activities', async () => {
+      setupUser([permissions.createActivity]);
+
+      jest
+        .spyOn(importService, 'import')
+        .mockResolvedValue([{ id: 'activity-id' } as Activity]);
+
+      expect(
+        await mcpService.importActivities({
+          userId,
+          activities: [createActivity(), createActivity({ quantity: 2 })]
+        })
+      ).toEqual({
+        content: [
+          {
+            text: 'Imported activities: 1\nSkipped duplicate activities: 1',
+            type: 'text'
+          }
+        ]
+      });
+    });
+
+    it('Resolves the mask of the data source of the Ghostfolio data provider', async () => {
+      setupUser([permissions.createActivity]);
+
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.importActivities({
+        userId,
+        activities: [createActivity({ dataSource: DataSource.GHOSTFOLIO })]
+      });
+
+      expect(importService.import).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activitiesDto: [
+            expect.objectContaining({ dataSource: DataSource.YAHOO })
+          ]
+        })
+      );
+    });
+
+    it('Decodes an encoded data source', async () => {
+      setupUser([permissions.createActivity]);
+
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = true;
+
+      await mcpService.importActivities({
+        userId,
+        activities: [
+          createActivity({ dataSource: encodeDataSource(DataSource.YAHOO) })
+        ]
+      });
+
+      expect(importService.import).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activitiesDto: [
+            expect.objectContaining({ dataSource: DataSource.YAHOO })
+          ]
+        })
+      );
+    });
+
+    it('Keeps the data source if the subscription is not enabled', async () => {
+      setupUser([permissions.createActivity]);
+
+      configuration.DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER = [DataSource.YAHOO];
+      configuration.ENABLE_FEATURE_SUBSCRIPTION = false;
+
+      await mcpService.importActivities({
+        userId,
+        activities: [createActivity({ dataSource: DataSource.GHOSTFOLIO })]
+      });
+
+      expect(importService.import).toHaveBeenCalledWith(
+        expect.objectContaining({
+          activitiesDto: [
+            expect.objectContaining({ dataSource: DataSource.GHOSTFOLIO })
+          ]
+        })
+      );
+    });
+
+    // The McpToolExceptionFilter maps the error, hence the tool passes it on
+    it('Passes on an error of the import', async () => {
+      setupUser([permissions.createActivity]);
+
+      const error = new ImportValidationError(
+        'activities.0.symbol ("X") is not valid'
+      );
+
+      jest.spyOn(importService, 'import').mockRejectedValue(error);
+
+      await expect(
+        mcpService.importActivities({
+          userId,
+          activities: [createActivity()]
+        })
+      ).rejects.toBe(error);
+    });
+  });
+
+  describe('updateAccountBalance', () => {
+    const parameters = {
+      userId,
+      accountId: 'account-id',
+      balance: 1000,
+      date: '2024-01-01'
+    };
+
+    it('Refuses a user without the permission to create an account balance', async () => {
+      setupUser([]);
+
+      await expect(mcpService.updateAccountBalance(parameters)).rejects.toThrow(
+        HttpException
+      );
+
+      // The permission is checked first, hence the existence of the account
+      // stays hidden
+      expect(accountService.account).not.toHaveBeenCalled();
+
+      expect(
+        accountBalanceService.createOrUpdateAccountBalance
+      ).not.toHaveBeenCalled();
+    });
+
+    it('Refuses an account which does not belong to the user', async () => {
+      setupUser([permissions.createAccountBalance]);
+
+      jest.spyOn(accountService, 'account').mockResolvedValue(null);
+
+      await expect(mcpService.updateAccountBalance(parameters)).rejects.toThrow(
+        CallerFacingError
+      );
+
+      expect(accountService.account).toHaveBeenCalledWith({
+        id_userId: { userId, id: 'account-id' }
+      });
+
+      expect(
+        accountBalanceService.createOrUpdateAccountBalance
+      ).not.toHaveBeenCalled();
+    });
+
+    it('Updates the cash balance of the account of the user', async () => {
+      setupUser([permissions.createAccountBalance]);
+
+      jest
+        .spyOn(accountService, 'account')
+        .mockResolvedValue({ userId, id: 'account-id' } as AccountWithBalance);
+
+      expect(await mcpService.updateAccountBalance(parameters)).toEqual({
+        content: [
+          {
+            text: 'Updated the cash balance of the account at 2024-01-01',
+            type: 'text'
+          }
+        ]
+      });
+
+      expect(
+        accountBalanceService.createOrUpdateAccountBalance
+      ).toHaveBeenCalledWith({
+        userId,
+        accountId: 'account-id',
+        balance: 1000,
+        date: '2024-01-01'
+      });
+    });
+  });
+});

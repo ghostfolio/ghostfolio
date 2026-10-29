@@ -5,10 +5,12 @@ import {
 import { GfUserDetailDialogComponent } from '@ghostfolio/client/components/user-detail-dialog/user-detail-dialog.component';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE, locale } from '@ghostfolio/common/config';
+import { formatRelativeTime } from '@ghostfolio/client/util/date.util';
+import { DEFAULT_LOCALE, DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 import {
-  getDateFnsLocale,
+  canDeleteUser,
+  getCountryName,
   getDateFormatString,
   getEmojiFlag
 } from '@ghostfolio/common/helper';
@@ -19,6 +21,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { RequestClient } from '@ghostfolio/prisma/enums';
+import { translate } from '@ghostfolio/ui/i18n';
 import { NotificationService } from '@ghostfolio/ui/notifications';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { AdminService, DataService } from '@ghostfolio/ui/services';
@@ -26,6 +30,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -46,26 +51,26 @@ import {
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import {
-  differenceInSeconds,
-  formatDistanceToNowStrict,
-  parseISO
-} from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
+  codeSlashOutline,
   contractOutline,
   ellipsisHorizontal,
+  globeOutline,
   keyOutline,
   personOutline,
+  serverOutline,
+  sparklesOutline,
   trashOutline
 } from 'ionicons/icons';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { interval } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     GfPremiumIndicatorComponent,
@@ -86,17 +91,31 @@ export class GfAdminUsersComponent implements OnInit {
   protected dataSource = new MatTableDataSource<
     AdminUsersResponse['users'][0]
   >();
+
   protected defaultDateFormat: string;
   protected displayedColumns: string[] = [];
+  protected readonly canDeleteUser = canDeleteUser;
+  protected readonly formatRelativeTime = formatRelativeTime;
+  protected readonly getCountryName = getCountryName;
   protected readonly getEmojiFlag = getEmojiFlag;
   protected hasPermissionForSubscription: boolean;
   protected hasPermissionToImpersonateAllUsers: boolean;
   protected info: InfoItem;
   protected isLoading = false;
   protected readonly pageSize = DEFAULT_PAGE_SIZE;
+
+  protected readonly requestClientIcons: Record<RequestClient, string> = {
+    API: 'code-slash-outline',
+    MCP: 'sparkles-outline',
+    SELF_HOSTING: 'server-outline',
+    WEB: 'globe-outline'
+  };
+
   protected readonly routerLinkAdminControlUsers =
     internalRoutes.adminControl.subRoutes.users.routerLink;
+
   protected totalItems = 0;
+  protected readonly translate = translate;
   protected user: User;
 
   private readonly deviceType = computed(
@@ -110,9 +129,11 @@ export class GfAdminUsersComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
+
   private readonly impersonationStorageService = inject(
     ImpersonationStorageService
   );
+
   private readonly notificationService = inject(NotificationService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -163,23 +184,31 @@ export class GfAdminUsersComponent implements OnInit {
               this.user.permissions,
               permissions.impersonateAllUsers
             );
+
+            this.changeDetectorRef.markForCheck();
           }
         }),
-        switchMap(() => this.route.paramMap)
+        switchMap(() => this.route.paramMap),
+        map((params) => {
+          return params.get('userId');
+        }),
+        distinctUntilChanged()
       )
-      .subscribe((params) => {
-        const userId = params.get('userId');
-
+      .subscribe((userId) => {
         if (userId) {
           this.openUserDetailDialog(userId);
         }
       });
 
     addIcons({
+      codeSlashOutline,
       contractOutline,
       ellipsisHorizontal,
+      globeOutline,
       keyOutline,
       personOutline,
+      serverOutline,
+      sparklesOutline,
       trashOutline
     });
   }
@@ -194,23 +223,9 @@ export class GfAdminUsersComponent implements OnInit {
           pageIndex: this.paginator().pageIndex,
           showLoading: false
         });
+
+        this.changeDetectorRef.markForCheck();
       });
-  }
-
-  protected formatDistanceToNow(aDateString: string) {
-    if (aDateString) {
-      const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
-        addSuffix: true,
-        locale: getDateFnsLocale(this.user?.settings?.language)
-      });
-
-      return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
-        60
-        ? 'just now'
-        : distanceString;
-    }
-
-    return '';
   }
 
   protected onChangePage(page: PageEvent) {
@@ -226,12 +241,17 @@ export class GfAdminUsersComponent implements OnInit {
           .deleteUser(aId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
-            this.router.navigate(['..'], { relativeTo: this.route });
+            this.router.navigate(this.routerLinkAdminControlUsers);
+
+            this.fetchUsers({
+              pageIndex: this.paginator().pageIndex,
+              showLoading: false
+            });
           });
       },
       confirmType: ConfirmationDialogType.Warn,
       discardFn: () => {
-        this.router.navigate(['..'], { relativeTo: this.route });
+        this.router.navigate(this.routerLinkAdminControlUsers);
       },
       title: $localize`Do you really want to delete this user?`
     });
@@ -273,9 +293,7 @@ export class GfAdminUsersComponent implements OnInit {
   }
 
   protected onOpenUserDetailDialog(userId: string) {
-    this.router.navigate(
-      internalRoutes.adminControl.subRoutes.users.routerLink.concat(userId)
-    );
+    this.router.navigate(this.routerLinkAdminControlUsers.concat(userId));
   }
 
   private fetchUsers({
@@ -317,7 +335,8 @@ export class GfAdminUsersComponent implements OnInit {
         currentUserId: this.user?.id,
         deviceType: this.deviceType(),
         hasPermissionForSubscription: this.hasPermissionForSubscription,
-        locale: this.user?.settings?.locale ?? locale,
+        language: this.user?.settings?.language,
+        locale: this.user?.settings?.locale ?? DEFAULT_LOCALE,
         userId: aUserId
       } satisfies UserDetailDialogParams,
       height: this.deviceType() === 'mobile' ? '98vh' : '60vh',
@@ -331,9 +350,7 @@ export class GfAdminUsersComponent implements OnInit {
         if (data?.action === 'delete' && data?.userId) {
           this.onDeleteUser(data.userId);
         } else {
-          this.router.navigate(
-            internalRoutes.adminControl.subRoutes.users.routerLink
-          );
+          this.router.navigate(this.routerLinkAdminControlUsers);
         }
       });
   }

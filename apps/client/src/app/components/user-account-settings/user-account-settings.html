@@ -3,38 +3,46 @@
   <div class="row">
     <div class="col">
       <div class="d-flex py-1">
-        <form #changeUserSettingsForm="ngForm" class="w-100">
-          <div class="d-flex mb-2">
-            <div class="align-items-center d-flex pt-1 pt-1 w-50">
+        <div class="w-100">
+          <div
+            class="align-items-sm-baseline g-0 row"
+            [class.mb-3]="!hasImpersonationId"
+            [class.mb-4]="hasImpersonationId"
+            [class.mb-sm-2]="!hasImpersonationId"
+          >
+            <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <ng-container i18n>Base Currency</ng-container>
             </div>
-            <div class="pl-1 w-50">
-              <mat-form-field appearance="outline" class="w-100 without-hint">
-                <mat-select
-                  name="baseCurrency"
-                  [disabled]="!hasPermissionToUpdateUserSettings"
-                  [value]="user.settings.baseCurrency"
-                  (selectionChange)="
-                    onChangeUserSetting('baseCurrency', $event.value)
-                  "
-                >
-                  @for (currency of currencies; track currency) {
-                    <mat-option [value]="currency">{{ currency }}</mat-option>
-                  }
-                </mat-select>
+            <div class="col-sm-6 ps-sm-1" [formGroup]="baseCurrencyForm">
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                [class.without-hint]="!hasImpersonationId"
+              >
+                <gf-currency-selector
+                  formControlName="baseCurrency"
+                  [currencies]="currencies"
+                />
+                @if (hasImpersonationId) {
+                  <mat-hint class="mt-1 text-body-secondary text-truncate" i18n
+                    >Derived from the portfolio you are viewing</mat-hint
+                  >
+                }
               </mat-form-field>
             </div>
           </div>
-          @if (user?.settings?.isExperimentalFeatures && !user?.subscription) {
-            <div class="d-flex mb-2">
-              <div class="align-items-center d-flex pt-1 pt-1 w-50">
+          @if (user?.settings?.isExperimentalFeatures) {
+            <div class="align-items-sm-baseline g-0 mb-3 mb-sm-2 row">
+              <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
                 <ng-container i18n>Performance Calculation</ng-container>
               </div>
-              <div class="pl-1 w-50">
+              <div class="col-sm-6 ps-sm-1">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-select
                     name="performanceCalculationType"
-                    [disabled]="true"
+                    [disabled]="
+                      hasImpersonationId || !hasPermissionToUpdateUserSettings
+                    "
                     [value]="user.settings.performanceCalculationType"
                     (selectionChange)="
                       onChangeUserSetting(
@@ -46,16 +54,19 @@
                     <mat-option value="ROAI"
                       >Return on Average Investment (ROAI)</mat-option
                     >
+                    <mat-option value="ROI"
+                      >Return on Investment (ROI)</mat-option
+                    >
                   </mat-select>
                 </mat-form-field>
               </div>
             </div>
           }
-          <div class="align-items-center d-flex mb-2">
-            <div class="pr-1 w-50">
+          <div class="align-items-sm-baseline g-0 mb-3 mb-sm-2 row">
+            <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <div i18n>Language</div>
               @if (isCommunityLanguage()) {
-                <div class="hint-text text-muted" i18n>
+                <div class="hint-text text-body-secondary" i18n>
                   If a translation is missing, kindly support us in extending it
                   <a
                     href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
@@ -67,7 +78,7 @@
                 </div>
               }
             </div>
-            <div class="pl-1 w-50">
+            <div class="col-sm-6 ps-sm-1">
               <mat-form-field appearance="outline" class="w-100 without-hint">
                 <mat-select
                   name="language"
@@ -103,6 +114,15 @@
                     >Italiano (<ng-container i18n>Community</ng-container
                     >)</mat-option
                   >
+                  <!--
+                    @if (user?.settings?.isExperimentalFeatures) {
+                      <mat-option value="ja"
+                        >Japanese / 日本語 (<ng-container i18n
+                          >Community</ng-container
+                        >)</mat-option
+                      >
+                    }
+                  -->
                   @if (user?.settings?.isExperimentalFeatures) {
                     <mat-option value="ko"
                       >Korean / 한국어 (<ng-container i18n
@@ -137,15 +157,18 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="align-items-center d-flex mb-2">
-            <div class="pr-1 w-50">
+          <div class="align-items-sm-baseline g-0 mb-3 mb-sm-4 row">
+            <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <div i18n>Locale</div>
-              <div class="hint-text text-muted">
+              <div class="d-none d-sm-block hint-text text-body-secondary">
                 <ng-container i18n>Date and number format</ng-container>
               </div>
             </div>
-            <div class="pl-1 w-50">
-              <mat-form-field appearance="outline" class="w-100 without-hint">
+            <div class="col-sm-6 ps-sm-1">
+              <mat-form-field
+                appearance="outline"
+                class="w-100 with-value-hint"
+              >
                 <mat-select
                   name="locale"
                   [disabled]="!hasPermissionToUpdateUserSettings"
@@ -159,14 +182,31 @@
                     <mat-option [value]="locale">{{ locale }}</mat-option>
                   }
                 </mat-select>
+                <mat-hint class="d-flex mt-2 text-body-secondary">
+                  <gf-value
+                    [deviceType]="deviceType()"
+                    [isDate]="true"
+                    [isLoading]="isLoading"
+                    [locale]="user.settings.locale"
+                    [value]="previewDate"
+                  />
+                  <span class="mx-1">·</span>
+                  <gf-value
+                    [isCurrency]="true"
+                    [isLoading]="isLoading"
+                    [locale]="user.settings.locale"
+                    [unit]="user.settings.baseCurrency"
+                    [value]="previewValue"
+                  />
+                </mat-hint>
               </mat-form-field>
             </div>
           </div>
-          <div class="d-flex">
-            <div class="align-items-center d-flex pr-1 pt-1 w-50">
+          <div class="align-items-sm-baseline g-0 row">
+            <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <ng-container i18n>Appearance</ng-container>
             </div>
-            <div class="pl-1 w-50">
+            <div class="col-sm-6 ps-sm-1">
               <mat-form-field appearance="outline" class="w-100 without-hint">
                 <mat-select
                   class="with-placeholder-as-option"
@@ -185,17 +225,17 @@
               </mat-form-field>
             </div>
           </div>
-        </form>
+        </div>
       </div>
-      <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
+        <div class="col col-sm-6 pe-1">
           <div i18n>Presenter View</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Protection for sensitive information like absolute performances and
             quantity values
           </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="col-auto col-sm-6 ps-1">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -205,14 +245,14 @@
           />
         </div>
       </div>
-      <div class="d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
+        <div class="col col-sm-6 pe-1">
           <div i18n>Zen Mode</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Distraction-free experience for turbulent times
           </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="col-auto col-sm-6 ps-1">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -222,12 +262,14 @@
           />
         </div>
       </div>
-      <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
+        <div class="col col-sm-6 pe-1">
           <div i18n>Biometric Authentication</div>
-          <div class="hint-text text-muted" i18n>Sign in with fingerprint</div>
+          <div class="hint-text text-body-secondary" i18n>
+            Sign in with fingerprint
+          </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="col-auto col-sm-6 ps-1">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -239,14 +281,14 @@
           />
         </div>
       </div>
-      <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+      <div class="align-items-baseline g-0 mt-4 py-1 row">
+        <div class="col col-sm-6 pe-1">
           <div i18n>Experimental Features</div>
-          <div class="hint-text text-muted" i18n>
+          <div class="hint-text text-body-secondary" i18n>
             Sneak peek at upcoming functionality
           </div>
         </div>
-        <div class="pl-1 w-50">
+        <div class="col-auto col-sm-6 ps-1">
           <mat-slide-toggle
             color="primary"
             hideIcon="true"
@@ -256,70 +298,132 @@
           />
         </div>
       </div>
+      @if (deviceType() !== 'mobile' && hasPermissionToEnableGhostfolioAi) {
+        <div class="align-items-baseline g-0 mt-4 py-1 row">
+          <div class="col col-sm-6 pe-1">
+            <div>Ghostfolio AI</div>
+            <div class="hint-text text-body-secondary" i18n>
+              Powered by third-party AI providers
+            </div>
+          </div>
+          <div class="col-auto col-sm-6 ps-1">
+            <mat-slide-toggle
+              color="primary"
+              hideIcon="true"
+              [checked]="user.settings.isGhostfolioAiEnabled"
+              [disabled]="!hasPermissionToUpdateUserSettings"
+              (change)="onGhostfolioAiChange($event)"
+            />
+          </div>
+        </div>
+      }
       <div class="align-items-center d-flex mt-4 py-1">
-        <div class="pr-1 w-50">
+        <div class="pe-1 w-50">
           Ghostfolio <ng-container i18n>User ID</ng-container>
         </div>
-        <div class="pl-1 text-monospace w-50">{{ user?.id }}</div>
+        <div class="ps-1 w-50">
+          <gf-value
+            class="font-monospace"
+            [enableCopyToClipboardButton]="true"
+            [isLoading]="isLoading"
+            [value]="user?.id"
+          />
+        </div>
       </div>
       <div class="align-items-center d-flex py-1">
-        <div class="pr-1 w-50"></div>
-        <div class="pl-1 text-monospace w-50">
-          <button color="primary" mat-flat-button (click)="onExport()">
-            <span i18n>Export Data</span>
+        <div class="pe-1 w-50"></div>
+        <div class="ps-1 w-50">
+          <button color="primary" i18n mat-flat-button (click)="onExport()">
+            Export Data
           </button>
         </div>
       </div>
-      @if (hasPermissionToDeleteOwnUser) {
+      @if (
+        hasPermissionToDeleteOwnUser || hasPermissionToRequestOwnUserDeletion
+      ) {
         <hr class="mt-5" />
-        <form
-          class="w-100"
-          [formGroup]="deleteOwnUserForm"
-          (ngSubmit)="onCloseAccount()"
-        >
-          <div class="d-flex py-1">
-            <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
-            <div class="pl-1 w-50">
-              <mat-form-field
-                appearance="outline"
-                class="without-hint w-100"
-                [hideRequiredMarker]="true"
+        <div class="d-flex py-1">
+          <div class="pe-1 text-danger w-50" i18n>Danger Zone</div>
+          <div class="ps-1 w-50">
+            @if (
+              hasPermissionToDeleteOwnUser &&
+              hasPermissionToUpdateOwnAccessToken
+            ) {
+              <form
+                class="w-100"
+                [formGroup]="deleteOwnUserForm"
+                (ngSubmit)="onCloseAccount()"
               >
-                <mat-label i18n>Security Token</mat-label>
-                <input
-                  formControlName="accessToken"
-                  matInput
-                  [type]="isAccessTokenHidden ? 'password' : 'text'"
-                />
-                <button
-                  class="mx-2"
-                  mat-icon-button
-                  matSuffix
-                  type="button"
-                  (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                <mat-form-field
+                  appearance="outline"
+                  class="without-hint w-100"
+                  [hideRequiredMarker]="true"
                 >
-                  <ion-icon
-                    class="mat-icon"
-                    [name]="
-                      isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
-                    "
+                  <mat-label i18n>Security Token</mat-label>
+                  <input
+                    formControlName="accessToken"
+                    matInput
+                    [type]="isAccessTokenHidden ? 'password' : 'text'"
                   />
+                  <button
+                    class="mx-2"
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                  >
+                    <ion-icon
+                      class="mat-icon"
+                      [name]="
+                        isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
+                      "
+                    />
+                  </button>
+                </mat-form-field>
+                <button
+                  class="mt-2"
+                  color="warn"
+                  i18n
+                  mat-flat-button
+                  type="submit"
+                  [disabled]="
+                    !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
+                  "
+                >
+                  Close Account
                 </button>
-              </mat-form-field>
+              </form>
+            } @else if (hasPermissionToDeleteOwnUser && !hasImpersonationId) {
               <button
-                class="mt-2"
                 color="warn"
+                i18n
                 mat-flat-button
-                type="submit"
-                [disabled]="
-                  !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
-                "
+                (click)="onCloseAccount()"
               >
-                <span i18n>Close Account</span>
+                Close Account
               </button>
-            </div>
+            } @else if (
+              hasPermissionToRequestOwnUserDeletion &&
+              (user?.accounts?.length > 0 || user?.activitiesCount > 0)
+            ) {
+              <button color="warn" i18n mat-flat-button [disabled]="true">
+                Close Account
+              </button>
+              <div class="hint-text mt-2 text-body-secondary" i18n>
+                For security reasons, please delete all activities and accounts
+                first before your Ghostfolio account can be closed.
+              </div>
+            } @else if (hasPermissionToRequestOwnUserDeletion) {
+              <a
+                color="warn"
+                i18n
+                mat-flat-button
+                [href]="closeUserAccountMailHref"
+                >Close Account</a
+              >
+            }
           </div>
-        </form>
+        </div>
       }
     </div>
   </div>

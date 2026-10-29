@@ -19,28 +19,33 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { uniqBy } from 'lodash-es';
 import YahooFinance from 'yahoo-finance2';
-import { ChartResultArray } from 'yahoo-finance2/esm/src/modules/chart';
-import {
+import type { ChartResultArray } from 'yahoo-finance2/modules/chart';
+import type {
   HistoricalDividendsResult,
   HistoricalHistoryResult
-} from 'yahoo-finance2/esm/src/modules/historical';
-import {
-  Quote,
-  QuoteResponseArray
-} from 'yahoo-finance2/esm/src/modules/quote';
-import {
+} from 'yahoo-finance2/modules/historical';
+import type { Quote, QuoteResponseArray } from 'yahoo-finance2/modules/quote';
+import type {
   Price,
   QuoteSummaryResult
-} from 'yahoo-finance2/esm/src/modules/quoteSummary';
-import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
+} from 'yahoo-finance2/modules/quoteSummary';
+import type { SearchQuoteNonYahoo } from 'yahoo-finance2/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
+  private static readonly DELISTED_ERROR_MESSAGE =
+    'No data found, symbol may be delisted';
+
+  private static readonly RATE_LIMIT_ERROR_MESSAGE =
+    ReasonPhrases.TOO_MANY_REQUESTS;
+
   private readonly logger = new Logger(YahooFinanceService.name);
 
   private readonly yahooFinance = new YahooFinance({
@@ -77,10 +82,6 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol,
     to
   }: GetDividendsParams) {
-    if (isSameDay(from, to)) {
-      to = addDays(to, 1);
-    }
-
     try {
       const historicalResult = this.convertToDividendResult(
         await this.yahooFinance.chart(
@@ -91,7 +92,10 @@ export class YahooFinanceService implements DataProviderInterface {
             events: 'dividends',
             interval: granularity === 'month' ? '1mo' : '1d',
             period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
+            period2: format(
+              isSameDay(from, to) ? addDays(to, 1) : to,
+              DATE_FORMAT
+            )
           }
         )
       );
@@ -100,19 +104,33 @@ export class YahooFinanceService implements DataProviderInterface {
       } = {};
 
       for (const historicalItem of historicalResult) {
-        response[format(historicalItem.date, DATE_FORMAT)] = {
+        response[format(historicalItem.date, DATE_FORMAT, { in: utc })] = {
           marketPrice: historicalItem.dividends
         };
       }
 
       return response;
     } catch (error) {
-      this.logger.error(
-        `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
-          from,
-          DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
-      );
+      const message = `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
+        from,
+        DATE_FORMAT
+      )} to ${format(to, DATE_FORMAT)}`;
+
+      if (error?.message === YahooFinanceService.DELISTED_ERROR_MESSAGE) {
+        this.logger.warn(
+          `${message}: ${YahooFinanceService.DELISTED_ERROR_MESSAGE}`
+        );
+      } else if (
+        (error?.name === 'HTTPError' &&
+          error?.code === StatusCodes.TOO_MANY_REQUESTS) ||
+        error?.message?.startsWith(YahooFinanceService.RATE_LIMIT_ERROR_MESSAGE)
+      ) {
+        this.logger.warn(
+          `${message}: ${YahooFinanceService.RATE_LIMIT_ERROR_MESSAGE}`
+        );
+      } else {
+        this.logger.error(`${message}: [${error?.name}] ${error?.message}`);
+      }
 
       return {};
     }
@@ -123,41 +141,47 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
-    if (isSameDay(from, to)) {
-      to = addDays(to, 1);
-    }
-
     try {
-      const historicalResult = this.convertToHistoricalResult(
-        await this.yahooFinance.chart(
-          this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
-            symbol
-          ),
-          {
-            interval: '1d',
-            period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
-          }
-        )
+      const chartResult = await this.yahooFinance.chart(
+        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+          symbol
+        ),
+        {
+          interval: '1d',
+          period1: format(from, DATE_FORMAT),
+          period2: format(
+            isSameDay(from, to) ? addDays(to, 1) : to,
+            DATE_FORMAT
+          )
+        }
       );
 
+      const historicalResult = this.convertToHistoricalResult(chartResult);
+
       const response: {
-        [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+        [date: string]: DataProviderHistoricalResponse;
       } = {};
 
-      response[symbol] = {};
+      for (const { close, date } of historicalResult) {
+        // The chart endpoint can omit the close price of a historical item, for
+        // example if the daily data of an exchange has not been consolidated yet.
+        // In this case, the market price of the corresponding quote is taken.
+        const marketPrice =
+          close ??
+          (isSameDay(date, chartResult.meta.regularMarketTime)
+            ? chartResult.meta.regularMarketPrice
+            : undefined);
 
-      for (const historicalItem of historicalResult) {
-        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice: historicalItem.close
-        };
+        if (marketPrice) {
+          response[format(date, DATE_FORMAT, { in: utc })] = { marketPrice };
+        }
       }
 
       return response;
     } catch (error) {
-      if (error.message === 'No data found, symbol may be delisted') {
+      if (error?.message === YahooFinanceService.DELISTED_ERROR_MESSAGE) {
         throw new AssetProfileDelistedError(
           `No data found, ${symbol} (${this.getName()}) may be delisted`
         );
@@ -166,7 +190,7 @@ export class YahooFinanceService implements DataProviderInterface {
           `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
             from,
             DATE_FORMAT
-          )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+          )} to ${format(to, DATE_FORMAT)}: [${error?.name}] ${error?.message}`
         );
       }
     }
@@ -199,7 +223,7 @@ export class YahooFinanceService implements DataProviderInterface {
       try {
         quotes = await this.yahooFinance.quote(yahooFinanceSymbols);
       } catch (error) {
-        this.logger.error(error);
+        this.logger.error(error.message);
 
         this.logger.warn('Fallback to yahooFinance.quoteSummary()');
 
@@ -227,7 +251,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       return {};
     }
@@ -332,7 +356,11 @@ export class YahooFinanceService implements DataProviderInterface {
         });
       }
     } catch (error) {
-      this.logger.error(error);
+      if (error?.name === 'BadRequestError') {
+        this.logger.warn(`Could not search for "${query}": ${error.message}`);
+      } else {
+        this.logger.error(error.message);
+      }
     }
 
     return { items };
@@ -341,9 +369,11 @@ export class YahooFinanceService implements DataProviderInterface {
   private convertToDividendResult(
     result: ChartResultArray
   ): HistoricalDividendsResult {
-    return result.events.dividends.map(({ amount: dividends, date }) => {
-      return { date, dividends };
-    });
+    return (result.events?.dividends ?? []).map(
+      ({ amount: dividends, date }) => {
+        return { date, dividends };
+      }
+    );
   }
 
   private convertToHistoricalResult(

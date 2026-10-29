@@ -4,8 +4,7 @@
     "outDir": "../../dist/out-tsc",
     "module": "preserve",
     "isolatedModules": true,
-    "types": ["jest", "node"],
-    "target": "es2016"
+    "types": ["jest", "node"]
   },
   "files": ["src/test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.test.ts", "**/*.d.ts", "jest.config.ts"]

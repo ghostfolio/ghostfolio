@@ -1,29 +1,33 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import {
-  PortfolioDetails,
-  RuleSettings,
-  UserSettings
-} from '@ghostfolio/common/interfaces';
+import { PortfolioDetails, RuleSettings } from '@ghostfolio/common/interfaces';
 
 import { Account } from '@prisma/client';
 
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   private accounts: PortfolioDetails['accounts'];
+  private i18nService: I18nService;
 
-  public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    accounts: PortfolioDetails['accounts']
-  ) {
-    super(exchangeRateDataService, {
+  public constructor({
+    accounts,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    accounts: PortfolioDetails['accounts'];
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
-      key: AccountClusterRiskCurrentInvestment.name
+      key: 'AccountClusterRiskCurrentInvestment'
     });
 
     this.accounts = accounts;
+    this.i18nService = i18nService;
   }
 
   public evaluate(ruleSettings: Settings) {
@@ -50,7 +54,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       };
     }
 
-    let maxAccount: (typeof accounts)[0];
+    let maxAccount: (typeof accounts)[0] | undefined;
     let totalInvestment = 0;
 
     for (const account of Object.values(accounts)) {
@@ -67,7 +71,8 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       }
     }
 
-    const maxInvestmentRatio = maxAccount?.investment / totalInvestment || 0;
+    const maxInvestmentRatio =
+      (maxAccount?.investment ?? 0) / totalInvestment || 0;
 
     if (maxInvestmentRatio > ruleSettings.thresholdMax) {
       return {
@@ -75,7 +80,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
           id: 'rule.accountClusterRiskCurrentInvestment.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
-            maxAccountName: maxAccount.name,
+            maxAccountName: maxAccount?.name ?? '',
             maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
             thresholdMax: ruleSettings.thresholdMax * 100
           }
@@ -89,7 +94,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
         id: 'rule.accountClusterRiskCurrentInvestment.true',
         languageCode: this.getLanguageCode(),
         placeholders: {
-          maxAccountName: maxAccount.name,
+          maxAccountName: maxAccount?.name ?? '',
           maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
           thresholdMax: ruleSettings.thresholdMax * 100
         }
@@ -115,19 +120,6 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       id: 'rule.accountClusterRiskCurrentInvestment',
       languageCode: this.getLanguageCode()
     });
-  }
-
-  public getSettings({
-    baseCurrency,
-    locale,
-    xRayRules
-  }: UserSettings): Settings {
-    return {
-      baseCurrency,
-      locale,
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
-      thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.5
-    };
   }
 }
 

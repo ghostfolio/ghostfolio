@@ -1,16 +1,22 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { TAG_ID_DRAFT } from '@ghostfolio/common/config';
 
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Prisma, Tag } from '@prisma/client';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()
 export class TagService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   public async createTag(data: Prisma.TagCreateInput) {
-    return this.prismaService.tag.create({
-      data
-    });
+    try {
+      return await this.prismaService.tag.create({
+        data
+      });
+    } catch (error) {
+      throw this.getExceptionForError(error);
+    }
   }
 
   public async deleteTag(where: Prisma.TagWhereUniqueInput): Promise<Tag> {
@@ -19,7 +25,7 @@ export class TagService {
 
   public async getTag(
     tagWhereUniqueInput: Prisma.TagWhereUniqueInput
-  ): Promise<Tag> {
+  ): Promise<Tag | null> {
     return this.prismaService.tag.findUnique({
       where: tagWhereUniqueInput
     });
@@ -52,6 +58,11 @@ export class TagService {
       include: {
         _count: {
           select: {
+            accounts: {
+              where: {
+                userId
+              }
+            },
             activities: {
               where: {
                 userId
@@ -80,27 +91,28 @@ export class TagService {
         id,
         name,
         userId,
-        isUsed: _count.activities > 0
+        isUsed: _count.accounts > 0 || _count.activities > 0
       }))
       .sort((a, b) => {
         return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
       });
   }
 
-  public async getTagsWithActivityCount() {
-    const tagsWithOrderCount = await this.prismaService.tag.findMany({
+  public async getTagsWithAccountAndActivityCount() {
+    const tagsWithAccountAndOrderCount = await this.prismaService.tag.findMany({
       include: {
         _count: {
-          select: { activities: true }
+          select: { accounts: true, activities: true }
         }
       }
     });
 
-    return tagsWithOrderCount.map(({ _count, id, name, userId }) => {
+    return tagsWithAccountAndOrderCount.map(({ _count, id, name, userId }) => {
       return {
         id,
         name,
         userId,
+        accountCount: _count.accounts,
         activityCount: _count.activities
       };
     });
@@ -113,9 +125,81 @@ export class TagService {
     data: Prisma.TagUpdateInput;
     where: Prisma.TagWhereUniqueInput;
   }): Promise<Tag> {
-    return this.prismaService.tag.update({
-      data,
-      where
+    try {
+      return await this.prismaService.tag.update({
+        data,
+        where
+      });
+    } catch (error) {
+      throw this.getExceptionForError(error);
+    }
+  }
+
+  public async validateTagIds({
+    tagIds,
+    userId
+  }: {
+    tagIds: string[];
+    userId: string;
+  }) {
+    if (!tagIds?.length) {
+      return;
+    }
+
+    if (!userId) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const uniqueTagIds = Array.from(new Set(tagIds));
+
+    const tagsCount = await this.prismaService.tag.count({
+      where: {
+        id: { in: uniqueTagIds },
+        OR: [{ userId }, { userId: null }]
+      }
     });
+
+    if (tagsCount !== uniqueTagIds.length) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+  }
+
+  public async validateTagIdsWithoutDraftTag({
+    tagIds,
+    userId
+  }: {
+    tagIds: string[];
+    userId: string;
+  }) {
+    // The "DRAFT" tag qualifies an individual activity and can therefore
+    // neither be assigned to an account nor to all activities of a holding
+    if (tagIds?.includes(TAG_ID_DRAFT)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return this.validateTagIds({ tagIds, userId });
+  }
+
+  private getExceptionForError(error: unknown) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      return new HttpException(
+        getReasonPhrase(StatusCodes.CONFLICT),
+        StatusCodes.CONFLICT
+      );
+    }
+
+    return error;
   }
 }

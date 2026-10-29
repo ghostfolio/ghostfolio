@@ -1,6 +1,17 @@
+import {
+  COMMENT_MAXIMUM_LENGTH,
+  SYMBOL_MAXIMUM_LENGTH
+} from '@ghostfolio/common/config';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
+import type { Prisma } from '@ghostfolio/prisma/browser';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataGatheringFrequency,
+  DataSource
+} from '@ghostfolio/prisma/enums';
 
-import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -8,29 +19,43 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  IsUrl
+  IsUrl,
+  MaxLength,
+  ValidateNested
 } from 'class-validator';
 
+import { CountryDto } from './country.dto';
+import { HoldingDto } from './holding.dto';
+import { ScraperConfigurationDto } from './scraper-configuration.dto';
+import { SectorDto } from './sector.dto';
+
 export class UpdateAssetProfileDto {
-  @IsEnum(AssetClass, { each: true })
+  @IsEnum(AssetClass)
   @IsOptional()
   assetClass?: AssetClass;
 
-  @IsEnum(AssetSubClass, { each: true })
+  @IsEnum(AssetSubClass)
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
   @IsOptional()
   @IsString()
-  comment?: string;
+  @MaxLength(COMMENT_MAXIMUM_LENGTH)
+  comment?: string | null;
 
   @IsArray()
   @IsOptional()
+  @Type(() => CountryDto)
+  @ValidateNested({ each: true })
   countries?: Prisma.InputJsonArray;
 
   @IsCurrencyCode()
   @IsOptional()
   currency?: string;
+
+  @IsEnum(DataGatheringFrequency)
+  @IsOptional()
+  dataGatheringFrequency?: DataGatheringFrequency;
 
   @IsEnum(DataSource)
   @IsOptional()
@@ -38,6 +63,8 @@ export class UpdateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
+  @Type(() => HoldingDto)
+  @ValidateNested({ each: true })
   holdings?: Prisma.InputJsonArray;
 
   @IsBoolean()
@@ -50,14 +77,19 @@ export class UpdateAssetProfileDto {
 
   @IsObject()
   @IsOptional()
+  @Type(() => ScraperConfigurationDto)
+  @ValidateNested()
   scraperConfiguration?: Prisma.InputJsonObject;
 
   @IsArray()
   @IsOptional()
+  @Type(() => SectorDto)
+  @ValidateNested({ each: true })
   sectors?: Prisma.InputJsonArray;
 
   @IsOptional()
   @IsString()
+  @MaxLength(SYMBOL_MAXIMUM_LENGTH)
   symbol?: string;
 
   @IsObject()
@@ -71,5 +103,5 @@ export class UpdateAssetProfileDto {
     protocols: ['http', 'https'],
     require_protocol: true
   })
-  url?: string;
+  url?: string | null;
 }

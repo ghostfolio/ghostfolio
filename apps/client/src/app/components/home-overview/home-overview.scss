@@ -30,6 +30,33 @@
     }
   }
 
+  mat-card {
+    &.holdings {
+      --mat-card-title-text-size: var(--mat-sys-title-medium-size);
+
+      mat-card-header {
+        a[mat-icon-button] {
+          --mat-icon-button-icon-size: 1rem;
+
+          margin-right: -0.125rem;
+          margin-top: -0.5rem;
+        }
+
+        mat-card-title {
+          padding-left: 0.1875rem;
+        }
+      }
+
+      mat-card-content {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+  }
+
   .introduction {
     max-width: 50rem;
   }

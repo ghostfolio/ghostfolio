@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col text-center">
       <div>
-        <h1 class="font-weight-bold gf-text-wrap-balance intro" i18n>
+        <h1 class="fw-bold gf-text-wrap-balance intro" i18n>
           Manage your wealth like a boss
         </h1>
       </div>
@@ -14,6 +14,7 @@
       <div class="mb-4">
         <a
           href="https://www.youtube.com/watch?v=yY6ObSQVJZk"
+          i18n-title
           target="_blank"
           title="Watch the Ghostfol.io Trailer on YouTube"
         >
@@ -43,7 +44,7 @@
       }
       @if (hasPermissionForDemo) {
         @if (hasPermissionToCreateUser) {
-          <div class="mx-3 text-muted" i18n>or</div>
+          <div class="mx-3 text-body-secondary" i18n>or</div>
         }
         <a i18n mat-stroked-button [routerLink]="routerLinkDemo">Live Demo</a>
       }
@@ -58,6 +59,7 @@
       >
         <a
           class="d-block"
+          i18n-title
           title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
           [routerLink]="routerLinkOpenStartup"
         >
@@ -76,6 +78,7 @@
       >
         <a
           class="d-block"
+          i18n-title
           title="Ghostfolio in Numbers: Stars on GitHub"
           [routerLink]="routerLinkOpenStartup"
         >
@@ -94,6 +97,7 @@
       >
         <a
           class="d-block"
+          i18n-title
           title="Ghostfolio in Numbers: Pulls on Docker Hub"
           [routerLink]="routerLinkOpenStartup"
         >
@@ -110,7 +114,7 @@
   }
 
   <div class="row mb-5">
-    <div class="col-12 text-center text-muted">
+    <div class="col-12 text-body-secondary text-center">
       <small i18n>As seen in</small>
     </div>
     <div class="col-12">
@@ -135,7 +139,7 @@
     <div class="col-md-4 my-2">
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-title i18n>360° View</mat-card-title>
+          <mat-card-title i18n>All in One Place</mat-card-title>
         </mat-card-header>
         <mat-card-content i18n>
           Get the full picture of your personal finances across multiple
@@ -146,7 +150,7 @@
     <div class="col-md-4 my-2">
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-title i18n>Web3 Ready</mat-card-title>
+          <mat-card-title i18n>Privacy First</mat-card-title>
         </mat-card-header>
         <mat-card-content i18n>
           Use Ghostfolio anonymously and own your financial data.
@@ -173,43 +177,43 @@
       </p>
       <ul class="list-unstyled">
         <li class="d-flex mb-3">
-          <span class="mr-3">💼 </span
+          <span class="me-3">💼 </span
           ><span i18n
             >trading stocks, ETFs or cryptocurrencies on multiple
             platforms</span
           >
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🏦</span
+          <span class="me-3">🏦</span
           ><span i18n>pursuing a buy & hold strategy</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🎯</span
+          <span class="me-3">🎯</span
           ><span i18n
             >interested in getting insights of your portfolio composition</span
           >
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">👻</span
+          <span class="me-3">👻</span
           ><span i18n>valuing privacy and data ownership</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🧘</span><span i18n>into minimalism</span>
+          <span class="me-3">🧘</span><span i18n>into minimalism</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🧺</span
+          <span class="me-3">🧺</span
           ><span i18n>caring about diversifying your financial resources</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🆓</span
+          <span class="me-3">🆓</span
           ><span i18n>interested in financial independence</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🙅</span
+          <span class="me-3">🙅</span
           ><span i18n>saying no to spreadsheets in {{ currentYear }}</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">😎</span><span i18n>still reading this list</span>
+          <span class="me-3">😎</span><span i18n>still reading this list</span>
         </li>
       </ul>
       <div class="mt-4 text-center">
@@ -232,22 +236,22 @@
           <div #carouselItem gfCarouselItem>
             <div class="d-flex px-4">
               <gf-logo
-                class="mr-3 mt-2 pt-1"
+                class="me-3 mt-2 pt-1"
                 size="medium"
                 [showLabel]="false"
               />
               <div>
                 <div>{{ testimonial.quote }}</div>
-                <div class="mt-2 text-muted">
+                <div class="mt-2 text-body-secondary">
                   —
                   @if (testimonial.url) {
                     <a target="_blank" [href]="testimonial.url">{{
                       testimonial.author
-                    }}</a>
+                    }}</a
+                    >,
                   } @else {
-                    <span>{{ testimonial.author }}</span>
+                    <span>{{ testimonial.author }},</span>
                   }
-                  ,
                   {{ testimonial.country }}
                 </div>
               </div>
@@ -287,12 +291,12 @@
         <mat-card appearance="outlined" class="h-100">
           <mat-card-content class="d-flex flex-row">
             <div class="flex-grow-1">
-              <div class="font-weight-bold" i18n>Sign up anonymously*</div>
-              <div class="text-muted" i18n>
+              <div class="fw-bold" i18n>Sign up anonymously*</div>
+              <div class="text-body-secondary" i18n>
                 <small>* no e-mail address nor credit card required</small>
               </div>
             </div>
-            <div class="pl-2 text-muted text-right">1</div>
+            <div class="ps-2 text-body-secondary text-end">1</div>
           </mat-card-content>
         </mat-card>
       </div>
@@ -300,11 +304,11 @@
         <mat-card appearance="outlined" class="h-100">
           <mat-card-content class="d-flex flex-row">
             <div class="flex-grow-1">
-              <div class="font-weight-bold" i18n>
+              <div class="fw-bold" i18n>
                 Add any of your historical transactions
               </div>
             </div>
-            <div class="pl-2 text-muted text-right">2</div>
+            <div class="ps-2 text-body-secondary text-end">2</div>
           </mat-card-content>
         </mat-card>
       </div>
@@ -312,11 +316,11 @@
         <mat-card appearance="outlined" class="h-100">
           <mat-card-content class="d-flex flex-row">
             <div class="flex-grow-1">
-              <div class="font-weight-bold" i18n>
+              <div class="fw-bold" i18n>
                 Get valuable insights of your portfolio composition
               </div>
             </div>
-            <div class="pl-2 text-muted text-right">3</div>
+            <div class="ps-2 text-body-secondary text-end">3</div>
           </mat-card-content>
         </mat-card>
       </div>
@@ -344,7 +348,7 @@
             >Get Started</a
           >
           @if (hasPermissionForDemo) {
-            <div class="mx-3 text-muted" i18n>or</div>
+            <div class="mx-3 text-body-secondary" i18n>or</div>
             <a i18n mat-stroked-button [routerLink]="routerLinkDemo"
               >Live Demo</a
             >
@@ -356,21 +360,17 @@
 </div>
 
 <div class="container">
-  <div class="d-block row">
-    <div class="outro-inner-container mx-auto">
-      <div class="h-100 w-100"></div>
-    </div>
+  <div class="outro-inner-container mx-auto">
+    <div class="h-100 w-100"></div>
   </div>
-  <div class="row mb-4">
-    <div
-      class="align-items-center d-flex flex-column justify-content-center w-100"
-    >
+  <div class="d-flex justify-content-center mb-4">
+    <div class="align-items-center d-flex flex-column justify-content-center">
       <gf-logo size="medium" />
       <div>Wealth Management Software</div>
     </div>
   </div>
-  <div class="row">
-    <div class="align-items-center d-flex flex-column w-100">
+  <div class="d-flex justify-content-center">
+    <div class="align-items-center d-flex flex-column">
       <a
         class="logo logo-agplv3 mask"
         href="https://www.gnu.org/licenses/agpl-3.0.html"

@@ -7,32 +7,10 @@
   "generators": {},
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
-      "options": {
-        "compiler": "tsc",
-        "deleteOutputPath": false,
-        "main": "apps/api/src/main.ts",
-        "outputPath": "dist/apps/api",
-        "sourceMap": true,
-        "target": "node",
-        "tsConfig": "apps/api/tsconfig.app.json",
-        "webpackConfig": "apps/api/webpack.config.js"
-      },
       "configurations": {
-        "production": {
-          "generatePackageJson": true,
-          "optimization": true,
-          "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/api/src/environments/environment.ts",
-              "with": "apps/api/src/environments/environment.prod.ts"
-            }
-          ]
-        }
+        "production": {}
       },
-      "outputs": ["{options.outputPath}"]
+      "outputs": ["{workspaceRoot}/dist/apps/api"]
     },
     "copy-assets": {
       "executor": "nx:run-commands",

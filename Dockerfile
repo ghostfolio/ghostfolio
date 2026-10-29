@@ -20,7 +20,7 @@ COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
 COPY ./prisma/schema.prisma prisma/
 
-RUN npm install
+RUN npm ci
 
 COPY ./apps apps/
 COPY ./libs libs/
@@ -39,7 +39,7 @@ WORKDIR /ghostfolio/dist/apps/api
 # package-lock.json needs to be used to ensure the same versions
 COPY ./package-lock.json /ghostfolio/dist/apps/api/
 
-RUN npm install
+RUN npm ci
 COPY .config /ghostfolio/dist/apps/api/.config/
 COPY prisma /ghostfolio/dist/apps/api/prisma/
 

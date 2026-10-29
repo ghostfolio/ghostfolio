@@ -6,14 +6,16 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   DestroyRef,
-  OnInit,
-  inject,
-  signal
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
@@ -25,7 +27,7 @@ import { MatInputModule } from '@angular/material/input';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
 
@@ -33,7 +35,6 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    FormsModule,
     IonIcon,
     MatButtonModule,
     MatDatepickerModule,
@@ -47,28 +48,24 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   styleUrls: ['./historical-market-data-editor-dialog.scss'],
   templateUrl: 'historical-market-data-editor-dialog.html'
 })
-export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
+export class GfHistoricalMarketDataEditorDialogComponent {
   public readonly data =
     inject<HistoricalMarketDataEditorDialogParams>(MAT_DIALOG_DATA);
 
-  protected readonly marketPrice = signal(this.data.marketPrice);
+  protected readonly historicalMarketDataForm = new FormGroup({
+    date: new FormControl({ disabled: true, value: this.data.dateString }),
+    marketPrice: new FormControl(this.data.marketPrice, Validators.required)
+  });
 
   private readonly destroyRef = inject(DestroyRef);
-  private readonly locale =
-    this.data.user.settings.locale ?? inject<string>(MAT_DATE_LOCALE);
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    private dateAdapter: DateAdapter<Date, string>,
     public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>
   ) {
     addIcons({ calendarClearOutline, refreshOutline });
-  }
-
-  public ngOnInit() {
-    this.dateAdapter.setLocale(this.locale);
   }
 
   public onCancel() {
@@ -84,14 +81,19 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ marketPrice }) => {
-        this.marketPrice.set(marketPrice);
+        this.historicalMarketDataForm.controls.marketPrice.setValue(
+          marketPrice
+        );
+
+        this.historicalMarketDataForm.controls.marketPrice.markAsDirty();
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
   public onUpdate() {
-    const marketPrice = this.marketPrice();
+    const marketPrice =
+      this.historicalMarketDataForm.controls.marketPrice.value;
 
     if (isNil(marketPrice)) {
       return;

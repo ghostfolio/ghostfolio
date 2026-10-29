@@ -22,13 +22,13 @@
       <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+      <td *matCellDef="let element" class="lh-normal px-1 text-nowrap" mat-cell>
         <div class="text-truncate">
           {{ element?.name }}
         </div>
         @if (showSymbol()) {
           <div>
-            <small class="text-muted">{{ element?.symbol }}</small>
+            <small class="text-body-secondary">{{ element?.symbol }}</small>
           </div>
         }
       </td>
@@ -37,7 +37,7 @@
     <ng-container matColumnDef="trend50d">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>50-Day Trend</ng-container>
@@ -66,7 +66,7 @@
     <ng-container matColumnDef="trend200d">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>200-Day Trend</ng-container>
@@ -95,7 +95,7 @@
     <ng-container matColumnDef="date">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 text-right"
+        class="d-none d-lg-table-cell px-1 text-end"
         mat-header-cell
       >
         <ng-container i18n>Last All Time High</ng-container>
@@ -129,15 +129,21 @@
         >
         <span class="d-block d-sm-none text-nowrap" i18n>from ATH</span>
       </th>
-      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
         @if (isNumber(element?.performances?.allTimeHigh?.performancePercent)) {
           <gf-value
             class="d-inline-block justify-content-end"
             [class]="{
               'text-danger':
-                element?.performances?.allTimeHigh?.performancePercent < 0,
+                round(
+                  element?.performances?.allTimeHigh?.performancePercent,
+                  4
+                ) < 0,
               'text-success':
-                element?.performances?.allTimeHigh?.performancePercent === 0
+                round(
+                  element?.performances?.allTimeHigh?.performancePercent,
+                  4
+                ) === 0
             }"
             [isPercent]="true"
             [locale]="locale()"
@@ -183,7 +189,7 @@
             "
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="trash-outline" />
+              <ion-icon class="me-2" name="trash-outline" />
               <span i18n>Delete</span>
             </span>
           </button>
@@ -194,8 +200,8 @@
     <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"
-      class="cursor-pointer"
       mat-row
+      [class.cursor-pointer]="hasPermissionToOpenDetails()"
       (click)="
         onOpenBenchmarkDialog({
           dataSource: row.dataSource,
@@ -206,7 +212,7 @@
   </table>
 </div>
 
-@if (isLoading) {
+@if (isLoading()) {
   <ngx-skeleton-loader
     animation="pulse"
     class="px-4 py-3"
@@ -216,7 +222,7 @@
     }"
   />
 } @else if (benchmarks()?.length === 0) {
-  <div class="p-3 text-center text-muted">
+  <div class="p-3 text-body-secondary text-center">
     <small i18n>No data available</small>
   </div>
 }

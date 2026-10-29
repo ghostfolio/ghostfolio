@@ -3,7 +3,11 @@ import {
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { getLocale } from '@ghostfolio/common/helper';
+import {
+  canOpenHoldingDetail,
+  getHoldingName,
+  getLocale
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
@@ -15,29 +19,32 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
-  Input,
+  input,
   OnChanges,
   OnDestroy,
-  Output,
-  ViewChild
+  output,
+  viewChild
 } from '@angular/core';
-import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
-import type { ChartData, TooltipOptions } from 'chart.js';
-import { LinearScale } from 'chart.js';
-import { Chart, Tooltip } from 'chart.js';
+import type {
+  ActiveElement,
+  ChartData,
+  TooltipItem,
+  TooltipOptions
+} from 'chart.js';
+import { Chart, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { isUUID } from 'class-validator';
 import { differenceInDays, max } from 'date-fns';
-import { orderBy } from 'lodash';
+import { orderBy, round } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import OpenColor from 'open-color';
 
+import { onPrefersColorSchemeChange } from '../chart';
 import type {
   GetColorParams,
-  GfTreemapScriptableContext,
-  GfTreemapTooltipItem
+  GfTreemapDataPoint,
+  GfTreemapScriptableContext
 } from './interfaces/interfaces';
 
 const { gray, green, red } = OpenColor;
@@ -52,33 +59,37 @@ const { gray, green, red } = OpenColor;
 export class GfTreemapChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() baseCurrency: string;
-  @Input() colorScheme: ColorScheme;
-  @Input() cursor: string;
-  @Input() dateRange: DateRange;
-  @Input() holdings: PortfolioPosition[];
-  @Input() locale = getLocale();
+  public readonly baseCurrency = input.required<string>();
+  public readonly colorScheme = input<ColorScheme>();
+  public readonly cursor = input.required<string>();
+  public readonly dateRange = input.required<DateRange>();
+  public readonly holdings = input<PortfolioPosition[]>();
+  public readonly locale = input<string>(getLocale());
 
-  @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
+  public readonly treemapChartClicked = output<AssetProfileIdentifier>();
 
-  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
+  protected isLoading = true;
 
-  public chart: Chart<'treemap'>;
-  public isLoading = true;
+  private chart: Chart<'treemap'>;
+  private readonly chartCanvas =
+    viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
+
+    onPrefersColorSchemeChange(() => {
+      if (this.chart && !this.colorScheme()) {
+        this.initialize();
+      }
+    });
   }
+
   public ngAfterViewInit() {
-    if (this.holdings) {
-      this.initialize();
-    }
+    this.initialize();
   }
 
   public ngOnChanges() {
-    if (this.holdings) {
-      this.initialize();
-    }
+    this.initialize();
   }
 
   public ngOnDestroy() {
@@ -158,14 +169,37 @@ export class GfTreemapChartComponent
     }
   }
 
+  private getHolding(
+    chart: Chart<'treemap'>,
+    activeElement: ActiveElement
+  ): PortfolioPosition | undefined {
+    if (!activeElement) {
+      return undefined;
+    }
+
+    const dataset = orderBy(
+      chart.data.datasets[activeElement.datasetIndex].tree,
+      ['allocationInPercentage'],
+      ['desc']
+    ) as PortfolioPosition[];
+
+    return dataset[activeElement.index];
+  }
+
   private initialize() {
+    const holdings = this.holdings();
+
+    if (!holdings) {
+      return;
+    }
+
     this.isLoading = true;
 
     const { endDate, startDate } = getIntervalFromDateRange({
-      dateRange: this.dateRange
+      dateRange: this.dateRange()
     });
 
-    const netPerformancePercentsWithCurrencyEffect = this.holdings.map(
+    const netPerformancePercentsWithCurrencyEffect = holdings.map(
       ({ dateOfFirstActivity, netPerformancePercentWithCurrencyEffect }) => {
         return getAnnualizedPerformancePercent({
           daysInMarket: differenceInDays(
@@ -207,23 +241,27 @@ export class GfTreemapChartComponent
       datasets: [
         {
           backgroundColor: (context: GfTreemapScriptableContext) => {
+            const raw = context.raw as GfTreemapDataPoint;
+
+            if (!raw) {
+              return undefined;
+            }
+
             let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
-                  max([
-                    context.raw._data.dateOfFirstActivity ?? new Date(0),
-                    startDate
-                  ])
+                  max([raw._data.dateOfFirstActivity ?? new Date(0), startDate])
                 ),
                 netPerformancePercentage: new Big(
-                  context.raw._data.netPerformancePercentWithCurrencyEffect
+                  raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
 
-            // Round to 2 decimal places
-            annualizedNetPerformancePercent =
-              Math.round(annualizedNetPerformancePercent * 100) / 100;
+            annualizedNetPerformancePercent = round(
+              annualizedNetPerformancePercent,
+              2
+            );
 
             const { backgroundColor } = this.getColor({
               annualizedNetPerformancePercent,
@@ -238,23 +276,30 @@ export class GfTreemapChartComponent
           labels: {
             align: 'left',
             color: (context: GfTreemapScriptableContext) => {
+              const raw = context.raw as GfTreemapDataPoint;
+
+              if (!raw) {
+                return undefined;
+              }
+
               let annualizedNetPerformancePercent =
                 getAnnualizedPerformancePercent({
                   daysInMarket: differenceInDays(
                     endDate,
                     max([
-                      context.raw._data.dateOfFirstActivity ?? new Date(0),
+                      raw._data.dateOfFirstActivity ?? new Date(0),
                       startDate
                     ])
                   ),
                   netPerformancePercentage: new Big(
-                    context.raw._data.netPerformancePercentWithCurrencyEffect
+                    raw._data.netPerformancePercentWithCurrencyEffect
                   )
                 }).toNumber();
 
-              // Round to 2 decimal places
-              annualizedNetPerformancePercent =
-                Math.round(annualizedNetPerformancePercent * 100) / 100;
+              annualizedNetPerformancePercent = round(
+                annualizedNetPerformancePercent,
+                2
+              );
 
               const { fontColor } = this.getColor({
                 annualizedNetPerformancePercent,
@@ -266,25 +311,22 @@ export class GfTreemapChartComponent
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter: ({ raw }: GfTreemapScriptableContext) => {
-              // Round to 4 decimal places
-              let netPerformancePercentWithCurrencyEffect =
-                Math.round(
-                  raw._data.netPerformancePercentWithCurrencyEffect * 10000
-                ) / 10000;
-
-              if (Math.abs(netPerformancePercentWithCurrencyEffect) === 0) {
-                netPerformancePercentWithCurrencyEffect = Math.abs(
-                  netPerformancePercentWithCurrencyEffect
-                );
-              }
+            formatter: (context: GfTreemapScriptableContext) => {
+              const raw = context.raw as GfTreemapDataPoint;
 
               const name = raw._data.assetProfile.name;
               const symbol = raw._data.assetProfile.symbol;
 
               return [
                 isUUID(symbol) ? (name ?? symbol) : symbol,
-                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
+                `${(
+                  raw._data.netPerformancePercentWithCurrencyEffect * 100
+                ).toLocaleString(this.locale(), {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2,
+                  signDisplay: 'exceptZero',
+                  useGrouping: true
+                })}%`
               ];
             },
             hoverColor: undefined,
@@ -292,12 +334,12 @@ export class GfTreemapChartComponent
           },
           spacing: 1,
           // @ts-expect-error: should be PortfolioPosition[]
-          tree: this.holdings
+          tree: this.holdings()
         }
       ]
     };
 
-    if (this.chartCanvas) {
+    if (this.chartCanvas()) {
       if (this.chart) {
         this.chart.data = data;
         this.chart.options.plugins ??= {};
@@ -306,33 +348,30 @@ export class GfTreemapChartComponent
 
         this.chart.update();
       } else {
-        this.chart = new Chart<'treemap'>(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'treemap'>(this.chartCanvas().nativeElement, {
           data,
           options: {
             animation: false,
             onClick: (_, activeElements, chart: Chart<'treemap'>) => {
               try {
-                const dataIndex = activeElements[0].index;
-                const datasetIndex = activeElements[0].datasetIndex;
+                const holding = this.getHolding(chart, activeElements[0]);
 
-                const dataset = orderBy(
-                  chart.data.datasets[datasetIndex].tree,
-                  ['allocationInPercentage'],
-                  ['desc']
-                ) as PortfolioPosition[];
-
-                const dataSource: DataSource =
-                  dataset[dataIndex].assetProfile.dataSource;
-
-                const symbol: string = dataset[dataIndex].assetProfile.symbol;
-
-                this.treemapChartClicked.emit({ dataSource, symbol });
+                if (holding && canOpenHoldingDetail(holding)) {
+                  this.treemapChartClicked.emit({
+                    dataSource: holding.assetProfile.dataSource,
+                    symbol: holding.assetProfile.symbol
+                  });
+                }
               } catch {}
             },
-            onHover: (event, chartElement) => {
-              if (this.cursor) {
+            onHover: (event, chartElements, chart: Chart<'treemap'>) => {
+              if (this.cursor()) {
+                const holding = this.getHolding(chart, chartElements[0]);
+
                 (event.native?.target as HTMLElement).style.cursor =
-                  chartElement[0] ? this.cursor : 'default';
+                  holding && canOpenHoldingDetail(holding)
+                    ? this.cursor()
+                    : 'default';
               }
             },
             plugins: {
@@ -350,45 +389,58 @@ export class GfTreemapChartComponent
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'treemap'>> {
     return {
       ...getTooltipOptions({
-        colorScheme: this.colorScheme,
-        currency: this.baseCurrency,
-        locale: this.locale
+        colorScheme: this.colorScheme(),
+        currency: this.baseCurrency(),
+        locale: this.locale()
       }),
       // @ts-expect-error: no need to set all attributes in callbacks
       callbacks: {
-        label: ({ raw }: GfTreemapTooltipItem) => {
-          const allocationInPercentage = `${(raw._data.allocationInPercentage * 100).toFixed(2)}%`;
-          const name = raw._data.assetProfile.name;
+        label: (context: TooltipItem<'treemap'>) => {
+          const raw = context.raw as GfTreemapDataPoint;
 
-          const sign =
-            raw._data.netPerformancePercentWithCurrencyEffect > 0 ? '+' : '';
+          const allocationInPercentage = `${(
+            raw._data.allocationInPercentage * 100
+          ).toLocaleString(this.locale(), {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+            useGrouping: true
+          })}%`;
+          const name = getHoldingName(raw._data.assetProfile);
 
-          const symbol = raw._data.assetProfile.symbol;
-
-          const netPerformanceInPercentageWithSign = `${sign}${(raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
+          const netPerformanceInPercentageWithSign = `${(
+            raw._data.netPerformancePercentWithCurrencyEffect * 100
+          ).toLocaleString(this.locale(), {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+            signDisplay: 'exceptZero',
+            useGrouping: true
+          })}%`;
 
           if (raw._data.valueInBaseCurrency !== null) {
             const value = raw._data.valueInBaseCurrency;
 
             return [
-              `${name ?? symbol} (${allocationInPercentage})`,
-              `${value?.toLocaleString(this.locale, {
+              `${name} (${allocationInPercentage})`,
+              `${value?.toLocaleString(this.locale(), {
                 maximumFractionDigits: 2,
-                minimumFractionDigits: 2
-              })} ${this.baseCurrency}`,
+                minimumFractionDigits: 2,
+                useGrouping: true
+              })} ${this.baseCurrency()}`,
               '',
               $localize`Change` + ' (' + $localize`Performance` + ')',
-              `${sign}${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
-                this.locale,
+              `${raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
+                this.locale(),
                 {
                   maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
+                  minimumFractionDigits: 2,
+                  signDisplay: 'exceptZero',
+                  useGrouping: true
                 }
-              )} ${this.baseCurrency} (${netPerformanceInPercentageWithSign})`
+              )} ${this.baseCurrency()} (${netPerformanceInPercentageWithSign})`
             ];
           } else {
             return [
-              `${name ?? symbol} (${allocationInPercentage})`,
+              `${name} (${allocationInPercentage})`,
               '',
               $localize`Performance`,
               netPerformanceInPercentageWithSign

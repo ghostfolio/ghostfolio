@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
   startAuthentication,
   startRegistration
@@ -14,16 +14,12 @@ import {
 import { of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class WebAuthnService {
   private static readonly WEB_AUTH_N_DEVICE_ID = 'WEB_AUTH_N_DEVICE_ID';
 
-  public constructor(
-    private http: HttpClient,
-    private settingsStorageService: SettingsStorageService
-  ) {}
+  private readonly http = inject(HttpClient);
+  private readonly settingsStorageService = inject(SettingsStorageService);
 
   public isSupported() {
     return typeof PublicKeyCredential !== 'undefined';
@@ -44,8 +40,12 @@ export class WebAuthnService {
           console.warn('Could not register device', error);
           return of(null);
         }),
-        switchMap((attOps) => {
-          return startRegistration({ optionsJSON: attOps });
+        switchMap((registrationOptions) => {
+          if (!registrationOptions) {
+            throw new Error('Could not generate registration options');
+          }
+
+          return startRegistration({ optionsJSON: registrationOptions });
         }),
         switchMap((credential) => {
           return this.http.post<AuthDeviceDto>(
@@ -53,10 +53,10 @@ export class WebAuthnService {
             { credential }
           );
         }),
-        tap((authDevice) =>
+        tap(({ id }) =>
           this.settingsStorageService.setSetting(
             WebAuthnService.WEB_AUTH_N_DEVICE_ID,
-            authDevice.id
+            id
           )
         )
       );
@@ -66,7 +66,7 @@ export class WebAuthnService {
     const deviceId = this.getDeviceId();
 
     return this.http
-      .delete<AuthDeviceDto>(`/api/v1/auth-device/${deviceId}`)
+      .delete<AuthDeviceDto>(`/api/v1/auth-devices/${deviceId}`)
       .pipe(
         catchError((error) => {
           console.warn(`Could not deregister device ${deviceId}`, error);

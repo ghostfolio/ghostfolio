@@ -1,18 +1,126 @@
 /*!
- * Bootstrap v4.6.2 (https://getbootstrap.com/)
- * Copyright 2011-2022 The Bootstrap Authors
- * Copyright 2011-2022 Twitter, Inc.
+ * Bootstrap v5.3.8 (https://getbootstrap.com/)
+ * Copyright 2011-2025 The Bootstrap Authors
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
+@use 'sass:map';
+
+// Configuration
 @import 'bootstrap/scss/functions';
+
+// Restore Bootstrap 4 defaults
+$badge-padding-x: 0.4em;
+$badge-padding-y: 0.25em;
+$blue: #007bff;
+$body-secondary-color: #6c757d;
+$border-radius: 0.25rem;
+$code-color: inherit;
+$code-color-dark: inherit;
+$code-font-size: 1em;
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px
+);
+$cyan: #17a2b8;
+$enable-rfs: false;
+$enable-smooth-scroll: false;
+$figure-caption-font-size: 90%;
+$green: #28a745;
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+);
+$grid-gutter-width: 30px;
+$hr-opacity: 1;
+$initialism-font-size: 90%;
+$link-decoration: none;
+$link-hover-decoration: underline;
+$table-cell-padding-y: 0.75rem;
+
 @import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
 @import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
+
+// Remove the utility groups that the app does not use
+$unused-utilities: (
+  'align-content',
+  'bg-opacity',
+  'border-color',
+  'border-end',
+  'border-opacity',
+  'border-start',
+  'border-width',
+  'bottom',
+  'column-gap',
+  'end',
+  'flex',
+  'focus-ring',
+  'font-size',
+  'font-style',
+  'gap',
+  'gradient',
+  'link-offset',
+  'link-opacity',
+  'link-underline',
+  'link-underline-opacity',
+  'max-height',
+  'min-viewport-height',
+  'min-viewport-width',
+  'object-fit',
+  'opacity',
+  'order',
+  'overflow-y',
+  'rounded-bottom',
+  'rounded-end',
+  'rounded-start',
+  'rounded-top',
+  'row-gap',
+  'shadow',
+  'start',
+  'subtle-background-color',
+  'subtle-border-color',
+  'text-color',
+  'text-opacity',
+  'top',
+  'translate-middle',
+  'user-select',
+  'viewport-height',
+  'viewport-width',
+  'z-index'
+);
+
+@each $key in $unused-utilities {
+  @if not map.has-key($utilities, $key) {
+    @error 'The utility group "#{$key}" does not exist';
+  }
+}
+
+$utilities: map.remove($utilities, $unused-utilities...);
+
+$utilities: map.set(
+  $utilities,
+  'line-height',
+  'values',
+  (
+    1: 1,
+    normal: normal
+  )
+);
+
+// Layout & components
 @import 'bootstrap/scss/root';
 @import 'bootstrap/scss/reboot';
 @import 'bootstrap/scss/type';
 @import 'bootstrap/scss/images';
-// @import 'bootstrap/scss/code';
+@import 'bootstrap/scss/containers';
 @import 'bootstrap/scss/grid';
 // @import 'bootstrap/scss/tables';
 // @import 'bootstrap/scss/forms';
@@ -20,18 +128,15 @@
 // @import 'bootstrap/scss/transitions';
 // @import 'bootstrap/scss/dropdown';
 // @import 'bootstrap/scss/button-group';
-// @import 'bootstrap/scss/input-group';
-// @import 'bootstrap/scss/custom-forms';
 // @import 'bootstrap/scss/nav';
 // @import 'bootstrap/scss/navbar';
 // @import 'bootstrap/scss/card';
+// @import 'bootstrap/scss/accordion';
 @import 'bootstrap/scss/breadcrumb';
 // @import 'bootstrap/scss/pagination';
 @import 'bootstrap/scss/badge';
-// @import 'bootstrap/scss/jumbotron';
 // @import 'bootstrap/scss/alert';
 // @import 'bootstrap/scss/progress';
-// @import 'bootstrap/scss/media';
 // @import 'bootstrap/scss/list-group';
 // @import 'bootstrap/scss/close';
 // @import 'bootstrap/scss/toasts';
@@ -40,5 +145,17 @@
 // @import 'bootstrap/scss/popover';
 // @import 'bootstrap/scss/carousel';
 // @import 'bootstrap/scss/spinners';
-@import 'bootstrap/scss/utilities';
-// @import 'bootstrap/scss/print';
+// @import 'bootstrap/scss/offcanvas';
+// @import 'bootstrap/scss/placeholders';
+
+// Helpers
+@import 'bootstrap/scss/helpers/text-truncation';
+
+// Utilities
+@import 'bootstrap/scss/utilities/api';
+
+// Typography compatibility
+small,
+.small {
+  font-weight: $font-weight-normal;
+}

@@ -1,15 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  Output
+  input,
+  output
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { close } from 'ionicons/icons';
+import { closeOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,17 +19,17 @@ import { close } from 'ionicons/icons';
   templateUrl: './dialog-header.component.html'
 })
 export class GfDialogHeaderComponent {
-  @Input() deviceType: string;
-  @Input() position: 'center' | 'left' = 'left';
-  @Input() title: string;
+  public readonly deviceType = input<string>();
+  public readonly position = input<'center' | 'left'>('left');
+  public readonly title = input.required<string | null | undefined>();
 
-  @Output() closeButtonClicked = new EventEmitter<void>();
+  public readonly closeButtonClicked = output<void>();
 
   public constructor() {
-    addIcons({ close });
+    addIcons({ closeOutline });
   }
 
-  public onClickCloseButton() {
+  protected onClickCloseButton() {
     this.closeButtonClicked.emit();
   }
 }

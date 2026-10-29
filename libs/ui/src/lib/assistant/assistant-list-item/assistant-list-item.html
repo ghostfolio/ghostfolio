@@ -1,14 +1,17 @@
 <a
   #link
-  class="d-block line-height-1 px-3 py-1 text-truncate"
+  class="d-block lh-1 px-3 py-1 text-truncate"
   [queryParams]="queryParams"
   [routerLink]="routerLink"
   (click)="onClick()"
   ><span>{{ item?.name }}</span>
   @if (item && isAsset(item)) {
     <br />
-    <small class="text-muted"
-      >{{ item?.symbol ?? '' | gfSymbol }} · {{ item?.currency }}
+    <small class="text-body-secondary"
+      >{{ item?.symbol }}
+      @if (item.currency) {
+        · {{ item.currency }}
+      }
       @if (item?.assetSubClassString) {
         · {{ item.assetSubClassString }}
       }

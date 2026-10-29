@@ -1,11 +1,12 @@
 import { Activity, User } from '@ghostfolio/common/interfaces';
-
-import { Account } from '@prisma/client';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
 
 export interface CreateOrUpdateActivityDialogParams {
-  accounts: Account[];
-  activity: Omit<Activity, 'SymbolProfile'> & {
-    SymbolProfile: Activity['SymbolProfile'] | null;
+  accounts: AccountWithPlatform[];
+  activity: Partial<Omit<Activity, 'assetProfile' | 'id' | 'unitPrice'>> & {
+    assetProfile: Activity['assetProfile'] | null;
+    id: string | null;
+    unitPrice: number | null;
   };
   user: User;
 }

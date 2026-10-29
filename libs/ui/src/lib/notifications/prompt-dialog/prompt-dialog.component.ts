@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { PromptDialogParams } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatButtonModule,
     MatDialogModule,
@@ -25,6 +26,7 @@ export class GfPromptDialogComponent {
   public formControl = new FormControl('');
   public title: string;
   public valueLabel?: string;
+  public valueSuffix?: string;
 
   protected readonly dialogRef =
     inject<MatDialogRef<GfPromptDialogComponent>>(MatDialogRef);
@@ -34,7 +36,8 @@ export class GfPromptDialogComponent {
     defaultValue,
     discardLabel,
     title,
-    valueLabel
+    valueLabel,
+    valueSuffix
   }: PromptDialogParams) {
     this.confirmLabel = confirmLabel;
     this.defaultValue = defaultValue;
@@ -42,5 +45,6 @@ export class GfPromptDialogComponent {
     this.formControl.setValue(defaultValue ?? null);
     this.title = title;
     this.valueLabel = valueLabel;
+    this.valueSuffix = valueSuffix;
   }
 }

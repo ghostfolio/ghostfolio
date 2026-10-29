@@ -1,17 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export const IMPERSONATION_KEY = 'impersonationId';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class ImpersonationStorageService {
-  private hasImpersonationChangeSubject = new BehaviorSubject<string>(
+  private hasImpersonationChangeSubject = new BehaviorSubject<string | null>(
     this.getId()
   );
 
-  public getId(): string {
+  public getId(): string | null {
     return window.localStorage.getItem(IMPERSONATION_KEY);
   }
 

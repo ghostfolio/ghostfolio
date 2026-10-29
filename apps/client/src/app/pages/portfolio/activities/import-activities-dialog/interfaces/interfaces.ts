@@ -1,9 +1,12 @@
 import { User } from '@ghostfolio/common/interfaces';
-
-import { Type } from '@prisma/client';
+import { Type } from '@ghostfolio/prisma/enums';
 
 export interface ImportActivitiesDialogParams {
   activityTypes?: Type[];
   deviceType: string;
   user: User;
+}
+
+export interface ImportActivitiesDialogResult {
+  withRefresh: boolean;
 }

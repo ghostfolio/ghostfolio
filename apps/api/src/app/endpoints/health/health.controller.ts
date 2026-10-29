@@ -1,0 +1,136 @@
+import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import {
+  AiServiceHealthResponse,
+  DataEnhancerHealthResponse,
+  DataProviderHealthResponse,
+  LivenessHealthResponse
+} from '@ghostfolio/common/interfaces';
+import { permissions } from '@ghostfolio/common/permissions';
+
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Param,
+  Res,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { DataSource } from '@prisma/client';
+import { Response } from 'express';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import ms from 'ms';
+
+import { HealthService } from './health.service';
+
+@Controller('health')
+export class HealthController {
+  private readonly logger = new Logger(HealthController.name);
+
+  public constructor(
+    private readonly aiService: AiService,
+    private readonly healthService: HealthService
+  ) {}
+
+  @Get()
+  public async getHealth(@Res() response: Response) {
+    const [databaseServiceHealthy, redisCacheServiceHealthy] =
+      await Promise.all([
+        this.healthService.isDatabaseHealthy(),
+        this.healthService.isRedisCacheHealthy()
+      ]);
+
+    if (databaseServiceHealthy && redisCacheServiceHealthy) {
+      return response
+        .status(HttpStatus.OK)
+        .json({ status: getReasonPhrase(StatusCodes.OK) });
+    } else {
+      return response
+        .status(HttpStatus.SERVICE_UNAVAILABLE)
+        .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
+    }
+  }
+
+  @Get('ai')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getHealthOfAiService(
+    @Res() response: Response
+  ): Promise<Response<AiServiceHealthResponse>> {
+    try {
+      const { text } = await this.aiService.generateText({
+        prompt: `Reply with the word "OK" and nothing else.`,
+        requestTimeout: ms('30 seconds')
+      });
+
+      if (text === 'OK') {
+        return response
+          .status(HttpStatus.OK)
+          .json({ status: getReasonPhrase(StatusCodes.OK) });
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+
+    return response
+      .status(HttpStatus.SERVICE_UNAVAILABLE)
+      .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
+  }
+
+  @Get('data-enhancer/:name')
+  public async getHealthOfDataEnhancer(
+    @Param('name') name: string,
+    @Res() response: Response
+  ): Promise<Response<DataEnhancerHealthResponse>> {
+    const hasResponse =
+      await this.healthService.hasResponseFromDataEnhancer(name);
+
+    if (hasResponse) {
+      return response.status(HttpStatus.OK).json({
+        status: getReasonPhrase(StatusCodes.OK)
+      });
+    } else {
+      return response
+        .status(HttpStatus.SERVICE_UNAVAILABLE)
+        .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
+    }
+  }
+
+  @Get('data-provider/:dataSource')
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  public async getHealthOfDataProvider(
+    @Param('dataSource') dataSource: DataSource,
+    @Res() response: Response
+  ): Promise<Response<DataProviderHealthResponse>> {
+    if (!DataSource[dataSource]) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    const hasResponse =
+      await this.healthService.hasResponseFromDataProvider(dataSource);
+
+    if (hasResponse) {
+      return response
+        .status(HttpStatus.OK)
+        .json({ status: getReasonPhrase(StatusCodes.OK) });
+    } else {
+      return response
+        .status(HttpStatus.SERVICE_UNAVAILABLE)
+        .json({ status: getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE) });
+    }
+  }
+
+  @Get('liveness')
+  public getLiveness(): LivenessHealthResponse {
+    return { status: getReasonPhrase(StatusCodes.OK) };
+  }
+}

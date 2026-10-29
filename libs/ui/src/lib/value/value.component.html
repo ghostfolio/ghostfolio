@@ -1,5 +1,5 @@
 @if (icon) {
-  <div class="align-self-center mr-3">
+  <div class="align-self-center me-3">
     <ion-icon class="h3 m-0" [name]="icon" />
   </div>
 }
@@ -12,46 +12,58 @@
   <ng-template #copyIcon>
     @if (enableCopyToClipboardButton) {
       <button
-        class="ml-1 no-height no-min-width p-1"
-        i18n-title
+        class="h-auto ms-1 no-min-width p-1"
         mat-button
-        title="Copy to clipboard"
         type="button"
+        [title]="isCopied ? copiedTitle : copyToClipboardTitle"
         (click)="onCopyValueToClipboard()"
+        (mousedown)="$event.preventDefault()"
       >
-        <ion-icon class="text-muted" name="copy-outline" />
+        <ion-icon
+          class="text-body-secondary"
+          [name]="isCopied ? 'checkmark-outline' : 'copy-outline'"
+        />
       </button>
     }
   </ng-template>
 
-  @if (value || value === 0 || value === null) {
+  @if (isLoading()) {
+    <ngx-skeleton-loader
+      animation="pulse"
+      [theme]="{
+        height:
+          size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
+        width: '5rem'
+      }"
+    />
+  } @else if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
       [class.justify-content-end]="position === 'end'"
     >
       @if (isNumber || value === null) {
-        @if (colorizeSign && !useAbsoluteValue) {
+        @if (colorizeSign && !useAbsoluteValue && value !== null) {
           @if (+value > 0) {
-            <div class="mr-1 text-success">+</div>
+            <div class="me-1 text-success">+</div>
           }
           @if (+value < 0) {
-            <div class="mr-1 text-danger">-</div>
+            <div class="me-1 text-danger">-</div>
           }
         }
         <div
           class="mb-0 value"
-          [class.font-weight-bold]="size === 'large'"
+          [class.fw-bold]="size === 'large'"
           [class.h2]="size === 'large'"
           [class.h4]="size === 'medium'"
         >
           @if (value === null) {
-            <span class="text-monospace text-muted">*****</span>
+            <span class="font-monospace text-body-secondary">*****</span>
           } @else {
             {{ formattedValue }}
           }
         </div>
         @if (isPercent || unit) {
-          <div class="ml-1">
+          <div class="ms-1">
             {{ isPercent ? '%' : unit }}
           </div>
         }
@@ -59,7 +71,7 @@
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
-          [class.font-weight-bold]="size === 'large'"
+          [class.fw-bold]="size === 'large'"
           [class.h2]="size === 'large'"
           [class.h4]="size === 'medium'"
         >
@@ -72,17 +84,6 @@
     </div>
   }
 
-  @if (value === undefined) {
-    <ngx-skeleton-loader
-      animation="pulse"
-      [theme]="{
-        height:
-          size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
-        width: '5rem'
-      }"
-    />
-  }
-
   @if (size === 'large') {
     <div class="text-truncate">
       <span class="h6"><ng-container *ngTemplateOutlet="label" /></span>
@@ -90,7 +91,7 @@
         <ng-container *ngTemplateOutlet="copyIcon" />
       }
       @if (subLabel) {
-        <span class="text-muted"> {{ subLabel }}</span>
+        <span class="text-body-secondary"> {{ subLabel }}</span>
       }
     </div>
   } @else {

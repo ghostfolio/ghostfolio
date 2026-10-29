@@ -28,12 +28,8 @@
           matInput
           (keydown.enter)="$event.stopPropagation()"
         />
-        @if (platformForm.get('url')?.value) {
-          <gf-entity-logo
-            class="mat-icon"
-            matSuffix
-            [url]="platformForm.get('url').value"
-          />
+        @if (platformForm.get('url')?.value; as url) {
+          <gf-entity-logo class="mat-icon" matSuffix [url]="url" />
         }
       </mat-form-field>
     </div>

@@ -14,7 +14,7 @@
             step="100"
             type="number"
           />
-          <span class="ml-2" matTextSuffix>{{ currency }}</span>
+          <span class="ms-2" matTextSuffix>{{ currency }}</span>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
@@ -25,33 +25,36 @@
             step="0.25"
             type="number"
           />
-          <div class="ml-2" matTextSuffix>%</div>
+          <div class="ms-2" matTextSuffix>%</div>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Retirement Date</mat-label>
-          <div>
-            {{
-              calculatorForm.get('retirementDate')?.value | date: 'MMMM yyyy'
-            }}
-          </div>
+          <div>{{ retirementDateLabel }}</div>
           <input
             class="d-none"
             formControlName="retirementDate"
             matInput
-            [matDatepicker]="datepicker"
+            [matDatepicker]="date"
             [min]="minDate"
           />
           <mat-datepicker-toggle
-            matIconSuffix
+            class="me-2"
+            matSuffix
             [disabled]="hasPermissionToUpdateUserSettings !== true"
-            [for]="datepicker"
-          />
+            [for]="date"
+          >
+            <ion-icon
+              class="text-body-secondary"
+              matDatepickerToggleIcon
+              name="calendar-clear-outline"
+            />
+          </mat-datepicker-toggle>
           <mat-datepicker
-            #datepicker
+            #date
             startView="multi-year"
             [disabled]="hasPermissionToUpdateUserSettings !== true"
-            (monthSelected)="setMonthAndYear($event, datepicker)"
+            (monthSelected)="setMonthAndYear($event, date)"
           />
         </mat-form-field>
 
@@ -63,7 +66,7 @@
             step="100"
             type="number"
           />
-          <span class="ml-2" matTextSuffix>{{ currency }}</span>
+          <span class="ms-2" matTextSuffix>{{ currency }}</span>
         </mat-form-field>
       </form>
     </div>

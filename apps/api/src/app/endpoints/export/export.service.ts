@@ -1,0 +1,273 @@
+import { environment } from '@ghostfolio/api/environments/environment';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import {
+  ExportResponse,
+  Filter,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
+
+import { Injectable } from '@nestjs/common';
+import { Platform, Prisma, Type as ActivityType } from '@prisma/client';
+import { groupBy, uniqBy } from 'lodash-es';
+
+@Injectable()
+export class ExportService {
+  public constructor(
+    private readonly accountService: AccountService,
+    private readonly activitiesService: ActivitiesService,
+    private readonly marketDataService: MarketDataService,
+    private readonly tagService: TagService
+  ) {}
+
+  public async export({
+    activityIds,
+    activityTypes,
+    endDate,
+    filters,
+    startDate,
+    userId,
+    userSettings
+  }: {
+    activityIds?: string[];
+    activityTypes?: ActivityType[];
+    endDate?: Date;
+    filters?: Filter[];
+    startDate?: Date;
+    userId: string;
+    userSettings: UserSettings;
+  }): Promise<ExportResponse> {
+    const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
+      return type;
+    });
+    const platformsMap: { [platformId: string]: Platform } = {};
+
+    let { activities } = await this.activitiesService.getActivities({
+      endDate,
+      filters,
+      startDate,
+      userId,
+      includeDrafts: true,
+      sortColumn: 'date',
+      sortDirection: 'asc',
+      types: activityTypes,
+      userCurrency: userSettings?.baseCurrency,
+      withExcludedAccountsAndActivities: true
+    });
+
+    if (activityIds?.length > 0) {
+      activities = activities.filter(({ id }) => {
+        return activityIds.includes(id);
+      });
+    }
+
+    const where: Prisma.AccountWhereInput = { userId };
+
+    if (filtersByAccount.length > 0) {
+      where.id = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
+    }
+
+    const isFilteredExport =
+      activityIds?.length > 0 ||
+      activityTypes?.length > 0 ||
+      filters?.length > 0 ||
+      !!endDate ||
+      !!startDate;
+
+    const accounts = (
+      await this.accountService.accounts({
+        where,
+        include: {
+          balances: true,
+          platform: true,
+          tags: true
+        },
+        orderBy: {
+          name: 'asc'
+        }
+      })
+    )
+      .filter(({ id }) => {
+        return isFilteredExport
+          ? activities.some(({ accountId }) => {
+              return accountId === id;
+            })
+          : true;
+      })
+      .map(
+        ({
+          balances,
+          comment,
+          currency,
+          id,
+          name,
+          platform,
+          platformId,
+          tags
+        }): ExportResponse['accounts'][number] => {
+          if (platformId) {
+            platformsMap[platformId] = platform;
+          }
+
+          return {
+            balances: balances.map(({ date, value }) => {
+              return { date: date.toISOString(), value };
+            }),
+            comment,
+            currency,
+            id,
+            name,
+            platformId,
+            tags: tags.map(({ id: tagId }) => {
+              return tagId;
+            })
+          };
+        }
+      );
+
+    const customAssetProfiles = uniqBy(
+      activities
+        .map(({ assetProfile }) => {
+          return assetProfile;
+        })
+        .filter(({ userId: assetProfileUserId }) => {
+          return assetProfileUserId === userId;
+        }),
+      ({ id }) => {
+        return id;
+      }
+    );
+
+    const marketDataByAssetProfile = Object.fromEntries(
+      await Promise.all(
+        customAssetProfiles.map(async ({ dataSource, id, symbol }) => {
+          const marketData = (
+            await this.marketDataService.marketDataItems({
+              where: { dataSource, symbol }
+            })
+          ).map(({ date, marketPrice }) => ({
+            date: date.toISOString(),
+            marketPrice
+          }));
+
+          return [id, marketData] as const;
+        })
+      )
+    );
+
+    const tags = (await this.tagService.getTagsForUser(userId))
+      .filter(({ id, isUsed }) => {
+        return (
+          isUsed &&
+          (accounts.some(({ tags: tagIds }) => {
+            return tagIds.includes(id);
+          }) ||
+            activities.some((activity) => {
+              return activity.tags.some(({ id: tagId }) => {
+                return tagId === id;
+              });
+            }))
+        );
+      })
+      .map(({ id, name }) => {
+        return {
+          id,
+          name
+        };
+      });
+
+    return {
+      meta: { date: new Date().toISOString(), version: environment.version },
+      accounts,
+      assetProfiles: customAssetProfiles.map(
+        ({
+          assetClass,
+          assetSubClass,
+          comment,
+          countries,
+          currency,
+          cusip,
+          dataSource,
+          figi,
+          figiComposite,
+          figiShareClass,
+          holdings,
+          id,
+          isActive,
+          isin,
+          name,
+          sectors,
+          symbol,
+          url
+        }) => {
+          return {
+            assetClass,
+            assetSubClass,
+            comment,
+            countries: countries as unknown as Prisma.JsonArray,
+            currency,
+            cusip,
+            dataSource,
+            figi,
+            figiComposite,
+            figiShareClass,
+            holdings: holdings as unknown as Prisma.JsonArray,
+            isActive,
+            isin,
+            marketData: marketDataByAssetProfile[id],
+            name,
+            sectors: sectors as unknown as Prisma.JsonArray,
+            symbol,
+            url
+          };
+        }
+      ),
+      platforms: Object.values(platformsMap),
+      tags,
+      activities: activities.map(
+        ({
+          accountId,
+          assetProfile,
+          comment,
+          currency,
+          date,
+          fee,
+          id,
+          quantity,
+          tags: currentTags,
+          type,
+          unitPrice
+        }) => {
+          return {
+            accountId,
+            comment,
+            fee,
+            id,
+            quantity,
+            type,
+            unitPrice,
+            currency: currency ?? assetProfile.currency,
+            dataSource: assetProfile.dataSource,
+            date: date.toISOString(),
+            symbol: assetProfile.symbol,
+            tags: currentTags.map(({ id: tagId }) => {
+              return tagId;
+            })
+          };
+        }
+      ),
+      user: {
+        settings: {
+          currency: userSettings?.baseCurrency,
+          performanceCalculationType: userSettings?.performanceCalculationType
+        }
+      }
+    };
+  }
+}

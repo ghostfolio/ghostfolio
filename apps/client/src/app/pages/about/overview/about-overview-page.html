@@ -16,6 +16,7 @@
             >The source code is fully available as
             <a
               href="https://github.com/ghostfolio/ghostfolio"
+              i18n-title
               title="Find Ghostfolio on GitHub"
               >open source software</a
             >
@@ -49,6 +50,7 @@
             >and is driven by the efforts of its
             <a
               href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
+              i18n-title
               title="Contributors to Ghostfolio"
               >contributors</a
             ></ng-container
@@ -72,12 +74,14 @@
             Ghostfolio
             <a
               href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+              i18n-title
               title="Join the Ghostfolio Slack community"
               >Slack</a
             >
             community, post to
             <a
               href="https://x.com/ghostfolio_"
+              i18n-title
               title="Post to Ghostfolio on X (formerly Twitter)"
               >&#64;ghostfolio_</a
             ></ng-container
@@ -94,7 +98,7 @@
           <ng-container i18n>or start a discussion at</ng-container>
           <ng-container>&nbsp;</ng-container>
           <a
-            href="https://github.com/ghostfolio/ghostfolio"
+            href="https://github.com/ghostfolio/ghostfolio/discussions"
             i18n-title
             title="Find Ghostfolio on GitHub"
             >GitHub</a
@@ -165,6 +169,7 @@
               target="_blank"
               title="Support Ghostfolio"
               ><img
+                alt="Buy me a coffee"
                 class="mb-2"
                 src="../assets/images/button-buy-me-a-coffee.png"
                 width="180"
@@ -177,7 +182,7 @@
 
   <div class="mb-5 row">
     <div
-      class="col-md-6 col-xs-12 my-2"
+      class="col-md-6 my-2"
       [class.offset-md-3]="hasPermissionForSubscription === false"
     >
       <a
@@ -190,7 +195,7 @@
       >
     </div>
     @if (hasPermissionForSubscription) {
-      <div class="col-md-6 col-xs-12 my-2">
+      <div class="col-md-6 my-2">
         <a
           class="py-4 w-100"
           color="primary"
@@ -215,12 +220,15 @@
           >
             <img
               alt="TestMu AI Logo"
+              class="sponsor-logo-dark"
               height="32"
-              [src]="
-                user?.settings?.colorScheme === 'DARK'
-                  ? '../assets/images/sponsors/logo-testmu-light.svg'
-                  : '../assets/images/sponsors/logo-testmu-dark.svg'
-              "
+              src="../assets/images/sponsors/logo-testmu-dark.svg"
+            />
+            <img
+              alt="TestMu AI Logo"
+              class="sponsor-logo-light"
+              height="32"
+              src="../assets/images/sponsors/logo-testmu-light.svg"
             />
           </a>
         </div>

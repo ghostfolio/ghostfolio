@@ -1,3 +1,10 @@
-import { UserWithSettings } from '@ghostfolio/common/types';
+import {
+  ImpersonationContext,
+  UserWithSettings
+} from '@ghostfolio/common/types';
 
-export type RequestWithUser = Request & { user: UserWithSettings };
+export type RequestWithUser = Request & {
+  impersonation?: ImpersonationContext;
+  impersonationOfBearerToken?: ImpersonationContext;
+  user: UserWithSettings;
+};

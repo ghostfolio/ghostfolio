@@ -1,19 +1,21 @@
-import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Type
+} from '@ghostfolio/prisma/enums';
+
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ColorScheme, DateRange } from './types';
+import { DateRange } from './types';
 
 export const ghostfolioPrefix = 'GF';
-export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
+
 export const ghostfolioFearAndGreedIndexDataSourceCryptocurrencies =
   DataSource.MANUAL;
-export const ghostfolioFearAndGreedIndexDataSourceStocks = DataSource.RAPID_API;
-export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
 export const ghostfolioFearAndGreedIndexSymbolCryptocurrencies = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_CRYPTOCURRENCIES`;
 export const ghostfolioFearAndGreedIndexSymbolStocks = `${ghostfolioPrefix}_FEAR_AND_GREED_INDEX_STOCKS`;
-
-export const locale = 'en-US';
 
 export const primaryColorHex = '#36cfcc';
 export const primaryColorRgb = {
@@ -29,12 +31,9 @@ export const secondaryColorRgb = {
   b: 207
 };
 
-export const warnColorHex = '#dc3545';
-export const warnColorRgb = {
-  r: 220,
-  g: 53,
-  b: 69
-};
+export const AI_ACTIVITIES_FILE_MAXIMUM_SIZE = 10 * 1024 * 1024;
+export const AI_ACTIVITIES_TIMEOUT = ms('2 minutes');
+export const AI_MAX_ACTIVITIES = 25;
 
 export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],
@@ -64,12 +63,31 @@ export const BULL_BOARD_ROUTE = '/admin/queues';
 export const CACHE_TTL_NO_CACHE = 1;
 export const CACHE_TTL_INFINITE = 0;
 
+export const COMMENT_MAXIMUM_LENGTH = 2000;
+
 export const DATA_GATHERING_QUEUE = 'DATA_GATHERING_QUEUE';
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
 export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
 export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
   DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
 );
+
+export const DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD = ms('2 weeks');
+export const DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_SETUP_PERIOD_MAX_REQUESTS_FACTOR = 2;
+
+/**
+ * The named date ranges, complemented by the calendar years like '2024',
+ * '2023', '2022', etc.
+ */
+export const DATE_RANGES = [
+  '1d',
+  '1y',
+  '5y',
+  'max',
+  'mtd',
+  'wtd',
+  'ytd'
+] as const;
 
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE =
   'PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE';
@@ -79,54 +97,67 @@ export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW =
 
 export const STATISTICS_GATHERING_QUEUE = 'STATISTICS_GATHERING_QUEUE';
 
-export const DEFAULT_COLOR_SCHEME: ColorScheme = 'LIGHT';
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_DATE_RANGE: DateRange = 'max';
 export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
+export const DEFAULT_LOCALE = 'en-US';
+export const DEFAULT_OPENROUTER_ENGINE_WEB_FETCH = 'openrouter';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PORT = 3333;
 export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY = 1;
+export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT =
+  ms('1 minute');
+export const DEFAULT_PROCESSOR_GATHER_STATISTICS_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY = 1;
-export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
+export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT =
+  ms('30 seconds');
 
 export const DEFAULT_REDACTED_PATHS = [
+  'account.comment',
   'accounts[*].balance',
   'accounts[*].balanceInBaseCurrency',
   'accounts[*].comment',
   'accounts[*].dividendInBaseCurrency',
   'accounts[*].interestInBaseCurrency',
+  'accounts[*].quantity',
   'accounts[*].value',
   'accounts[*].valueInBaseCurrency',
-  'activities[*].account.balance',
   'activities[*].account.comment',
+  'activities[*].assetProfile.comment',
+  'activities[*].assetProfile.scraperConfiguration',
+  'activities[*].assetProfile.symbolMapping',
+  'activities[*].assetProfile.watchedByCount',
   'activities[*].comment',
   'activities[*].fee',
   'activities[*].feeInAssetProfileCurrency',
   'activities[*].feeInBaseCurrency',
   'activities[*].quantity',
-  'activities[*].SymbolProfile.symbolMapping',
-  'activities[*].SymbolProfile.watchedByCount',
   'activities[*].value',
   'activities[*].valueInBaseCurrency',
+  'assetProfile.comment',
+  'assetProfile.scraperConfiguration',
+  'assetProfile.symbolMapping',
+  'assetProfile.watchedByCount',
   'balance',
   'balanceInBaseCurrency',
-  'balances[*].account.balance',
   'balances[*].account.comment',
   'balances[*].value',
   'balances[*].valueInBaseCurrency',
   'comment',
   'dividendInBaseCurrency',
+  'fee',
+  'feeInAssetProfileCurrency',
   'feeInBaseCurrency',
   'grossPerformance',
   'grossPerformanceWithCurrencyEffect',
   'historicalData[*].quantity',
+  'holdings[*].assetProfile.holdings[*].valueInBaseCurrency',
   'holdings[*].dividend',
   'holdings[*].grossPerformance',
   'holdings[*].grossPerformanceWithCurrencyEffect',
-  'holdings[*].holdings[*].valueInBaseCurrency',
   'holdings[*].investment',
   'holdings[*].netPerformance',
   'holdings[*].netPerformanceWithCurrencyEffect',
@@ -134,13 +165,18 @@ export const DEFAULT_REDACTED_PATHS = [
   'holdings[*].valueInBaseCurrency',
   'interestInBaseCurrency',
   'investmentInBaseCurrencyWithCurrencyEffect',
+  'latestActivities[*].fee',
+  'latestActivities[*].quantity',
+  'latestActivities[*].value',
+  'latestActivities[*].valueInBaseCurrency',
   'netPerformance',
   'netPerformanceWithCurrencyEffect',
   'platforms[*].balance',
   'platforms[*].valueInBaseCurrency',
   'quantity',
-  'SymbolProfile.symbolMapping',
-  'SymbolProfile.watchedByCount',
+  'settings.emergencyFund',
+  'settings.projectedTotalAmount',
+  'settings.savingsRate',
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',
@@ -148,6 +184,8 @@ export const DEFAULT_REDACTED_PATHS = [
   'value',
   'valueInBaseCurrency'
 ];
+
+export const DELETE_OWN_USER_PERIOD = ms('2 weeks');
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
@@ -168,29 +206,47 @@ export const DERIVED_CURRENCIES = [
   }
 ];
 
+export const E_MAIL_LINE_BREAK = '%0D%0A';
+
+/**
+ * Keep equal to GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS: Bull removes the
+ * completed jobs of all job names by age, so the lower value applies to both.
+ */
+export const GATHER_ASSET_PROFILE_COOLDOWN_IN_MS = ms('12 hours');
+
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 12,
+  attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: true
+  removeOnComplete: true,
+  removeOnFail: true,
+  timeout: ms('5 minutes')
 };
+
+/**
+ * Keep equal to GATHER_ASSET_PROFILE_COOLDOWN_IN_MS: Bull removes the
+ * completed jobs of all job names by age, so the lower value applies to both.
+ */
+export const GATHER_HISTORICAL_MARKET_DATA_COOLDOWN_IN_MS = ms('12 hours');
 
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 12,
+  attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  removeOnComplete: true
+  removeOnComplete: true,
+  removeOnFail: true,
+  timeout: ms('5 minutes')
 };
 
 export const GATHER_STATISTICS_PROCESS_JOB_OPTIONS: JobOptions = {
-  attempts: 5,
+  attempts: 6, // Retries after 1, 3, 7, 15 and 31 minutes (57 minutes in total)
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
@@ -216,6 +272,12 @@ export const INVESTMENT_ACTIVITY_TYPES = [
   Type.SELL
 ] as Type[];
 
+export const NON_INVESTMENT_ACTIVITY_TYPES = Object.values(Type).filter(
+  (type) => {
+    return !INVESTMENT_ACTIVITY_TYPES.includes(type);
+  }
+);
+
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
@@ -226,9 +288,18 @@ export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
 export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
 
+export const HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED =
+  'The impersonation identifier cannot be resolved';
+
 export const MAX_TOP_HOLDINGS = 50;
 
+export const MCP_ENDPOINT = '/mcp';
+export const MCP_MAX_ACCOUNTS = 50;
+export const MCP_MAX_ACTIVITIES = 100;
+export const MCP_REALM = 'Ghostfolio';
+
 export const NUMERICAL_PRECISION_THRESHOLD_3_FIGURES = 100;
+export const NUMERICAL_PRECISION_THRESHOLD_4_FIGURES = 1000;
 export const NUMERICAL_PRECISION_THRESHOLD_5_FIGURES = 10000;
 export const NUMERICAL_PRECISION_THRESHOLD_6_FIGURES = 100000;
 
@@ -251,8 +322,15 @@ export const PROPERTY_DEMO_USER_ID = 'DEMO_USER_ID';
 export const PROPERTY_IS_DATA_GATHERING_ENABLED = 'IS_DATA_GATHERING_ENABLED';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
+export const PROPERTY_MAX_DAILY_REQUESTS = 'MAX_DAILY_REQUESTS';
+export const PROPERTY_OPENROUTER_ENGINE_WEB_FETCH =
+  'OPENROUTER_ENGINE_WEB_FETCH';
 export const PROPERTY_OPENROUTER_MODEL = 'OPENROUTER_MODEL';
+export const PROPERTY_OPENROUTER_MODEL_AGENT = 'OPENROUTER_MODEL_AGENT';
+export const PROPERTY_OPENROUTER_MODEL_VISION = 'OPENROUTER_MODEL_VISION';
 export const PROPERTY_OPENROUTER_MODEL_WEB_FETCH = 'OPENROUTER_MODEL_WEB_FETCH';
+export const PROPERTY_PROXY_ROUTES = 'PROXY_ROUTES';
+export const PROPERTY_REFERRAL_PARTNERS = 'REFERRAL_PARTNERS';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
@@ -283,6 +361,9 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const SEARCH_QUERY_MAXIMUM_LENGTH = 255;
+export const SEARCH_QUERY_MINIMUM_LENGTH = 2;
+
 export const SECTORS = [
   'Basic Materials',
   'Communication Services',
@@ -307,6 +388,7 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'es',
   'fr',
   'it',
+  // 'ja',
   'ko',
   'nl',
   'pl',
@@ -314,11 +396,44 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'tr',
   'uk',
   'zh'
-];
+] as const;
 
+export const SYMBOL_MAXIMUM_LENGTH = 255;
+
+export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
+export const TAG_ID_DRAFT = '0c077abd-eca2-4cbb-818c-6cefbf2d169a';
 export const TAG_ID_EMERGENCY_FUND = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 export const TAG_ID_EXCLUDE_FROM_ANALYSIS =
   'f2e868af-8333-459f-b161-cbc6544c24bd';
-export const TAG_ID_DEMO = 'efa08cb3-9b9d-4974-ac68-db13a19c4874';
+
+export const TAG_IDS_SYSTEM = [
+  TAG_ID_DEMO,
+  TAG_ID_DRAFT,
+  TAG_ID_EMERGENCY_FUND,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS
+];
+
+export const THROTTLE_AI_ACTIVITIES_LIMIT = 25;
+export const THROTTLE_AI_ACTIVITIES_TTL = ms('1 week');
+export const THROTTLE_DAILY_KEY = 'daily';
+export const THROTTLE_DAILY_TTL = ms('1 day');
+export const THROTTLE_DEFAULT_LIMIT = 10;
+export const THROTTLE_DEFAULT_TTL = ms('1 minute');
+export const THROTTLE_SIGNUP_LIMIT = 5;
+export const THROTTLE_SIGNUP_TTL = ms('1 hour');
+
+export const TRY_SUBSCRIPTION_MAIL_HREF = `mailto:hi@ghostfol.io?subject=${encodeURIComponent(
+  'Ghostfolio Premium Trial'
+)}&body=${[
+  'Hello',
+  '',
+  'I am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?',
+  '',
+  'Kind regards'
+]
+  .map((line) => {
+    return encodeURIComponent(line);
+  })
+  .join(E_MAIL_LINE_BREAK)}`;
 
 export const UNKNOWN_KEY = 'UNKNOWN';

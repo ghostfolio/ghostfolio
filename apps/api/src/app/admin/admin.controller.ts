@@ -1,7 +1,7 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
-import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
@@ -15,6 +15,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
 import {
+  MergeAssetProfileDto,
   UpdateAssetProfileDto,
   UpdatePropertyDto
 } from '@ghostfolio/common/dtos';
@@ -24,19 +25,19 @@ import {
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
-  AdminMarketData,
   AdminUserResponse,
   AdminUsersResponse,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type {
   DateRange,
-  MarketDataPreset,
+  PropertyKey,
   RequestWithUser
 } from '@ghostfolio/common/types';
 
+import { utc } from '@date-fns/utc';
 import {
   Body,
   Controller,
@@ -46,6 +47,7 @@ import {
   Inject,
   Logger,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -60,14 +62,15 @@ import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
+import { PropertyKeyPipe } from './pipes/property-key.pipe';
 
+@AllowDuringImpersonation()
 @Controller('admin')
 export class AdminController {
   private readonly logger = new Logger(AdminController.name);
 
   public constructor(
     private readonly adminService: AdminService,
-    private readonly apiService: ApiService,
     private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly demoService: DemoService,
@@ -93,8 +96,8 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   @Post('gather')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async gather7Days(): Promise<void> {
-    this.dataGatheringService.gather7Days();
+  public async gatherRecentMarketData(): Promise<void> {
+    this.dataGatheringService.gatherRecentMarketData();
   }
 
   @HasPermission(permissions.accessAdminControl)
@@ -156,6 +159,11 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
+    await this.dataGatheringService.removeAssetProfileJobFromQueue({
+      dataSource,
+      symbol
+    });
+
     await this.dataGatheringService.addJobToQueue({
       data: {
         dataSource,
@@ -178,7 +186,7 @@ export class AdminController {
     @Param('symbol') symbol: string,
     @Query('range') dateRange: DateRange
   ): Promise<void> {
-    let date: Date;
+    let date: Date | undefined;
 
     if (dateRange) {
       const { startDate } = getIntervalFromDateRange({ dateRange });
@@ -202,7 +210,7 @@ export class AdminController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<MarketData> {
-    const date = parseISO(dateString);
+    const date = parseISO(dateString, { in: utc });
 
     if (!isDate(date)) {
       throw new HttpException(
@@ -211,40 +219,20 @@ export class AdminController {
       );
     }
 
-    return this.dataGatheringService.gatherSymbolForDate({
+    const marketData = await this.dataGatheringService.gatherSymbolForDate({
       dataSource,
       date,
       symbol
     });
-  }
 
-  @Get('market-data')
-  @HasPermission(permissions.accessAdminControl)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getMarketData(
-    @Query('assetSubClasses') filterByAssetSubClasses?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('presetId') presetId?: MarketDataPreset,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('skip') skip?: number,
-    @Query('sortColumn') sortColumn?: string,
-    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
-    @Query('take') take?: number
-  ): Promise<AdminMarketData> {
-    const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAssetSubClasses,
-      filterByDataSource,
-      filterBySearchQuery
-    });
+    if (!marketData) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
 
-    return this.adminService.getMarketData({
-      filters,
-      presetId,
-      sortColumn,
-      sortDirection,
-      skip: isNaN(skip) ? undefined : skip,
-      take: isNaN(take) ? undefined : take
-    });
+    return marketData;
   }
 
   @HasPermission(permissions.accessAdminControl)
@@ -328,13 +316,28 @@ export class AdminController {
   }
 
   @HasPermission(permissions.accessAdminControl)
+  @Post('profile-data/:dataSource/:symbol/merge')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  public async mergeAssetProfile(
+    @Body() targetAssetProfile: MergeAssetProfileDto,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<EnhancedAssetProfile> {
+    return this.adminService.mergeAssetProfile(
+      { dataSource, symbol },
+      targetAssetProfile
+    );
+  }
+
+  @HasPermission(permissions.accessAdminControl)
   @Patch('profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async patchAssetProfileData(
     @Body() assetProfile: UpdateAssetProfileDto,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
-  ): Promise<EnhancedSymbolProfile> {
+  ): Promise<EnhancedAssetProfile> {
     return this.adminService.patchAssetProfileData(
       { dataSource, symbol },
       assetProfile
@@ -345,7 +348,7 @@ export class AdminController {
   @Put('settings/:key')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateProperty(
-    @Param('key') key: string,
+    @Param('key', PropertyKeyPipe) key: PropertyKey,
     @Body() data: UpdatePropertyDto
   ) {
     return this.adminService.putSetting(key, data.value);
@@ -355,12 +358,12 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getUsers(
-    @Query('skip') skip?: number,
-    @Query('take') take?: number
+    @Query('skip', new ParseIntPipe({ optional: true })) skip?: number,
+    @Query('take', new ParseIntPipe({ optional: true })) take?: number
   ): Promise<AdminUsersResponse> {
     return this.adminService.getUsers({
-      skip: isNaN(skip) ? undefined : skip,
-      take: isNaN(take) ? undefined : take
+      skip,
+      take
     });
   }
 

@@ -1,4 +1,8 @@
-import { withThemeByClassName } from '@storybook/addon-themes';
+import '@angular/localize/init';
+import {
+  withThemeByClassName,
+  withThemeByDataAttribute
+} from '@storybook/addon-themes';
 
 const preview = {
   decorators: [
@@ -8,6 +12,15 @@ const preview = {
       themes: {
         Dark: 'theme-dark',
         Light: 'theme-light'
+      }
+    }),
+    withThemeByDataAttribute({
+      attributeName: 'data-bs-theme',
+      defaultTheme: 'Light',
+      parentSelector: 'html',
+      themes: {
+        Dark: 'dark',
+        Light: 'light'
       }
     })
   ]

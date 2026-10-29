@@ -4,7 +4,9 @@ import {
   getDateFormatString,
   getLocale
 } from '@ghostfolio/common/helper';
-import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { LineChartItem } from '@ghostfolio/common/interfaces';
+import type { MarketData } from '@ghostfolio/prisma/browser';
+import { DataSource } from '@ghostfolio/prisma/enums';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { CommonModule } from '@angular/common';
@@ -20,7 +22,8 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output
+  Output,
+  signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -28,7 +31,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,
   addMonths,
@@ -41,12 +43,11 @@ import {
   parse,
   parseISO
 } from 'date-fns';
-import { first, last } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 import { GfHistoricalMarketDataEditorDialogComponent } from './historical-market-data-editor-dialog/historical-market-data-editor-dialog.component';
 import { HistoricalMarketDataEditorDialogParams } from './historical-market-data-editor-dialog/interfaces/interfaces';
@@ -66,11 +67,10 @@ export class GfHistoricalMarketDataEditorComponent
     DATE_FORMAT
   )};123.45`;
 
-  @Input() currency: string;
+  @Input() currency?: string;
   @Input() dataSource: DataSource;
-  @Input() dateOfFirstActivity: string;
+  @Input() dateOfFirstActivity?: Date;
   @Input() symbol: string;
-  @Input() user: User;
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
 
@@ -96,6 +96,7 @@ export class GfHistoricalMarketDataEditorComponent
   protected readonly defaultDateFormat = computed(() =>
     getDateFormatString(this.locale())
   );
+  protected readonly isSubmitting = signal(false);
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -123,75 +124,78 @@ export class GfHistoricalMarketDataEditorComponent
   }
 
   public ngOnChanges() {
-    if (this.dateOfFirstActivity) {
-      let date = parseISO(this.dateOfFirstActivity);
+    const startDate = this.dateOfFirstActivity ?? this.marketData()[0]?.date;
 
-      const missingMarketData: { date: Date; marketPrice?: number }[] = [];
+    if (!startDate) {
+      return;
+    }
 
-      if (this.historicalDataItems()?.[0]?.date) {
-        while (
-          isBefore(
-            date,
-            parse(this.historicalDataItems()[0].date, DATE_FORMAT, new Date())
-          )
-        ) {
-          missingMarketData.push({
-            date,
-            marketPrice: undefined
-          });
+    let date = startDate;
 
-          date = addDays(date, 1);
-        }
+    const missingMarketData: { date: Date; marketPrice?: number }[] = [];
+
+    if (this.historicalDataItems()?.[0]?.date) {
+      while (
+        isBefore(
+          date,
+          parse(this.historicalDataItems()[0].date, DATE_FORMAT, new Date())
+        )
+      ) {
+        missingMarketData.push({
+          date,
+          marketPrice: undefined
+        });
+
+        date = addDays(date, 1);
+      }
+    }
+
+    const marketDataItems = [...missingMarketData, ...this.marketData()];
+
+    const lastDate = marketDataItems.at(-1)?.date;
+    if (!lastDate || !isToday(lastDate)) {
+      marketDataItems.push({ date: new Date() });
+    }
+
+    this.marketDataByMonth = {};
+
+    for (const marketDataItem of marketDataItems) {
+      const currentDay = parseInt(format(marketDataItem.date, 'd'), 10);
+      const key = format(marketDataItem.date, 'yyyy-MM');
+
+      if (!this.marketDataByMonth[key]) {
+        this.marketDataByMonth[key] = {};
       }
 
-      const marketDataItems = [...missingMarketData, ...this.marketData()];
+      this.marketDataByMonth[key][
+        currentDay < 10 ? `0${currentDay}` : currentDay
+      ] = {
+        date: marketDataItem.date,
+        day: currentDay,
+        marketPrice: marketDataItem.marketPrice
+      };
+    }
 
-      const lastDate = last(marketDataItems)?.date;
-      if (!lastDate || !isToday(lastDate)) {
-        marketDataItems.push({ date: new Date() });
-      }
+    // Fill up missing months
+    const dates = Object.keys(this.marketDataByMonth).sort();
+    const startDateString = dates[0];
+    const endDateString = dates.at(-1);
 
-      this.marketDataByMonth = {};
+    if (endDateString) {
+      const endDate = parseISO(endDateString);
 
-      for (const marketDataItem of marketDataItems) {
-        const currentDay = parseInt(format(marketDataItem.date, 'd'), 10);
-        const key = format(marketDataItem.date, 'yyyy-MM');
+      let currentDate = min([
+        startDate,
+        ...(startDateString ? [parseISO(startDateString)] : [])
+      ]);
 
+      while (isBefore(currentDate, endDate)) {
+        const key = format(currentDate, 'yyyy-MM');
         if (!this.marketDataByMonth[key]) {
           this.marketDataByMonth[key] = {};
         }
 
-        this.marketDataByMonth[key][
-          currentDay < 10 ? `0${currentDay}` : currentDay
-        ] = {
-          date: marketDataItem.date,
-          day: currentDay,
-          marketPrice: marketDataItem.marketPrice
-        };
-      }
-
-      // Fill up missing months
-      const dates = Object.keys(this.marketDataByMonth).sort();
-      const startDateString = first(dates);
-      const startDate = min([
-        parseISO(this.dateOfFirstActivity),
-        ...(startDateString ? [parseISO(startDateString)] : [])
-      ]);
-      const endDateString = last(dates);
-
-      if (endDateString) {
-        const endDate = parseISO(endDateString);
-
-        let currentDate = startDate;
-
-        while (isBefore(currentDate, endDate)) {
-          const key = format(currentDate, 'yyyy-MM');
-          if (!this.marketDataByMonth[key]) {
-            this.marketDataByMonth[key] = {};
-          }
-
-          currentDate = addMonths(currentDate, 1);
-        }
+        currentDate = addMonths(currentDate, 1);
       }
     }
   }
@@ -230,8 +234,7 @@ export class GfHistoricalMarketDataEditorComponent
         currency: this.currency,
         dataSource: this.dataSource,
         dateString: `${yearMonth}-${day}`,
-        symbol: this.symbol,
-        user: this.user
+        symbol: this.symbol
       },
       height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
@@ -257,6 +260,8 @@ export class GfHistoricalMarketDataEditorComponent
         }
       ).data;
 
+      this.isSubmitting.set(true);
+
       this.dataService
         .postMarketData({
           dataSource: this.dataSource,
@@ -271,6 +276,9 @@ export class GfHistoricalMarketDataEditorComponent
               duration: ms('3 seconds')
             });
             return EMPTY;
+          }),
+          finalize(() => {
+            this.isSubmitting.set(false);
           }),
           takeUntilDestroyed(this.destroyRef)
         )

@@ -1,12 +1,12 @@
-import { IsISO8601, IsNumber, IsUUID } from 'class-validator';
+import { IsValidAccountBalanceDateConstraint } from '@ghostfolio/common/validator-constraints/is-valid-account-balance-date';
+
+import { IsISO8601, IsNumber, Validate } from 'class-validator';
 
 export class CreateAccountBalanceDto {
-  @IsUUID()
-  accountId: string;
-
   @IsNumber()
   balance: number;
 
   @IsISO8601()
+  @Validate(IsValidAccountBalanceDateConstraint)
   date: string;
 }

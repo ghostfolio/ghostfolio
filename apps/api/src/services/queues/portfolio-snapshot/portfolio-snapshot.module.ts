@@ -1,13 +1,13 @@
-import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
-import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
+import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
+import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import {
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE

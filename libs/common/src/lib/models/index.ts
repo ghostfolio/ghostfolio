@@ -1,4 +1,4 @@
 import { PortfolioSnapshot } from './portfolio-snapshot';
-import { TimelinePosition } from './timeline-position';
+import { PortfolioSnapshotHolding } from './portfolio-snapshot-holding';
 
-export { PortfolioSnapshot, TimelinePosition };
+export { PortfolioSnapshot, PortfolioSnapshotHolding };

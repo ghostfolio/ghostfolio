@@ -1,0 +1,120 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { CallerFacingError } from '@ghostfolio/api/errors/caller-facing.error';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { ImportDataDto } from '@ghostfolio/api/services/import/import-data.dto';
+import { ImportService } from '@ghostfolio/api/services/import/import.service';
+import { ImportResponse } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import type { RequestWithUser } from '@ghostfolio/common/types';
+
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Inject,
+  Logger,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
+import { DataSource } from '@prisma/client';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
+@Controller('import')
+export class ImportController {
+  private readonly logger = new Logger(ImportController.name);
+
+  public constructor(
+    private readonly importService: ImportService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
+  ) {}
+
+  @Post()
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @HasPermission(permissions.createActivity)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async import(
+    @Body() importData: ImportDataDto,
+    @Query('dryRun') isDryRunParam = 'false'
+  ): Promise<ImportResponse> {
+    const isDryRun = isDryRunParam === 'true';
+
+    if (
+      !hasPermission(this.request.user.permissions, permissions.createAccount)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    try {
+      const activities = await this.importService.import({
+        isDryRun,
+        accountsWithBalancesDto: importData.accounts ?? [],
+        activitiesDto: importData.activities,
+        assetProfilesWithMarketDataDto: importData.assetProfiles ?? [],
+        platformsDto: importData.platforms ?? [],
+        tagsDto: importData.tags ?? [],
+        user: this.request.user
+      });
+
+      return { activities };
+    } catch (error) {
+      this.logger.error(error);
+
+      throw new HttpException(
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [this.getMessageOfError(error)]
+        },
+        StatusCodes.BAD_REQUEST
+      );
+    }
+  }
+
+  @Get('dividends/:dataSource/:symbol')
+  @HasPermission(permissions.createActivity)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async gatherDividends(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<ImportResponse> {
+    const maxActivitiesToImport = this.importService.getMaxActivitiesToImport({
+      user: this.request.user
+    });
+
+    const activities = await this.importService.getDividends({
+      dataSource,
+      symbol,
+      userCurrency: this.request.user.settings.settings.baseCurrency,
+      userId: this.request.user.id
+    });
+
+    return {
+      activities: activities.slice(0, maxActivitiesToImport)
+    };
+  }
+
+  private getMessageOfError(error: unknown) {
+    if (error instanceof CallerFacingError) {
+      return error.message;
+    }
+
+    if (error instanceof HttpException) {
+      return getReasonPhrase(error.getStatus());
+    }
+
+    return getReasonPhrase(StatusCodes.BAD_REQUEST);
+  }
+}

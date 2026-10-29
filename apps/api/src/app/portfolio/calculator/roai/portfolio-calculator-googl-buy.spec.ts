@@ -1,18 +1,18 @@
 import {
   activityDummyData,
-  symbolProfileDummyData,
+  assetProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
+import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
+import { RedisCacheServiceMock } from '@ghostfolio/api/services/redis-cache/redis-cache.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity } from '@ghostfolio/common/interfaces';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
@@ -38,7 +38,7 @@ jest.mock(
   }
 );
 
-jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
+jest.mock('@ghostfolio/api/services/redis-cache/redis-cache.service', () => {
   return {
     RedisCacheService: jest.fn().mockImplementation(() => {
       return RedisCacheServiceMock;
@@ -66,9 +66,12 @@ describe('PortfolioCalculator', () => {
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    PortfolioSnapshotServiceMock.reset();
+    RedisCacheServiceMock.reset();
+
     configurationService = new ConfigurationService();
 
-    currentRateService = new CurrentRateService(null, null, null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -77,7 +80,7 @@ describe('PortfolioCalculator', () => {
       null
     );
 
-    portfolioSnapshotService = new PortfolioSnapshotService(null);
+    portfolioSnapshotService = new PortfolioSnapshotService(null, null);
 
     redisCacheService = new RedisCacheService(null, null);
 
@@ -97,17 +100,17 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2023-01-03'),
-          feeInAssetProfileCurrency: 1,
-          feeInBaseCurrency: 0.9238,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
+          assetProfile: {
+            ...assetProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
             name: 'Alphabet Inc.',
             symbol: 'GOOGL'
           },
+          date: new Date('2023-01-03'),
+          feeInAssetProfileCurrency: 1,
+          feeInBaseCurrency: 0.9238,
+          quantity: 1,
           type: 'BUY',
           unitPriceInAssetProfileCurrency: 89.12
         }
@@ -141,6 +144,8 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             activitiesCount: 1,
+            averageInvestment: new Big('89.12').mul(0.8854),
+            averageInvestmentWithCurrencyEffect: new Big('82.329056'),
             averagePrice: new Big('89.12'),
             currency: 'USD',
             dataSource: 'YAHOO',
@@ -170,8 +175,6 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('1'),
             symbol: 'GOOGL',
             tags: [],
-            timeWeightedInvestment: new Big('89.12').mul(0.8854),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
             valueInBaseCurrency: new Big('103.10483')
           }
         ],

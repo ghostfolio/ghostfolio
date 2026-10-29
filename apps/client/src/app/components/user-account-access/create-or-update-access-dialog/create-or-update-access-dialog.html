@@ -1,7 +1,7 @@
 <form
   class="d-flex flex-column h-100"
   [formGroup]="accessForm"
-  (keyup.enter)="accessForm.valid && onSubmit()"
+  (keyup.enter)="accessForm.valid && !isSubmitting() && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
   <h1 mat-dialog-title>
@@ -23,23 +23,85 @@
         />
       </mat-form-field>
     </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
+    <div class="mb-3">
+      <mat-form-field
+        appearance="outline"
+        class="w-100"
+        [class.without-hint]="!isPublicAccess"
+      >
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
           <mat-option i18n value="PRIVATE">Private</mat-option>
           <mat-option i18n value="PUBLIC">Public</mat-option>
+          @if (canGrantMcpAccess) {
+            <mat-option value="MCP">Model Context Protocol (MCP)</mat-option>
+          }
         </mat-select>
+        @if (isPublicAccess) {
+          <mat-hint i18n
+            >Any person who has the link can view the data.</mat-hint
+          >
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="mb-3">
+      <mat-form-field
+        appearance="outline"
+        class="w-100"
+        [class.without-hint]="!showExpiresAtErrorMessage"
+      >
+        <mat-label i18n>Expiration Date</mat-label>
+        <input
+          formControlName="expiresAt"
+          matInput
+          [matDatepicker]="expiresAt"
+          [min]="minExpiresAt"
+        />
+        <mat-datepicker-toggle class="me-2" matSuffix [for]="expiresAt">
+          <ion-icon
+            class="text-body-secondary"
+            matDatepickerToggleIcon
+            name="calendar-clear-outline"
+          />
+        </mat-datepicker-toggle>
+        <mat-datepicker #expiresAt />
+        @if (showExpiresAtErrorMessage) {
+          <mat-error i18n>Date must be in the future.</mat-error>
+        }
       </mat-form-field>
     </div>
 
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Permission</mat-label>
-        <mat-select formControlName="permissions">
-          <mat-option i18n value="READ_RESTRICTED">Restricted view</mat-option>
-          @if (accessForm.get('type')?.value === 'PRIVATE') {
-            <mat-option i18n value="READ">View</mat-option>
+        <mat-select formControlName="accessLevel">
+          <mat-select-trigger>
+            <gf-access-level-icon [accessLevel]="accessLevel" />
+          </mat-select-trigger>
+          <mat-option value="READ_RESTRICTED">
+            <gf-access-level-icon accessLevel="READ_RESTRICTED" />
+          </mat-option>
+          @if (canGrantRestrictedWriteAccess) {
+            <mat-option
+              value="CREATE_READ_RESTRICTED_UPDATE_DELETE"
+              [disabled]="!canGrantWriteAccess"
+            >
+              <gf-access-level-icon
+                accessLevel="CREATE_READ_RESTRICTED_UPDATE_DELETE"
+              />
+            </mat-option>
+          }
+          @if (canGrantUnrestrictedReadAccess) {
+            <mat-option value="READ">
+              <gf-access-level-icon accessLevel="READ" />
+            </mat-option>
+            <mat-option
+              value="CREATE_READ_UPDATE_DELETE"
+              [disabled]="!canGrantWriteAccess"
+            >
+              <gf-access-level-icon accessLevel="CREATE_READ_UPDATE_DELETE" />
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -59,6 +121,30 @@
         </mat-form-field>
       </div>
     }
+    @if (canApplyFilters) {
+      <h2 class="h6" i18n>Portfolio Filters</h2>
+      <gf-portfolio-filter-form
+        appearance="outline"
+        class="w-100"
+        formControlName="filters"
+        [accounts]="accounts"
+        [assetClasses]="assetClasses"
+        [holdings]="holdings"
+        [tags]="tags"
+      />
+    }
+    @if (showMcpDetails || showPublicDetails) {
+      <h2 class="h6" i18n>Details</h2>
+      @if (showMcpDetails) {
+        <pre class="m-0"><code>{{ mcpConfiguration | json }}</code></pre>
+      } @else if (showPublicDetails) {
+        <div>
+          <code class="text-break"
+            >GET {{ baseUrl }}/api/v1/public/{{ accessId }}/portfolio</code
+          >
+        </div>
+      }
+    }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button mat-button type="button" (click)="onCancel()">
@@ -73,9 +159,9 @@
       mat-flat-button
       type="submit"
       [disabled]="
-        mode === 'create'
+        (mode === 'create'
           ? !(accessForm.dirty && accessForm.valid)
-          : !accessForm.valid
+          : !accessForm.valid) || isSubmitting()
       "
     >
       <ng-container i18n>Save</ng-container>

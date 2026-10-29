@@ -3,7 +3,7 @@ import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { HttpClient } from '@angular/common/http';
-import { DestroyRef, Injectable } from '@angular/core';
+import { computed, DestroyRef, inject, Service } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
@@ -18,24 +18,22 @@ import { GfSubscriptionInterstitialDialogComponent } from '../../components/subs
 import { UserStoreActions } from './user-store.actions';
 import { UserStoreState } from './user-store.state';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class UserService extends ObservableStore<UserStoreState> {
-  private deviceType: string;
+  private readonly deviceType = computed(
+    () => this.deviceDetectorService.deviceInfo().deviceType
+  );
 
-  public constructor(
-    private destroyRef: DestroyRef,
-    private deviceDetectorService: DeviceDetectorService,
-    private dialog: MatDialog,
-    private http: HttpClient,
-    private webAuthnService: WebAuthnService
-  ) {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly deviceDetectorService = inject(DeviceDetectorService);
+  private readonly dialog = inject(MatDialog);
+  private readonly http = inject(HttpClient);
+  private readonly webAuthnService = inject(WebAuthnService);
+
+  public constructor() {
     super({ trackStateHistory: true });
 
     this.setState({ user: undefined }, UserStoreActions.Initialize);
-
-    this.deviceType = this.deviceDetectorService.getDeviceInfo().deviceType;
   }
 
   public get(force = false) {
@@ -97,7 +95,7 @@ export class UserService extends ObservableStore<UserStoreState> {
   }
 
   public reset() {
-    this.setState({ user: null }, UserStoreActions.RemoveUser);
+    this.setState({ user: undefined }, UserStoreActions.RemoveUser);
   }
 
   public signOut() {
@@ -127,7 +125,19 @@ export class UserService extends ObservableStore<UserStoreState> {
 
     const cookies = await cookieStore.getAll();
 
-    await Promise.all(cookies.map(({ name }) => cookieStore.delete(name)));
+    const cookieNames = cookies
+      .map(({ name }) => {
+        return name;
+      })
+      .filter((name): name is string => {
+        return !!name;
+      });
+
+    await Promise.all(
+      cookieNames.map((name) => {
+        return cookieStore.delete(name);
+      })
+    );
   }
 
   private fetchUser(): Observable<User> {
@@ -139,6 +149,16 @@ export class UserService extends ObservableStore<UserStoreState> {
 
         if (user.settings?.retirementDate) {
           user.settings.retirementDate = parseISO(user.settings.retirementDate);
+        }
+
+        if (user.subscription?.expiresAt) {
+          user.subscription.expiresAt = parseISO(user.subscription.expiresAt);
+        }
+
+        if (user.subscription?.subscribedAt) {
+          user.subscription.subscribedAt = parseISO(
+            user.subscription.subscribedAt
+          );
         }
 
         this.setState({ user }, UserStoreActions.GetUser);
@@ -158,8 +178,8 @@ export class UserService extends ObservableStore<UserStoreState> {
               user
             },
             disableClose: true,
-            height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-            width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+            height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+            width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
           });
 
           dialogRef
@@ -180,6 +200,6 @@ export class UserService extends ObservableStore<UserStoreState> {
       return throwError(errMessage);
     }
 
-    return throwError(error || 'Server error');
+    return throwError(error ?? 'Server error');
   }
 }

@@ -16,6 +16,8 @@
   }
 
   .mat-mdc-dialog-title {
-    padding-right: 0.5rem !important;
+    button[mat-icon-button] {
+      --mat-icon-button-icon-size: 1rem;
+    }
   }
 }

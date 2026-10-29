@@ -1,0 +1,168 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
+import { CustomThrottlerGuard } from '@ghostfolio/api/guards/custom-throttler.guard';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { OAuthCallbackGuard } from '@ghostfolio/api/guards/oauth-callback.guard';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
+import { AuthDeviceDto } from '@ghostfolio/common/dtos';
+import {
+  AssertionCredentialJSON,
+  AttestationCredentialJSON,
+  OAuthResponse
+} from '@ghostfolio/common/interfaces';
+
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+  Version,
+  VERSION_NEUTRAL
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import type {
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON
+} from '@simplewebauthn/server';
+import { Request, Response } from 'express';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+
+import { AuthService } from './auth.service';
+import { GenerateAuthenticationOptionsDto } from './generate-authentication-options.dto';
+import { WebAuthService } from './web-auth.service';
+
+@AllowDuringImpersonation()
+@Controller('auth')
+export class AuthController {
+  public constructor(
+    private readonly authService: AuthService,
+    private readonly configurationService: ConfigurationService,
+    private readonly webAuthService: WebAuthService
+  ) {}
+
+  @Post('anonymous')
+  @UseGuards(CustomThrottlerGuard)
+  public async accessTokenLogin(
+    @Body() body: { accessToken: string }
+  ): Promise<OAuthResponse> {
+    try {
+      const authToken = await this.authService.validateAnonymousLogin(
+        body.accessToken
+      );
+      return { authToken };
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  public googleLogin() {
+    // Initiates the Google OAuth2 login flow
+  }
+
+  @Get('google/callback')
+  @UseGuards(OAuthCallbackGuard('google'))
+  @Version(VERSION_NEUTRAL)
+  public googleLoginCallback(
+    @Req() request: Request,
+    @Res() response: Response
+  ) {
+    const jwt: string = (request.user as any)?.jwt;
+
+    if (jwt) {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
+      );
+    } else {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth`
+      );
+    }
+  }
+
+  @Get('oidc')
+  @UseGuards(AuthGuard('oidc'))
+  @Version(VERSION_NEUTRAL)
+  public oidcLogin() {
+    if (!this.configurationService.get('ENABLE_FEATURE_AUTH_OIDC')) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+  }
+
+  @Get('oidc/callback')
+  @UseGuards(OAuthCallbackGuard('oidc'))
+  @Version(VERSION_NEUTRAL)
+  public oidcLoginCallback(@Req() request: Request, @Res() response: Response) {
+    const jwt: string = (request.user as any)?.jwt;
+
+    if (jwt) {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
+      );
+    } else {
+      response.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth`
+      );
+    }
+  }
+
+  @Post('webauthn/generate-authentication-options')
+  @UseGuards(CustomThrottlerGuard)
+  public async generateAuthenticationOptions(
+    @Body() body: GenerateAuthenticationOptionsDto
+  ): Promise<PublicKeyCredentialRequestOptionsJSON> {
+    return this.webAuthService.generateAuthenticationOptions(body.deviceId);
+  }
+
+  @Get('webauthn/generate-registration-options')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async generateRegistrationOptions(): Promise<PublicKeyCredentialCreationOptionsJSON> {
+    return this.webAuthService.generateRegistrationOptions();
+  }
+
+  @Post('webauthn/verify-attestation')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async verifyAttestation(
+    @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
+  ): Promise<AuthDeviceDto> {
+    return this.webAuthService.verifyAttestation(body.credential);
+  }
+
+  @Post('webauthn/verify-authentication')
+  @UseGuards(CustomThrottlerGuard)
+  public async verifyAuthentication(
+    @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
+  ): Promise<OAuthResponse> {
+    try {
+      const authToken = await this.webAuthService.verifyAuthentication(
+        body.deviceId,
+        body.credential
+      );
+      return { authToken };
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+  }
+}

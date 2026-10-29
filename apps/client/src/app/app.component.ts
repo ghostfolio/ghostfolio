@@ -1,5 +1,13 @@
-import { getCssVariable } from '@ghostfolio/common/helper';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import {
+  getBackgroundColor,
+  getCssVariable,
+  isDarkColorScheme
+} from '@ghostfolio/common/helper';
+import {
+  AssetProfileIdentifier,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -17,6 +25,7 @@ import {
   OnInit
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DateAdapter } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
 import {
@@ -27,16 +36,16 @@ import {
   RouterLink,
   RouterOutlet
 } from '@angular/router';
-import { DataSource } from '@prisma/client';
 import { Chart } from 'chart.js';
 import { addIcons } from 'ionicons';
 import { openOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { filter } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogResult } from './components/holding-detail-dialog/interfaces/interfaces';
 import { GfAppQueryParams } from './interfaces/interfaces';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { UserService } from './services/user/user.service';
@@ -53,12 +62,12 @@ export class GfAppComponent implements OnInit {
   public currentRoute: string;
   public currentSubRoute: string;
   public deviceType: string;
-  public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
   public hasPromotion = false;
   public hasTabs = false;
+  public impersonationId: string | null;
   public info: InfoItem;
   public pageTitle: string;
   public routerLinkRegister = publicRoutes.register.routerLink;
@@ -67,6 +76,7 @@ export class GfAppComponent implements OnInit {
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
+  private readonly dateAdapter = inject<DateAdapter<Date, string>>(DateAdapter);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
   private readonly dialog = inject(MatDialog);
@@ -112,7 +122,7 @@ export class GfAppComponent implements OnInit {
       .onChangeHasImpersonation()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
+        this.impersonationId = impersonationId;
       });
 
     this.router.events
@@ -131,7 +141,10 @@ export class GfAppComponent implements OnInit {
               this.currentSubRoute ===
                 internalRoutes.home.subRoutes?.holdings.path) ||
             (this.currentRoute === internalRoutes.portfolio.path &&
-              !this.currentSubRoute)) &&
+              !this.currentSubRoute) ||
+            (this.currentRoute === internalRoutes.portfolio.path &&
+              this.currentSubRoute ===
+                internalRoutes.portfolio.subRoutes?.activities.path)) &&
           this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;
@@ -140,6 +153,9 @@ export class GfAppComponent implements OnInit {
         }
 
         if (
+          (this.currentRoute === internalRoutes.accounts.path &&
+            this.currentSubRoute !==
+              internalRoutes.accounts.subRoutes.create.path) ||
           (this.currentRoute === internalRoutes.home.path &&
             this.currentSubRoute ===
               internalRoutes.home.subRoutes?.holdings.path) ||
@@ -199,6 +215,20 @@ export class GfAppComponent implements OnInit {
       });
 
     this.userService.stateChanged
+      .pipe(
+        map(({ user }) => {
+          return user?.settings.locale;
+        }),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((locale) => {
+        if (locale) {
+          this.dateAdapter.setLocale(locale);
+        }
+      });
+
+    this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
         this.user = state.user;
@@ -217,7 +247,7 @@ export class GfAppComponent implements OnInit {
           : !!this.info?.subscriptionOffer?.coupon ||
             !!this.info?.subscriptionOffer?.durationExtension;
 
-        this.initializeTheme(this.user?.settings.colorScheme);
+        this.toggleTheme(this.user?.settings.colorScheme);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -249,30 +279,25 @@ export class GfAppComponent implements OnInit {
     document.location.href = `/${document.documentElement.lang}`;
   }
 
-  private initializeTheme(userPreferredColorScheme?: ColorScheme) {
-    const isDarkTheme = userPreferredColorScheme
-      ? userPreferredColorScheme === 'DARK'
-      : window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    this.toggleTheme(isDarkTheme);
+  private initializeTheme() {
+    this.toggleTheme();
 
     // Default chart styles
     Chart.defaults.font.family = getCssVariable('--font-family-sans-serif');
 
-    window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
-      if (!this.user?.settings.colorScheme) {
-        this.toggleTheme(event.matches);
-      }
-    });
+    window
+      .matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', () => {
+        if (!this.user?.settings.colorScheme) {
+          this.toggleTheme();
+        }
+      });
   }
 
   private openHoldingDetailDialog({
     dataSource,
     symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  }: AssetProfileIdentifier) {
     this.userService
       .get()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -287,13 +312,12 @@ export class GfAppComponent implements OnInit {
             baseCurrency: this.user?.settings?.baseCurrency,
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
             hasPermissionToAccessAdminControl: hasPermission(
               this.user?.permissions,
               permissions.accessAdminControl
             ),
             hasPermissionToCreateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.createActivity
@@ -304,12 +328,13 @@ export class GfAppComponent implements OnInit {
               permissions.reportDataGlitch
             ),
             hasPermissionToUpdateActivity:
-              !this.hasImpersonationId &&
+              !this.impersonationId &&
               hasPermission(
                 this.user?.permissions,
                 permissions.updateActivity
               ) &&
               !this.user?.settings?.isRestrictedView,
+            impersonationId: this.impersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
@@ -319,7 +344,11 @@ export class GfAppComponent implements OnInit {
         dialogRef
           .afterClosed()
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(() => {
+          .subscribe((result: HoldingDetailDialogResult) => {
+            if (result?.isNavigating) {
+              return;
+            }
+
             void this.router.navigate([], {
               queryParams: {
                 dataSource: null,
@@ -333,21 +362,19 @@ export class GfAppComponent implements OnInit {
       });
   }
 
-  private toggleTheme(isDarkTheme: boolean) {
-    const themeColor = getCssVariable(
-      isDarkTheme ? '--dark-background' : '--light-background'
-    );
-
-    if (isDarkTheme) {
+  private toggleTheme(userPreferredColorScheme?: ColorScheme) {
+    if (isDarkColorScheme(userPreferredColorScheme)) {
       this.document.body.classList.add('theme-dark');
       this.document.body.classList.remove('theme-light');
+      this.document.documentElement.setAttribute('data-bs-theme', 'dark');
     } else {
       this.document.body.classList.add('theme-light');
       this.document.body.classList.remove('theme-dark');
+      this.document.documentElement.setAttribute('data-bs-theme', 'light');
     }
 
     this.document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', themeColor);
+      ?.setAttribute('content', getBackgroundColor(userPreferredColorScheme));
   }
 }

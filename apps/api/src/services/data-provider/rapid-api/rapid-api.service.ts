@@ -8,11 +8,11 @@ import {
   GetSearchParams
 } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import { FetchService } from '@ghostfolio/api/services/fetch/fetch.service';
+import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
 import {
-  ghostfolioFearAndGreedIndexSymbol,
-  ghostfolioFearAndGreedIndexSymbolStocks
-} from '@ghostfolio/common/config';
-import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
+  DATE_FORMAT,
+  getStartOfUtcDateOfYesterday
+} from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
   DataProviderInfo,
@@ -20,6 +20,7 @@ import {
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
@@ -61,24 +62,21 @@ export class RapidApiService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
-      if (
-        [
-          ghostfolioFearAndGreedIndexSymbol,
-          ghostfolioFearAndGreedIndexSymbolStocks
-        ].includes(symbol)
-      ) {
+      if (symbol === ghostfolioFearAndGreedIndexSymbolStocks) {
         const fgi = await this.getFearAndGreedIndex();
 
-        return {
-          [symbol]: {
-            [format(getYesterday(), DATE_FORMAT)]: {
+        if (fgi) {
+          return {
+            [format(getStartOfUtcDateOfYesterday(), DATE_FORMAT, {
+              in: utc
+            })]: {
               marketPrice: fgi.previousClose.value
             }
-          }
-        };
+          };
+        }
       }
     } catch (error) {
       throw new Error(
@@ -106,25 +104,22 @@ export class RapidApiService implements DataProviderInterface {
     try {
       const symbol = symbols[0];
 
-      if (
-        [
-          ghostfolioFearAndGreedIndexSymbol,
-          ghostfolioFearAndGreedIndexSymbolStocks
-        ].includes(symbol)
-      ) {
+      if (symbol === ghostfolioFearAndGreedIndexSymbolStocks) {
         const fgi = await this.getFearAndGreedIndex();
 
-        return {
-          [symbol]: {
-            currency: undefined,
-            dataSource: this.getName(),
-            marketPrice: fgi.now.value,
-            marketState: 'open'
-          }
-        };
+        if (fgi) {
+          return {
+            [symbol]: {
+              currency: undefined,
+              dataSource: this.getName(),
+              marketPrice: fgi.now.value,
+              marketState: 'open'
+            }
+          };
+        }
       }
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     }
 
     return {};

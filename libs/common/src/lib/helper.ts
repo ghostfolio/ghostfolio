@@ -1,19 +1,28 @@
-import { NumberParser } from '@internationalized/number';
-import {
-  Type as ActivityType,
-  DataSource,
+import type {
+  AssetProfileOverrides,
   MarketData,
   Prisma,
-  SymbolProfile,
-  SymbolProfileOverrides
-} from '@prisma/client';
-import { Big } from 'big.js';
-import { isISO4217CurrencyCode } from 'class-validator';
+  SymbolProfile
+} from '@ghostfolio/prisma/browser';
 import {
+  AccessType,
+  Type as ActivityType,
+  AssetSubClass
+} from '@ghostfolio/prisma/enums';
+
+import { utc } from '@date-fns/utc';
+import { NumberParser } from '@internationalized/number';
+import { Big } from 'big.js';
+import { isISO4217CurrencyCode, isUUID } from 'class-validator';
+import { countries } from 'countries-list';
+import {
+  addDays,
   getDate,
   getMonth,
   getYear,
+  isAfter,
   isMatch,
+  isValid,
   parse,
   parseISO,
   subDays
@@ -24,6 +33,7 @@ import {
   es,
   fr,
   it,
+  ja,
   ko,
   nl,
   pl,
@@ -32,21 +42,26 @@ import {
   uk,
   zhCN
 } from 'date-fns/locale';
-import { get, isNil, isString } from 'lodash';
+import { get, isNil, isString } from 'lodash-es';
 
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_LOCALE,
   DERIVED_CURRENCIES,
-  ghostfolioFearAndGreedIndexSymbol,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks,
-  ghostfolioScraperApiSymbolPrefix,
-  locale
+  ghostfolioPrefix,
+  SEARCH_QUERY_MINIMUM_LENGTH,
+  TAG_ID_DRAFT,
+  TAG_ID_EXCLUDE_FROM_ANALYSIS,
+  TAG_IDS_SYSTEM
 } from './config';
 import {
-  AdminMarketDataItem,
   AssetProfileIdentifier,
-  Benchmark
+  AssetProfileItem,
+  Benchmark,
+  PortfolioPosition,
+  UserSettings
 } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
@@ -54,9 +69,35 @@ export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
 
+// Settings which describe the person looking at the screen rather than the
+// portfolio being looked at. They stay with the authenticated user while
+// impersonating. Every other setting follows the impersonated user.
+// The filters are included because they are always written back to the
+// authenticated user, so reading them from the impersonated user would
+// overwrite the filters of the authenticated user.
+const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
+  'benchmark',
+  'colorScheme',
+  'dateRange',
+  'filters.accounts',
+  'filters.assetClasses',
+  'filters.dataSource',
+  'filters.symbol',
+  'filters.tags',
+  'holdingsViewMode',
+  'isExperimentalFeatures',
+  'isGhostfolioAiEnabled',
+  'isRestrictedView',
+  'language',
+  'locale',
+  'viewMode'
+];
+
+const VALID_COUNTRY_CODES = new Set([...Object.keys(countries), 'EU']);
+
 export function applyAssetProfileOverrides<T extends Partial<SymbolProfile>>(
   assetProfile: T,
-  assetProfileOverrides: SymbolProfileOverrides | null
+  assetProfileOverrides: AssetProfileOverrides | null
 ): T {
   if (!assetProfileOverrides) {
     return assetProfile;
@@ -143,37 +184,101 @@ export function calculateMovingAverage({
     .toNumber();
 }
 
+export function canApplyFiltersToAccess({ type }: { type: AccessType }) {
+  return type === 'PUBLIC';
+}
+
 export function canDeleteAssetProfile({
   activitiesCount,
   isBenchmark,
   symbol,
   watchedByCount
 }: Pick<
-  AdminMarketDataItem,
+  AssetProfileItem,
   'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
 >): boolean {
   return (
     activitiesCount === 0 &&
     !isBenchmark &&
     !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
+    !isFearAndGreedIndexSymbol(symbol) &&
     !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
-    symbol !== ghostfolioFearAndGreedIndexSymbol &&
-    symbol !== ghostfolioFearAndGreedIndexSymbolCryptocurrencies &&
-    symbol !== ghostfolioFearAndGreedIndexSymbolStocks &&
     watchedByCount === 0
   );
+}
+
+export function canDeleteUser({
+  currentUserId,
+  userId
+}: {
+  currentUserId: string;
+  userId: string;
+}): boolean {
+  return currentUserId !== userId;
+}
+
+export function canMergeAssetProfile({
+  isBenchmark = false,
+  splitsCount = 0,
+  symbol
+}: Pick<AssetProfileItem, 'isBenchmark' | 'symbol'> & {
+  splitsCount?: number;
+}): boolean {
+  return (
+    !isBenchmark &&
+    !isCurrencySymbol(symbol) &&
+    !isFearAndGreedIndexSymbol(symbol) &&
+    splitsCount === 0
+  );
+}
+
+export function canOpenHoldingDetail({
+  assetProfile
+}: Pick<PortfolioPosition, 'assetProfile'>): boolean {
+  return assetProfile?.assetSubClass !== AssetSubClass.CASH;
+}
+
+/**
+ * Checks if the symbol of a custom asset profile can be used, either to connect
+ * to the existing asset profile or to create a new one. The prefix is reserved
+ * for the asset profiles of the admin, thus a new asset profile cannot use it.
+ */
+export function canUseCustomAssetProfileSymbol({
+  assetProfile,
+  symbol
+}: {
+  assetProfile: Pick<SymbolProfile, 'id'> | null;
+  symbol: string;
+}): boolean {
+  if (!isValidCustomAssetProfileSymbol(symbol)) {
+    return false;
+  }
+
+  if (assetProfile) {
+    return true;
+  }
+
+  return !hasGhostfolioPrefix(symbol);
 }
 
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }
 
-export function decodeDataSource(encodedDataSource: string) {
-  if (encodedDataSource) {
-    return Buffer.from(encodedDataSource, 'hex').toString();
+export function convertValuesToPercentagesOfTotal({
+  total,
+  values
+}: {
+  total: number;
+  values: { [key: string]: { value: number } };
+}) {
+  if (!total) {
+    return;
   }
 
-  return undefined;
+  for (const item of Object.values(values)) {
+    item.value = item.value / total;
+  }
 }
 
 export function downloadAsFile({
@@ -201,14 +306,6 @@ export function downloadAsFile({
   a.click();
 }
 
-export function encodeDataSource(aDataSource: DataSource) {
-  if (aDataSource) {
-    return Buffer.from(aDataSource, 'utf-8').toString('hex');
-  }
-
-  return undefined;
-}
-
 export function extractNumberFromString({
   locale = 'en-US',
   value
@@ -217,15 +314,48 @@ export function extractNumberFromString({
   value: string;
 }): number | undefined {
   try {
+    // Only a leading minus sign indicates a negative value. Detect it before
+    // stripping so that hyphens within the text cannot flip the sign.
+    const isNegative = value.trim().startsWith('-');
+
     // Remove non-numeric characters (excluding international formatting characters)
     const numericValue = value.replace(/[^\d.,'’\s]/g, '');
 
     const parser = new NumberParser(locale);
+    const parsedValue = parser.parse(numericValue);
 
-    return parser.parse(numericValue);
+    return isNegative ? -parsedValue : parsedValue;
   } catch {
     return undefined;
   }
+}
+
+export function formatAssetProfileName({
+  assetSubClass,
+  name
+}: {
+  assetSubClass?: AssetSubClass;
+  name?: string;
+}) {
+  if (assetSubClass === 'CRYPTOCURRENCY') {
+    // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
+    return name?.replace(new RegExp(` ${DEFAULT_CURRENCY}$`), '');
+  }
+
+  return name;
+}
+
+export function formatMonthAndYear({
+  date,
+  locale
+}: {
+  date: Date;
+  locale?: string;
+}) {
+  return new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric'
+  }).format(date);
 }
 
 export function getAllActivityTypes(): ActivityType[] {
@@ -239,12 +369,9 @@ export function getAssetProfileIdentifier({
   return `${dataSource}-${symbol}`;
 }
 
-export function getBackgroundColor(aColorScheme: ColorScheme) {
+export function getBackgroundColor(aColorScheme?: ColorScheme) {
   return getCssVariable(
-    aColorScheme === 'DARK' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? '--dark-background'
-      : '--light-background'
+    isDarkColorScheme(aColorScheme) ? '--dark-background' : '--light-background'
   );
 }
 
@@ -258,15 +385,24 @@ export function getCurrencyFromSymbol(aSymbol = '') {
   return aSymbol.replace(DEFAULT_CURRENCY, '');
 }
 
-export function getCountryName({
-  code,
-  locale = getLocale()
-}: {
-  code: string;
-  locale?: string;
-}): string {
+export function getCountryCodeFromCurrency(aCurrency = '') {
+  // An ISO 4217 currency code is composed of the ISO 3166-1 alpha-2 country
+  // code and the initial of the currency itself, except for the supranational
+  // currencies, which are prefixed with X (like XAU or XOF)
+  if (aCurrency.startsWith('X')) {
+    return '';
+  }
+
+  return aCurrency.slice(0, 2).toUpperCase();
+}
+
+export function getCountryName({ code }: { code: string }): string {
   try {
-    return new Intl.DisplayNames([locale], { type: 'region' }).of(code) ?? code;
+    return (
+      new Intl.DisplayNames([document.documentElement.lang || DEFAULT_LOCALE], {
+        type: 'region'
+      }).of(code) ?? code
+    );
   } catch {
     return code;
   }
@@ -283,6 +419,8 @@ export function getDateFnsLocale(aLanguageCode?: string) {
     return fr;
   } else if (aLanguageCode === 'it') {
     return it;
+  } else if (aLanguageCode === 'ja') {
+    return ja;
   } else if (aLanguageCode === 'ko') {
     return ko;
   } else if (aLanguageCode === 'nl') {
@@ -328,19 +466,35 @@ export function getDateWithTimeFormatString(aLocale?: string) {
 }
 
 export function getEmojiFlag(aCountryCode: string) {
-  if (!aCountryCode) {
-    return aCountryCode;
+  const countryCode = aCountryCode?.toUpperCase();
+
+  if (!countryCode || !VALID_COUNTRY_CODES.has(countryCode)) {
+    return undefined;
   }
 
-  return aCountryCode
-    .toUpperCase()
-    .replace(/./g, (character) =>
-      String.fromCodePoint(127397 + character.charCodeAt(0))
-    );
+  return countryCode.replace(/./g, (character) => {
+    return String.fromCodePoint(127397 + character.charCodeAt(0));
+  });
+}
+
+export function getHoldingName({
+  assetSubClass,
+  assetSubClassLabel,
+  name,
+  symbol
+}: Pick<
+  PortfolioPosition['assetProfile'],
+  'assetSubClass' | 'assetSubClassLabel' | 'name' | 'symbol'
+>) {
+  if (isCashPosition({ assetSubClass }) && assetSubClassLabel) {
+    return `${assetSubClassLabel} (${symbol})`;
+  }
+
+  return name ?? symbol;
 }
 
 export function getLocale() {
-  return navigator.language ?? locale;
+  return navigator.language ?? DEFAULT_LOCALE;
 }
 
 export function getLowercase(object: object, path: string) {
@@ -378,6 +532,34 @@ export function getStartOfUtcDate(aDate: Date) {
   return date;
 }
 
+export function getStartOfUtcDateOfTomorrow() {
+  return addDays(getStartOfUtcDate(new Date()), 1, { in: utc });
+}
+
+export function getStartOfUtcDateOfYesterday() {
+  return subDays(getStartOfUtcDate(new Date()), 1, { in: utc });
+}
+
+export function getStringOrNull(aString: string | null | undefined) {
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
+  }
+
+  return null;
+}
+
+export function getStringOrUndefined(aString: string | null | undefined) {
+  const trimmedString = aString?.trim();
+
+  if (trimmedString) {
+    return trimmedString;
+  }
+
+  return undefined;
+}
+
 export function getSum(aArray: Big[]) {
   if (aArray?.length > 0) {
     return aArray.reduce((a, b) => a.plus(b), new Big(0));
@@ -386,10 +568,9 @@ export function getSum(aArray: Big[]) {
   return new Big(0);
 }
 
-export function getTextColor(aColorScheme: ColorScheme) {
+export function getTextColor(aColorScheme?: ColorScheme) {
   const cssVariable = getCssVariable(
-    aColorScheme === 'DARK' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
+    isDarkColorScheme(aColorScheme)
       ? '--light-primary-text'
       : '--dark-primary-text'
   );
@@ -397,14 +578,6 @@ export function getTextColor(aColorScheme: ColorScheme) {
   const [r, g, b] = cssVariable.split(',');
 
   return `${r}, ${g}, ${b}`;
-}
-
-export function getToday() {
-  const year = getYear(new Date());
-  const month = getMonth(new Date());
-  const day = getDate(new Date());
-
-  return new Date(Date.UTC(year, month, day));
 }
 
 export function getUtc(aDateString: string) {
@@ -419,12 +592,12 @@ export function getUtc(aDateString: string) {
   );
 }
 
-export function getYesterday() {
-  const year = getYear(new Date());
-  const month = getMonth(new Date());
-  const day = getDate(new Date());
+export function hasGhostfolioPrefix(aSymbol: string) {
+  if (!aSymbol) {
+    return false;
+  }
 
-  return subDays(new Date(Date.UTC(year, month, day)), 1);
+  return aSymbol.startsWith(`${ghostfolioPrefix}_`);
 }
 
 export function interpolate(template: string, context: any) {
@@ -435,6 +608,32 @@ export function interpolate(template: string, context: any) {
       context
     );
   });
+}
+
+export function isAccountBalanceInFuture({
+  date,
+  startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow()
+}: {
+  date: Date;
+  startOfUtcDateOfTomorrow?: Date;
+}) {
+  return isAfter(date, startOfUtcDateOfTomorrow);
+}
+
+export function isAccountExcluded(account?: { tags?: { id: string }[] }) {
+  return (
+    account?.tags?.some(({ id }) => {
+      return id === TAG_ID_EXCLUDE_FROM_ANALYSIS;
+    }) === true
+  );
+}
+
+export function isCashPosition({
+  assetSubClass
+}: {
+  assetSubClass?: AssetSubClass;
+} = {}) {
+  return assetSubClass === AssetSubClass.CASH;
 }
 
 export function isCurrency(aCurrency: string) {
@@ -459,6 +658,14 @@ export function isCurrencySymbol(aSymbol: string) {
   );
 }
 
+export function isDarkColorScheme(aColorScheme?: ColorScheme | null) {
+  if (aColorScheme) {
+    return aColorScheme === 'DARK';
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
 export function isDerivedCurrency(aCurrency: string) {
   if (aCurrency === 'USX') {
     return true;
@@ -469,6 +676,21 @@ export function isDerivedCurrency(aCurrency: string) {
   });
 }
 
+export function isDraftActivity(activity?: { tags?: { id: string }[] }) {
+  return (
+    activity?.tags?.some(({ id }) => {
+      return id === TAG_ID_DRAFT;
+    }) === true
+  );
+}
+
+export function isFearAndGreedIndexSymbol(aSymbol: string) {
+  return (
+    aSymbol === ghostfolioFearAndGreedIndexSymbolCryptocurrencies ||
+    aSymbol === ghostfolioFearAndGreedIndexSymbolStocks
+  );
+}
+
 export function isRootCurrency(aCurrency: string) {
   if (aCurrency === 'USD') {
     return true;
@@ -477,6 +699,93 @@ export function isRootCurrency(aCurrency: string) {
   return DERIVED_CURRENCIES.find(({ rootCurrency }) => {
     return rootCurrency === aCurrency;
   });
+}
+
+/**
+ * Validates the ratio of a stock split, expressed as the number of shares held
+ * after the split (numerator) per number of shares held before (denominator),
+ * for example 4 and 1 for a 4:1 split or 1 and 10 for a 1:10 reverse split. An
+ * equal numerator and denominator would be a no-op.
+ */
+export function isSplitRatio({
+  denominator,
+  numerator
+}: {
+  denominator: number;
+  numerator: number;
+}) {
+  return (
+    Number.isSafeInteger(numerator) &&
+    Number.isSafeInteger(denominator) &&
+    numerator > 0 &&
+    denominator > 0 &&
+    numerator !== denominator
+  );
+}
+
+export function isSystemTag(tag?: { id: string }) {
+  return TAG_IDS_SYSTEM.some((id) => {
+    return id === tag?.id;
+  });
+}
+
+export function isUserSettingOfAuthenticatedUser(aKey: string) {
+  return USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.includes(
+    aKey as keyof UserSettings
+  );
+}
+
+export function isValidAccountBalanceDate(aDate: string) {
+  const date = parseISO(aDate);
+
+  return isValid(date) && !isAccountBalanceInFuture({ date: resetHours(date) });
+}
+
+export function isValidCurrencyCode(aCurrency: string) {
+  if (!aCurrency) {
+    return false;
+  }
+
+  return (
+    isDerivedCurrency(aCurrency) ||
+    (aCurrency === aCurrency.toUpperCase() && isISO4217CurrencyCode(aCurrency))
+  );
+}
+
+export function isValidCustomAssetProfileSymbol(aSymbol: string) {
+  return hasGhostfolioPrefix(aSymbol) || isUUID(aSymbol);
+}
+
+export function isValidDateAfter1970(aDate: Date | string) {
+  const date = isString(aDate) ? parseISO(aDate, { in: utc }) : aDate;
+
+  return isValid(date) && isAfter(date, new Date(0));
+}
+
+/**
+ * A private access is granted to a user, while a public access and an access
+ * of a client of the model context protocol are credentials on their own and
+ * have no grantee. A row which mixes both is neither, hence it is rejected.
+ * The owner of an access cannot be its grantee.
+ */
+export function isValidGranteeOfAccess({
+  granteeUserId,
+  type,
+  userId
+}: {
+  granteeUserId?: string | null;
+  type: AccessType;
+  userId: string;
+}) {
+  if (type === 'PRIVATE') {
+    return !!granteeUserId && granteeUserId !== userId;
+  }
+
+  return !granteeUserId;
+}
+
+export function isValidSearchQuery(aQuery: string) {
+  return aQuery?.trim().length >= SEARCH_QUERY_MINIMUM_LENGTH;
 }
 
 export function parseDate(date: string): Date | undefined {
@@ -522,10 +831,6 @@ export function parseSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
   };
 }
 
-export function prettifySymbol(aSymbol: string): string {
-  return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
-}
-
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);
@@ -534,8 +839,10 @@ export function resetHours(aDate: Date) {
   return new Date(Date.UTC(year, month, day));
 }
 
-export function resolveFearAndGreedIndex(aValue: number) {
-  if (aValue <= 25) {
+export function resolveFearAndGreedIndex(aValue?: number) {
+  if (isNil(aValue)) {
+    return { emoji: '⚪', key: 'UNKNOWN', text: 'Unknown' };
+  } else if (aValue <= 25) {
     return { emoji: '🥵', key: 'EXTREME_FEAR', text: 'Extreme Fear' };
   } else if (aValue <= 45) {
     return { emoji: '😨', key: 'FEAR', text: 'Fear' };
@@ -558,4 +865,25 @@ export function resolveMarketCondition(
   } else {
     return { emoji: undefined };
   }
+}
+
+export function resolveUserSettings({
+  impersonationUserSettings,
+  userSettings
+}: {
+  impersonationUserSettings?: UserSettings;
+  userSettings: UserSettings;
+}): UserSettings {
+  if (!impersonationUserSettings) {
+    return { ...userSettings };
+  }
+
+  return {
+    ...impersonationUserSettings,
+    ...Object.fromEntries(
+      USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER.map((key) => {
+        return [key, userSettings?.[key]];
+      })
+    )
+  };
 }

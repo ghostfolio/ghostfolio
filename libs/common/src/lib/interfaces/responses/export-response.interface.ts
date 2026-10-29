@@ -1,33 +1,34 @@
-import {
+import type {
   Account,
-  DataSource,
   Order,
   Platform,
   SymbolProfile,
   Tag
-} from '@prisma/client';
+} from '@ghostfolio/prisma/browser';
 
 import { AccountBalance } from '../account-balance.interface';
+import { AssetProfileIdentifier } from '../asset-profile-identifier.interface';
 import { MarketData } from '../market-data.interface';
 import { UserSettings } from '../user-settings.interface';
 
 export interface ExportResponse {
   accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {
     balances: AccountBalance[];
+    tags?: string[];
   })[];
   activities: (Omit<
     Order,
     | 'accountUserId'
     | 'createdAt'
     | 'date'
-    | 'isDraft'
     | 'symbolProfileId'
     | 'updatedAt'
     | 'userId'
-  > & { dataSource: DataSource; date: string; symbol: string })[];
+  > & { date: string } & AssetProfileIdentifier)[];
   assetProfiles: (Omit<
     SymbolProfile,
     | 'createdAt'
+    | 'dataGatheringFrequency'
     | 'id'
     | 'scraperConfiguration'
     | 'symbolMapping'

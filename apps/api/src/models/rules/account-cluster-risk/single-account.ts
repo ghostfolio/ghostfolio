@@ -1,27 +1,31 @@
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import {
-  PortfolioDetails,
-  RuleSettings,
-  UserSettings
-} from '@ghostfolio/common/interfaces';
+import { PortfolioDetails, RuleSettings } from '@ghostfolio/common/interfaces';
 
 export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
   private accounts: PortfolioDetails['accounts'];
+  private i18nService: I18nService;
 
-  public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService,
-    private i18nService: I18nService,
-    languageCode: string,
-    accounts: PortfolioDetails['accounts']
-  ) {
-    super(exchangeRateDataService, {
+  public constructor({
+    accounts,
+    exchangeRateDataService,
+    i18nService,
+    languageCode
+  }: {
+    accounts: PortfolioDetails['accounts'];
+    exchangeRateDataService: ExchangeRateDataService;
+    i18nService: I18nService;
+    languageCode: string;
+  }) {
+    super({
+      exchangeRateDataService,
       languageCode,
-      key: AccountClusterRiskSingleAccount.name
+      key: 'AccountClusterRiskSingleAccount'
     });
 
     this.accounts = accounts;
+    this.i18nService = i18nService;
   }
 
   public evaluate() {
@@ -66,12 +70,5 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
       id: 'rule.accountClusterRiskSingleAccount',
       languageCode: this.getLanguageCode()
     });
-  }
-
-  public getSettings({ locale, xRayRules }: UserSettings): RuleSettings {
-    return {
-      locale,
-      isActive: xRayRules?.[this.getKey()]?.isActive ?? true
-    };
   }
 }

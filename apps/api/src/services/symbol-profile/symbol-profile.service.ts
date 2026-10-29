@@ -1,9 +1,12 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import {
+  INVESTMENT_ACTIVITY_TYPES,
+  UNKNOWN_KEY
+} from '@ghostfolio/common/config';
 import { applyAssetProfileOverrides } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Holding,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
@@ -12,10 +15,10 @@ import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 import { Injectable } from '@nestjs/common';
 import {
+  AssetProfileOverrides,
   DataSource,
   Prisma,
-  SymbolProfile,
-  SymbolProfileOverrides
+  SymbolProfile
 } from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
@@ -32,6 +35,15 @@ export class SymbolProfileService {
   public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.symbolProfile.delete({
       where: { dataSource_symbol: { dataSource, symbol } }
+    });
+  }
+
+  public deleteAssetProfileOverrides({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    return this.prismaService.assetProfileOverrides.deleteMany({
+      where: { symbolProfile: { dataSource, symbol } }
     });
   }
 
@@ -85,20 +97,41 @@ export class SymbolProfileService {
     }
 
     return {
-      SymbolProfileOverrides: {
+      assetProfileOverrides: {
         upsert: {
           create:
-            data as Prisma.SymbolProfileOverridesCreateWithoutSymbolProfileInput,
+            data as Prisma.AssetProfileOverridesCreateWithoutSymbolProfileInput,
           update:
-            data as Prisma.SymbolProfileOverridesUpdateWithoutSymbolProfileInput
+            data as Prisma.AssetProfileOverridesUpdateWithoutSymbolProfileInput
         }
       }
     };
   }
 
+  public async getCustomSymbolProfilesByNames({
+    names,
+    userId
+  }: {
+    names: string[];
+    userId: string;
+  }): Promise<Pick<SymbolProfile, 'name' | 'symbol'>[]> {
+    if (names.length === 0) {
+      return [];
+    }
+
+    return this.prismaService.symbolProfile.findMany({
+      select: { name: true, symbol: true },
+      where: {
+        userId,
+        dataSource: DataSource.MANUAL,
+        name: { in: names }
+      }
+    });
+  }
+
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
-  ): Promise<EnhancedSymbolProfile[]> {
+  ): Promise<EnhancedAssetProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
         include: {
@@ -112,7 +145,7 @@ export class SymbolProfileService {
             select: { date: true },
             take: 1
           },
-          SymbolProfileOverrides: true
+          assetProfileOverrides: true
         },
         where: {
           OR: aAssetProfileIdentifiers.map(({ dataSource, symbol }) => {
@@ -130,14 +163,14 @@ export class SymbolProfileService {
 
   public async getSymbolProfilesByIds(
     symbolProfileIds: string[]
-  ): Promise<EnhancedSymbolProfile[]> {
+  ): Promise<EnhancedAssetProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
         include: {
           _count: {
             select: { activities: true, watchedBy: true }
           },
-          SymbolProfileOverrides: true
+          assetProfileOverrides: true
         },
         where: {
           id: {
@@ -150,6 +183,41 @@ export class SymbolProfileService {
       .then((symbolProfiles) => {
         return this.enhanceSymbolProfiles(symbolProfiles);
       });
+  }
+
+  /**
+   * Gives the currency, the data source, the ISIN, the name and the symbol of
+   * the active asset profiles of the investment activities of the user, also
+   * of the closed positions and of the excluded accounts, with the overrides.
+   * An inactive asset profile is left out, for example a delisted one, which a
+   * data provider cannot resolve, or one whose data gathering an admin has
+   * disabled.
+   */
+  public async getSymbolProfilesOfUser({ userId }: { userId: string }) {
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }, { dataSource: 'asc' }],
+      select: {
+        assetProfileOverrides: true,
+        currency: true,
+        dataSource: true,
+        isin: true,
+        name: true,
+        symbol: true
+      },
+      where: {
+        activities: {
+          some: { userId, type: { in: INVESTMENT_ACTIVITY_TYPES } }
+        },
+        isActive: true
+      }
+    });
+
+    return symbolProfiles.map(({ assetProfileOverrides, ...symbolProfile }) => {
+      const { currency, dataSource, isin, name, symbol } =
+        applyAssetProfileOverrides(symbolProfile, assetProfileOverrides);
+
+      return { currency, dataSource, isin, name, symbol };
+    });
   }
 
   public updateAssetProfileIdentifier(
@@ -174,34 +242,36 @@ export class SymbolProfileService {
     { dataSource, symbol }: AssetProfileIdentifier,
     {
       assetClass,
+      assetProfileOverrides,
       assetSubClass,
       comment,
       countries,
       currency,
+      dataGatheringFrequency,
       holdings,
       isActive,
       name,
       scraperConfiguration,
       sectors,
       symbolMapping,
-      SymbolProfileOverrides,
       url
     }: Prisma.SymbolProfileUpdateInput
   ) {
     return this.prismaService.symbolProfile.update({
       data: {
         assetClass,
+        assetProfileOverrides,
         assetSubClass,
         comment,
         countries,
         currency,
+        dataGatheringFrequency,
         holdings,
         isActive,
         name,
         scraperConfiguration,
         sectors,
         symbolMapping,
-        SymbolProfileOverrides,
         url
       },
       where: { dataSource_symbol: { dataSource, symbol } }
@@ -214,13 +284,13 @@ export class SymbolProfileService {
       activities?: {
         date: Date;
       }[];
-      SymbolProfileOverrides: SymbolProfileOverrides;
+      assetProfileOverrides: AssetProfileOverrides;
     })[]
-  ): EnhancedSymbolProfile[] {
+  ): EnhancedAssetProfile[] {
     return symbolProfiles.map((symbolProfile) => {
       const symbolProfileWithOverrides = applyAssetProfileOverrides(
         symbolProfile,
-        symbolProfile.SymbolProfileOverrides
+        symbolProfile.assetProfileOverrides
       );
 
       const item = {
@@ -250,7 +320,7 @@ export class SymbolProfileService {
       item.dateOfFirstActivity = symbolProfile.activities?.[0]?.date;
       delete item.activities;
 
-      delete item.SymbolProfileOverrides;
+      delete item.assetProfileOverrides;
 
       return item;
     });

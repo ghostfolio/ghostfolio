@@ -1,6 +1,7 @@
 import { ConfirmationDialogType } from '@ghostfolio/common/enums';
 
 export interface AlertParams {
+  copyValue?: string;
   discardFn?: () => void;
   discardLabel?: string;
   message?: string;
@@ -25,4 +26,5 @@ export interface PromptParams {
   discardLabel?: string;
   title: string;
   valueLabel?: string;
+  valueSuffix?: string;
 }

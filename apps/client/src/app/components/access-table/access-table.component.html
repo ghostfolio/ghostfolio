@@ -2,60 +2,53 @@
   <table class="gf-table w-100" mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="alias">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Alias</th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
         {{ element.alias }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="grantee">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Grantee</th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
-        {{ element.grantee }}
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+        @if (element.grantee) {
+          {{ element.grantee }}
+        } @else if (element.type === 'PUBLIC') {
+          <span i18n>Public</span>
+        } @else if (element.type === 'MCP') {
+          <span>Model Context Protocol (MCP)</span>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="type">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Permission</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        <div class="align-items-center d-flex">
-          @if (element.permissions.includes('READ')) {
-            <ion-icon class="mr-1" name="lock-open-outline" />
-            <ng-container i18n>View</ng-container>
-          } @else if (element.permissions.includes('READ_RESTRICTED')) {
-            <ion-icon class="mr-1" name="lock-closed-outline" />
-            <ng-container i18n>Restricted view</ng-container>
-          }
-        </div>
+        <gf-access-level-icon [accessLevel]="getAccessLevel(element.scopes)" />
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="details">
-      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
+    <ng-container matColumnDef="lastUsedAt">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Last Used</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        @if (element.type === 'PUBLIC') {
-          <div class="align-items-center d-flex">
-            <ion-icon class="mr-1" name="link-outline" />
-            <a target="_blank" [href]="getPublicUrl(element.id)">{{
-              getPublicUrl(element.id)
-            }}</a>
-          </div>
-          @if (user()?.settings?.isExperimentalFeatures) {
-            <div>
-              <code
-                >GET {{ baseUrl }}/api/v1/public/{{
-                  element.id
-                }}/portfolio</code
-              >
-            </div>
-          }
+        @if (element.lastUsedAt) {
+          {{ element.lastUsedAt | date: defaultDateFormat() }}
+        } @else {
+          <span>–</span>
         }
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="actions" stickyEnd>
-      <th *matHeaderCellDef class="px-1 text-right" mat-header-cell></th>
+    <ng-container matColumnDef="expiresAt">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Expiration</th>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+        {{ element.expiresAt | date: defaultDateFormat() }}
+      </td>
+    </ng-container>
 
-      <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+    <ng-container matColumnDef="actions" stickyEnd>
+      <th *matHeaderCellDef class="px-1 text-end" mat-header-cell></th>
+
+      <td *matCellDef="let element" class="px-1 text-end" mat-cell>
         <button
           class="mx-1 no-min-width px-2"
           mat-button
@@ -69,32 +62,43 @@
           class="no-max-width"
           xPosition="before"
         >
-          @if (user()?.settings?.isExperimentalFeatures) {
-            <button mat-menu-item (click)="onUpdateAccess(element.id)">
+          @if (
+            !isReceivedAccess() && user()?.settings?.isExperimentalFeatures
+          ) {
+            <a
+              mat-menu-item
+              [routerLink]="accessDialogRouterLinks().get(element.id)"
+            >
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="create-outline" />
+                <ion-icon class="me-2" name="create-outline" />
                 <span><ng-container i18n>Edit</ng-container>...</span>
               </span>
-            </button>
+            </a>
           }
           @if (element.type === 'PUBLIC') {
             <button mat-menu-item (click)="onCopyUrlToClipboard(element.id)">
               <span class="align-items-center d-flex">
-                <ion-icon class="mr-2" name="copy-outline" />
+                <ion-icon class="me-2" name="copy-outline" />
                 <span i18n>Copy link to clipboard</span>
               </span>
             </button>
           }
           @if (
-            user()?.settings?.isExperimentalFeatures ||
-            element.type === 'PUBLIC'
+            (!isReceivedAccess() && user()?.settings?.isExperimentalFeatures) ||
+            element.type === 'PUBLIC' ||
+            (element.type === 'MCP' && hasPermissionToEnableMcp)
           ) {
             <hr class="my-0" />
           }
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="remove-circle-outline" />
-              <span i18n>Revoke</span>
+              @if (isReceivedAccess()) {
+                <ion-icon class="me-2" name="trash-outline" />
+                <span i18n>Delete</span>
+              } @else {
+                <ion-icon class="me-2" name="remove-circle-outline" />
+                <span i18n>Revoke</span>
+              }
             </span>
           </button>
         </mat-menu>
@@ -105,3 +109,14 @@
     <tr *matRowDef="let row; columns: displayedColumns()" mat-row></tr>
   </table>
 </div>
+
+@if (isLoading()) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}

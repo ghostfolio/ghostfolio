@@ -4,7 +4,7 @@
     (keydown.tab)="$event.stopPropagation()"
   >
     <div class="align-items-center d-flex search-container">
-      <ion-icon class="ml-2 mr-0" name="search-outline" />
+      <ion-icon class="ms-2" name="search-outline" />
       <input
         #search
         autocomplete="off"
@@ -13,6 +13,7 @@
         name="search"
         type="text"
         [formControl]="searchFormControl"
+        [maxlength]="SEARCH_QUERY_MAXIMUM_LENGTH"
         [placeholder]="placeholder"
       />
       @if (deviceType !== 'mobile' && !searchFormControl.value) {
@@ -24,7 +25,7 @@
           mat-button
           (click)="initialize()"
         >
-          <ion-icon class="m-0" name="close-circle-outline" />
+          <ion-icon name="close-circle-outline" />
         </button>
       } @else {
         <button
@@ -32,7 +33,7 @@
           mat-button
           (click)="onCloseAssistant()"
         >
-          <ion-icon class="m-0" name="close-outline" />
+          <ion-icon name="close-outline" />
         </button>
       }
     </div>
@@ -48,13 +49,15 @@
           searchResults.holdings?.length === 0 &&
           searchResults.quickLinks?.length === 0
         ) {
-          <div class="px-3 py-1 text-muted" i18n>No results found...</div>
+          <div class="px-3 py-1 text-body-secondary" i18n>
+            No results found...
+          </div>
         } @else {
           @if (
             isLoading.quickLinks || searchResults?.quickLinks?.length !== 0
           ) {
             <div class="mb-2">
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-body-secondary title">
                 <ng-container i18n>Quick Links</ng-container>
               </div>
               @for (
@@ -80,7 +83,7 @@
           }
           @if (isLoading.accounts || searchResults?.accounts?.length !== 0) {
             <div>
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-body-secondary title">
                 <ng-container i18n>Accounts</ng-container>
               </div>
               @for (
@@ -106,7 +109,7 @@
           }
           @if (isLoading.holdings || searchResults?.holdings?.length !== 0) {
             <div>
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-body-secondary title">
                 <ng-container i18n>Holdings</ng-container>
               </div>
               @for (
@@ -136,7 +139,7 @@
               searchResults?.assetProfiles?.length !== 0)
           ) {
             <div class="mt-2">
-              <div class="font-weight-bold px-3 text-muted title">
+              <div class="fw-bold px-3 text-body-secondary title">
                 <ng-container i18n>Asset Profiles</ng-container>
               </div>
               @for (

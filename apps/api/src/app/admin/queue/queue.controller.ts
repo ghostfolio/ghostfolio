@@ -1,3 +1,4 @@
+import { AllowDuringImpersonation } from '@ghostfolio/api/decorators/allow-during-impersonation.decorator';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
@@ -16,6 +17,7 @@ import { JobStatus } from 'bull';
 
 import { QueueService } from './queue.service';
 
+@AllowDuringImpersonation()
 @Controller('admin/queue')
 export class QueueController {
   public constructor(private readonly queueService: QueueService) {}

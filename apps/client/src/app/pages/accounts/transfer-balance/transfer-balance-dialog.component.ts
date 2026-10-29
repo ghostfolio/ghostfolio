@@ -1,13 +1,18 @@
 import { TransferBalanceDto } from '@ghostfolio/common/dtos';
-import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
+import { GfAccountSelectorComponent } from '@ghostfolio/ui/account-selector';
 
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import {
-  AbstractControl,
-  FormBuilder,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal
+} from '@angular/core';
+import {
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,21 +23,21 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { Account } from '@prisma/client';
 
-import { TransferBalanceDialogParams } from './interfaces/interfaces';
+import {
+  TransferBalanceDialogParams,
+  TransferBalanceForm
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    GfEntityLogoComponent,
+    GfAccountSelectorComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     ReactiveFormsModule
   ],
   selector: 'gf-transfer-balance-dialog',
@@ -40,57 +45,72 @@ import { TransferBalanceDialogParams } from './interfaces/interfaces';
   templateUrl: 'transfer-balance-dialog.html'
 })
 export class GfTransferBalanceDialogComponent {
-  public accounts: Account[] = [];
-  public currency: string;
-  public transferBalanceForm: FormGroup;
+  protected readonly accounts: AccountWithPlatform[] =
+    inject<TransferBalanceDialogParams>(MAT_DIALOG_DATA).accounts;
 
-  public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: TransferBalanceDialogParams,
-    public dialogRef: MatDialogRef<GfTransferBalanceDialogComponent>,
-    private formBuilder: FormBuilder
-  ) {}
+  protected currency: string;
+
+  protected readonly labelFrom = $localize`From`;
+  protected readonly labelTo = $localize`To`;
+
+  protected readonly toAccounts = computed(() => {
+    const fromAccountId = this.fromAccountId();
+
+    return this.accounts.filter(({ id }) => {
+      return id !== fromAccountId;
+    });
+  });
+
+  protected readonly transferBalanceForm: TransferBalanceForm = new FormGroup({
+    balance: new FormControl<number | string | null>('', Validators.required),
+    fromAccount: new FormControl<string | null>(null, Validators.required),
+    toAccount: new FormControl<string | null>(null, Validators.required)
+  });
+
+  private readonly dialogRef =
+    inject<MatDialogRef<GfTransferBalanceDialogComponent>>(MatDialogRef);
+
+  private readonly fromAccountId = signal<string | null>(null);
 
   public ngOnInit() {
-    this.accounts = this.data.accounts;
+    this.transferBalanceForm.controls.fromAccount.valueChanges.subscribe(
+      (id) => {
+        this.fromAccountId.set(id);
 
-    this.transferBalanceForm = this.formBuilder.group(
-      {
-        balance: ['', Validators.required],
-        fromAccount: ['', Validators.required],
-        toAccount: ['', Validators.required]
-      },
-      {
-        validators: this.compareAccounts
+        const currency = this.getAccountById(id)?.currency;
+
+        if (currency) {
+          this.currency = currency;
+        }
+
+        const toAccountControl = this.transferBalanceForm.controls.toAccount;
+
+        if (id && toAccountControl.value === id) {
+          toAccountControl.setValue(null);
+          toAccountControl.markAsPristine();
+          toAccountControl.markAsUntouched();
+        }
       }
     );
-
-    this.transferBalanceForm.get('fromAccount').valueChanges.subscribe((id) => {
-      this.currency = this.accounts.find((account) => {
-        return account.id === id;
-      }).currency;
-    });
   }
 
-  public onCancel() {
+  protected onCancel() {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
-    const account: TransferBalanceDto = {
-      accountIdFrom: this.transferBalanceForm.get('fromAccount').value,
-      accountIdTo: this.transferBalanceForm.get('toAccount').value,
-      balance: this.transferBalanceForm.get('balance').value
+  protected onSubmit() {
+    const transferBalance: TransferBalanceDto = {
+      accountIdFrom: this.transferBalanceForm.controls.fromAccount.value ?? '',
+      accountIdTo: this.transferBalanceForm.controls.toAccount.value ?? '',
+      balance: Number(this.transferBalanceForm.controls.balance.value)
     };
 
-    this.dialogRef.close({ account });
+    this.dialogRef.close(transferBalance);
   }
 
-  private compareAccounts(control: AbstractControl): ValidationErrors {
-    const accountFrom = control.get('fromAccount');
-    const accountTo = control.get('toAccount');
-
-    if (accountFrom.value === accountTo.value) {
-      return { invalid: true };
-    }
+  private getAccountById(aId: string | null) {
+    return this.accounts.find(({ id }) => {
+      return id === aId;
+    });
   }
 }

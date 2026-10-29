@@ -13,12 +13,20 @@ import { SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private static baseUrl = 'https://www.trackinsight.com/data-api';
+  private static baseUrl = 'https://www.trackinsight.com';
+
   private static countriesMapping = {
-    'Russian Federation': 'Russia',
-    USA: 'United States'
+    'Czech Republic': 'CZ',
+    Macau: 'MO',
+    'Republic of Korea': 'KR',
+    'Russian Federation': 'RU',
+    Turkey: 'TR',
+    USA: 'US',
+    'Virgin Islands, British': 'VG'
   };
+
   private static holdingsWeightTreshold = 0.85;
+
   private static sectorsMapping: Record<string, SectorName> = {
     'Consumer Discretionary': 'Consumer Cyclical',
     'Consumer Staples': 'Consumer Defensive',
@@ -44,12 +52,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    if (
-      !(
-        response.assetClass === 'EQUITY' &&
-        ['ETF', 'MUTUALFUND'].includes(response.assetSubClass)
-      )
-    ) {
+    if (!(
+      response.assetClass === 'EQUITY' &&
+      ['ETF', 'MUTUALFUND'].includes(response.assetSubClass)
+    )) {
       return response;
     }
 
@@ -58,10 +64,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       symbol
     });
 
-    if (!trackinsightSymbol) {
+    if (!trackinsightSymbol && symbol.includes('.')) {
       trackinsightSymbol = await this.searchTrackinsightSymbol({
         requestTimeout,
-        symbol: symbol.split('.')?.[0]
+        symbol: symbol.split('.')[0]
       });
     }
 
@@ -71,7 +77,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const profile = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
+        `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -95,7 +101,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const holdings = await this.fetchService
       .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
+        `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -121,13 +127,15 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       for (const [name, value] of Object.entries<any>(
         holdings?.countries ?? {}
       )) {
-        response.countries.push({
-          code: getCountryCodeByName({
-            name,
-            aliases: TrackinsightDataEnhancerService.countriesMapping
-          }),
-          weight: value.weight
+        const code = getCountryCodeByName({
+          name,
+          aliases: TrackinsightDataEnhancerService.countriesMapping,
+          dataSource: this.getName()
         });
+
+        if (code) {
+          response.countries.push({ code, weight: value.weight });
+        }
       }
     }
 
@@ -188,7 +196,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   }) {
     return this.fetchService
       .fetch(
-        `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+        `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -205,11 +213,17 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           return jsonRes['results']['docs'][0]['ticker'];
         }
 
+        this.logger.debug(
+          `Could not match a Trackinsight symbol for "${symbol}": ${JSON.stringify(
+            jsonRes
+          )}`
+        );
+
         return undefined;
       })
       .catch(({ message }) => {
-        this.logger.error(
-          `Failed to search Trackinsight symbol for ${symbol} (${message})`
+        this.logger.warn(
+          `Could not search Trackinsight symbol for "${symbol}": ${message}`
         );
 
         return undefined;

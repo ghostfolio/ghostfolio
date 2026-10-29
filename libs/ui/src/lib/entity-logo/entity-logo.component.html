@@ -1,8 +1,27 @@
-@if (src) {
+@if (emojiFlag) {
+  <span
+    class="cursor-default d-block logo overflow-hidden position-relative"
+    role="img"
+    [attr.aria-label]="tooltip ? tooltip : countryCode"
+    [class.large]="size === 'large'"
+    [title]="tooltip ? tooltip : ''"
+  >
+    <span
+      aria-hidden="true"
+      class="align-items-center d-flex emoji justify-content-center lh-1 position-absolute"
+    >
+      {{ emojiFlag }}
+    </span>
+  </span>
+} @else if (src && !hasError) {
   <img
-    onerror="this.style.display = 'none'"
+    class="logo"
+    [alt]="tooltip ? tooltip : ''"
     [class.large]="size === 'large'"
     [src]="src"
     [title]="tooltip ? tooltip : ''"
+    (error)="onError()"
   />
+} @else if (hasPlaceholder) {
+  <div class="logo" [class.large]="size === 'large'"></div>
 }

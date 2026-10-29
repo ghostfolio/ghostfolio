@@ -1,3 +1,13 @@
 :host {
   display: block;
+
+  button[mat-icon-button] {
+    margin-top: 0.125rem;
+  }
+
+  .with-close-button {
+    .text-center {
+      padding-left: 0.9375rem;
+    }
+  }
 }

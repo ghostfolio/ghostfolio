@@ -1,25 +1,33 @@
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { AccountWithPlatform } from '@ghostfolio/common/types';
+import type { Access, Tag } from '@ghostfolio/prisma/browser';
+import { Type as ActivityType } from '@ghostfolio/prisma/enums';
 
-import { Access, Tag } from '@prisma/client';
-
+import { ReferralPartner } from './referral-partner.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
 import { SystemMessage } from './system-message.interface';
 import { UserSettings } from './user-settings.interface';
 
 // TODO: Compare with UserWithSettings
 export interface User {
-  access: Pick<Access, 'alias' | 'id' | 'permissions'>[];
+  access: Pick<
+    Access,
+    'alias' | 'expiresAt' | 'id' | 'lastUsedAt' | 'scopes'
+  >[];
   accounts: AccountWithPlatform[];
   activitiesCount: number;
+  activityTypes: ActivityType[];
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
+  referralPartners?: ReferralPartner[];
+  scopes: string[];
   settings: UserSettings;
   systemMessage?: SystemMessage;
   subscription: {
     expiresAt?: Date;
     offer: SubscriptionOffer;
+    subscribedAt?: Date;
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];

@@ -20,6 +20,10 @@
           <ng-container
             *ngTemplateOutlet="tabContent; context: { $implicit: tab }"
           />
+          <ion-icon
+            class="d-none d-sm-block external-link-icon ms-auto text-body-secondary"
+            name="open-outline"
+          />
         </button>
       } @else {
         <a
@@ -41,9 +45,17 @@
 </nav>
 
 <ng-template #tabContent let-tab>
-  <ion-icon
-    [name]="tab.iconName"
-    [size]="deviceType === 'mobile' ? 'large' : 'small'"
-  />
-  <div class="d-none d-sm-block ml-1" [innerHTML]="tab.label"></div>
+  <span
+    class="align-items-center d-flex justify-content-start text-start w-100"
+  >
+    <ion-icon
+      class="flex-shrink-0"
+      [name]="tab.iconName"
+      [size]="deviceType === 'mobile' ? 'large' : 'small'"
+    />
+    <span
+      class="d-none d-sm-block lh-normal ms-1 overflow-hidden p-0 text-truncate"
+      [innerHTML]="tab.label"
+    ></span>
+  </span>
 </ng-template>

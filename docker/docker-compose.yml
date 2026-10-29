@@ -5,6 +5,7 @@ services:
     container_name: ghostfolio
     restart: unless-stopped
     init: true
+    stop_grace_period: 1m
     cap_drop:
       - ALL
     security_opt:

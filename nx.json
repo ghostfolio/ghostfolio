@@ -67,6 +67,16 @@
     }
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "plugins": [
+    {
+      "plugin": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview"
+      }
+    }
+  ],
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
@@ -88,10 +98,16 @@
       "cache": true
     },
     "lint": {
+      "inputs": ["default", "^default", "{workspaceRoot}/eslint.config.cjs"],
       "cache": true
     },
     "@nx/jest:jest": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js",
+        { "env": "TEST_TZ" }
+      ],
       "cache": true,
       "options": {
         "passWithNoTests": true
@@ -109,7 +125,8 @@
     "sharedGlobals": [
       "{workspaceRoot}/angular.json",
       "{workspaceRoot}/tsconfig.base.json",
-      "{workspaceRoot}/nx.json"
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/prisma/schema.prisma"
     ],
     "production": [
       "default",
@@ -126,5 +143,6 @@
   },
   "parallel": 1,
   "defaultBase": "origin/main",
-  "analytics": false
+  "analytics": false,
+  "neverConnectToCloud": true
 }

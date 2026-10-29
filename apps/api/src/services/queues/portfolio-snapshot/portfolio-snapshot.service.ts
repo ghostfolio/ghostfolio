@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE } from '@ghostfolio/common/config';
 
 import { InjectQueue } from '@nestjs/bull';
@@ -9,6 +10,7 @@ import { PortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue
 @Injectable()
 export class PortfolioSnapshotService {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     @InjectQueue(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
     private readonly portfolioSnapshotQueue: Queue
   ) {}
@@ -22,7 +24,12 @@ export class PortfolioSnapshotService {
     name: string;
     opts?: JobOptions;
   }) {
-    return this.portfolioSnapshotQueue.add(name, data, opts);
+    return this.portfolioSnapshotQueue.add(name, data, {
+      ...opts,
+      removeOnFail: this.configurationService.get(
+        'PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_REMOVE_ON_FAIL'
+      )
+    });
   }
 
   public async getJob(jobId: string) {

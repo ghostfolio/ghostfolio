@@ -6,6 +6,10 @@
   height: 100%;
   width: 100%;
 
+  .external-link-icon {
+    font-size: 0.75rem;
+  }
+
   @include mat.tabs-overrides(
     (
       active-indicator-height: 0,
@@ -52,6 +56,11 @@
         padding: 2rem 0;
         width: 14rem;
 
+        .mat-mdc-tab-list,
+        .mat-mdc-tab-links {
+          width: 100%;
+        }
+
         .mat-mdc-tab-links {
           flex-direction: column;
 
@@ -64,6 +73,11 @@
             &.mdc-tab--active {
               background-color: rgba(var(--palette-foreground-base), 0.05);
               font-weight: 500;
+            }
+
+            .mdc-tab__content,
+            .mdc-tab__text-label {
+              width: 100%;
             }
           }
         }

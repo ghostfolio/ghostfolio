@@ -29,5 +29,9 @@
     @include select-arrow(variables.$light-primary-text);
 
     color: rgb(var(--light-primary-text));
+
+    option {
+      color: rgb(var(--dark-primary-text));
+    }
   }
 }

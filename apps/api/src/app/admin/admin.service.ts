@@ -1,4 +1,4 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { AssetProfilesService } from '@ghostfolio/api/app/endpoints/asset-profiles/asset-profiles.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -9,33 +9,34 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  ghostfolioPrefix,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
 import {
   applyAssetProfileOverrides,
+  canMergeAssetProfile,
   getAssetProfileIdentifier,
   getCurrencyFromSymbol,
-  isCurrency
+  hasGhostfolioPrefix
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
-  AdminMarketData,
-  AdminMarketDataDetails,
-  AdminMarketDataItem,
   AdminUserResponse,
   AdminUsersResponse,
   AssetProfileIdentifier,
-  EnhancedSymbolProfile,
-  Filter
+  EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
-import { MarketDataPreset } from '@ghostfolio/common/types';
+import { PropertyKey } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
+  ConflictException,
   HttpException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException
 } from '@nestjs/common';
 import {
@@ -48,12 +49,14 @@ import {
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { groupBy } from 'lodash';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class AdminService {
+  private readonly logger = new Logger(AdminService.name);
+
   public constructor(
-    private readonly activitiesService: ActivitiesService,
+    private readonly assetProfilesService: AssetProfilesService,
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
@@ -73,6 +76,12 @@ export class AdminService {
   > {
     try {
       if (dataSource === 'MANUAL') {
+        if (!hasGhostfolioPrefix(symbol)) {
+          throw new BadRequestException(
+            `symbol ("${symbol}") must start with the prefix "${ghostfolioPrefix}_" for the data source ("${dataSource}")`
+          );
+        }
+
         return this.symbolProfileService.add({
           currency,
           dataSource,
@@ -84,14 +93,17 @@ export class AdminService {
         { dataSource, symbol }
       ]);
 
-      if (!assetProfiles[symbol]?.currency) {
+      const assetProfile =
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })];
+
+      if (!assetProfile?.currency) {
         throw new BadRequestException(
           `Asset profile not found for ${symbol} (${dataSource})`
         );
       }
 
       return this.symbolProfileService.add(
-        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
+        assetProfile as Prisma.SymbolProfileCreateInput
       );
     } catch (error) {
       if (
@@ -114,8 +126,11 @@ export class AdminService {
     await this.marketDataService.deleteMany({ dataSource, symbol });
 
     const currency = getCurrencyFromSymbol(symbol);
-    const customCurrencies =
-      await this.propertyService.getByKey<string[]>(PROPERTY_CURRENCIES);
+
+    const customCurrencies = await this.propertyService.getByKey<string[]>(
+      PROPERTY_CURRENCIES,
+      { skipCache: true }
+    );
 
     if (customCurrencies.includes(currency)) {
       const updatedCustomCurrencies = customCurrencies.filter(
@@ -188,299 +203,6 @@ export class AdminService {
     };
   }
 
-  public async getMarketData({
-    filters,
-    presetId,
-    sortColumn,
-    sortDirection = 'asc',
-    skip,
-    take = Number.MAX_SAFE_INTEGER
-  }: {
-    filters?: Filter[];
-    presetId?: MarketDataPreset;
-    skip?: number;
-    sortColumn?: string;
-    sortDirection?: Prisma.SortOrder;
-    take?: number;
-  }): Promise<AdminMarketData> {
-    let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
-      [{ symbol: 'asc' }];
-    const where: Prisma.SymbolProfileWhereInput = {};
-
-    if (presetId === 'BENCHMARKS') {
-      const benchmarkAssetProfiles =
-        await this.benchmarkService.getBenchmarkAssetProfiles();
-
-      where.id = {
-        in: benchmarkAssetProfiles.map(({ id }) => {
-          return id;
-        })
-      };
-    } else if (presetId === 'CURRENCIES') {
-      return this.getMarketDataForCurrencies();
-    } else if (
-      presetId === 'ETF_WITHOUT_COUNTRIES' ||
-      presetId === 'ETF_WITHOUT_SECTORS'
-    ) {
-      filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
-    } else if (presetId === 'NO_ACTIVITIES') {
-      where.activities = {
-        none: {}
-      };
-    }
-
-    const searchQuery = filters.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
-
-    const {
-      ASSET_SUB_CLASS: filtersByAssetSubClass,
-      DATA_SOURCE: filtersByDataSource
-    } = groupBy(filters, ({ type }) => {
-      return type;
-    });
-
-    const marketDataItems = await this.prismaService.marketData.groupBy({
-      _count: true,
-      by: ['dataSource', 'symbol']
-    });
-
-    if (filtersByAssetSubClass) {
-      where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
-    }
-
-    if (filtersByDataSource) {
-      where.dataSource = DataSource[filtersByDataSource[0].id];
-    }
-
-    if (searchQuery) {
-      where.OR = [
-        { id: { mode: 'insensitive', startsWith: searchQuery } },
-        { isin: { mode: 'insensitive', startsWith: searchQuery } },
-        { name: { mode: 'insensitive', startsWith: searchQuery } },
-        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
-      ];
-    }
-
-    if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }];
-
-      if (sortColumn === 'activitiesCount') {
-        orderBy = [
-          {
-            activities: {
-              _count: sortDirection
-            }
-          }
-        ];
-      }
-    }
-
-    const extendedPrismaClient = this.getExtendedPrismaClient();
-
-    const symbolProfileResult = await Promise.all([
-      extendedPrismaClient.symbolProfile.findMany({
-        skip,
-        take,
-        where,
-        orderBy: [...orderBy, { id: sortDirection }],
-        select: {
-          _count: {
-            select: {
-              activities: true,
-              watchedBy: true
-            }
-          },
-          activities: {
-            orderBy: [{ date: 'asc' }],
-            select: { date: true },
-            take: 1
-          },
-          assetClass: true,
-          assetSubClass: true,
-          comment: true,
-          countries: true,
-          currency: true,
-          dataSource: true,
-          id: true,
-          isActive: true,
-          isUsedByUsersWithSubscription: true,
-          name: true,
-          scraperConfiguration: true,
-          sectors: true,
-          symbol: true,
-          SymbolProfileOverrides: true
-        }
-      }),
-      this.prismaService.symbolProfile.count({ where })
-    ]);
-    const assetProfiles = symbolProfileResult[0];
-    let count = symbolProfileResult[1];
-
-    const lastMarketPrices = await this.prismaService.marketData.findMany({
-      distinct: ['dataSource', 'symbol'],
-      orderBy: { date: 'desc' },
-      select: {
-        dataSource: true,
-        marketPrice: true,
-        symbol: true
-      },
-      where: {
-        dataSource: {
-          in: assetProfiles.map(({ dataSource }) => {
-            return dataSource;
-          })
-        },
-        symbol: {
-          in: assetProfiles.map(({ symbol }) => {
-            return symbol;
-          })
-        }
-      }
-    });
-
-    const lastMarketPriceMap = new Map<string, number>();
-
-    for (const { dataSource, marketPrice, symbol } of lastMarketPrices) {
-      lastMarketPriceMap.set(
-        getAssetProfileIdentifier({ dataSource, symbol }),
-        marketPrice
-      );
-    }
-
-    let marketData: AdminMarketDataItem[] = await Promise.all(
-      assetProfiles.map(async (assetProfile) => {
-        const {
-          _count,
-          activities,
-          comment,
-          currency,
-          dataSource,
-          id,
-          isActive,
-          isUsedByUsersWithSubscription,
-          symbol
-        } = assetProfile;
-
-        const { assetClass, assetSubClass, countries, name, sectors } =
-          applyAssetProfileOverrides(
-            assetProfile,
-            assetProfile.SymbolProfileOverrides
-          );
-
-        const countriesCount = countries ? Object.keys(countries).length : 0;
-
-        const lastMarketPrice = lastMarketPriceMap.get(
-          getAssetProfileIdentifier({ dataSource, symbol })
-        );
-
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
-
-        const sectorsCount = sectors ? Object.keys(sectors).length : 0;
-
-        return {
-          assetClass,
-          assetSubClass,
-          comment,
-          countriesCount,
-          currency,
-          dataSource,
-          id,
-          isActive,
-          lastMarketPrice,
-          marketDataItemCount,
-          name,
-          sectorsCount,
-          symbol,
-          activitiesCount: _count.activities,
-          date: activities?.[0]?.date,
-          isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription,
-          watchedByCount: _count.watchedBy
-        };
-      })
-    );
-
-    if (presetId) {
-      if (presetId === 'ETF_WITHOUT_COUNTRIES') {
-        marketData = marketData.filter(({ countriesCount }) => {
-          return countriesCount === 0;
-        });
-      } else if (presetId === 'ETF_WITHOUT_SECTORS') {
-        marketData = marketData.filter(({ sectorsCount }) => {
-          return sectorsCount === 0;
-        });
-      }
-
-      count = marketData.length;
-    }
-
-    return {
-      count,
-      marketData
-    };
-  }
-
-  public async getMarketDataBySymbol({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {
-    let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-    let currency: EnhancedSymbolProfile['currency'] = '-';
-    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
-
-    const isCurrencyAssetProfile = isCurrency(getCurrencyFromSymbol(symbol));
-
-    if (isCurrencyAssetProfile) {
-      currency = getCurrencyFromSymbol(symbol);
-      ({ activitiesCount, dateOfFirstActivity } =
-        await this.activitiesService.getStatisticsByCurrency(currency));
-    }
-
-    const [[assetProfile], marketData] = await Promise.all([
-      this.symbolProfileService.getSymbolProfiles([
-        {
-          dataSource,
-          symbol
-        }
-      ]),
-      this.marketDataService.marketDataItems({
-        orderBy: {
-          date: 'asc'
-        },
-        where: {
-          dataSource,
-          symbol
-        }
-      })
-    ]);
-
-    if (assetProfile) {
-      assetProfile.dataProviderInfo = this.dataProviderService
-        .getDataProvider(assetProfile.dataSource)
-        .getDataProviderInfo();
-    }
-
-    return {
-      marketData,
-      assetProfile: assetProfile ?? {
-        activitiesCount,
-        currency,
-        dataSource,
-        dateOfFirstActivity,
-        symbol,
-        assetClass: isCurrencyAssetProfile ? AssetClass.LIQUIDITY : undefined,
-        assetSubClass: isCurrencyAssetProfile ? AssetSubClass.CASH : undefined,
-        isActive: true
-      }
-    };
-  }
-
   public async getUser(id: string): Promise<AdminUserResponse> {
     const [user] = await this.getUsersWithAnalytics({
       where: { id }
@@ -488,6 +210,17 @@ export class AdminService {
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      user.subscriptions = await this.prismaService.subscription.findMany({
+        orderBy: {
+          expiresAt: 'desc'
+        },
+        where: {
+          userId: id
+        }
+      });
     }
 
     return user;
@@ -511,6 +244,230 @@ export class AdminService {
     return { count, users };
   }
 
+  /**
+   * Merges the source asset profile into the target asset profile. The
+   * activities, the watchlist entries and the market data which is missing
+   * there are moved to the target asset profile. The metadata of the source
+   * asset profile is discarded, because the target asset profile is the
+   * authoritative one. Then the source asset profile is deleted and the market
+   * data of the target asset profile is gathered again.
+   */
+  public async mergeAssetProfile(
+    sourceAssetProfileIdentifier: AssetProfileIdentifier,
+    targetAssetProfileIdentifier: AssetProfileIdentifier
+  ): Promise<EnhancedAssetProfile> {
+    if (
+      getAssetProfileIdentifier(sourceAssetProfileIdentifier) ===
+      getAssetProfileIdentifier(targetAssetProfileIdentifier)
+    ) {
+      throw new BadRequestException(
+        'The source and the target asset profile must be different'
+      );
+    }
+
+    // The rules of the symbol apply to both asset profiles and are examined
+    // first. The remaining rules apply to the source asset profile only,
+    // because the merge deletes it
+    for (const assetProfileIdentifier of [
+      sourceAssetProfileIdentifier,
+      targetAssetProfileIdentifier
+    ]) {
+      if (!canMergeAssetProfile(assetProfileIdentifier)) {
+        throw new BadRequestException(
+          `The asset profile ${getAssetProfileIdentifier(assetProfileIdentifier)} cannot be merged`
+        );
+      }
+    }
+
+    const [sourceAssetProfile, targetAssetProfile] = await Promise.all([
+      this.prismaService.symbolProfile.findUnique({
+        include: { watchedBy: { select: { id: true } } },
+        where: {
+          dataSource_symbol: {
+            dataSource: sourceAssetProfileIdentifier.dataSource,
+            symbol: sourceAssetProfileIdentifier.symbol
+          }
+        }
+      }),
+      this.prismaService.symbolProfile.findUnique({
+        where: {
+          dataSource_symbol: {
+            dataSource: targetAssetProfileIdentifier.dataSource,
+            symbol: targetAssetProfileIdentifier.symbol
+          }
+        }
+      })
+    ]);
+
+    if (!sourceAssetProfile || !targetAssetProfile) {
+      throw new NotFoundException(
+        'The source or the target asset profile does not exist'
+      );
+    }
+
+    // An activity without a currency inherits the currency of its asset
+    // profile, hence a merge into an asset profile with another currency
+    // would change the value of the moved activities
+    if (sourceAssetProfile.currency !== targetAssetProfile.currency) {
+      throw new BadRequestException(
+        `The currency of the source asset profile (${sourceAssetProfile.currency}) does not match the currency of the target asset profile (${targetAssetProfile.currency})`
+      );
+    }
+
+    // A user asset profile must not become accessible to another user and a
+    // user must not become unable to be deleted, because the activities of the
+    // source asset profile would keep a reference to it
+    if (sourceAssetProfile.userId !== targetAssetProfile.userId) {
+      throw new BadRequestException(
+        'The source and the target asset profile must belong to the same user'
+      );
+    }
+
+    const [isBenchmark, splitsCount] = await Promise.all([
+      this.benchmarkService.isBenchmark(sourceAssetProfile.id),
+      this.prismaService.assetProfileSplit.count({
+        where: {
+          symbolProfileId: {
+            in: [sourceAssetProfile.id, targetAssetProfile.id]
+          }
+        }
+      })
+    ]);
+
+    if (
+      !canMergeAssetProfile({
+        isBenchmark,
+        splitsCount,
+        symbol: sourceAssetProfileIdentifier.symbol
+      })
+    ) {
+      throw new BadRequestException(
+        `The asset profile ${getAssetProfileIdentifier(sourceAssetProfileIdentifier)} cannot be merged. Remove the benchmark and the splits before the merge.`
+      );
+    }
+
+    const marketDataItems = await this.prismaService.marketData.findMany({
+      select: {
+        date: true,
+        isCarriedForward: true,
+        marketPrice: true,
+        state: true
+      },
+      where: {
+        dataSource: sourceAssetProfileIdentifier.dataSource,
+        symbol: sourceAssetProfileIdentifier.symbol
+      }
+    });
+
+    const operations: Prisma.PrismaPromise<unknown>[] = [
+      this.prismaService.order.updateMany({
+        data: { symbolProfileId: targetAssetProfile.id },
+        where: { symbolProfileId: sourceAssetProfile.id }
+      }),
+      this.prismaService.symbolProfile.update({
+        data: {
+          watchedBy: {
+            connect: sourceAssetProfile.watchedBy.map(({ id }) => {
+              return { id };
+            })
+          }
+        },
+        where: { id: targetAssetProfile.id }
+      }),
+      this.prismaService.marketData.createMany({
+        data: marketDataItems.map(
+          ({ date, isCarriedForward, marketPrice, state }) => {
+            return {
+              date,
+              isCarriedForward,
+              marketPrice,
+              state,
+              dataSource: targetAssetProfileIdentifier.dataSource,
+              symbol: targetAssetProfileIdentifier.symbol
+            };
+          }
+        ),
+        skipDuplicates: true
+      }),
+      // The market data has no relation to the asset profile and is therefore
+      // not deleted in cascade
+      this.prismaService.marketData.deleteMany({
+        where: {
+          dataSource: sourceAssetProfileIdentifier.dataSource,
+          symbol: sourceAssetProfileIdentifier.symbol
+        }
+      }),
+      this.prismaService.symbolProfile.delete({
+        where: { id: sourceAssetProfile.id }
+      })
+    ];
+
+    const mergeDescription = `${getAssetProfileIdentifier(
+      sourceAssetProfileIdentifier
+    )} into ${getAssetProfileIdentifier(targetAssetProfileIdentifier)}`;
+
+    try {
+      await this.prismaService.$transaction(operations);
+    } catch (error) {
+      this.logger.error(
+        `Could not merge the asset profile ${mergeDescription}`,
+        error.stack
+      );
+
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new ConflictException(
+          `The asset profile ${mergeDescription} could not be merged, because it has been changed in the meantime`
+        );
+      }
+
+      throw new InternalServerErrorException(
+        `The asset profile ${mergeDescription} could not be merged`
+      );
+    }
+
+    // The merge is committed at this point. The gathering of the market data
+    // only updates derived data, thus an error must not fail the request.
+    // Otherwise the admin would retry a merge which has already been done.
+    try {
+      // The activities now refer to the market data of the target asset
+      // profile, hence the portfolio snapshots are already wrong and are
+      // invalidated immediately. The market data is not gathered with force,
+      // because a forced gathering deletes the market data of the days which
+      // the data provider does not return, including the days which have been
+      // copied from the source asset profile.
+      await this.assetProfilesService.gatherSymbolAndEmitPortfolioChangedEvents(
+        {
+          ...targetAssetProfileIdentifier,
+          force: false,
+          symbolProfileId: targetAssetProfile.id,
+          withImmediateInvalidation: true
+        }
+      );
+    } catch (error) {
+      this.logger.error(
+        `The asset profile ${mergeDescription} has been merged, but the market data could not be gathered`,
+        error.stack
+      );
+    }
+
+    const [mergedAssetProfile] =
+      await this.symbolProfileService.getSymbolProfiles([
+        targetAssetProfileIdentifier
+      ]);
+
+    if (!mergedAssetProfile) {
+      this.logger.error(
+        `The asset profile ${mergeDescription} has been merged, but the merged asset profile could not be read`
+      );
+
+      throw new InternalServerErrorException(
+        `The asset profile ${mergeDescription} has been merged, but the merged asset profile could not be read. Reload the page.`
+      );
+    }
+
+    return mergedAssetProfile;
+  }
+
   public async patchAssetProfileData(
     { dataSource, symbol }: AssetProfileIdentifier,
     {
@@ -519,6 +476,7 @@ export class AdminService {
       comment,
       countries,
       currency,
+      dataGatheringFrequency,
       dataSource: newDataSource,
       holdings,
       isActive,
@@ -530,16 +488,25 @@ export class AdminService {
       url
     }: Prisma.SymbolProfileUpdateInput
   ) {
+    const isConversionToManualDataSource =
+      newDataSource === DataSource.MANUAL && dataSource !== DataSource.MANUAL;
+
+    if (isConversionToManualDataSource && !newSymbol) {
+      newSymbol = randomUUID();
+    }
+
     if (
-      newSymbol &&
       newDataSource &&
-      (newSymbol !== symbol || newDataSource !== dataSource)
+      newSymbol &&
+      (newDataSource !== dataSource || newSymbol !== symbol)
     ) {
+      const newAssetProfileIdentifier: AssetProfileIdentifier = {
+        dataSource: newDataSource as DataSource,
+        symbol: newSymbol as string
+      };
+
       const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
-        {
-          dataSource: DataSource[newDataSource.toString()],
-          symbol: newSymbol as string
-        }
+        newAssetProfileIdentifier
       ]);
 
       if (assetProfile) {
@@ -549,47 +516,81 @@ export class AdminService {
         );
       }
 
-      try {
-        await Promise.all([
-          this.symbolProfileService.updateAssetProfileIdentifier(
-            {
-              dataSource,
-              symbol
-            },
-            {
-              dataSource: DataSource[newDataSource.toString()],
-              symbol: newSymbol as string
-            }
+      const operations: Prisma.PrismaPromise<unknown>[] = [
+        this.symbolProfileService.updateAssetProfileIdentifier(
+          {
+            dataSource,
+            symbol
+          },
+          newAssetProfileIdentifier
+        ),
+        this.marketDataService.updateAssetProfileIdentifier(
+          {
+            dataSource,
+            symbol
+          },
+          newAssetProfileIdentifier
+        )
+      ];
+
+      if (isConversionToManualDataSource) {
+        const currentAssetProfile =
+          await this.prismaService.symbolProfile.findUnique({
+            include: { assetProfileOverrides: true },
+            where: { dataSource_symbol: { dataSource, symbol } }
+          });
+
+        if (!currentAssetProfile) {
+          throw new HttpException(
+            getReasonPhrase(StatusCodes.NOT_FOUND),
+            StatusCodes.NOT_FOUND
+          );
+        }
+
+        const currentAssetProfileWithOverrides = applyAssetProfileOverrides(
+          currentAssetProfile,
+          currentAssetProfile.assetProfileOverrides
+        );
+
+        operations.push(
+          // The overrides are applied on every read, so delete them and
+          // persist the merged values in the asset profile instead
+          this.symbolProfileService.deleteAssetProfileOverrides(
+            newAssetProfileIdentifier
           ),
-          this.marketDataService.updateAssetProfileIdentifier(
+          this.symbolProfileService.updateSymbolProfile(
+            newAssetProfileIdentifier,
             {
-              dataSource,
-              symbol
-            },
-            {
-              dataSource: DataSource[newDataSource.toString()],
-              symbol: newSymbol as string
+              assetClass: currentAssetProfileWithOverrides.assetClass,
+              assetSubClass: currentAssetProfileWithOverrides.assetSubClass,
+              countries:
+                currentAssetProfileWithOverrides.countries ?? undefined,
+              holdings: currentAssetProfileWithOverrides.holdings ?? undefined,
+              name: currentAssetProfileWithOverrides.name,
+              sectors: currentAssetProfileWithOverrides.sectors ?? undefined,
+              url: currentAssetProfileWithOverrides.url
             }
           )
-        ]);
+        );
+      }
 
-        const [updatedAssetProfile] =
-          await this.symbolProfileService.getSymbolProfiles([
-            {
-              dataSource: DataSource[newDataSource.toString()],
-              symbol: newSymbol as string
-            }
-          ]);
-
-        return updatedAssetProfile;
+      try {
+        await this.prismaService.$transaction(operations);
       } catch {
         throw new HttpException(
           getReasonPhrase(StatusCodes.BAD_REQUEST),
           StatusCodes.BAD_REQUEST
         );
       }
+
+      const [updatedAssetProfile] =
+        await this.symbolProfileService.getSymbolProfiles([
+          newAssetProfileIdentifier
+        ]);
+
+      return updatedAssetProfile;
     } else {
-      const symbolProfileOverrides = {
+      const assetProfileOverrides = {
         assetClass: assetClass as AssetClass,
         assetSubClass: assetSubClass as AssetSubClass,
         countries: countries as Prisma.JsonArray,
@@ -602,6 +603,7 @@ export class AdminService {
       const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
         comment,
         currency,
+        dataGatheringFrequency,
         dataSource,
         isActive,
         scraperConfiguration,
@@ -609,7 +611,7 @@ export class AdminService {
         symbolMapping,
         ...this.symbolProfileService.getAssetProfileUpdateInput(
           { dataSource, symbol },
-          symbolProfileOverrides
+          assetProfileOverrides
         )
       };
 
@@ -633,13 +635,18 @@ export class AdminService {
     }
   }
 
-  public async putSetting(key: string, value: string) {
+  public async putSetting(key: PropertyKey, value: string) {
     let response: Property;
 
     if (value) {
-      response = await this.propertyService.put({ key, value });
+      response = await this.propertyService.put({
+        key,
+        value
+      });
     } else {
-      response = await this.propertyService.delete({ key });
+      response = await this.propertyService.delete({
+        key
+      });
     }
 
     if (key === PROPERTY_IS_READ_ONLY_MODE && value === 'true') {
@@ -652,7 +659,7 @@ export class AdminService {
   }
 
   private async countUsersWithAnalytics() {
-    let where: Prisma.UserWhereInput;
+    let where: Prisma.UserWhereInput | undefined;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       where = {
@@ -665,138 +672,6 @@ export class AdminService {
     return this.prismaService.user.count({
       where
     });
-  }
-
-  private getExtendedPrismaClient() {
-    const symbolProfileExtension = Prisma.defineExtension((client) => {
-      return client.$extends({
-        result: {
-          symbolProfile: {
-            isUsedByUsersWithSubscription: {
-              compute: async ({ id }) => {
-                const { _count } =
-                  await this.prismaService.symbolProfile.findUnique({
-                    select: {
-                      _count: {
-                        select: {
-                          activities: {
-                            where: {
-                              user: {
-                                subscriptions: {
-                                  some: {
-                                    expiresAt: {
-                                      gt: new Date()
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    where: {
-                      id
-                    }
-                  });
-
-                return _count.activities > 0;
-              }
-            }
-          }
-        }
-      });
-    });
-
-    return this.prismaService.$extends(symbolProfileExtension);
-  }
-
-  private async getMarketDataForCurrencies(): Promise<AdminMarketData> {
-    const currencyPairs = this.exchangeRateDataService.getCurrencyPairs();
-
-    const [lastMarketPrices, marketDataItems] = await Promise.all([
-      this.prismaService.marketData.findMany({
-        distinct: ['dataSource', 'symbol'],
-        orderBy: { date: 'desc' },
-        select: {
-          dataSource: true,
-          marketPrice: true,
-          symbol: true
-        },
-        where: {
-          dataSource: {
-            in: currencyPairs.map(({ dataSource }) => {
-              return dataSource;
-            })
-          },
-          symbol: {
-            in: currencyPairs.map(({ symbol }) => {
-              return symbol;
-            })
-          }
-        }
-      }),
-      this.prismaService.marketData.groupBy({
-        _count: true,
-        by: ['dataSource', 'symbol']
-      })
-    ]);
-
-    const lastMarketPriceMap = new Map<string, number>();
-
-    for (const { dataSource, marketPrice, symbol } of lastMarketPrices) {
-      lastMarketPriceMap.set(
-        getAssetProfileIdentifier({ dataSource, symbol }),
-        marketPrice
-      );
-    }
-
-    const marketDataPromise: Promise<AdminMarketDataItem>[] = currencyPairs.map(
-      async ({ dataSource, symbol }) => {
-        let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-        let currency: EnhancedSymbolProfile['currency'] = '-';
-        let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
-
-        if (isCurrency(getCurrencyFromSymbol(symbol))) {
-          currency = getCurrencyFromSymbol(symbol);
-          ({ activitiesCount, dateOfFirstActivity } =
-            await this.activitiesService.getStatisticsByCurrency(currency));
-        }
-
-        const lastMarketPrice = lastMarketPriceMap.get(
-          getAssetProfileIdentifier({ dataSource, symbol })
-        );
-
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
-
-        return {
-          activitiesCount,
-          currency,
-          dataSource,
-          lastMarketPrice,
-          marketDataItemCount,
-          symbol,
-          assetClass: AssetClass.LIQUIDITY,
-          assetSubClass: AssetSubClass.CASH,
-          countriesCount: 0,
-          date: dateOfFirstActivity,
-          id: undefined,
-          isActive: true,
-          name: symbol,
-          sectorsCount: 0,
-          watchedByCount: 0
-        };
-      }
-    );
-
-    const marketData = await Promise.all(marketDataPromise);
-    return { marketData, count: marketData.length };
   }
 
   private async getUsersWithAnalytics({
@@ -850,7 +725,8 @@ export class AdminService {
             activityCount: true,
             country: true,
             dataProviderGhostfolioDailyRequests: true,
-            lastRequestAt: true
+            lastRequestAt: true,
+            lastRequestClient: true
           }
         },
         createdAt: true,
@@ -896,7 +772,8 @@ export class AdminService {
           activityCount: _count.activities || 0,
           country: analytics?.country,
           dailyApiRequests: analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: analytics?.lastRequestAt
+          lastActivity: analytics?.lastRequestAt,
+          lastRequestClient: analytics?.lastRequestClient
         };
       }
     );

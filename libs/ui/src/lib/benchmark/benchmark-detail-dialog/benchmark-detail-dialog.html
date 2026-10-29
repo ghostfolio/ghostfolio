@@ -11,17 +11,19 @@
       <div class="col-12 d-flex justify-content-center mb-3">
         <gf-value
           size="large"
+          [isLoading]="isLoading"
           [locale]="data.locale"
-          [precision]="2"
+          [precision]="precision"
+          [unit]="assetProfile?.currency"
           [value]="value"
         />
       </div>
     </div>
 
     <gf-line-chart
-      benchmarkLabel="Average Unit Price"
       class="mb-4"
       [colorScheme]="data.colorScheme"
+      [currency]="assetProfile?.currency"
       [historicalDataItems]="historicalDataItems"
       [isAnimated]="true"
       [label]="data.symbol"

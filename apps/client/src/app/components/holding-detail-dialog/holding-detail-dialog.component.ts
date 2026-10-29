@@ -1,8 +1,11 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
+  E_MAIL_LINE_BREAK,
   NUMERICAL_PRECISION_THRESHOLD_3_FIGURES,
-  NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
+  NUMERICAL_PRECISION_THRESHOLD_4_FIGURES,
+  TAG_ID_DRAFT
 } from '@ghostfolio/common/config';
 import { CreateOrderDto } from '@ghostfolio/common/dtos';
 import {
@@ -13,13 +16,16 @@ import {
 import {
   Activity,
   DataProviderInfo,
-  EnhancedSymbolProfile,
+  EnhancedAssetProfile,
   Filter,
   LineChartItem,
+  NullableLineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
+import { AccountWithValue } from '@ghostfolio/common/types';
+import type { MarketData, Tag } from '@ghostfolio/prisma/browser';
 import { GfAccountsTableComponent } from '@ghostfolio/ui/accounts-table';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
@@ -29,21 +35,26 @@ import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
 import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
-  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
-  Inject,
-  OnInit
+  OnInit,
+  inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -56,9 +67,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
-import { Account, MarketData, Tag } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { addIcons } from 'ionicons';
@@ -71,10 +81,14 @@ import {
   swapVerticalOutline,
   walletOutline
 } from 'ionicons/icons';
+import { isNumber, round, uniqBy } from 'lodash-es';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 
-import { HoldingDetailDialogParams } from './interfaces/interfaces';
+import {
+  HoldingDetailDialogParams,
+  HoldingDetailDialogResult
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -88,6 +102,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
+    GfPremiumIndicatorComponent,
     GfTagsSelectorComponent,
     GfValueComponent,
     IonIcon,
@@ -100,81 +115,115 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     ReactiveFormsModule,
     RouterModule
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holding-detail-dialog',
   styleUrls: ['./holding-detail-dialog.component.scss'],
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnInit {
-  public activitiesCount: number;
-  public accounts: Account[];
-  public assetClass: string;
-  public assetSubClass: string;
-  public averagePrice: number;
-  public averagePricePrecision = 2;
-  public benchmarkDataItems: LineChartItem[];
-  public benchmarkLabel = $localize`Average Unit Price`;
-  public countries: {
+  protected accounts: AccountWithValue[];
+  protected activitiesCount: number;
+  protected assetClass: string;
+  protected assetProfile: Pick<
+    EnhancedAssetProfile,
+    | 'assetClass'
+    | 'assetSubClass'
+    | 'countries'
+    | 'currency'
+    | 'dataSource'
+    | 'isin'
+    | 'name'
+    | 'sectors'
+    | 'symbol'
+    | 'userId'
+  >;
+  protected assetSubClass: string;
+  protected averagePrice: number;
+  protected averagePricePrecision = 2;
+  protected benchmarkDataItems: NullableLineChartItem[];
+  protected readonly benchmarkLabel = $localize`Average Unit Price`;
+  protected countries: {
     [code: string]: { name: string; value: number };
   };
-  public dataProviderInfo: DataProviderInfo;
-  public dataSource: MatTableDataSource<Activity>;
-  public dateOfFirstActivity: string;
-  public dividendInBaseCurrency: number;
-  public dividendInBaseCurrencyPrecision = 2;
-  public dividendYieldPercentWithCurrencyEffect: number;
-  public feeInBaseCurrency: number;
-  public getCountryName = getCountryName;
-  public hasPermissionToCreateOwnTag: boolean;
-  public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
-  public historicalDataItems: LineChartItem[];
-  public holdingForm: FormGroup;
-  public investmentInBaseCurrencyWithCurrencyEffect: number;
-  public investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
-  public isUUID = isUUID;
-  public marketDataItems: MarketData[] = [];
-  public marketPrice: number;
-  public marketPriceMax: number;
-  public marketPriceMaxPrecision = 2;
-  public marketPriceMin: number;
-  public marketPriceMinPrecision = 2;
-  public marketPricePrecision = 2;
-  public netPerformance: number;
-  public netPerformancePrecision = 2;
-  public netPerformancePercent: number;
-  public netPerformancePercentWithCurrencyEffect: number;
-  public netPerformancePercentWithCurrencyEffectPrecision = 2;
-  public netPerformanceWithCurrencyEffect: number;
-  public netPerformanceWithCurrencyEffectPrecision = 2;
-  public pageIndex = 0;
-  public pageSize = DEFAULT_PAGE_SIZE;
-  public quantity: number;
-  public quantityPrecision = 2;
-  public reportDataGlitchMail: string;
-  public routerLinkAdminControlMarketData =
-    internalRoutes.adminControl.subRoutes.marketData.routerLink;
-  public sectors: {
+  protected dataProviderInfo: DataProviderInfo;
+  protected dataSource: MatTableDataSource<Activity>;
+  protected dateOfFirstActivity: Date;
+  protected dividendInBaseCurrency: number;
+  protected dividendInBaseCurrencyPrecision = 2;
+  protected dividendYieldPercentWithCurrencyEffect: number;
+  protected feeInBaseCurrency: number;
+  protected readonly getCountryName = getCountryName;
+  protected hasPermissionToCreateOwnTag: boolean;
+  protected hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
+  protected historicalDataItems: LineChartItem[];
+  protected holdingForm: FormGroup<{
+    tags: FormControl<Tag[] | null>;
+  }>;
+  protected investmentInBaseCurrencyWithCurrencyEffect: number;
+  protected investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
+  protected isLoading = true;
+  protected isOwnAssetProfile: boolean;
+  protected readonly isUUID = isUUID;
+  protected marketDataItems: MarketData[] = [];
+  protected marketPrice: number;
+  protected marketPriceMax: number;
+  protected marketPriceMaxPrecision = 2;
+  protected marketPriceMin: number;
+  protected marketPriceMinPrecision = 2;
+  protected marketPricePrecision = 2;
+  protected netPerformancePercentWithCurrencyEffect: number;
+  protected netPerformancePercentWithCurrencyEffectPrecision = 2;
+  protected netPerformanceWithCurrencyEffect: number;
+  protected netPerformanceWithCurrencyEffectPrecision = 2;
+  protected pageIndex = 0;
+  protected readonly pageSize = DEFAULT_PAGE_SIZE;
+  protected quantity: number;
+  protected quantityPrecision = 2;
+  protected reportDataGlitchMailHref: string;
+  protected readonly round = round;
+  protected readonly routerLinkAdminControlMarketDataUpdate =
+    internalRoutes.adminControl.subRoutes.marketData.subRoutes.update
+      .routerLink;
+  protected sectors: {
     [name: string]: { name: string; value: number };
   };
-  public sortColumn = 'date';
-  public sortDirection: SortDirection = 'desc';
-  public SymbolProfile: EnhancedSymbolProfile;
-  public tags: Tag[];
-  public tagsAvailable: Tag[];
-  public translate = translate;
-  public user: User;
-  public value: number;
+  protected sortColumn = 'date';
+  protected sortDirection: SortDirection = 'desc';
+  protected tagsAvailable: Tag[];
+  protected tagsOfAccounts: Tag[];
+  protected readonly translate = translate;
+  protected user: User;
+  protected value: number;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
-    private destroyRef: DestroyRef,
-    public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: HoldingDetailDialogParams,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private userService: UserService
-  ) {
+  protected readonly data = inject<HoldingDetailDialogParams>(MAT_DIALOG_DATA);
+  protected readonly dialogRef =
+    inject<
+      MatDialogRef<GfHoldingDetailDialogComponent, HoldingDetailDialogResult>
+    >(MatDialogRef);
+
+  private tags: Tag[];
+
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly dataService = inject(DataService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly impersonationStorageService = inject(
+    ImpersonationStorageService
+  );
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  public constructor() {
+    this.router.events
+      .pipe(
+        filter((event) => {
+          return event instanceof NavigationStart;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.dialogRef.close({ isNavigating: true });
+      });
+
     addIcons({
       arrowDownCircleOutline,
       createOutline,
@@ -190,12 +239,11 @@ export class GfHoldingDetailDialogComponent implements OnInit {
     const filters = this.getActivityFilters();
 
     this.holdingForm = this.formBuilder.group({
-      tags: [] as string[]
+      tags: new FormControl<Tag[]>([])
     });
 
-    this.holdingForm
-      .get('tags')
-      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+    this.holdingForm.controls.tags.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((tags: Tag[]) => {
         const newTag = tags.find(({ id }) => {
           return id === undefined;
@@ -243,6 +291,18 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       .subscribe(({ accounts }) => {
         this.accounts = accounts;
 
+        this.tagsOfAccounts = uniqBy(
+          accounts.flatMap(({ tags }) => {
+            return tags ?? [];
+          }),
+          'id'
+        ).map((tag) => {
+          return {
+            ...tag,
+            name: translate(tag.name)
+          };
+        });
+
         this.changeDetectorRef.markForCheck();
       });
 
@@ -257,6 +317,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       .subscribe(
         ({
           activitiesCount,
+          assetProfile,
           averagePrice,
           dataProviderInfo,
           dateOfFirstActivity,
@@ -268,20 +329,18 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           marketPrice,
           marketPriceMax,
           marketPriceMin,
-          netPerformance,
-          netPerformancePercent,
           netPerformancePercentWithCurrencyEffect,
           netPerformanceWithCurrencyEffect,
           quantity,
-          SymbolProfile,
           tags,
           value
         }) => {
           this.activitiesCount = activitiesCount;
+          this.assetProfile = assetProfile;
           this.averagePrice = averagePrice;
 
           if (
-            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES &&
+            this.averagePrice >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES &&
             this.data.deviceType === 'mobile'
           ) {
             this.averagePricePrecision = 0;
@@ -290,13 +349,17 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           this.benchmarkDataItems = [];
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
-          this.dateOfFirstActivity = dateOfFirstActivity;
+
+          if (dateOfFirstActivity) {
+            this.dateOfFirstActivity = dateOfFirstActivity;
+          }
+
           this.dividendInBaseCurrency = dividendInBaseCurrency;
 
           if (
             this.data.deviceType === 'mobile' &&
             this.dividendInBaseCurrency >=
-              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
           ) {
             this.dividendInBaseCurrencyPrecision = 0;
           }
@@ -306,24 +369,21 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           this.feeInBaseCurrency = feeInBaseCurrency;
 
-          this.hasPermissionToReadMarketDataOfOwnAssetProfile =
-            hasPermission(
-              this.user?.permissions,
-              permissions.readMarketDataOfOwnAssetProfile
-            ) &&
-            SymbolProfile?.dataSource === 'MANUAL' &&
-            SymbolProfile?.userId === this.user?.id;
+          this.hasPermissionToReadMarketDataOfOwnAssetProfile = hasPermission(
+            this.user?.permissions,
+            permissions.readMarketDataOfOwnAssetProfile
+          );
 
           this.historicalDataItems = historicalData.map(
             ({ averagePrice, date, marketPrice }) => {
               this.benchmarkDataItems.push({
                 date,
-                value: averagePrice
+                value: isNumber(averagePrice) ? averagePrice : null
               });
 
               return {
                 date,
-                value: marketPrice
+                value: marketPrice ?? 0
               };
             }
           );
@@ -334,17 +394,21 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.investmentInBaseCurrencyWithCurrencyEffect >=
-              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
           ) {
             this.investmentInBaseCurrencyWithCurrencyEffectPrecision = 0;
           }
+
+          this.isOwnAssetProfile =
+            assetProfile?.dataSource === 'MANUAL' &&
+            assetProfile?.userId === this.user?.id;
 
           this.marketPrice = marketPrice;
           this.marketPriceMax = marketPriceMax;
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPriceMax >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
+            this.marketPriceMax >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
           ) {
             this.marketPriceMaxPrecision = 0;
           }
@@ -353,28 +417,17 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPriceMin >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
+            this.marketPriceMin >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
           ) {
             this.marketPriceMinPrecision = 0;
           }
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.marketPrice >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
+            this.marketPrice >= NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
           ) {
             this.marketPricePrecision = 0;
           }
-
-          this.netPerformance = netPerformance;
-
-          if (
-            this.data.deviceType === 'mobile' &&
-            this.netPerformance >= NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
-          ) {
-            this.netPerformancePrecision = 0;
-          }
-
-          this.netPerformancePercent = netPerformancePercent;
 
           this.netPerformancePercentWithCurrencyEffect =
             netPerformancePercentWithCurrencyEffect;
@@ -393,7 +446,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
           if (
             this.data.deviceType === 'mobile' &&
             this.netPerformanceWithCurrencyEffect >=
-              NUMERICAL_PRECISION_THRESHOLD_5_FIGURES
+              NUMERICAL_PRECISION_THRESHOLD_4_FIGURES
           ) {
             this.netPerformanceWithCurrencyEffectPrecision = 0;
           }
@@ -402,7 +455,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
-          } else if (SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
+          } else if (assetProfile?.assetSubClass === 'CRYPTOCURRENCY') {
             if (this.quantity < 10) {
               this.quantityPrecision = 8;
             } else if (this.quantity < 1000) {
@@ -412,9 +465,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           }
 
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
-          this.SymbolProfile = SymbolProfile;
 
           this.tags = tags.map((tag) => {
             return {
@@ -427,28 +478,44 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           this.value = value;
 
-          if (SymbolProfile?.assetClass) {
-            this.assetClass = translate(SymbolProfile?.assetClass);
+          const reportDataGlitchSubject = `Ghostfolio Data Glitch Report${
+            this.assetProfile?.symbol ? ` (${this.assetProfile.symbol})` : ''
+          }`;
+
+          this.reportDataGlitchMailHref = `mailto:hi@ghostfol.io?subject=${reportDataGlitchSubject}&body=${[
+            'Hello',
+            '',
+            'I would like to report a data glitch for',
+            '',
+            `Symbol: ${this.assetProfile?.symbol}`,
+            `Data Source: ${this.assetProfile?.dataSource}`,
+            '',
+            'Additional notes:',
+            '',
+            'Can you please take a look?',
+            '',
+            'Kind regards'
+          ].join(E_MAIL_LINE_BREAK)}`;
+
+          if (this.assetProfile?.assetClass) {
+            this.assetClass = translate(this.assetProfile?.assetClass);
           }
 
-          if (SymbolProfile?.assetSubClass) {
-            this.assetSubClass = translate(SymbolProfile?.assetSubClass);
+          if (this.assetProfile?.assetSubClass) {
+            this.assetSubClass = translate(this.assetProfile?.assetSubClass);
           }
 
-          if (SymbolProfile?.countries?.length > 0) {
-            for (const country of SymbolProfile.countries) {
+          if (this.assetProfile?.countries?.length > 0) {
+            for (const country of this.assetProfile.countries) {
               this.countries[country.code] = {
-                name: getCountryName({
-                  code: country.code,
-                  locale: this.data.locale
-                }),
+                name: getCountryName({ code: country.code }),
                 value: country.weight
               };
             }
           }
 
-          if (SymbolProfile?.sectors?.length > 0) {
-            for (const sector of SymbolProfile.sectors) {
+          if (this.assetProfile?.sectors?.length > 0) {
+            for (const sector of this.assetProfile.sectors) {
               this.sectors[sector.name] = {
                 name: translate(sector.name),
                 value: sector.weight
@@ -456,16 +523,16 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           }
 
-          if (isToday(parseISO(this.dateOfFirstActivity))) {
+          if (isToday(this.dateOfFirstActivity)) {
             // Add average price
             this.historicalDataItems.push({
-              date: this.dateOfFirstActivity,
+              date: this.dateOfFirstActivity.toISOString(),
               value: this.averagePrice
             });
 
             // Add benchmark 1
             this.benchmarkDataItems.push({
-              date: this.dateOfFirstActivity,
+              date: this.dateOfFirstActivity.toISOString(),
               value: averagePrice
             });
 
@@ -496,7 +563,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
 
           if (
             this.benchmarkDataItems[0]?.value === undefined &&
-            isSameMonth(parseISO(this.dateOfFirstActivity), new Date())
+            isSameMonth(this.dateOfFirstActivity, new Date())
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
           }
@@ -510,9 +577,14 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             }
           );
 
-          if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
+          if (
+            this.hasPermissionToReadMarketDataOfOwnAssetProfile &&
+            this.isOwnAssetProfile
+          ) {
             this.fetchMarketData();
           }
+
+          this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -524,56 +596,54 @@ export class GfHoldingDetailDialogComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          // A tag created during an impersonation belongs to the authenticated
+          // user, hence it cannot be assigned to the data of the impersonated
+          // user
           this.hasPermissionToCreateOwnTag =
-            hasPermission(this.user.permissions, permissions.createOwnTag) &&
-            this.user?.settings?.isExperimentalFeatures;
+            !this.impersonationStorageService.getId() &&
+            hasPermission(this.user?.permissions, permissions.createOwnTag);
 
           this.tagsAvailable =
-            this.user?.tags?.map((tag) => {
-              return {
-                ...tag,
-                name: translate(tag.name)
-              };
-            }) ?? [];
+            this.user?.tags
+              ?.filter(({ id }) => {
+                // The "DRAFT" tag qualifies an individual activity and cannot
+                // be assigned to all activities of a holding
+                return id !== TAG_ID_DRAFT;
+              })
+              .map((tag) => {
+                return {
+                  ...tag,
+                  name: translate(tag.name)
+                };
+              }) ?? [];
 
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
-  public onChangePage(page: PageEvent) {
+  protected onChangePage(page: PageEvent) {
     this.pageIndex = page.pageIndex;
 
     this.fetchActivities();
   }
 
-  public onCloneActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, createDialog: true }
-      }
-    );
-
+  protected onClose() {
     this.dialogRef.close();
   }
 
-  public onClose() {
-    this.dialogRef.close();
-  }
-
-  public onCloseHolding() {
+  protected onCloseHolding() {
     const today = new Date();
 
     const activity: CreateOrderDto = {
-      accountId: this.accounts.length === 1 ? this.accounts[0].id : null,
-      comment: null,
-      currency: this.SymbolProfile.currency,
-      dataSource: this.SymbolProfile.dataSource,
+      accountId: this.accounts.length === 1 ? this.accounts[0].id : undefined,
+      comment: undefined,
+      currency: this.assetProfile?.currency ?? '',
+      dataSource: this.assetProfile?.dataSource,
       date: today.toISOString(),
       fee: 0,
       quantity: this.quantity,
-      symbol: this.SymbolProfile.symbol,
+      symbol: this.assetProfile?.symbol ?? '',
       tags: this.tags.map(({ id }) => {
         return id;
       }),
@@ -585,15 +655,13 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       .postActivity(activity)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.router.navigate(
-          internalRoutes.portfolio.subRoutes.activities.routerLink
-        );
+        this.userService.get(true).subscribe();
 
-        this.dialogRef.close();
+        this.navigateToActivities();
       });
   }
 
-  public onExport() {
+  protected onExport() {
     const activityIds = this.dataSource.data.map(({ id }) => {
       return id;
     });
@@ -604,7 +672,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       .subscribe((data) => {
         downloadAsFile({
           content: data,
-          fileName: `ghostfolio-export-${this.SymbolProfile?.symbol}-${format(
+          fileName: `ghostfolio-export-${this.assetProfile?.symbol}-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,
@@ -613,21 +681,10 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       });
   }
 
-  public onMarketDataChanged(withRefresh = false) {
+  protected onMarketDataChanged(withRefresh = false) {
     if (withRefresh) {
       this.fetchMarketData();
     }
-  }
-
-  public onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(
-      internalRoutes.portfolio.subRoutes.activities.routerLink,
-      {
-        queryParams: { activityId: aActivity.id, editDialog: true }
-      }
-    );
-
-    this.dialogRef.close();
   }
 
   private fetchActivities(filters: Filter[] = this.getActivityFilters()) {
@@ -675,5 +732,13 @@ export class GfHoldingDetailDialogComponent implements OnInit {
       { id: this.data.dataSource, type: 'DATA_SOURCE' },
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
+  }
+
+  private navigateToActivities() {
+    this.router.navigate(
+      internalRoutes.portfolio.subRoutes.activities.routerLink
+    );
+
+    this.dialogRef.close();
   }
 }

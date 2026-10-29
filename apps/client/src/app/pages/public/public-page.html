@@ -15,11 +15,11 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [isLoading]="isLoading"
             [isPercent]="true"
             [precision]="2"
             [value]="
-              publicPortfolioDetails?.performance?.['1d']?.relativeChange ??
-              undefined
+              publicPortfolioDetails?.performance?.['1d']?.relativeChange
             "
             >Today</gf-value
           >
@@ -33,11 +33,11 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [isLoading]="isLoading"
             [isPercent]="true"
             [precision]="2"
             [value]="
-              publicPortfolioDetails?.performance?.['ytd']?.relativeChange ??
-              undefined
+              publicPortfolioDetails?.performance?.['ytd']?.relativeChange
             "
             >This year</gf-value
           >
@@ -51,11 +51,11 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [isLoading]="isLoading"
             [isPercent]="true"
             [precision]="2"
             [value]="
-              publicPortfolioDetails?.performance?.['max']?.relativeChange ??
-              undefined
+              publicPortfolioDetails?.performance?.['max']?.relativeChange
             "
             >From the beginning</gf-value
           >
@@ -63,7 +63,7 @@
       </mat-card>
     </div>
   </div>
-  <div class="proportion-charts row">
+  <div class="row">
     <div class="col-md-12 allocations-by-symbol">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
@@ -158,7 +158,7 @@
               />
             </div>
             <div class="row">
-              <div class="col-xs-12 col-md my-2">
+              <div class="col-md my-2">
                 <gf-value
                   i18n
                   size="large"
@@ -167,7 +167,7 @@
                   >Developed Markets</gf-value
                 >
               </div>
-              <div class="col-xs-12 col-md my-2">
+              <div class="col-md my-2">
                 <gf-value
                   i18n
                   size="large"
@@ -176,7 +176,7 @@
                   >Emerging Markets</gf-value
                 >
               </div>
-              <div class="col-xs-12 col-md my-2">
+              <div class="col-md my-2">
                 <gf-value
                   i18n
                   size="large"
@@ -186,7 +186,7 @@
                 >
               </div>
               @if (markets?.[UNKNOWN_KEY]?.valueInPercentage > 0) {
-                <div class="col-xs-12 col-md my-2">
+                <div class="col-md my-2">
                   <gf-value
                     i18n
                     size="large"

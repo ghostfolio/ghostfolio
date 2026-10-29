@@ -1,12 +1,14 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { formatMonthAndYear } from '@ghostfolio/common/helper';
 import {
   FireCalculationCompleteEvent,
   FireWealth,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { DataService } from '@ghostfolio/ui/services';
@@ -14,6 +16,7 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -25,10 +28,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { Big } from 'big.js';
+import { isFinite, isNumber } from 'lodash-es';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     FormsModule,
@@ -49,6 +54,7 @@ export class GfFirePageComponent implements OnInit {
 
   protected fireWealth: FireWealth;
   protected hasImpersonationId: boolean;
+  protected hasPermissionToShowValues: boolean;
   protected hasPermissionToUpdateUserSettings: boolean;
   protected isLoading = false;
   protected retirementDate: Date;
@@ -75,6 +81,20 @@ export class GfFirePageComponent implements OnInit {
   );
   private readonly userService = inject(UserService);
 
+  protected get retirementDateLabel(): string {
+    const retirementDate =
+      this.user?.settings?.retirementDate ?? this.retirementDate;
+
+    if (!retirementDate) {
+      return '';
+    }
+
+    return formatMonthAndYear({
+      date: new Date(retirementDate),
+      locale: this.user?.settings?.locale
+    });
+  }
+
   public ngOnInit() {
     this.isLoading = true;
 
@@ -89,6 +109,7 @@ export class GfFirePageComponent implements OnInit {
               : 0
           }
         };
+
         if (this.user.subscription?.type === SubscriptionType.Basic) {
           this.fireWealth = {
             today: {
@@ -107,6 +128,8 @@ export class GfFirePageComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.safeWithdrawalRateControl.valueChanges
@@ -120,6 +143,10 @@ export class GfFirePageComponent implements OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToShowValues =
+            hasScope(this.user.scopes, scopes.portfolioReadValues) &&
+            !this.user.settings.isRestrictedView;
 
           this.hasPermissionToUpdateUserSettings =
             this.user.subscription?.type === SubscriptionType.Basic
@@ -135,9 +162,9 @@ export class GfFirePageComponent implements OnInit {
           );
 
           this.calculateWithdrawalRates();
-
-          this.changeDetectorRef.markForCheck();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -236,7 +263,8 @@ export class GfFirePageComponent implements OnInit {
   private calculateWithdrawalRatesProjected() {
     if (
       this.fireWealth &&
-      this.projectedTotalAmount &&
+      isNumber(this.projectedTotalAmount) &&
+      isFinite(this.projectedTotalAmount) &&
       this.user?.settings?.safeWithdrawalRate
     ) {
       this.withdrawalRatePerYearProjected = new Big(

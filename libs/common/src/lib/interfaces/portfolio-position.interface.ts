@@ -1,20 +1,20 @@
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
+import type { Tag } from '@ghostfolio/prisma/browser';
 
-import { Tag } from '@prisma/client';
-
-import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
+import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
 
 export interface PortfolioPosition {
   activitiesCount: number;
   allocationInPercentage: number;
   assetProfile: Pick<
-    EnhancedSymbolProfile,
+    EnhancedAssetProfile,
     | 'assetClass'
     | 'assetSubClass'
     | 'countries'
     | 'currency'
     | 'dataSource'
     | 'holdings'
+    | 'isin'
     | 'name'
     | 'sectors'
     | 'symbol'
@@ -25,7 +25,6 @@ export interface PortfolioPosition {
   };
   dateOfFirstActivity: Date;
   dividend: number;
-  exchange?: string;
   grossPerformance: number;
   grossPerformancePercent: number;
   grossPerformancePercentWithCurrencyEffect: number;

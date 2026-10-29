@@ -1,5 +1,14 @@
-import { Account } from '@prisma/client';
+import { User } from '@ghostfolio/common/interfaces';
+import { AccountWithBalance } from '@ghostfolio/common/types';
+import type { Tag } from '@ghostfolio/prisma/browser';
 
 export interface CreateOrUpdateAccountDialogParams {
-  account: Omit<Account, 'createdAt' | 'updatedAt' | 'userId'>;
+  account: Omit<
+    AccountWithBalance,
+    'createdAt' | 'id' | 'updatedAt' | 'userId'
+  > & {
+    id: string | null;
+    tags?: Tag[];
+  };
+  user: User;
 }

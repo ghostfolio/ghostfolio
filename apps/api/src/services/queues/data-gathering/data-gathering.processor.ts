@@ -10,22 +10,19 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier,
+  getStartOfUtcDate
+} from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job } from 'bull';
-import {
-  addDays,
-  format,
-  getDate,
-  getMonth,
-  getYear,
-  isBefore,
-  parseISO
-} from 'date-fns';
+import { addDays, format, isBefore, parseISO } from 'date-fns';
 
 import { DataGatheringService } from './data-gathering.service';
 
@@ -81,7 +78,7 @@ export class DataGatheringProcessor {
         return job.discard();
       }
 
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }
@@ -104,7 +101,8 @@ export class DataGatheringProcessor {
       this.logger.log(
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(
           currentDate,
-          DATE_FORMAT
+          DATE_FORMAT,
+          { in: utc }
         )}${force ? ' (forced update)' : ''}`
       );
 
@@ -114,29 +112,23 @@ export class DataGatheringProcessor {
         to: new Date()
       });
 
-      const data: Prisma.MarketDataUpdateInput[] = [];
-      let lastMarketPrice: number;
+      const assetProfileIdentifier = getAssetProfileIdentifier({
+        dataSource,
+        symbol
+      });
 
-      while (
-        isBefore(
-          currentDate,
-          new Date(
-            Date.UTC(
-              getYear(new Date()),
-              getMonth(new Date()),
-              getDate(new Date()),
-              0
-            )
-          )
-        )
-      ) {
-        if (
-          historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-            ?.marketPrice
-        ) {
-          lastMarketPrice =
-            historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-              ?.marketPrice;
+      const data: Prisma.MarketDataUpdateInput[] = [];
+      const startOfUtcDateOfToday = getStartOfUtcDate(new Date());
+      let lastMarketPrice: number | undefined;
+
+      while (isBefore(currentDate, startOfUtcDateOfToday)) {
+        const marketPriceOfDataProvider =
+          historicalData[assetProfileIdentifier]?.[
+            format(currentDate, DATE_FORMAT, { in: utc })
+          ]?.marketPrice;
+
+        if (marketPriceOfDataProvider) {
+          lastMarketPrice = marketPriceOfDataProvider;
         }
 
         if (lastMarketPrice) {
@@ -144,12 +136,13 @@ export class DataGatheringProcessor {
             dataSource,
             symbol,
             date: getStartOfUtcDate(currentDate),
+            isCarriedForward: lastMarketPrice !== marketPriceOfDataProvider,
             marketPrice: lastMarketPrice,
             state: 'CLOSE'
           });
         }
 
-        currentDate = addDays(currentDate, 1);
+        currentDate = addDays(currentDate, 1, { in: utc });
       }
 
       if (force) {
@@ -165,7 +158,8 @@ export class DataGatheringProcessor {
       this.logger.log(
         `Historical market data gathering has been completed for ${symbol} (${dataSource}) at ${format(
           currentDate,
-          DATE_FORMAT
+          DATE_FORMAT,
+          { in: utc }
         )}`
       );
     } catch (error) {
@@ -187,7 +181,7 @@ export class DataGatheringProcessor {
         return job.discard();
       }
 
-      this.logger.error(error);
+      this.logger.error(error.message);
 
       throw error;
     }

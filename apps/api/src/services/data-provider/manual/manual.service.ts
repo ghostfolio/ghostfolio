@@ -14,7 +14,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import {
   DATE_FORMAT,
   extractNumberFromString,
-  getYesterday
+  getStartOfUtcDateOfYesterday
 } from '@ghostfolio/common/helper';
 import {
   DataProviderHistoricalResponse,
@@ -24,6 +24,7 @@ import {
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 
+import { utc } from '@date-fns/utc';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
@@ -79,7 +80,7 @@ export class ManualService implements DataProviderInterface {
     symbol,
     to
   }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
+    [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
@@ -90,18 +91,17 @@ export class ManualService implements DataProviderInterface {
 
       if (defaultMarketPrice) {
         const historical: {
-          [symbol: string]: { [date: string]: DataProviderHistoricalResponse };
-        } = {
-          [symbol]: {}
-        };
+          [date: string]: DataProviderHistoricalResponse;
+        } = {};
+
         let date = from;
 
         while (isBefore(date, to)) {
-          historical[symbol][format(date, DATE_FORMAT)] = {
+          historical[format(date, DATE_FORMAT, { in: utc })] = {
             marketPrice: defaultMarketPrice
           };
 
-          date = addDays(date, 1);
+          date = addDays(date, 1, { in: utc });
         }
 
         return historical;
@@ -115,10 +115,8 @@ export class ManualService implements DataProviderInterface {
       });
 
       return {
-        [symbol]: {
-          [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: value
-          }
+        [format(getStartOfUtcDateOfYesterday(), DATE_FORMAT, { in: utc })]: {
+          marketPrice: value
         }
       };
     } catch (error) {
@@ -136,7 +134,8 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    symbols
+    symbols,
+    useCache = true
   }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }> {
     const response: { [symbol: string]: DataProviderResponse } = {};
 
@@ -151,45 +150,48 @@ export class ManualService implements DataProviderInterface {
         })
       );
 
-      const marketData = await this.prismaService.marketData.findMany({
-        distinct: ['symbol'],
-        orderBy: {
-          date: 'desc'
-        },
-        take: symbols.length,
-        where: {
-          symbol: {
-            in: symbols
-          }
-        }
-      });
+      // Query the latest market data per symbol because distinct loads all
+      // the market data of the symbols into memory
+      const marketData = await Promise.all(
+        symbols.map((symbol) => {
+          return this.prismaService.marketData.findFirst({
+            orderBy: {
+              date: 'desc'
+            },
+            where: {
+              symbol,
+              dataSource: this.getName()
+            }
+          });
+        })
+      );
 
-      const symbolProfilesWithScraperConfigurationAndInstantMode =
-        symbolProfiles.filter(({ scraperConfiguration }) => {
+      const symbolProfilesToScrape = symbolProfiles.filter(
+        ({ scraperConfiguration }) => {
           return (
-            scraperConfiguration?.mode === 'instant' &&
+            (scraperConfiguration?.mode === 'instant' || !useCache) &&
             scraperConfiguration?.selector &&
             scraperConfiguration?.url
           );
-        });
+        }
+      );
 
-      const scraperResultPromises =
-        symbolProfilesWithScraperConfigurationAndInstantMode.map(
-          async ({ scraperConfiguration, symbol }) => {
-            try {
-              const marketPrice = await this.scrape({
-                scraperConfiguration,
-                symbol
-              });
-              return { marketPrice, symbol };
-            } catch (error) {
-              this.logger.error(
-                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`
-              );
-              return { symbol, marketPrice: undefined };
-            }
+      const scraperResultPromises = symbolProfilesToScrape.map(
+        async ({ scraperConfiguration, symbol }) => {
+          try {
+            const marketPrice = await this.scrape({
+              scraperConfiguration,
+              symbol
+            });
+            return { marketPrice, symbol };
+          } catch (error) {
+            this.logger.error(
+              `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`
+            );
+            return { symbol, marketPrice: undefined };
           }
-        );
+        }
+      );
 
       // Wait for all scraping requests to complete concurrently
       const scraperResults = await Promise.all(scraperResultPromises);
@@ -203,7 +205,7 @@ export class ManualService implements DataProviderInterface {
         marketPrice =
           marketPrice ??
           marketData.find((marketDataItem) => {
-            return marketDataItem.symbol === symbol;
+            return marketDataItem?.symbol === symbol;
           })?.marketPrice ??
           0;
 
@@ -217,7 +219,7 @@ export class ManualService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(error.message);
     }
 
     return {};

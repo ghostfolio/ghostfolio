@@ -1,5 +1,5 @@
+import { SEARCH_QUERY_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
 import { LookupItem } from '@ghostfolio/common/interfaces';
-import { GfSymbolPipe } from '@ghostfolio/common/pipes';
 import { DataService } from '@ghostfolio/ui/services';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -36,12 +36,13 @@ import {
 } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { isString } from 'lodash';
+import { isString } from 'lodash-es';
 import { tap } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  map,
   switchMap
 } from 'rxjs/operators';
 
@@ -58,7 +59,6 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   imports: [
     FormsModule,
     GfPremiumIndicatorComponent,
-    GfSymbolPipe,
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
@@ -83,10 +83,11 @@ export class GfSymbolAutocompleteComponent
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
 
-  @Input() private includeIndices = false;
+  @Input() public includeIndices = false;
 
   public readonly control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
+  public readonly SEARCH_QUERY_MAXIMUM_LENGTH = SEARCH_QUERY_MAXIMUM_LENGTH;
 
   protected readonly symbolAutocomplete =
     viewChild.required<MatAutocomplete>('symbolAutocomplete');
@@ -95,31 +96,27 @@ export class GfSymbolAutocompleteComponent
   private readonly input = viewChild.required(MatInput);
 
   public constructor(
-    public readonly _elementRef: ElementRef,
-    public readonly _focusMonitor: FocusMonitor,
+    public override readonly _elementRef: ElementRef<HTMLElement>,
+    public override readonly _focusMonitor: FocusMonitor,
     public readonly changeDetectorRef: ChangeDetectorRef,
     public readonly dataService: DataService,
-    public readonly ngControl: NgControl
+    public override readonly ngControl: NgControl
   ) {
     super(_elementRef, _focusMonitor, ngControl);
 
     this.controlType = 'symbol-autocomplete';
   }
 
-  public get empty() {
+  public override get empty() {
     return this.input().empty;
   }
 
-  public set value(value: LookupItem) {
+  public override set value(value: LookupItem) {
     this.control.setValue(value);
     super.value = value;
   }
 
   public ngOnInit() {
-    if (this.disabled) {
-      this.control.disable();
-    }
-
     this.control.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
@@ -130,6 +127,10 @@ export class GfSymbolAutocompleteComponent
 
     this.control.valueChanges
       .pipe(
+        map((query) => {
+          return isString(query) ? query.trim() : query;
+        }),
+        distinctUntilChanged(),
         filter((query) => {
           if (query?.length === 0) {
             this.showDefaultOptions();
@@ -145,7 +146,6 @@ export class GfSymbolAutocompleteComponent
           this.changeDetectorRef.markForCheck();
         }),
         debounceTime(400),
-        distinctUntilChanged(),
         takeUntilDestroyed(this.destroyRef),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({
@@ -188,7 +188,7 @@ export class GfSymbolAutocompleteComponent
     });
   }
 
-  public ngDoCheck() {
+  public override ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
       this.errorState = !!(this.ngControl.invalid && this.ngControl.touched);

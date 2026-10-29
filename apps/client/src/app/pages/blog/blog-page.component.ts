@@ -1,7 +1,11 @@
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataService } from '@ghostfolio/ui/services';
 
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -9,6 +13,7 @@ import { addIcons } from 'ionicons';
 import { chevronForwardOutline } from 'ionicons/icons';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   imports: [IonIcon, MatCardModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

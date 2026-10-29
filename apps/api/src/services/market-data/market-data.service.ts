@@ -1,7 +1,7 @@
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
 import { DataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { UpdateMarketDataDto } from '@ghostfolio/common/dtos';
+import { DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -36,6 +36,19 @@ export class MarketDataService {
         dataSource,
         symbol,
         date: resetHours(date)
+      }
+    });
+  }
+
+  public async getLatest({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier): Promise<MarketData> {
+    return this.prismaService.marketData.findFirst({
+      orderBy: [{ date: 'desc' }],
+      where: {
+        dataSource,
+        symbol
       }
     });
   }
@@ -142,52 +155,58 @@ export class MarketDataService {
     dataSource,
     symbol
   }: AssetProfileIdentifier & { data: Prisma.MarketDataUpdateInput[] }) {
-    await this.prismaService.$transaction(async (prisma) => {
-      if (data.length > 0) {
-        let minTime = Infinity;
-        let maxTime = -Infinity;
+    await this.prismaService.$transaction(
+      async (prisma) => {
+        if (data.length > 0) {
+          let minTime = Infinity;
+          let maxTime = -Infinity;
 
-        for (const { date } of data) {
-          const time = (date as Date).getTime();
+          for (const { date } of data) {
+            const time = (date as Date).getTime();
 
-          if (time < minTime) {
-            minTime = time;
-          }
+            if (time < minTime) {
+              minTime = time;
+            }
 
-          if (time > maxTime) {
-            maxTime = time;
-          }
-        }
-
-        const minDate = new Date(minTime);
-        const maxDate = new Date(maxTime);
-
-        await prisma.marketData.deleteMany({
-          where: {
-            dataSource,
-            symbol,
-            date: {
-              gte: minDate,
-              lte: maxDate
+            if (time > maxTime) {
+              maxTime = time;
             }
           }
-        });
 
-        await prisma.marketData.createMany({
-          data: data.map(({ date, marketPrice, state }) => ({
-            dataSource,
-            symbol,
-            date: date as Date,
-            marketPrice: marketPrice as number,
-            state: state as MarketDataState
-          })),
-          skipDuplicates: true
-        });
-      }
-    });
+          const minDate = new Date(minTime);
+          const maxDate = new Date(maxTime);
+
+          await prisma.marketData.deleteMany({
+            where: {
+              dataSource,
+              symbol,
+              date: {
+                gte: minDate,
+                lte: maxDate
+              }
+            }
+          });
+
+          await prisma.marketData.createMany({
+            data: data.map(
+              ({ date, isCarriedForward, marketPrice, state }) => ({
+                dataSource,
+                symbol,
+                date: date as Date,
+                isCarriedForward: isCarriedForward as boolean,
+                marketPrice: marketPrice as number,
+                state: state as MarketDataState
+              })
+            ),
+            skipDuplicates: true
+          });
+        }
+      },
+      { timeout: DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_TIMEOUT }
+    );
   }
 
-  public async updateAssetProfileIdentifier(
+  public updateAssetProfileIdentifier(
     oldAssetProfileIdentifier: AssetProfileIdentifier,
     newAssetProfileIdentifier: AssetProfileIdentifier
   ) {
@@ -203,27 +222,6 @@ export class MarketDataService {
     });
   }
 
-  public async updateMarketData(params: {
-    data: {
-      state: MarketDataState;
-    } & UpdateMarketDataDto;
-    where: Prisma.MarketDataWhereUniqueInput;
-  }): Promise<MarketData> {
-    const { data, where } = params;
-
-    return this.prismaService.marketData.upsert({
-      where,
-      create: {
-        dataSource: where.dataSource_date_symbol.dataSource,
-        date: where.dataSource_date_symbol.date,
-        marketPrice: data.marketPrice,
-        state: data.state,
-        symbol: where.dataSource_date_symbol.symbol
-      },
-      update: { marketPrice: data.marketPrice, state: data.state }
-    });
-  }
-
   /**
    * Upsert market data by imitating missing upsertMany functionality
    * with $transaction
@@ -234,21 +232,23 @@ export class MarketDataService {
     data: Prisma.MarketDataUpdateInput[];
   }): Promise<MarketData[]> {
     const upsertPromises = data.map(
-      ({ dataSource, date, marketPrice, symbol, state }) => {
+      ({ dataSource, date, isCarriedForward, marketPrice, symbol, state }) => {
         return this.prismaService.marketData.upsert({
           create: {
             dataSource: dataSource as DataSource,
             date: date as Date,
+            isCarriedForward: isCarriedForward as boolean,
             marketPrice: marketPrice as number,
             state: state as MarketDataState,
             symbol: symbol as string
           },
           update: {
+            isCarriedForward: (isCarriedForward ?? false) as boolean,
             marketPrice: marketPrice as number,
             state: state as MarketDataState
           },
           where: {
-            dataSource_date_symbol: {
+            dataSource_symbol_date: {
               dataSource: dataSource as DataSource,
               date: date as Date,
               symbol: symbol as string

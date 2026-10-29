@@ -27,13 +27,13 @@
         <ng-container matColumnDef="index">
           <th
             *matHeaderCellDef
-            class="px-1 py-2 text-right"
+            class="justify-content-end px-1 py-2"
             mat-header-cell
             mat-sort-header="id"
           >
             <ng-container i18n>Job ID</ng-container>
           </th>
-          <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
+          <td *matCellDef="let element" class="px-1 py-2 text-end" mat-cell>
             {{ element.id }}
           </td>
         </ng-container>
@@ -113,13 +113,13 @@
         <ng-container matColumnDef="attempts">
           <th
             *matHeaderCellDef
-            class="px-1 py-2 text-right"
+            class="px-1 py-2 text-end"
             mat-header-cell
             mat-sort-header="attemptsMade"
           >
             <ng-container i18n>Attempts</ng-container>
           </th>
-          <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
+          <td *matCellDef="let element" class="px-1 py-2 text-end" mat-cell>
             {{ element.attemptsMade }}
           </td>
         </ng-container>
@@ -179,7 +179,7 @@
         </ng-container>
 
         <ng-container matColumnDef="actions" stickyEnd>
-          <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
+          <th *matHeaderCellDef class="px-1 py-2 text-end" mat-header-cell>
             <button
               class="mx-1 no-min-width px-2"
               mat-button
@@ -194,7 +194,7 @@
               </button>
             </mat-menu>
           </th>
-          <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
+          <td *matCellDef="let element" class="px-1 py-2 text-end" mat-cell>
             <button
               class="mx-1 no-min-width px-2"
               mat-button
