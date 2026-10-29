@@ -1,8 +1,8 @@
-import type { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import type { WatchlistService } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.service';
 import type { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { encodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import type { TableParameters } from '@ghostfolio/api/helper/interfaces/table-parameters.interface';
+import type { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import type { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import type { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {

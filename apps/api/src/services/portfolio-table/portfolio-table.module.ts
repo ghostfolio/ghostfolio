@@ -1,6 +1,6 @@
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { WatchlistModule } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.module';
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
+import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 

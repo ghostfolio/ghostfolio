@@ -1,6 +1,6 @@
-import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { MarketDataModule as MarketDataServiceModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { SymbolModule } from '@ghostfolio/api/services/symbol/symbol.module';
 
 import { Module } from '@nestjs/common';
 
