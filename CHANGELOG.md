@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Deprecated the `api/v1/symbol` endpoints in favor of the `api/v1/symbols` endpoints
+- Upgraded `@internationalized/number` from version `3.6.8` to `3.6.9`
 - Upgraded `countries-and-timezones` from version `3.10.0` to `3.11.0`
 
 ## 3.94.0 - 2026-10-28
