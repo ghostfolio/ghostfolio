@@ -779,15 +779,15 @@ describe('ActivitiesService', () => {
     });
 
     it.each([
-      { dataSource: DataSource.MANUAL, symbol: 'GF_GOLD' },
-      { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+      { currency: 'USD', dataSource: DataSource.MANUAL, symbol: 'GF_GOLD' },
+      { currency: 'EUR', dataSource: DataSource.YAHOO, symbol: 'AAPL' }
     ])(
       'removes the currency if it is the currency of the asset profile ($dataSource)',
-      async ({ dataSource, symbol }) => {
+      async ({ currency, dataSource, symbol }) => {
         const data = await getUpdatedActivityData({
+          currency,
           dataSource,
           symbol,
-          currency: 'USD',
           userId: 'user-id'
         });
 
@@ -796,19 +796,19 @@ describe('ActivitiesService', () => {
     );
 
     it.each([
-      { dataSource: DataSource.MANUAL, symbol: 'GF_GOLD' },
-      { dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+      { currency: 'EUR', dataSource: DataSource.MANUAL, symbol: 'GF_GOLD' },
+      { currency: 'USD', dataSource: DataSource.YAHOO, symbol: 'AAPL' }
     ])(
       'keeps the currency if it is not the currency of the asset profile ($dataSource)',
-      async ({ dataSource, symbol }) => {
+      async ({ currency, dataSource, symbol }) => {
         const data = await getUpdatedActivityData({
+          currency,
           dataSource,
           symbol,
-          currency: 'EUR',
           userId: 'user-id'
         });
 
-        expect(data.currency).toBe('EUR');
+        expect(data.currency).toBe(currency);
       }
     );
 
@@ -845,7 +845,7 @@ describe('ActivitiesService', () => {
             })
           },
           symbolProfile: {
-            findUnique: jest.fn().mockResolvedValue({ currency: 'USD' })
+            findUnique: jest.fn().mockResolvedValue({ currency: 'EUR' })
           }
         } as unknown as PrismaService,
         null,
