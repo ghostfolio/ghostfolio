@@ -1,9 +1,9 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { WatchlistService } from '@ghostfolio/api/app/endpoints/watchlist/watchlist.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { transformDataSourceInResponse } from '@ghostfolio/api/helper/data-source.helper';
 import { TableColumnDefinition } from '@ghostfolio/api/helper/interfaces/table-column-definition.interface';
 import { getMarkdownTable } from '@ghostfolio/api/helper/markdown-table.helper';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {

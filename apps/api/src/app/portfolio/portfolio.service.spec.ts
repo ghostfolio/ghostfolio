@@ -1,4 +1,3 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
@@ -7,6 +6,7 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/services/account/account.service';
 import { CashDetails } from '@ghostfolio/api/services/account/interfaces/cash-details.interface';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';

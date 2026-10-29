@@ -1,4 +1,3 @@
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { PerformanceLoggingModule } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.module';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
@@ -7,6 +6,7 @@ import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptor
 import { AccessModule } from '@ghostfolio/api/services/access/access.module';
 import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
 import { AccountModule } from '@ghostfolio/api/services/account/account.module';
+import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';

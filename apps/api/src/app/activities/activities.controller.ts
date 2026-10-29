@@ -6,6 +6,7 @@ import { isDataGatheringSupported } from '@ghostfolio/api/helper/data-source.hel
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
@@ -41,7 +42,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { omit } from 'lodash-es';
 
 import { ActivitiesFilterDto } from './activities-filter.dto';
-import { ActivitiesService } from './activities.service';
 import { GetActivitiesDto } from './get-activities.dto';
 
 @Controller('activities')
