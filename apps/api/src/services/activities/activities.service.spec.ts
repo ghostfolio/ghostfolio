@@ -181,6 +181,17 @@ describe('ActivitiesService', () => {
       expect(data).not.toHaveProperty('currency');
     });
 
+    it('does not store the currency if it is the currency of the existing custom asset profile (clone)', async () => {
+      const data = await getCreatedActivityData({
+        assetProfile: { currency: 'EUR', id: 'asset-profile-id' },
+        currency: 'EUR',
+        dataSource: DataSource.MANUAL,
+        symbol: 'GF_COPX'
+      });
+
+      expect(data).not.toHaveProperty('currency');
+    });
+
     it('stores the currency of an activity with a new asset profile of a data provider', async () => {
       const data = await getCreatedActivityData({ currency: 'USD' });
 
@@ -190,11 +201,13 @@ describe('ActivitiesService', () => {
     async function getCreatedActivityData({
       assetProfile,
       currency,
-      dataSource = DataSource.YAHOO
+      dataSource = DataSource.YAHOO,
+      symbol = 'VT'
     }: {
-      assetProfile?: { currency: string };
+      assetProfile?: { currency: string; id?: string };
       currency: string;
       dataSource?: DataSource;
+      symbol?: string;
     }) {
       const create = jest.fn(({ data }: Prisma.OrderCreateArgs) => {
         return {
@@ -230,8 +243,8 @@ describe('ActivitiesService', () => {
         quantity: 1,
         SymbolProfile: {
           connectOrCreate: {
-            create: { dataSource, currency: 'USD', symbol: 'VT' },
-            where: { dataSource_symbol: { dataSource, symbol: 'VT' } }
+            create: { dataSource, symbol, currency: 'USD' },
+            where: { dataSource_symbol: { dataSource, symbol } }
           }
         },
         type: 'BUY',
