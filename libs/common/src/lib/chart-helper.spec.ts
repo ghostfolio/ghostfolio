@@ -19,7 +19,7 @@ describe('getTooltipOptions', () => {
       colorScheme: 'LIGHT'
     });
 
-    return (callbacks.label as (context: unknown) => string)({
+    return (callbacks?.label as (context: unknown) => string)({
       dataset: { label: 'Performance' },
       parsed: { y, x: 0 }
     });
