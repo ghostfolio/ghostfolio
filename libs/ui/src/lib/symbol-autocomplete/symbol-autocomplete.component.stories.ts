@@ -91,7 +91,7 @@ export default {
           useValue: new HttpClientMock(
             new Map([
               [
-                '/api/v1/symbol/lookup',
+                '/api/v1/symbols/lookup',
                 {
                   items: FILTERED_OPTIONS
                 }

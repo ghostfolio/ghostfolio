@@ -61,10 +61,10 @@ import { PlatformsModule } from './endpoints/platforms/platforms.module';
 import { PublicModule } from './endpoints/public/public.module';
 import { SitemapModule } from './endpoints/sitemap/sitemap.module';
 import { SubscriptionModule } from './endpoints/subscription/subscription.module';
+import { SymbolsModule } from './endpoints/symbols/symbols.module';
 import { TagsModule } from './endpoints/tags/tags.module';
 import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
-import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -150,7 +150,7 @@ import { UserModule } from './user/user.module';
     }),
     SitemapModule,
     SubscriptionModule,
-    SymbolModule,
+    SymbolsModule,
     TagsModule,
     ThrottlerModule.forRootAsync({
       imports: [ConfigurationModule],

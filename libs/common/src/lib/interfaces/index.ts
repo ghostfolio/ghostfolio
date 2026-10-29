@@ -90,6 +90,7 @@ import type { PortfolioReportResponse } from './responses/portfolio-report.inter
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { RedeemCouponResponse } from './responses/redeem-coupon-response.interface';
+import type { SymbolResponse } from './responses/symbol-response.interface';
 import type { WatchlistResponse } from './responses/watchlist-response.interface';
 import type { RuleSettings } from './rule-settings.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
@@ -207,6 +208,7 @@ export {
   Statistics,
   SubscriptionOffer,
   SymbolItem,
+  SymbolResponse,
   SystemMessage,
   User,
   UserItem,

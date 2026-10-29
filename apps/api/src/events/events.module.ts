@@ -1,5 +1,5 @@
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
+import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
