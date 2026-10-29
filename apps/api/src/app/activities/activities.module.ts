@@ -6,7 +6,6 @@ import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
-import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
 import { Module } from '@nestjs/common';
@@ -22,7 +21,6 @@ import { ActivitiesController } from './activities.controller';
     DataProviderModule,
     ImpersonationModule,
     RedactValuesInResponseModule,
-    RedisCacheModule,
     SymbolProfileModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
