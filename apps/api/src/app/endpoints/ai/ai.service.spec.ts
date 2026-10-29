@@ -37,11 +37,23 @@ jest.mock('ai', () => {
     generateText: jest.fn(),
     NoObjectGeneratedError: class MockNoObjectGeneratedError extends Error {
       public readonly finishReason: string;
+      public readonly response?: { modelId: string };
+      public readonly usage?: { totalTokens: number };
 
-      public constructor({ finishReason }: { finishReason: string }) {
+      public constructor({
+        finishReason,
+        response,
+        usage
+      }: {
+        finishReason: string;
+        response?: { modelId: string };
+        usage?: { totalTokens: number };
+      }) {
         super('No object generated');
 
         this.finishReason = finishReason;
+        this.response = response;
+        this.usage = usage;
       }
 
       public static isInstance(error: unknown) {
@@ -202,7 +214,7 @@ describe('AiService', () => {
       );
     });
 
-    it('Restricts the routing to endpoints with zero data retention, disables the reasoning and passes a PDF file to the model itself', async () => {
+    it('Restricts the routing to endpoints with zero data retention, disables the reasoning, sets the temperature to 0 and passes a PDF file to the model itself', async () => {
       await aiService.getActivityRowsFromFile({
         file: { buffer: Buffer.from('%PDF-1.7'), mediaType: 'application/pdf' },
         locale: 'de-CH'
@@ -214,6 +226,10 @@ describe('AiService', () => {
         reasoning: { effort: 'none' },
         usage: { include: true }
       });
+
+      expect(generateText).toHaveBeenCalledWith(
+        expect.objectContaining({ temperature: 0 })
+      );
     });
 
     it('Falls back to the general model if no vision model is set', async () => {
@@ -299,6 +315,8 @@ describe('AiService', () => {
         })
       ).rejects.toThrow(CallerFacingError);
 
+      expect(generateText).toHaveBeenCalledTimes(1);
+
       expect(Logger.prototype.warn).toHaveBeenCalled();
     });
 
@@ -325,9 +343,107 @@ describe('AiService', () => {
       expect(Logger.prototype.warn).toHaveBeenCalled();
     });
 
-    it('Passes on every other error of the vision model', async () => {
-      const error = new NoObjectGeneratedError({
+    it('Requests the rows one more time if the output does not agree with the schema', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockRejectedValueOnce(
+        new NoObjectGeneratedError({
+          finishReason: 'stop',
+          response: { modelId: 'vision-model' },
+          usage: { totalTokens: 1000 }
+        } as ConstructorParameters<typeof NoObjectGeneratedError>[0])
+      );
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          abortSignal,
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).resolves.toEqual({ broker: 'Swissquote', rows });
+
+      expect(generateText).toHaveBeenCalledTimes(2);
+
+      const [[firstOptions], [secondOptions]] =
+        jest.mocked(generateText).mock.calls;
+
+      expect(secondOptions).toEqual(firstOptions);
+      expect(secondOptions.abortSignal).toBe(abortSignal);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'the model vision-model one more time after 1000 tokens'
+        )
+      );
+    });
+
+    it('Requests the rows one more time if the output is empty', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockResolvedValueOnce({
+        finalStep: { response: { modelId: 'vision-model' } },
+        finishReason: 'other',
+        text: '',
+        usage: { totalTokens: 10 },
+        get output() {
+          throw new Error('No output generated');
+        }
+      } as unknown as Awaited<ReturnType<typeof generateText>>);
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).resolves.toEqual({ broker: 'Swissquote', rows });
+
+      expect(generateText).toHaveBeenCalledTimes(2);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'the model vision-model one more time after 10 tokens'
+        )
+      );
+    });
+
+    it('Passes on the error if the output does not agree with the schema a second time', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      const firstError = new NoObjectGeneratedError({
         finishReason: 'stop'
+      } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
+
+      const secondError = new NoObjectGeneratedError({
+        finishReason: 'stop'
+      } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
+
+      jest
+        .mocked(generateText)
+        .mockRejectedValueOnce(firstError)
+        .mockRejectedValueOnce(secondError);
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).rejects.toBe(secondError);
+
+      expect(generateText).toHaveBeenCalledTimes(2);
+    });
+
+    it('Passes on the error if the content filter stops the output', async () => {
+      const error = new NoObjectGeneratedError({
+        finishReason: 'content-filter'
       } as ConstructorParameters<typeof NoObjectGeneratedError>[0]);
 
       jest.mocked(generateText).mockRejectedValueOnce(error);
@@ -341,6 +457,26 @@ describe('AiService', () => {
           locale: 'de-CH'
         })
       ).rejects.toBe(error);
+
+      expect(generateText).toHaveBeenCalledTimes(1);
+    });
+
+    it('Passes on every other error of the vision model', async () => {
+      const error = new Error('Provider failed');
+
+      jest.mocked(generateText).mockRejectedValueOnce(error);
+
+      await expect(
+        aiService.getActivityRowsFromFile({
+          file: {
+            buffer: Buffer.from('%PDF-1.7'),
+            mediaType: 'application/pdf'
+          },
+          locale: 'de-CH'
+        })
+      ).rejects.toBe(error);
+
+      expect(generateText).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -1524,7 +1660,7 @@ describe('AiService', () => {
       );
     });
 
-    it('Restricts the routing to endpoints with zero data retention, disables the reasoning and gives the model no tools', async () => {
+    it('Restricts the routing to endpoints with zero data retention, disables the reasoning, sets the temperature to 0 and gives the model no tools', async () => {
       mockRowMatches({});
 
       await aiService.getActivitiesFromRows({
@@ -1545,12 +1681,55 @@ describe('AiService', () => {
         expect.objectContaining({
           abortSignal,
           model,
-          output: { schema: ROW_MATCHES_OUTPUT }
+          output: { schema: ROW_MATCHES_OUTPUT },
+          temperature: 0
         })
       );
 
       expect(jest.mocked(generateText).mock.calls[0][0]).not.toHaveProperty(
         'tools'
+      );
+    });
+
+    it('Requests the matches one more time if the output does not agree with the schema', async () => {
+      jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+      jest.mocked(generateText).mockRejectedValueOnce(
+        new NoObjectGeneratedError({
+          finishReason: 'stop',
+          response: { modelId: 'agent-model' },
+          usage: { totalTokens: 1000 }
+        } as ConstructorParameters<typeof NoObjectGeneratedError>[0])
+      );
+
+      mockRowMatches({
+        assets: [
+          { currency: 'USD', dataSource: 'YAHOO', id: 0, symbol: 'AAPL' }
+        ]
+      });
+
+      const { activities } = await aiService.getActivitiesFromRows({
+        abortSignal,
+        accounts,
+        userCurrency,
+        userId,
+        rows: [createActivityRow({ accountName: null })]
+      });
+
+      expect(activities).toEqual([expect.objectContaining({ symbol: 'AAPL' })]);
+
+      expect(generateText).toHaveBeenCalledTimes(2);
+
+      const [[firstOptions], [secondOptions]] =
+        jest.mocked(generateText).mock.calls;
+
+      expect(secondOptions).toEqual(firstOptions);
+      expect(secondOptions.abortSignal).toBe(abortSignal);
+
+      expect(Logger.prototype.warn).toHaveBeenCalledWith(
+        expect.stringContaining(
+          'the model agent-model one more time after 1000 tokens'
+        )
       );
     });
 

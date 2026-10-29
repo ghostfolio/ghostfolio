@@ -458,6 +458,10 @@ ngx-skeleton-loader {
 
 .mdc-dialog__title {
   padding: 9px 24px !important;
+
+  button[mat-icon-button] {
+    margin-right: -0.8125rem;
+  }
 }
 
 .no-min-width {
