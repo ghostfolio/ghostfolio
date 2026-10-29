@@ -1,6 +1,6 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import { HEADER_KEY_TOKEN } from '@ghostfolio/common/config';
 import { hasRole } from '@ghostfolio/common/permissions';
 

@@ -1,4 +1,3 @@
-import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { AuthDeviceModule } from '@ghostfolio/api/services/auth-device/auth-device.module';
@@ -10,6 +9,7 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
+import { UserModule } from '@ghostfolio/api/services/user/user.module';
 
 import { Logger, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';

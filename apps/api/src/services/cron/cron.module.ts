@@ -1,5 +1,3 @@
-import { UserModule } from '@ghostfolio/api/app/user/user.module';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
@@ -10,6 +8,8 @@ import { StatisticsGatheringQueueModule } from '@ghostfolio/api/services/queues/
 import { StatisticsGatheringService } from '@ghostfolio/api/services/queues/statistics-gathering/statistics-gathering.service';
 import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
+import { UserModule } from '@ghostfolio/api/services/user/user.module';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 
 import { Logger, Module } from '@nestjs/common';
 

@@ -1,9 +1,9 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getHelmetOptions } from '@ghostfolio/api/helper/security-headers.helper';
 import { languageRedirectMiddleware } from '@ghostfolio/api/middlewares/language-redirect.middleware';
 import { createMcpAuthorizationMiddleware } from '@ghostfolio/api/middlewares/mcp-authorization.middleware';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import {
   BULL_BOARD_ROUTE,
   DEFAULT_HOST,

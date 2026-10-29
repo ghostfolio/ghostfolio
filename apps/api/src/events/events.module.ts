@@ -1,4 +1,3 @@
-import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -7,6 +6,7 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
+import { UserModule } from '@ghostfolio/api/services/user/user.module';
 
 import { Module } from '@nestjs/common';
 

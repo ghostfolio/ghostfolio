@@ -1,4 +1,3 @@
-import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { environment } from '@ghostfolio/api/environments/environment';
 import {
   getMcpUserOfBearerToken,
@@ -14,6 +13,7 @@ import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/p
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 import { SymbolModule } from '@ghostfolio/api/services/symbol/symbol.module';
+import { UserModule } from '@ghostfolio/api/services/user/user.module';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 
 import { Module } from '@nestjs/common';

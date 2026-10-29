@@ -1,6 +1,6 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { isBrowserUserAgent } from '@ghostfolio/api/helper/user-agent.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_LANGUAGE_CODE,
