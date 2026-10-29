@@ -1,6 +1,6 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';

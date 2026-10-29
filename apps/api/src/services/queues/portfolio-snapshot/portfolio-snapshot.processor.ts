@@ -1,7 +1,7 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
 import {
