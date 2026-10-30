@@ -12,7 +12,10 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
+import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  NON_INVESTMENT_ACTIVITY_TYPES
+} from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
@@ -345,9 +348,14 @@ export class ActivitiesController {
         originalActivity.symbolProfileId
       ]);
 
+    const isAssetProfileConnected =
+      !NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) &&
+      !(data.dataSource === 'MANUAL' && data.type === 'BUY');
+
     if (
-      originalAssetProfile.dataSource !== data.dataSource ||
-      originalAssetProfile.symbol !== data.symbol
+      isAssetProfileConnected &&
+      (originalAssetProfile.dataSource !== data.dataSource ||
+        originalAssetProfile.symbol !== data.symbol)
     ) {
       await this.validateActivity({
         authenticatedUserSubscription,
