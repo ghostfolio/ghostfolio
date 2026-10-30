@@ -1,5 +1,6 @@
 import { KEY_SUBSCRIPTION_INTERSTITIAL_SHOWN } from '@ghostfolio/client/services/settings-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
+import { BULL_BOARD_COOKIE_NAME } from '@ghostfolio/common/config';
 import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
@@ -109,7 +110,7 @@ export class UserService extends ObservableStore<UserStoreState> {
     window.localStorage.clear();
     window.sessionStorage.clear();
 
-    void this.clearAllCookies();
+    void this.clearBullBoardCookie();
 
     this.reset();
 
@@ -118,27 +119,13 @@ export class UserService extends ObservableStore<UserStoreState> {
     }
   }
 
-  private async clearAllCookies() {
+  private async clearBullBoardCookie() {
     if (!('cookieStore' in window)) {
       console.warn('Cookie Store API not available in this browser');
       return;
     }
 
-    const cookies = await cookieStore.getAll();
-
-    const cookieNames = cookies
-      .map(({ name }) => {
-        return name;
-      })
-      .filter((name): name is string => {
-        return !!name;
-      });
-
-    await Promise.all(
-      cookieNames.map((name) => {
-        return cookieStore.delete(name);
-      })
-    );
+    await cookieStore.delete(BULL_BOARD_COOKIE_NAME);
   }
 
   private fetchUser(): Observable<User> {
