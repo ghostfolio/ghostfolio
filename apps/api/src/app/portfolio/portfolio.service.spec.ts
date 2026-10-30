@@ -25,7 +25,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { AccountWithBalance, DateRange } from '@ghostfolio/common/types';
 
-import { AssetClass, DataSource, Prisma } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfDay } from 'date-fns';
 import { randomUUID } from 'node:crypto';
@@ -346,7 +346,7 @@ describe('PortfolioService', () => {
       ).getAggregatedMarkets(holdings);
     };
 
-    it('should distribute holdings with countries to their market and route holdings without countries (e.g. commodities, cryptocurrencies) to the unknown bucket', () => {
+    it('should distribute holdings with countries to their market and route holdings without countries (e.g. commodities) to the unknown bucket', () => {
       const holdings = [
         {
           // Gold (GC=F)
@@ -390,6 +390,143 @@ describe('PortfolioService', () => {
 
       expect(marketsAdvanced.northAmerica.valueInBaseCurrency).toBe(1000);
       expect(marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency).toBe(500);
+    });
+
+    it('should exclude cash and cryptocurrency holdings from the market distribution', () => {
+      const holdings = [
+        {
+          // BTC
+          assetProfile: {
+            assetSubClass: AssetSubClass.CRYPTOCURRENCY,
+            countries: []
+          },
+          markets: {
+            developedMarkets: 0,
+            emergingMarkets: 0,
+            otherMarkets: 0
+          },
+          marketsAdvanced: {
+            asiaPacific: 0,
+            emergingMarkets: 0,
+            europe: 0,
+            japan: 0,
+            northAmerica: 0,
+            otherMarkets: 0
+          },
+          valueInBaseCurrency: 500
+        },
+        {
+          // Cash (USD)
+          assetProfile: {
+            assetSubClass: AssetSubClass.CASH,
+            countries: []
+          },
+          markets: {
+            developedMarkets: 0,
+            emergingMarkets: 0,
+            otherMarkets: 0
+          },
+          marketsAdvanced: {
+            asiaPacific: 0,
+            emergingMarkets: 0,
+            europe: 0,
+            japan: 0,
+            northAmerica: 0,
+            otherMarkets: 0
+          },
+          valueInBaseCurrency: 250
+        },
+        {
+          // MSFT
+          assetProfile: { countries: [{ code: 'US', weight: 1 }] },
+          markets: {
+            developedMarkets: 1,
+            emergingMarkets: 0,
+            otherMarkets: 0
+          },
+          marketsAdvanced: {
+            asiaPacific: 0,
+            emergingMarkets: 0,
+            europe: 0,
+            japan: 0,
+            northAmerica: 1,
+            otherMarkets: 0
+          },
+          valueInBaseCurrency: 1000
+        }
+      ];
+
+      const { markets, marketsAdvanced } = getAggregatedMarkets(holdings);
+
+      expect(markets.developedMarkets.valueInBaseCurrency).toBe(1000);
+      expect(markets[UNKNOWN_KEY].valueInBaseCurrency).toBe(0);
+
+      expect(markets.developedMarkets.valueInPercentage).toBeCloseTo(1);
+      expect(markets[UNKNOWN_KEY].valueInPercentage).toBe(0);
+
+      expect(marketsAdvanced.northAmerica.valueInBaseCurrency).toBe(1000);
+      expect(marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency).toBe(0);
+      expect(marketsAdvanced.northAmerica.valueInPercentage).toBeCloseTo(1);
+      expect(marketsAdvanced[UNKNOWN_KEY].valueInPercentage).toBe(0);
+    });
+
+    it('should not produce NaN percentages when the portfolio only holds cash and cryptocurrencies', () => {
+      const holdings = [
+        {
+          // BTC
+          assetProfile: {
+            assetSubClass: AssetSubClass.CRYPTOCURRENCY,
+            countries: []
+          },
+          markets: {
+            developedMarkets: 0,
+            emergingMarkets: 0,
+            otherMarkets: 0
+          },
+          marketsAdvanced: {
+            asiaPacific: 0,
+            emergingMarkets: 0,
+            europe: 0,
+            japan: 0,
+            northAmerica: 0,
+            otherMarkets: 0
+          },
+          valueInBaseCurrency: 500
+        },
+        {
+          // Cash (USD)
+          assetProfile: {
+            assetSubClass: AssetSubClass.CASH,
+            countries: []
+          },
+          markets: {
+            developedMarkets: 0,
+            emergingMarkets: 0,
+            otherMarkets: 0
+          },
+          marketsAdvanced: {
+            asiaPacific: 0,
+            emergingMarkets: 0,
+            europe: 0,
+            japan: 0,
+            northAmerica: 0,
+            otherMarkets: 0
+          },
+          valueInBaseCurrency: 250
+        }
+      ];
+
+      const { markets, marketsAdvanced } = getAggregatedMarkets(holdings);
+
+      for (const bucket of Object.values(markets)) {
+        expect(bucket.valueInBaseCurrency).toBe(0);
+        expect(bucket.valueInPercentage).toBe(0);
+      }
+
+      for (const bucket of Object.values(marketsAdvanced)) {
+        expect(bucket.valueInBaseCurrency).toBe(0);
+        expect(bucket.valueInPercentage).toBe(0);
+      }
     });
   });
 
