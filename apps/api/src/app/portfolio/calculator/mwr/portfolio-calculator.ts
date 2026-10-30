@@ -388,7 +388,7 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
     }
 
     const normalizedCashFlows = aggregatedCashFlows.map(({ date, value }) => ({
-      date,
+      exponent: differenceInCalendarDays(parseDate(date), firstDate) / 365,
       value: value.div(scale).toNumber()
     }));
 
@@ -398,12 +398,7 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
       }
 
       return normalizedCashFlows.reduce((xnpv, cashFlow) => {
-        const days = differenceInCalendarDays(
-          parseDate(cashFlow.date),
-          firstDate
-        );
-
-        return xnpv + cashFlow.value / Math.pow(1 + rate, days / 365);
+        return xnpv + cashFlow.value / Math.pow(1 + rate, cashFlow.exponent);
       }, 0);
     };
 
@@ -419,11 +414,7 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
       }
 
       const derivative = normalizedCashFlows.reduce((value, cashFlow) => {
-        const days = differenceInCalendarDays(
-          parseDate(cashFlow.date),
-          firstDate
-        );
-        const exponent = days / 365;
+        const exponent = cashFlow.exponent;
 
         if (exponent === 0) {
           return value;
