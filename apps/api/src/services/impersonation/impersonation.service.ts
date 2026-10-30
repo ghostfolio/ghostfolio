@@ -1,4 +1,4 @@
-import { AccessService } from '@ghostfolio/api/app/access/access.service';
+import { AccessService } from '@ghostfolio/api/services/access/access.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SubscriptionService } from '@ghostfolio/api/services/subscription/subscription.service';

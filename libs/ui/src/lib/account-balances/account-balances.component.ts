@@ -69,9 +69,9 @@ export class GfAccountBalancesComponent implements OnChanges {
     input.required<AccountBalancesResponse['balances']>();
 
   public readonly accountCurrency = input.required<string | null>();
-  public readonly accountId = input.required<string>();
   public readonly currentBalance = input<number | null>();
   public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
+  public readonly isSubmitting = input(false);
 
   public readonly locale = input(getLocale(), {
     transform: (value?: string) => {
@@ -137,7 +137,6 @@ export class GfAccountBalancesComponent implements OnChanges {
 
     const accountBalance: CreateAccountBalanceDto = {
       balance,
-      accountId: this.accountId(),
       date: format(date, DATE_FORMAT)
     };
 

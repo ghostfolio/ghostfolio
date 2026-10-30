@@ -1,4 +1,4 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';

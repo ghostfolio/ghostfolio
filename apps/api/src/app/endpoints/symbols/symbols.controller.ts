@@ -1,10 +1,11 @@
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { SymbolService } from '@ghostfolio/api/services/symbol/symbol.service';
 import {
   DataProviderHistoricalResponse,
   LookupResponse,
-  SymbolItem
+  SymbolResponse
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -28,10 +29,13 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isEmpty } from 'lodash-es';
 
 import { GetLookupDto } from './get-lookup.dto';
-import { SymbolService } from './symbol.service';
 
-@Controller('symbol')
-export class SymbolController {
+@Controller([
+  'symbols',
+  /** @deprecated */
+  'symbol'
+])
+export class SymbolsController {
   public constructor(
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly symbolService: SymbolService
@@ -72,7 +76,7 @@ export class SymbolController {
     @Param('symbol') symbol: string,
     @Query('includeHistoricalData', new ParseIntPipe({ optional: true }))
     includeHistoricalData = 0
-  ): Promise<SymbolItem> {
+  ): Promise<SymbolResponse> {
     if (!DataSource[dataSource]) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),

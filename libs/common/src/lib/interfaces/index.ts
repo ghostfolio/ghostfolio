@@ -38,7 +38,10 @@ import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Product } from './product.interface';
 import type { ReferralPartner } from './referral-partner.interface';
+import type { AccessResponse } from './responses/access-response.interface';
 import type { AccessTokenResponse } from './responses/access-token-response.interface';
+import type { AccessesResponse } from './responses/accesses-response.interface';
+import type { AccountBalanceResponse } from './responses/account-balance-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { AccountResponse } from './responses/account-response.interface';
 import type { AccountsResponse } from './responses/accounts-response.interface';
@@ -87,6 +90,7 @@ import type { PortfolioReportResponse } from './responses/portfolio-report.inter
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { RedeemCouponResponse } from './responses/redeem-coupon-response.interface';
+import type { SymbolResponse } from './responses/symbol-response.interface';
 import type { WatchlistResponse } from './responses/watchlist-response.interface';
 import type { RuleSettings } from './rule-settings.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
@@ -107,9 +111,12 @@ import type { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export {
   Access,
+  AccessResponse,
   AccessSettings,
   AccessTokenResponse,
+  AccessesResponse,
   AccountBalance,
+  AccountBalanceResponse,
   AccountBalancesResponse,
   AccountResponse,
   AccountsResponse,
@@ -201,6 +208,7 @@ export {
   Statistics,
   SubscriptionOffer,
   SymbolItem,
+  SymbolResponse,
   SystemMessage,
   User,
   UserItem,

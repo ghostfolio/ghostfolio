@@ -1,9 +1,10 @@
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { Impersonation } from '@ghostfolio/api/decorators/impersonation.decorator';
 import { RequiresScope } from '@ghostfolio/api/decorators/requires-scope.decorator';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
-import { CreateAccountBalanceDto } from '@ghostfolio/common/dtos';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { AccountService } from '@ghostfolio/api/services/account/account.service';
+import { CreateAccountBalanceWithAccountIdDto } from '@ghostfolio/common/dtos';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
@@ -20,8 +21,7 @@ import {
 import { AccountBalance } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { AccountBalanceService } from './account-balance.service';
-
+/** @deprecated */
 @Controller('account-balance')
 export class AccountBalanceController {
   public constructor(
@@ -34,7 +34,7 @@ export class AccountBalanceController {
   @RequiresScope(scopes.accountUpdate)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async createAccountBalance(
-    @Body() data: CreateAccountBalanceDto,
+    @Body() data: CreateAccountBalanceWithAccountIdDto,
     @Impersonation() { userId }: ImpersonationContext
   ): Promise<AccountBalance> {
     const account = await this.accountService.account({

@@ -1,3 +1,4 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
   HEADER_KEY_TOKEN
@@ -13,6 +14,7 @@ import {
   MarketDataOfMarketsResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfFearAndGreedIndexComponent } from '@ghostfolio/ui/fear-and-greed-index';
 
 import { CommonModule } from '@angular/common';
@@ -24,6 +26,7 @@ import {
 } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   inject,
@@ -57,6 +60,7 @@ export class GfApiPageComponent implements OnInit {
     FetchResult<DataProviderGhostfolioAssetProfileResponse>
   >;
   protected dividends$: Observable<FetchResult<DividendsResponse['dividends']>>;
+  protected hasPermissionToAccessAdminControl: boolean;
   protected historicalData$: Observable<
     FetchResult<HistoricalResponse['historicalData']>
   >;
@@ -72,12 +76,25 @@ export class GfApiPageComponent implements OnInit {
 
   private apiKey: string;
 
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly destroyRef = inject(DestroyRef);
   private readonly http = inject(HttpClient);
+  private readonly userService = inject(UserService);
 
   public ngOnInit() {
     this.apiKey =
       prompt($localize`Please enter your Ghostfolio API key:`) ?? '';
+
+    this.userService.stateChanged
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => {
+        this.hasPermissionToAccessAdminControl = hasPermission(
+          state?.user?.permissions,
+          permissions.accessAdminControl
+        );
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.aiServiceHealth$ = this.fetchAiServiceHealth();
     this.assetProfile$ = this.fetchAssetProfile({ symbol: 'AAPL' });

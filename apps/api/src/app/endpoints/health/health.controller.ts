@@ -1,4 +1,6 @@
 import { AiService } from '@ghostfolio/api/app/endpoints/ai/ai.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import {
   AiServiceHealthResponse,
@@ -6,6 +8,7 @@ import {
   DataProviderHealthResponse,
   LivenessHealthResponse
 } from '@ghostfolio/common/interfaces';
+import { permissions } from '@ghostfolio/common/permissions';
 
 import {
   Controller,
@@ -15,11 +18,14 @@ import {
   Logger,
   Param,
   Res,
+  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import ms from 'ms';
 
 import { HealthService } from './health.service';
 
@@ -52,12 +58,15 @@ export class HealthController {
   }
 
   @Get('ai')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getHealthOfAiService(
     @Res() response: Response
   ): Promise<Response<AiServiceHealthResponse>> {
     try {
       const { text } = await this.aiService.generateText({
-        prompt: `Reply with the word "OK" and nothing else.`
+        prompt: `Reply with the word "OK" and nothing else.`,
+        requestTimeout: ms('30 seconds')
       });
 
       if (text === 'OK') {

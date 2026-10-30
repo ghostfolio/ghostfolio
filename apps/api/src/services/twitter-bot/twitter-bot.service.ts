@@ -1,7 +1,7 @@
-import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { SymbolService } from '@ghostfolio/api/services/symbol/symbol.service';
 import { ghostfolioFearAndGreedIndexSymbolStocks } from '@ghostfolio/common/config';
 import {
   resolveFearAndGreedIndex,

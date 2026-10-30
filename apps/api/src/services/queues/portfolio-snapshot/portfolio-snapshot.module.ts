@@ -1,7 +1,7 @@
-import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
+import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';

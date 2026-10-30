@@ -120,16 +120,18 @@ export function getTooltipOptions<T extends ChartType>({
         const yPoint = (context.parsed as Point).y;
 
         if (yPoint !== null) {
+          const value = yPoint.toLocaleString(locale, {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2,
+            useGrouping: true
+          });
+
           if (currency) {
-            label += `${yPoint.toLocaleString(locale, {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-              useGrouping: true
-            })} ${currency}`;
+            label += `${value} ${currency}`;
           } else if (unit) {
-            label += `${yPoint.toFixed(2)} ${unit}`;
+            label += `${value} ${unit}`;
           } else {
-            label += yPoint.toFixed(2);
+            label += value;
           }
         }
 

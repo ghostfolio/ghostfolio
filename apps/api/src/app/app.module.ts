@@ -35,11 +35,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { join } from 'node:path';
 
-import { AccessModule } from './access/access.module';
-import { AccountModule } from './account/account.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
+import { AccessesModule } from './endpoints/accesses/accesses.module';
+import { AccountsModule } from './endpoints/accounts/accounts.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
 import { AssetProfilesModule } from './endpoints/asset-profiles/asset-profiles.module';
@@ -61,18 +61,18 @@ import { PlatformsModule } from './endpoints/platforms/platforms.module';
 import { PublicModule } from './endpoints/public/public.module';
 import { SitemapModule } from './endpoints/sitemap/sitemap.module';
 import { SubscriptionModule } from './endpoints/subscription/subscription.module';
+import { SymbolsModule } from './endpoints/symbols/symbols.module';
 import { TagsModule } from './endpoints/tags/tags.module';
 import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
-import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
 
 @Module({
   controllers: [AppController],
   imports: [
     AdminModule,
-    AccessModule,
-    AccountModule,
+    AccessesModule,
+    AccountsModule,
     ActivitiesModule,
     AiModule,
     ApiKeysModule,
@@ -150,7 +150,7 @@ import { UserModule } from './user/user.module';
     }),
     SitemapModule,
     SubscriptionModule,
-    SymbolModule,
+    SymbolsModule,
     TagsModule,
     ThrottlerModule.forRootAsync({
       imports: [ConfigurationModule],

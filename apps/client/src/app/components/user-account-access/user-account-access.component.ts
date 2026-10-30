@@ -216,7 +216,7 @@ export class GfUserAccountAccessComponent {
     this.dataService
       .fetchAccesses()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((accesses) => {
+      .subscribe(({ accesses }) => {
         this.accessesGive = accesses;
 
         this.changeDetectorRef.markForCheck();

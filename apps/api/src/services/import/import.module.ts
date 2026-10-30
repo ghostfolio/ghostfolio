@@ -1,6 +1,6 @@
-import { AccountModule } from '@ghostfolio/api/app/account/account.module';
-import { ActivitiesModule } from '@ghostfolio/api/app/activities/activities.module';
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
+import { AccountModule } from '@ghostfolio/api/services/account/account.module';
+import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';

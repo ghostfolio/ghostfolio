@@ -1,12 +1,11 @@
-import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
-import { AccountModule } from '@ghostfolio/api/app/account/account.module';
-import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { environment } from '@ghostfolio/api/environments/environment';
 import {
   getMcpUserOfBearerToken,
   hasLimitsOfBasicSubscriptionOfBearerToken
 } from '@ghostfolio/api/helper/bearer-token.helper';
+import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
+import { AccountModule } from '@ghostfolio/api/services/account/account.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -14,6 +13,7 @@ import { ImportModule } from '@ghostfolio/api/services/import/import.module';
 import { PortfolioTableModule } from '@ghostfolio/api/services/portfolio-table/portfolio-table.module';
 import { PortfolioTableService } from '@ghostfolio/api/services/portfolio-table/portfolio-table.service';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { SymbolModule } from '@ghostfolio/api/services/symbol/symbol.module';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 
 import { Module } from '@nestjs/common';

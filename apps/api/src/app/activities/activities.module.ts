@@ -1,46 +1,29 @@
-import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
+import { ActivitiesModule as ActivitiesServiceModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
-import { AssetProfileSplitModule } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.module';
-import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
-import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
-import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
-import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
-import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
-import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 
 import { ActivitiesController } from './activities.controller';
-import { ActivitiesService } from './activities.service';
 
 @Module({
   controllers: [ActivitiesController],
-  exports: [ActivitiesService],
   imports: [
+    ActivitiesServiceModule,
     ApiModule,
-    AssetProfileSplitModule,
-    BenchmarkModule,
     DataGatheringQueueModule,
     DataProviderModule,
-    ExchangeRateDataModule,
     ImpersonationModule,
-    MarketDataModule,
-    PrismaModule,
     RedactValuesInResponseModule,
-    RedisCacheModule,
     SymbolProfileModule,
-    TagModule,
     TransformDataSourceInRequestModule,
     TransformDataSourceInResponseModule
-  ],
-  providers: [AccountBalanceService, AccountService, ActivitiesService]
+  ]
 })
 export class ActivitiesModule {}
