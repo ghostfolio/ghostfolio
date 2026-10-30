@@ -29,6 +29,21 @@ interface DatedCashFlow {
  * of the dated investor cash flows and the terminal portfolio value.
  */
 export class MwrPortfolioCalculator extends PortfolioCalculator {
+  declare private parsedDates: Map<string, Date> | undefined;
+
+  private getParsedDate(date: string): Date {
+    this.parsedDates ??= new Map<string, Date>();
+
+    let parsedDate = this.parsedDates.get(date);
+
+    if (!parsedDate) {
+      parsedDate = parseDate(date);
+      this.parsedDates.set(date, parsedDate);
+    }
+
+    return parsedDate;
+  }
+
   protected calculateOverallPerformance({
     accumulatedValuesByDate,
     positions
@@ -372,8 +387,8 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
       return 0;
     }
 
-    const firstDate = parseDate(aggregatedCashFlows[0].date);
-    const lastDate = parseDate(aggregatedCashFlows.at(-1).date);
+    const firstDate = this.getParsedDate(aggregatedCashFlows[0].date);
+    const lastDate = this.getParsedDate(aggregatedCashFlows.at(-1).date);
 
     if (differenceInCalendarDays(lastDate, firstDate) === 0) {
       return 0;
@@ -388,7 +403,8 @@ export class MwrPortfolioCalculator extends PortfolioCalculator {
     }
 
     const normalizedCashFlows = aggregatedCashFlows.map(({ date, value }) => ({
-      exponent: differenceInCalendarDays(parseDate(date), firstDate) / 365,
+      exponent:
+        differenceInCalendarDays(this.getParsedDate(date), firstDate) / 365,
       value: value.div(scale).toNumber()
     }));
 
