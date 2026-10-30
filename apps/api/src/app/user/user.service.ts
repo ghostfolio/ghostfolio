@@ -435,7 +435,7 @@ export class UserService {
           frequency = 6;
         }
 
-        if (analytics?.activityCount % frequency === 1) {
+        if (frequency === 1 || analytics?.activityCount % frequency === 1) {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
 
