@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `uuid` from version `14.0.2` to `14.0.3`
 - Upgraded `yahoo-finance2` from version `4.0.2` to `4.0.5`
 
+### Fixed
+
+- Fixed the sign-out logic which deleted all cookies of the origin
+
 ## 3.94.0 - 2026-10-28
 
 ### Changed
