@@ -18,7 +18,9 @@ import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   ActivitiesResponse,
   ActivityResponse,
-  CreateActivityResponse
+  CreateActivityResponse,
+  DeleteActivityResponse,
+  UpdateActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -36,10 +38,9 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { omit } from 'lodash-es';
+import { omit, pick } from 'lodash-es';
 
 import { ActivitiesFilterDto } from './activities-filter.dto';
 import { GetActivitiesDto } from './get-activities.dto';
@@ -104,7 +105,7 @@ export class ActivitiesController {
   public async deleteActivity(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<Order> {
+  ): Promise<DeleteActivityResponse> {
     const activity = await this.activitiesService.order({
       id,
       userId
@@ -117,9 +118,26 @@ export class ActivitiesController {
       );
     }
 
-    return this.activitiesService.deleteActivity({
+    const deletedActivity = await this.activitiesService.deleteActivity({
       id
     });
+
+    return pick(deletedActivity, [
+      'accountId',
+      'accountUserId',
+      'comment',
+      'createdAt',
+      'currency',
+      'date',
+      'fee',
+      'id',
+      'quantity',
+      'symbolProfileId',
+      'type',
+      'unitPrice',
+      'updatedAt',
+      'userId'
+    ]);
   }
 
   @Get()
@@ -328,7 +346,7 @@ export class ActivitiesController {
     @Body() data: UpdateOrderDto,
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ) {
+  ): Promise<UpdateActivityResponse> {
     const originalActivity = await this.activitiesService.order({
       id,
       userId
@@ -357,7 +375,7 @@ export class ActivitiesController {
 
     delete data.dataSource;
 
-    return this.activitiesService.updateActivity({
+    const activity = await this.activitiesService.updateActivity({
       userId,
       data: {
         ...data,
@@ -392,5 +410,22 @@ export class ActivitiesController {
         id
       }
     });
+
+    return pick(activity, [
+      'accountId',
+      'accountUserId',
+      'comment',
+      'createdAt',
+      'currency',
+      'date',
+      'fee',
+      'id',
+      'quantity',
+      'symbolProfileId',
+      'type',
+      'unitPrice',
+      'updatedAt',
+      'userId'
+    ]);
   }
 }

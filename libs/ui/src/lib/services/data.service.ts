@@ -42,6 +42,7 @@ import {
   CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
+  DeleteActivityResponse,
   ExportResponse,
   Filter,
   ImportResponse,
@@ -61,6 +62,7 @@ import {
   PublicPortfolioResponse,
   RedeemCouponResponse,
   SymbolResponse,
+  UpdateActivityResponse,
   User,
   UserItem,
   WatchlistResponse
@@ -75,7 +77,6 @@ import type {
 import type {
   Account,
   MarketData,
-  Order,
   SymbolProfile,
   Tag,
   User as UserModel
@@ -353,7 +354,9 @@ export class DataService {
   }
 
   public deleteActivity(aId: string) {
-    return this.http.delete<Order>(`/api/v1/activities/${aId}`);
+    return this.http.delete<DeleteActivityResponse>(
+      `/api/v1/activities/${aId}`
+    );
   }
 
   public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -952,7 +955,10 @@ export class DataService {
   }
 
   public putActivity(aOrder: UpdateOrderDto) {
-    return this.http.put<UserItem>(`/api/v1/activities/${aOrder.id}`, aOrder);
+    return this.http.put<UpdateActivityResponse>(
+      `/api/v1/activities/${aOrder.id}`,
+      aOrder
+    );
   }
 
   public putAdminSetting(key: string, aData: UpdatePropertyDto) {

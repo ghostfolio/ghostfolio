@@ -1,4 +1,4 @@
-import { ActivitiesFilterDto } from '@ghostfolio/api/app/activities/activities-filter.dto';
+import { ActivitiesFilterDto } from '@ghostfolio/api/app/endpoints/activities/activities-filter.dto';
 
 import { Transform, TransformFnParams } from 'class-transformer';
 import { IsOptional, IsUUID } from 'class-validator';
