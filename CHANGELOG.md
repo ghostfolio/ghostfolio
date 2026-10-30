@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the sign-out logic which deleted all cookies of the origin
+- Fixed the sign-out logic which deleted all cookies of the origin and did not delete the _Bull Board_ cookie on plain HTTP
 
 ## 3.94.0 - 2026-10-28
 
