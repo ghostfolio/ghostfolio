@@ -1,3 +1,4 @@
+import { KEY_SUBSCRIPTION_INTERSTITIAL_SHOWN } from '@ghostfolio/client/services/settings-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -167,8 +168,14 @@ export class UserService extends ObservableStore<UserStoreState> {
           hasPermission(
             user.permissions,
             permissions.enableSubscriptionInterstitial
-          )
+          ) &&
+          !window.sessionStorage.getItem(KEY_SUBSCRIPTION_INTERSTITIAL_SHOWN)
         ) {
+          window.sessionStorage.setItem(
+            KEY_SUBSCRIPTION_INTERSTITIAL_SHOWN,
+            'true'
+          );
+
           const dialogRef = this.dialog.open<
             GfSubscriptionInterstitialDialogComponent,
             SubscriptionInterstitialDialogParams
