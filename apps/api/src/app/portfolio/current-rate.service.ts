@@ -1,5 +1,5 @@
-import { ActivitiesService } from '@ghostfolio/api/app/activities/activities.service';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { ActivitiesService } from '@ghostfolio/api/services/activities/activities.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import {
