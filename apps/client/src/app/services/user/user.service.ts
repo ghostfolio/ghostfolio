@@ -110,7 +110,7 @@ export class UserService extends ObservableStore<UserStoreState> {
     window.localStorage.clear();
     window.sessionStorage.clear();
 
-    void this.clearBullBoardCookie();
+    this.clearBullBoardCookie();
 
     this.reset();
 
@@ -119,13 +119,8 @@ export class UserService extends ObservableStore<UserStoreState> {
     }
   }
 
-  private async clearBullBoardCookie() {
-    if (!('cookieStore' in window)) {
-      console.warn('Cookie Store API not available in this browser');
-      return;
-    }
-
-    await cookieStore.delete(BULL_BOARD_COOKIE_NAME);
+  private clearBullBoardCookie() {
+    document.cookie = `${BULL_BOARD_COOKIE_NAME}=; Max-Age=0; path=/`;
   }
 
   private fetchUser(): Observable<User> {
