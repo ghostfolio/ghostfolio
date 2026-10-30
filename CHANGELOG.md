@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Localized the number formatting in the tooltip of the line chart, the investment chart and the benchmark comparator
 - Deprecated the `api/v1/symbol` endpoints in favor of the `api/v1/symbols` endpoints
 - Upgraded `@internationalized/number` from version `3.6.8` to `3.6.9`
 
