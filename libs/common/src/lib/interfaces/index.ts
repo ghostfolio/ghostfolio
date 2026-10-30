@@ -46,6 +46,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { AccountResponse } from './responses/account-response.interface';
 import type { AccountsResponse } from './responses/accounts-response.interface';
 import type { ActivitiesResponse } from './responses/activities-response.interface';
+import type { ActivityMutationResponse } from './responses/activity-mutation-response.interface';
 import type { ActivityResponse } from './responses/activity-response.interface';
 import type { AdminUserResponse } from './responses/admin-user-response.interface';
 import type { AdminUsersResponse } from './responses/admin-users-response.interface';
@@ -68,7 +69,6 @@ import type {
   DataProviderResponse,
   DataProviderHistoricalResponse
 } from './responses/data-provider-response.interface';
-import type { DeleteActivityResponse } from './responses/delete-activity-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ExchangeRateResponse } from './responses/exchange-rate-response.interface';
@@ -92,7 +92,6 @@ import type { PublicPortfolioResponse } from './responses/public-portfolio-respo
 import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { RedeemCouponResponse } from './responses/redeem-coupon-response.interface';
 import type { SymbolResponse } from './responses/symbol-response.interface';
-import type { UpdateActivityResponse } from './responses/update-activity-response.interface';
 import type { WatchlistResponse } from './responses/watchlist-response.interface';
 import type { RuleSettings } from './rule-settings.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
@@ -125,6 +124,7 @@ export {
   ActivitiesResponse,
   Activity,
   ActivityError,
+  ActivityMutationResponse,
   ActivityResponse,
   AdminData,
   AdminJobs,
@@ -159,7 +159,6 @@ export {
   DataProviderHistoricalResponse,
   DataProviderInfo,
   DataProviderResponse,
-  DeleteActivityResponse,
   DividendsResponse,
   EnhancedAssetProfile,
   ExchangeRateResponse,
@@ -213,7 +212,6 @@ export {
   SymbolItem,
   SymbolResponse,
   SystemMessage,
-  UpdateActivityResponse,
   User,
   UserItem,
   UserSettings,

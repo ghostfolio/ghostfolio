@@ -17,10 +17,9 @@ import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   ActivitiesResponse,
+  ActivityMutationResponse,
   ActivityResponse,
-  CreateActivityResponse,
-  DeleteActivityResponse,
-  UpdateActivityResponse
+  CreateActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -38,6 +37,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
+import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { omit, pick } from 'lodash-es';
@@ -105,7 +105,7 @@ export class ActivitiesController {
   public async deleteActivity(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<DeleteActivityResponse> {
+  ): Promise<ActivityMutationResponse> {
     const activity = await this.activitiesService.order({
       id,
       userId
@@ -122,22 +122,7 @@ export class ActivitiesController {
       id
     });
 
-    return pick(deletedActivity, [
-      'accountId',
-      'accountUserId',
-      'comment',
-      'createdAt',
-      'currency',
-      'date',
-      'fee',
-      'id',
-      'quantity',
-      'symbolProfileId',
-      'type',
-      'unitPrice',
-      'updatedAt',
-      'userId'
-    ]);
+    return this.getActivityMutationResponse(deletedActivity);
   }
 
   @Get()
@@ -346,7 +331,7 @@ export class ActivitiesController {
     @Body() data: UpdateOrderDto,
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<UpdateActivityResponse> {
+  ): Promise<ActivityMutationResponse> {
     const originalActivity = await this.activitiesService.order({
       id,
       userId
@@ -411,6 +396,12 @@ export class ActivitiesController {
       }
     });
 
+    return this.getActivityMutationResponse(activity);
+  }
+
+  private getActivityMutationResponse(
+    activity: Order
+  ): ActivityMutationResponse {
     return pick(activity, [
       'accountId',
       'accountUserId',
