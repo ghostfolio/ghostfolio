@@ -4,7 +4,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_DATE_RANGE,
+  DEFAULT_USER_DATE_RANGE,
   DEFAULT_LOCALE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
@@ -203,7 +203,7 @@ export class GfHomeOverviewComponent implements OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
-        range: userSettings?.dateRange ?? DEFAULT_DATE_RANGE
+        range: userSettings?.dateRange ?? DEFAULT_USER_DATE_RANGE
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ chart, errors, performance }) => {
