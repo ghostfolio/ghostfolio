@@ -41,6 +41,36 @@ export function formatGroupedDate({
   return format(date, DATE_FORMAT);
 }
 
+// Green and red of the theme (`$green` and `$red` of Bootstrap)
+const NEGATIVE_COLOR_RGB = { b: 69, g: 53, r: 220 };
+const POSITIVE_COLOR_RGB = { b: 69, g: 167, r: 40 };
+
+/**
+ * Returns the green (gain) or red (loss) of a chart line as `r, g, b`, from
+ * its last value compared to a reference (e.g. 0 % or its first value)
+ */
+export function getTrendColorRgb({
+  reference,
+  values
+}: {
+  reference?: number;
+  values: (number | null | undefined)[];
+}) {
+  const definedValues = values.filter((value): value is number => {
+    return typeof value === 'number' && Number.isFinite(value);
+  });
+
+  const start = reference ?? definedValues[0];
+  const end = definedValues.at(-1);
+
+  const { b, g, r } =
+    start !== undefined && end !== undefined && end < start
+      ? NEGATIVE_COLOR_RGB
+      : POSITIVE_COLOR_RGB;
+
+  return `${r}, ${g}, ${b}`;
+}
+
 export function getChartBorderColor(colorScheme?: ColorScheme) {
   return `rgba(${getTextColor(colorScheme)}, 0.1)`;
 }

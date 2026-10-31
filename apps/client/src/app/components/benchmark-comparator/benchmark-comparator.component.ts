@@ -2,11 +2,12 @@ import {
   getChartBorderColor,
   getChartElementsOptions,
   getTimeAxisOptions,
+  getTrendColorRgb,
   getValueAxisOptions,
   getVerticalHoverLinePlugin,
   getZeroLineAnnotation
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import { secondaryColorRgb } from '@ghostfolio/common/config';
 import { getLocale, parseDate } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -147,11 +148,19 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
       benchmarkDataValues[date] = value;
     }
 
+    // Green for a gain, red for a loss
+    const portfolioColor = `rgb(${getTrendColorRgb({
+      reference: 0,
+      values: this.performanceDataItems().map(({ value }) => {
+        return value;
+      })
+    })})`;
+
     const data: ChartData<'line'> = {
       datasets: [
         {
-          backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+          backgroundColor: portfolioColor,
+          borderColor: portfolioColor,
           borderWidth: 2,
           data: this.performanceDataItems().map(({ date, value }) => {
             return {

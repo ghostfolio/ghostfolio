@@ -1,6 +1,7 @@
 import {
   getChartBorderColor,
   getTimeAxisOptions,
+  getTrendColorRgb,
   getValueAxisOptions,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
@@ -62,6 +63,8 @@ export class GfLineChartComponent
   @Input() currency?: string;
   @Input() historicalDataItems: LineChartItem[] | null;
   @Input() isAnimated = false;
+  /** Draws the line in green (gain) or red (loss) instead of the primary color */
+  @Input() isTrendColored = false;
   @Input() label: string;
   @Input() locale = getLocale();
   @Input() showGradient = false;
@@ -160,10 +163,14 @@ export class GfLineChartComponent
           5
       );
 
+    const lineColorRgb = this.isTrendColored
+      ? getTrendColorRgb({ values: marketPrices })
+      : `${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}`;
+
     if (gradient && this.showGradient) {
       gradient.addColorStop(
         0,
-        `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.01)`
+        `rgba(${lineColorRgb}, ${this.isTrendColored ? 0.15 : 0.01})`
       );
       gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
@@ -182,7 +189,7 @@ export class GfLineChartComponent
         },
         {
           backgroundColor: gradient,
-          borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+          borderColor: `rgb(${lineColorRgb})`,
           borderWidth: 2,
           data: marketPrices,
           fill: true,
