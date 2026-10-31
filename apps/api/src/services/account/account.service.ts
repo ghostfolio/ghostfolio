@@ -73,9 +73,10 @@ export class AccountService {
     accountWhereUniqueInput: Prisma.AccountWhereUniqueInput,
     accountInclude: Prisma.AccountInclude
   ): Promise<
-    Account & {
-      activities?: Order[];
-    }
+    | (Account & {
+        activities?: Order[];
+      })
+    | null
   > {
     return this.prismaService.account.findUnique({
       include: accountInclude,
@@ -97,7 +98,7 @@ export class AccountService {
         tags?: Pick<Tag, 'id'>[];
       })[];
       balances?: AccountBalance[];
-      platform?: Platform;
+      platform?: Platform | null;
       tags?: Tag[];
     })[]
   > {
@@ -140,7 +141,15 @@ export class AccountService {
     const startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow();
 
     return accounts.map((account) => {
-      const result = {
+      const result: AccountWithBalance & {
+        activities?: (Order & {
+          SymbolProfile?: SymbolProfile;
+          tags?: Pick<Tag, 'id'>[];
+        })[];
+        balances?: AccountBalance[];
+        platform?: Platform | null;
+        tags?: Tag[];
+      } = {
         ...account,
         balance:
           // The balances are ordered by date descending, hence the first account
@@ -181,7 +190,9 @@ export class AccountService {
     tagIds?: string[];
     userId: string;
   }): Promise<Account> {
-    await this.tagService.validateTagIdsWithoutDraftTag({ tagIds, userId });
+    if (tagIds?.length) {
+      await this.tagService.validateTagIdsWithoutDraftTag({ tagIds, userId });
+    }
 
     const account = await this.prismaService.account.create({
       data: {
@@ -248,7 +259,7 @@ export class AccountService {
     return accounts.map((account) => {
       const result = {
         ...account,
-        activitiesCount: account.activities.length
+        activitiesCount: account.activities?.length ?? 0
       };
 
       delete result.activities;
@@ -296,7 +307,7 @@ export class AccountService {
       totalCashBalanceInBaseCurrency = totalCashBalanceInBaseCurrency.plus(
         this.exchangeRateDataService.toCurrency(
           account.balance,
-          account.currency,
+          account.currency ?? currency,
           currency
         )
       );
@@ -321,7 +332,9 @@ export class AccountService {
     userId: string;
     where: Prisma.AccountWhereUniqueInput;
   }): Promise<Account> {
-    await this.tagService.validateTagIdsWithoutDraftTag({ tagIds, userId });
+    if (tagIds?.length) {
+      await this.tagService.validateTagIdsWithoutDraftTag({ tagIds, userId });
+    }
 
     const account = await this.prismaService.account.update({
       data: {
@@ -372,18 +385,24 @@ export class AccountService {
     date?: Date;
     userId: string;
   }) {
-    const { balance, currency: currencyOfAccount } = await this.account({
+    const account = await this.account({
       id_userId: {
         userId,
         id: accountId
       }
     });
 
+    if (!account) {
+      return;
+    }
+
+    const { balance, currency: currencyOfAccount } = account;
+
     const amountInCurrencyOfAccount =
       await this.exchangeRateDataService.toCurrencyAtDate(
         amount,
         currency,
-        currencyOfAccount,
+        currencyOfAccount ?? currency,
         date
       );
 
