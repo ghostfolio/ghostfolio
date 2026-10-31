@@ -7,6 +7,9 @@ import { join } from 'node:path';
 
 @Injectable()
 export class I18nService implements OnModuleInit {
+  private static readonly TRANSLATION_TAGGED_MESSAGE_REGEX =
+    /:.*@@(?<id>[a-zA-Z0-9.]+):(?<message>.+)/;
+
   private readonly logger = new Logger(I18nService.name);
 
   private localesPath = join(__dirname, 'assets', 'locales');
@@ -14,6 +17,27 @@ export class I18nService implements OnModuleInit {
 
   public onModuleInit() {
     this.loadFiles();
+  }
+
+  public getLocalizedRouterLink({
+    languageCode,
+    routerLink
+  }: {
+    languageCode: string;
+    routerLink: string[];
+  }): string[] {
+    return routerLink.map((link) => {
+      const match = link.match(I18nService.TRANSLATION_TAGGED_MESSAGE_REGEX);
+
+      const segment = match
+        ? (this.getTranslation({
+            languageCode,
+            id: match.groups.id
+          }) ?? match.groups.message)
+        : link;
+
+      return segment.replace(/^\/+|\/+$/, '');
+    });
   }
 
   public getTranslation({
