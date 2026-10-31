@@ -104,7 +104,7 @@ export class AdminService {
   }
 
   public fetchUserById(id: string) {
-    return this.http.get<AdminUserResponse>(`/api/v1/admin/user/${id}`);
+    return this.http.get<AdminUserResponse>(`/api/v1/users/${id}`);
   }
 
   public fetchUsers({
@@ -124,7 +124,7 @@ export class AdminService {
       params = params.append('take', take);
     }
 
-    return this.http.get<AdminUsersResponse>('/api/v1/admin/user', { params });
+    return this.http.get<AdminUsersResponse>('/api/v1/users', { params });
   }
 
   public gatherMax() {

@@ -12,6 +12,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the validation of the holdings in the asset profile endpoints
 - Fixed the allocation of the holdings in imported asset profiles
 
+## 3.96.0 - 2026-10-31
+
+### Added
+
+- Added a blog post: _Black Weeks 2026_
+
+### Changed
+
+- Extended the sectors mapping in the data enhancer for asset profile data via _Trackinsight_
+- Improved the logging of the `web_fetch` tool in the `FetchService`
+- Improved the validation of the `WEB_FETCH_ROUTES` setting in the `FetchService`
+- Improved the validation of the response of the `web_fetch` tool in the `FetchService`
+- Deprecated the `api/v1/admin/user`, `api/v1/user/:id` and `api/v1/user/:id/access-token` endpoints in favor of the `api/v1/users` endpoints
+- Improved the language localization for German (`de`)
+- Upgraded `chart.js` from version `4.5.1` to `4.6.1`
+
+### Fixed
+
+- Fixed the overwrite of `countries`, `holdings` and `sectors` with empty values in the data gathering of asset profiles
+- Fixed the validation of the responses in the data enhancer for asset profile data via _Trackinsight_
+
 ## 3.95.0 - 2026-10-31
 
 ### Changed

@@ -33,7 +33,7 @@ export class RedisCacheService {
     });
   }
 
-  public async get(key: string): Promise<string> {
+  public async get(key: string): Promise<string | undefined> {
     return this.cache.get(key);
   }
 
@@ -42,9 +42,11 @@ export class RedisCacheService {
     const prefix = aPrefix;
 
     try {
-      for await (const [key] of this.client.iterator({})) {
-        if ((prefix && key.startsWith(prefix)) || !prefix) {
-          keys.push(key);
+      if (this.client.iterator) {
+        for await (const [key] of this.client.iterator({})) {
+          if ((prefix && key.startsWith(prefix)) || !prefix) {
+            keys.push(key);
+          }
         }
       }
     } catch {}
@@ -63,7 +65,7 @@ export class RedisCacheService {
   }) {
     let portfolioSnapshotKey = `${this.getPortfolioSnapshotKeyPrefix({ userId })}-${calculationType}`;
 
-    if (filters?.length > 0) {
+    if (filters && filters.length > 0) {
       const filtersHash = createHash('sha256')
         .update(JSON.stringify(filters))
         .digest('hex');
