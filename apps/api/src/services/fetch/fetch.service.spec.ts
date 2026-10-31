@@ -2,6 +2,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_ENGINE_WEB_FETCH,
+  PROPERTY_OPENROUTER_MODEL,
   PROPERTY_OPENROUTER_MODEL_WEB_FETCH,
   PROPERTY_WEB_FETCH_ROUTES
 } from '@ghostfolio/common/config';
@@ -292,10 +293,47 @@ describe('FetchService', () => {
       expect(warn).not.toHaveBeenCalled();
     });
 
+    it.each(['apikey', 'APIKEY', 'api_token', 'key', 'token'])(
+      'should redact the query parameter %s in the log of a successful web fetch',
+      async (name) => {
+        mockGenerateText({ text: BODY });
+
+        await fetchService.fetch(`${URL_WITH_ROUTE}?${name}=secret&a=b`);
+
+        expect(log.mock.calls[0][0]).toContain(`${name}=*******&a=b`);
+        expect(log.mock.calls[0][0]).not.toContain('secret');
+      }
+    );
+
     it.each([
       [
         'a failure message',
         { text: FAILURE_MESSAGE },
+        'reason=failure_message error="HTTP 405: Method Not Allowed"'
+      ],
+      [
+        'a failure message with an empty error',
+        { text: '{"url":"u","status":"failed","error":""}' },
+        'reason=failure_message error="(empty)"'
+      ],
+      [
+        'a failure message of a source before a text without JSON',
+        {
+          sources: [
+            { providerMetadata: { openrouter: { content: FAILURE_MESSAGE } } }
+          ],
+          text: 'Sorry.'
+        },
+        'reason=failure_message error="HTTP 405: Method Not Allowed"'
+      ],
+      [
+        'a failure message after a source without JSON',
+        {
+          sources: [
+            { providerMetadata: { openrouter: { content: 'Sorry.' } } }
+          ],
+          text: FAILURE_MESSAGE
+        },
         'reason=failure_message error="HTTP 405: Method Not Allowed"'
       ],
       ['a text without JSON', { text: 'Sorry.' }, 'reason=invalid_body'],
@@ -320,9 +358,34 @@ describe('FetchService', () => {
       expect(log).not.toHaveBeenCalled();
     });
 
-    it('should redact the API keys in the error of a failure message', async () => {
+    it.each([
+      ['https://www.example.com?unknown=secret', 'No access to [url]'],
+      [
+        'https://www.example.com?u=https%3A%2F%2Fx%3Fapikey%3Dsecret',
+        'No access to [url]'
+      ],
+      ['HTTPS://www.example.com?apikey=secret', 'No access to [url]']
+    ])(
+      'should replace the URL %s in the error of a failure message',
+      async (url, expected) => {
+        mockGenerateText({
+          text: JSON.stringify({
+            error: `No access to ${url}`,
+            status: 'failed',
+            url: 'https://www.example.com'
+          })
+        });
+
+        await fetchService.fetch(URL_WITH_ROUTE);
+
+        expect(warn.mock.calls[0][0]).toContain(`error="${expected}"`);
+        expect(warn.mock.calls[0][0]).not.toContain('secret');
+      }
+    );
+
+    it('should redact the API keys outside of a URL in the error of a failure message', async () => {
       mockGenerateText({
-        text: '{"url":"https://www.example.com","status":"failed","error":"No access to https://www.example.com?apikey=secret"}'
+        text: '{"url":"https://www.example.com","status":"failed","error":"Invalid apikey=secret"}'
       });
 
       await fetchService.fetch(URL_WITH_ROUTE);
@@ -342,14 +405,48 @@ describe('FetchService', () => {
       );
     });
 
-    it('should log a missing configuration without the API key', async () => {
+    it('should log the name of a missing model', async () => {
       delete properties[PROPERTY_OPENROUTER_MODEL_WEB_FETCH];
 
       await fetchService.fetch(URL_WITH_ROUTE);
 
       expect(warn).toHaveBeenCalledTimes(1);
-      expect(warn.mock.calls[0][0]).toContain('reason=missing_configuration');
+      expect(warn.mock.calls[0][0]).toContain(
+        `reason=missing_configuration missing=${PROPERTY_OPENROUTER_MODEL})`
+      );
       expect(warn.mock.calls[0][0]).not.toContain('api-key');
+    });
+
+    it('should log the name of a missing API key', async () => {
+      delete properties[PROPERTY_API_KEY_OPENROUTER];
+
+      await fetchService.fetch(URL_WITH_ROUTE);
+
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0][0]).toContain(
+        `reason=missing_configuration missing=${PROPERTY_API_KEY_OPENROUTER})`
+      );
+    });
+
+    it('should log the names of a missing API key and model', async () => {
+      delete properties[PROPERTY_API_KEY_OPENROUTER];
+      delete properties[PROPERTY_OPENROUTER_MODEL_WEB_FETCH];
+
+      await fetchService.fetch(URL_WITH_ROUTE);
+
+      expect(warn.mock.calls[0][0]).toContain(
+        `missing=${PROPERTY_API_KEY_OPENROUTER},${PROPERTY_OPENROUTER_MODEL})`
+      );
+    });
+
+    it('should log a missing configuration only one time', async () => {
+      delete properties[PROPERTY_API_KEY_OPENROUTER];
+
+      await fetchService.fetch(URL_WITH_ROUTE);
+      await fetchService.fetch(URL_WITH_ROUTE);
+
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(directFetch).toHaveBeenCalledTimes(2);
     });
   });
 

@@ -1,4 +1,3 @@
-import { redactPaths } from '@ghostfolio/api/helper/object.helper';
 import {
   getWebFetchBody,
   getWebFetchError
@@ -29,9 +28,15 @@ export class FetchService implements OnModuleInit {
   private readonly logger = new Logger(FetchService.name);
 
   private static readonly BODY_PREVIEW_LENGTH = 500;
-  private static readonly REDACTED_QUERY_PARAM_NAMES = ['apikey', 'api_token'];
+  private static readonly REDACTED_QUERY_PARAM_NAMES = [
+    'apikey',
+    'api_token',
+    'key',
+    'token'
+  ];
   private static readonly WEB_FETCH_TIMEOUT = ms('30 seconds');
 
+  private hasLoggedMissingConfiguration = false;
   private proxyRoutes: ProxyRoute[] = [];
   private webFetchRoutes: WebFetchRoute[] = [];
 
@@ -120,11 +125,21 @@ export class FetchService implements OnModuleInit {
     const model = openRouterModelWebFetch || openRouterModel;
 
     if (!model || !openRouterApiKey) {
-      this.logger.warn(
-        `Web fetch tool is not available for ${this.redactUrl(url)} (${this.getWebFetchLogDetails(
-          { engine, reason: 'missing_configuration' }
-        )})`
-      );
+      if (!this.hasLoggedMissingConfiguration) {
+        const missing = [
+          ...(openRouterApiKey ? [] : [PROPERTY_API_KEY_OPENROUTER]),
+          ...(model ? [] : [PROPERTY_OPENROUTER_MODEL])
+        ].join(',');
+
+        this.logger.warn(
+          `Web fetch tool is not available (${this.getWebFetchLogDetails({
+            engine,
+            reason: `missing_configuration missing=${missing}`
+          })})`
+        );
+
+        this.hasLoggedMissingConfiguration = true;
+      }
 
       return undefined;
     }
@@ -186,7 +201,13 @@ export class FetchService implements OnModuleInit {
         const body = getWebFetchBody({ candidate, isJson });
 
         if (!body) {
-          rejectedBody = candidate.trim() || rejectedBody;
+          // A failure message tells more than the text of a later candidate
+          if (
+            !rejectedBody ||
+            getWebFetchError({ candidate: rejectedBody }) === undefined
+          ) {
+            rejectedBody = candidate.trim() || rejectedBody;
+          }
 
           continue;
         }
@@ -329,8 +350,9 @@ export class FetchService implements OnModuleInit {
 
     const error = getWebFetchError({ candidate: rejectedBody });
 
-    return error
-      ? `failure_message error="${this.getBodyPreview(error)}"`
+    // The model can repeat the URL of the prompt, which can contain a secret
+    return error !== undefined
+      ? `failure_message error="${this.getBodyPreview(error.replace(/https?:\/\/\S+/gi, '[url]'))}"`
       : 'invalid_body';
   }
 
@@ -426,13 +448,10 @@ export class FetchService implements OnModuleInit {
     try {
       const url = new URL(rawUrl);
 
-      const redacted = redactPaths({
-        object: Object.fromEntries(url.searchParams),
-        paths: FetchService.REDACTED_QUERY_PARAM_NAMES
-      });
-
-      for (const [key, value] of Object.entries(redacted)) {
-        if (value === null) {
+      for (const key of [...url.searchParams.keys()]) {
+        if (
+          FetchService.REDACTED_QUERY_PARAM_NAMES.includes(key.toLowerCase())
+        ) {
           url.searchParams.set(key, '*******');
         }
       }
