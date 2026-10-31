@@ -40,8 +40,9 @@ export function getActiveImpersonationOfBearerToken(
  * hence the transport lists only the tools which the access covers.
  */
 export function getMcpUserOfBearerToken(request: unknown) {
-  const impersonationOfBearerToken =
-    getActiveImpersonationOfBearerToken(request);
+  const impersonationOfBearerToken = getActiveImpersonationOfBearerToken(
+    request as Pick<RequestWithUser, 'impersonationOfBearerToken'>
+  );
 
   return impersonationOfBearerToken
     ? { scopes: impersonationOfBearerToken.scopes }
@@ -54,8 +55,9 @@ export function getMcpUserOfBearerToken(request: unknown) {
  * they apply only to an access which reads the monetary values.
  */
 export function hasLimitsOfBasicSubscriptionOfBearerToken(request: unknown) {
-  const impersonationOfBearerToken =
-    getActiveImpersonationOfBearerToken(request);
+  const impersonationOfBearerToken = getActiveImpersonationOfBearerToken(
+    request as Pick<RequestWithUser, 'impersonationOfBearerToken'>
+  );
 
   return (
     impersonationOfBearerToken?.userSubscription?.type ===
