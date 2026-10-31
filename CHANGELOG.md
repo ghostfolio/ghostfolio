@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the validation of the response of the `web_fetch` tool in the `FetchService`
 - Deprecated the `api/v1/admin/user`, `api/v1/user/:id` and `api/v1/user/:id/access-token` endpoints in favor of the `api/v1/users` endpoints
+- Improved the language localization for German (`de`)
 - Upgraded `chart.js` from version `4.5.1` to `4.6.1`
 
 ### Fixed
