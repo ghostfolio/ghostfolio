@@ -1,4 +1,4 @@
-import { getWebFetchBody } from './web-fetch.helper';
+import { getWebFetchBody, getWebFetchError } from './web-fetch.helper';
 
 const FAILURE_MESSAGE =
   '{"url":"https://www.example.com/data.json","status":"failed","error":"HTTP 405: Method Not Allowed","_failure_reason":"http_error","http_status":405}';
@@ -108,5 +108,25 @@ describe('getWebFetchBody', () => {
         getWebFetchBody({ candidate: ' \n ', isJson: false })
       ).toBeUndefined();
     });
+  });
+});
+
+describe('getWebFetchError', () => {
+  it.each([
+    ['the raw message', FAILURE_MESSAGE],
+    ['a text around the message', `Failed:\n\n${FAILURE_MESSAGE}\n\nSorry.`]
+  ])('should get the error from %s', (_, candidate) => {
+    expect(getWebFetchError({ candidate })).toBe(
+      'HTTP 405: Method Not Allowed'
+    );
+  });
+
+  it.each([
+    ['a body', BODY],
+    ['a text', 'The fetch did not succeed.'],
+    ['an empty text', ''],
+    ['broken JSON', '{"status":"failed",']
+  ])('should get no error from %s', (_, candidate) => {
+    expect(getWebFetchError({ candidate })).toBeUndefined();
   });
 });
