@@ -235,6 +235,6 @@ export const routes: Routes = [
       import('./2026/11/black-weeks-2026/black-weeks-2026-page.component').then(
         (c) => c.BlackWeeks2026PageComponent
       ),
-    title: 'Black Friday 2026: 15 Months of Premium'
+    title: 'Black Weeks 2026: 15 Months of Premium'
   }
 ];
