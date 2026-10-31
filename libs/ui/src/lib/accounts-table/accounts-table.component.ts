@@ -8,6 +8,7 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithValue } from '@ghostfolio/common/types';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { NotificationService } from '@ghostfolio/ui/notifications';
+import { GfPersistSortDirective } from '@ghostfolio/ui/persist-sort';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
@@ -42,6 +43,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfEntityLogoComponent,
+    GfPersistSortDirective,
     GfValueComponent,
     IonIcon,
     MatButtonModule,
