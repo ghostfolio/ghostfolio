@@ -9,7 +9,8 @@ import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma, SymbolProfile } from '@prisma/client';
+import { SymbolProfile } from '@prisma/client';
+import { isPlainObject } from 'lodash-es';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
@@ -100,6 +101,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       url: `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`
     });
 
+    if (!holdings) {
+      return response;
+    }
+
     if (!this.isValidHoldings(holdings)) {
       this.logger.warn(
         `Could not use the Trackinsight holdings of "${trackinsightSymbol}": Invalid response`
@@ -119,7 +124,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.countries ||
       (response.countries as unknown as Country[]).length === 0
     ) {
-      const countries: Prisma.JsonArray = [];
+      response.countries = [];
 
       for (const [name, value] of Object.entries<any>(
         holdings.countries ?? {}
@@ -131,12 +136,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         });
 
         if (code) {
-          countries.push({ code, weight: value.weight });
+          response.countries.push({ code, weight: value.weight });
         }
-      }
-
-      if (countries.length > 0) {
-        response.countries = countries;
       }
     }
 
@@ -144,21 +145,17 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.holdings ||
       (response.holdings as unknown as Holding[]).length === 0
     ) {
-      const topHoldings: Prisma.JsonArray = [];
+      response.holdings = [];
 
       for (const { label, weight } of holdings.topHoldings ?? []) {
         if (label.toLowerCase() === 'other') {
           continue;
         }
 
-        topHoldings.push({
+        response.holdings.push({
           weight,
           name: label
         });
-      }
-
-      if (topHoldings.length > 0) {
-        response.holdings = topHoldings;
       }
     }
 
@@ -166,20 +163,16 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.sectors ||
       (response.sectors as unknown as Sector[]).length === 0
     ) {
-      const sectors: Prisma.JsonArray = [];
+      response.sectors = [];
 
       for (const [name, value] of Object.entries<any>(holdings.sectors ?? {})) {
-        sectors.push({
+        response.sectors.push({
           name: getSectorName({
             name,
             aliases: TrackinsightDataEnhancerService.sectorsMapping
           }),
           weight: value.weight
         });
-      }
-
-      if (sectors.length > 0) {
-        response.sectors = sectors;
       }
     }
 
@@ -226,7 +219,11 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     const { countries, sectors, topHoldings } = holdings;
 
-    if (topHoldings !== undefined && !Array.isArray(topHoldings)) {
+    if (
+      !isPlainObject(countries ?? {}) ||
+      !isPlainObject(sectors ?? {}) ||
+      !Array.isArray(topHoldings ?? [])
+    ) {
       return false;
     }
 

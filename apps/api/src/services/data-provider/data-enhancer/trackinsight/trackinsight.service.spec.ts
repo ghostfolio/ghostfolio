@@ -1,3 +1,5 @@
+import { Logger } from '@nestjs/common';
+
 import { TrackinsightDataEnhancerService } from './trackinsight.service';
 
 jest.mock('@ghostfolio/api/services/fetch/fetch.service', () => {
@@ -164,6 +166,52 @@ describe('TrackinsightDataEnhancerService', () => {
   });
 
   it.each([
+    ['a single result', 1, 'QQQ.US'],
+    ['an exact match', 2, 'QQQ'],
+    ['a match with an exchange', 2, 'XETRA:QQQ']
+  ])('should use the ticker of %s in the search', async (_, count, ticker) => {
+    mockResponses({
+      search: Response.json({ results: { count, docs: [{ ticker }] } })
+    });
+
+    await enhance();
+
+    expect(fetchService.fetch.mock.calls[1][0]).toContain(
+      `/data-api/funds/${ticker}.json`
+    );
+  });
+
+  it('should not use a search result with another ticker', async () => {
+    mockResponses({
+      search: Response.json({
+        results: { count: 2, docs: [{ ticker: 'QQQ.US' }] }
+      })
+    });
+
+    await enhance();
+
+    expect(fetchService.fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('should search again without the suffix of the symbol', async () => {
+    mockResponses({
+      search: Response.json({
+        results: { count: 2, docs: [{ ticker: 'VWCE' }] }
+      })
+    });
+
+    await enhance({}, 'VWCE.DE');
+
+    const urls = fetchService.fetch.mock.calls.map(([url]) => {
+      return url;
+    });
+
+    expect(urls[0]).toContain('/search_v2/VWCE.DE/');
+    expect(urls[1]).toContain('/search_v2/VWCE/');
+    expect(urls[2]).toContain('/data-api/funds/VWCE.json');
+  });
+
+  it.each([
     ['a failed request', new Error('The operation timed out')],
     ['an error status', new Response(null, { status: 502 })],
     ['a body which is not JSON', new Response('`AccessDenied`Access Denied')],
@@ -193,6 +241,14 @@ describe('TrackinsightDataEnhancerService', () => {
     [
       'top holdings which are not a list',
       Response.json({ ...HOLDINGS, topHoldings: 'NVIDIA Corp.' })
+    ],
+    [
+      'countries which are not an object',
+      Response.json({ ...HOLDINGS, countries: [{ weight: 0.5 }] })
+    ],
+    [
+      'sectors which are not an object',
+      Response.json({ ...HOLDINGS, sectors: [{ weight: 0.5 }] })
     ]
   ])('should not add lists on %s in the holdings', async (_, holdings) => {
     mockResponses({ holdings });
@@ -213,7 +269,22 @@ describe('TrackinsightDataEnhancerService', () => {
     expect(response.isin).toBe('US46090E1038');
   });
 
-  it('should not add empty lists', async () => {
+  it('should not report a failed request as an invalid response', async () => {
+    const warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+    mockResponses({ holdings: new Response(null, { status: 502 }) });
+
+    await enhance();
+
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('HTTP status 502')
+    );
+
+    warn.mockRestore();
+  });
+
+  it('should set empty lists on a valid response without items', async () => {
     mockResponses({
       holdings: Response.json({
         countries: {},
@@ -225,9 +296,35 @@ describe('TrackinsightDataEnhancerService', () => {
 
     const response = await enhance();
 
-    expect(response).not.toHaveProperty('countries');
-    expect(response).not.toHaveProperty('holdings');
-    expect(response).not.toHaveProperty('sectors');
+    expect(response.countries).toEqual([]);
+    expect(response.holdings).toEqual([]);
+    expect(response.sectors).toEqual([]);
+  });
+
+  it('should use the other lists if the top holdings are null', async () => {
+    mockResponses({
+      holdings: Response.json({ ...HOLDINGS, topHoldings: null })
+    });
+
+    const response = await enhance();
+
+    expect(response.countries).toEqual([{ code: 'US', weight: 0.99 }]);
+    expect(response.holdings).toEqual([]);
+    expect(response.sectors).toEqual([
+      { name: 'Financial Services', weight: 0.2 },
+      { name: 'Technology', weight: 0.8 }
+    ]);
+  });
+
+  it('should use the other lists if the countries are null', async () => {
+    mockResponses({
+      holdings: Response.json({ ...HOLDINGS, countries: null })
+    });
+
+    const response = await enhance();
+
+    expect(response.countries).toEqual([]);
+    expect(response.holdings).toEqual([{ name: 'NVIDIA Corp.', weight: 0.08 }]);
   });
 
   it('should accept floating point noise in a weight', async () => {
