@@ -12,6 +12,7 @@ export interface Environment extends CleanedEnvAccessors {
   API_KEY_RAPID_API: string;
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;
+  DATA_GATHERING_INTERVAL_MINUTES: number;
   DATA_SOURCE_EXCHANGE_RATES: string;
   DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS: string;
   DATA_SOURCE_IMPORT: string;
