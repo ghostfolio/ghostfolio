@@ -9,7 +9,7 @@ import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { SymbolProfile } from '@prisma/client';
+import { Prisma, SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
@@ -35,6 +35,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     'Information Technology': 'Technology',
     Materials: 'Basic Materials'
   };
+
+  // Allows for floating point noise in the sums of Trackinsight
+  private static weightTolerance = 0.001;
 
   private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
 
@@ -75,44 +78,38 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const profile = await this.fetchService
-      .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${trackinsightSymbol}.json`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      )
-      .then((res) => res.json())
-      .catch(() => {
-        return {};
-      });
+    const profile = await this.fetchJson({
+      requestTimeout,
+      url: `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${trackinsightSymbol}.json`
+    });
 
     const cusip = profile?.cusip;
 
-    if (cusip) {
+    if (cusip && typeof cusip === 'string') {
       response.cusip = cusip;
     }
 
-    const isin = profile?.isins?.[0];
+    const isin = Array.isArray(profile?.isins) ? profile.isins[0] : undefined;
 
-    if (isin) {
+    if (isin && typeof isin === 'string') {
       response.isin = isin;
     }
 
-    const holdings = await this.fetchService
-      .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      )
-      .then((res) => res.json())
-      .catch(() => {
-        return {};
-      });
+    const holdings = await this.fetchJson({
+      requestTimeout,
+      url: `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`
+    });
+
+    if (!this.isValidHoldings(holdings)) {
+      this.logger.warn(
+        `Could not use the Trackinsight holdings of "${trackinsightSymbol}": Invalid response`
+      );
+
+      return response;
+    }
 
     if (
-      holdings?.weight < TrackinsightDataEnhancerService.holdingsWeightTreshold
+      holdings.weight < TrackinsightDataEnhancerService.holdingsWeightTreshold
     ) {
       // Skip if data is inaccurate
       return response;
@@ -122,10 +119,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.countries ||
       (response.countries as unknown as Country[]).length === 0
     ) {
-      response.countries = [];
+      const countries: Prisma.JsonArray = [];
 
       for (const [name, value] of Object.entries<any>(
-        holdings?.countries ?? {}
+        holdings.countries ?? {}
       )) {
         const code = getCountryCodeByName({
           name,
@@ -134,8 +131,12 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         });
 
         if (code) {
-          response.countries.push({ code, weight: value.weight });
+          countries.push({ code, weight: value.weight });
         }
+      }
+
+      if (countries.length > 0) {
+        response.countries = countries;
       }
     }
 
@@ -143,17 +144,21 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.holdings ||
       (response.holdings as unknown as Holding[]).length === 0
     ) {
-      response.holdings = [];
+      const topHoldings: Prisma.JsonArray = [];
 
-      for (const { label, weight } of holdings?.topHoldings ?? []) {
-        if (label?.toLowerCase() === 'other') {
+      for (const { label, weight } of holdings.topHoldings ?? []) {
+        if (label.toLowerCase() === 'other') {
           continue;
         }
 
-        response.holdings.push({
+        topHoldings.push({
           weight,
           name: label
         });
+      }
+
+      if (topHoldings.length > 0) {
+        response.holdings = topHoldings;
       }
     }
 
@@ -161,18 +166,20 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.sectors ||
       (response.sectors as unknown as Sector[]).length === 0
     ) {
-      response.sectors = [];
+      const sectors: Prisma.JsonArray = [];
 
-      for (const [name, value] of Object.entries<any>(
-        holdings?.sectors ?? {}
-      )) {
-        response.sectors.push({
+      for (const [name, value] of Object.entries<any>(holdings.sectors ?? {})) {
+        sectors.push({
           name: getSectorName({
             name,
             aliases: TrackinsightDataEnhancerService.sectorsMapping
           }),
           weight: value.weight
         });
+      }
+
+      if (sectors.length > 0) {
+        response.sectors = sectors;
       }
     }
 
@@ -187,6 +194,66 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     return 'QQQ';
   }
 
+  private async fetchJson({
+    requestTimeout,
+    url
+  }: {
+    requestTimeout: number;
+    url: string;
+  }) {
+    return this.fetchService
+      .fetch(url, {
+        signal: AbortSignal.timeout(requestTimeout)
+      })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP status ${res.status}`);
+        }
+
+        return res.json();
+      })
+      .catch(({ message }) => {
+        this.logger.warn(`Could not fetch ${url}: ${message}`);
+
+        return undefined;
+      });
+  }
+
+  private isValidHoldings(holdings: any) {
+    if (!this.isValidWeight(holdings?.weight)) {
+      return false;
+    }
+
+    const { countries, sectors, topHoldings } = holdings;
+
+    if (topHoldings !== undefined && !Array.isArray(topHoldings)) {
+      return false;
+    }
+
+    return (
+      Object.values<any>(countries ?? {}).every((country) => {
+        return this.isValidWeight(country?.weight);
+      }) &&
+      Object.values<any>(sectors ?? {}).every((sector) => {
+        return this.isValidWeight(sector?.weight);
+      }) &&
+      (topHoldings ?? []).every((topHolding) => {
+        return (
+          typeof topHolding?.label === 'string' &&
+          this.isValidWeight(topHolding?.weight)
+        );
+      })
+    );
+  }
+
+  private isValidWeight(weight: unknown) {
+    return (
+      typeof weight === 'number' &&
+      weight >= 0 &&
+      weight <= 1 + TrackinsightDataEnhancerService.weightTolerance
+    );
+  }
+
   private async searchTrackinsightSymbol({
     requestTimeout,
     symbol
@@ -194,39 +261,42 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     requestTimeout: number;
     symbol: string;
   }) {
-    return this.fetchService
-      .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      )
-      .then((res) => res.json())
-      .then((jsonRes) => {
-        if (
-          jsonRes['results']?.['count'] === 1 ||
-          // Allow exact match
-          jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol ||
-          // Allow EXCHANGE:SYMBOL
-          jsonRes['results']?.['docs']?.[0]?.['ticker']?.endsWith(`:${symbol}`)
-        ) {
-          return jsonRes['results']['docs'][0]['ticker'];
-        }
+    const jsonRes = await this.fetchJson({
+      requestTimeout,
+      url: `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${encodeURIComponent(symbol)}/_/ticker/default/0/3`
+    });
 
-        this.logger.debug(
-          `Could not match a Trackinsight symbol for "${symbol}": ${JSON.stringify(
-            jsonRes
-          )}`
-        );
+    if (!jsonRes) {
+      return undefined;
+    }
 
-        return undefined;
-      })
-      .catch(({ message }) => {
-        this.logger.warn(
-          `Could not search Trackinsight symbol for "${symbol}": ${message}`
-        );
+    if (!Array.isArray(jsonRes.results?.docs)) {
+      this.logger.warn(
+        `Could not search Trackinsight symbol for "${symbol}": Invalid response`
+      );
 
-        return undefined;
-      });
+      return undefined;
+    }
+
+    const ticker = jsonRes.results.docs[0]?.ticker;
+
+    if (
+      typeof ticker === 'string' &&
+      (jsonRes.results.count === 1 ||
+        // Allow exact match
+        ticker === symbol ||
+        // Allow EXCHANGE:SYMBOL
+        ticker.endsWith(`:${symbol}`))
+    ) {
+      return ticker;
+    }
+
+    this.logger.debug(
+      `Could not match a Trackinsight symbol for "${symbol}": ${JSON.stringify(
+        jsonRes
+      )}`
+    );
+
+    return undefined;
   }
 }
