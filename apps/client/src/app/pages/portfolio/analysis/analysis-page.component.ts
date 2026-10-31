@@ -1,5 +1,6 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { getTradingDayItems } from '@ghostfolio/common/chart-helper';
 import {
   DEFAULT_DATE_RANGE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
@@ -7,12 +8,15 @@ import {
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   canOpenHoldingDetail,
-  getSelectedBenchmarkIds
+  getSelectedBenchmarkIds,
+  isIntradayDateRange
 } from '@ghostfolio/common/helper';
 import {
   BenchmarkSeries,
   InvestmentItem,
   LineChartItem,
+  NullableLineChartItem,
+  PortfolioIntradayResponse,
   PortfolioInvestmentsResponse,
   PortfolioPerformance,
   PortfolioPosition,
@@ -22,6 +26,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
 import type {
   AiPromptMode,
+  DateRange,
   GroupBy,
   ToggleOption
 } from '@ghostfolio/common/types';
@@ -60,7 +65,7 @@ import { isNumber, keyBy, sortBy, union } from 'lodash-es';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { catchError, forkJoin, map, of, Subscription } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, Subscription } from 'rxjs';
 
 type BenchmarkProfile = Partial<SymbolProfile> &
   Required<Pick<SymbolProfile, 'dataSource' | 'id' | 'symbol'>>;
@@ -110,7 +115,8 @@ export class GfAnalysisPageComponent implements OnInit {
   protected performance: PortfolioPerformance;
   protected readonly PerformanceCalculationType = PerformanceCalculationType;
   protected performanceDataItems: LineChartItem[];
-  protected performanceDataItemsInPercentage: LineChartItem[];
+  protected readonly defaultDateRange = DEFAULT_DATE_RANGE;
+  protected performanceDataItemsInPercentage: NullableLineChartItem[];
   protected performancePercentagesByYear: InvestmentItem[];
   protected readonly performanceTimelineDataLabel = $localize`Net Performance`;
   protected readonly portfolioEvolutionDataLabel = $localize`Invested Capital`;
@@ -419,6 +425,12 @@ export class GfAnalysisPageComponent implements OnInit {
           this.precision = 0;
         }
 
+        // Only the trading days, and the remaining ones of the current year
+        this.performanceDataItemsInPercentage = getTradingDayItems({
+          dateRange: this.dateRange,
+          items: this.performanceDataItemsInPercentage
+        });
+
         this.isLoadingInvestmentChart = false;
 
         this.updateBenchmarkDataItems();
@@ -476,11 +488,85 @@ export class GfAnalysisPageComponent implements OnInit {
     this.changeDetectorRef.markForCheck();
   }
 
+  private get dateRange(): DateRange {
+    return this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE;
+  }
+
+  private fetchIntraday(): Observable<PortfolioIntradayResponse | null> {
+    const dateRange = this.dateRange;
+
+    if (!isIntradayDateRange(dateRange)) {
+      return of(null);
+    }
+
+    return this.dataService
+      .fetchPortfolioIntraday({
+        benchmarks: this.selectedBenchmarkIds,
+        range: dateRange
+      })
+      .pipe(
+        catchError(() => {
+          return of(null);
+        })
+      );
+  }
+
+  private setIntradayComparatorItems({
+    benchmarks,
+    chart
+  }: PortfolioIntradayResponse) {
+    this.performanceDataItemsInPercentage = chart;
+
+    this.benchmarkSeries = this.selectedBenchmarkIds.flatMap((id) => {
+      const series = benchmarks.find((benchmark) => {
+        return benchmark.id === id;
+      });
+
+      const profile = this.benchmarks.find((benchmark) => {
+        return benchmark.id === id;
+      });
+
+      return series
+        ? [
+            {
+              id,
+              // The daily benchmarks are in percent
+              items: series.items.map(({ date, value }) => {
+                return { date, value: value === null ? null : value * 100 };
+              }),
+              name: profile?.name ?? profile?.symbol ?? id
+            }
+          ]
+        : [];
+    });
+
+    this.changeDetectorRef.markForCheck();
+  }
+
   private updateBenchmarkDataItems() {
     // Discard the pending requests of a previous selection
     this.benchmarkSeriesSubscription?.unsubscribe();
 
     this.benchmarkSeries = [];
+
+    if (isIntradayDateRange(this.dateRange)) {
+      // The portfolio and the benchmarks are drawn from intraday prices
+      this.isLoadingBenchmarkComparator = true;
+
+      this.benchmarkSeriesSubscription = this.fetchIntraday()
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((intraday) => {
+          if (intraday) {
+            this.setIntradayComparatorItems(intraday);
+          }
+
+          this.isLoadingBenchmarkComparator = false;
+
+          this.changeDetectorRef.markForCheck();
+        });
+
+      return;
+    }
 
     const selectedBenchmarks = this.benchmarks.filter(
       (benchmark): benchmark is BenchmarkProfile => {
