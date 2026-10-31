@@ -258,7 +258,8 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
   ): [string, string][] {
     const description = this.i18nService.getTranslation({
       languageCode,
-      id: 'metaDescription.resources.personalFinanceTools.product'
+      id: 'metaDescription.resources.personalFinanceTools.product',
+      skipUntranslated: true
     });
 
     const path = [
@@ -304,7 +305,8 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
 
       const description = this.i18nService.getTranslation({
         languageCode,
-        id: routeId
+        id: routeId,
+        skipUntranslated: true
       });
 
       return [
