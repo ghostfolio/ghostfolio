@@ -1,6 +1,9 @@
 import type { Prisma } from '@ghostfolio/prisma/browser';
 
-import { IsArray, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsOptional, ValidateNested } from 'class-validator';
+
+import { HoldingDto } from './holding.dto';
 
 export class UpdateAssetProfileDataDto {
   @IsArray()
@@ -9,6 +12,8 @@ export class UpdateAssetProfileDataDto {
 
   @IsArray()
   @IsOptional()
+  @Type(() => HoldingDto)
+  @ValidateNested({ each: true })
   holdings?: Prisma.InputJsonArray;
 
   @IsArray()

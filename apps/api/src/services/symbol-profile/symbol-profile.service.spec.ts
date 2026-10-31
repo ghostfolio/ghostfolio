@@ -6,6 +6,68 @@ import { DataSource } from '@prisma/client';
 import { SymbolProfileService } from './symbol-profile.service';
 
 describe('SymbolProfileService', () => {
+  describe('getSymbolProfiles', () => {
+    const getHoldings = async (holdings: object[]) => {
+      const symbolProfileService = new SymbolProfileService({
+        symbolProfile: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              holdings,
+              _count: { activities: 0, watchedBy: 0 },
+              activities: [],
+              assetProfileOverrides: null,
+              countries: [],
+              currency: 'USD',
+              dataSource: DataSource.MANUAL,
+              sectors: [],
+              symbol: 'symbol'
+            }
+          ])
+        }
+      } as unknown as PrismaService);
+
+      const [assetProfile] = await symbolProfileService.getSymbolProfiles([
+        { dataSource: DataSource.MANUAL, symbol: 'symbol' }
+      ]);
+
+      return assetProfile.holdings;
+    };
+
+    it('gives the allocation of a holding with a weight', async () => {
+      await expect(
+        getHoldings([{ name: 'Apple', weight: 0.5 }])
+      ).resolves.toEqual([
+        expect.objectContaining({ allocationInPercentage: 0.5, name: 'Apple' })
+      ]);
+    });
+
+    it('gives the allocation of a holding of an import', async () => {
+      await expect(
+        getHoldings([{ allocationInPercentage: 0.5, name: 'Apple' }])
+      ).resolves.toEqual([
+        expect.objectContaining({ allocationInPercentage: 0.5, name: 'Apple' })
+      ]);
+    });
+
+    it('prefers the weight of a holding with both allocations', async () => {
+      await expect(
+        getHoldings([
+          { allocationInPercentage: 0.5, name: 'Apple', weight: 0.9 }
+        ])
+      ).resolves.toEqual([
+        expect.objectContaining({ allocationInPercentage: 0.9, name: 'Apple' })
+      ]);
+    });
+
+    it('keeps a weight of zero', async () => {
+      await expect(
+        getHoldings([{ allocationInPercentage: 0.5, name: 'Apple', weight: 0 }])
+      ).resolves.toEqual([
+        expect.objectContaining({ allocationInPercentage: 0, name: 'Apple' })
+      ]);
+    });
+  });
+
   describe('getSymbolProfilesOfUser', () => {
     const userId = 'user-id';
 
