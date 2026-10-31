@@ -2,6 +2,7 @@ import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/p
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { getTradingDayItems } from '@ghostfolio/common/chart-helper';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_DATE_RANGE,
@@ -11,7 +12,8 @@ import {
 import { isCashPosition } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  LineChartItem,
+  HistoricalDataItem,
+  NullableLineChartItem,
   PortfolioPerformance,
   PortfolioPosition,
   User
@@ -19,6 +21,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { hasScope, scopes } from '@ghostfolio/common/scopes';
+import { DateRange } from '@ghostfolio/common/types';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { DataService } from '@ghostfolio/ui/services';
@@ -41,6 +44,8 @@ import { addIcons } from 'ionicons';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
+const MINIMUM_CHART_ITEMS = 3;
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -59,7 +64,20 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 export class GfHomeOverviewComponent implements OnInit {
   protected readonly errors = signal<AssetProfileIdentifier[]>([]);
   protected readonly hasImpersonationId = signal(false);
-  protected readonly historicalDataItems = signal<LineChartItem[] | null>(null);
+  protected readonly defaultDateRange = DEFAULT_DATE_RANGE;
+  protected readonly historicalDataItems = signal<
+    NullableLineChartItem[] | null
+  >(null);
+
+  // A line through only two points (e.g. the close of the previous day and
+  // now) is drawn as a misleading slope across the whole width
+  protected readonly hasEnoughChartData = computed(() => {
+    return (
+      (this.historicalDataItems() ?? []).filter(({ value }) => {
+        return value !== null;
+      }).length >= MINIMUM_CHART_ITEMS
+    );
+  });
   protected readonly holdings = signal<PortfolioPosition[] | undefined>(
     undefined
   );
@@ -171,6 +189,30 @@ export class GfHomeOverviewComponent implements OnInit {
     }
   }
 
+  private setChartItems({
+    chart,
+    dateRange
+  }: {
+    chart?: HistoricalDataItem[];
+    dateRange?: DateRange;
+  }) {
+    // Only the trading days, and the remaining ones of the current year
+    this.historicalDataItems.set(
+      getTradingDayItems({
+        dateRange,
+        items:
+          chart?.map(
+            ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
+              return {
+                date,
+                value: (netPerformanceInPercentageWithCurrencyEffect ?? 0) * 100
+              };
+            }
+          ) ?? []
+      })
+    );
+  }
+
   private update() {
     const userSettings = this.user()?.settings;
 
@@ -210,16 +252,7 @@ export class GfHomeOverviewComponent implements OnInit {
         this.errors.set(errors ?? []);
         this.performance.set(performance);
 
-        this.historicalDataItems.set(
-          chart?.map(
-            ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
-              return {
-                date,
-                value: (netPerformanceInPercentageWithCurrencyEffect ?? 0) * 100
-              };
-            }
-          ) ?? null
-        );
+        this.setChartItems({ chart, dateRange: userSettings?.dateRange });
 
         this.precision.set(2);
 
