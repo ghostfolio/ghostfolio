@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post: _Black Weeks 2026_
+
 ### Changed
 
 - Extended the sectors mapping in the data enhancer for asset profile data via _Trackinsight_
