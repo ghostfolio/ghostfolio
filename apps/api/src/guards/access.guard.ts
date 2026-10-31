@@ -32,7 +32,7 @@ export class AccessGuard implements CanActivate {
     const impersonationOfBearerToken =
       getActiveImpersonationOfBearerToken(request);
 
-    if (!impersonationOfBearerToken) {
+    if (!request || !impersonationOfBearerToken) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

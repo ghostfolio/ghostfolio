@@ -3,10 +3,12 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
 import {
+  DEFAULT_CURRENCY,
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -72,8 +74,10 @@ export class PortfolioChangedListener {
         data: {
           filters,
           userId,
-          calculationType: userSettings.performanceCalculationType,
-          userCurrency: userSettings.baseCurrency
+          calculationType:
+            userSettings.performanceCalculationType ??
+            PerformanceCalculationType.ROAI,
+          userCurrency: userSettings.baseCurrency ?? DEFAULT_CURRENCY
         },
         name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
         opts: {
@@ -81,7 +85,9 @@ export class PortfolioChangedListener {
           jobId: this.redisCacheService.getPortfolioSnapshotKey({
             filters,
             userId,
-            calculationType: userSettings.performanceCalculationType
+            calculationType:
+              userSettings.performanceCalculationType ??
+              PerformanceCalculationType.ROAI
           }),
           priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
         }
