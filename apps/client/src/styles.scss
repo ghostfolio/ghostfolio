@@ -227,6 +227,9 @@ body {
   }
 
   &.theme-dark {
+    --ngx-skeleton-loader-base-color: #323232;
+    --ngx-skeleton-loader-color-scheme: dark;
+
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
 
@@ -236,12 +239,6 @@ body {
 
     hr {
       border-top-color: rgba(var(--light-dividers));
-    }
-
-    ngx-skeleton-loader {
-      .skeleton-loader {
-        background-color: #323232;
-      }
     }
 
     .gf-table {
@@ -305,7 +302,6 @@ ion-icon {
 }
 
 ngx-skeleton-loader {
-  display: block;
   line-height: 0;
   outline: 0;
 
