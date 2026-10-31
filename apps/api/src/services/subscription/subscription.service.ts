@@ -172,10 +172,16 @@ export class SubscriptionService {
         );
       }
 
+      if (session.amount_total === null || session.amount_total === undefined) {
+        throw new Error(
+          `Stripe Checkout Session '${aCheckoutSessionId}' is missing amount_total`
+        );
+      }
+
       try {
         await this.createSubscription({
           durationExtension,
-          price: (session.amount_total ?? 0) / 100,
+          price: session.amount_total / 100,
           stripeCheckoutSessionId: session.id,
           userId: session.client_reference_id
         });
