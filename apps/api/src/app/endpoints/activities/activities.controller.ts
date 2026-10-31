@@ -343,26 +343,27 @@ export class ActivitiesController {
       );
     }
 
-    const [originalAssetProfile] =
-      await this.symbolProfileService.getSymbolProfilesByIds([
-        originalActivity.symbolProfileId
-      ]);
-
     const isAssetProfileConnected =
       !NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) &&
       !(data.dataSource === 'MANUAL' && data.type === 'BUY');
 
-    if (
-      isAssetProfileConnected &&
-      (originalAssetProfile.dataSource !== data.dataSource ||
-        originalAssetProfile.symbol !== data.symbol)
-    ) {
-      await this.validateActivity({
-        authenticatedUserSubscription,
-        userId,
-        userSubscription,
-        activityDto: data
-      });
+    if (isAssetProfileConnected) {
+      const [originalAssetProfile] =
+        await this.symbolProfileService.getSymbolProfilesByIds([
+          originalActivity.symbolProfileId
+        ]);
+
+      if (
+        originalAssetProfile.dataSource !== data.dataSource ||
+        originalAssetProfile.symbol !== data.symbol
+      ) {
+        await this.validateActivity({
+          authenticatedUserSubscription,
+          userId,
+          userSubscription,
+          activityDto: data
+        });
+      }
     }
 
     const date = parseISO(data.date);
