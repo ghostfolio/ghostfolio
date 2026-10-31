@@ -206,10 +206,8 @@ export class UserService {
       activityTypes,
       dateOfFirstActivity,
       id,
-      permissions: permissions ?? [],
       referralPartners,
       scopes,
-      subscription: subscription as IUser['subscription'],
       systemMessage,
       tags,
       access: access.map((accessItem) => {
@@ -233,11 +231,13 @@ export class UserService {
             .toLowerCase()
             .localeCompare((b.name ?? '').toLowerCase());
         }),
+      permissions: permissions ?? [],
       settings: {
         ...resolvedUserSettings,
         baseCurrency: resolvedUserSettings.baseCurrency ?? DEFAULT_CURRENCY,
         locale: resolvedUserSettings.locale ?? locale
-      }
+      },
+      subscription: subscription as IUser['subscription']
     };
   }
 
