@@ -155,15 +155,13 @@ export class FetchService implements OnModuleInit {
         this.logger.warn(
           `Web fetch tool stopped with the reason "${finishReason}" for ${this.redactUrl(url)}`
         );
-
-        return undefined;
       }
 
       const candidates = [
         ...(sources ?? []).map((source) => {
           return source.providerMetadata?.openrouter?.content;
         }),
-        text
+        ...(finishReason === 'stop' ? [text] : [])
       ];
 
       const isJson =
@@ -180,7 +178,7 @@ export class FetchService implements OnModuleInit {
         const body = getWebFetchBody({ candidate, isJson });
 
         if (!body) {
-          rejectedBody = candidate;
+          rejectedBody = candidate.trim() || rejectedBody;
 
           continue;
         }
@@ -270,7 +268,16 @@ export class FetchService implements OnModuleInit {
       return '(empty)';
     }
 
-    const singleLineBody = body.replace(/\s+/g, ' ').trim();
+    const singleLineBody = body
+      .replace(
+        new RegExp(
+          `(${FetchService.REDACTED_QUERY_PARAM_NAMES.join('|')})=[^&\\s"']+`,
+          'gi'
+        ),
+        '$1=*******'
+      )
+      .replace(/\s+/g, ' ')
+      .trim();
 
     return singleLineBody.length > FetchService.BODY_PREVIEW_LENGTH
       ? `${singleLineBody.slice(0, FetchService.BODY_PREVIEW_LENGTH)}…`

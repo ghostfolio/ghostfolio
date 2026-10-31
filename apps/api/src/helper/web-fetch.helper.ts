@@ -22,37 +22,38 @@ export function getWebFetchBody({
     return undefined;
   }
 
-  return isJson ? json?.text : body;
+  if (!isJson) {
+    return body;
+  }
+
+  return json?.isWhole ? json.text : undefined;
 }
 
 /**
- * Extracts the JSON object or array from a text. The extraction goes from the
- * first opening bracket to the last closing bracket, so that a text with other
- * brackets around the JSON gives no result.
+ * Extracts the JSON object or array from a text. The JSON must start at the
+ * beginning of a line and goes to the last matching closing bracket, so that a
+ * bracket in a sentence gives no result. `isWhole` tells if only a closing code
+ * fence follows the JSON.
  */
 function extractJson(text: string) {
-  const brackets = [
-    { close: '}', start: text.indexOf('{') },
-    { close: ']', start: text.indexOf('[') }
-  ]
-    .filter(({ start }) => {
-      return start >= 0;
-    })
-    .sort((a, b) => {
-      return a.start - b.start;
-    });
+  const start = text.search(/^[[{]/m);
 
-  for (const { close, start } of brackets) {
-    const jsonText = text.slice(start, text.lastIndexOf(close) + 1);
-
-    try {
-      return { text: jsonText, value: JSON.parse(jsonText) as unknown };
-    } catch {
-      continue;
-    }
+  if (start < 0) {
+    return undefined;
   }
 
-  return undefined;
+  const end = text.lastIndexOf(text[start] === '{' ? '}' : ']') + 1;
+  const jsonText = text.slice(start, end);
+
+  try {
+    return {
+      isWhole: /^(```)?$/.test(text.slice(end).trim()),
+      text: jsonText,
+      value: JSON.parse(jsonText) as unknown
+    };
+  } catch {
+    return undefined;
+  }
 }
 
 /**

@@ -6,6 +6,7 @@ import {
   PROPERTY_WEB_FETCH_ROUTES
 } from '@ghostfolio/common/config';
 
+import { Logger } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { generateText } from 'ai';
 
@@ -122,6 +123,55 @@ describe('FetchService', () => {
     const response = await fetchService.fetch(URL_WITH_ROUTE);
 
     await expect(response.text()).resolves.toBe(BODY);
+  });
+
+  it('should get the body from the content of a source on a truncated text', async () => {
+    mockGenerateText({
+      finishReason: 'length',
+      sources: [{ providerMetadata: { openrouter: { content: BODY } } }],
+      text: '{"items":['
+    });
+
+    const response = await fetchService.fetch(URL_WITH_ROUTE);
+
+    await expect(response.text()).resolves.toBe(BODY);
+
+    expect(directFetch).not.toHaveBeenCalled();
+  });
+
+  it('should log the failure message of a source after an empty text', async () => {
+    const debug = jest.spyOn(Logger.prototype, 'debug');
+
+    mockGenerateText({
+      sources: [
+        { providerMetadata: { openrouter: { content: FAILURE_MESSAGE } } }
+      ],
+      text: ''
+    });
+
+    await fetchService.fetch(URL_WITH_ROUTE);
+
+    expect(debug.mock.calls.join()).toContain('HTTP 405');
+
+    debug.mockRestore();
+  });
+
+  it('should redact the API keys in the log of a rejected body', async () => {
+    const debug = jest.spyOn(Logger.prototype, 'debug');
+
+    mockGenerateText({
+      text: '{"url":"https://www.example.com/data.json?apikey=secret&api_token=secret","status":"failed","error":"HTTP 405"}'
+    });
+
+    await fetchService.fetch(URL_WITH_ROUTE);
+
+    const logs = debug.mock.calls.join();
+
+    expect(logs).toContain('apikey=*******');
+    expect(logs).toContain('api_token=*******');
+    expect(logs).not.toContain('secret');
+
+    debug.mockRestore();
   });
 
   it('should call the model with temperature 0 and the configured engine', async () => {
