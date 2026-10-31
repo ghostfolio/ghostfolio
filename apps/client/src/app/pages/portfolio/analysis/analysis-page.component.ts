@@ -5,8 +5,12 @@ import {
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/enums';
-import { canOpenHoldingDetail } from '@ghostfolio/common/helper';
 import {
+  canOpenHoldingDetail,
+  getSelectedBenchmarkIds
+} from '@ghostfolio/common/helper';
+import {
+  BenchmarkSeries,
   InvestmentItem,
   LineChartItem,
   PortfolioInvestmentsResponse,
@@ -56,7 +60,10 @@ import { isNumber, keyBy, sortBy, union } from 'lodash-es';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, map, of, Subscription } from 'rxjs';
+
+type BenchmarkProfile = Partial<SymbolProfile> &
+  Required<Pick<SymbolProfile, 'dataSource' | 'id' | 'symbol'>>;
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -79,9 +86,8 @@ import { forkJoin } from 'rxjs';
   templateUrl: './analysis-page.html'
 })
 export class GfAnalysisPageComponent implements OnInit {
-  protected benchmark?: Partial<SymbolProfile>;
-  protected benchmarkDataItems: LineChartItem[] = [];
   protected readonly benchmarks: Partial<SymbolProfile>[];
+  protected benchmarkSeries: BenchmarkSeries[] = [];
   protected bottom3: PortfolioPosition[];
   protected dividendsByGroup: InvestmentItem[];
   protected readonly dividendTimelineDataLabel = $localize`Dividend`;
@@ -110,6 +116,7 @@ export class GfAnalysisPageComponent implements OnInit {
   protected readonly portfolioEvolutionDataLabel = $localize`Invested Capital`;
   protected precision = 2;
   protected savingsRatePerMonth: number | undefined;
+  protected selectedBenchmarkIds: string[] = [];
   protected streaks: PortfolioInvestmentsResponse['streaks'];
   protected top3: PortfolioPosition[];
   protected unitCurrentStreak: string;
@@ -120,6 +127,7 @@ export class GfAnalysisPageComponent implements OnInit {
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+  private benchmarkSeriesSubscription?: Subscription;
   private dateOfFirstActivity: Date;
 
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -154,8 +162,11 @@ export class GfAnalysisPageComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.benchmark = this.benchmarks.find(({ id }) => {
-            return id === this.user.settings?.benchmark;
+          this.selectedBenchmarkIds = getSelectedBenchmarkIds({
+            availableIds: this.benchmarks.flatMap(({ id }) => {
+              return id ? [id] : [];
+            }),
+            settings: this.user.settings
           });
 
           this.hasPermissionToReadAiPrompt = hasPermission(
@@ -170,9 +181,9 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
-  protected onChangeBenchmark(symbolProfileId: string) {
+  protected onChangeBenchmarks(symbolProfileIds: string[]) {
     this.dataService
-      .putUserSetting({ benchmark: symbolProfileId })
+      .putUserSetting({ benchmarks: symbolProfileIds })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.userService
@@ -466,18 +477,40 @@ export class GfAnalysisPageComponent implements OnInit {
   }
 
   private updateBenchmarkDataItems() {
-    this.benchmarkDataItems = [];
+    // Discard the pending requests of a previous selection
+    this.benchmarkSeriesSubscription?.unsubscribe();
 
-    if (this.user.settings.benchmark) {
-      const { dataSource, symbol } =
-        this.benchmarks.find(({ id }) => {
-          return id === this.user.settings.benchmark;
-        }) ?? {};
+    this.benchmarkSeries = [];
 
-      if (dataSource && symbol) {
-        this.isLoadingBenchmarkComparator = true;
+    const selectedBenchmarks = this.benchmarks.filter(
+      (benchmark): benchmark is BenchmarkProfile => {
+        return (
+          !!benchmark.id &&
+          !!benchmark.dataSource &&
+          !!benchmark.symbol &&
+          this.selectedBenchmarkIds.includes(benchmark.id)
+        );
+      }
+    );
 
-        this.dataService
+    selectedBenchmarks.sort((a, b) => {
+      return (
+        this.selectedBenchmarkIds.indexOf(a.id) -
+        this.selectedBenchmarkIds.indexOf(b.id)
+      );
+    });
+
+    if (selectedBenchmarks.length === 0) {
+      this.isLoadingBenchmarkComparator = false;
+
+      return;
+    }
+
+    this.isLoadingBenchmarkComparator = true;
+
+    this.benchmarkSeriesSubscription = forkJoin(
+      selectedBenchmarks.map(({ dataSource, id, name, symbol }) => {
+        return this.dataService
           .fetchBenchmarkForUser({
             dataSource,
             symbol,
@@ -485,20 +518,34 @@ export class GfAnalysisPageComponent implements OnInit {
             range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE,
             startDate: this.dateOfFirstActivity
           })
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe(({ marketData }) => {
-            this.benchmarkDataItems = marketData.map(({ date, value }) => {
+          .pipe(
+            map(({ marketData }): BenchmarkSeries => {
               return {
-                date,
-                value
+                id,
+                items: marketData.map(({ date, value }) => {
+                  return { date, value };
+                }),
+                name: name ?? symbol
               };
-            });
+            }),
+            // A benchmark without data must not hide the other benchmarks
+            catchError(() => {
+              return of<BenchmarkSeries>({
+                id,
+                items: [],
+                name: name ?? symbol
+              });
+            })
+          );
+      })
+    )
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((benchmarkSeries) => {
+        this.benchmarkSeries = benchmarkSeries;
 
-            this.isLoadingBenchmarkComparator = false;
+        this.isLoadingBenchmarkComparator = false;
 
-            this.changeDetectorRef.markForCheck();
-          });
-      }
-    }
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }

@@ -77,6 +77,7 @@ export const DATE_FORMAT_YEARLY = 'yyyy';
 // overwrite the filters of the authenticated user.
 const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
   'benchmark',
+  'benchmarks',
   'colorScheme',
   'dateRange',
   'filters.accounts',
@@ -491,6 +492,25 @@ export function getHoldingName({
   }
 
   return name ?? symbol;
+}
+
+/**
+ * Returns the ids of the selected benchmarks. Falls back to the legacy single
+ * benchmark setting and ignores ids which are not available anymore.
+ */
+export function getSelectedBenchmarkIds({
+  availableIds,
+  settings
+}: {
+  availableIds: string[];
+  settings?: Pick<UserSettings, 'benchmark' | 'benchmarks'>;
+}) {
+  const selectedIds =
+    settings?.benchmarks ?? (settings?.benchmark ? [settings.benchmark] : []);
+
+  return selectedIds.filter((id) => {
+    return availableIds.includes(id);
+  });
 }
 
 export function getLocale() {

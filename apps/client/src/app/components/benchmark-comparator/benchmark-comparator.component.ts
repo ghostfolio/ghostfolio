@@ -1,4 +1,5 @@
 import {
+  getBenchmarkColor,
   getChartBorderColor,
   getChartElementsOptions,
   getTimeAxisOptions,
@@ -6,9 +7,13 @@ import {
   getVerticalHoverLinePlugin,
   getZeroLineAnnotation
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import { primaryColorRgb } from '@ghostfolio/common/config';
 import { getLocale, parseDate } from '@ghostfolio/common/helper';
-import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import {
+  BenchmarkSeries,
+  LineChartItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -67,8 +72,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './benchmark-comparator.component.html'
 })
 export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
-  public readonly benchmark = input<Partial<SymbolProfile>>();
-  public readonly benchmarkDataItems = input<LineChartItem[]>([]);
+  public readonly benchmarkSeries = input<BenchmarkSeries[]>([]);
   public readonly benchmarks = input<Partial<SymbolProfile>[]>();
   public readonly colorScheme = input<ColorScheme>();
   public readonly isLoading = input<boolean>();
@@ -80,9 +84,10 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   });
 
   public readonly performanceDataItems = input.required<LineChartItem[]>();
+  public readonly selectedBenchmarkIds = input<string[]>([]);
   public readonly user = input<User>();
 
-  public readonly benchmarkChanged = output<string>();
+  public readonly benchmarksChanged = output<string[]>();
 
   protected chart?: Chart<'line'>;
   protected hasPermissionToAccessAdminControl: boolean;
@@ -136,22 +141,18 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     this.chart?.destroy();
   }
 
-  protected onChangeBenchmark(symbolProfileId: string) {
-    this.benchmarkChanged.emit(symbolProfileId);
+  protected onChangeBenchmarks(symbolProfileIds: string[]) {
+    this.benchmarksChanged.emit(symbolProfileIds);
   }
 
   private initialize() {
-    const benchmarkDataValues: Record<string, number> = {};
-
-    for (const { date, value } of this.benchmarkDataItems()) {
-      benchmarkDataValues[date] = value;
-    }
+    const portfolioColor = `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`;
 
     const data: ChartData<'line'> = {
       datasets: [
         {
-          backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+          backgroundColor: portfolioColor,
+          borderColor: portfolioColor,
           borderWidth: 2,
           data: this.performanceDataItems().map(({ date, value }) => {
             return {
@@ -161,18 +162,27 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
           }),
           label: $localize`Portfolio`
         },
-        {
-          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderWidth: 2,
-          data: this.performanceDataItems().map(({ date }) => {
-            return {
-              x: parseDate(date)?.getTime() ?? null,
-              y: benchmarkDataValues[date]
-            };
-          }),
-          label: this.benchmark()?.name ?? $localize`Benchmark`
-        }
+        ...this.benchmarkSeries().map(({ items, name }, index) => {
+          const color = getBenchmarkColor(index);
+          const valuesByDate: Record<string, number> = {};
+
+          for (const { date, value } of items) {
+            valuesByDate[date] = value;
+          }
+
+          return {
+            backgroundColor: color,
+            borderColor: color,
+            borderWidth: 2,
+            data: this.performanceDataItems().map(({ date }) => {
+              return {
+                x: parseDate(date)?.getTime() ?? null,
+                y: valuesByDate[date]
+              };
+            }),
+            label: name ?? $localize`Benchmark`
+          };
+        })
       ]
     };
 
@@ -199,7 +209,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 }
               },
               legend: {
-                display: false
+                display: this.benchmarkSeries().length > 0,
+                labels: { boxHeight: 2, boxWidth: 16 }
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
@@ -230,10 +241,28 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
-    return getTimeSeriesTooltipOptions<'line'>({
-      colorScheme: this.colorScheme(),
-      locale: this.locale(),
-      unit: '%'
-    });
+    return {
+      ...getTimeSeriesTooltipOptions<'line'>({
+        colorScheme: this.colorScheme(),
+        locale: this.locale(),
+        unit: '%'
+      }),
+      // List the best performing line first
+      itemSort: (a, b) => {
+        // Lines without a value at the hovered date are listed last
+        const valueOfA = Number(a.parsed.y);
+        const valueOfB = Number(b.parsed.y);
+
+        if (Number.isFinite(valueOfA) && Number.isFinite(valueOfB)) {
+          return valueOfB - valueOfA;
+        }
+
+        return Number.isFinite(valueOfB)
+          ? 1
+          : Number.isFinite(valueOfA)
+            ? -1
+            : 0;
+      }
+    };
   }
 }
