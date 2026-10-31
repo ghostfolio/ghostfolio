@@ -30,6 +30,22 @@ export function getWebFetchBody({
 }
 
 /**
+ * Gets the error of a failed fetch from a candidate of the `web_fetch` tool.
+ * Gives back `undefined` if the candidate has no failure message.
+ */
+export function getWebFetchError({
+  candidate
+}: {
+  candidate: string;
+}): string | undefined {
+  const value = extractJson(candidate.trim())?.value;
+
+  return isWebFetchFailureMessage(value)
+    ? (value as { error: string }).error
+    : undefined;
+}
+
+/**
  * Extracts the JSON object or array from a text. The JSON must start at the
  * beginning of a line and goes to the last matching closing bracket, so that a
  * bracket in a sentence gives no result. `isWhole` tells if only a closing code
