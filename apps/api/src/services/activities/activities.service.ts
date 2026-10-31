@@ -292,9 +292,7 @@ export class ActivitiesService {
 
     const assetProfileCurrency =
       assetProfile?.currency ??
-      (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL'
-        ? data.SymbolProfile.connectOrCreate.create.currency
-        : undefined);
+      data.SymbolProfile.connectOrCreate.create.currency;
 
     if (data.currency === assetProfileCurrency) {
       delete data.currency;
