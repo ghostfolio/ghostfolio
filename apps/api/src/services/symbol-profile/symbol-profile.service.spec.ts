@@ -48,6 +48,24 @@ describe('SymbolProfileService', () => {
         expect.objectContaining({ allocationInPercentage: 0.5, name: 'Apple' })
       ]);
     });
+
+    it('prefers the weight of a holding with both allocations', async () => {
+      await expect(
+        getHoldings([
+          { allocationInPercentage: 0.5, name: 'Apple', weight: 0.9 }
+        ])
+      ).resolves.toEqual([
+        expect.objectContaining({ allocationInPercentage: 0.9, name: 'Apple' })
+      ]);
+    });
+
+    it('keeps a weight of zero', async () => {
+      await expect(
+        getHoldings([{ allocationInPercentage: 0.5, name: 'Apple', weight: 0 }])
+      ).resolves.toEqual([
+        expect.objectContaining({ allocationInPercentage: 0, name: 'Apple' })
+      ]);
+    });
   });
 
   describe('getSymbolProfilesOfUser', () => {

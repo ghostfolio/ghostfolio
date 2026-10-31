@@ -23,16 +23,30 @@ function loadImportData(directory: string, fileName: string): ImportDataDto {
 }
 
 describe('ImportDataDto', () => {
-  it('accepts sample.json', async () => {
-    await expect(
-      validationPipe.transform(loadImportData('ok', 'sample.json'), {
-        metatype: ImportDataDto,
-        type: 'body'
-      })
-    ).resolves.toBeInstanceOf(ImportDataDto);
-  });
+  it.each(['asset-profile-with-holdings.json', 'sample.json'])(
+    'accepts %s',
+    async (fileName) => {
+      await expect(
+        validationPipe.transform(loadImportData('ok', fileName), {
+          metatype: ImportDataDto,
+          type: 'body'
+        })
+      ).resolves.toBeInstanceOf(ImportDataDto);
+    }
+  );
 
   it.each([
+    {
+      fileName: 'invalid-holding.json',
+      messages: [
+        'assetProfiles.0.holdings.0.allocationInPercentage must not be less than 0',
+        'assetProfiles.0.holdings.0.allocationInPercentage must not be greater than 1',
+        'assetProfiles.0.holdings.0.allocationInPercentage must be a number conforming to the specified constraints',
+        'assetProfiles.0.holdings.0.weight must not be less than 0',
+        'assetProfiles.0.holdings.0.weight must not be greater than 1',
+        'assetProfiles.0.holdings.0.weight must be a number conforming to the specified constraints'
+      ]
+    },
     {
       fileName: 'invalid-data-source.json',
       messages: [

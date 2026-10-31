@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "date": "2022-04-01T00:00:00.000Z",
+    "version": "dev"
+  },
+  "assetProfiles": [
+    {
+      "assetClass": null,
+      "assetSubClass": null,
+      "comment": null,
+      "countries": [],
+      "currency": "USD",
+      "cusip": null,
+      "dataSource": "MANUAL",
+      "figi": null,
+      "figiComposite": null,
+      "figiShareClass": null,
+      "holdings": [
+        {
+          "allocationInPercentage": 0.5,
+          "name": "Apple"
+        }
+      ],
+      "isActive": true,
+      "isin": null,
+      "marketData": [],
+      "name": "Custom Fund",
+      "sectors": [],
+      "symbol": "7e91b7d4-1430-4212-8380-289a06c9bbc1",
+      "url": null
+    }
+  ],
+  "activities": [],
+  "user": {
+    "settings": {
+      "currency": "USD",
+      "performanceCalculationType": "ROAI"
+    }
+  }
+}
