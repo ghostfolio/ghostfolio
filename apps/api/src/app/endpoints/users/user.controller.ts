@@ -8,7 +8,6 @@ import { decodeDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { UserService } from '@ghostfolio/api/services/user/user.service';
 import {
@@ -62,7 +61,6 @@ export class UserController {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
-    private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
@@ -91,6 +89,7 @@ export class UserController {
     });
   }
 
+  /** @deprecated */
   @Delete(':id')
   @HasPermission(permissions.deleteUser)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -107,13 +106,14 @@ export class UserController {
     });
   }
 
+  /** @deprecated */
   @HasPermission(permissions.accessAdminControl)
   @Post(':id/access-token')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateUserAccessToken(
     @Param('id') id: string
   ): Promise<AccessTokenResponse> {
-    return this.rotateUserAccessToken(id);
+    return this.userService.rotateAccessToken({ userId: id });
   }
 
   @HasPermission(permissions.updateOwnAccessToken)
@@ -127,7 +127,7 @@ export class UserController {
       this.request.user.id
     );
 
-    return this.rotateUserAccessToken(user.id);
+    return this.userService.rotateAccessToken({ userId: user.id });
   }
 
   @Get()
@@ -249,22 +249,6 @@ export class UserController {
       userSettings,
       userId: this.request.user.id
     });
-  }
-
-  private async rotateUserAccessToken(
-    userId: string
-  ): Promise<AccessTokenResponse> {
-    const { accessToken, hashedAccessToken } =
-      this.userService.generateAccessToken({
-        userId
-      });
-
-    await this.prismaService.user.update({
-      data: { accessToken: hashedAccessToken },
-      where: { id: userId }
-    });
-
-    return { accessToken };
   }
 
   private async validateAccessToken(

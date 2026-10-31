@@ -63,9 +63,9 @@ import { SitemapModule } from './endpoints/sitemap/sitemap.module';
 import { SubscriptionModule } from './endpoints/subscription/subscription.module';
 import { SymbolsModule } from './endpoints/symbols/symbols.module';
 import { TagsModule } from './endpoints/tags/tags.module';
+import { UsersModule } from './endpoints/users/users.module';
 import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
-import { UserModule } from './user/user.module';
 
 @Module({
   controllers: [AppController],
@@ -182,7 +182,7 @@ import { UserModule } from './user/user.module';
         };
       }
     }),
-    UserModule,
+    UsersModule,
     WatchlistModule
   ],
   providers: [
