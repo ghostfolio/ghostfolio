@@ -29,9 +29,9 @@ function createConfigurationService({
 describe('DataSourceHelper', () => {
   describe('isValidEncodedDataSource', () => {
     it('Accepts an encoded data source', () => {
-      expect(isValidEncodedDataSource(encodeDataSource(DataSource.YAHOO))).toBe(
-        true
-      );
+      expect(
+        isValidEncodedDataSource(encodeDataSource(DataSource.YAHOO) ?? '')
+      ).toBe(true);
     });
 
     it('Refuses a data source which is not encoded', () => {

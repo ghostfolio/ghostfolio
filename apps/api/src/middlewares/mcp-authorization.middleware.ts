@@ -92,7 +92,7 @@ function sendUnauthorizedResponse({
   accessId,
   response
 }: {
-  accessId: string;
+  accessId?: string;
   response: Response;
 }) {
   const parameters = [`realm="${MCP_REALM}"`];

@@ -21,7 +21,7 @@ export function convertValuesToPercentages({
 
   const totalValue = holdings
     .map(({ valueInBaseCurrency }) => {
-      return valueInBaseCurrency;
+      return valueInBaseCurrency ?? 0;
     })
     .reduce((a, b) => {
       return a + b;
@@ -32,7 +32,7 @@ export function convertValuesToPercentages({
       ? holding.investment / totalInvestment
       : 0;
     holding.valueInPercentage = totalValue
-      ? holding.valueInBaseCurrency / totalValue
+      ? (holding.valueInBaseCurrency ?? 0) / totalValue
       : 0;
   }
 

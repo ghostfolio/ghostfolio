@@ -64,7 +64,7 @@ function hashDataSource(dataSource: DataSource) {
   return createHash('sha256').update(dataSource).digest('hex').slice(0, 8);
 }
 
-export function decodeDataSource(encodedDataSource: string) {
+export function decodeDataSource(encodedDataSource?: string) {
   if (!encodedDataSource) {
     return undefined;
   }
@@ -128,7 +128,7 @@ export function transformDataSourceInRequest({
   configurationService: ConfigurationService;
   dataSource?: string;
 }) {
-  if (Object.hasOwn(DataSource, dataSource)) {
+  if (dataSource && Object.hasOwn(DataSource, dataSource)) {
     return getUnmaskedGhostfolioDataSource({
       dataSource: dataSource as DataSource,
       ghostfolioDataSources: getGhostfolioDataSources({ configurationService })

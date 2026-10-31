@@ -174,7 +174,6 @@ export class ActivitiesService {
       accountId?: string;
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
-      currency?: string;
       symbol?: string;
       tags?: { id: string }[];
       updateAccountBalance?: boolean;
@@ -284,6 +283,19 @@ export class ActivitiesService {
 
     if (!data.comment) {
       delete data.comment;
+    }
+
+    const assetProfile = await this.prismaService.symbolProfile.findUnique({
+      select: { currency: true },
+      where: data.SymbolProfile.connectOrCreate.where
+    });
+
+    const assetProfileCurrency =
+      assetProfile?.currency ??
+      data.SymbolProfile.connectOrCreate.create.currency;
+
+    if (data.currency === assetProfileCurrency) {
+      delete data.currency;
     }
 
     delete data.symbol;
@@ -907,7 +919,6 @@ export class ActivitiesService {
     data: Prisma.OrderUpdateInput & {
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
-      currency?: string;
       symbol?: string;
       tags?: { id: string }[];
       type?: ActivityType;
@@ -930,6 +941,8 @@ export class ActivitiesService {
       data.comment = null;
     }
 
+    let assetProfileCurrency: string;
+
     if (
       NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
@@ -938,9 +951,11 @@ export class ActivitiesService {
       delete data.SymbolProfile.connect;
 
       const activityToUpdate = await this.prismaService.order.findUnique({
-        select: { SymbolProfile: { select: { userId: true } } },
+        select: { SymbolProfile: { select: { currency: true, userId: true } } },
         where
       });
+
+      assetProfileCurrency = activityToUpdate?.SymbolProfile.currency;
 
       if (activityToUpdate?.SymbolProfile.userId === userId) {
         data.SymbolProfile.update = {
@@ -955,6 +970,13 @@ export class ActivitiesService {
       }
     } else {
       delete data.SymbolProfile.update;
+
+      const assetProfile = await this.prismaService.symbolProfile.findUnique({
+        select: { currency: true },
+        where: data.SymbolProfile.connect
+      });
+
+      assetProfileCurrency = assetProfile?.currency;
 
       if (!isActivityInFuture({ date: data.date as Date })) {
         // Gather symbol data of order in the background, if the date is not in
@@ -975,6 +997,11 @@ export class ActivitiesService {
 
     delete data.assetClass;
     delete data.assetSubClass;
+
+    if (data.currency === assetProfileCurrency) {
+      data.currency = null;
+    }
+
     delete data.symbol;
     delete data.tags;
 

@@ -53,7 +53,7 @@ async function bootstrap() {
 
   try {
     customLogLevels = JSON.parse(
-      configService.get<string>('LOG_LEVELS')
+      configService.get<string>('LOG_LEVELS') ?? ''
     ) as LogLevel[];
   } catch {}
 
@@ -191,7 +191,7 @@ async function bootstrap() {
 
     let address = app.getHttpServer().address();
 
-    if (typeof address === 'object') {
+    if (address && typeof address === 'object') {
       const addressObject = address;
       let host = addressObject.address;
 
