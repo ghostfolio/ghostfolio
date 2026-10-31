@@ -90,9 +90,9 @@ const locales = {
   },
   '/en/blog/2026/11/black-weeks-2026': {
     description:
-      'Get 15 months of Ghostfolio Premium for the price of 12. Track stocks, ETFs and crypto with the open source portfolio tracker. Offer ends November 30.',
+      'Get 15 months of Ghostfolio Premium for the price of 12. Track stocks, ETFs and crypto with the open source portfolio tracker. Offer valid until the end of November.',
     featureGraphicPath: 'assets/images/blog/black-weeks-2026.jpg',
-    title: `Black Friday 2026: 15 Months of Premium - ${title}`
+    title: `Black Weeks 2026: 15 Months of Premium - ${title}`
   }
 };
 
