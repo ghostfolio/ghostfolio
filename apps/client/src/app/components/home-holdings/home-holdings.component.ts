@@ -1,3 +1,4 @@
+import { AutoRefreshService } from '@ghostfolio/client/services/auto-refresh/auto-refresh.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
@@ -39,6 +40,7 @@ import { Router, RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { gridOutline, reorderFourOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { catchError, EMPTY, exhaustMap, filter } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -106,6 +108,7 @@ export class GfHomeHoldingsComponent implements OnInit {
     internalRoutes.portfolio.subRoutes.activities.routerLink;
   protected readonly user = signal<User | null>(null);
 
+  private readonly autoRefreshService = inject(AutoRefreshService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
@@ -138,6 +141,19 @@ export class GfHomeHoldingsComponent implements OnInit {
           this.initialize();
         }
 
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.autoRefreshService.refresh$
+      .pipe(
+        filter(() => !!this.user() && !!this.holdings),
+        exhaustMap(() => this.fetchHoldings().pipe(catchError(() => EMPTY))),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings;
+
+        this.autoRefreshService.markUpdated();
         this.changeDetectorRef.markForCheck();
       });
   }

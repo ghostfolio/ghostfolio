@@ -1,4 +1,4 @@
-import { Market, MarketAdvanced } from '@ghostfolio/common/types';
+import { Market, MarketAdvanced, MarketState } from '@ghostfolio/common/types';
 import type { Tag } from '@ghostfolio/prisma/browser';
 
 import { EnhancedAssetProfile } from './enhanced-asset-profile.interface';
@@ -33,6 +33,7 @@ export interface PortfolioPosition {
   marketChange?: number;
   marketChangePercent?: number;
   marketPrice: number;
+  marketState?: MarketState;
   markets?: { [key in Market]: number };
   marketsAdvanced?: { [key in MarketAdvanced]: number };
   netPerformance: number;

@@ -680,9 +680,24 @@ export class PortfolioService {
       };
     });
 
-    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-      assetProfileIdentifiers
-    );
+    const [symbolProfiles, quotes] = await Promise.all([
+      this.symbolProfileService.getSymbolProfiles(assetProfileIdentifiers),
+      // The quotes are cached, they only provide the state of the markets
+      this.dataProviderService
+        .getQuotes({
+          items: positions
+            .filter(({ quantity }) => {
+              return !quantity.eq(0);
+            })
+            .map(({ dataSource, symbol }) => {
+              return { dataSource, symbol };
+            }),
+          subscriptionType: user.subscription?.type
+        })
+        .catch(() => {
+          return {} as Awaited<ReturnType<DataProviderService['getQuotes']>>;
+        })
+    ]);
 
     const cashSymbolProfiles = this.getCashSymbolProfiles(cashDetails);
     symbolProfiles.push(...cashSymbolProfiles);
@@ -765,6 +780,9 @@ export class PortfolioService {
         markets,
         marketsAdvanced,
         marketPrice,
+        marketState:
+          quotes[getAssetProfileIdentifier({ dataSource, symbol })]
+            ?.marketState,
         tags,
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
