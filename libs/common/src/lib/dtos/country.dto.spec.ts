@@ -17,7 +17,7 @@ describe('CountryDto', () => {
     expect(getInvalidProperties({ code: 'US', weight: 1 })).toEqual([]);
   });
 
-  it('Accepts a country of an export', () => {
+  it('Rejects a continent and a name', () => {
     expect(
       getInvalidProperties({
         code: 'US',
@@ -25,12 +25,6 @@ describe('CountryDto', () => {
         name: 'United States',
         weight: 1
       })
-    ).toEqual([]);
-  });
-
-  it('Rejects a continent and a name which are not strings', () => {
-    expect(
-      getInvalidProperties({ code: 'US', continent: 1, name: 2, weight: 1 })
     ).toEqual(['continent', 'name']);
   });
 
