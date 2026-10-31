@@ -1,4 +1,5 @@
 import { redactPaths } from '@ghostfolio/api/helper/object.helper';
+import { getWebFetchBody } from '@ghostfolio/api/helper/web-fetch.helper';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_OPENROUTER_ENGINE_WEB_FETCH,
@@ -119,13 +120,14 @@ export class FetchService implements OnModuleInit {
     try {
       const openRouterService = createOpenRouter({ apiKey: openRouterApiKey });
 
-      const { sources, text } = await generateText({
+      const { finishReason, sources, text } = await generateText({
         model: openRouterService.chat(model),
         prompt: [
           'You have access to a web_fetch tool. You MUST call it to retrieve the URL below, do not answer from prior knowledge.',
           'Return the fetched response body exactly as received: raw body only, no commentary, no Markdown, and no code fences.',
           `URL: ${url}`
         ].join('\n'),
+        temperature: 0,
         timeout: FetchService.WEB_FETCH_TIMEOUT,
         tools: {
           // Provider-executed tool: lets OpenRouter perform the actual web
@@ -149,12 +151,22 @@ export class FetchService implements OnModuleInit {
         }
       });
 
+      if (finishReason !== 'stop') {
+        this.logger.warn(
+          `Web fetch tool stopped with the reason "${finishReason}" for ${this.redactUrl(url)}`
+        );
+      }
+
       const candidates = [
         ...(sources ?? []).map((source) => {
           return source.providerMetadata?.openrouter?.content;
         }),
-        text
+        ...(finishReason === 'stop' ? [text] : [])
       ];
+
+      const isJson =
+        webFetchRoute.responseContentType?.includes('application/json') ??
+        false;
 
       let rejectedBody: string | undefined;
 
@@ -163,20 +175,12 @@ export class FetchService implements OnModuleInit {
           continue;
         }
 
-        const body = candidate.trim();
+        const body = getWebFetchBody({ candidate, isJson });
 
         if (!body) {
+          rejectedBody = candidate.trim() || rejectedBody;
+
           continue;
-        }
-
-        if (webFetchRoute.responseContentType?.includes('application/json')) {
-          try {
-            JSON.parse(body);
-          } catch {
-            rejectedBody = body;
-
-            continue;
-          }
         }
 
         this.logger.debug(`Routed ${this.redactUrl(url)} via web fetch tool`);
@@ -264,7 +268,16 @@ export class FetchService implements OnModuleInit {
       return '(empty)';
     }
 
-    const singleLineBody = body.replace(/\s+/g, ' ').trim();
+    const singleLineBody = body
+      .replace(
+        new RegExp(
+          `(${FetchService.REDACTED_QUERY_PARAM_NAMES.join('|')})=[^&\\s"']+`,
+          'gi'
+        ),
+        '$1=*******'
+      )
+      .replace(/\s+/g, ' ')
+      .trim();
 
     return singleLineBody.length > FetchService.BODY_PREVIEW_LENGTH
       ? `${singleLineBody.slice(0, FetchService.BODY_PREVIEW_LENGTH)}…`
