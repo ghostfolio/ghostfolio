@@ -10,6 +10,7 @@ import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
+import { Big } from 'big.js';
 import { isPlainObject } from 'lodash-es';
 
 @Injectable()
@@ -179,8 +180,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           aliases: TrackinsightDataEnhancerService.sectorsMapping
         });
 
-        weightsBySector[sectorName] =
-          (weightsBySector[sectorName] ?? 0) + value.weight;
+        weightsBySector[sectorName] = new Big(weightsBySector[sectorName] ?? 0)
+          .plus(value.weight)
+          .toNumber();
       }
 
       response.sectors = Object.entries(weightsBySector).map(

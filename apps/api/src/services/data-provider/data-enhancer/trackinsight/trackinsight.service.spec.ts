@@ -380,6 +380,24 @@ describe('TrackinsightDataEnhancerService', () => {
     ]);
   });
 
+  it('should merge the sectors without floating point noise', async () => {
+    mockResponses({
+      holdings: Response.json({
+        ...HOLDINGS,
+        sectors: {
+          'Consumer Cyclicals': { weight: 0.1 },
+          'Consumer Services': { weight: 0.2 }
+        }
+      })
+    });
+
+    const response = await enhance();
+
+    expect(response.sectors).toEqual([
+      { name: 'Consumer Cyclical', weight: 0.3 }
+    ]);
+  });
+
   it('should merge the sectors without a mapping', async () => {
     const warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
 
