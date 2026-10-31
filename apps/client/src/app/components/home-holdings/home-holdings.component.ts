@@ -1,3 +1,4 @@
+import { GfDateRangeSelectorComponent } from '@ghostfolio/client/components/date-range-selector/date-range-selector.component';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
@@ -43,6 +44,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    GfDateRangeSelectorComponent,
     GfHoldingsTableComponent,
     GfToggleComponent,
     GfTreemapChartComponent,

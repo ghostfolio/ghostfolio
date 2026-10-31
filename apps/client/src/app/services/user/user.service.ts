@@ -1,6 +1,7 @@
 import { KEY_SUBSCRIPTION_INTERSTITIAL_SHOWN } from '@ghostfolio/client/services/settings-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { BULL_BOARD_COOKIE_NAME } from '@ghostfolio/common/config';
+import { getStoredDateRange } from '@ghostfolio/common/date-range.helper';
 import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
@@ -11,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -25,6 +26,8 @@ export class UserService extends ObservableStore<UserStoreState> {
   private readonly deviceType = computed(
     () => this.deviceDetectorService.deviceInfo().deviceType
   );
+
+  private hasRestoredDateRange = false;
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -144,6 +147,8 @@ export class UserService extends ObservableStore<UserStoreState> {
           );
         }
 
+        this.restoreStoredDateRange(user);
+
         this.setState({ user }, UserStoreActions.GetUser);
 
         if (
@@ -181,6 +186,38 @@ export class UserService extends ObservableStore<UserStoreState> {
       }),
       catchError(this.handleError)
     );
+  }
+
+  /**
+   * Restores the date range selected last on this device once per page load,
+   * e.g. if the stored user setting has been changed from another device.
+   */
+  private restoreStoredDateRange(user: User) {
+    if (this.hasRestoredDateRange || !user.settings) {
+      return;
+    }
+
+    this.hasRestoredDateRange = true;
+
+    const storedDateRange = getStoredDateRange();
+
+    if (
+      !storedDateRange ||
+      storedDateRange === user.settings.dateRange ||
+      user.settings.viewMode === 'ZEN'
+    ) {
+      return;
+    }
+
+    user.settings.dateRange = storedDateRange;
+
+    this.http
+      .put('/api/v1/user/setting', { dateRange: storedDateRange })
+      .pipe(
+        catchError(() => EMPTY),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   private handleError(error: any) {
