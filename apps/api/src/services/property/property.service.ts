@@ -16,8 +16,8 @@ import { PropertyValue } from './interfaces/interfaces';
 export class PropertyService {
   private static readonly CACHE_TTL = ms('1 minute');
 
-  private cachedProperties: Promise<Property[]>;
-  private cachedPropertiesExpiresAt: Date;
+  private cachedProperties?: Promise<Property[]>;
+  private cachedPropertiesExpiresAt?: Date;
 
   public constructor(private readonly prismaService: PrismaService) {}
 
@@ -91,6 +91,7 @@ export class PropertyService {
 
     if (
       this.cachedProperties &&
+      this.cachedPropertiesExpiresAt &&
       isBefore(new Date(), this.cachedPropertiesExpiresAt)
     ) {
       return this.cachedProperties;

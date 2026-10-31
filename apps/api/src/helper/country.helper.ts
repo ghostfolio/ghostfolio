@@ -9,7 +9,7 @@ export function getCountryCodeByName({
   aliases?: Record<string, string>;
   dataSource?: string;
   name: string;
-}): string {
+}): string | undefined {
   if (aliases[name]) {
     return aliases[name];
   }

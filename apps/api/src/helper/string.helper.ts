@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto';
 export function getRandomString(length: number) {
   const bytes = randomBytes(length);
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const result = [];
+  const result: string[] = [];
 
   for (let i = 0; i < length; i++) {
     const randomByte = bytes[i];
