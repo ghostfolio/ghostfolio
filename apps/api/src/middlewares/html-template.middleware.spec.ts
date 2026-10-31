@@ -1,4 +1,5 @@
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
+import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { Logger } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
@@ -109,6 +110,22 @@ describe('HtmlTemplateMiddleware', () => {
       })
     ).toContain('content="Compare 8FIGURES"');
   });
+
+  it.each(
+    personalFinanceTools.filter(({ alias, key }) => {
+      return (alias ?? key).includes('.');
+    })
+  )(
+    'serves the template of a personal finance tool with a dot in the key ($key)',
+    ({ alias, key, name }) => {
+      expect(
+        getResponseBody({
+          locale: createLocale({ productDescription: 'Compare ${name}' }),
+          originalUrl: `/en/resources/personal-finance-tools/open-source-alternative-to-${alias ?? key}`
+        })
+      ).toContain(`content="Compare ${name}"`);
+    }
+  );
 
   it('falls back to the generic description if the name token is not in the description of a personal finance tool', () => {
     expect(
