@@ -466,6 +466,7 @@ export class UserService {
 
         // Reset benchmark
         user.settings.settings.benchmark = undefined;
+        user.settings.settings.benchmarks = undefined;
 
         // Reset holdings view mode
         user.settings.settings.holdingsViewMode = undefined;
