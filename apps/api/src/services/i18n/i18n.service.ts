@@ -43,11 +43,13 @@ export class I18nService implements OnModuleInit {
   public getTranslation({
     id,
     languageCode,
-    placeholders
+    placeholders,
+    skipUntranslated = false
   }: {
     id: string;
     languageCode: string;
     placeholders?: Record<string, string | number>;
+    skipUntranslated?: boolean;
   }): string {
     const languageCodeToUse = this.translations[languageCode]
       ? languageCode
@@ -61,9 +63,13 @@ export class I18nService implements OnModuleInit {
       return '';
     }
 
+    const targetSelector = skipUntranslated
+      ? 'target:not([state="new"])'
+      : 'target';
+
     let translatedText = $(
       `trans-unit[id="${id}"] > ${
-        languageCodeToUse === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
+        languageCodeToUse === DEFAULT_LANGUAGE_CODE ? 'source' : targetSelector
       }`
     ).text();
 
