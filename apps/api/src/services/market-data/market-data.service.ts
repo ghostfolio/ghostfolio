@@ -30,7 +30,7 @@ export class MarketDataService {
     dataSource,
     date = new Date(),
     symbol
-  }: DataGatheringItem): Promise<MarketData> {
+  }: DataGatheringItem): Promise<MarketData | null> {
     return await this.prismaService.marketData.findFirst({
       where: {
         dataSource,
@@ -43,7 +43,7 @@ export class MarketDataService {
   public async getLatest({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Promise<MarketData> {
+  }: AssetProfileIdentifier): Promise<MarketData | null> {
     return this.prismaService.marketData.findFirst({
       orderBy: [{ date: 'desc' }],
       where: {
