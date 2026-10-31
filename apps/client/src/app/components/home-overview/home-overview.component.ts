@@ -1,3 +1,4 @@
+import { GfDateRangeSelectorComponent } from '@ghostfolio/client/components/date-range-selector/date-range-selector.component';
 import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -44,6 +45,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    GfDateRangeSelectorComponent,
     GfHoldingsTableComponent,
     GfLineChartComponent,
     GfPortfolioPerformanceComponent,

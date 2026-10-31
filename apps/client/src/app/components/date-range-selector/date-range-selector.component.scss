@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  margin-bottom: 1rem;
+  max-width: 100%;
+  overflow-x: auto;
+
+  gf-toggle {
+    display: flex;
+    justify-content: center;
+  }
+}
