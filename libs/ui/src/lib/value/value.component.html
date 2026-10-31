@@ -42,31 +42,50 @@
       [class.justify-content-end]="position === 'end'"
     >
       @if (isNumber || value === null) {
-        @if (colorizeSign && !useAbsoluteValue && value !== null) {
-          @if (+value > 0) {
-            <div class="me-1 text-success">+</div>
-          }
-          @if (+value < 0) {
-            <div class="me-1 text-danger">-</div>
-          }
-        }
         <div
-          class="mb-0 value"
-          [class.fw-bold]="size === 'large'"
-          [class.h2]="size === 'large'"
-          [class.h4]="size === 'medium'"
+          class="align-items-center d-flex gf-value-line"
+          [ngClass]="trendColorClass"
         >
-          @if (value === null) {
-            <span class="font-monospace text-body-secondary">*****</span>
-          } @else {
-            {{ formattedValue }}
+          @if (colorizeSign && !useAbsoluteValue && value !== null) {
+            @if (+value > 0) {
+              <div
+                class="me-1"
+                [class.text-success]="
+                  isMarketOpen === undefined && !colorizeValue
+                "
+              >
+                +
+              </div>
+            }
+            @if (+value < 0) {
+              <div
+                class="me-1"
+                [class.text-danger]="
+                  isMarketOpen === undefined && !colorizeValue
+                "
+              >
+                -
+              </div>
+            }
+          }
+          <div
+            class="mb-0 value"
+            [class.fw-bold]="size === 'large'"
+            [class.h2]="size === 'large'"
+            [class.h4]="size === 'medium'"
+          >
+            @if (value === null) {
+              <span class="font-monospace text-body-secondary">*****</span>
+            } @else {
+              {{ formattedValue }}
+            }
+          </div>
+          @if (isPercent || unit) {
+            <div class="ms-1">
+              {{ isPercent ? '%' : unit }}
+            </div>
           }
         </div>
-        @if (isPercent || unit) {
-          <div class="ms-1">
-            {{ isPercent ? '%' : unit }}
-          </div>
-        }
       }
       @if (isString) {
         <div

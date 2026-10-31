@@ -5,8 +5,10 @@ import {
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import {
   canOpenHoldingDetail,
+  getAssetProfileIdentifier,
   getHoldingName,
-  getLocale
+  getLocale,
+  getTextColor
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -49,6 +51,37 @@ import type {
 
 const { gray, green, red } = OpenColor;
 
+// Duration of the highlight of a tile whose value changed on a refresh
+const FLASH_DURATION_IN_MS = 1200;
+const FLASH_FRAME_IN_MS = 100;
+
+type Rgba = [number, number, number, number];
+
+function getRgba(aHexColor: string, aAlpha = 1): Rgba {
+  const hex = aHexColor.replace('#', '');
+
+  return [
+    parseInt(hex.slice(0, 2), 16),
+    parseInt(hex.slice(2, 4), 16),
+    parseInt(hex.slice(4, 6), 16),
+    aAlpha
+  ];
+}
+
+/** Mixes the color `aTop` with the opacity `aRatio` over `aBottom` */
+function mix(aBottom: Rgba, aTop: Rgba, aRatio: number): Rgba {
+  return [
+    Math.round(aBottom[0] + (aTop[0] - aBottom[0]) * aRatio),
+    Math.round(aBottom[1] + (aTop[1] - aBottom[1]) * aRatio),
+    Math.round(aBottom[2] + (aTop[2] - aBottom[2]) * aRatio),
+    aBottom[3] + (aTop[3] - aBottom[3]) * aRatio
+  ];
+}
+
+function toCss([r, g, b, a]: Rgba) {
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgxSkeletonLoaderModule],
@@ -71,6 +104,10 @@ export class GfTreemapChartComponent
   protected isLoading = true;
 
   private chart: Chart<'treemap'>;
+  private flashes = new Map<string, { isUp: boolean; start: number }>();
+  private flashTimer?: ReturnType<typeof setInterval>;
+  private previousDateRange?: DateRange;
+  private previousValues = new Map<string, number>();
   private readonly chartCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
 
@@ -93,7 +130,93 @@ export class GfTreemapChartComponent
   }
 
   public ngOnDestroy() {
+    clearInterval(this.flashTimer);
     this.chart?.destroy();
+  }
+
+  /**
+   * Remembers the tiles whose absolute change differs from the previous
+   * refresh of the same date range, to highlight them briefly
+   */
+  private detectChanges(aHoldings: PortfolioPosition[]) {
+    const isRefresh =
+      !!this.chart && this.previousDateRange === this.dateRange();
+
+    const now = Date.now();
+
+    for (const {
+      assetProfile,
+      netPerformanceWithCurrencyEffect
+    } of aHoldings) {
+      const key = getAssetProfileIdentifier(assetProfile);
+      const previousValue = this.previousValues.get(key);
+
+      if (
+        isRefresh &&
+        previousValue !== undefined &&
+        netPerformanceWithCurrencyEffect !== previousValue
+      ) {
+        this.flashes.set(key, {
+          isUp: netPerformanceWithCurrencyEffect > previousValue,
+          start: now
+        });
+      }
+
+      this.previousValues.set(key, netPerformanceWithCurrencyEffect);
+    }
+
+    this.previousDateRange = this.dateRange();
+
+    if (this.flashes.size > 0 && !this.flashTimer) {
+      this.flashTimer = setInterval(() => {
+        for (const [key, { start }] of this.flashes) {
+          if (Date.now() - start >= FLASH_DURATION_IN_MS) {
+            this.flashes.delete(key);
+          }
+        }
+
+        if (this.flashes.size === 0) {
+          clearInterval(this.flashTimer);
+          this.flashTimer = undefined;
+        }
+
+        this.chart?.update('none');
+      }, FLASH_FRAME_IN_MS);
+    }
+  }
+
+  /**
+   * Returns the border of a tile: the background, or a green (up) or red
+   * (down) highlight fading into the background after a change
+   */
+  private getBorderColor(aHolding: PortfolioPosition, aBackground: Rgba) {
+    const flash = this.flashes.get(
+      getAssetProfileIdentifier(aHolding.assetProfile)
+    );
+
+    if (!flash) {
+      return toCss(aBackground);
+    }
+
+    const isReducedMotion = window.matchMedia?.(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+    const ratio = isReducedMotion
+      ? 1
+      : Math.max(0, 1 - (Date.now() - flash.start) / FLASH_DURATION_IN_MS);
+
+    return toCss(
+      mix(aBackground, getRgba(flash.isUp ? green[6] : red[6]), ratio)
+    );
+  }
+
+  /**
+   * The tile of a holding whose market is closed is drawn faded, like its
+   * figures in the holdings table, which are gray while it is closed
+   */
+  private isMarketClosed(aHolding: PortfolioPosition) {
+    return aHolding.marketState !== 'open';
   }
 
   private getColor({
@@ -195,6 +318,8 @@ export class GfTreemapChartComponent
 
     this.isLoading = true;
 
+    this.detectChanges(holdings);
+
     const { endDate, startDate } = getIntervalFromDateRange({
       dateRange: this.dateRange()
     });
@@ -237,41 +362,51 @@ export class GfTreemapChartComponent
       min: Math.min(...negativeNetPerformancePercents)
     };
 
+    const getTileBackground = (raw: GfTreemapDataPoint): Rgba => {
+      let annualizedNetPerformancePercent = getAnnualizedPerformancePercent({
+        daysInMarket: differenceInDays(
+          endDate,
+          max([raw._data.dateOfFirstActivity ?? new Date(0), startDate])
+        ),
+        netPerformancePercentage: new Big(
+          raw._data.netPerformancePercentWithCurrencyEffect
+        )
+      }).toNumber();
+
+      annualizedNetPerformancePercent = round(
+        annualizedNetPerformancePercent,
+        2
+      );
+
+      const { backgroundColor } = this.getColor({
+        annualizedNetPerformancePercent,
+        negativeNetPerformancePercentsRange,
+        positiveNetPerformancePercentsRange
+      });
+
+      return getRgba(
+        backgroundColor,
+        this.isMarketClosed(raw._data) ? 0.35 : 1
+      );
+    };
+
     const data: ChartData<'treemap'> = {
       datasets: [
         {
           backgroundColor: (context: GfTreemapScriptableContext) => {
             const raw = context.raw as GfTreemapDataPoint;
 
-            if (!raw) {
-              return undefined;
-            }
+            return raw ? toCss(getTileBackground(raw)) : undefined;
+          },
+          borderColor: (context: GfTreemapScriptableContext) => {
+            const raw = context.raw as GfTreemapDataPoint;
 
-            let annualizedNetPerformancePercent =
-              getAnnualizedPerformancePercent({
-                daysInMarket: differenceInDays(
-                  endDate,
-                  max([raw._data.dateOfFirstActivity ?? new Date(0), startDate])
-                ),
-                netPerformancePercentage: new Big(
-                  raw._data.netPerformancePercentWithCurrencyEffect
-                )
-              }).toNumber();
-
-            annualizedNetPerformancePercent = round(
-              annualizedNetPerformancePercent,
-              2
-            );
-
-            const { backgroundColor } = this.getColor({
-              annualizedNetPerformancePercent,
-              negativeNetPerformancePercentsRange,
-              positiveNetPerformancePercentsRange
-            });
-
-            return backgroundColor;
+            return raw
+              ? this.getBorderColor(raw._data, getTileBackground(raw))
+              : undefined;
           },
           borderRadius: 4,
+          borderWidth: 3,
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
@@ -307,7 +442,9 @@ export class GfTreemapChartComponent
                 positiveNetPerformancePercentsRange
               });
 
-              return fontColor;
+              return this.isMarketClosed(raw._data)
+                ? `rgb(${getTextColor(this.colorScheme())})`
+                : fontColor;
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
@@ -346,7 +483,8 @@ export class GfTreemapChartComponent
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
 
-        this.chart.update();
+        // A refresh only recolors the tiles, without an animation
+        this.chart.update('none');
       } else {
         this.chart = new Chart<'treemap'>(this.chartCanvas().nativeElement, {
           data,
