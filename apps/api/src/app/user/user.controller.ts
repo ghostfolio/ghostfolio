@@ -10,6 +10,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import {
   THROTTLE_SIGNUP_LIMIT,
   THROTTLE_SIGNUP_TTL
@@ -54,8 +55,6 @@ import { Throttle } from '@nestjs/throttler';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { merge, size } from 'lodash-es';
-
-import { UserService } from './user.service';
 
 @AllowDuringImpersonation()
 @Controller('user')

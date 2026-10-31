@@ -1,27 +1,20 @@
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
-import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
-import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
-import { SubscriptionModule } from '@ghostfolio/api/services/subscription/subscription.module';
-import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
+import { UserModule as UserServiceModule } from '@ghostfolio/api/services/user/user.module';
 
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 import { UserController } from './user.controller';
-import { UserService } from './user.service';
 
 @Module({
   controllers: [UserController],
-  exports: [UserService],
   imports: [
-    ActivitiesModule,
     ConfigurationModule,
-    I18nModule,
     ImpersonationModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
@@ -30,10 +23,8 @@ import { UserService } from './user.service';
     PrismaModule,
     PropertyModule,
     RedactValuesInResponseModule,
-    SubscriptionModule,
-    TagModule,
-    TransformDataSourceInResponseModule
-  ],
-  providers: [UserService]
+    TransformDataSourceInResponseModule,
+    UserServiceModule
+  ]
 })
 export class UserModule {}

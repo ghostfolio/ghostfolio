@@ -1,4 +1,3 @@
-import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { PerformanceLoggingModule } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.module';
 import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
@@ -19,6 +18,7 @@ import { DataGatheringQueueModule } from '@ghostfolio/api/services/queues/data-g
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { RedisCacheModule } from '@ghostfolio/api/services/redis-cache/redis-cache.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+import { UserModule } from '@ghostfolio/api/services/user/user.module';
 
 import { Module } from '@nestjs/common';
 

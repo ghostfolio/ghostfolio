@@ -1,7 +1,7 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getAccessIdOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import { HEADER_KEY_TOKEN, MCP_REALM } from '@ghostfolio/common/config';
 import { hasRole } from '@ghostfolio/common/permissions';
 import type { ImpersonationContext } from '@ghostfolio/common/types';

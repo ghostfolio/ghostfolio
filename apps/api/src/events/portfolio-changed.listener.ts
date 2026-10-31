@@ -1,7 +1,7 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { RedisCacheService } from '@ghostfolio/api/services/redis-cache/redis-cache.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import {
   PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,

@@ -1,9 +1,9 @@
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
-import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { AccessModule } from '@ghostfolio/api/services/access/access.module';
 import { ActivitiesModule } from '@ghostfolio/api/services/activities/activities.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
+import { UserModule } from '@ghostfolio/api/services/user/user.module';
 
 import { Module } from '@nestjs/common';
 

@@ -1,4 +1,3 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -26,6 +25,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import {
   getAnnualizedPerformancePercent,
   getIntervalFromDateRange

@@ -2,7 +2,6 @@ import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/po
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/services/account/account.service';
 import { CashDetails } from '@ghostfolio/api/services/account/interfaces/cash-details.interface';
@@ -11,6 +10,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { UserService } from '@ghostfolio/api/services/user/user.service';
 import {
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS,
