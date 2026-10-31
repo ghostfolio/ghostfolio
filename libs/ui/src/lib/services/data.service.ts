@@ -377,7 +377,7 @@ export class DataService {
   }
 
   public deleteUser(aId: string) {
-    return this.http.delete<UserModel>(`/api/v1/user/${aId}`);
+    return this.http.delete<void>(`/api/v1/users/${aId}`);
   }
 
   public deleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -1020,7 +1020,7 @@ export class DataService {
 
   public updateUserAccessToken(aUserId: string) {
     return this.http.post<AccessTokenResponse>(
-      `/api/v1/user/${aUserId}/access-token`,
+      `/api/v1/users/${aUserId}/access-token`,
       {}
     );
   }

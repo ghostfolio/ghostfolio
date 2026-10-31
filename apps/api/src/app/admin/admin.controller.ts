@@ -354,6 +354,7 @@ export class AdminController {
     return this.adminService.putSetting(key, data.value);
   }
 
+  /** @deprecated */
   @Get('user')
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -367,6 +368,7 @@ export class AdminController {
     });
   }
 
+  /** @deprecated */
   @Get('user/:id')
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
