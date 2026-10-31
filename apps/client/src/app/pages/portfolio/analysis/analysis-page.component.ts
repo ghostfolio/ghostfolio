@@ -1,4 +1,5 @@
 import { GfBenchmarkComparatorComponent } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.component';
+import { AutoRefreshService } from '@ghostfolio/client/services/auto-refresh/auto-refresh.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_RANGE,
@@ -56,7 +57,7 @@ import { isNumber, keyBy, sortBy, union } from 'lodash-es';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { forkJoin } from 'rxjs';
+import { catchError, EMPTY, exhaustMap, filter, forkJoin } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -122,6 +123,7 @@ export class GfAnalysisPageComponent implements OnInit {
   );
   private dateOfFirstActivity: Date;
 
+  private readonly autoRefreshService = inject(AutoRefreshService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly clipboard = inject(Clipboard);
   private readonly dataService = inject(DataService);
@@ -166,6 +168,35 @@ export class GfAnalysisPageComponent implements OnInit {
           this.update();
         }
 
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.autoRefreshService.refresh$
+      .pipe(
+        filter(() => !!this.user && !this.isLoadingInvestmentChart),
+        exhaustMap(() => {
+          return forkJoin({
+            holdings: this.dataService.fetchPortfolioHoldings({
+              filters: [
+                ...this.userService.getFilters(),
+                { id: 'ACTIVE', type: 'HOLDING_TYPE' }
+              ],
+              range: this.user?.settings?.dateRange
+            }),
+            performance: this.dataService.fetchPortfolioPerformance({
+              filters: this.userService.getFilters(),
+              range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+            })
+          }).pipe(catchError(() => EMPTY));
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(({ holdings: { holdings }, performance }) => {
+        this.performance = performance.performance;
+
+        this.updateTopAndBottomHoldings(holdings);
+
+        this.autoRefreshService.markUpdated();
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -347,6 +378,35 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
+  private updateTopAndBottomHoldings(holdings: PortfolioPosition[]) {
+    const holdingsSorted = sortBy(
+      holdings.filter((holding) => {
+        return (
+          canOpenHoldingDetail(holding) &&
+          isNumber(holding.netPerformancePercentWithCurrencyEffect)
+        );
+      }),
+      'netPerformancePercentWithCurrencyEffect'
+    ).reverse();
+
+    this.top3 = holdingsSorted
+      .filter(
+        ({ netPerformancePercentWithCurrencyEffect }) =>
+          netPerformancePercentWithCurrencyEffect > 0
+      )
+      .slice(0, 3);
+
+    this.bottom3 = holdingsSorted
+      .filter(
+        ({ netPerformancePercentWithCurrencyEffect }) =>
+          netPerformancePercentWithCurrencyEffect < 0
+      )
+      .slice(-3)
+      .reverse();
+
+    this.changeDetectorRef.markForCheck();
+  }
+
   private update() {
     this.isLoadingInvestmentChart = true;
 
@@ -425,30 +485,7 @@ export class GfAnalysisPageComponent implements OnInit {
       })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
-        const holdingsSorted = sortBy(
-          holdings.filter((holding) => {
-            return (
-              canOpenHoldingDetail(holding) &&
-              isNumber(holding.netPerformancePercentWithCurrencyEffect)
-            );
-          }),
-          'netPerformancePercentWithCurrencyEffect'
-        ).reverse();
-
-        this.top3 = holdingsSorted
-          .filter(
-            ({ netPerformancePercentWithCurrencyEffect }) =>
-              netPerformancePercentWithCurrencyEffect > 0
-          )
-          .slice(0, 3);
-
-        this.bottom3 = holdingsSorted
-          .filter(
-            ({ netPerformancePercentWithCurrencyEffect }) =>
-              netPerformancePercentWithCurrencyEffect < 0
-          )
-          .slice(-3)
-          .reverse();
+        this.updateTopAndBottomHoldings(holdings);
 
         this.changeDetectorRef.markForCheck();
       });
