@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the _Redis_ image from `redis:alpine` to `redis:8-alpine` in the `docker-compose` file (`docker-compose.yml`)
 - Upgraded `@internationalized/number` from version `3.6.8` to `3.6.9`
 - Upgraded `countries-and-timezones` from version `3.10.0` to `3.11.0`
+- Upgraded `envalid` from version `8.2.0` to `9.0.0`
 - Upgraded `uuid` from version `14.0.2` to `14.0.3`
 - Upgraded `yahoo-finance2` from version `4.0.2` to `4.0.5`
 

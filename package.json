@@ -117,7 +117,7 @@
     "date-fns": "4.4.0",
     "dotenv": "18.0.3",
     "dotenv-expand": "13.0.0",
-    "envalid": "8.2.0",
+    "envalid": "9.0.0",
     "express": "5.2.1",
     "fast-redact": "3.5.0",
     "fuse.js": "7.5.0",
