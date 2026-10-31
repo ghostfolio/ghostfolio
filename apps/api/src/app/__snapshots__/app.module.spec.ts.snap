@@ -230,6 +230,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     "interceptors": [],
     "permission": "deleteUser",
   },
+  "DELETE /users/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "deleteUser",
+  },
   "DELETE /watchlist/:dataSource/:symbol": {
     "guards": [
       "AuthGuard('jwt')",
@@ -891,6 +900,24 @@ exports[`AppModule should keep the security of each route 1`] = `
       "RedactValuesInResponseInterceptor",
     ],
   },
+  "GET /users": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
+  "GET /users/:id": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
+  },
   "GET /watchlist": {
     "guards": [
       "AuthGuard('jwt')",
@@ -1306,6 +1333,15 @@ exports[`AppModule should keep the security of each route 1`] = `
     ],
     "interceptors": [],
     "permission": "updateOwnAccessToken",
+  },
+  "POST /users/:id/access-token": {
+    "allowDuringImpersonation": true,
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+    ],
+    "interceptors": [],
+    "permission": "accessAdminControl",
   },
   "POST /watchlist": {
     "guards": [

@@ -227,5 +227,14 @@ export const routes: Routes = [
         (c) => c.Ghostfolio3PageComponent
       ),
     title: 'Ghostfolio 3.0'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2026/11/black-weeks-2026',
+    loadComponent: () =>
+      import('./2026/11/black-weeks-2026/black-weeks-2026-page.component').then(
+        (c) => c.BlackWeeks2026PageComponent
+      ),
+    title: 'Black Weeks 2026: 15 Months of Premium'
   }
 ];
