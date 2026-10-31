@@ -23,14 +23,17 @@ function loadImportData(directory: string, fileName: string): ImportDataDto {
 }
 
 describe('ImportDataDto', () => {
-  it('accepts sample.json', async () => {
-    await expect(
-      validationPipe.transform(loadImportData('ok', 'sample.json'), {
-        metatype: ImportDataDto,
-        type: 'body'
-      })
-    ).resolves.toBeInstanceOf(ImportDataDto);
-  });
+  it.each(['custom-asset-profile-with-countries.json', 'sample.json'])(
+    'accepts %s',
+    async (fileName) => {
+      await expect(
+        validationPipe.transform(loadImportData('ok', fileName), {
+          metatype: ImportDataDto,
+          type: 'body'
+        })
+      ).resolves.toBeInstanceOf(ImportDataDto);
+    }
+  );
 
   it.each([
     {

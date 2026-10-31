@@ -15,6 +15,7 @@ import { CreateUserDto } from './create-user.dto';
 import { CreateWatchlistItemDto } from './create-watchlist-item.dto';
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { HoldingDto } from './holding.dto';
+import { ImportCountryDto } from './import-country.dto';
 import { MergeAssetProfileDto } from './merge-asset-profile.dto';
 import { ScraperConfigurationDto } from './scraper-configuration.dto';
 import { SectorDto } from './sector.dto';
@@ -50,6 +51,7 @@ export {
   CreateWatchlistItemDto,
   DeleteOwnUserDto,
   HoldingDto,
+  ImportCountryDto,
   MergeAssetProfileDto,
   ScraperConfigurationDto,
   SectorDto,

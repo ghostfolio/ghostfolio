@@ -20,6 +20,7 @@ import {
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
 import {
+  CountryDto,
   CreateAccountWithBalancesDto,
   CreateAssetProfileDto,
   CreateOrderDto
@@ -650,6 +651,13 @@ export class ImportService {
               assetProfileWithMarketData,
               'marketData'
             );
+
+            // Do not persist the properties which are derived from the code
+            assetProfile.countries = (
+              assetProfile.countries as unknown as CountryDto[]
+            )?.map(({ code, weight }) => {
+              return { code, weight };
+            });
 
             if (
               (existingAssetProfile || hasGhostfolioPrefix(symbol)) &&

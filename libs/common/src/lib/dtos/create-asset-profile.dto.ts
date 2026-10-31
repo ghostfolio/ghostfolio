@@ -24,8 +24,8 @@ import {
 } from 'class-validator';
 import { isString } from 'lodash-es';
 
-import { CountryDto } from './country.dto';
 import { HoldingDto } from './holding.dto';
+import { ImportCountryDto } from './import-country.dto';
 import { SectorDto } from './sector.dto';
 
 export class CreateAssetProfileDto {
@@ -44,7 +44,7 @@ export class CreateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
-  @Type(() => CountryDto)
+  @Type(() => ImportCountryDto)
   @ValidateNested({ each: true })
   countries?: Prisma.InputJsonArray;
 

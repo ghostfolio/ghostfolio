@@ -402,6 +402,44 @@ describe('ImportService', () => {
       expect(addSymbolProfile.mock.calls[0][0].name).toBe('GF_COPX');
     });
 
+    it('keeps only the code and the weight of the countries of a custom asset profile', async () => {
+      mockCreatedAssetProfiles([
+        { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
+      ]);
+
+      await importActivities({
+        activitiesDto: [
+          createActivityDto({
+            dataSource: DataSource.MANUAL,
+            date: '2024-01-01T00:00:00.000Z',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL,
+            type: 'BUY'
+          })
+        ],
+        assetProfilesWithMarketDataDto: [
+          {
+            countries: [
+              {
+                code: 'US',
+                continent: 'North America',
+                name: 'United States',
+                weight: 1
+              }
+            ],
+            currency: 'USD',
+            dataSource: DataSource.MANUAL,
+            marketData: [],
+            name: 'Penthouse Apartment',
+            symbol: CUSTOM_ASSET_PROFILE_SYMBOL
+          }
+        ]
+      });
+
+      expect(addSymbolProfile.mock.calls[0][0].countries).toEqual([
+        { code: 'US', weight: 1 }
+      ]);
+    });
+
     it('merges the market data of asset profiles with the same symbol with the prefix', async () => {
       mockCreatedAssetProfiles([
         { dataSource: DataSource.MANUAL, symbol: CUSTOM_ASSET_PROFILE_SYMBOL }
