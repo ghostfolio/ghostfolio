@@ -349,10 +349,11 @@ export class SymbolProfileService {
     }
 
     return aHoldings.map((holding) => {
-      const { name, weight } = holding as Prisma.JsonObject;
+      const { allocationInPercentage, name, weight } =
+        holding as Prisma.JsonObject;
 
       return {
-        allocationInPercentage: weight as number,
+        allocationInPercentage: (weight ?? allocationInPercentage) as number,
         name: (name as string) ?? UNKNOWN_KEY,
         valueInBaseCurrency: undefined
       };
