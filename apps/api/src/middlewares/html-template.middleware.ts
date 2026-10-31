@@ -87,6 +87,12 @@ const locales = {
   '/en/blog/2026/04/ghostfolio-3': {
     featureGraphicPath: 'assets/images/blog/ghostfolio-3.jpg',
     title: `Announcing Ghostfolio 3.0 - ${title}`
+  },
+  '/en/blog/2026/11/black-weeks-2026': {
+    description:
+      'Get 15 months of Ghostfolio Premium for the price of 12. Track stocks, ETFs and crypto with the open source portfolio tracker. Offer ends November 30.',
+    featureGraphicPath: 'assets/images/blog/black-weeks-2026.jpg',
+    title: `Black Friday 2026: 15 Months of Premium - ${title}`
   }
 };
 
@@ -156,10 +162,12 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
         languageCode,
         path,
         rootUrl,
-        description: this.i18nService.getTranslation({
-          languageCode,
-          id: 'metaDescription'
-        }),
+        description:
+          locales[path]?.description ??
+          this.i18nService.getTranslation({
+            languageCode,
+            id: 'metaDescription'
+          }),
         featureGraphicPath:
           locales[path]?.featureGraphicPath ?? 'assets/cover.png',
         keywords: this.i18nService.getTranslation({
