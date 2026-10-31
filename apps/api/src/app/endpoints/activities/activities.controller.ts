@@ -12,7 +12,10 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
+import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  NON_INVESTMENT_ACTIVITY_TYPES
+} from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
@@ -241,36 +244,12 @@ export class ActivitiesController {
       userSubscription
     }: ImpersonationContext
   ): Promise<CreateActivityResponse> {
-    // Evaluate the more restrictive subscription of the authenticated user
-    // and the owner of the activity
-    const subscription =
-      userSubscription?.type === SubscriptionType.Basic
-        ? userSubscription
-        : authenticatedUserSubscription;
-
-    try {
-      await this.dataProviderService.validateActivities({
-        subscription,
-        userId,
-        activitiesDto: [
-          {
-            currency: data.currency,
-            dataSource: data.dataSource,
-            symbol: data.symbol,
-            type: data.type
-          }
-        ],
-        maxActivitiesToImport: 1
-      });
-    } catch (error) {
-      throw new HttpException(
-        {
-          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
-          message: [error.message]
-        },
-        StatusCodes.BAD_REQUEST
-      );
-    }
+    await this.validateActivity({
+      authenticatedUserSubscription,
+      userId,
+      userSubscription,
+      activityDto: data
+    });
 
     const currency = data.currency;
     const customCurrency = data.customCurrency;
@@ -344,7 +323,12 @@ export class ActivitiesController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async updateActivity(
     @Body() data: UpdateOrderDto,
-    @Impersonation() { userId }: ImpersonationContext,
+    @Impersonation()
+    {
+      authenticatedUserSubscription,
+      userId,
+      userSubscription
+    }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<UpdateActivityResponse> {
     const originalActivity = await this.activitiesService.order({
@@ -357,6 +341,29 @@ export class ActivitiesController {
         getReasonPhrase(StatusCodes.NOT_FOUND),
         StatusCodes.NOT_FOUND
       );
+    }
+
+    const isAssetProfileConnected =
+      !NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) &&
+      !(data.dataSource === 'MANUAL' && data.type === 'BUY');
+
+    if (isAssetProfileConnected) {
+      const [originalAssetProfile] =
+        await this.symbolProfileService.getSymbolProfilesByIds([
+          originalActivity.symbolProfileId
+        ]);
+
+      if (
+        originalAssetProfile.dataSource !== data.dataSource ||
+        originalAssetProfile.symbol !== data.symbol
+      ) {
+        await this.validateActivity({
+          authenticatedUserSubscription,
+          userId,
+          userSubscription,
+          activityDto: data
+        });
+      }
     }
 
     const date = parseISO(data.date);
@@ -427,5 +434,44 @@ export class ActivitiesController {
       'updatedAt',
       'userId'
     ]);
+  }
+
+  private async validateActivity({
+    activityDto: { currency, dataSource, symbol, type },
+    authenticatedUserSubscription,
+    userId,
+    userSubscription
+  }: Pick<
+    ImpersonationContext,
+    'authenticatedUserSubscription' | 'userId' | 'userSubscription'
+  > & {
+    activityDto: Pick<
+      CreateOrderDto,
+      'currency' | 'dataSource' | 'symbol' | 'type'
+    >;
+  }) {
+    // Evaluate the more restrictive subscription of the authenticated user
+    // and the owner of the activity
+    const subscription =
+      userSubscription?.type === SubscriptionType.Basic
+        ? userSubscription
+        : authenticatedUserSubscription;
+
+    try {
+      await this.dataProviderService.validateActivities({
+        subscription,
+        userId,
+        activitiesDto: [{ currency, dataSource, symbol, type }],
+        maxActivitiesToImport: 1
+      });
+    } catch (error) {
+      throw new HttpException(
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [error.message]
+        },
+        StatusCodes.BAD_REQUEST
+      );
+    }
   }
 }
