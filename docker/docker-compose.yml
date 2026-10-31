@@ -72,5 +72,24 @@ services:
       timeout: 5s
       retries: 5
 
+  pse-sync:
+    image: docker.io/library/postgres:15-alpine
+    container_name: gf-pse-sync
+    restart: unless-stopped
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    env_file:
+      - ../.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./pse-sync.sh:/pse-sync.sh:ro
+    # tr keeps the script working if Git checks it out with Windows line endings.
+    command: ['sh', '-c', "tr -d '\\r' < /pse-sync.sh | sh"]
+
 volumes:
   postgres:
