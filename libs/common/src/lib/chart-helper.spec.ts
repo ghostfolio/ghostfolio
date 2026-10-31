@@ -1,4 +1,4 @@
-import { getTooltipOptions } from './chart-helper';
+import { getBaselineAnnotation, getTooltipOptions } from './chart-helper';
 
 describe('getTooltipOptions', () => {
   const getLabel = ({
@@ -45,5 +45,18 @@ describe('getTooltipOptions', () => {
 
   it('formats the value with the locale without a unit', () => {
     expect(getLabel({ locale: 'de', y: 1234.5 })).toBe('Performance: 1.234,50');
+  });
+});
+
+describe('getBaselineAnnotation', () => {
+  it('returns a dashed horizontal line at the value', () => {
+    expect(
+      getBaselineAnnotation({ colorScheme: 'LIGHT', value: 0 })
+    ).toMatchObject({
+      borderDash: [4, 4],
+      scaleID: 'y',
+      type: 'line',
+      value: 0
+    });
   });
 });

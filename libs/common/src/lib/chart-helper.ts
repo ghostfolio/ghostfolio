@@ -219,6 +219,50 @@ export function getValueAxisOptions({
   };
 }
 
+/**
+ * Returns a plugin which draws a dashed horizontal line at the baseline of a
+ * chart above the datasets. Unlike an annotation, it does not follow the
+ * custom animations of the data points
+ */
+export function getBaselinePlugin<T extends 'line' | 'bar'>({
+  colorScheme,
+  getValue
+}: {
+  colorScheme?: ColorScheme;
+  getValue: () => number | undefined;
+}): Plugin<T> {
+  return {
+    afterDatasetsDraw: (chart) => {
+      const value = getValue();
+      const yScale = chart.scales['y'];
+
+      if (value === undefined || !yScale) {
+        return;
+      }
+
+      const y = yScale.getPixelForValue(value);
+      const { bottom, left, right, top } = chart.chartArea;
+
+      if (!Number.isFinite(y) || y < top || y > bottom) {
+        return;
+      }
+
+      const context = chart.ctx;
+
+      context.save();
+      context.beginPath();
+      context.lineWidth = 1;
+      context.setLineDash(BASELINE_DASH);
+      context.strokeStyle = getBaselineColor(colorScheme);
+      context.moveTo(left, y);
+      context.lineTo(right, y);
+      context.stroke();
+      context.restore();
+    },
+    id: 'baseline'
+  };
+}
+
 export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
   chartCanvas: ElementRef<HTMLCanvasElement>,
   colorScheme?: ColorScheme
@@ -255,16 +299,39 @@ export function getVerticalHoverLinePlugin<T extends 'line' | 'bar'>(
   };
 }
 
+const BASELINE_DASH = [4, 4];
+
+function getBaselineColor(colorScheme?: ColorScheme) {
+  return `rgba(${getTextColor(colorScheme)}, 0.4)`;
+}
+
+/**
+ * Returns a dashed horizontal line at the baseline of a chart (e.g. 0 % for
+ * the performance), which stands out from the grid lines
+ */
+export function getBaselineAnnotation({
+  colorScheme,
+  value = 0
+}: {
+  colorScheme?: ColorScheme;
+  value?: number;
+}): AnnotationOptions<'line'> {
+  return {
+    borderColor: getBaselineColor(colorScheme),
+    borderDash: BASELINE_DASH,
+    borderWidth: 1,
+    // Above the area of a filled line
+    drawTime: 'afterDatasetsDraw',
+    scaleID: 'y',
+    type: 'line',
+    value
+  };
+}
+
 export function getZeroLineAnnotation(
   colorScheme?: ColorScheme
 ): AnnotationOptions<'line'> {
-  return {
-    borderColor: getChartBorderColor(colorScheme),
-    borderWidth: 1,
-    scaleID: 'y',
-    type: 'line',
-    value: 0
-  };
+  return getBaselineAnnotation({ colorScheme });
 }
 
 export function transformTickToAbbreviation(value: number) {
