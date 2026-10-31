@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post: _Black Weeks 2026_
+
 ### Changed
 
 - Deprecated the `api/v1/admin/user`, `api/v1/user/:id` and `api/v1/user/:id/access-token` endpoints in favor of the `api/v1/users` endpoints
