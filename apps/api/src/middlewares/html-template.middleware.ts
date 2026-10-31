@@ -348,8 +348,11 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
     if (filename === '/assets/LICENSE') {
       return true;
     } else if (
+      filename.endsWith('-anlage.app') ||
       filename.endsWith('-de.fi') ||
+      filename.endsWith('-fiscal.ai') ||
       filename.endsWith('-markets.sh') ||
+      filename.endsWith('-sarmaaya.pk') ||
       filename.includes('auth/ey')
     ) {
       return false;
