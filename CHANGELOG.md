@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added a time axis to the performance chart on the overview page which only contains the trading days, spans the whole current year and uses hours, days, months or years as unit according to the selected date range
+
+### Changed
+
+- Hid the performance chart on the overview page if it has less than three data points
+- Reduced the performance chart on the overview page to one point per week above 400 trading days
+
 ## 3.95.0 - 2026-10-31
 
 ### Changed
