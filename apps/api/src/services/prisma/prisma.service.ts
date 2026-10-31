@@ -25,7 +25,7 @@ export class PrismaService
 
     try {
       customLogLevels = JSON.parse(
-        configService.get<string>('LOG_LEVELS')
+        configService.get<string>('LOG_LEVELS') ?? ''
       ) as LogLevel[];
     } catch {}
 
