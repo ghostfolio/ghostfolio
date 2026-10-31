@@ -6,7 +6,11 @@ import {
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import { getBackgroundColor, getLocale } from '@ghostfolio/common/helper';
+import {
+  getBackgroundColor,
+  getLocale,
+  isIntradayDateRange
+} from '@ghostfolio/common/helper';
 import { NullableLineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme, DateRange } from '@ghostfolio/common/types';
 
@@ -295,7 +299,8 @@ export class GfLineChartComponent
       locale: this.locale,
       // Equidistant points: the closed markets (nights, weekends) are skipped
       type: this.dateRange ? 'timeseries' : 'time',
-      unit: getTimeAxisUnit(this.dateRange)
+      unit: getTimeAxisUnit(this.dateRange),
+      withTime: isIntradayDateRange(this.dateRange)
     });
   }
 

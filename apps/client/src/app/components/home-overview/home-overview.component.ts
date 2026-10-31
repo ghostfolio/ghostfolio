@@ -9,7 +9,7 @@ import {
   DEFAULT_LOCALE,
   NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
 } from '@ghostfolio/common/config';
-import { isCashPosition } from '@ghostfolio/common/helper';
+import { isCashPosition, isIntradayDateRange } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   HistoricalDataItem,
@@ -43,6 +43,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 
 const MINIMUM_CHART_ITEMS = 3;
 
@@ -75,7 +76,10 @@ export class GfHomeOverviewComponent implements OnInit {
     return (
       (this.historicalDataItems() ?? []).filter(({ value }) => {
         return value !== null;
-      }).length >= MINIMUM_CHART_ITEMS
+      }).length >=
+      (isIntradayDateRange(this.user()?.settings?.dateRange)
+        ? 1
+        : MINIMUM_CHART_ITEMS)
     );
   });
   protected readonly holdings = signal<PortfolioPosition[] | undefined>(
@@ -189,6 +193,29 @@ export class GfHomeOverviewComponent implements OnInit {
     }
   }
 
+  /**
+   * The current day, week and month are drawn from intraday prices, with a
+   * fallback to the daily chart
+   */
+  private fetchIntradayChartItems(
+    aDateRange: DateRange
+  ): Observable<NullableLineChartItem[] | null> {
+    if (!isIntradayDateRange(aDateRange)) {
+      return of(null);
+    }
+
+    return this.dataService.fetchPortfolioIntraday({ range: aDateRange }).pipe(
+      map(({ chart }) => {
+        return chart.map(({ date, value }) => {
+          return { date, value: value === null ? null : value * 100 };
+        });
+      }),
+      catchError(() => {
+        return of(null);
+      })
+    );
+  }
+
   private setChartItems({
     chart,
     dateRange
@@ -243,28 +270,38 @@ export class GfHomeOverviewComponent implements OnInit {
         });
     }
 
-    this.dataService
-      .fetchPortfolioPerformance({
-        range: userSettings?.dateRange ?? DEFAULT_DATE_RANGE
+    const dateRange = userSettings?.dateRange ?? DEFAULT_DATE_RANGE;
+
+    forkJoin({
+      intradayChart: this.fetchIntradayChartItems(dateRange),
+      response: this.dataService.fetchPortfolioPerformance({
+        range: dateRange
       })
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ chart, errors, performance }) => {
-        this.errors.set(errors ?? []);
-        this.performance.set(performance);
+      .subscribe(
+        ({ intradayChart, response: { chart, errors, performance } }) => {
+          this.errors.set(errors ?? []);
+          this.performance.set(performance);
 
-        this.setChartItems({ chart, dateRange: userSettings?.dateRange });
+          if (intradayChart) {
+            this.historicalDataItems.set(intradayChart);
+          } else {
+            this.setChartItems({ chart, dateRange });
+          }
 
-        this.precision.set(2);
+          this.precision.set(2);
 
-        if (
-          this.deviceType() === 'mobile' &&
-          performance.currentValueInBaseCurrency >=
-            NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
-        ) {
-          this.precision.set(0);
+          if (
+            this.deviceType() === 'mobile' &&
+            performance.currentValueInBaseCurrency >=
+              NUMERICAL_PRECISION_THRESHOLD_6_FIGURES
+          ) {
+            this.precision.set(0);
+          }
+
+          this.isLoadingPerformance.set(false);
         }
-
-        this.isLoadingPerformance.set(false);
-      });
+      );
   }
 }

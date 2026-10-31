@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a time axis to the performance chart on the overview page which only contains the trading days, spans the whole current year and uses hours, days, months or years as unit according to the selected date range
+- Added the endpoint `GET api/v1/portfolio/intraday` to draw the performance chart of the current day (5 minutes), week (15 minutes) and month (60 minutes) on the overview page from the intraday prices of _Yahoo Finance_, including the pre-market and the post-market
 
 ### Changed
 

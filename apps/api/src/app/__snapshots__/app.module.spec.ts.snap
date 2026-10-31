@@ -760,6 +760,20 @@ exports[`AppModule should keep the security of each route 1`] = `
       "portfolio:read",
     ],
   },
+  "GET /portfolio/intraday": {
+    "guards": [
+      "AuthGuard('jwt')",
+      "HasPermissionGuard",
+      "ImpersonationGuard",
+      "ScopeGuard",
+    ],
+    "interceptors": [
+      "PerformanceLoggingInterceptor",
+    ],
+    "scopes": [
+      "portfolio:read",
+    ],
+  },
   "GET /portfolio/investments": {
     "guards": [
       "AuthGuard('jwt')",
