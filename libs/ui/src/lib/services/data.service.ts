@@ -56,6 +56,7 @@ import {
   PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
+  PortfolioIntradayResponse,
   PortfolioInvestmentsResponse,
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
@@ -731,6 +732,25 @@ export class DataService {
           return response;
         })
       );
+  }
+
+  public fetchPortfolioIntraday({
+    benchmarks = [],
+    range
+  }: {
+    benchmarks?: string[];
+    range: '1d' | 'mtd' | 'wtd';
+  }) {
+    let params = new HttpParams().append('range', range);
+
+    if (benchmarks.length > 0) {
+      params = params.append('benchmarks', benchmarks.join(','));
+    }
+
+    return this.http.get<PortfolioIntradayResponse>(
+      '/api/v1/portfolio/intraday',
+      { params }
+    );
   }
 
   public fetchPortfolioPerformance({
