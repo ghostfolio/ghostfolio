@@ -18,6 +18,7 @@ import {
 } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   ActivitiesResponse,
   ActivityResponse,
@@ -229,16 +230,20 @@ export class ActivitiesController {
       userSubscription
     }: ImpersonationContext
   ): Promise<CreateActivityResponse> {
-    await this.validateActivity({
+    const assetProfiles = await this.validateActivity({
       authenticatedUserSubscription,
       userId,
       userSubscription,
       activityDto: data
     });
 
-    const currency = data.currency;
     const customCurrency = data.customCurrency;
     const dataSource = data.dataSource;
+
+    const currency =
+      assetProfiles[
+        getAssetProfileIdentifier({ dataSource, symbol: data.symbol })
+      ]?.currency ?? data.currency;
 
     if (customCurrency) {
       data.currency = customCurrency;
@@ -449,7 +454,7 @@ export class ActivitiesController {
         : authenticatedUserSubscription;
 
     try {
-      await this.dataProviderService.validateActivities({
+      return await this.dataProviderService.validateActivities({
         subscription,
         userId,
         activitiesDto: [{ currency, dataSource, symbol, type }],

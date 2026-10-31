@@ -109,7 +109,8 @@ describe('ActivitiesService', () => {
               },
               userId: 'user-id'
             })
-          }
+          },
+          symbolProfile: { findUnique: jest.fn().mockResolvedValue(null) }
         } as unknown as PrismaService,
         null,
         { validateTagIds: jest.fn() } as unknown as TagService
@@ -152,6 +153,130 @@ describe('ActivitiesService', () => {
         })
       );
     });
+
+    it('does not store the currency if it is the currency of the existing asset profile', async () => {
+      const data = await getCreatedActivityData({
+        assetProfile: { currency: 'USD' },
+        currency: 'USD'
+      });
+
+      expect(data).not.toHaveProperty('currency');
+    });
+
+    it('stores the currency if it is not the currency of the existing asset profile', async () => {
+      const data = await getCreatedActivityData({
+        assetProfile: { currency: 'USD' },
+        currency: 'EUR'
+      });
+
+      expect(data.currency).toBe('EUR');
+    });
+
+    it('does not store the currency if it is the currency of a new custom asset profile', async () => {
+      const data = await getCreatedActivityData({
+        currency: 'USD',
+        dataSource: DataSource.MANUAL
+      });
+
+      expect(data).not.toHaveProperty('currency');
+    });
+
+    it('does not store the currency if it is the currency of the existing custom asset profile (clone)', async () => {
+      const data = await getCreatedActivityData({
+        assetProfile: { currency: 'EUR', id: 'asset-profile-id' },
+        currency: 'EUR',
+        dataSource: DataSource.MANUAL,
+        symbol: 'GF_COPX'
+      });
+
+      expect(data).not.toHaveProperty('currency');
+    });
+
+    it('does not store the currency if it is the currency of a new asset profile of a data provider', async () => {
+      const data = await getCreatedActivityData({ currency: 'USD' });
+
+      expect(data).not.toHaveProperty('currency');
+    });
+
+    it('stores the currency if it is not the currency of a new asset profile of a data provider', async () => {
+      const data = await getCreatedActivityData({ currency: 'EUR' });
+
+      expect(data.currency).toBe('EUR');
+    });
+
+    it('compares the currency with the asset profile which the activity connects to', async () => {
+      const data = await getCreatedActivityData({
+        currency: 'USD',
+        findUnique: jest.fn(({ where }: Prisma.SymbolProfileFindUniqueArgs) => {
+          return where.dataSource_symbol.dataSource === DataSource.MANUAL
+            ? null
+            : { currency: 'EUR' };
+        }),
+        type: ActivityType.FEE
+      });
+
+      expect(data).not.toHaveProperty('currency');
+    });
+
+    async function getCreatedActivityData({
+      assetProfile,
+      currency,
+      dataSource = DataSource.YAHOO,
+      findUnique = jest.fn().mockResolvedValue(assetProfile ?? null),
+      symbol = 'VT',
+      type = ActivityType.BUY
+    }: {
+      assetProfile?: { currency: string; id?: string };
+      currency: string;
+      dataSource?: DataSource;
+      findUnique?: jest.Mock;
+      symbol?: string;
+      type?: ActivityType;
+    }) {
+      const create = jest.fn(({ data }: Prisma.OrderCreateArgs) => {
+        return {
+          ...data,
+          SymbolProfile: data.SymbolProfile.connectOrCreate.create
+        };
+      });
+
+      const service = new ActivitiesService(
+        null,
+        null,
+        null,
+        null,
+        { addJobToQueue: jest.fn() } as unknown as DataGatheringService,
+        null,
+        { emit: jest.fn() } as unknown as EventEmitter2,
+        null,
+        null,
+        {
+          order: { create },
+          symbolProfile: { findUnique }
+        } as unknown as PrismaService,
+        null,
+        { validateTagIds: jest.fn() } as unknown as TagService
+      );
+
+      await service.createActivity({
+        currency,
+        type,
+        date: parseDate('2026-10-01'),
+        fee: 0,
+        quantity: 1,
+        SymbolProfile: {
+          connectOrCreate: {
+            create: { dataSource, symbol, currency: 'USD' },
+            where: { dataSource_symbol: { dataSource, symbol } }
+          }
+        },
+        unitPrice: 100,
+        user: { connect: { id: 'user-id' } },
+        userId: 'user-id'
+      });
+
+      return create.mock.calls[0][0].data;
+    }
 
     async function getCreatedAssetProfile({
       existingAssetProfile,
@@ -688,12 +813,48 @@ describe('ActivitiesService', () => {
       expect(data).not.toHaveProperty('SymbolProfile');
     });
 
+    it.each([
+      { currency: 'USD', dataSource: DataSource.MANUAL, symbol: 'GF_GOLD' },
+      { currency: 'EUR', dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+    ])(
+      'removes the currency if it is the currency of the asset profile ($dataSource)',
+      async ({ currency, dataSource, symbol }) => {
+        const data = await getUpdatedActivityData({
+          currency,
+          dataSource,
+          symbol,
+          userId: 'user-id'
+        });
+
+        expect(data.currency).toBeNull();
+      }
+    );
+
+    it.each([
+      { currency: 'EUR', dataSource: DataSource.MANUAL, symbol: 'GF_GOLD' },
+      { currency: 'USD', dataSource: DataSource.YAHOO, symbol: 'AAPL' }
+    ])(
+      'keeps the currency if it is not the currency of the asset profile ($dataSource)',
+      async ({ currency, dataSource, symbol }) => {
+        const data = await getUpdatedActivityData({
+          currency,
+          dataSource,
+          symbol,
+          userId: 'user-id'
+        });
+
+        expect(data.currency).toBe(currency);
+      }
+    );
+
     async function getUpdatedActivityData({
+      currency,
       dataSource = DataSource.MANUAL,
       symbol = 'GF_GOLD',
       type = ActivityType.BUY,
       userId
     }: {
+      currency?: string;
       dataSource?: DataSource;
       symbol?: string;
       type?: ActivityType;
@@ -706,7 +867,7 @@ describe('ActivitiesService', () => {
         null,
         null,
         null,
-        null,
+        { gatherSymbols: jest.fn() } as unknown as DataGatheringService,
         null,
         { emit: jest.fn() } as unknown as EventEmitter2,
         null,
@@ -714,9 +875,19 @@ describe('ActivitiesService', () => {
         {
           order: {
             update,
-            findUnique: jest
-              .fn()
-              .mockResolvedValue({ SymbolProfile: { userId } })
+            findUnique: jest.fn().mockResolvedValue({
+              SymbolProfile: { userId, currency: 'USD' }
+            })
+          },
+          symbolProfile: {
+            findUnique: jest.fn(
+              ({ where }: Prisma.SymbolProfileFindUniqueArgs) => {
+                return where.dataSource_symbol.dataSource ===
+                  DataSource.YAHOO && where.dataSource_symbol.symbol === 'AAPL'
+                  ? { currency: 'EUR' }
+                  : null;
+              }
+            )
           }
         } as unknown as PrismaService,
         null,
@@ -725,6 +896,7 @@ describe('ActivitiesService', () => {
 
       await service.updateActivity({
         data: {
+          currency,
           type,
           assetClass: AssetClass.COMMODITY,
           assetSubClass: AssetSubClass.PRECIOUS_METAL,
