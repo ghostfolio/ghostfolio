@@ -22,8 +22,7 @@ import {
   ActivitiesResponse,
   ActivityResponse,
   CreateActivityResponse,
-  DeleteActivityResponse,
-  UpdateActivityResponse
+  DeleteOrUpdateActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -41,6 +40,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
+import { Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { omit, pick } from 'lodash-es';
@@ -108,7 +108,7 @@ export class ActivitiesController {
   public async deleteActivity(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<DeleteActivityResponse> {
+  ): Promise<DeleteOrUpdateActivityResponse> {
     const activity = await this.activitiesService.order({
       id,
       userId
@@ -125,22 +125,7 @@ export class ActivitiesController {
       id
     });
 
-    return pick(deletedActivity, [
-      'accountId',
-      'accountUserId',
-      'comment',
-      'createdAt',
-      'currency',
-      'date',
-      'fee',
-      'id',
-      'quantity',
-      'symbolProfileId',
-      'type',
-      'unitPrice',
-      'updatedAt',
-      'userId'
-    ]);
+    return this.getDeleteOrUpdateActivityResponse(deletedActivity);
   }
 
   @Get()
@@ -330,7 +315,7 @@ export class ActivitiesController {
       userSubscription
     }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<UpdateActivityResponse> {
+  ): Promise<DeleteOrUpdateActivityResponse> {
     const originalActivity = await this.activitiesService.order({
       id,
       userId
@@ -418,6 +403,12 @@ export class ActivitiesController {
       }
     });
 
+    return this.getDeleteOrUpdateActivityResponse(activity);
+  }
+
+  private getDeleteOrUpdateActivityResponse(
+    activity: Order
+  ): DeleteOrUpdateActivityResponse {
     return pick(activity, [
       'accountId',
       'accountUserId',

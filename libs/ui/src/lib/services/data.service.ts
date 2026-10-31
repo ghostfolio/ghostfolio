@@ -42,7 +42,7 @@ import {
   CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
-  DeleteActivityResponse,
+  DeleteOrUpdateActivityResponse,
   ExportResponse,
   Filter,
   ImportResponse,
@@ -62,7 +62,6 @@ import {
   PublicPortfolioResponse,
   RedeemCouponResponse,
   SymbolResponse,
-  UpdateActivityResponse,
   User,
   UserItem,
   WatchlistResponse
@@ -354,7 +353,7 @@ export class DataService {
   }
 
   public deleteActivity(aId: string) {
-    return this.http.delete<DeleteActivityResponse>(
+    return this.http.delete<DeleteOrUpdateActivityResponse>(
       `/api/v1/activities/${aId}`
     );
   }
@@ -955,7 +954,7 @@ export class DataService {
   }
 
   public putActivity(aOrder: UpdateOrderDto) {
-    return this.http.put<UpdateActivityResponse>(
+    return this.http.put<DeleteOrUpdateActivityResponse>(
       `/api/v1/activities/${aOrder.id}`,
       aOrder
     );
