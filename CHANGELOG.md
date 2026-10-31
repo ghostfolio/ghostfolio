@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Colored the line of the performance chart on the overview page, of the portfolio in the benchmark comparator and of the charts in the holding and benchmark detail dialogs in green for a gain and red for a loss
+
 ## 3.95.0 - 2026-10-31
 
 ### Changed
