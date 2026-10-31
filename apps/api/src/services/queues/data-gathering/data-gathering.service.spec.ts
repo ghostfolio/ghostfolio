@@ -9,36 +9,104 @@ import { DataGatheringService } from './data-gathering.service';
 describe('DataGatheringService', () => {
   let dataGatheringQueue: { addBulk: jest.Mock; clean: jest.Mock };
   let dataGatheringService: DataGatheringService;
-  let dataProviderService: { getHistoricalRaw: jest.Mock };
-  let prismaService: { marketData: { groupBy: jest.Mock; upsert: jest.Mock } };
+  let dataProviderService: {
+    getAssetProfiles: jest.Mock;
+    getHistoricalRaw: jest.Mock;
+  };
+  let prismaService: {
+    marketData: { groupBy: jest.Mock; upsert: jest.Mock };
+    symbolProfile: { upsert: jest.Mock };
+  };
+  let symbolProfileService: { getSymbolProfiles: jest.Mock };
 
   beforeEach(() => {
     dataGatheringQueue = {
       addBulk: jest.fn().mockResolvedValue([]),
       clean: jest.fn().mockResolvedValue([])
     };
-    dataProviderService = { getHistoricalRaw: jest.fn() };
+    dataProviderService = {
+      getAssetProfiles: jest.fn(),
+      getHistoricalRaw: jest.fn()
+    };
     prismaService = {
       marketData: {
         groupBy: jest.fn().mockResolvedValue([]),
         upsert: jest.fn().mockResolvedValue({})
+      },
+      symbolProfile: {
+        upsert: jest.fn().mockResolvedValue({})
       }
+    };
+    symbolProfileService = {
+      getSymbolProfiles: jest.fn().mockResolvedValue([])
     };
 
     dataGatheringService = new DataGatheringService(
-      null,
+      [],
       dataGatheringQueue as any,
       dataProviderService as any,
       null,
       null,
       prismaService as any,
       null,
-      null
+      symbolProfileService as any
     );
   });
 
   afterEach(() => {
     jest.useRealTimers();
+  });
+
+  describe('gatherAssetProfiles', () => {
+    const assetProfileIdentifier = { dataSource: 'YAHOO', symbol: 'VWCE.DE' };
+
+    it('keeps the stored lists if the lists of the asset profile are empty', async () => {
+      dataProviderService.getAssetProfiles.mockResolvedValue({
+        'VWCE.DE': {
+          ...assetProfileIdentifier,
+          countries: [],
+          holdings: [],
+          sectors: []
+        }
+      });
+
+      await dataGatheringService.gatherAssetProfiles([
+        assetProfileIdentifier as any
+      ]);
+
+      const { create, update } =
+        prismaService.symbolProfile.upsert.mock.calls[0][0];
+
+      expect(create.holdings).toEqual([]);
+      expect(update.countries).toBeUndefined();
+      expect(update.holdings).toBeUndefined();
+      expect(update.sectors).toBeUndefined();
+    });
+
+    it('updates the stored lists if the lists of the asset profile have items', async () => {
+      const countries = [{ code: 'US', weight: 1 }];
+      const holdings = [{ name: 'NVIDIA Corp.', weight: 0.05 }];
+      const sectors = [{ name: 'Technology', weight: 1 }];
+
+      dataProviderService.getAssetProfiles.mockResolvedValue({
+        'VWCE.DE': {
+          ...assetProfileIdentifier,
+          countries,
+          holdings,
+          sectors
+        }
+      });
+
+      await dataGatheringService.gatherAssetProfiles([
+        assetProfileIdentifier as any
+      ]);
+
+      const { update } = prismaService.symbolProfile.upsert.mock.calls[0][0];
+
+      expect(update).toEqual(
+        expect.objectContaining({ countries, holdings, sectors })
+      );
+    });
   });
 
   describe('getAssetProfileIdentifiersWithRecentMarketData', () => {
