@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deprecated the `api/v1/admin/user`, `api/v1/user/:id` and `api/v1/user/:id/access-token` endpoints in favor of the `api/v1/users` endpoints
 
+### Fixed
+
+- Fixed the overwrite of `countries`, `holdings` and `sectors` with empty values in the data gathering of asset profiles
+- Fixed the validation of the responses in the data enhancer for asset profile data via _Trackinsight_
+
 ## 3.95.0 - 2026-10-31
 
 ### Changed
