@@ -167,7 +167,7 @@ export class UserService extends ObservableStore<UserStoreState> {
               user
             },
             disableClose: true,
-            height: this.deviceType() === 'mobile' ? '98vh' : '80vh',
+            height: this.deviceType() === 'mobile' ? '98dvh' : '80vh',
             width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
           });
 
