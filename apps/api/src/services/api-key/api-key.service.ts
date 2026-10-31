@@ -32,12 +32,12 @@ export class ApiKeyService {
   public async getUserByApiKey(apiKey: string) {
     const hashedKey = this.hashApiKey(apiKey);
 
-    const { user } = await this.prismaService.apiKey.findUnique({
+    const apiKeyEntity = await this.prismaService.apiKey.findUnique({
       include: { user: true },
       where: { hashedKey }
     });
 
-    return user;
+    return apiKeyEntity?.user;
   }
 
   public hashApiKey(apiKey: string): string {
@@ -53,7 +53,7 @@ export class ApiKeyService {
   private generateApiKey(): string {
     return getRandomString(32)
       .split('')
-      .reduce((acc, char, index) => {
+      .reduce<string[]>((acc, char, index) => {
         const chunkIndex = Math.floor(index / 4);
         acc[chunkIndex] = (acc[chunkIndex] || '') + char;
         return acc;

@@ -21,7 +21,7 @@ export class PlatformService {
 
   public async getPlatform(
     platformWhereUniqueInput: Prisma.PlatformWhereUniqueInput
-  ): Promise<Platform> {
+  ): Promise<Platform | null> {
     return this.prismaService.platform.findUnique({
       where: platformWhereUniqueInput
     });
