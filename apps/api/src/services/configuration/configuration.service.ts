@@ -2,6 +2,7 @@ import { environment } from '@ghostfolio/api/environments/environment';
 import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
 import {
   CACHE_TTL_NO_CACHE,
+  DEFAULT_DATA_GATHERING_INTERVAL_MINUTES,
   DEFAULT_HOST,
   DEFAULT_PORT,
   DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY,
@@ -55,6 +56,9 @@ export class ConfigurationService {
       API_KEY_RAPID_API: str({ default: '' }),
       CACHE_QUOTES_TTL: num({ default: ms('1 minute') }),
       CACHE_TTL: num({ default: CACHE_TTL_NO_CACHE }),
+      DATA_GATHERING_INTERVAL_MINUTES: num({
+        default: DEFAULT_DATA_GATHERING_INTERVAL_MINUTES
+      }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_FEAR_AND_GREED_INDEX_STOCKS: str({
         default: DataSource.MANUAL
