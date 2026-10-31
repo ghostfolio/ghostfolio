@@ -63,7 +63,7 @@ import {
   PortfolioPosition,
   UserSettings
 } from './interfaces';
-import { BenchmarkTrend, ColorScheme } from './types';
+import { BenchmarkTrend, ColorScheme, DateRange } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
@@ -886,4 +886,15 @@ export function resolveUserSettings({
       })
     )
   };
+}
+
+/**
+ * Whether the date range is drawn from intraday prices (5 minutes for the
+ * current day, 15 minutes for the current week, 60 minutes for the current
+ * month) instead of daily prices
+ */
+export function isIntradayDateRange(
+  aDateRange?: DateRange
+): aDateRange is '1d' | 'mtd' | 'wtd' {
+  return aDateRange === '1d' || aDateRange === 'mtd' || aDateRange === 'wtd';
 }
