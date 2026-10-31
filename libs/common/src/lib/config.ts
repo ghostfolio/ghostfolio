@@ -100,6 +100,7 @@ export const STATISTICS_GATHERING_QUEUE = 'STATISTICS_GATHERING_QUEUE';
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_DATE_RANGE: DateRange = 'max';
+export const DEFAULT_USER_DATE_RANGE: DateRange = 'ytd';
 export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_LOCALE = 'en-US';
