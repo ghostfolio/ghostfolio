@@ -13,6 +13,7 @@ import {
   getStringOrNull,
   getStringOrUndefined,
   isAccountBalanceInFuture,
+  isIntradayDateRange,
   isAccountExcluded,
   isCurrency,
   isCurrencySymbol,
@@ -868,5 +869,18 @@ describe('Helper', () => {
         viewMode: 'DEFAULT'
       });
     });
+  });
+});
+
+describe('isIntradayDateRange', () => {
+  it.each([
+    ['1d', true],
+    ['wtd', true],
+    ['mtd', true],
+    ['ytd', false],
+    ['max', false],
+    [undefined, false]
+  ] as const)('returns %s for %s', (dateRange, expected) => {
+    expect(isIntradayDateRange(dateRange)).toBe(expected);
   });
 });
