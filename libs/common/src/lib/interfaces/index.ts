@@ -11,6 +11,7 @@ import type { AssetClassSelectorOption } from './asset-class-selector-option.int
 import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { AssetProfileItem } from './asset-profile-item.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
+import type { BenchmarkSeries } from './benchmark-series.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
@@ -152,6 +153,7 @@ export {
   BenchmarkMarketDataDetailsResponse,
   BenchmarkProperty,
   BenchmarkResponse,
+  BenchmarkSeries,
   Coupon,
   CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
