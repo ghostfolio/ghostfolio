@@ -29,12 +29,19 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static holdingsWeightTreshold = 0.85;
 
   private static sectorsMapping: Record<string, SectorName> = {
+    'Business Services': 'Industrials',
+    'Consumer Cyclicals': 'Consumer Cyclical',
     'Consumer Discretionary': 'Consumer Cyclical',
+    'Consumer Non-Cyclicals': 'Consumer Defensive',
+    'Consumer Services': 'Consumer Cyclical',
     'Consumer Staples': 'Consumer Defensive',
+    Finance: 'Financial Services',
     Financials: 'Financial Services',
     'Health Care': 'Healthcare',
     'Information Technology': 'Technology',
-    Materials: 'Basic Materials'
+    Materials: 'Basic Materials',
+    'Non-Energy Materials': 'Basic Materials',
+    Telecommunications: 'Communication Services'
   };
 
   // Allows for floating point noise in the sums of Trackinsight
@@ -163,17 +170,24 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.sectors ||
       (response.sectors as unknown as Sector[]).length === 0
     ) {
-      response.sectors = [];
+      // Several names of Trackinsight can map to the same sector
+      const weightsBySector: Record<string, number> = {};
 
       for (const [name, value] of Object.entries<any>(holdings.sectors ?? {})) {
-        response.sectors.push({
-          name: getSectorName({
-            name,
-            aliases: TrackinsightDataEnhancerService.sectorsMapping
-          }),
-          weight: value.weight
+        const sectorName = getSectorName({
+          name,
+          aliases: TrackinsightDataEnhancerService.sectorsMapping
         });
+
+        weightsBySector[sectorName] =
+          (weightsBySector[sectorName] ?? 0) + value.weight;
       }
+
+      response.sectors = Object.entries(weightsBySector).map(
+        ([name, weight]) => {
+          return { name, weight };
+        }
+      );
     }
 
     return Promise.resolve(response);
