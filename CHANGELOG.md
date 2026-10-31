@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the HTML template middleware to support page-specific meta descriptions for the public pages, the blog posts and the personal finance tools
 - Upgraded `stripe` from version `23.0.0` to `23.0.1`
 
 ## 3.96.0 - 2026-10-31
