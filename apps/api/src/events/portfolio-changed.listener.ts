@@ -69,25 +69,25 @@ export class PortfolioChangedListener {
         userSettings
       });
 
+      const calculationType =
+        userSettings.performanceCalculationType ??
+        PerformanceCalculationType.ROAI;
+
       // Recompute in the background to avoid a cold start on the next request
       await this.portfolioSnapshotService.addJobToQueue({
         data: {
+          calculationType,
           filters,
           userId,
-          calculationType:
-            userSettings.performanceCalculationType ??
-            PerformanceCalculationType.ROAI,
           userCurrency: userSettings.baseCurrency ?? DEFAULT_CURRENCY
         },
         name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
         opts: {
           ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
           jobId: this.redisCacheService.getPortfolioSnapshotKey({
+            calculationType,
             filters,
-            userId,
-            calculationType:
-              userSettings.performanceCalculationType ??
-              PerformanceCalculationType.ROAI
+            userId
           }),
           priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
         }
