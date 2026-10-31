@@ -29,7 +29,6 @@ import {
   AccountResponse,
   AccountsResponse,
   ActivitiesResponse,
-  ActivityMutationResponse,
   ActivityResponse,
   AiActivitiesResponse,
   AiPromptResponse,
@@ -43,6 +42,7 @@ import {
   CreateActivityResponse,
   CreateStripeCheckoutSessionResponse,
   DataProviderHealthResponse,
+  DeleteOrUpdateActivityResponse,
   ExportResponse,
   Filter,
   ImportResponse,
@@ -353,7 +353,7 @@ export class DataService {
   }
 
   public deleteActivity(aId: string) {
-    return this.http.delete<ActivityMutationResponse>(
+    return this.http.delete<DeleteOrUpdateActivityResponse>(
       `/api/v1/activities/${aId}`
     );
   }
@@ -954,7 +954,7 @@ export class DataService {
   }
 
   public putActivity(aOrder: UpdateOrderDto) {
-    return this.http.put<ActivityMutationResponse>(
+    return this.http.put<DeleteOrUpdateActivityResponse>(
       `/api/v1/activities/${aOrder.id}`,
       aOrder
     );

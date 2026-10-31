@@ -17,9 +17,9 @@ import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import {
   ActivitiesResponse,
-  ActivityMutationResponse,
   ActivityResponse,
-  CreateActivityResponse
+  CreateActivityResponse,
+  DeleteOrUpdateActivityResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { scopes } from '@ghostfolio/common/scopes';
@@ -105,7 +105,7 @@ export class ActivitiesController {
   public async deleteActivity(
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<ActivityMutationResponse> {
+  ): Promise<DeleteOrUpdateActivityResponse> {
     const activity = await this.activitiesService.order({
       id,
       userId
@@ -122,7 +122,7 @@ export class ActivitiesController {
       id
     });
 
-    return this.getActivityMutationResponse(deletedActivity);
+    return this.getDeleteOrUpdateActivityResponse(deletedActivity);
   }
 
   @Get()
@@ -331,7 +331,7 @@ export class ActivitiesController {
     @Body() data: UpdateOrderDto,
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
-  ): Promise<ActivityMutationResponse> {
+  ): Promise<DeleteOrUpdateActivityResponse> {
     const originalActivity = await this.activitiesService.order({
       id,
       userId
@@ -396,12 +396,12 @@ export class ActivitiesController {
       }
     });
 
-    return this.getActivityMutationResponse(activity);
+    return this.getDeleteOrUpdateActivityResponse(activity);
   }
 
-  private getActivityMutationResponse(
+  private getDeleteOrUpdateActivityResponse(
     activity: Order
-  ): ActivityMutationResponse {
+  ): DeleteOrUpdateActivityResponse {
     return pick(activity, [
       'accountId',
       'accountUserId',

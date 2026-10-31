@@ -1,6 +1,6 @@
 import type { Order } from '@ghostfolio/prisma/browser';
 
-export interface ActivityMutationResponse extends Pick<
+export interface DeleteOrUpdateActivityResponse extends Pick<
   Order,
   | 'accountId'
   | 'accountUserId'

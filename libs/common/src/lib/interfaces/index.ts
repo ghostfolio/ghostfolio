@@ -46,7 +46,6 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { AccountResponse } from './responses/account-response.interface';
 import type { AccountsResponse } from './responses/accounts-response.interface';
 import type { ActivitiesResponse } from './responses/activities-response.interface';
-import type { ActivityMutationResponse } from './responses/activity-mutation-response.interface';
 import type { ActivityResponse } from './responses/activity-response.interface';
 import type { AdminUserResponse } from './responses/admin-user-response.interface';
 import type { AdminUsersResponse } from './responses/admin-users-response.interface';
@@ -69,6 +68,7 @@ import type {
   DataProviderResponse,
   DataProviderHistoricalResponse
 } from './responses/data-provider-response.interface';
+import type { DeleteOrUpdateActivityResponse } from './responses/delete-or-update-activity-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ExchangeRateResponse } from './responses/exchange-rate-response.interface';
@@ -124,7 +124,6 @@ export {
   ActivitiesResponse,
   Activity,
   ActivityError,
-  ActivityMutationResponse,
   ActivityResponse,
   AdminData,
   AdminJobs,
@@ -159,6 +158,7 @@ export {
   DataProviderHistoricalResponse,
   DataProviderInfo,
   DataProviderResponse,
+  DeleteOrUpdateActivityResponse,
   DividendsResponse,
   EnhancedAssetProfile,
   ExchangeRateResponse,
