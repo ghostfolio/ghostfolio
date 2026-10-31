@@ -327,6 +327,102 @@ describe('TrackinsightDataEnhancerService', () => {
     expect(response.holdings).toEqual([{ name: 'NVIDIA Corp.', weight: 0.08 }]);
   });
 
+  it.each([
+    ['Business Services', 'Industrials'],
+    ['Consumer Cyclicals', 'Consumer Cyclical'],
+    ['Consumer Discretionary', 'Consumer Cyclical'],
+    ['Consumer Non-Cyclicals', 'Consumer Defensive'],
+    ['Consumer Services', 'Consumer Cyclical'],
+    ['Consumer Staples', 'Consumer Defensive'],
+    ['Finance', 'Financial Services'],
+    ['Financials', 'Financial Services'],
+    ['Health Care', 'Healthcare'],
+    ['Information Technology', 'Technology'],
+    ['Materials', 'Basic Materials'],
+    ['Non-Energy Materials', 'Basic Materials'],
+    ['Telecommunications', 'Communication Services']
+  ])('should map the sector %s to %s', async (name, expected) => {
+    const warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+    mockResponses({
+      holdings: Response.json({
+        ...HOLDINGS,
+        sectors: { [name]: { weight: 0.5 } }
+      })
+    });
+
+    const response = await enhance();
+
+    expect(response.sectors).toEqual([{ name: expected, weight: 0.5 }]);
+    expect(warn).not.toHaveBeenCalled();
+
+    warn.mockRestore();
+  });
+
+  it('should merge the sectors with the same mapping', async () => {
+    mockResponses({
+      holdings: Response.json({
+        ...HOLDINGS,
+        sectors: {
+          'Business Services': { weight: 0.25 },
+          'Consumer Cyclicals': { weight: 0.125 },
+          'Consumer Services': { weight: 0.125 },
+          Industrials: { weight: 0.5 }
+        }
+      })
+    });
+
+    const response = await enhance();
+
+    expect(response.sectors).toEqual([
+      { name: 'Industrials', weight: 0.75 },
+      { name: 'Consumer Cyclical', weight: 0.25 }
+    ]);
+  });
+
+  it('should merge the sectors without floating point noise', async () => {
+    mockResponses({
+      holdings: Response.json({
+        ...HOLDINGS,
+        sectors: {
+          'Consumer Cyclicals': { weight: 0.1 },
+          'Consumer Services': { weight: 0.2 }
+        }
+      })
+    });
+
+    const response = await enhance();
+
+    expect(response.sectors).toEqual([
+      { name: 'Consumer Cyclical', weight: 0.3 }
+    ]);
+  });
+
+  it('should merge the sectors without a mapping', async () => {
+    const warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+
+    mockResponses({
+      holdings: Response.json({
+        ...HOLDINGS,
+        sectors: {
+          'New Sector A': { weight: 0.25 },
+          'New Sector B': { weight: 0.25 },
+          Technology: { weight: 0.5 }
+        }
+      })
+    });
+
+    const response = await enhance();
+
+    expect(response.sectors).toEqual([
+      { name: 'Other', weight: 0.5 },
+      { name: 'Technology', weight: 0.5 }
+    ]);
+    expect(warn).toHaveBeenCalledTimes(2);
+
+    warn.mockRestore();
+  });
+
   it('should accept floating point noise in a weight', async () => {
     mockResponses({
       holdings: Response.json({
