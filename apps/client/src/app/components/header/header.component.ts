@@ -105,6 +105,7 @@ export class GfHeaderComponent implements OnChanges {
   protected hasPermissionToCreateUser: boolean;
   protected impersonationId: string | null;
   protected readonly internalRoutes = internalRoutes;
+  protected isLoadingUser: boolean;
   protected isMenuOpen: boolean;
   protected readonly routeAbout = publicRoutes.about.path;
   protected readonly routeFeatures = publicRoutes.features.path;
@@ -214,6 +215,9 @@ export class GfHeaderComponent implements OnChanges {
       this.info()?.globalPermissions,
       permissions.createUserAccount
     );
+
+    this.isLoadingUser =
+      !this.currentRoute() && !!this.tokenStorageService.getToken();
   }
 
   protected closeAssistant() {
