@@ -49,7 +49,7 @@ export class InfoService {
     const info: Partial<InfoItem> = {};
     let isReadOnlyMode: boolean | undefined;
     let latestFearAndGreedStocksMarketDataPromise:
-      Promise<MarketData> | undefined;
+      Promise<MarketData | null> | undefined;
 
     const globalPermissions: string[] = [];
 
