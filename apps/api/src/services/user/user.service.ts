@@ -143,7 +143,7 @@ export class UserService {
       }),
       impersonationUserId
         ? this.user({ id: impersonationUserId })
-        : Promise.resolve<UserWithSettings>(null),
+        : Promise.resolve<UserWithSettings | null>(null),
       this.tagService.getTagsForUser(impersonationUserId || user.id)
     ]);
 
@@ -207,10 +207,8 @@ export class UserService {
       activityTypes,
       dateOfFirstActivity,
       id,
-      permissions,
       referralPartners,
       scopes,
-      subscription,
       systemMessage,
       tags,
       access: access.map((accessItem) => {
@@ -222,14 +220,25 @@ export class UserService {
           scopes: getScopesOfAccess(accessItem)
         };
       }),
-      accounts: accounts.sort((a, b) => {
-        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-      }),
+      accounts: accounts
+        .map((account) => {
+          return {
+            ...account,
+            platform: account.platform ?? undefined
+          };
+        })
+        .sort((a, b) => {
+          return (a.name ?? '')
+            .toLowerCase()
+            .localeCompare((b.name ?? '').toLowerCase());
+        }),
+      permissions: permissions ?? [],
       settings: {
         ...resolvedUserSettings,
         baseCurrency: resolvedUserSettings.baseCurrency ?? DEFAULT_CURRENCY,
         locale: resolvedUserSettings.locale ?? locale
-      }
+      },
+      subscription: subscription as IUser['subscription']
     };
   }
 
@@ -436,7 +445,10 @@ export class UserService {
           frequency = 6;
         }
 
-        if (frequency === 1 || analytics?.activityCount % frequency === 1) {
+        if (
+          frequency === 1 ||
+          (analytics?.activityCount ?? 0) % frequency === 1
+        ) {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
 
@@ -551,7 +563,9 @@ export class UserService {
     }
 
     user.accounts = user.accounts.sort((a, b) => {
-      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      return (a.name ?? '')
+        .toLowerCase()
+        .localeCompare((b.name ?? '').toLowerCase());
     });
 
     user.permissions = currentPermissions.sort();
@@ -660,11 +674,13 @@ export class UserService {
       });
     } catch {}
 
-    try {
-      await this.activitiesService.deleteActivities({
-        userId: where.id
-      });
-    } catch {}
+    if (where.id) {
+      try {
+        await this.activitiesService.deleteActivities({
+          userId: where.id
+        });
+      } catch {}
+    }
 
     try {
       await this.prismaService.settings.delete({
