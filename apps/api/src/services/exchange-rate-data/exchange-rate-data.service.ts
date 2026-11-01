@@ -296,18 +296,39 @@ export class ExchangeRateDataService {
       return 0;
     }
 
+    const derivedFromCurrency = DERIVED_CURRENCIES.find(({ currency }) => {
+      return currency === aFromCurrency;
+    });
+    const derivedToCurrency = DERIVED_CURRENCIES.find(({ currency }) => {
+      return currency === aToCurrency;
+    });
+
+    if (
+      aFromCurrency !== aToCurrency &&
+      (derivedFromCurrency || derivedToCurrency)
+    ) {
+      // Convert via the root currencies, since the exchange rates of derived
+      // currencies are not available for every currency pair
+      const valueInRootCurrency = await this.toCurrencyAtDate(
+        aValue / (derivedFromCurrency?.factor ?? 1),
+        derivedFromCurrency?.rootCurrency ?? aFromCurrency,
+        derivedToCurrency?.rootCurrency ?? aToCurrency,
+        aDate
+      );
+
+      return valueInRootCurrency === undefined
+        ? undefined
+        : valueInRootCurrency * (derivedToCurrency?.factor ?? 1);
+    }
+
     if (isToday(aDate)) {
       return this.toCurrency(aValue, aFromCurrency, aToCurrency);
     }
 
-    const derivedCurrencyFactor =
-      this.derivedCurrencyFactors[`${aFromCurrency}${aToCurrency}`];
     let factor: number;
 
     if (aFromCurrency === aToCurrency) {
       factor = 1;
-    } else if (derivedCurrencyFactor) {
-      factor = derivedCurrencyFactor;
     } else {
       const dataSource =
         this.dataProviderService.getDataSourceForExchangeRates();
