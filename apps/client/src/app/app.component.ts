@@ -337,7 +337,7 @@ export class GfAppComponent implements OnInit {
             impersonationId: this.impersonationId,
             locale: this.user?.settings?.locale
           },
-          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+          height: this.deviceType === 'mobile' ? '98dvh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 

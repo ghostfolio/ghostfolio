@@ -89,7 +89,7 @@ export class GfRegisterPageComponent implements OnInit {
         needsToAcceptTermsOfService: this.hasPermissionForSubscription
       },
       disableClose: true,
-      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98dvh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '30rem'
     });
 

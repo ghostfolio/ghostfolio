@@ -386,6 +386,10 @@ ngx-skeleton-loader {
 }
 
 .mat-mdc-dialog-container {
+  .mat-mdc-dialog-surface {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
   .mdc-dialog__content {
     --mat-dialog-supporting-text-color: rgba(var(--dark-primary-text));
   }
