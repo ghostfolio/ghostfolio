@@ -10,6 +10,8 @@ import { SectorName } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
+import { Big } from 'big.js';
+import { isPlainObject } from 'lodash-es';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
@@ -28,13 +30,23 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static holdingsWeightTreshold = 0.85;
 
   private static sectorsMapping: Record<string, SectorName> = {
+    'Business Services': 'Industrials',
+    'Consumer Cyclicals': 'Consumer Cyclical',
     'Consumer Discretionary': 'Consumer Cyclical',
+    'Consumer Non-Cyclicals': 'Consumer Defensive',
+    'Consumer Services': 'Consumer Cyclical',
     'Consumer Staples': 'Consumer Defensive',
+    Finance: 'Financial Services',
     Financials: 'Financial Services',
     'Health Care': 'Healthcare',
     'Information Technology': 'Technology',
-    Materials: 'Basic Materials'
+    Materials: 'Basic Materials',
+    'Non-Energy Materials': 'Basic Materials',
+    Telecommunications: 'Communication Services'
   };
+
+  // Allows for floating point noise in the sums of Trackinsight
+  private static weightTolerance = 0.001;
 
   private readonly logger = new Logger(TrackinsightDataEnhancerService.name);
 
@@ -75,44 +87,42 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const profile = await this.fetchService
-      .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${trackinsightSymbol}.json`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      )
-      .then((res) => res.json())
-      .catch(() => {
-        return {};
-      });
+    const profile = await this.fetchJson({
+      requestTimeout,
+      url: `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${trackinsightSymbol}.json`
+    });
 
     const cusip = profile?.cusip;
 
-    if (cusip) {
+    if (cusip && typeof cusip === 'string') {
       response.cusip = cusip;
     }
 
-    const isin = profile?.isins?.[0];
+    const isin = Array.isArray(profile?.isins) ? profile.isins[0] : undefined;
 
-    if (isin) {
+    if (isin && typeof isin === 'string') {
       response.isin = isin;
     }
 
-    const holdings = await this.fetchService
-      .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      )
-      .then((res) => res.json())
-      .catch(() => {
-        return {};
-      });
+    const holdings = await this.fetchJson({
+      requestTimeout,
+      url: `${TrackinsightDataEnhancerService.baseUrl}/data-api/holdings/${trackinsightSymbol}.json`
+    });
+
+    if (!holdings) {
+      return response;
+    }
+
+    if (!this.isValidHoldings(holdings)) {
+      this.logger.warn(
+        `Could not use the Trackinsight holdings of "${trackinsightSymbol}": Invalid response`
+      );
+
+      return response;
+    }
 
     if (
-      holdings?.weight < TrackinsightDataEnhancerService.holdingsWeightTreshold
+      holdings.weight < TrackinsightDataEnhancerService.holdingsWeightTreshold
     ) {
       // Skip if data is inaccurate
       return response;
@@ -125,7 +135,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       response.countries = [];
 
       for (const [name, value] of Object.entries<any>(
-        holdings?.countries ?? {}
+        holdings.countries ?? {}
       )) {
         const code = getCountryCodeByName({
           name,
@@ -145,8 +155,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     ) {
       response.holdings = [];
 
-      for (const { label, weight } of holdings?.topHoldings ?? []) {
-        if (label?.toLowerCase() === 'other') {
+      for (const { label, weight } of holdings.topHoldings ?? []) {
+        if (label.toLowerCase() === 'other') {
           continue;
         }
 
@@ -161,19 +171,25 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       !response.sectors ||
       (response.sectors as unknown as Sector[]).length === 0
     ) {
-      response.sectors = [];
+      // Several names of Trackinsight can map to the same sector
+      const weightsBySector: Record<string, number> = {};
 
-      for (const [name, value] of Object.entries<any>(
-        holdings?.sectors ?? {}
-      )) {
-        response.sectors.push({
-          name: getSectorName({
-            name,
-            aliases: TrackinsightDataEnhancerService.sectorsMapping
-          }),
-          weight: value.weight
+      for (const [name, value] of Object.entries<any>(holdings.sectors ?? {})) {
+        const sectorName = getSectorName({
+          name,
+          aliases: TrackinsightDataEnhancerService.sectorsMapping
         });
+
+        weightsBySector[sectorName] = new Big(weightsBySector[sectorName] ?? 0)
+          .plus(value.weight)
+          .toNumber();
       }
+
+      response.sectors = Object.entries(weightsBySector).map(
+        ([name, weight]) => {
+          return { name, weight };
+        }
+      );
     }
 
     return Promise.resolve(response);
@@ -187,6 +203,70 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     return 'QQQ';
   }
 
+  private async fetchJson({
+    requestTimeout,
+    url
+  }: {
+    requestTimeout: number;
+    url: string;
+  }) {
+    return this.fetchService
+      .fetch(url, {
+        signal: AbortSignal.timeout(requestTimeout)
+      })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP status ${res.status}`);
+        }
+
+        return res.json();
+      })
+      .catch(({ message }) => {
+        this.logger.warn(`Could not fetch ${url}: ${message}`);
+
+        return undefined;
+      });
+  }
+
+  private isValidHoldings(holdings: any) {
+    if (!this.isValidWeight(holdings?.weight)) {
+      return false;
+    }
+
+    const { countries, sectors, topHoldings } = holdings;
+
+    if (
+      !isPlainObject(countries ?? {}) ||
+      !isPlainObject(sectors ?? {}) ||
+      !Array.isArray(topHoldings ?? [])
+    ) {
+      return false;
+    }
+
+    return (
+      Object.values<any>(countries ?? {}).every((country) => {
+        return this.isValidWeight(country?.weight);
+      }) &&
+      Object.values<any>(sectors ?? {}).every((sector) => {
+        return this.isValidWeight(sector?.weight);
+      }) &&
+      (topHoldings ?? []).every((topHolding) => {
+        return (
+          typeof topHolding?.label === 'string' &&
+          this.isValidWeight(topHolding?.weight)
+        );
+      })
+    );
+  }
+
+  private isValidWeight(weight: unknown) {
+    return (
+      typeof weight === 'number' &&
+      weight >= 0 &&
+      weight <= 1 + TrackinsightDataEnhancerService.weightTolerance
+    );
+  }
+
   private async searchTrackinsightSymbol({
     requestTimeout,
     symbol
@@ -194,39 +274,42 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     requestTimeout: number;
     symbol: string;
   }) {
-    return this.fetchService
-      .fetch(
-        `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      )
-      .then((res) => res.json())
-      .then((jsonRes) => {
-        if (
-          jsonRes['results']?.['count'] === 1 ||
-          // Allow exact match
-          jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol ||
-          // Allow EXCHANGE:SYMBOL
-          jsonRes['results']?.['docs']?.[0]?.['ticker']?.endsWith(`:${symbol}`)
-        ) {
-          return jsonRes['results']['docs'][0]['ticker'];
-        }
+    const jsonRes = await this.fetchJson({
+      requestTimeout,
+      url: `${TrackinsightDataEnhancerService.baseUrl}/search-api/search_v2/${encodeURIComponent(symbol)}/_/ticker/default/0/3`
+    });
 
-        this.logger.debug(
-          `Could not match a Trackinsight symbol for "${symbol}": ${JSON.stringify(
-            jsonRes
-          )}`
-        );
+    if (!jsonRes) {
+      return undefined;
+    }
 
-        return undefined;
-      })
-      .catch(({ message }) => {
-        this.logger.warn(
-          `Could not search Trackinsight symbol for "${symbol}": ${message}`
-        );
+    if (!Array.isArray(jsonRes.results?.docs)) {
+      this.logger.warn(
+        `Could not search Trackinsight symbol for "${symbol}": Invalid response`
+      );
 
-        return undefined;
-      });
+      return undefined;
+    }
+
+    const ticker = jsonRes.results.docs[0]?.ticker;
+
+    if (
+      typeof ticker === 'string' &&
+      (jsonRes.results.count === 1 ||
+        // Allow exact match
+        ticker === symbol ||
+        // Allow EXCHANGE:SYMBOL
+        ticker.endsWith(`:${symbol}`))
+    ) {
+      return ticker;
+    }
+
+    this.logger.debug(
+      `Could not match a Trackinsight symbol for "${symbol}": ${JSON.stringify(
+        jsonRes
+      )}`
+    );
+
+    return undefined;
   }
 }

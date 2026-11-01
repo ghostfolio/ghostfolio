@@ -28,6 +28,7 @@ import {
 import { SubscriptionType } from '@ghostfolio/common/enums';
 import { resolveUserSettings } from '@ghostfolio/common/helper';
 import {
+  AccessTokenResponse,
   User as IUser,
   ReferralPartner,
   SystemMessage,
@@ -703,6 +704,23 @@ export class UserService {
         }
       }
     });
+  }
+
+  public async rotateAccessToken({
+    userId
+  }: {
+    userId: string;
+  }): Promise<AccessTokenResponse> {
+    const { accessToken, hashedAccessToken } = this.generateAccessToken({
+      userId
+    });
+
+    await this.prismaService.user.update({
+      data: { accessToken: hashedAccessToken },
+      where: { id: userId }
+    });
+
+    return { accessToken };
   }
 
   /**
