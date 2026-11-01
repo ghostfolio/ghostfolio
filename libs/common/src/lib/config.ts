@@ -37,7 +37,7 @@ export const AI_MAX_ACTIVITIES = 25;
 
 export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
   [AssetClass.ALTERNATIVE_INVESTMENT, [AssetSubClass.COLLECTIBLE]],
-  [AssetClass.COMMODITY, [AssetSubClass.PRECIOUS_METAL]],
+  [AssetClass.COMMODITY, [AssetSubClass.ETF, AssetSubClass.PRECIOUS_METAL]],
   [
     AssetClass.EQUITY,
     [
@@ -47,9 +47,17 @@ export const ASSET_CLASS_MAPPING = new Map<AssetClass, AssetSubClass[]>([
       AssetSubClass.STOCK
     ]
   ],
-  [AssetClass.FIXED_INCOME, [AssetSubClass.BOND, AssetSubClass.LOAN]],
+  [
+    AssetClass.FIXED_INCOME,
+    [
+      AssetSubClass.BOND,
+      AssetSubClass.ETF,
+      AssetSubClass.LOAN,
+      AssetSubClass.MUTUALFUND
+    ]
+  ],
   [AssetClass.LIQUIDITY, [AssetSubClass.CRYPTOCURRENCY]],
-  [AssetClass.REAL_ESTATE, []]
+  [AssetClass.REAL_ESTATE, [AssetSubClass.ETF, AssetSubClass.MUTUALFUND]]
 ]);
 
 export const BULL_BOARD_COOKIE_NAME = 'bull_board_token';
