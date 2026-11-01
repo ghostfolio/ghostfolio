@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the colors of the skeleton loaders by enabling the dark mode of `ngx-skeleton-loader`
 - Upgraded `ngx-skeleton-loader` from version `13.0.0` to `14.0.0`
 - Upgraded `stripe` from version `23.0.0` to `23.0.1`
 
