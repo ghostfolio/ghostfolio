@@ -393,7 +393,7 @@ export class AccountService {
     });
 
     if (!account) {
-      return;
+      throw new Error(`Account '${accountId}' has not been found`);
     }
 
     const { balance, currency: currencyOfAccount } = account;
