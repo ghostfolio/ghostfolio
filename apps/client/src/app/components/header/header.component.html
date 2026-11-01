@@ -339,7 +339,10 @@
       </a>
     </div>
     <span class="gf-spacer"></span>
-    <ul class="align-items-center d-flex list-inline m-0 px-2">
+    <ul
+      class="align-items-center d-flex list-inline m-0 px-2"
+      [class.invisible]="isLoadingUser"
+    >
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block rounded"
