@@ -200,6 +200,8 @@
 }
 
 body {
+  --ngx-skeleton-loader-base-color: rgb(239, 241, 246);
+
   font-family: var(--font-family-sans-serif);
   margin: 0;
   min-height: 100%;
@@ -228,7 +230,6 @@ body {
 
   &.theme-dark {
     --ngx-skeleton-loader-base-color: #323232;
-    --ngx-skeleton-loader-color-scheme: dark;
 
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
