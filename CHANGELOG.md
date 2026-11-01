@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `stripe` from version `23.0.0` to `23.0.1`
+
 ### Fixed
 
 - Fixed the height of the dialogs on mobile
