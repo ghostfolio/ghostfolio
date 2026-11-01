@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the content of the pricing page
 - Upgraded `stripe` from version `23.0.0` to `23.0.1`
 
 ## 3.96.0 - 2026-10-31
