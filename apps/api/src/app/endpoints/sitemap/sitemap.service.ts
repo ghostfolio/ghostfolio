@@ -9,9 +9,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SitemapService {
-  private static readonly TRANSLATION_TAGGED_MESSAGE_REGEX =
-    /:.*@@(?<id>[a-zA-Z0-9.]+):(?<message>.+)/;
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly i18nService: I18nService
@@ -148,26 +145,13 @@ export class SitemapService {
     const rootUrl = this.configurationService.get('ROOT_URL');
 
     return SUPPORTED_LANGUAGE_CODES.flatMap((languageCode) => {
-      const resourcesPath = this.i18nService.getTranslation({
-        languageCode,
-        id: publicRoutes.resources.path.match(
-          SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
-        ).groups.id
-      });
-
-      const personalFinanceToolsPath = this.i18nService.getTranslation({
-        languageCode,
-        id: publicRoutes.resources.subRoutes.personalFinanceTools.path.match(
-          SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
-        ).groups.id
-      });
-
-      const productPath = this.i18nService.getTranslation({
-        languageCode,
-        id: publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes.product.path.match(
-          SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
-        ).groups.id
-      });
+      const [resourcesPath, personalFinanceToolsPath, productPath] =
+        this.i18nService.getLocalizedRouterLink({
+          languageCode,
+          routerLink:
+            publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes
+              .product.routerLink
+        });
 
       return personalFinanceTools.map(({ alias, key }) => {
         const routerLink = [
@@ -217,21 +201,10 @@ export class SitemapService {
     rootUrl: string;
     route?: PublicRoute;
   }): string {
-    const segments =
-      route?.routerLink.map((link) => {
-        const match = link.match(
-          SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
-        );
-
-        const segment = match
-          ? (this.i18nService.getTranslation({
-              languageCode,
-              id: match.groups.id
-            }) ?? match.groups.message)
-          : link;
-
-        return segment.replace(/^\/+|\/+$/, '');
-      }) ?? [];
+    const segments = this.i18nService.getLocalizedRouterLink({
+      languageCode,
+      routerLink: route?.routerLink ?? []
+    });
 
     const location = [rootUrl, languageCode, ...segments].join('/');
 
