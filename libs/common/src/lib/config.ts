@@ -291,6 +291,25 @@ export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
 export const HTTP_RESPONSE_MESSAGE_IMPERSONATION_UNRESOLVED =
   'The impersonation identifier cannot be resolved';
 
+export const MAX_PLAN_MAIL_HREF = `mailto:hi@ghostfol.io?subject=${encodeURIComponent(
+  'Ghostfolio Max'
+)}&body=${[
+  'Hello,',
+  '',
+  'I am interested in Ghostfolio Max.',
+  '',
+  'Who will use it (me, family, friends, family office, wealth manager, other):',
+  'Number of persons or clients:',
+  'How I track their portfolios today:',
+  'Main reason to choose this plan:',
+  '',
+  'Kind regards'
+]
+  .map((line) => {
+    return encodeURIComponent(line);
+  })
+  .join(E_MAIL_LINE_BREAK)}`;
+
 export const MAX_TOP_HOLDINGS = 50;
 
 export const MCP_ENDPOINT = '/mcp';
