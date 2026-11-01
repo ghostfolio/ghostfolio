@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the HTML template middleware to support page-specific meta descriptions for the public pages, the blog posts and the personal finance tools
 - Extended the sectors mapping in the data enhancer for asset profile data via _Trackinsight_
 - Improved the logging of the `web_fetch` tool in the `FetchService`
 - Improved the validation of the `WEB_FETCH_ROUTES` setting in the `FetchService`

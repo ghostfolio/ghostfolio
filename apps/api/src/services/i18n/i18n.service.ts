@@ -7,6 +7,9 @@ import { join } from 'node:path';
 
 @Injectable()
 export class I18nService implements OnModuleInit {
+  private static readonly TRANSLATION_TAGGED_MESSAGE_REGEX =
+    /:.*@@(?<id>[a-zA-Z0-9.]+):(?<message>.+)/;
+
   private readonly logger = new Logger(I18nService.name);
 
   private localesPath = join(__dirname, 'assets', 'locales');
@@ -16,14 +19,37 @@ export class I18nService implements OnModuleInit {
     this.loadFiles();
   }
 
+  public getLocalizedRouterLink({
+    languageCode,
+    routerLink
+  }: {
+    languageCode: string;
+    routerLink: string[];
+  }): string[] {
+    return routerLink.map((link) => {
+      const match = link.match(I18nService.TRANSLATION_TAGGED_MESSAGE_REGEX);
+
+      const segment = match
+        ? (this.getTranslation({
+            languageCode,
+            id: match.groups.id
+          }) ?? match.groups.message)
+        : link;
+
+      return segment.replace(/^\/+|\/+$/, '');
+    });
+  }
+
   public getTranslation({
     id,
     languageCode,
-    placeholders
+    placeholders,
+    skipUntranslated = false
   }: {
     id: string;
     languageCode: string;
     placeholders?: Record<string, string | number>;
+    skipUntranslated?: boolean;
   }): string {
     const languageCodeToUse = this.translations[languageCode]
       ? languageCode
@@ -37,9 +63,13 @@ export class I18nService implements OnModuleInit {
       return '';
     }
 
+    const targetSelector = skipUntranslated
+      ? 'target:not([state="new"])'
+      : 'target';
+
     let translatedText = $(
       `trans-unit[id="${id}"] > ${
-        languageCodeToUse === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
+        languageCodeToUse === DEFAULT_LANGUAGE_CODE ? 'source' : targetSelector
       }`
     ).text();
 
