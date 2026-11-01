@@ -228,13 +228,14 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
         languageCode,
         path,
         rootUrl,
-        description:
+        description: this.escapeAttribute(
           locales[path]?.description ??
-          this.getRouteDescription({ languageCode, path }) ??
-          this.i18nService.getTranslation({
-            languageCode,
-            id: 'metaDescription'
-          }),
+            this.getRouteDescription({ languageCode, path }) ??
+            this.i18nService.getTranslation({
+              languageCode,
+              id: 'metaDescription'
+            })
+        ),
         featureGraphicPath:
           locales[path]?.featureGraphicPath ?? 'assets/cover.png',
         keywords: this.i18nService.getTranslation({
@@ -253,6 +254,10 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
     }
   }
 
+  private escapeAttribute(value: string) {
+    return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  }
+
   private getPersonalFinanceToolDescriptions(
     languageCode: string
   ): [string, string][] {
@@ -261,6 +266,10 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
       id: 'metaDescription.resources.personalFinanceTools.product',
       skipUntranslated: true
     });
+
+    if (!description.includes('${name}')) {
+      return [];
+    }
 
     const path = [
       '',

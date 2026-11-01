@@ -73,7 +73,7 @@ export class I18nService implements OnModuleInit {
       }`
     ).text();
 
-    if (!translatedText) {
+    if (!translatedText && !skipUntranslated) {
       this.logger.warn(
         `Translation not found for id '${id}' in locale '${languageCode}'`
       );
