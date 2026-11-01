@@ -15,4 +15,5 @@ export interface InfoItem {
   isReadOnlyMode?: boolean;
   statistics: Statistics;
   subscriptionOffer?: SubscriptionOffer;
+  subscriptionOfferMax?: SubscriptionOffer;
 }
