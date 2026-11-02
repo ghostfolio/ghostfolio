@@ -1202,6 +1202,81 @@ describe('PortfolioService', () => {
         { date: '2025-01-01', investmentValueWithCurrencyEffect: 200 }
       ]);
     });
+
+    describe('with an empty chart of the date range', () => {
+      const historicalData = [
+        { date: '2023-03-01' },
+        {
+          date: '2025-06-12',
+          dividendInBaseCurrency: 50,
+          netPerformance: 600,
+          netPerformanceInPercentage: 0.6,
+          netPerformanceInPercentageWithCurrencyEffect: 0.5,
+          netPerformanceWithCurrencyEffect: 500,
+          netWorth: 2000,
+          totalInvestment: 1000,
+          totalInvestmentValueWithCurrencyEffect: 1100,
+          valueWithCurrencyEffect: 1600
+        }
+      ];
+
+      beforeEach(() => {
+        getPerformanceOfCalculator.mockResolvedValueOnce({ chart: [] });
+
+        jest
+          .spyOn(portfolioCalculatorFactory, 'createCalculator')
+          .mockReturnValue({
+            getPerformance: getPerformanceOfCalculator,
+            getSnapshot: jest.fn().mockResolvedValue({
+              historicalData,
+              errors: [],
+              hasErrors: false
+            })
+          } as unknown as PortfolioCalculator);
+      });
+
+      it('should return the latest values of the portfolio snapshot without any performance when the portfolio snapshot ends before the date range', async () => {
+        const { chart, performance } = await portfolioService.getPerformance({
+          dateRange: '1d',
+          userId: userDummyData.id
+        });
+
+        expect(chart).toEqual([]);
+        expect(performance).toEqual({
+          currentNetWorth: 2000,
+          currentValueInBaseCurrency: 1600,
+          dividendInBaseCurrency: 0,
+          dividendPercentageWithCurrencyEffect: 0,
+          netPerformance: 0,
+          netPerformancePercentage: 0,
+          netPerformancePercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
+          totalInvestment: 1000,
+          totalInvestmentValueWithCurrencyEffect: 1100
+        });
+      });
+
+      it('should return no values when the portfolio snapshot ends after the date range', async () => {
+        const { chart, performance } = await portfolioService.getPerformance({
+          dateRange: '2022',
+          userId: userDummyData.id
+        });
+
+        expect(chart).toEqual([]);
+        expect(performance).toEqual({
+          currentNetWorth: 0,
+          currentValueInBaseCurrency: 0,
+          dividendInBaseCurrency: 0,
+          dividendPercentageWithCurrencyEffect: 0,
+          netPerformance: 0,
+          netPerformancePercentage: 0,
+          netPerformancePercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
+          totalInvestment: 0,
+          totalInvestmentValueWithCurrencyEffect: 0
+        });
+      });
+    });
   });
 
   describe('getSummary', () => {

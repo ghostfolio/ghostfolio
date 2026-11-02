@@ -10,7 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `ngx-skeleton-loader` from version `13.0.0` to `14.0.0`
+
+## 3.97.0 - 2026-11-02
+
+### Changed
+
+- Improved the content of the pricing page
+- Improved the language localization for German (`de`)
 - Upgraded `stripe` from version `23.0.0` to `23.0.1`
+
+### Fixed
+
+- Fixed the value of zero in the portfolio performance for date ranges starting after the end of an expired portfolio snapshot
 
 ## 3.96.0 - 2026-10-31
 

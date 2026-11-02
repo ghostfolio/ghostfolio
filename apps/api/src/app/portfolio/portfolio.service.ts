@@ -98,6 +98,7 @@ import {
   endOfDay,
   format,
   isAfter,
+  isBefore,
   isSameMonth,
   isSameYear,
   min,
@@ -1234,6 +1235,17 @@ export class PortfolioService {
         start: startDate
       });
 
+    // An expired portfolio snapshot can end before the date range until its
+    // computation in the background is complete. In this case, the performance
+    // in the date range is not known, but the latest values are available.
+    const latestHistoricalDataItem = historicalData.at(-1);
+
+    const latestValues =
+      latestHistoricalDataItem &&
+      isBefore(parseDate(latestHistoricalDataItem.date), startDate)
+        ? latestHistoricalDataItem
+        : undefined;
+
     const {
       dividendInBaseCurrency,
       dividendInPercentageWithCurrencyEffect,
@@ -1252,9 +1264,11 @@ export class PortfolioService {
       netPerformanceInPercentage: 0,
       netPerformanceInPercentageWithCurrencyEffect: 0,
       netPerformanceWithCurrencyEffect: 0,
-      netWorth: 0,
-      totalInvestment: 0,
-      valueWithCurrencyEffect: 0
+      netWorth: latestValues?.netWorth ?? 0,
+      totalInvestment: latestValues?.totalInvestment ?? 0,
+      totalInvestmentValueWithCurrencyEffect:
+        latestValues?.totalInvestmentValueWithCurrencyEffect ?? 0,
+      valueWithCurrencyEffect: latestValues?.valueWithCurrencyEffect ?? 0
     };
 
     const chart =
