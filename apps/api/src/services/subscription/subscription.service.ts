@@ -233,9 +233,9 @@ export class SubscriptionService {
       });
 
       return {
-        offer: offer as SubscriptionOffer,
         subscribedAt,
         expiresAt: isBefore(new Date(), expiresAt) ? expiresAt : undefined,
+        offer: offer as SubscriptionOffer,
         type: isBefore(new Date(), expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic
