@@ -1,10 +1,10 @@
-import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import { FilterDto } from '@ghostfolio/api/dtos/filter.dto';
 import { DateRange } from '@ghostfolio/common/types';
+import { IsValidDateRangeConstraint } from '@ghostfolio/common/validator-constraints/is-valid-date-range';
 
 import { Type as ActivityType } from '@prisma/client';
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsEnum, IsOptional, Matches } from 'class-validator';
+import { IsEnum, IsOptional, Validate } from 'class-validator';
 import { isString } from 'lodash-es';
 
 export class ActivitiesFilterDto extends FilterDto {
@@ -16,6 +16,6 @@ export class ActivitiesFilterDto extends FilterDto {
   activityTypes?: ActivityType[];
 
   @IsOptional()
-  @Matches(DATE_RANGE_PATTERN)
+  @Validate(IsValidDateRangeConstraint)
   range?: DateRange;
 }

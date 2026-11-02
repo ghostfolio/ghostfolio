@@ -1,4 +1,5 @@
 import {
+  DATE_RANGES,
   TAG_ID_EMERGENCY_FUND,
   TAG_ID_EXCLUDE_FROM_ANALYSIS
 } from '@ghostfolio/common/config';
@@ -22,6 +23,7 @@ import {
   isValidCurrencyCode,
   isValidCustomAssetProfileSymbol,
   isValidDateAfter1970,
+  isValidDateRange,
   isValidGranteeOfAccess,
   resolveUserSettings
 } from '@ghostfolio/common/helper';
@@ -686,6 +688,45 @@ describe('Helper', () => {
 
     it('Free-text date', () => {
       expect(isValidDateAfter1970('yesterday')).toEqual(false);
+    });
+  });
+
+  describe('Is valid date range', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-11-02T12:00:00.000Z'));
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it.each(DATE_RANGES)('Accepts the named date range %s', (dateRange) => {
+      expect(isValidDateRange(dateRange)).toBe(true);
+    });
+
+    it('Accepts a calendar year in the past', () => {
+      expect(isValidDateRange('2024')).toBe(true);
+    });
+
+    it('Accepts the current calendar year', () => {
+      expect(isValidDateRange('2026')).toBe(true);
+    });
+
+    it('Refuses the next calendar year', () => {
+      expect(isValidDateRange('2027')).toBe(false);
+    });
+
+    it('Accepts the next calendar year on the last day of the current calendar year', () => {
+      jest.setSystemTime(new Date('2026-12-31T23:30:00.000Z'));
+
+      expect(isValidDateRange('2027')).toBe(true);
+      expect(isValidDateRange('2028')).toBe(false);
+    });
+
+    it('Refuses an unknown date range', () => {
+      expect(isValidDateRange('2w')).toBe(false);
+      expect(isValidDateRange('')).toBe(false);
+      expect(isValidDateRange('20245')).toBe(false);
     });
   });
 

@@ -1,7 +1,7 @@
-import { DATE_RANGE_PATTERN } from '@ghostfolio/api/dtos/date-range-filter.dto';
 import { isValidEncodedDataSource } from '@ghostfolio/api/helper/data-source.helper';
 import {
   COMMENT_MAXIMUM_LENGTH,
+  DATE_RANGE_PATTERN,
   DATE_RANGES,
   DEFAULT_DATE_RANGE,
   MCP_MAX_ACCOUNTS,
@@ -13,7 +13,8 @@ import {
 import {
   isValidAccountBalanceDate,
   isValidCurrencyCode,
-  isValidDateAfter1970
+  isValidDateAfter1970,
+  isValidDateRange
 } from '@ghostfolio/common/helper';
 
 import { AssetClass, DataSource, Type as ActivityType } from '@prisma/client';
@@ -32,6 +33,13 @@ const DATA_SOURCE_PARAMETER = z
     { error: DATA_SOURCE_PARAMETER_ERROR }
   )
   .describe('The data source of the asset profile');
+
+const RANGE_PARAMETER = z
+  .string()
+  .regex(DATE_RANGE_PATTERN, { abort: true })
+  .refine(isValidDateRange, {
+    error: 'The date range must not be in the future'
+  });
 
 const SYMBOL_PARAMETER = z
   .string()
@@ -78,15 +86,11 @@ export const GET_ACTIVITIES_PARAMETERS = z.object({
   holding: HOLDING_PARAMETER.optional().describe(
     'The asset profile of the activities to get'
   ),
-  range: z
-    .string()
-    .regex(DATE_RANGE_PATTERN)
-    .optional()
-    .describe(
-      `The date range of the activities to get, either ${DATE_RANGES.join(
-        ', '
-      )} or a calendar year like 2024`
-    ),
+  range: RANGE_PARAMETER.optional().describe(
+    `The date range of the activities to get, either ${DATE_RANGES.join(
+      ', '
+    )} or a calendar year like 2024`
+  ),
   skip: z
     .number()
     .int()
@@ -119,15 +123,11 @@ export const GET_PERFORMANCE_PARAMETERS = z.object({
   holding: HOLDING_PARAMETER.optional().describe(
     'The asset profile of the performance'
   ),
-  range: z
-    .string()
-    .regex(DATE_RANGE_PATTERN)
-    .default(DEFAULT_DATE_RANGE)
-    .describe(
-      `The date range of the performance, either ${DATE_RANGES.join(
-        ', '
-      )} or a calendar year like 2024`
-    )
+  range: RANGE_PARAMETER.default(DEFAULT_DATE_RANGE).describe(
+    `The date range of the performance, either ${DATE_RANGES.join(
+      ', '
+    )} or a calendar year like 2024`
+  )
 });
 
 export const IMPORT_ACTIVITIES_PARAMETERS = z.object({
