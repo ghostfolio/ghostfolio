@@ -45,6 +45,7 @@ import {
 import { get, isNil, isString } from 'lodash-es';
 
 import {
+  DATE_RANGE_PATTERN,
   DEFAULT_CURRENCY,
   DEFAULT_LOCALE,
   DERIVED_CURRENCIES,
@@ -760,6 +761,25 @@ export function isValidDateAfter1970(aDate: Date | string) {
   const date = isString(aDate) ? parseISO(aDate, { in: utc }) : aDate;
 
   return isValid(date) && isAfter(date, new Date(0));
+}
+
+/**
+ * A named date range or a calendar year like '2024', '2023', '2022', etc. A
+ * calendar year in the future is refused, except for the next one on the last
+ * day of the year, as it has already started in a time zone ahead of the
+ * instance.
+ */
+export function isValidDateRange(aDateRange: string) {
+  if (!DATE_RANGE_PATTERN.test(aDateRange)) {
+    return false;
+  }
+
+  const calendarYear = Number(aDateRange);
+
+  return (
+    Number.isNaN(calendarYear) ||
+    calendarYear <= getStartOfUtcDateOfTomorrow().getUTCFullYear()
+  );
 }
 
 /**

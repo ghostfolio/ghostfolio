@@ -89,6 +89,10 @@ export const DATE_RANGES = [
   'ytd'
 ] as const;
 
+export const DATE_RANGE_PATTERN = new RegExp(
+  `^(${DATE_RANGES.join('|')}|\\d{4})$`
+);
+
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE =
   'PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE';
 export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH = 1;

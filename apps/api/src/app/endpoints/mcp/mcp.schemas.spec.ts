@@ -109,6 +109,12 @@ describe('GET_ACTIVITIES_PARAMETERS', () => {
       }).success
     ).toBe(false);
   });
+
+  it('Refuses a calendar year in the future', () => {
+    expect(GET_ACTIVITIES_PARAMETERS.safeParse({ range: '9999' }).success).toBe(
+      false
+    );
+  });
 });
 
 describe('GET_PERFORMANCE_PARAMETERS', () => {
@@ -125,6 +131,14 @@ describe('GET_PERFORMANCE_PARAMETERS', () => {
   it('Refuses an unknown date range', () => {
     expect(GET_PERFORMANCE_PARAMETERS.safeParse({ range: '2w' }).success).toBe(
       false
+    );
+  });
+
+  it('Refuses a calendar year in the future', () => {
+    const { error } = GET_PERFORMANCE_PARAMETERS.safeParse({ range: '9999' });
+
+    expect(error.issues[0].message).toBe(
+      'The date range must not be in the future'
     );
   });
 
