@@ -53,32 +53,13 @@ export class SubscriptionService {
     priceId: string;
     user: UserWithSettings;
   }): Promise<CreateStripeCheckoutSessionResponse> {
-    if (!priceId) {
+    const subscriptionOffer = user.subscription?.offer;
+
+    if (!priceId || subscriptionOffer?.priceId !== priceId) {
       throw new BadRequestException('Invalid priceId');
     }
 
-    const subscriptionOffers: {
-      [offer in SubscriptionOfferKey]: SubscriptionOffer;
-    } =
-      (await this.propertyService.getByKey<any>(PROPERTY_STRIPE_CONFIG)) ?? {};
-
-    const subscriptionOffersForPrice = Object.values(subscriptionOffers).filter(
-      (subscriptionOffer) => {
-        return subscriptionOffer.priceId === priceId;
-      }
-    );
-
-    if (subscriptionOffersForPrice.length === 0) {
-      throw new BadRequestException('Invalid priceId');
-    }
-
-    const subscriptionOffer = subscriptionOffersForPrice.find(
-      (subscriptionOffer) => {
-        return subscriptionOffer.couponId === couponId;
-      }
-    );
-
-    if (!subscriptionOffer) {
+    if (subscriptionOffer.couponId !== couponId) {
       throw new BadRequestException('Invalid couponId');
     }
 
