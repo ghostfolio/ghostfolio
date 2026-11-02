@@ -53,6 +53,10 @@ export class SubscriptionService {
     priceId: string;
     user: UserWithSettings;
   }): Promise<CreateStripeCheckoutSessionResponse> {
+    if (!priceId) {
+      throw new BadRequestException('Invalid priceId');
+    }
+
     const subscriptionOffers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
