@@ -1,0 +1,25 @@
+{
+  "$schema": "https://flisk.sh/schema.service.json",
+  "schemaVersion": 1,
+  "appName": "redis",
+  "appType": "bring-your-own",
+  "image": "docker.io/library/redis:8-alpine",
+  "port": 6379,
+  "exposeViaProxy": false,
+  "env": { "REDIS_PASSWORD": "${REDIS_PASSWORD}" },
+  "container": {
+    "user": "999:1000",
+    "command": [
+      "/bin/sh",
+      "-c",
+      "redis-server --requirepass \"$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}\""
+    ]
+  },
+  "healthCheck": {
+    "command": [
+      "sh",
+      "-c",
+      "redis-cli --pass \"$REDIS_PASSWORD\" ping | grep PONG"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://flisk.sh/schema.service.json",
+  "schemaVersion": 1,
+  "appName": "postgres",
+  "appType": "bring-your-own",
+  "image": "docker.io/library/postgres:15-alpine",
+  "port": 5432,
+  "exposeViaProxy": false,
+  "env": {
+    "POSTGRES_DB": "${POSTGRES_DB}",
+    "POSTGRES_USER": "${POSTGRES_USER}",
+    "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD}"
+  },
+  "healthCheck": {
+    "command": [
+      "sh",
+      "-c",
+      "pg_isready -d \"$POSTGRES_DB\" -U \"$POSTGRES_USER\""
+    ]
+  },
+  "volumes": [
+    {
+      "source": "postgres",
+      "target": "/var/lib/postgresql/data",
+      "name": "ghostfolio_dev_postgres"
+    }
+  ]
+}
