@@ -178,7 +178,7 @@
             <mat-card-content class="d-flex flex-column h-100">
               @if (label) {
                 <div class="badge-container position-absolute text-end">
-                  <span class="badge bg-warning m-1 text-dark">{{
+                  <span class="badge gf-promotion-badge m-1 text-dark">{{
                     label
                   }}</span>
                 </div>
@@ -300,7 +300,9 @@
               }
               @if (durationExtension) {
                 <div class="mt-3">
-                  <div class="badge bg-warning fw-normal p-3 text-dark w-100">
+                  <div
+                    class="badge fw-normal gf-promotion-badge p-3 text-dark w-100"
+                  >
                     <strong i18n>Limited Offer!</strong>
                     <ng-container>&nbsp;</ng-container>
                     <ng-container i18n
