@@ -111,8 +111,12 @@ export class SubscriptionService {
       stripeCheckoutSessionCreateParams
     );
 
+    if (!session.url) {
+      throw new Error(`Stripe Checkout Session '${session.id}' is missing url`);
+    }
+
     return {
-      sessionUrl: session.url ?? ''
+      sessionUrl: session.url
     };
   }
 

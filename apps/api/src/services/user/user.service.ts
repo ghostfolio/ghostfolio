@@ -220,18 +220,11 @@ export class UserService {
           scopes: getScopesOfAccess(accessItem)
         };
       }),
-      accounts: accounts
-        .map((account) => {
-          return {
-            ...account,
-            platform: account.platform ?? undefined
-          };
-        })
-        .sort((a, b) => {
-          return (a.name ?? '')
-            .toLowerCase()
-            .localeCompare((b.name ?? '').toLowerCase());
-        }),
+      accounts: accounts.sort((a, b) => {
+        return (a.name ?? '')
+          .toLowerCase()
+          .localeCompare((b.name ?? '').toLowerCase());
+      }),
       permissions: permissions ?? [],
       settings: {
         ...resolvedUserSettings,
