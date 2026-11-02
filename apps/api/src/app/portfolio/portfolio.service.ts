@@ -1236,8 +1236,8 @@ export class PortfolioService {
       });
 
     // An expired portfolio snapshot can end before the date range until its
-    // computation in the background is complete. In this case, there is no
-    // performance in the date range, but the latest values are still available.
+    // computation in the background is complete. In this case, the performance
+    // in the date range is not known, but the latest values are available.
     const latestHistoricalDataItem = historicalData.at(-1);
 
     const latestValues =
