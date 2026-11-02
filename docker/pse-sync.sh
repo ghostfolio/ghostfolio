@@ -6,7 +6,8 @@
 # "cmpy_id=" on edge.pse.com.ph); the ticker must match the asset's name in Ghostfolio.
 
 COMPANIES="AC:57 AREIT:679 CNPF:652 CNVRG:680 CREIT:691 DDMPR:681 DNL:639 FILRT:683
-JFC:86 MBT:128 MER:118 MONDE:682 OGP:704 PGOLD:629 RCR:684 SGP:166 SMC:154 URC:124"
+JFC:86 MBT:128 MER:118 MONDE:682 OGP:704 PGOLD:629 RCR:684 SGP:166 SMC:154 URC:124
+AEV:16 ALI:180 LTG:12 MREIT:685 RLC:195"
 
 # Every update covers this date up to today. A ticker fails, and nothing is written
 # for it, if its data doesn't reach back to LATEST_FIRST_DAY (allows for market holidays).
