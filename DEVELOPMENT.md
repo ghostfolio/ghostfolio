@@ -18,6 +18,16 @@
 1. Open https://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 
+### Optional: start everything with one command
+
+Instead of the setup steps 2 to 4 above, you can start [PostgreSQL](https://www.postgresql.org), [Redis](https://redis.io), the database setup, the server and the client with [Flisk](https://github.com/flisk-sh/flisk):
+
+```bash
+npx @flisk-sh/flisk up
+```
+
+It starts PostgreSQL and Redis with Docker (same images and the same `ghostfolio_dev_postgres` volume as `docker/docker-compose.dev.yml`), runs `npm run database:setup`, then `npm run start:server` and `npm run start:client` with live reload, in that order, in one terminal. Press `Ctrl+C` to stop everything. The settings live in the `service.json` files next to each part (`apps/api`, `apps/client`, `docker/flisk`). This is optional: the steps above keep working as before.
+
 ### Start Server
 
 #### Debug

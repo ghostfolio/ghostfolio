@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "ghostfolio",
+    "version": "1.0.0"
+  },
+  "phases": {
+    "pre_alpha": {
+      "name": "Pre-Alpha",
+      "description": "Core infrastructure and MVP services",
+      "enabledStacks": ["proxy", "database-management"]
+    },
+    "alpha": {
+      "name": "Alpha",
+      "description": "Essential business services",
+      "enabledStacks": []
+    },
+    "beta": {
+      "name": "Beta",
+      "description": "Extended features",
+      "enabledStacks": []
+    },
+    "out_of_scope": {
+      "name": "Out of Scope",
+      "description": "Future releases",
+      "enabledStacks": []
+    }
+  },
+  "optional_infra": {
+    "monitoring": false,
+    "elk": false,
+    "debezium": false,
+    "golden_image": true,
+    "verdaccio": false
+  },
+  "discovery": {
+    "paths": ["services/*/*"]
+  },
+  "overrides": {}
+}

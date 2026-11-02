@@ -1,0 +1,10 @@
+{
+  "$schema": "https://flisk.sh/schema.service.json",
+  "schemaVersion": 1,
+  "appName": "client",
+  "appType": "frontend",
+  "command": "cd ../.. && npm run start:client",
+  "port": 4200,
+  "healthCheck": { "port": 4200 },
+  "dependsOn": ["api"]
+}
