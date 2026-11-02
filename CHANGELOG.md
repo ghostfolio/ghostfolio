@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the content of the pricing page
+- Improved the language localization for German (`de`)
 - Upgraded `stripe` from version `23.0.0` to `23.0.1`
 
 ### Fixed
