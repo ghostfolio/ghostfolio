@@ -1,4 +1,5 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { MAX_PLAN_MAIL_HREF } from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
@@ -64,7 +65,9 @@ export class GfPricingPageComponent implements OnInit {
   );
 
   protected label: string | undefined;
+  protected readonly maxPlanMailHref = MAX_PLAN_MAIL_HREF;
   protected price: number | undefined;
+  protected priceMax: number | undefined;
 
   protected readonly professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
@@ -92,8 +95,12 @@ export class GfPricingPageComponent implements OnInit {
   }
 
   public ngOnInit() {
-    const { baseCurrency, globalPermissions, subscriptionOffer } =
-      this.dataService.fetchInfo();
+    const {
+      baseCurrency,
+      globalPermissions,
+      subscriptionOffer,
+      subscriptionOfferMax
+    } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
     this.coupon = subscriptionOffer?.coupon;
@@ -106,6 +113,7 @@ export class GfPricingPageComponent implements OnInit {
 
     this.label = subscriptionOffer?.label;
     this.price = subscriptionOffer?.price;
+    this.priceMax = subscriptionOfferMax?.price;
 
     this.userService.stateChanged
       .pipe(takeUntilDestroyed(this.destroyRef))

@@ -1,5 +1,6 @@
 export type SubscriptionOfferKey =
   | 'default'
+  | 'max'
   | 'renewal'
   | 'renewal-early-bird-2023'
   | 'renewal-early-bird-2024'
