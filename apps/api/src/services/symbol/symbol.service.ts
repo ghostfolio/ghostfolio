@@ -50,7 +50,7 @@ export class SymbolService {
         symbol: dataGatheringItem.symbol
       });
 
-      marketPrice = latestMarketData?.marketPrice;
+      marketPrice = latestMarketData?.marketPrice as number;
     } else {
       const quotes = await this.dataProviderService.getQuotes({
         items: [dataGatheringItem]
