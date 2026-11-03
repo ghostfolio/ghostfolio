@@ -53,11 +53,14 @@ export class ApiKeyStrategy extends PassportStrategy(
   private async validateApiKey(apiKey: string) {
     if (apiKey) {
       try {
-        const { id } = await this.apiKeyService.getUserByApiKey(apiKey);
-        const user = await this.userService.user({ id });
+        const userOfApiKey = await this.apiKeyService.getUserByApiKey(apiKey);
 
-        if (user) {
-          return user;
+        if (userOfApiKey) {
+          const user = await this.userService.user({ id: userOfApiKey.id });
+
+          if (user) {
+            return user;
+          }
         }
       } catch {}
     }
