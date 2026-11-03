@@ -306,6 +306,7 @@ export class UserService {
     const {
       _count,
       accessToken,
+      accessTokenRotatedAt,
       accounts,
       analytics,
       authChallenge,
@@ -323,6 +324,7 @@ export class UserService {
 
     const user: UserWithSettings = {
       accessToken,
+      accessTokenRotatedAt,
       accounts,
       activitiesCount,
       authChallenge,
@@ -709,7 +711,10 @@ export class UserService {
     });
 
     await this.prismaService.user.update({
-      data: { accessToken: hashedAccessToken },
+      data: {
+        accessToken: hashedAccessToken,
+        accessTokenRotatedAt: new Date()
+      },
       where: { id: userId }
     });
 

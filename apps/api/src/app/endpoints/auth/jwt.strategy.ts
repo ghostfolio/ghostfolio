@@ -12,7 +12,9 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { RequestClient } from '@prisma/client';
 import * as countriesAndTimezones from 'countries-and-timezones';
+import { getUnixTime } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { isNumber } from 'lodash-es';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
@@ -28,12 +30,25 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  public async validate(request: Request, { id }: { id: string }) {
+  public async validate(
+    request: Request,
+    { iat, id }: { iat: number; id: string }
+  ) {
     try {
       const timezone = request.headers[HEADER_KEY_TIMEZONE.toLowerCase()];
       const user = await this.userService.user({ id });
 
       if (user) {
+        if (
+          user.accessTokenRotatedAt &&
+          (!isNumber(iat) || iat <= getUnixTime(user.accessTokenRotatedAt))
+        ) {
+          throw new HttpException(
+            getReasonPhrase(StatusCodes.UNAUTHORIZED),
+            StatusCodes.UNAUTHORIZED
+          );
+        }
+
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
           if (hasRole(user, 'INACTIVE')) {
             throw new HttpException(
