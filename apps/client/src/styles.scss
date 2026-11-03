@@ -346,6 +346,18 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
+.gf-button-large {
+  @include mat.button-overrides(
+    (
+      filled-container-height: 3rem,
+      outlined-container-height: 3rem,
+      protected-container-height: 3rem,
+      text-container-height: 3rem,
+      tonal-container-height: 3rem
+    )
+  );
+}
+
 .gf-mobile-dialog {
   .mat-mdc-dialog-surface {
     padding-bottom: max(0px, env(safe-area-inset-bottom) - 1dvh);
