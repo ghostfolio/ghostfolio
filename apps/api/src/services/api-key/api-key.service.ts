@@ -32,12 +32,12 @@ export class ApiKeyService {
   public async getUserByApiKey(apiKey: string) {
     const hashedKey = this.hashApiKey(apiKey);
 
-    const apiKeyEntity = await this.prismaService.apiKey.findUnique({
+    const apiKeyFromDatabase = await this.prismaService.apiKey.findUnique({
       include: { user: true },
       where: { hashedKey }
     });
 
-    return apiKeyEntity?.user;
+    return apiKeyFromDatabase?.user;
   }
 
   public hashApiKey(apiKey: string): string {
