@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the content of the pricing page
 
+### Fixed
+
+- Fixed the flickering of the navigation items in the header for logged-in users
+
 ## 3.97.0 - 2026-11-02
 
 ### Changed
