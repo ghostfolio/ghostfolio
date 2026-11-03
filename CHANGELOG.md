@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Changed the viewport to resize the content when the on-screen keyboard opens on _Android_ (`interactive-widget=resizes-content`)
+
 ### Fixed
 
 - Fixed the height of the dialogs on mobile
