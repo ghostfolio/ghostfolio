@@ -11,8 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `accessTokenRotatedAt` to the `User` database schema
 
+### Changed
+
+- Improved the content of the pricing page
+
 ### Fixed
 
+- Fixed the flickering of the navigation items in the header for logged-in users
 - Fixed the invalidation of existing sessions when generating a new _Security Token_
 
 ## 3.97.0 - 2026-11-02
