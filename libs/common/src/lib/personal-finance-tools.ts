@@ -1788,6 +1788,20 @@ export const personalFinanceTools: Product[] = (
       updatedAt: '2025-04-17'
     },
     {
+      categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
+      founded: 2025,
+      hasSelfHostingAbility: false,
+      key: 'greenline',
+      languages: ['English'],
+      name: 'Greenline',
+      origin: 'CA',
+      platforms: ['IOS', 'WEB'],
+      regions: ['CA'],
+      slogan: 'See everything you own. In one place.',
+      updatedAt: '2026-11-02',
+      url: 'https://usegreenline.com'
+    },
+    {
       categories: ['INVESTMENT_RESEARCH'],
       key: 'gurufocus',
       name: 'GuruFocus',
@@ -3233,6 +3247,14 @@ export const personalFinanceTools: Product[] = (
       slogan: 'Portfolio Management and Reporting Software',
       updatedAt: '2026-09-23',
       url: 'https://www.assetbook.com'
+    },
+    {
+      categories: ['ETF_TRACKING', 'STOCK_TRACKING'],
+      key: 'pure-benchmarks',
+      name: 'Pure Benchmarks',
+      slogan: 'See how your portfolio is actually doing.',
+      updatedAt: '2026-11-02',
+      url: 'https://www.purebenchmarks.com'
     },
     {
       categories: [
