@@ -201,7 +201,7 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
   }
 
   public use(request: Request, response: Response, next: NextFunction) {
-    const path = request.originalUrl.replace(/\/$/, '');
+    const path = request.originalUrl.split('?')[0].replace(/\/$/, '');
     let languageCode = path.substr(1, 2);
 
     if (

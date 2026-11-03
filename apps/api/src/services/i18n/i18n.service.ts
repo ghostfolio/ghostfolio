@@ -30,13 +30,13 @@ export class I18nService implements OnModuleInit {
       const match = link.match(I18nService.TRANSLATION_TAGGED_MESSAGE_REGEX);
 
       const segment = match
-        ? (this.getTranslation({
+        ? this.getTranslation({
             languageCode,
             id: match.groups.id
-          }) ?? match.groups.message)
+          }) || match.groups.message
         : link;
 
-      return segment.replace(/^\/+|\/+$/, '');
+      return segment.replace(/^\/+|\/+$/g, '');
     });
   }
 
