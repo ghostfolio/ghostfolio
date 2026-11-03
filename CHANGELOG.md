@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the content of the pricing page
 - Disabled the _Sign in with fingerprint_ on all devices when generating a new _Security Token_
 
 ## 3.97.0 - 2026-11-02
