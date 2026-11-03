@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the content of the pricing page
 - Upgraded `ngx-skeleton-loader` from version `13.0.0` to `14.0.0`
+
+### Fixed
+
+- Fixed the flickering of the navigation items in the header for logged-in users
 
 ## 3.97.0 - 2026-11-02
 
