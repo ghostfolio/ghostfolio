@@ -337,7 +337,7 @@ export class ExchangeRateDataService {
                 date: aDate,
                 symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
               })
-            )?.marketPrice;
+            )?.marketPrice as number;
           }
         } catch {}
 
@@ -351,7 +351,7 @@ export class ExchangeRateDataService {
                 date: aDate,
                 symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
               })
-            )?.marketPrice;
+            )?.marketPrice as number;
           }
         } catch {}
 

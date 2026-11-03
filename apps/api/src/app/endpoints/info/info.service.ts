@@ -49,7 +49,7 @@ export class InfoService {
     const info: Partial<InfoItem> = {};
     let isReadOnlyMode: boolean | undefined;
     let latestFearAndGreedStocksMarketDataPromise:
-      Promise<MarketData> | undefined;
+      Promise<MarketData | null> | undefined;
 
     const globalPermissions: string[] = [];
 
@@ -109,14 +109,16 @@ export class InfoService {
       isUserSignupEnabled,
       latestFearAndGreedStocksMarketData,
       statistics,
-      subscriptionOffer
+      subscriptionOffer,
+      subscriptionOfferMax
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
       this.propertyService.isUserSignupEnabled(),
       latestFearAndGreedStocksMarketDataPromise,
       this.getStatistics(),
-      this.subscriptionService.getSubscriptionOffer({ key: 'default' })
+      this.subscriptionService.getSubscriptionOffer({ key: 'default' }),
+      this.subscriptionService.getSubscriptionOffer({ key: 'max' })
     ]);
 
     if (isUserSignupEnabled) {
@@ -131,6 +133,7 @@ export class InfoService {
       isReadOnlyMode,
       statistics,
       subscriptionOffer,
+      subscriptionOfferMax,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies(),
       fearAndGreedStocksMarketPrice:

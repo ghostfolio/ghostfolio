@@ -42,7 +42,7 @@
         <target state="translated">bitte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">311</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8650499415827640724" datatype="html">
@@ -846,7 +846,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">370</context>
+          <context context-type="linenumber">343</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
@@ -1022,7 +1022,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">336</context>
+          <context context-type="linenumber">304</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
@@ -1409,6 +1409,14 @@
           <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4441947260430469890" datatype="html">
+        <source>Fully managed cloud offering, with</source>
+        <target state="translated">Vollständig verwaltetes Cloud-Angebot, mit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="4819099731531004979" datatype="html">
         <source>Coupon code has been redeemed</source>
         <target state="translated">Gutscheincode wurde eingelöst</target>
@@ -1434,7 +1442,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">276</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">254</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8589730128931685735" datatype="html">
@@ -1842,7 +1854,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/2024/11/black-weeks-2024/black-weeks-2024-page.html</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/2025/09/hacktoberfest-2025/hacktoberfest-2025-page.html</context>
@@ -1850,11 +1862,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/2025/11/black-weeks-2025/black-weeks-2025-page.html</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">154</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/2026/04/ghostfolio-3/ghostfolio-3-page.html</context>
           <context context-type="linenumber">269</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2026/11/black-weeks-2026/black-weeks-2026-page.html</context>
+          <context context-type="linenumber">189</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/blog-page.html</context>
@@ -2670,7 +2686,7 @@
         <target state="translated">kontaktiere uns</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">314</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1533391340482659699" datatype="html">
@@ -3546,7 +3562,7 @@
         <target state="translated">Suchst du nach einem Studentenrabatt?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">352</context>
+          <context context-type="linenumber">321</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7765499580020598783" datatype="html">
@@ -3810,7 +3826,7 @@
         <target state="translated">Alles von <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Basic<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, plus</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8050244774979733855" datatype="html">
@@ -3870,11 +3886,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">377</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5777928097698511040" datatype="html">
@@ -3886,11 +3902,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">218</context>
+          <context context-type="linenumber">385</context>
         </context-group>
       </trans-unit>
       <trans-unit id="685453282455108461" datatype="html">
@@ -3902,11 +3918,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">389</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4809229280245558999" datatype="html">
@@ -3918,11 +3934,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">163</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">409</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4563965495368336177" datatype="html">
@@ -3974,7 +3990,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">293</context>
+          <context context-type="linenumber">202</context>
         </context-group>
       </trans-unit>
       <trans-unit id="195913158506780337" datatype="html">
@@ -3982,7 +3998,7 @@
         <target state="translated">Für technisch versierte Anleger, die Ghostfolio auf der eigenen Infrastruktur betreiben möchten.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">357</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2640607428459636406" datatype="html">
@@ -3998,11 +4014,11 @@
         <target state="translated">Unlimitierte Transaktionen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">42</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">365</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5488101610658427424" datatype="html">
@@ -4010,11 +4026,11 @@
         <target state="translated">Unlimitierte Accounts</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">369</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5490568627775279769" datatype="html">
@@ -4022,11 +4038,19 @@
         <target state="translated">Portfolio Performance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">373</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8631624965832676744" datatype="html">
+        <source>Everything in <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Premium<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, plus</source>
+        <target state="translated">Alles von <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Premium<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, plus</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">236</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8635198392077595702" datatype="html">
@@ -4034,7 +4058,7 @@
         <target state="translated">Selbst gehostet, manuelles Update.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">418</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5891064527381218201" datatype="html">
@@ -4042,11 +4066,11 @@
         <target state="translated">Kostenlos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">420</context>
         </context-group>
       </trans-unit>
       <trans-unit id="420388803578883766" datatype="html">
@@ -4054,19 +4078,7 @@
         <target state="translated">Für Einsteiger, die gerade mit dem Börsenhandel beginnen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">123</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4362270378699380187" datatype="html">
-        <source>Fully managed Ghostfolio cloud offering.</source>
-        <target state="translated">Vollständig verwaltetes Ghostfolio Cloud-Angebot.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">154</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">262</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="332047587746771816" datatype="html">
@@ -4074,7 +4086,7 @@
         <target state="translated">Für ambitionierte Anleger, die den vollständigen Überblick über ihr Anlagevermögen benötigen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3323137014509063489" datatype="html">
@@ -4094,7 +4106,15 @@
         <target state="translated">Einmalige Zahlung, keine automatische Erneuerung.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">297</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7486561293393436733" datatype="html">
+        <source>Please find the source code and further instructions on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <target state="translated">Den Quellcode und weitere Anleitungen findest du auf <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">423</context>
         </context-group>
       </trans-unit>
       <trans-unit id="749104632257292438" datatype="html">
@@ -4122,7 +4142,7 @@
         <target state="translated">Es ist kostenlos.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">372</context>
+          <context context-type="linenumber">346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5012084291992448490" datatype="html">
@@ -4150,11 +4170,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">124</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">381</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6037201184636207208" datatype="html">
@@ -4170,11 +4190,11 @@
         <target state="translated">Datenimport und -export</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">397</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1631940846690193897" datatype="html">
@@ -4190,7 +4210,7 @@
         <target state="translated">Community Support</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">414</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6463889888921382396" datatype="html">
@@ -4198,7 +4218,7 @@
         <target state="translated">E-Mail und Chat Support</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">258</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3298117765569632011" datatype="html">
@@ -4270,7 +4290,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">140</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8130557161756365658" datatype="html">
@@ -4294,7 +4314,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6962217007874959362" datatype="html">
@@ -5405,6 +5425,14 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="512051640366462908" datatype="html">
+        <source>For investors who manage several portfolios.</source>
+        <target state="translated">Für Anleger, die mehrere Portfolios verwalten.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">232</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="5134951682994822188" datatype="html">
         <source>Could not parse scraper configuration</source>
         <target state="translated">Die Scraper Konfiguration konnte nicht geparsed werden</target>
@@ -5423,14 +5451,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/blog-page.html</context>
           <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8362400188600186131" datatype="html">
-        <source>If you prefer to run Ghostfolio on your own infrastructure, please find the source code and further instructions on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
-        <target state="translated">Wenn du Ghostfolio lieber auf deiner eigenen Infrastruktur betreiben möchtest, findest du den Quellcode und weitere Informationen auf <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="387656060598558647" datatype="html">
@@ -5962,6 +5982,14 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="7316283100413796260" datatype="html">
+        <source>Up to 5 User Accounts</source>
+        <target state="translated">Bis zu 5 Benutzerkonten</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">242</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="2315631726271602419" datatype="html">
         <source>Let’s dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements.</source>
         <target state="translated">Wir möchten uns in der untenstehenden Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> Vergleichstabelle ein detailliertes Bild davon machen, wie Ghostfolio im Vergleich zu <x id="INTERPOLATION" equiv-text="{{ product2().name }}"/> positioniert ist. Dabei werden wir verschiedene Aspekte wie Funktionen, Datenschutz, Preise und weiteres untersuchen, damit du eine gut informierte Entscheidung für deine persönlichen Anforderungen treffen kannst.</target>
@@ -6056,7 +6084,7 @@
         <target state="translated">mit deiner Universitäts-E-Mail-Adresse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">358</context>
+          <context context-type="linenumber">330</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7028409640523782603" datatype="html">
@@ -6077,6 +6105,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="707929791822981619" datatype="html">
+        <source>Centralized User Management</source>
+        <target state="translated">Zentrale Benutzerverwaltung</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">246</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6075566839446502414" datatype="html">
@@ -6252,7 +6288,7 @@
         <target state="translated">Fordere ihn an</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">354</context>
+          <context context-type="linenumber">323</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5278627882107105833" datatype="html">
@@ -6696,7 +6732,7 @@
         <target state="translated">hier</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">357</context>
+          <context context-type="linenumber">327</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1600023202562292052" datatype="html">
@@ -7632,6 +7668,14 @@
           <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="2885373924356772303" datatype="html">
+        <source>Get Max</source>
+        <target state="translated">Max abschliessen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">267</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="8375528527939577247" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="@if ( assetProfile?.currency &amp;&amp; data.baseCurrency !== assetProfile?.currency ) {"/> Change with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Change <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
         <target state="translated"><x id="START_BLOCK_IF" equiv-text="@if ( assetProfile?.currency &amp;&amp; data.baseCurrency !== assetProfile?.currency ) {"/> Änderung mit Währungseffekt <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Änderung <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
@@ -7645,7 +7689,7 @@
         <target state="translated">Wenn du die Eröffnung eines Kontos planst bei</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">322</context>
+          <context context-type="linenumber">289</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6608617124920241143" datatype="html">
@@ -7777,7 +7821,7 @@
         <target state="translated">um unseren Empfehlungslink zu verwenden und eine Ghostfolio Premium-Mitgliedschaft für ein Jahr zu erhalten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">318</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7530176451725943586" datatype="html">
@@ -8596,7 +8640,7 @@
         <target state="translated">inklusive API-Zugriff für</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">245</context>
+          <context context-type="linenumber">155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5201942929131534075" datatype="html">
@@ -8943,7 +8987,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">304</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2415916442984615985" datatype="html">
@@ -8955,7 +8999,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">218</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3946393485152934212" datatype="html">
