@@ -575,7 +575,8 @@ export class PortfolioController {
           'grossPerformanceWithCurrencyEffect',
           'netPerformance',
           'netPerformanceWithCurrencyEffect',
-          'totalInvestment'
+          'totalInvestment',
+          'totalInvestmentValueWithCurrencyEffect'
         ]
       );
     }

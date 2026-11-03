@@ -53,6 +53,10 @@ export class SubscriptionService {
     priceId: string;
     user: UserWithSettings;
   }): Promise<CreateStripeCheckoutSessionResponse> {
+    if (!priceId) {
+      throw new BadRequestException('Invalid priceId');
+    }
+
     const subscriptionOffers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
@@ -82,7 +86,7 @@ export class SubscriptionService {
       {
         allowed_payment_method_types: ['card'],
         cancel_url: `${this.configurationService.get('ROOT_URL')}/${
-          user.settings.settings.language
+          user.settings?.settings?.language ?? DEFAULT_LANGUAGE_CODE
         }/account`,
         client_reference_id: user.id,
         line_items: [
@@ -110,6 +114,10 @@ export class SubscriptionService {
     const session = await this.stripe.checkout.sessions.create(
       stripeCheckoutSessionCreateParams
     );
+
+    if (!session.url) {
+      throw new Error(`Stripe Checkout Session '${session.id}' is missing url`);
+    }
 
     return {
       sessionUrl: session.url
@@ -166,10 +174,16 @@ export class SubscriptionService {
 
       const durationExtension = subscriptionOffer?.durationExtension;
 
+      if (!session.client_reference_id) {
+        throw new Error(
+          `Stripe Checkout Session '${aCheckoutSessionId}' is missing client_reference_id`
+        );
+      }
+
       try {
         await this.createSubscription({
           durationExtension,
-          price: session.amount_total / 100,
+          price: (session.amount_total ?? 0) / 100,
           stripeCheckoutSessionId: session.id,
           userId: session.client_reference_id
         });
@@ -210,11 +224,11 @@ export class SubscriptionService {
 
       let offerKey: SubscriptionOfferKey = price ? 'renewal' : 'default';
 
-      if (isBefore(createdAt, parseDate('2023-01-01'))) {
+      if (createdAt && isBefore(createdAt, parseDate('2023-01-01')!)) {
         offerKey = 'renewal-early-bird-2023';
-      } else if (isBefore(createdAt, parseDate('2024-01-01'))) {
+      } else if (createdAt && isBefore(createdAt, parseDate('2024-01-01')!)) {
         offerKey = 'renewal-early-bird-2024';
-      } else if (isBefore(createdAt, parseDate('2025-12-01'))) {
+      } else if (createdAt && isBefore(createdAt, parseDate('2025-12-01')!)) {
         offerKey = 'renewal-early-bird-2025';
       }
 
@@ -223,9 +237,9 @@ export class SubscriptionService {
       });
 
       return {
-        offer,
         subscribedAt,
         expiresAt: isBefore(new Date(), expiresAt) ? expiresAt : undefined,
+        offer: offer as SubscriptionOffer,
         type: isBefore(new Date(), expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic
@@ -236,7 +250,7 @@ export class SubscriptionService {
       });
 
       return {
-        offer,
+        offer: offer as SubscriptionOffer,
         type: SubscriptionType.Basic
       };
     }
@@ -246,7 +260,7 @@ export class SubscriptionService {
     key
   }: {
     key: SubscriptionOfferKey;
-  }): Promise<SubscriptionOffer> {
+  }): Promise<SubscriptionOffer | undefined> {
     if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       return undefined;
     }
@@ -263,7 +277,7 @@ export class SubscriptionService {
   }
 
   private getStripeLocale(
-    languageCode: string
+    languageCode?: string
   ): Stripe.Checkout.SessionCreateParams.Locale {
     const unsupportedLanguageCodes: Record<
       Exclude<
@@ -282,6 +296,7 @@ export class SubscriptionService {
     };
 
     if (
+      languageCode &&
       (SUPPORTED_LANGUAGE_CODES as readonly string[]).includes(languageCode) &&
       !(languageCode in unsupportedLanguageCodes)
     ) {
