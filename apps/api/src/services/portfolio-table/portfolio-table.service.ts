@@ -699,7 +699,7 @@ export class PortfolioTableService {
 
     const performanceSection = ['## Performance', ''];
 
-    if (chart?.length) {
+    if ((chart?.length ?? 0) > 0) {
       performanceSection.push(
         await getMarkdownTable({
           columnDefinitions: this.getColumnDefinitions({

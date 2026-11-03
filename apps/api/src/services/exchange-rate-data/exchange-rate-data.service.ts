@@ -547,9 +547,7 @@ export class ExchangeRateDataService {
         select: { currency: true }
       })
     ).forEach(({ currency }) => {
-      if (currency) {
-        currencies.push(currency);
-      }
+      currencies.push(currency);
     });
 
     const customCurrencies =
