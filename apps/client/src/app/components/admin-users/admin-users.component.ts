@@ -340,6 +340,8 @@ export class GfAdminUsersComponent implements OnInit {
         userId: aUserId
       } satisfies UserDetailDialogParams,
       height: this.deviceType() === 'mobile' ? '98dvh' : '60vh',
+      panelClass:
+        this.deviceType() === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 

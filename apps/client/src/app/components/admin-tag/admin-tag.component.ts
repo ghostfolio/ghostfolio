@@ -205,6 +205,8 @@ export class GfAdminTagComponent implements OnInit {
     >(GfCreateOrUpdateTagDialogComponent, {
       data: {} satisfies CreateOrUpdateTagDialogParams,
       height: this.deviceType() === 'mobile' ? '98dvh' : undefined,
+      panelClass:
+        this.deviceType() === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -244,6 +246,8 @@ export class GfAdminTagComponent implements OnInit {
         }
       } satisfies CreateOrUpdateTagDialogParams,
       height: this.deviceType() === 'mobile' ? '98dvh' : undefined,
+      panelClass:
+        this.deviceType() === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 

@@ -152,6 +152,8 @@ export class GfAssetProfileDialogHostComponent implements OnDestroy, OnInit {
         locale: user?.settings?.locale ?? DEFAULT_LOCALE
       } satisfies AssetProfileDialogParams,
       height: this.deviceType() === 'mobile' ? '98dvh' : '80vh',
+      panelClass:
+        this.deviceType() === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 

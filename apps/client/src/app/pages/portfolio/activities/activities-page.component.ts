@@ -228,6 +228,7 @@ export class GfActivitiesPageComponent implements OnInit {
         user: this.user
       },
       height: this.deviceType === 'mobile' ? '98dvh' : undefined,
+      panelClass: this.deviceType === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -260,6 +261,7 @@ export class GfActivitiesPageComponent implements OnInit {
         user: this.user
       },
       height: this.deviceType === 'mobile' ? '98dvh' : undefined,
+      panelClass: this.deviceType === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
