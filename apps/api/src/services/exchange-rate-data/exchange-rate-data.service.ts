@@ -257,7 +257,7 @@ export class ExchangeRateDataService {
       return 0;
     }
 
-    let factor: number | undefined;
+    let factor: number;
 
     if (aFromCurrency === aToCurrency) {
       factor = 1;
@@ -337,7 +337,7 @@ export class ExchangeRateDataService {
                 date: aDate,
                 symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
               })
-            )?.marketPrice as number;
+            )?.marketPrice;
           }
         } catch {}
 
@@ -351,13 +351,13 @@ export class ExchangeRateDataService {
                 date: aDate,
                 symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
               })
-            )?.marketPrice as number;
+            )?.marketPrice;
           }
         } catch {}
 
         if (
-          marketPriceBaseCurrencyFromCurrency &&
-          marketPriceBaseCurrencyToCurrency
+          isNumber(marketPriceBaseCurrencyFromCurrency) &&
+          isNumber(marketPriceBaseCurrencyToCurrency)
         ) {
           // Calculate the opposite direction
           factor =
