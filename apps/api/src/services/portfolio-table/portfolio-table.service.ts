@@ -52,7 +52,10 @@ function getDataSourceColumnDefinition<T>(
       const dataSource = getDataSource(row);
 
       return dataSource
-        ? transformDataSourceInResponse({ configurationService, dataSource })
+        ? (transformDataSourceInResponse({
+            configurationService,
+            dataSource
+          }) ?? '')
         : '';
     },
     name: DATA_SOURCE_COLUMN_NAME
@@ -176,7 +179,7 @@ export class PortfolioTableService {
     }),
     {
       getValue: ({ assetProfile, currency }) => {
-        return currency ?? assetProfile.currency;
+        return currency ?? assetProfile.currency ?? '';
       },
       name: 'Currency'
     },
@@ -226,7 +229,7 @@ export class PortfolioTableService {
     [
       {
         getValue: ({ assetProfile }) => {
-          return assetProfile.name;
+          return assetProfile.name ?? '';
         },
         name: 'Name'
       },
@@ -249,7 +252,7 @@ export class PortfolioTableService {
       }),
       {
         getValue: ({ assetProfile }) => {
-          return assetProfile.currency;
+          return assetProfile.currency ?? '';
         },
         name: 'Currency'
       },
@@ -696,7 +699,7 @@ export class PortfolioTableService {
 
     const performanceSection = ['## Performance', ''];
 
-    if (chart?.length > 0) {
+    if (chart && chart.length > 0) {
       performanceSection.push(
         await getMarkdownTable({
           columnDefinitions: this.getColumnDefinitions({
