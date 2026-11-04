@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the content of the pricing page
 - Changed the viewport to resize the content when the on-screen keyboard opens on _Android_ (`interactive-widget=resizes-content`)
+- Improved the meta descriptions of the public pages and the blog posts
 - Disabled the biometric authentication on all devices when generating a new _Security Token_
 - Improved the language localization for German (`de`)
 
