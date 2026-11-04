@@ -2068,7 +2068,7 @@
       </trans-unit>
       <trans-unit id="8740012355706949514" datatype="html">
         <source>The CSV file has more than <x id="maxActivities" equiv-text="AI_MAX_ACTIVITIES"/> rows of activities</source>
-        <target state="translated">El archivo CSV tiene más de <x id="maxActivities" equiv-text="AI_MAX_ACTIVITIES"/> filas de actividades</target>
+        <target state="translated">El archivo CSV tiene más de <x id="maxActivities" equiv-text="AI_MAX_ACTIVITIES"/> filas de operaciones</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">445</context>
