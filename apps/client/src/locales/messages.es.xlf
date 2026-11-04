@@ -444,7 +444,7 @@
       </trans-unit>
       <trans-unit id="8529462486322984963" datatype="html">
         <source>Ghostfolio AI has processed the maximum of <x id="INTERPOLATION" equiv-text="{{ maxActivitiesOfGhostfolioAi }}"/> activities. The file can have more activities.</source>
-        <target state="translated">Ghostfolio AI ha procesado el máximo de <x id="INTERPOLATION" equiv-text="{{ maxActivitiesOfGhostfolioAi }}"/> actividades. El archivo puede tener más actividades.</target>
+        <target state="translated">Ghostfolio AI ha procesado el máximo de <x id="INTERPOLATION" equiv-text="{{ maxActivitiesOfGhostfolioAi }}"/> operaciones. El archivo puede tener más operaciones.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">158</context>
