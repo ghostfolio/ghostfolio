@@ -9005,7 +9005,7 @@
       </trans-unit>
       <trans-unit id="3946393485152934212" datatype="html">
         <source>Privacy First</source>
-        <target state="translated">Privacidad primero</target>
+        <target state="translated">Privacidad ante todo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">153</context>
