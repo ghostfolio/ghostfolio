@@ -186,7 +186,8 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
         user,
         accounts: user?.accounts
       },
-      height: deviceType === 'mobile' ? '98vh' : '80vh',
+      height: deviceType === 'mobile' ? '98dvh' : '80vh',
+      panelClass: deviceType === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
