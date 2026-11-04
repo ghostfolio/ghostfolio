@@ -121,6 +121,7 @@ function createHolding({
   assetSubClass = AssetSubClass.STOCK,
   dataSource = DataSource.YAHOO,
   isin,
+  name,
   symbol = 'AAPL'
 }: {
   allocationInPercentage?: number;
@@ -128,6 +129,7 @@ function createHolding({
   assetSubClass?: AssetSubClass;
   dataSource?: DataSource;
   isin?: string | null;
+  name?: string | null;
   symbol?: string;
 } = {}) {
   return {
@@ -140,7 +142,7 @@ function createHolding({
       isin,
       symbol,
       currency: 'CHF',
-      name: `Name of ${symbol}`
+      name: name === undefined ? `Name of ${symbol}` : name
     },
     dateOfFirstActivity: new Date('2024-01-01'),
     grossPerformance: 100,
@@ -629,6 +631,16 @@ describe('PortfolioTableService', () => {
       });
 
       expect(row).toContain('| Name of AAPL |  | AAPL |');
+    });
+
+    it('gives an empty name if the asset profile has none', async () => {
+      const result = await getHoldingsTable([createHolding({ name: null })]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.includes('| AAPL |');
+      });
+
+      expect(row).toContain('|  |  | AAPL |');
     });
 
     it('gives the translation of the asset class and of the asset sub class', async () => {

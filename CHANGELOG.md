@@ -11,10 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the content of the pricing page
 - Extended the HTML template middleware to support page-specific meta descriptions for the public pages and the blog posts
+- Disabled the biometric authentication on all devices when generating a new _Security Token_
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
 - Fixed the flickering of the navigation items in the header for logged-in users
+- Fixed the description of the `ROOT_URL` requirement for the server of the Model Context Protocol (MCP) (experimental)
 
 ## 3.97.0 - 2026-11-02
 
