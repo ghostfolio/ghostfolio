@@ -10,12 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the content of the pricing page
+- Changed the viewport to resize the content when the on-screen keyboard opens on _Android_ (`interactive-widget=resizes-content`)
 - Disabled the biometric authentication on all devices when generating a new _Security Token_
 - Improved the language localization for German (`de`)
 
 ### Fixed
 
 - Fixed the flickering of the navigation items in the header for logged-in users
+- Fixed the height of the dialogs on mobile
 - Fixed the description of the `ROOT_URL` requirement for the server of the Model Context Protocol (MCP) (experimental)
 
 ## 3.97.0 - 2026-11-02
