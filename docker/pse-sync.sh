@@ -77,8 +77,8 @@ until pg_isready --quiet -h postgres; do sleep 5; done
 while true; do
   now=$(date +%s)
   if sync_all; then
-    # Next 18:00 Manila time (10:00 UTC). Short sleeps so a laptop's sleep can't delay it much.
-    next=$((now / 86400 * 86400 + 36000))
+    # Next 18:30 Manila time (10:30 UTC). Short sleeps so a laptop's sleep can't delay it much.
+    next=$((now / 86400 * 86400 + 37800))
     [ "$next" -gt "$now" ] || next=$((next + 86400))
   else
     next=$((now + 3600))

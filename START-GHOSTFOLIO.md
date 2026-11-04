@@ -36,7 +36,7 @@ Ghostfolio fetches stock prices about once an hour, and only while it is running
 
 You don't need to do anything to update PSE prices. A fourth container, `gf-pse-sync`, starts and stops with Ghostfolio. Each time it starts, it downloads all closing prices since July 1, 2026 from PSE EDGE and updates them in Ghostfolio. This takes about a minute; reload the page to see the new prices.
 
-- If you leave Ghostfolio running, it updates again each day at 6:00 PM Manila time.
+- If you leave Ghostfolio running, it updates again each day at 6:30 PM Manila time.
 - Days when Ghostfolio was off are filled in by the next update.
 - A ticker shows `FAIL` if its prices don't reach back to July 1, 2026. Its existing prices stay as they are.
 - If an update fails, it tries again an hour later.
