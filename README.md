@@ -110,7 +110,7 @@ Find answers to commonly asked questions about self-hosting Ghostfolio in our [F
 | `REDIS_PORT`                      | `number`              |                       | The port where _Redis_ is running                                                                                                                                                                                                                                                   |
 | `REDIS_TLS`                       | `boolean` (optional)  | `false`               | Enables TLS/SSL connection to _Redis_                                                                                                                                                                                                                                               |
 | `REQUEST_TIMEOUT`                 | `number` (optional)   | `3000`                | The timeout of network requests to data providers in milliseconds                                                                                                                                                                                                                   |
-| `ROOT_URL`                        | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links.                                                                                                                                                                                   |
+| `ROOT_URL`                        | `string` (optional)   | `http://0.0.0.0:3333` | The root URL of the Ghostfolio application, used for generating callback URLs and external links. The endpoint of the _Model Context Protocol_ (MCP) accepts only requests to the host name of this URL.                                                                            |
 | `TRUST_PROXY`                     | `string` (optional)   |                       | The [trust proxy](https://expressjs.com/en/guide/behind-proxies.html) setting of _Express.js_ to determine the client IP address for rate limiting, e.g. `1` if the Ghostfolio application runs behind a single reverse proxy                                                       |
 
 #### OpenID Connect OIDC (experimental)
@@ -405,7 +405,7 @@ The _Model Context Protocol_ (MCP) server lets an AI client read your portfolio,
 ### Prerequisites
 
 - Set `ENABLE_FEATURE_MCP` to `true`
-- Set `ROOT_URL` to the public URL of your instance if a client calls the endpoint from a browser page. The host name of `ROOT_URL` is the only accepted origin.
+- Set `ROOT_URL` to the public URL of your instance. The clients must use the host name of this URL: the endpoint accepts only requests to this host name, and a request from a browser page only with this host name as origin. If a reverse proxy is in front of your instance, it must send the original `Host` header.
 - Grant an access of the type _MCP_ in _My Ghostfolio_ under _Access_ and copy its token
 
 An _MCP_ access with the _Restricted view_ permission reads the portfolio without the monetary values. Grant the _View_ permission to let the client also read the monetary values. Grant the _Restricted view and manage_ or the _View and manage_ permission to let the client also import activities and update the cash balances of your accounts.
@@ -415,7 +415,7 @@ An _MCP_ access with the _Restricted view_ permission reads the portfolio withou
 Point the client to the endpoint below and set the MCP access token as the _Bearer Token_.
 
 ```
-POST http://localhost:3333/mcp
+POST <INSERT_ROOT_URL>/mcp
 "Authorization": "Bearer <INSERT_MCP_ACCESS_TOKEN>"
 ```
 
