@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed 
+### Changed
 
 - Improved the language localization for Spanish (`es`)
 
