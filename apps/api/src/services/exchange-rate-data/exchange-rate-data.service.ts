@@ -88,7 +88,7 @@ export class ExchangeRateDataService {
       );
       const lastDateString = dateStrings.reduce((a, b) => {
         return a > b ? a : b;
-      }, undefined);
+      }, '');
 
       let previousExchangeRate =
         exchangeRatesByCurrency[`${currency}${targetCurrency}`]?.[
@@ -214,7 +214,7 @@ export class ExchangeRateDataService {
     const resultExtended = result;
 
     for (const symbol of Object.keys(result)) {
-      const [currency1, currency2] = symbol.match(/.{1,3}/g);
+      const [currency1, currency2] = symbol.match(/.{1,3}/g) ?? [];
       const [date] = Object.keys(result[symbol]);
 
       // Calculate the opposite direction
@@ -226,7 +226,7 @@ export class ExchangeRateDataService {
     }
 
     for (const symbol of Object.keys(resultExtended)) {
-      const [currency1, currency2] = symbol.match(/.{1,3}/g);
+      const [currency1, currency2] = symbol.match(/.{1,3}/g) ?? [];
 
       this.exchangeRates[symbol] =
         resultExtended[symbol]?.[dateStringOfYesterday]?.marketPrice;
@@ -302,7 +302,7 @@ export class ExchangeRateDataService {
 
     const derivedCurrencyFactor =
       this.derivedCurrencyFactors[`${aFromCurrency}${aToCurrency}`];
-    let factor: number;
+    let factor: number | undefined;
 
     if (aFromCurrency === aToCurrency) {
       factor = 1;
@@ -324,8 +324,8 @@ export class ExchangeRateDataService {
       } else {
         // Calculate indirectly via base currency
 
-        let marketPriceBaseCurrencyFromCurrency: number;
-        let marketPriceBaseCurrencyToCurrency: number;
+        let marketPriceBaseCurrencyFromCurrency: number | undefined;
+        let marketPriceBaseCurrencyToCurrency: number | undefined;
 
         try {
           if (aFromCurrency === DEFAULT_CURRENCY) {
@@ -355,10 +355,15 @@ export class ExchangeRateDataService {
           }
         } catch {}
 
-        // Calculate the opposite direction
-        factor =
-          (1 / marketPriceBaseCurrencyFromCurrency) *
-          marketPriceBaseCurrencyToCurrency;
+        if (
+          isNumber(marketPriceBaseCurrencyFromCurrency) &&
+          isNumber(marketPriceBaseCurrencyToCurrency)
+        ) {
+          // Calculate the opposite direction
+          factor =
+            (1 / marketPriceBaseCurrencyFromCurrency) *
+            marketPriceBaseCurrencyToCurrency;
+        }
       }
     }
 
@@ -530,7 +535,9 @@ export class ExchangeRateDataService {
         }
       })
     ).forEach(({ currency }) => {
-      currencies.push(currency);
+      if (currency) {
+        currencies.push(currency);
+      }
     });
 
     (

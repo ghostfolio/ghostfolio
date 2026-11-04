@@ -708,6 +708,8 @@ export class UserService {
       userId
     });
 
+    await this.prismaService.authDevice.deleteMany({ where: { userId } });
+
     await this.prismaService.user.update({
       data: { accessToken: hashedAccessToken },
       where: { id: userId }
