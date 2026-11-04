@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Italian (`it`)
+
 - Improved the content of the pricing page
 
 ### Fixed
