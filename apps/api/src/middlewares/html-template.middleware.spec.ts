@@ -119,6 +119,17 @@ describe('HtmlTemplateMiddleware', () => {
     ).toContain(`content="${genericDescription}"`);
   });
 
+  it('falls back to the generic description if the description of a personal finance tool contains another token than the name token', () => {
+    expect(
+      getResponseBody({
+        locale: createLocale({
+          productDescription: 'Compare ${name} (${product})'
+        }),
+        originalUrl: productPath
+      })
+    ).toContain(`content="${genericDescription}"`);
+  });
+
   it('escapes the description for the use in an attribute', () => {
     expect(
       getResponseBody({

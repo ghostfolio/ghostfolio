@@ -267,7 +267,14 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
       skipUntranslated: true
     });
 
-    if (!description.includes('${name}')) {
+    const tokens = description.match(/[$]{[^}]+}/g) ?? [];
+
+    if (
+      tokens.length === 0 ||
+      tokens.some((token) => {
+        return token !== '${name}';
+      })
+    ) {
       return [];
     }
 
