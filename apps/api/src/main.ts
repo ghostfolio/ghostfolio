@@ -83,6 +83,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api', {
     exclude: [
       `${BULL_BOARD_ROUTE.substring(1)}{/*wildcard}`,
+      '.well-known{/*wildcard}',
       'sitemap.xml',
       ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
         // Exclude language-specific routes with an optional wildcard

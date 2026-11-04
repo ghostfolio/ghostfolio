@@ -60,6 +60,8 @@ const AUTHENTICATION_STRATEGIES = ['api-key', 'google', 'jwt', 'oidc'];
  * are not served by a controller
  */
 const PUBLIC_ROUTES = [
+  'GET /.well-known/oauth-authorization-server',
+  'GET /.well-known/oauth-protected-resource/mcp',
   'GET /assets/:languageCode/site.webmanifest',
   'GET /auth/google',
   'GET /auth/google/callback',
