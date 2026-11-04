@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the content of the pricing page
+- Disabled the biometric authentication on all devices when generating a new _Security Token_
 - Improved the language localization for German (`de`)
 
 ### Fixed
