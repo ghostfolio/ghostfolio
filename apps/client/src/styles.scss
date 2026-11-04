@@ -349,6 +349,12 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
+.gf-mobile-dialog {
+  .mat-mdc-dialog-surface {
+    padding-bottom: max(0px, env(safe-area-inset-bottom) - 1dvh);
+  }
+}
+
 .gf-promotion-badge {
   background-color: var(--oc-orange-5);
 }

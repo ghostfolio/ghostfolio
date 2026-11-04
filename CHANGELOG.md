@@ -5,16 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## Unrelease
+
+### Changed 
+
+- Improved the language localization for Spanish (`es`)
+
+## 3.98.0 - 2026-11-04
 
 ### Changed
 
 - Improved the content of the pricing page
-- Improved the language localization for Spanish (`es`)
+- Changed the viewport to resize the content when the on-screen keyboard opens on _Android_ (`interactive-widget=resizes-content`)
+- Improved the meta descriptions of the public pages and the blog posts
+- Disabled the biometric authentication on all devices when generating a new _Security Token_
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
 - Fixed the flickering of the navigation items in the header for logged-in users
+- Fixed the height of the dialogs on mobile
+- Fixed the description of the `ROOT_URL` requirement for the server of the Model Context Protocol (MCP) (experimental)
 
 ## 3.97.0 - 2026-11-02
 
