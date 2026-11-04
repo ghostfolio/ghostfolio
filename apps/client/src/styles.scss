@@ -351,7 +351,7 @@ ngx-skeleton-loader {
 
 .gf-mobile-dialog {
   .mat-mdc-dialog-surface {
-    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: max(0px, env(safe-area-inset-bottom) - 1dvh);
   }
 }
 
