@@ -4104,7 +4104,7 @@
       </trans-unit>
       <trans-unit id="749104632257292438" datatype="html">
         <source>Powered by third-party AI providers</source>
-        <target state="translated">Impulsado por proveedores de IA de terceros</target>
+        <target state="translated">Con la tecnología de proveedores de IA de terceros</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">306</context>
