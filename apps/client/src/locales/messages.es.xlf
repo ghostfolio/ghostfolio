@@ -8751,7 +8751,7 @@
       </trans-unit>
       <trans-unit id="3915660855611041642" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Ghostfolio AI could not match 1 activity of the file } other {Ghostfolio AI could not match <x id="INTERPOLATION"/> activities of the file }}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {Ghostfolio AI no pudo emparejar 1 actividad del archivo } other {Ghostfolio AI no pudo emparejar <x id="INTERPOLATION"/> actividades del archivo }}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {Ghostfolio AI no pudo reconocer 1 operación del archivo } other {Ghostfolio AI no pudo reconocer <x id="INTERPOLATION"/> operaciones del archivo }}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">137</context>
