@@ -184,7 +184,9 @@ export class GfAdminPlatformComponent implements OnInit {
       CreateOrUpdatePlatformDialogParams
     >(GfCreateOrUpdatePlatformDialogComponent, {
       data: {} satisfies CreateOrUpdatePlatformDialogParams,
-      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      height: this.deviceType() === 'mobile' ? '98dvh' : undefined,
+      panelClass:
+        this.deviceType() === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -224,7 +226,9 @@ export class GfAdminPlatformComponent implements OnInit {
           url
         }
       } satisfies CreateOrUpdatePlatformDialogParams,
-      height: this.deviceType() === 'mobile' ? '98vh' : undefined,
+      height: this.deviceType() === 'mobile' ? '98dvh' : undefined,
+      panelClass:
+        this.deviceType() === 'mobile' ? 'gf-mobile-dialog' : undefined,
       width: this.deviceType() === 'mobile' ? '100vw' : '50rem'
     });
 

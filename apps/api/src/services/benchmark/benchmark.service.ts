@@ -16,7 +16,8 @@ import {
   AssetProfileIdentifier,
   Benchmark,
   BenchmarkProperty,
-  BenchmarkResponse
+  BenchmarkResponse,
+  EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -88,18 +89,20 @@ export class BenchmarkService {
           this.CACHE_KEY_BENCHMARKS
         );
 
-        const { benchmarks, expiration }: BenchmarkValue =
-          JSON.parse(cachedBenchmarkValue);
+        if (cachedBenchmarkValue) {
+          const { benchmarks, expiration }: BenchmarkValue =
+            JSON.parse(cachedBenchmarkValue);
 
-        this.logger.debug('Fetched benchmarks from cache');
+          this.logger.debug('Fetched benchmarks from cache');
 
-        if (isPast(new Date(expiration))) {
-          this.calculateAndCacheBenchmarks({
-            enableSharing
-          });
+          if (isPast(new Date(expiration))) {
+            this.calculateAndCacheBenchmarks({
+              enableSharing
+            });
+          }
+
+          return benchmarks;
         }
-
-        return benchmarks;
       } catch {}
     }
 
@@ -108,7 +111,9 @@ export class BenchmarkService {
 
   public async getBenchmarkAssetProfiles({
     enableSharing = false
-  } = {}): Promise<Partial<SymbolProfile>[]> {
+  } = {}): Promise<
+    Pick<EnhancedAssetProfile, 'dataSource' | 'id' | 'name' | 'symbol'>[]
+  > {
     const symbolProfileIds: string[] = (
       (await this.propertyService.getByKey<BenchmarkProperty[]>(
         PROPERTY_BENCHMARKS
@@ -293,7 +298,7 @@ export class BenchmarkService {
         name: benchmarkAssetProfiles[index].name,
         performances: {
           allTimeHigh: {
-            date: allTimeHigh?.date,
+            date: allTimeHigh?.date as Date,
             performancePercent: this.getPerformancePercentFromAllTimeHigh(
               performancePercentFromAllTimeHigh
             )
