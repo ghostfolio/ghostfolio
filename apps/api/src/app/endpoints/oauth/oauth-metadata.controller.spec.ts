@@ -53,7 +53,6 @@ describe('OAuthMetadataController', () => {
 
       expect(result).toEqual({
         authorization_servers: ['http://localhost:3333'],
-        bearer_methods_supported: ['header'],
         resource: 'http://localhost:3333/mcp',
         resource_name: 'Ghostfolio'
       });
@@ -68,7 +67,6 @@ describe('OAuthMetadataController', () => {
 
       expect(result).toEqual({
         authorization_servers: ['https://ghostfol.io'],
-        bearer_methods_supported: ['header'],
         resource: 'https://ghostfol.io/mcp',
         resource_name: 'Ghostfolio'
       });

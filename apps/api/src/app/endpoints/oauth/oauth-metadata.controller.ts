@@ -1,10 +1,12 @@
 import {
-  getMcpOAuthBaseUrl,
+  getMcpAuthorizationServerMetadata,
+  getMcpResourceUrl,
   isMcpOAuthEnabled
 } from '@ghostfolio/api/helper/mcp-oauth.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 
+import { buildOAuthProtectedResourceMetadata } from '@modelcontextprotocol/server';
 import {
   Controller,
   Get,
@@ -26,14 +28,13 @@ export class OAuthMetadataController {
       throw new NotFoundException();
     }
 
-    const rootUrl = getMcpOAuthBaseUrl(this.configurationService);
-
-    return {
-      authorization_servers: [rootUrl],
-      bearer_methods_supported: ['header'],
-      resource: `${rootUrl}${MCP_ENDPOINT}`,
-      resource_name: 'Ghostfolio'
-    };
+    return buildOAuthProtectedResourceMetadata({
+      oauthMetadata: getMcpAuthorizationServerMetadata(
+        this.configurationService
+      ),
+      resourceName: 'Ghostfolio',
+      resourceServerUrl: getMcpResourceUrl(this.configurationService)
+    });
   }
 
   @Get('oauth-authorization-server')
@@ -43,17 +44,6 @@ export class OAuthMetadataController {
       throw new NotFoundException();
     }
 
-    const rootUrl = getMcpOAuthBaseUrl(this.configurationService);
-
-    return {
-      authorization_endpoint: `${rootUrl}/oauth/authorize`,
-      client_id_metadata_document_supported: true,
-      code_challenge_methods_supported: ['S256'],
-      grant_types_supported: ['authorization_code', 'refresh_token'],
-      issuer: rootUrl,
-      response_types_supported: ['code'],
-      token_endpoint: `${rootUrl}/api/v1/oauth/token`,
-      token_endpoint_auth_methods_supported: ['none']
-    };
+    return getMcpAuthorizationServerMetadata(this.configurationService);
   }
 }
