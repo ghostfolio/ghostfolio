@@ -40,8 +40,8 @@ export class SymbolService {
     dataGatheringItem: DataGatheringItem;
     includeHistoricalData?: number;
     useIntradayData?: boolean;
-  }): Promise<SymbolItem> {
-    let currency: string;
+  }): Promise<SymbolItem | undefined> {
+    let currency = '';
     let marketPrice: number;
 
     if (useIntradayData) {
@@ -63,7 +63,7 @@ export class SymbolService {
     if (dataGatheringItem.dataSource && marketPrice >= 0) {
       let historicalData: HistoricalDataItem[] = [];
 
-      if (includeHistoricalData > 0) {
+      if (includeHistoricalData && includeHistoricalData > 0) {
         const days = includeHistoricalData;
 
         const marketData = await this.marketDataService.getRange({
@@ -168,10 +168,10 @@ export class SymbolService {
       fearAndGreedIndex: {
         CRYPTOCURRENCIES: {
           ...marketDataFearAndGreedIndexCryptocurrencies
-        },
+        } as SymbolItem,
         STOCKS: {
           ...marketDataFearAndGreedIndexStocks
-        }
+        } as SymbolItem
       }
     };
   }
