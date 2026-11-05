@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the discovery endpoints of OAuth 2.1 to the server of the Model Context Protocol (MCP) (experimental)
+
 ### Changed
 
 - Improved the language localization for Spanish (`es`)

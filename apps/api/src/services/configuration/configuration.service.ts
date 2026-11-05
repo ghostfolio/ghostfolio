@@ -75,6 +75,9 @@ export class ConfigurationService {
       // TODO: Change the default to true, when the server of the Model Context
       // Protocol (MCP) was moved from experimental to general availability
       ENABLE_FEATURE_MCP: bool({ default: false }),
+      // TODO: Change the default to true, when the authorization with OAuth 2.1
+      // was moved from experimental to general availability
+      ENABLE_FEATURE_MCP_OAUTH: bool({ default: false }),
       ENABLE_FEATURE_RATE_LIMITING: bool({ default: false }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       // TODO: Change the default to true, when the security headers were

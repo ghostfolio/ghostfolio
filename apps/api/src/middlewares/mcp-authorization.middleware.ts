@@ -1,4 +1,8 @@
 import { getAccessIdOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
+import {
+  getMcpProtectedResourceMetadataUrl,
+  isMcpOAuthEnabled
+} from '@ghostfolio/api/helper/mcp-oauth.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { UserService } from '@ghostfolio/api/services/user/user.service';
@@ -17,9 +21,10 @@ import { getReasonPhrase, StatusCodes } from 'http-status-codes';
  * cannot come from a guard: a guard runs while the transport dispatches the
  * message and can no longer set the status of the response.
  *
- * The challenge names no resource metadata, because Ghostfolio has no
- * authorization server. A client which reads the challenge asks the user for
- * the identifier of the access instead of starting a flow which would fail.
+ * The challenge names the protected resource metadata (RFC 9728) only if the
+ * authorization with OAuth 2.1 is enabled. Otherwise, a client which reads the
+ * challenge asks the user for the identifier of the access instead of starting
+ * a flow which would fail.
  *
  * With the subscription, the user who granted the access has the same limits
  * as with the other clients: an inactive user and a user who exceeds the daily
@@ -52,14 +57,22 @@ export function createMcpAuthorizationMiddleware({
     });
 
     if (!impersonation.isActive) {
-      return sendUnauthorizedResponse({ accessId, response });
+      return sendUnauthorizedResponse({
+        accessId,
+        configurationService,
+        response
+      });
     }
 
     if (configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       const user = await userService.user({ id: impersonation.userId });
 
       if (!user) {
-        return sendUnauthorizedResponse({ accessId, response });
+        return sendUnauthorizedResponse({
+          accessId,
+          configurationService,
+          response
+        });
       }
 
       const isRequestLimitExceeded =
@@ -90,12 +103,20 @@ export function createMcpAuthorizationMiddleware({
 
 function sendUnauthorizedResponse({
   accessId,
+  configurationService,
   response
 }: {
   accessId?: string;
+  configurationService: ConfigurationService;
   response: Response;
 }) {
   const parameters = [`realm="${MCP_REALM}"`];
+
+  if (isMcpOAuthEnabled(configurationService)) {
+    parameters.push(
+      `resource_metadata="${getMcpProtectedResourceMetadataUrl(configurationService)}"`
+    );
+  }
 
   if (accessId) {
     parameters.push(

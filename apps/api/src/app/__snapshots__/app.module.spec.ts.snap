@@ -254,6 +254,14 @@ exports[`AppModule should keep the security of each route 1`] = `
       "watchlist:delete",
     ],
   },
+  "GET /.well-known/oauth-authorization-server (version neutral)": {
+    "guards": [],
+    "interceptors": [],
+  },
+  "GET /.well-known/oauth-protected-resource/mcp (version neutral)": {
+    "guards": [],
+    "interceptors": [],
+  },
   "GET /access": {
     "allowDuringImpersonation": true,
     "guards": [

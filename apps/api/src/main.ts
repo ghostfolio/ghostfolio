@@ -1,3 +1,4 @@
+import { isValidMcpOAuthIssuerUrl } from '@ghostfolio/api/helper/mcp-oauth.helper';
 import { getHelmetOptions } from '@ghostfolio/api/helper/security-headers.helper';
 import { languageRedirectMiddleware } from '@ghostfolio/api/middlewares/language-redirect.middleware';
 import { createMcpAuthorizationMiddleware } from '@ghostfolio/api/middlewares/mcp-authorization.middleware';
@@ -83,6 +84,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api', {
     exclude: [
       `${BULL_BOARD_ROUTE.substring(1)}{/*wildcard}`,
+      '.well-known{/*wildcard}',
       'sitemap.xml',
       ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
         // Exclude language-specific routes with an optional wildcard
@@ -152,6 +154,15 @@ async function bootstrap() {
 
       logger.warn(
         `The Model Context Protocol (MCP) is enabled, but ROOT_URL is not set. The endpoint accepts only requests to the host name ${hostname}. Set ROOT_URL to the public URL of the instance.`
+      );
+    }
+
+    if (
+      configurationService.get('ENABLE_FEATURE_MCP_OAUTH') &&
+      !isValidMcpOAuthIssuerUrl(configurationService)
+    ) {
+      logger.warn(
+        'The authorization with OAuth 2.1 of the Model Context Protocol (MCP) is enabled, but ROOT_URL does not use HTTPS. The authorization stays disabled. Set ROOT_URL to the public HTTPS URL of the instance.'
       );
     }
 
