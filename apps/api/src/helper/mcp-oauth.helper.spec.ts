@@ -5,7 +5,8 @@ import {
   getMcpOAuthBaseUrl,
   getMcpProtectedResourceMetadataUrl,
   getMcpResourceUrl,
-  isMcpOAuthEnabled
+  isMcpOAuthEnabled,
+  isValidMcpOAuthIssuerUrl
 } from './mcp-oauth.helper';
 
 describe('mcp-oauth.helper', () => {
@@ -93,6 +94,38 @@ describe('mcp-oauth.helper', () => {
       mockConfig.ENABLE_FEATURE_MCP_OAUTH = false;
 
       expect(isMcpOAuthEnabled(configurationService)).toBe(false);
+    });
+
+    it('returns false when ROOT_URL is not valid as the issuer', () => {
+      mockConfig.ENABLE_FEATURE_MCP = true;
+      mockConfig.ENABLE_FEATURE_MCP_OAUTH = true;
+      mockConfig.ROOT_URL = 'http://192.168.1.10:3333';
+
+      expect(isMcpOAuthEnabled(configurationService)).toBe(false);
+    });
+  });
+
+  describe('isValidMcpOAuthIssuerUrl', () => {
+    it.each([
+      'http://127.0.0.1:3333',
+      'http://localhost:3333/',
+      'https://192.168.1.10:3333',
+      'https://ghostfol.io'
+    ])('returns true for %s', (rootUrl) => {
+      mockConfig.ROOT_URL = rootUrl;
+
+      expect(isValidMcpOAuthIssuerUrl(configurationService)).toBe(true);
+    });
+
+    it.each([
+      'http://0.0.0.0:3333',
+      'http://192.168.1.10:3333',
+      'http://[::1]:3333',
+      'http://ghostfolio.local'
+    ])('returns false for %s', (rootUrl) => {
+      mockConfig.ROOT_URL = rootUrl;
+
+      expect(isValidMcpOAuthIssuerUrl(configurationService)).toBe(false);
     });
   });
 });

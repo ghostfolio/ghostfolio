@@ -44,6 +44,16 @@ describe('OAuthMetadataController', () => {
       }).toThrow(NotFoundException);
     });
 
+    it('throws NotFoundException when ROOT_URL is not valid as the issuer', () => {
+      mockConfig.ENABLE_FEATURE_MCP = true;
+      mockConfig.ENABLE_FEATURE_MCP_OAUTH = true;
+      mockConfig.ROOT_URL = 'http://0.0.0.0:3333';
+
+      expect(() => {
+        return controller.getProtectedResourceMetadata();
+      }).toThrow(NotFoundException);
+    });
+
     it('returns RFC 9728 protected resource metadata when feature flags are enabled', () => {
       mockConfig.ENABLE_FEATURE_MCP = true;
       mockConfig.ENABLE_FEATURE_MCP_OAUTH = true;
@@ -86,6 +96,16 @@ describe('OAuthMetadataController', () => {
     it('throws NotFoundException when ENABLE_FEATURE_MCP_OAUTH is false', () => {
       mockConfig.ENABLE_FEATURE_MCP = true;
       mockConfig.ENABLE_FEATURE_MCP_OAUTH = false;
+
+      expect(() => {
+        return controller.getAuthorizationServerMetadata();
+      }).toThrow(NotFoundException);
+    });
+
+    it('throws NotFoundException when ROOT_URL is not valid as the issuer', () => {
+      mockConfig.ENABLE_FEATURE_MCP = true;
+      mockConfig.ENABLE_FEATURE_MCP_OAUTH = true;
+      mockConfig.ROOT_URL = 'http://0.0.0.0:3333';
 
       expect(() => {
         return controller.getAuthorizationServerMetadata();

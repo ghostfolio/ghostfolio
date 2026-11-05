@@ -21,13 +21,10 @@ import { getReasonPhrase, StatusCodes } from 'http-status-codes';
  * cannot come from a guard: a guard runs while the transport dispatches the
  * message and can no longer set the status of the response.
  *
- * If MCP OAuth is disabled, the challenge names no resource metadata, because
- * Ghostfolio has no authorization server in that mode. A client which reads
- * the challenge asks the user for the identifier of the access instead of
- * starting a flow which would fail.
- *
- * When ENABLE_FEATURE_MCP_OAUTH is enabled, the challenge includes the RFC 9728
- * resource_metadata parameter pointing to the protected resource metadata document.
+ * The challenge names the protected resource metadata (RFC 9728) only if the
+ * authorization with OAuth 2.1 is enabled. Otherwise, a client which reads the
+ * challenge asks the user for the identifier of the access instead of starting
+ * a flow which would fail.
  *
  * With the subscription, the user who granted the access has the same limits
  * as with the other clients: an inactive user and a user who exceeds the daily

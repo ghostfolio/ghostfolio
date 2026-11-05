@@ -57,11 +57,32 @@ export function getMcpResourceUrl(configurationService: ConfigurationService) {
 
 /**
  * Tells if the authorization with OAuth 2.1 is enabled. It depends on the
- * server of the Model Context Protocol (MCP).
+ * server of the Model Context Protocol (MCP) and on a valid issuer URL.
  */
 export function isMcpOAuthEnabled(configurationService: ConfigurationService) {
   return (
     configurationService.get('ENABLE_FEATURE_MCP') &&
-    configurationService.get('ENABLE_FEATURE_MCP_OAUTH')
+    configurationService.get('ENABLE_FEATURE_MCP_OAUTH') &&
+    isValidMcpOAuthIssuerUrl(configurationService)
+  );
+}
+
+/**
+ * Tells if the root URL is valid as the issuer of the authorization server:
+ * OAuth 2.1 requires HTTPS, except for localhost. This is the same rule as in
+ * buildOAuthProtectedResourceMetadata() of @modelcontextprotocol/server, which
+ * throws an error for any other issuer.
+ */
+export function isValidMcpOAuthIssuerUrl(
+  configurationService: ConfigurationService
+) {
+  const { hostname, protocol } = new URL(
+    getMcpOAuthBaseUrl(configurationService)
+  );
+
+  return (
+    protocol === 'https:' ||
+    hostname === '127.0.0.1' ||
+    hostname === 'localhost'
   );
 }
