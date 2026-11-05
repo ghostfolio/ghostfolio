@@ -41,7 +41,7 @@ export class SymbolService {
     includeHistoricalData?: number;
     useIntradayData?: boolean;
   }): Promise<SymbolItem | undefined> {
-    let currency = '';
+    let currency: string;
     let marketPrice: number;
 
     if (useIntradayData) {

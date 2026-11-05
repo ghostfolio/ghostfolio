@@ -357,7 +357,7 @@ export class SymbolProfileService {
 
   private getScraperConfiguration(
     symbolProfile: SymbolProfile
-  ): ScraperConfiguration | undefined {
+  ): ScraperConfiguration | null {
     const scraperConfiguration =
       symbolProfile.scraperConfiguration as Prisma.JsonObject;
 
@@ -374,7 +374,7 @@ export class SymbolProfileService {
       };
     }
 
-    return undefined;
+    return null;
   }
 
   private getSectors(aSectors: Prisma.JsonArray = []): Sector[] {
