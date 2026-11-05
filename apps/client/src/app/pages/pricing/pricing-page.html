@@ -188,6 +188,7 @@
               }
               @if (
                 hasPermissionToUpdateUserSettings &&
+                user?.subscription?.offer?.priceId &&
                 user?.subscription?.type === 'Basic'
               ) {
                 <div class="mt-3 text-center">

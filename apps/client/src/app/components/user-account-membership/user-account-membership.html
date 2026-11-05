@@ -14,7 +14,9 @@
         @if (user?.subscription?.type === 'Basic') {
           <div class="d-flex flex-column mt-5">
             @if (
-              hasPermissionForSubscription && hasPermissionToUpdateUserSettings
+              hasPermissionForSubscription &&
+              hasPermissionToUpdateUserSettings &&
+              user?.subscription?.offer?.priceId
             ) {
               <button color="primary" mat-flat-button (click)="onCheckout()">
                 @if (user.subscription.offer.isRenewal) {
