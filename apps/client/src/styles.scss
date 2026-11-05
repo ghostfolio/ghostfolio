@@ -200,6 +200,8 @@
 }
 
 body {
+  --ngx-skeleton-loader-base-color: #eff1f6;
+
   font-family: var(--font-family-sans-serif);
   margin: 0;
   min-height: 100%;
@@ -227,6 +229,8 @@ body {
   }
 
   &.theme-dark {
+    --ngx-skeleton-loader-base-color: #323232;
+
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
 
@@ -236,12 +240,6 @@ body {
 
     hr {
       border-top-color: rgba(var(--light-dividers));
-    }
-
-    ngx-skeleton-loader {
-      .skeleton-loader {
-        background-color: #323232;
-      }
     }
 
     .gf-table {
@@ -305,7 +303,6 @@ ion-icon {
 }
 
 ngx-skeleton-loader {
-  display: block;
   line-height: 0;
   outline: 0;
 
