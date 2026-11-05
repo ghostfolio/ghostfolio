@@ -11,19 +11,20 @@ import { createMcpAuthorizationMiddleware } from './mcp-authorization.middleware
 describe('createMcpAuthorizationMiddleware', () => {
   let configurationService: ConfigurationService;
   let impersonationService: ImpersonationService;
-  let userService: UserService;
+  let mockConfig: Record<string, any>;
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let nextFunction: jest.Mock;
-
-  const mockConfig: Record<string, any> = {
-    ENABLE_FEATURE_MCP: true,
-    ENABLE_FEATURE_MCP_OAUTH: false,
-    ENABLE_FEATURE_SUBSCRIPTION: false,
-    ROOT_URL: 'http://localhost:3333'
-  };
+  let userService: UserService;
 
   beforeEach(() => {
+    mockConfig = {
+      ENABLE_FEATURE_MCP: true,
+      ENABLE_FEATURE_MCP_OAUTH: false,
+      ENABLE_FEATURE_SUBSCRIPTION: false,
+      ROOT_URL: 'http://localhost:3333'
+    };
+
     configurationService = {
       get: jest.fn((key: string) => {
         return mockConfig[key];

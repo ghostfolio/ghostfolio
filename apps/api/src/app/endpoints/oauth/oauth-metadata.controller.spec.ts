@@ -7,14 +7,15 @@ import { OAuthMetadataController } from './oauth-metadata.controller';
 describe('OAuthMetadataController', () => {
   let configurationService: ConfigurationService;
   let controller: OAuthMetadataController;
-
-  const mockConfig: Record<string, any> = {
-    ENABLE_FEATURE_MCP: true,
-    ENABLE_FEATURE_MCP_OAUTH: true,
-    ROOT_URL: 'http://localhost:3333'
-  };
+  let mockConfig: Record<string, any>;
 
   beforeEach(() => {
+    mockConfig = {
+      ENABLE_FEATURE_MCP: true,
+      ENABLE_FEATURE_MCP_OAUTH: true,
+      ROOT_URL: 'http://localhost:3333'
+    };
+
     configurationService = {
       get: jest.fn((key: string) => {
         return mockConfig[key];
@@ -102,7 +103,6 @@ describe('OAuthMetadataController', () => {
 
       expect(result).toEqual({
         authorization_endpoint: 'http://localhost:3333/oauth/authorize',
-        authorization_response_iss_parameter_supported: true,
         client_id_metadata_document_supported: true,
         code_challenge_methods_supported: ['S256'],
         grant_types_supported: ['authorization_code', 'refresh_token'],
@@ -122,7 +122,6 @@ describe('OAuthMetadataController', () => {
 
       expect(result).toEqual({
         authorization_endpoint: 'https://ghostfol.io/oauth/authorize',
-        authorization_response_iss_parameter_supported: true,
         client_id_metadata_document_supported: true,
         code_challenge_methods_supported: ['S256'],
         grant_types_supported: ['authorization_code', 'refresh_token'],

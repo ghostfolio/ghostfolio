@@ -147,10 +147,6 @@ import { PortfolioModule } from './portfolio/portfolio.module';
       rootPath: join(__dirname, '..', 'client')
     }),
     ServeStaticModule.forRoot({
-      exclude: [
-        '/.well-known/oauth-authorization-server',
-        '/.well-known/oauth-protected-resource/*wildcard'
-      ],
       rootPath: join(__dirname, '..', 'client', '.well-known'),
       serveRoot: '/.well-known'
     }),

@@ -1,10 +1,13 @@
+import {
+  getMcpOAuthBaseUrl,
+  isMcpOAuthEnabled
+} from '@ghostfolio/api/helper/mcp-oauth.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { MCP_ENDPOINT } from '@ghostfolio/common/config';
 
 import {
   Controller,
   Get,
-  Header,
   NotFoundException,
   VERSION_NEUTRAL,
   Version
@@ -16,21 +19,14 @@ export class OAuthMetadataController {
     private readonly configurationService: ConfigurationService
   ) {}
 
-  @Get('oauth-protected-resource/mcp')
-  @Header('Cache-Control', 'public, max-age=3600')
+  @Get(`oauth-protected-resource${MCP_ENDPOINT}`)
   @Version(VERSION_NEUTRAL)
   public getProtectedResourceMetadata() {
-    if (
-      !this.configurationService.get('ENABLE_FEATURE_MCP') ||
-      !this.configurationService.get('ENABLE_FEATURE_MCP_OAUTH')
-    ) {
+    if (!isMcpOAuthEnabled(this.configurationService)) {
       throw new NotFoundException();
     }
 
-    const rootUrl = (this.configurationService.get('ROOT_URL') || '').replace(
-      /\/+$/,
-      ''
-    );
+    const rootUrl = getMcpOAuthBaseUrl(this.configurationService);
 
     return {
       authorization_servers: [rootUrl],
@@ -41,24 +37,16 @@ export class OAuthMetadataController {
   }
 
   @Get('oauth-authorization-server')
-  @Header('Cache-Control', 'public, max-age=3600')
   @Version(VERSION_NEUTRAL)
   public getAuthorizationServerMetadata() {
-    if (
-      !this.configurationService.get('ENABLE_FEATURE_MCP') ||
-      !this.configurationService.get('ENABLE_FEATURE_MCP_OAUTH')
-    ) {
+    if (!isMcpOAuthEnabled(this.configurationService)) {
       throw new NotFoundException();
     }
 
-    const rootUrl = (this.configurationService.get('ROOT_URL') || '').replace(
-      /\/+$/,
-      ''
-    );
+    const rootUrl = getMcpOAuthBaseUrl(this.configurationService);
 
     return {
       authorization_endpoint: `${rootUrl}/oauth/authorize`,
-      authorization_response_iss_parameter_supported: true,
       client_id_metadata_document_supported: true,
       code_challenge_methods_supported: ['S256'],
       grant_types_supported: ['authorization_code', 'refresh_token'],

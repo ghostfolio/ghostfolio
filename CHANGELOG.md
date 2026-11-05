@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added discovery and metadata endpoints for Model Context Protocol (MCP) OAuth 2.1 (RFC 8414 & RFC 9728)
+- Added discovery and metadata endpoints for Model Context Protocol (MCP) OAuth 2.1 (RFC 8414 & RFC 9728) (experimental)
 
 ### Changed
 

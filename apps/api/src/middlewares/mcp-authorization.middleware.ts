@@ -1,12 +1,12 @@
 import { getAccessIdOfBearerToken } from '@ghostfolio/api/helper/bearer-token.helper';
+import {
+  getMcpProtectedResourceMetadataUrl,
+  isMcpOAuthEnabled
+} from '@ghostfolio/api/helper/mcp-oauth.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { UserService } from '@ghostfolio/api/services/user/user.service';
-import {
-  HEADER_KEY_TOKEN,
-  MCP_ENDPOINT,
-  MCP_REALM
-} from '@ghostfolio/common/config';
+import { HEADER_KEY_TOKEN, MCP_REALM } from '@ghostfolio/common/config';
 import { hasRole } from '@ghostfolio/common/permissions';
 import type { ImpersonationContext } from '@ghostfolio/common/types';
 
@@ -115,17 +115,9 @@ function sendUnauthorizedResponse({
 }) {
   const parameters = [`realm="${MCP_REALM}"`];
 
-  if (
-    configurationService.get('ENABLE_FEATURE_MCP') &&
-    configurationService.get('ENABLE_FEATURE_MCP_OAUTH')
-  ) {
-    const rootUrl = (configurationService.get('ROOT_URL') || '').replace(
-      /\/+$/,
-      ''
-    );
-
+  if (isMcpOAuthEnabled(configurationService)) {
     parameters.push(
-      `resource_metadata="${rootUrl}/.well-known/oauth-protected-resource${MCP_ENDPOINT}"`
+      `resource_metadata="${getMcpProtectedResourceMetadataUrl(configurationService)}"`
     );
   }
 
