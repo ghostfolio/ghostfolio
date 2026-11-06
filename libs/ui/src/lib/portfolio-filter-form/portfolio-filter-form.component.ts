@@ -63,10 +63,10 @@ export class GfPortfolioFilterFormComponent
   public readonly tags = input<Filter[]>([]);
 
   public filterForm: FormGroup<{
-    account: FormControl<string | null>;
-    assetClass: FormControl<string | null>;
+    accounts: FormControl<string[]>;
+    assetClasses: FormControl<string[]>;
     holding: FormControl<PortfolioPosition | null>;
-    tag: FormControl<string | null>;
+    tags: FormControl<string[]>;
   }>;
 
   public readonly labelAccount = translate('ACCOUNT');
@@ -77,10 +77,10 @@ export class GfPortfolioFilterFormComponent
 
   public constructor() {
     this.filterForm = this.formBuilder.group({
-      account: new FormControl<string | null>(null),
-      assetClass: new FormControl<string | null>(null),
+      accounts: new FormControl<string[]>([], { nonNullable: true }),
+      assetClasses: new FormControl<string[]>([], { nonNullable: true }),
       holding: new FormControl<PortfolioPosition | null>(null),
-      tag: new FormControl<string | null>(null)
+      tags: new FormControl<string[]>([], { nonNullable: true })
     });
   }
 
@@ -97,7 +97,7 @@ export class GfPortfolioFilterFormComponent
     const formValue = this.filterForm.value;
 
     return Object.values(formValue).some((value) => {
-      return !!value;
+      return Array.isArray(value) ? value.length > 0 : !!value;
     });
   }
 
@@ -122,7 +122,7 @@ export class GfPortfolioFilterFormComponent
       this.filterForm.enable({ emitEvent: false });
     }
 
-    const tagControl = this.filterForm.get('tag');
+    const tagControl = this.filterForm.get('tags');
 
     if (this.tags().length === 0) {
       tagControl?.disable({ emitEvent: false });
@@ -157,10 +157,10 @@ export class GfPortfolioFilterFormComponent
     if (value) {
       this.filterForm.setValue(
         {
-          account: value.account ?? null,
-          assetClass: value.assetClass ?? null,
+          accounts: value.accounts ?? [],
+          assetClasses: value.assetClasses ?? [],
           holding: value.holding ?? null,
-          tag: value.tag ?? null
+          tags: value.tags ?? []
         },
         { emitEvent: false }
       );

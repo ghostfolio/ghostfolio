@@ -73,7 +73,7 @@ const ACCOUNTS: AccountWithPlatform[] = [
 ];
 
 type AccountSelectorStory = GfAccountSelectorComponent & {
-  value: string | null;
+  value: string | string[] | null;
 };
 
 const meta: Meta<AccountSelectorStory> = {
@@ -97,13 +97,14 @@ const meta: Meta<AccountSelectorStory> = {
       imports: [GfAccountSelectorComponent, ReactiveFormsModule]
     })
   ],
-  render: ({ accounts, hasHint, hasNullOption, label, value }) => {
+  render: ({ accounts, hasHint, hasNullOption, label, multiple, value }) => {
     return {
       props: {
         accounts,
         hasHint,
         hasNullOption,
         label,
+        multiple,
         formGroup: new FormGroup({
           account: new FormControl(value)
         })
@@ -116,6 +117,7 @@ const meta: Meta<AccountSelectorStory> = {
             [hasHint]="hasHint"
             [hasNullOption]="hasNullOption"
             [label]="label"
+            [multiple]="multiple ?? false"
           />
         </form>
       `
@@ -132,6 +134,18 @@ export const Default: Story = {
     accounts: ACCOUNTS,
     label: 'Account',
     value: '9da3a8a7-4795-43e3-a6db-ccb914189737'
+  }
+};
+
+export const Multiple: Story = {
+  args: {
+    accounts: ACCOUNTS,
+    label: 'Accounts',
+    multiple: true,
+    value: [
+      '267ec888-cb57-45d0-8085-938017417a2e',
+      '9da3a8a7-4795-43e3-a6db-ccb914189737'
+    ]
   }
 };
 

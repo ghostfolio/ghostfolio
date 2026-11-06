@@ -1,11 +1,11 @@
 <form [formGroup]="filterForm">
   <div class="mb-3">
     <gf-account-selector
-      formControlName="account"
+      formControlName="accounts"
       [accounts]="accounts()"
       [hasHint]="false"
-      [hasNullOption]="true"
       [label]="labelAccount"
+      [multiple]="true"
     />
   </div>
   <div class="mb-3">
@@ -37,8 +37,7 @@
   <div class="mb-3">
     <mat-form-field appearance="outline" class="w-100 without-hint">
       <mat-label i18n>Tag</mat-label>
-      <mat-select formControlName="tag">
-        <mat-option [value]="null" />
+      <mat-select formControlName="tags" multiple>
         @for (tag of tags(); track tag.id) {
           <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
         }
@@ -48,8 +47,7 @@
   <div class="mb-3">
     <mat-form-field appearance="outline" class="w-100 without-hint">
       <mat-label i18n>Asset Class</mat-label>
-      <mat-select formControlName="assetClass">
-        <mat-option [value]="null" />
+      <mat-select formControlName="assetClasses" multiple>
         @for (assetClass of assetClasses(); track assetClass.id) {
           <mat-option [value]="assetClass.id">{{
             assetClass.label

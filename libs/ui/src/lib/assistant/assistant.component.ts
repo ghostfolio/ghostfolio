@@ -123,10 +123,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public portfolioFilterFormControl = new FormControl<PortfolioFilterFormValue>(
     {
-      account: null,
-      assetClass: null,
+      accounts: [],
+      assetClasses: [],
       holding: null,
-      tag: null
+      tags: []
     }
   );
 
@@ -738,14 +738,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     const settings = this.user?.settings;
 
     const filters = [
-      {
-        id: settings?.['filters.accounts']?.[0] ?? '',
-        type: 'ACCOUNT'
-      },
-      {
-        id: settings?.['filters.assetClasses']?.[0] ?? '',
-        type: 'ASSET_CLASS'
-      },
+      ...(settings?.['filters.accounts'] ?? []).map((id) => {
+        return { id, type: 'ACCOUNT' };
+      }),
+      ...(settings?.['filters.assetClasses'] ?? []).map((id) => {
+        return { id, type: 'ASSET_CLASS' };
+      }),
       {
         id: settings?.['filters.dataSource'] ?? '',
         type: 'DATA_SOURCE'
@@ -754,10 +752,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         id: settings?.['filters.symbol'] ?? '',
         type: 'SYMBOL'
       },
-      {
-        id: settings?.['filters.tags']?.[0] ?? '',
-        type: 'TAG'
-      }
+      ...(settings?.['filters.tags'] ?? []).map((id) => {
+        return { id, type: 'TAG' };
+      })
     ].filter(({ id }) => {
       return !!id;
     }) as Filter[];

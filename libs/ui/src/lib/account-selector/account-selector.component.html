@@ -7,23 +7,28 @@
   <mat-select
     [errorStateMatcher]="errorStateMatcher"
     [formControl]="control"
+    [multiple]="multiple()"
     [required]="isRequired()"
     (closed)="onPanelClosed()"
   >
     <mat-select-trigger>
-      <div class="align-items-center align-middle d-inline-flex lh-1">
-        @if (selectedAccount()?.platform?.url) {
-          <gf-entity-logo
-            class="me-1"
-            [tooltip]="selectedAccount()?.platform?.name ?? ''"
-            [url]="selectedAccount()?.platform?.url ?? ''"
-          />
-        }
-        <span>{{ selectedAccount()?.name }}</span>
-      </div>
+      @if (multiple()) {
+        <span>{{ selectedAccountNames() }}</span>
+      } @else {
+        <div class="align-items-center align-middle d-inline-flex lh-1">
+          @if (selectedAccount()?.platform?.url) {
+            <gf-entity-logo
+              class="me-1"
+              [tooltip]="selectedAccount()?.platform?.name ?? ''"
+              [url]="selectedAccount()?.platform?.url ?? ''"
+            />
+          }
+          <span>{{ selectedAccount()?.name }}</span>
+        </div>
+      }
     </mat-select-trigger>
 
-    @if (hasNullOption()) {
+    @if (hasNullOption() && !multiple()) {
       <mat-option [value]="null" />
     }
 
