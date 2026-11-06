@@ -72,7 +72,7 @@ export class SubscriptionService {
         client_reference_id: user.id,
         line_items: [
           {
-            price: priceId,
+            price: subscriptionOffer.priceId,
             quantity: 1
           }
         ],
@@ -84,10 +84,10 @@ export class SubscriptionService {
         )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
       };
 
-    if (couponId) {
+    if (subscriptionOffer.couponId) {
       stripeCheckoutSessionCreateParams.discounts = [
         {
-          coupon: couponId
+          coupon: subscriptionOffer.couponId
         }
       ];
     }
