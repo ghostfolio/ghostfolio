@@ -4440,7 +4440,7 @@
       </trans-unit>
       <trans-unit id="5176578390795646240" datatype="html">
         <source>thereof Dividend Performance</source>
-        <target state="new">thereof Dividend Performance</target>
+        <target state="translated">w tym stopa zwrotu z dywidend</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">185</context>
@@ -7542,7 +7542,7 @@
       </trans-unit>
       <trans-unit id="7803225195017107428" datatype="html">
         <source>thereof Dividend</source>
-        <target state="new">thereof Dividend</target>
+        <target state="translated">w tym dywidendy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">102</context>
