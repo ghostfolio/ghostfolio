@@ -45,5 +45,17 @@ const buildOptions = {
  * @type {import('webpack').WebpackOptionsNormalized}
  */
 module.exports = async () => ({
+  output: {
+    devtoolModuleFilenameTemplate: ({ absoluteResourcePath }) => {
+      return `webpack:///${
+        path.isAbsolute(absoluteResourcePath)
+          ? path.relative(
+              path.resolve(__dirname, '../..'),
+              absoluteResourcePath
+            )
+          : absoluteResourcePath
+      }`;
+    }
+  },
   plugins: [new NxAppWebpackPlugin(buildOptions)]
 });
