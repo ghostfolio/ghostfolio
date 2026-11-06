@@ -564,7 +564,7 @@
       </trans-unit>
       <trans-unit id="6182733719813772142" datatype="html">
         <source>First Activity</source>
-        <target state="translated">Prima attività</target>
+        <target state="translated">Prima operazione</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">182</context>
@@ -900,7 +900,7 @@
       </trans-unit>
       <trans-unit id="5047379499293213623" datatype="html">
         <source>Manage Activities</source>
-        <target state="translated">Gestione delle attività</target>
+        <target state="translated">Gestione delle operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
           <context context-type="linenumber">51</context>
@@ -2208,7 +2208,7 @@
       </trans-unit>
       <trans-unit id="1111435290645444471" datatype="html">
         <source>Update activity</source>
-        <target state="translated">Aggiorna l’attività</target>
+        <target state="translated">Aggiorna l’operazione</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">10</context>
@@ -2224,7 +2224,7 @@
       </trans-unit>
       <trans-unit id="6005640251215534178" datatype="html">
         <source>Add activity</source>
-        <target state="translated">Aggiungi un’attività</target>
+        <target state="translated">Aggiungi un’operazione</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">60</context>
@@ -2344,7 +2344,7 @@
       </trans-unit>
       <trans-unit id="2309808536212982229" datatype="html">
         <source>Activities</source>
-        <target state="translated">Attività</target>
+        <target state="translated">Operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">141</context>
@@ -2592,7 +2592,7 @@
       </trans-unit>
       <trans-unit id="1817902710689724227" datatype="html">
         <source>Import Activities</source>
-        <target state="translated">Importa le attività</target>
+        <target state="translated">Importa le operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">165</context>
@@ -2608,7 +2608,7 @@
       </trans-unit>
       <trans-unit id="5388209493122807655" datatype="html">
         <source>Export Activities</source>
-        <target state="translated">Esporta le attività</target>
+        <target state="translated">Esporta le operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">76</context>
@@ -2648,7 +2648,7 @@
       </trans-unit>
       <trans-unit id="670983159637074283" datatype="html">
         <source>Do you really want to delete this activity?</source>
-        <target state="translated">Vuoi davvero eliminare questa attività?</target>
+        <target state="translated">Vuoi davvero eliminare questa operazione?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
           <context context-type="linenumber">333</context>
@@ -2776,7 +2776,7 @@
       </trans-unit>
       <trans-unit id="7934616470747135563" datatype="html">
         <source>Latest activities</source>
-        <target state="translated">Attività recenti</target>
+        <target state="translated">Operazioni recenti</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">210</context>
@@ -3508,7 +3508,7 @@
       </trans-unit>
       <trans-unit id="6424689559488978075" datatype="html">
         <source>Activities Count</source>
-        <target state="translated">Conteggio attività</target>
+        <target state="translated">Numero di operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">197</context>
@@ -4496,7 +4496,7 @@
       </trans-unit>
       <trans-unit id="687928208076721343" datatype="html">
         <source>This activity already exists.</source>
-        <target state="translated">Questa attività esiste già.</target>
+        <target state="translated">Questa operazione esiste già.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">28</context>
@@ -4536,7 +4536,7 @@
       </trans-unit>
       <trans-unit id="6718675045548890054" datatype="html">
         <source>Select Activities</source>
-        <target state="translated">Seleziona le attività</target>
+        <target state="translated">Seleziona le operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">123</context>
@@ -5204,7 +5204,7 @@
       </trans-unit>
       <trans-unit id="6091364379293533723" datatype="html">
         <source>Capture your activities</source>
-        <target state="translated">Cattura le tue attività</target>
+        <target state="translated">Registra le tue operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">28</context>
@@ -5212,7 +5212,7 @@
       </trans-unit>
       <trans-unit id="2605131345877419693" datatype="html">
         <source>Record your investment activities to keep your portfolio up to date.</source>
-        <target state="translated">Registra le tue attività di investimento per tenere aggiornato il tuo portafoglio.</target>
+        <target state="translated">Registra le tue operazioni di investimento per tenere aggiornato il tuo portafoglio.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">30</context>
@@ -7007,7 +7007,7 @@
       </trans-unit>
       <trans-unit id="5306473977542913614" datatype="html">
         <source>Activity</source>
-        <target state="translated">Attività</target>
+        <target state="translated">Operazione</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">139</context>
@@ -7051,7 +7051,7 @@
       </trans-unit>
       <trans-unit id="7309206099560156141" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {activity} other {activities}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {attività} other {attività}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {operazione} other {operazioni}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">25</context>
@@ -7067,7 +7067,7 @@
       </trans-unit>
       <trans-unit id="7641420101493176397" datatype="html">
         <source>Delete Activities</source>
-        <target state="translated">Elimina le attività</target>
+        <target state="translated">Elimina le operazioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">114</context>
@@ -8590,7 +8590,7 @@
       </trans-unit>
       <trans-unit id="3606972039333274390" datatype="html">
         <source><x id="PH" equiv-text="symbol"/> (<x id="PH_1" equiv-text="dataSource"/>) is already in use.</source>
-        <target state="new"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>) e gia in uso.</target>
+        <target state="new"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>) è già in uso.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">967</context>
