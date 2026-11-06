@@ -5837,7 +5837,7 @@
       </trans-unit>
       <trans-unit id="5508103270863072482" datatype="html">
         <source>Return on Investment (total return with dividends)</source>
-        <target state="new">Return on Investment (total return with dividends)</target>
+        <target state="translated">Stopa zwrotu z inwestycji (całkowity zwrot z uwzględnieniem dywidend)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">165</context>
@@ -9357,7 +9357,7 @@
       </trans-unit>
       <trans-unit id="5814001514445505929" datatype="html">
         <source>Return on Average Investment (total return with dividends)</source>
-        <target state="new">Return on Average Investment (total return with dividends)</target>
+        <target state="translated">Stopa zwrotu ze średnio zainwestowanego kapitału (całkowity zwrot z uwzględnieniem dywidend)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">157</context>
