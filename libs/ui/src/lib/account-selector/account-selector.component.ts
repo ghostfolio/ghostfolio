@@ -22,6 +22,8 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
+export type AccountSelectorValue = string | string[] | null;
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-block' },
@@ -38,7 +40,7 @@ export class GfAccountSelectorComponent
   implements ControlValueAccessor, OnInit
 {
   public readonly accounts = input.required<AccountWithPlatform[]>();
-  public readonly control = new FormControl<string | null>(null);
+  public readonly control = new FormControl<AccountSelectorValue>(null);
 
   public readonly errorStateMatcher: ErrorStateMatcher = {
     isErrorState: () => {
@@ -53,12 +55,30 @@ export class GfAccountSelectorComponent
   public readonly isRequired = signal(false);
   public readonly label = input.required<string>();
 
-  public readonly selectedAccount = computed(() => {
-    const selectedAccountId = this.selectedAccountId();
+  /**
+   * Allows the selection of multiple accounts. The value is an array of
+   * account ids in this case. Must not be changed after initialization.
+   */
+  public readonly multiple = input(false);
 
-    return this.accounts().find(({ id }) => {
-      return id === selectedAccountId;
+  public readonly selectedAccounts = computed(() => {
+    const selectedAccountIds = this.selectedAccountIds();
+
+    return this.sortedAccounts().filter(({ id }) => {
+      return selectedAccountIds.includes(id);
     });
+  });
+
+  public readonly selectedAccount = computed(() => {
+    return this.selectedAccounts()[0];
+  });
+
+  public readonly selectedAccountNames = computed(() => {
+    return this.selectedAccounts()
+      .map(({ name }) => {
+        return name;
+      })
+      .join(', ');
   });
 
   public readonly sortedAccounts = computed(() => {
@@ -74,7 +94,7 @@ export class GfAccountSelectorComponent
     self: true
   });
 
-  private readonly selectedAccountId = signal<string | null>(null);
+  private readonly selectedAccountIds = signal<string[]>([]);
 
   public constructor() {
     // Register as the value accessor manually, because injecting NgControl
@@ -83,12 +103,10 @@ export class GfAccountSelectorComponent
       this.ngControl.valueAccessor = this;
     }
 
-    this.control.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe((accountId) => {
-        this.selectedAccountId.set(accountId);
-        this.onChange(accountId);
-      });
+    this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
+      this.selectedAccountIds.set(this.getAccountIds(value));
+      this.onChange(value);
+    });
   }
 
   public ngOnInit() {
@@ -101,7 +119,7 @@ export class GfAccountSelectorComponent
     this.onTouched();
   }
 
-  public registerOnChange(fn: (accountId: string | null) => void) {
+  public registerOnChange(fn: (value: AccountSelectorValue) => void) {
     this.onChange = fn;
   }
 
@@ -117,12 +135,25 @@ export class GfAccountSelectorComponent
     }
   }
 
-  public writeValue(accountId: string | null) {
-    this.control.setValue(accountId ?? null, { emitEvent: false });
-    this.selectedAccountId.set(accountId ?? null);
+  public writeValue(value: AccountSelectorValue) {
+    const accountIds = this.getAccountIds(value);
+
+    this.control.setValue(
+      this.multiple() ? accountIds : (accountIds[0] ?? null),
+      { emitEvent: false }
+    );
+    this.selectedAccountIds.set(accountIds);
   }
 
-  private onChange: (accountId: string | null) => void = () => {
+  private getAccountIds(value: AccountSelectorValue) {
+    if (Array.isArray(value)) {
+      return value;
+    }
+
+    return value ? [value] : [];
+  }
+
+  private onChange: (value: AccountSelectorValue) => void = () => {
     // ControlValueAccessor onChange callback
   };
 

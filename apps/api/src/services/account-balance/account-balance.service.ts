@@ -159,12 +159,16 @@ export class AccountBalanceService {
   }): Promise<AccountBalancesResponse> {
     const where: Prisma.AccountBalanceWhereInput = { userId };
 
-    const { ACCOUNT: [filterByAccount] = [] } = groupBy(filters, ({ type }) => {
+    const { ACCOUNT: filtersByAccount = [] } = groupBy(filters, ({ type }) => {
       return type;
     });
 
-    if (filterByAccount) {
-      where.accountId = filterByAccount.id;
+    if (filtersByAccount.length > 0) {
+      where.accountId = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
     }
 
     if (withExcludedAccounts === false) {
