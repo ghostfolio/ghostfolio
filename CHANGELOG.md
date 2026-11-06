@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the build executor of the client from `@nx/angular:browser-esbuild` to `@nx/angular:application`
+- Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `ngx-skeleton-loader` from version `13.0.0` to `14.0.0`
 
