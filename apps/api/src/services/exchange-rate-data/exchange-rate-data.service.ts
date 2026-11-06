@@ -257,6 +257,13 @@ export class ExchangeRateDataService {
       return 0;
     }
 
+    if (!aFromCurrency || !aToCurrency) {
+      // The currency of the value is unknown (e.g. an account without a
+      // currency), so no conversion can be performed. Return the value
+      // unchanged instead of logging an error for a "null" currency.
+      return aValue;
+    }
+
     let factor: number;
 
     if (aFromCurrency === aToCurrency) {
