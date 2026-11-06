@@ -69,29 +69,29 @@
   },
   "targets": {
     "build": {
-      "executor": "@nx/angular:browser-esbuild",
+      "executor": "@nx/angular:application",
       "options": {
         "index": "apps/client/src/index.html",
-        "main": "apps/client/src/main.ts",
-        "outputPath": "dist/apps/client",
+        "browser": "apps/client/src/main.ts",
+        "outputPath": {
+          "base": "dist/apps/client",
+          "browser": ""
+        },
         "tsConfig": "apps/client/tsconfig.app.json",
-        "buildOptimizer": false,
         "deleteOutputPath": false,
         "extractLicenses": false,
         "localize": true,
         "namedChunks": true,
-        "ngswConfigPath": "apps/client/ngsw-config.json",
         "optimization": false,
-        "polyfills": "apps/client/src/polyfills.ts",
-        "serviceWorker": true,
+        "polyfills": ["apps/client/src/polyfills.ts"],
+        "serviceWorker": "apps/client/ngsw-config.json",
         "sourceMap": true,
         "styles": [
           "apps/client/src/assets/fonts/inter.css",
           "apps/client/src/styles/theme.scss",
           "apps/client/src/styles.scss",
           "node_modules/open-color/open-color.css"
-        ],
-        "vendorChunk": true
+        ]
       },
       "configurations": {
         "development-ca": {
@@ -163,7 +163,6 @@
               "maximumError": "10kb"
             }
           ],
-          "buildOptimizer": true,
           "extractLicenses": true,
           "fileReplacements": [
             {
@@ -174,11 +173,10 @@
           "namedChunks": false,
           "optimization": true,
           "outputHashing": "all",
-          "sourceMap": false,
-          "vendorChunk": false
+          "sourceMap": false
         }
       },
-      "outputs": ["{options.outputPath}"],
+      "outputs": ["{options.outputPath.base}"],
       "defaultConfiguration": ""
     },
     "copy-assets": {
