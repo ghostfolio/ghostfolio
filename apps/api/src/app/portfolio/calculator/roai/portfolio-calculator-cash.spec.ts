@@ -161,6 +161,7 @@ describe('PortfolioCalculator', () => {
           balances: [
             {
               accountId,
+              comment: null,
               date: parseDate('2023-12-31'),
               id: randomUUID(),
               value: 1000,
@@ -168,6 +169,7 @@ describe('PortfolioCalculator', () => {
             },
             {
               accountId,
+              comment: null,
               date: parseDate('2024-12-31'),
               id: randomUUID(),
               value: 2000,
@@ -176,6 +178,7 @@ describe('PortfolioCalculator', () => {
             {
               // Ignored future account balance
               accountId,
+              comment: null,
               date: parseDate('2050-12-31'),
               id: randomUUID(),
               value: 0,
@@ -348,6 +351,7 @@ describe('PortfolioCalculator', () => {
           balances: [
             {
               accountId,
+              comment: null,
               date: parseDate('2023-12-31'),
               id: randomUUID(),
               value: 1000,
@@ -355,6 +359,7 @@ describe('PortfolioCalculator', () => {
             },
             {
               accountId,
+              comment: null,
               date: parseDate('2024-12-31'),
               id: randomUUID(),
               value: 2000,
@@ -488,6 +493,7 @@ describe('PortfolioCalculator', () => {
           balances: [
             {
               accountId,
+              comment: null,
               date: parseDate('2023-12-31'),
               id: randomUUID(),
               value: 2000,

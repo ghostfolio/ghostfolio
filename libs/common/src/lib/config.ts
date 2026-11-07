@@ -144,6 +144,7 @@ export const DEFAULT_REDACTED_PATHS = [
   'balance',
   'balanceInBaseCurrency',
   'balances[*].account.comment',
+  'balances[*].comment',
   'balances[*].value',
   'balances[*].valueInBaseCurrency',
   'comment',

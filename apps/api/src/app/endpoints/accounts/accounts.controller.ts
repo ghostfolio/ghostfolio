@@ -221,7 +221,7 @@ export class AccountsController {
   @RequiresScope(scopes.accountUpdate)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async createAccountBalance(
-    @Body() { balance, date }: CreateAccountBalanceDto,
+    @Body() { balance, comment, date }: CreateAccountBalanceDto,
     @Impersonation() { userId }: ImpersonationContext,
     @Param('id') id: string
   ): Promise<AccountBalanceResponse> {
@@ -242,12 +242,19 @@ export class AccountsController {
     const accountBalance =
       await this.accountBalanceService.createOrUpdateAccountBalance({
         balance,
+        comment,
         date,
         accountId: account.id,
         userId: account.userId
       });
 
-    return pick(accountBalance, ['accountId', 'date', 'id', 'value']);
+    return pick(accountBalance, [
+      'accountId',
+      'comment',
+      'date',
+      'id',
+      'value'
+    ]);
   }
 
   @HasPermission(permissions.updateAccount)

@@ -1,3 +1,5 @@
+import { COMMENT_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
+
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { DataSource, Type } from '@prisma/client';
 import { readFileSync } from 'node:fs';
@@ -30,6 +32,29 @@ describe('ImportDataDto', () => {
         type: 'body'
       })
     ).resolves.toBeInstanceOf(ImportDataDto);
+  });
+
+  it('refuses a comment of an account balance which exceeds the maximum length', async () => {
+    const importData = loadImportData('ok', 'sample.json');
+
+    importData.accounts[0].balances[0].comment = 'a'.repeat(
+      COMMENT_MAXIMUM_LENGTH + 1
+    );
+
+    const error: unknown = await validationPipe
+      .transform(importData, {
+        metatype: ImportDataDto,
+        type: 'body'
+      })
+      .catch((validationError: unknown) => validationError);
+
+    expect(error).toBeInstanceOf(BadRequestException);
+
+    expect((error as BadRequestException).getResponse()).toMatchObject({
+      message: [
+        `accounts.0.balances.0.comment must be shorter than or equal to ${COMMENT_MAXIMUM_LENGTH} characters`
+      ]
+    });
   });
 
   it.each([

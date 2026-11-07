@@ -54,6 +54,7 @@ export class AccountBalanceController {
     return this.accountBalanceService.createOrUpdateAccountBalance({
       accountId: account.id,
       balance: data.balance,
+      comment: data.comment,
       date: data.date,
       userId: account.userId
     });
