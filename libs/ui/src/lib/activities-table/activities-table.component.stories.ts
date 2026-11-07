@@ -155,7 +155,7 @@ const activities: Activity[] = [
   {
     accountId: '776bd1e9-b2f6-4f7e-933d-18756c2f0625',
     accountUserId: '081aa387-487d-4438-83a4-3060eb2a016e',
-    comment: null,
+    comment: 'Bitcoin exposure via spot ETF',
     createdAt: new Date('2024-03-12T15:15:21.217Z'),
     currency: 'USD',
     date: new Date('2024-03-12T15:14:38.597Z'),
