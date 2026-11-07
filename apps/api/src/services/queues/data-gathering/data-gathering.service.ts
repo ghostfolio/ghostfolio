@@ -104,7 +104,11 @@ export class DataGatheringService {
     );
 
     for (const assetProfile of Object.values(assetProfiles)) {
-      const { symbol } = assetProfile;
+      const { dataSource, symbol } = assetProfile;
+
+      if (!dataSource || !symbol) {
+        continue;
+      }
 
       const symbolProfile = symbolProfiles.find(
         ({ symbol: symbolProfileSymbol }) => {
@@ -145,7 +149,6 @@ export class DataGatheringService {
         countries,
         currency,
         cusip,
-        dataSource,
         figi,
         figiComposite,
         figiShareClass,
@@ -161,17 +164,17 @@ export class DataGatheringService {
           create: {
             assetClass,
             assetSubClass,
-            countries,
-            currency,
+            countries: countries as Prisma.InputJsonValue,
+            currency: currency as string,
             cusip,
             dataSource,
             figi,
             figiComposite,
             figiShareClass,
-            holdings,
+            holdings: holdings as Prisma.InputJsonValue,
             isin,
             name,
-            sectors,
+            sectors: sectors as Prisma.InputJsonValue,
             symbol,
             url
           },
@@ -187,9 +190,15 @@ export class DataGatheringService {
             name,
             url,
             // Keep the stored data if no list is available
-            countries: isEmpty(countries) ? undefined : countries,
-            holdings: isEmpty(holdings) ? undefined : holdings,
-            sectors: isEmpty(sectors) ? undefined : sectors
+            countries: isEmpty(countries)
+              ? undefined
+              : (countries as Prisma.InputJsonValue),
+            holdings: isEmpty(holdings)
+              ? undefined
+              : (holdings as Prisma.InputJsonValue),
+            sectors: isEmpty(sectors)
+              ? undefined
+              : (sectors as Prisma.InputJsonValue)
           },
           where: {
             dataSource_symbol: {
@@ -408,7 +417,7 @@ export class DataGatheringService {
             jobId: `${getAssetProfileIdentifier({
               dataSource,
               symbol
-            })}-${format(date, DATE_FORMAT, { in: utc })}`
+            })}${date ? `-${format(date, DATE_FORMAT, { in: utc })}` : ''}`
           }
         };
       })

@@ -29,7 +29,7 @@ export class I18nService implements OnModuleInit {
     return routerLink.map((link) => {
       const match = link.match(I18nService.TRANSLATION_TAGGED_MESSAGE_REGEX);
 
-      const segment = match
+      const segment = match?.groups
         ? this.getTranslation({
             languageCode,
             id: match.groups.id
