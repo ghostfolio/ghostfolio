@@ -31,7 +31,9 @@ export const PortfolioSnapshotServiceMock = {
       }
     };
 
-    PortfolioSnapshotServiceMock.jobsStore.set(opts?.jobId, mockJob);
+    if (opts?.jobId) {
+      PortfolioSnapshotServiceMock.jobsStore.set(opts.jobId, mockJob);
+    }
 
     return Promise.resolve(mockJob as Job);
   },
