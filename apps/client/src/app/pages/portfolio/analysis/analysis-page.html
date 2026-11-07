@@ -508,10 +508,10 @@
         </div>
         <gf-toggle
           class="d-none d-lg-block"
-          [defaultValue]="mode()"
+          [defaultValue]="investmentGroupBy()"
           [isLoading]="false"
           [options]="modeOptions"
-          (valueChange)="onChangeGroupBy($event.value)"
+          (valueChange)="onChangeInvestmentGroupBy($event.value)"
         />
       </div>
       @if (streaks) {
@@ -543,7 +543,7 @@
           [benchmarkDataLabel]="investmentTimelineDataLabel"
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
-          [groupBy]="mode()"
+          [groupBy]="investmentGroupBy()"
           [isInPercentage]="showValuesInPercentage()"
           [isLoading]="isLoadingInvestmentTimelineChart"
           [locale]="user?.settings?.locale"
@@ -566,10 +566,10 @@
         </div>
         <gf-toggle
           class="d-none d-lg-block"
-          [defaultValue]="mode()"
+          [defaultValue]="dividendGroupBy()"
           [isLoading]="false"
           [options]="modeOptions"
-          (valueChange)="onChangeGroupBy($event.value)"
+          (valueChange)="onChangeDividendGroupBy($event.value)"
         />
       </div>
       <div class="chart-container">
@@ -579,7 +579,7 @@
           [benchmarkDataLabel]="dividendTimelineDataLabel"
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
-          [groupBy]="mode()"
+          [groupBy]="dividendGroupBy()"
           [isInPercentage]="showValuesInPercentage()"
           [isLoading]="isLoadingDividendTimelineChart"
           [locale]="user?.settings?.locale"
