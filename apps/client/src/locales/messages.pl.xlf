@@ -7670,7 +7670,7 @@
       </trans-unit>
       <trans-unit id="6608617124920241143" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="@if ( assetProfile?.currency &amp;&amp; data.baseCurrency !== assetProfile?.currency ) {"/> Performance with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Performance <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
-        <target state="new"><x id="START_BLOCK_IF" equiv-text="@if ( SymbolProfile?.currency &amp;&amp; data.baseCurrency !== SymbolProfile?.currency ) {"/> Wydajność z efektem walutowym <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Wydajność <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
+        <target state="translated"><x id="START_BLOCK_IF" equiv-text="@if ( assetProfile?.currency &amp;&amp; data.baseCurrency !== assetProfile?.currency ) {"/> Wynik z efektem walutowym <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Wynik <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">87</context>
@@ -8400,7 +8400,7 @@
       </trans-unit>
       <trans-unit id="1322586333669103999" datatype="html">
         <source>Performance</source>
-        <target state="translated">Wydajność</target>
+        <target state="translated">Wynik</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">101</context>
@@ -8653,7 +8653,7 @@
       </trans-unit>
       <trans-unit id="7588205374923801261" datatype="html">
         <source>Performance Calculation</source>
-        <target state="translated">Obliczanie wydajności</target>
+        <target state="translated">Metoda obliczania wyniku</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">37</context>
