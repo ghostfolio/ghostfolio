@@ -6497,7 +6497,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.about" datatype="html">
         <source>Learn about Ghostfolio, the open source wealth management application to track stocks, ETFs and cryptocurrencies, and the community behind the project.</source>
-        <target state="new">Learn about Ghostfolio, the open source wealth management application to track stocks, ETFs and cryptocurrencies, and the community behind the project.</target>
+        <target state="translated">Lerne Ghostfolio kennen, die Open Source Software für die Vermögensverwaltung zum Überwachen von Aktien, ETFs und Kryptowährungen, und die Community dahinter.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">12</context>
@@ -6505,7 +6505,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.about.changelog" datatype="html">
         <source>See what is new in Ghostfolio. The changelog lists the features, improvements and fixes of each release of the open source wealth management software.</source>
-        <target state="new">See what is new in Ghostfolio. The changelog lists the features, improvements and fixes of each release of the open source wealth management software.</target>
+        <target state="translated">Erfahre, was es Neues in Ghostfolio gibt. Im Changelog findest du die Features, Verbesserungen und Fehlerbehebungen jeder Version der Open Source Software.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">17</context>
@@ -6513,7 +6513,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.about.license" datatype="html">
         <source>Ghostfolio is open source software under the AGPL-3.0 license. Read the full license text that applies to the source code of the wealth management software.</source>
-        <target state="new">Ghostfolio is open source software under the AGPL-3.0 license. Read the full license text that applies to the source code of the wealth management software.</target>
+        <target state="translated">Ghostfolio ist eine Open Source Software unter der AGPL-3.0 Lizenz. Lies den vollständigen Lizenztext, der für den Quellcode der Software für die Vermögensverwaltung gilt.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">22</context>
@@ -6521,7 +6521,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.about.ossFriends" datatype="html">
         <source>Discover the OSS Friends of Ghostfolio: a collection of other exciting open source software projects that you can explore and support.</source>
-        <target state="new">Discover the OSS Friends of Ghostfolio: a collection of other exciting open source software projects that you can explore and support.</target>
+        <target state="translated">Entdecke die OSS Friends von Ghostfolio: eine Sammlung weiterer interessanter Open Source Software Projekte, die du erkunden und unterstützen kannst.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">27</context>
@@ -6529,7 +6529,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.about.privacyPolicy" datatype="html">
         <source>Read the Privacy Policy of Ghostfolio to learn how the open source wealth management software handles your personal data and protects your privacy.</source>
-        <target state="new">Read the Privacy Policy of Ghostfolio to learn how the open source wealth management software handles your personal data and protects your privacy.</target>
+        <target state="translated">Lies die Datenschutzbestimmungen von Ghostfolio und erfahre, wie die Open Source Software mit deinen persönlichen Daten umgeht und deine Privatsphäre schützt.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">31</context>
@@ -6537,7 +6537,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.about.termsOfService" datatype="html">
         <source>Read the Terms of Service for the use of Ghostfolio, the web application and API of the open source software to manage your wealth.</source>
-        <target state="new">Read the Terms of Service for the use of Ghostfolio, the web application and API of the open source software to manage your wealth.</target>
+        <target state="translated">Lies die Allgemeinen Geschäftsbedingungen für die Nutzung von Ghostfolio, der Webanwendung und der API der Open Source Software zur Verwaltung deines Vermögens.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -6545,7 +6545,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.blog" datatype="html">
         <source>Read the latest Ghostfolio updates and insights on personal finance: release announcements, investing topics, community news and open source milestones.</source>
-        <target state="new">Read the latest Ghostfolio updates and insights on personal finance: release announcements, investing topics, community news and open source milestones.</target>
+        <target state="translated">Lies die neuesten Ghostfolio Updates zu persönlichen Finanzen: neue Versionen, Themen rund ums Investieren, News aus der Community und Open Source Meilensteine.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">40</context>
@@ -6553,7 +6553,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.faq" datatype="html">
         <source>Find answers to common questions about Ghostfolio: what the open source wealth management software does, which assets it tracks and how it protects privacy.</source>
-        <target state="new">Find answers to common questions about Ghostfolio: what the open source wealth management software does, which assets it tracks and how it protects privacy.</target>
+        <target state="translated">Finde Antworten auf häufige Fragen zu Ghostfolio: was die Open Source Software kann, welche Anlagen sie überwacht und wie sie deine Privatsphäre schützt.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">45</context>
@@ -6561,7 +6561,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.faq.saas" datatype="html">
         <source>Find answers to common questions about the managed Ghostfolio cloud offering: how to sign up, what you get for free and what Ghostfolio Premium includes.</source>
-        <target state="new">Find answers to common questions about the managed Ghostfolio cloud offering: how to sign up, what you get for free and what Ghostfolio Premium includes.</target>
+        <target state="translated">Finde Antworten auf häufige Fragen zum verwalteten Ghostfolio Cloud-Angebot: wie du dich registrierst, was du kostenlos erhältst und was Ghostfolio Premium beinhaltet.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">50</context>
@@ -6569,7 +6569,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.faq.selfHosting" datatype="html">
         <source>Find answers to common questions about self-hosting Ghostfolio: how to start, which home server systems are available and how to add a new currency.</source>
-        <target state="new">Find answers to common questions about self-hosting Ghostfolio: how to start, which home server systems are available and how to add a new currency.</target>
+        <target state="translated">Finde Antworten auf häufige Fragen zum Self-Hosting von Ghostfolio: wie du loslegst, welche Home Server Systeme verfügbar sind und wie du eine neue Währung hinzufügst.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">55</context>
@@ -6577,7 +6577,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.features" datatype="html">
         <source>Explore the features of Ghostfolio: track stocks, ETFs, bonds, cryptocurrencies, dividends and liabilities, and analyze your portfolio with open source tools.</source>
-        <target state="new">Explore the features of Ghostfolio: track stocks, ETFs, bonds, cryptocurrencies, dividends and liabilities, and analyze your portfolio with open source tools.</target>
+        <target state="translated">Entdecke die Features von Ghostfolio: Überwache Aktien, ETFs, Anleihen, Kryptowährungen, Dividenden und Verbindlichkeiten und analysiere dein Portfolio mit Open Source Tools.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">60</context>
@@ -6585,7 +6585,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.markets" datatype="html">
         <source>Check the current mood of the financial markets with the Fear and Greed Index and compare the trends of major benchmarks in Ghostfolio.</source>
-        <target state="new">Check the current mood of the financial markets with the Fear and Greed Index and compare the trends of major benchmarks in Ghostfolio.</target>
+        <target state="translated">Prüfe die aktuelle Stimmung an den Finanzmärkten mit dem Fear and Greed Index und vergleiche die Trends wichtiger Benchmarks in Ghostfolio.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">65</context>
@@ -6593,7 +6593,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.openStartup" datatype="html">
         <source>Ghostfolio is an Open Startup: see the public key metrics of the platform, including active users, GitHub stars, Docker Hub pulls and uptime.</source>
-        <target state="new">Ghostfolio is an Open Startup: see the public key metrics of the platform, including active users, GitHub stars, Docker Hub pulls and uptime.</target>
+        <target state="translated">Ghostfolio ist ein Open Startup: Sieh dir die öffentlichen Kennzahlen der Plattform an, darunter aktive Nutzer, Sterne auf GitHub, Downloads auf Docker Hub und Verfügbarkeit.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">69</context>
@@ -6601,7 +6601,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.pricing" datatype="html">
         <source>Compare the plans of Ghostfolio: run the open source software on your own infrastructure for free or get the managed Ghostfolio Premium cloud offering.</source>
-        <target state="new">Compare the plans of Ghostfolio: run the open source software on your own infrastructure for free or get the managed Ghostfolio Premium cloud offering.</target>
+        <target state="translated">Vergleiche die Preispläne von Ghostfolio: Betreibe die Open Source Software kostenlos auf deiner eigenen Infrastruktur oder nutze das verwaltete Ghostfolio Premium Cloud-Angebot.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">74</context>
@@ -6609,7 +6609,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.register" datatype="html">
         <source>Create your account and get started with Ghostfolio, the open source software to track stocks, ETFs and cryptocurrencies.</source>
-        <target state="new">Create your account and get started with Ghostfolio, the open source software to track stocks, ETFs and cryptocurrencies.</target>
+        <target state="translated">Erstelle dein Konto und starte mit Ghostfolio, der Open Source Software zum Überwachen von Aktien, ETFs und Kryptowährungen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">79</context>
@@ -6617,7 +6617,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.resources" datatype="html">
         <source>Explore the Ghostfolio resources on personal finance and investing: guides, a glossary, market tools and comparisons of personal finance tools.</source>
-        <target state="new">Explore the Ghostfolio resources on personal finance and investing: guides, a glossary, market tools and comparisons of personal finance tools.</target>
+        <target state="translated">Entdecke die Ghostfolio Ressourcen zum Investieren: Ratgeber, ein Lexikon, Tools zu den Finanzmärkten und Vergleiche von Tools für persönliche Finanzen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">83</context>
@@ -6625,7 +6625,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.resources.glossary" datatype="html">
         <source>Learn the key terms of personal finance and investing in the Ghostfolio glossary, from buy and hold and dollar-cost averaging to FIRE and stagflation.</source>
-        <target state="new">Learn the key terms of personal finance and investing in the Ghostfolio glossary, from buy and hold and dollar-cost averaging to FIRE and stagflation.</target>
+        <target state="translated">Lerne die wichtigsten Begriffe zu persönlichen Finanzen und zum Investieren im Ghostfolio Lexikon kennen, von Buy and Hold und Cost-Average-Effekt bis zu FIRE und Stagflation.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">88</context>
@@ -6633,7 +6633,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.resources.guides" datatype="html">
         <source>Get started with investing with the Ghostfolio guides: a diversified, low-cost strategy and the steps to get your personal finances in order.</source>
-        <target state="new">Get started with investing with the Ghostfolio guides: a diversified, low-cost strategy and the steps to get your personal finances in order.</target>
+        <target state="translated">Starte mit den Ratgebern von Ghostfolio ins Investieren: eine diversifizierte, kostengünstige Strategie und die Schritte, um deine persönlichen Finanzen in Ordnung zu bringen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">93</context>
@@ -6641,7 +6641,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.resources.markets" datatype="html">
         <source>Follow the financial markets with tools such as the Crypto Coins Heatmap, the Fear and Greed Index, the Inflation Chart and the Stock Heatmap.</source>
-        <target state="new">Follow the financial markets with tools such as the Crypto Coins Heatmap, the Fear and Greed Index, the Inflation Chart and the Stock Heatmap.</target>
+        <target state="translated">Verfolge die Finanzmärkte mit Tools wie der Crypto Coins Heatmap, dem Fear and Greed Index, dem Inflation Chart und der Stock Heatmap.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">97</context>
@@ -6649,7 +6649,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.resources.personalFinanceTools" datatype="html">
         <source>Discover open source alternatives for personal finance tools. Compare popular apps with Ghostfolio and take control of your finances, data and privacy.</source>
-        <target state="new">Discover open source alternatives for personal finance tools. Compare popular apps with Ghostfolio and take control of your finances, data and privacy.</target>
+        <target state="translated">Entdecke Open Source Alternativen für Personal Finance Tools. Vergleiche beliebte Apps mit Ghostfolio und übernimm die Kontrolle über deine Finanzen, Daten und Privatsphäre.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">102</context>
@@ -6657,7 +6657,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.resources.personalFinanceTools.product" datatype="html">
         <source>Compare Ghostfolio vs ${name}: the open source alternative on features, data privacy and pricing.</source>
-        <target state="new">Compare Ghostfolio vs ${name}: the open source alternative on features, data privacy and pricing.</target>
+        <target state="translated">Ghostfolio vs ${name} im Vergleich: die Open Source Alternative bei Features, Datenschutz und Preisen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">107</context>
