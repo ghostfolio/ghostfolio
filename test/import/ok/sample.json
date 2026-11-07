@@ -7,10 +7,12 @@
     {
       "balances": [
         {
+          "comment": "Deposit of the annual savings",
           "date": "2024-12-31T00:00:00.000Z",
           "value": 2000
         },
         {
+          "comment": null,
           "date": "2023-12-31T00:00:00.000Z",
           "value": 1000
         }

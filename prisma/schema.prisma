@@ -58,6 +58,7 @@ model Account {
 model AccountBalance {
   account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
   accountId String
+  comment   String?
   createdAt DateTime @default(now())
   date      DateTime @default(now())
   id        String   @id @default(uuid())

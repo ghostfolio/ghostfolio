@@ -35,6 +35,7 @@ import { format } from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
   calendarClearOutline,
+  documentTextOutline,
   ellipsisHorizontal,
   trashOutline
 } from 'ionicons/icons';
@@ -70,7 +71,12 @@ export class GfAccountBalancesComponent implements OnChanges {
 
   public readonly accountCurrency = input.required<string | null>();
   public readonly currentBalance = input<number | null>();
-  public readonly displayedColumns: string[] = ['date', 'value', 'actions'];
+  public readonly displayedColumns: string[] = [
+    'date',
+    'value',
+    'comment',
+    'actions'
+  ];
   public readonly isSubmitting = input(false);
 
   public readonly locale = input(getLocale(), {
@@ -95,7 +101,12 @@ export class GfAccountBalancesComponent implements OnChanges {
   private notificationService = inject(NotificationService);
 
   public constructor() {
-    addIcons({ calendarClearOutline, ellipsisHorizontal, trashOutline });
+    addIcons({
+      calendarClearOutline,
+      documentTextOutline,
+      ellipsisHorizontal,
+      trashOutline
+    });
 
     effect(() => {
       const currentBalance = this.currentBalance();
@@ -125,6 +136,12 @@ export class GfAccountBalancesComponent implements OnChanges {
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete this account balance?`
+    });
+  }
+
+  public onOpenComment(aComment: string) {
+    this.notificationService.alert({
+      title: aComment
     });
   }
 

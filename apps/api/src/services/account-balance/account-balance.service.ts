@@ -46,6 +46,7 @@ export class AccountBalanceService {
   public async createOrUpdateAccountBalance({
     accountId,
     balance,
+    comment,
     date,
     userId
   }: CreateAccountBalanceDto & {
@@ -54,14 +55,17 @@ export class AccountBalanceService {
   }): Promise<AccountBalance> {
     const dateOfBalance = resetHours(parseISO(date));
 
+    // A missing comment keeps the comment of an existing account balance
     const accountBalance = await this.prismaService.accountBalance.upsert({
       create: {
         accountId,
+        comment,
         userId,
         date: dateOfBalance,
         value: balance
       },
       update: {
+        comment,
         value: balance
       },
       where: {
@@ -178,6 +182,7 @@ export class AccountBalanceService {
       },
       select: {
         account: true,
+        comment: true,
         date: true,
         id: true,
         value: true

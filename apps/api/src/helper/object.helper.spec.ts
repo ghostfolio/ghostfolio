@@ -1,5 +1,8 @@
 import { DEFAULT_REDACTED_PATHS } from '@ghostfolio/common/config';
-import { PortfolioDetails } from '@ghostfolio/common/interfaces';
+import {
+  AccountBalancesResponse,
+  PortfolioDetails
+} from '@ghostfolio/common/interfaces';
 
 import { query, redactPaths } from './object.helper';
 
@@ -3391,6 +3394,39 @@ describe('redactAttributes', () => {
           netPerformancePercentWithCurrencyEffect: 0.8328704068843998,
           netPerformanceWithCurrencyEffect: null,
           quantity: null,
+          valueInBaseCurrency: null
+        }
+      ]
+    });
+  });
+
+  // The type makes sure that the object keeps the shape of the response of the
+  // endpoint GET api/v1/account/:id/balances
+  it('should redact the account balances of a response', () => {
+    expect(
+      redactPaths({
+        object: {
+          balances: [
+            {
+              accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+              comment: 'Interest credited',
+              date: new Date('2026-11-06T00:00:00.000Z'),
+              id: 'd1b5a2c4-7f3e-4b8a-9c6d-2e1f0a3b4c5d',
+              value: 1000,
+              valueInBaseCurrency: 916.4
+            }
+          ]
+        } satisfies AccountBalancesResponse,
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toStrictEqual({
+      balances: [
+        {
+          accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+          comment: null,
+          date: '2026-11-06T00:00:00.000Z',
+          id: 'd1b5a2c4-7f3e-4b8a-9c6d-2e1f0a3b4c5d',
+          value: null,
           valueInBaseCurrency: null
         }
       ]

@@ -163,6 +163,7 @@ describe('PortfolioCalculator (ROI)', () => {
           balances: [
             {
               accountId,
+              comment: null,
               date: parseDate('2023-12-31'),
               id: randomUUID(),
               value: 1000,
@@ -170,6 +171,7 @@ describe('PortfolioCalculator (ROI)', () => {
             },
             {
               accountId,
+              comment: null,
               date: parseDate('2024-12-31'),
               id: randomUUID(),
               value: 0,

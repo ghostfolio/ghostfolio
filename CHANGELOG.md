@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `comment` to the `AccountBalance` database schema as a preparation for notes in the account balances
 - Added the discovery endpoints of OAuth 2.1 to the server of the Model Context Protocol (MCP) (experimental)
 
 ### Changed
