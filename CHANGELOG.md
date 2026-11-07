@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the _Storybook_ stories of the accounts table component
+- Improved the _Storybook_ stories of the activities table component
 - Changed the build executor of the client from `@nx/angular:browser-esbuild` to `@nx/angular:application`
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
