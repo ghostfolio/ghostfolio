@@ -1,5 +1,5 @@
 export interface AccountBalance {
-  comment: string | null;
+  comment?: string;
   date: string;
   value: number;
 }

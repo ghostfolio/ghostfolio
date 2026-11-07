@@ -116,9 +116,15 @@ export class ExportService {
           }
 
           return {
-            balances: balances.map(({ comment, date, value }) => {
-              return { comment, value, date: date.toISOString() };
-            }),
+            balances: balances.map(
+              ({ comment: balanceComment, date, value }) => {
+                return {
+                  ...(balanceComment ? { comment: balanceComment } : {}),
+                  value,
+                  date: date.toISOString()
+                };
+              }
+            ),
             comment,
             currency,
             id,
