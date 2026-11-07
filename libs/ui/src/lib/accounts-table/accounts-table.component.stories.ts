@@ -47,7 +47,7 @@ const accounts: AccountWithValue[] = [
     allocationInPercentage: 0.11114023065971035,
     balance: 12000,
     balanceInBaseCurrency: 12000,
-    comment: null,
+    comment: 'Emergency fund for 6 months of living expenses',
     createdAt: new Date('2025-06-01T06:48:53.055Z'),
     currency: 'USD',
     dividendInBaseCurrency: 0,
