@@ -107,33 +107,42 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    if (response.dataSource !== 'YAHOO' && !response.isin) {
+    const { isin } = response;
+
+    if (response.dataSource !== 'YAHOO' && !isin) {
       return response;
     }
 
     try {
-      let yahooSymbol: string;
+      let yahooSymbol: string | undefined;
 
       if (response.dataSource === 'YAHOO') {
         yahooSymbol = symbol;
-      } else {
-        const { quotes } = await this.yahooFinance.search(response.isin);
-        yahooSymbol = quotes[0].symbol as string;
+      } else if (isin) {
+        const { quotes } = await this.yahooFinance.search(isin);
+        yahooSymbol = (quotes?.[0] as { symbol?: string })?.symbol;
       }
 
-      const { countries, sectors, url } =
-        await this.getAssetProfile(yahooSymbol);
-
-      if ((countries as unknown as Prisma.JsonArray)?.length > 0) {
-        response.countries = countries;
+      if (!yahooSymbol) {
+        return response;
       }
 
-      if ((sectors as unknown as Prisma.JsonArray)?.length > 0) {
-        response.sectors = sectors;
-      }
+      const assetProfile = await this.getAssetProfile(yahooSymbol);
 
-      if (url) {
-        response.url = url;
+      if (assetProfile) {
+        const { countries, sectors, url } = assetProfile;
+
+        if ((countries as unknown as Prisma.JsonArray)?.length > 0) {
+          response.countries = countries;
+        }
+
+        if ((sectors as unknown as Prisma.JsonArray)?.length > 0) {
+          response.sectors = sectors;
+        }
+
+        if (url) {
+          response.url = url;
+        }
       }
     } catch (error) {
       this.logger.error(error.message);
@@ -175,8 +184,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
   public async getAssetProfile(
     aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
-    let response: Partial<SymbolProfile> = {};
+  ): Promise<Partial<SymbolProfile> | undefined> {
+    let response: Partial<SymbolProfile> | undefined = {};
 
     try {
       let symbol = aSymbol;
@@ -199,6 +208,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         modules: ['price', 'summaryProfile', 'topHoldings']
       });
 
+      if (!assetProfile?.price?.symbol) {
+        return undefined;
+      }
+
       const { assetClass, assetSubClass } = this.parseAssetClass({
         quoteType: assetProfile.price.quoteType,
         shortName: assetProfile.price.shortName
@@ -206,19 +219,19 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
       response.assetClass = assetClass;
       response.assetSubClass = assetSubClass;
-      response.currency = assetProfile.price?.currency;
+      response.currency = assetProfile.price.currency;
       response.dataSource = this.getName();
       response.name = this.formatName({
-        longName: assetProfile.price?.longName,
-        quoteType: assetProfile.price?.quoteType,
-        shortName: assetProfile.price?.shortName,
-        symbol: assetProfile.price?.symbol
+        longName: assetProfile.price.longName,
+        quoteType: assetProfile.price.quoteType,
+        shortName: assetProfile.price.shortName,
+        symbol: assetProfile.price.symbol
       });
       response.symbol = this.convertFromYahooFinanceSymbol(
         assetProfile.price.symbol
       );
 
-      if (['ETF', 'MUTUALFUND'].includes(assetSubClass)) {
+      if (assetSubClass === 'ETF' || assetSubClass === 'MUTUALFUND') {
         response.holdings =
           assetProfile.topHoldings?.holdings
             ?.filter(({ holdingName }) => {
@@ -301,14 +314,14 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     quoteType,
     shortName
   }: {
-    quoteType: string;
-    shortName: string;
+    quoteType?: string;
+    shortName?: string | null;
   }): {
-    assetClass: AssetClass;
-    assetSubClass: AssetSubClass;
+    assetClass?: AssetClass;
+    assetSubClass?: AssetSubClass;
   } {
-    let assetClass: AssetClass;
-    let assetSubClass: AssetSubClass;
+    let assetClass: AssetClass | undefined;
+    let assetSubClass: AssetSubClass | undefined;
 
     switch (quoteType?.toLowerCase()) {
       case 'cryptocurrency':
