@@ -104,7 +104,11 @@ export class DataGatheringService {
     );
 
     for (const assetProfile of Object.values(assetProfiles)) {
-      const { symbol } = assetProfile;
+      const { dataSource, symbol } = assetProfile;
+
+      if (!dataSource || !symbol) {
+        continue;
+      }
 
       const symbolProfile = symbolProfiles.find(
         ({ symbol: symbolProfileSymbol }) => {
@@ -145,7 +149,6 @@ export class DataGatheringService {
         countries,
         currency,
         cusip,
-        dataSource,
         figi,
         figiComposite,
         figiShareClass,
@@ -161,19 +164,19 @@ export class DataGatheringService {
           create: {
             assetClass,
             assetSubClass,
-            countries,
-            currency,
             cusip,
             dataSource,
             figi,
             figiComposite,
             figiShareClass,
-            holdings,
             isin,
             name,
-            sectors,
             symbol,
-            url
+            url,
+            countries: countries ?? undefined,
+            currency: currency as string,
+            holdings: holdings ?? undefined,
+            sectors: sectors ?? undefined
           },
           update: {
             assetClass,
@@ -187,9 +190,11 @@ export class DataGatheringService {
             name,
             url,
             // Keep the stored data if no list is available
-            countries: isEmpty(countries) ? undefined : countries,
-            holdings: isEmpty(holdings) ? undefined : holdings,
-            sectors: isEmpty(sectors) ? undefined : sectors
+            countries: isEmpty(countries)
+              ? undefined
+              : (countries ?? undefined),
+            holdings: isEmpty(holdings) ? undefined : (holdings ?? undefined),
+            sectors: isEmpty(sectors) ? undefined : (sectors ?? undefined)
           },
           where: {
             dataSource_symbol: {
@@ -408,7 +413,7 @@ export class DataGatheringService {
             jobId: `${getAssetProfileIdentifier({
               dataSource,
               symbol
-            })}-${format(date, DATE_FORMAT, { in: utc })}`
+            })}-${format(date as Date, DATE_FORMAT, { in: utc })}`
           }
         };
       })
