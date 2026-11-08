@@ -114,7 +114,7 @@ https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
 
 #### Create schema migration
 
-Run `npm run prisma migrate dev --name added_job_title`
+Run `npm run prisma -- migrate dev --name added_job_title`
 
 https://www.prisma.io/docs/concepts/components/prisma-migrate#getting-started-with-prisma-migrate
 
