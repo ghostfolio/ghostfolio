@@ -167,8 +167,8 @@ export class GfAdminPlatformComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource(platforms);
         this.dataSource.paginator = this.paginator();
-        this.dataSource.sort = this.sort();
         this.dataSource.sortingDataAccessor = getLowercase;
+        this.dataSource.sort = this.sort();
 
         this.dataService.updateInfo();
 
