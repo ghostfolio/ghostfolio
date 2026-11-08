@@ -124,8 +124,8 @@ export class GfAccountBalancesComponent implements OnChanges {
     if (this.accountBalances()) {
       this.dataSource = new MatTableDataSource(this.accountBalances());
 
-      this.dataSource.sort = this.sort();
       this.dataSource.sortingDataAccessor = get;
+      this.dataSource.sort = this.sort();
     }
   }
 

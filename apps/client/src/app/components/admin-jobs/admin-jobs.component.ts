@@ -202,8 +202,8 @@ export class GfAdminJobsComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ jobs }) => {
         this.dataSource = new MatTableDataSource(jobs);
-        this.dataSource.sort = this.sort();
         this.dataSource.sortingDataAccessor = get;
+        this.dataSource.sort = this.sort();
 
         this.isLoading = false;
 

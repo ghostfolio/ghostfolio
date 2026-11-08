@@ -185,8 +185,8 @@ export class GfAdminSettingsComponent implements OnInit {
         });
 
         this.dataSource = new MatTableDataSource(filteredProviders);
-        this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = get;
+        this.dataSource.sort = this.sort;
 
         const ghostfolioApiKey = settings[
           PROPERTY_API_KEY_GHOSTFOLIO
