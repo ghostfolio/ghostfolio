@@ -164,19 +164,19 @@ export class DataGatheringService {
           create: {
             assetClass,
             assetSubClass,
-            countries: countries as Prisma.InputJsonValue,
-            currency: currency as string,
             cusip,
             dataSource,
             figi,
             figiComposite,
             figiShareClass,
-            holdings: holdings as Prisma.InputJsonValue,
             isin,
             name,
-            sectors: sectors as Prisma.InputJsonValue,
             symbol,
-            url
+            url,
+            countries: countries ?? undefined,
+            currency: currency as string,
+            holdings: holdings ?? undefined,
+            sectors: sectors ?? undefined
           },
           update: {
             assetClass,
@@ -192,13 +192,9 @@ export class DataGatheringService {
             // Keep the stored data if no list is available
             countries: isEmpty(countries)
               ? undefined
-              : (countries as Prisma.InputJsonValue),
-            holdings: isEmpty(holdings)
-              ? undefined
-              : (holdings as Prisma.InputJsonValue),
-            sectors: isEmpty(sectors)
-              ? undefined
-              : (sectors as Prisma.InputJsonValue)
+              : (countries ?? undefined),
+            holdings: isEmpty(holdings) ? undefined : (holdings ?? undefined),
+            sectors: isEmpty(sectors) ? undefined : (sectors ?? undefined)
           },
           where: {
             dataSource_symbol: {
@@ -417,7 +413,7 @@ export class DataGatheringService {
             jobId: `${getAssetProfileIdentifier({
               dataSource,
               symbol
-            })}${date ? `-${format(date, DATE_FORMAT, { in: utc })}` : ''}`
+            })}-${format(date as Date, DATE_FORMAT, { in: utc })}`
           }
         };
       })
