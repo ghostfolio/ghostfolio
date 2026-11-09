@@ -76,7 +76,9 @@ export class ImportActivitiesService {
       header: true,
       skipEmptyLines: true,
       transform: (value) => {
-        return value === '' ? null : value;
+        const trimmedValue = value.trim();
+
+        return trimmedValue === '' ? null : trimmedValue;
       }
     }).data;
 
