@@ -17,7 +17,7 @@ import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 export class TwitterBotService implements OnModuleInit {
   private readonly logger = new Logger(TwitterBotService.name);
 
-  private twitterClient: TwitterApiReadWrite;
+  private twitterClient?: TwitterApiReadWrite;
 
   public constructor(
     private readonly benchmarkService: BenchmarkService,
@@ -27,18 +27,40 @@ export class TwitterBotService implements OnModuleInit {
   ) {}
 
   public onModuleInit() {
-    this.twitterClient = new TwitterApi({
-      accessSecret: this.configurationService.get(
-        'TWITTER_ACCESS_TOKEN_SECRET'
-      ),
-      accessToken: this.configurationService.get('TWITTER_ACCESS_TOKEN'),
-      appKey: this.configurationService.get('TWITTER_API_KEY'),
-      appSecret: this.configurationService.get('TWITTER_API_SECRET')
-    }).readWrite;
+    const accessSecret = this.configurationService.get(
+      'TWITTER_ACCESS_TOKEN_SECRET'
+    );
+    const accessToken = this.configurationService.get('TWITTER_ACCESS_TOKEN');
+    const appKey = this.configurationService.get('TWITTER_API_KEY');
+    const appSecret = this.configurationService.get('TWITTER_API_SECRET');
+
+    const areCredentialsSet = !!(
+      accessSecret &&
+      accessToken &&
+      appKey &&
+      appSecret
+    );
+
+    if (areCredentialsSet) {
+      this.twitterClient = new TwitterApi({
+        accessSecret,
+        accessToken,
+        appKey,
+        appSecret
+      }).readWrite;
+    } else if (
+      this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX') &&
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')
+    ) {
+      this.logger.warn(
+        'ENABLE_FEATURE_FEAR_AND_GREED_INDEX and ENABLE_FEATURE_SUBSCRIPTION are enabled, but not all TWITTER_* credentials are set. The twitter bot service does not post the Fear & Greed Index.'
+      );
+    }
   }
 
   public async tweetFearAndGreedIndex() {
     if (
+      !this.twitterClient ||
       !this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX') ||
       isWeekend(new Date())
     ) {
