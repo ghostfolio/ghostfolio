@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the parsing of text columns and dates with a time in the import of activities from CSV files
+- Fixed the parsing of text columns and dates with a time zone in the import of activities from CSV files
 
 ## 3.99.0 - 2026-11-07
 
