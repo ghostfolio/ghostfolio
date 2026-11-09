@@ -120,7 +120,11 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         yahooSymbol = symbol;
       } else if (isin) {
         const { quotes } = await this.yahooFinance.search(isin);
-        yahooSymbol = (quotes?.[0] as { symbol?: string })?.symbol;
+        const firstQuote = quotes?.[0];
+
+        if (firstQuote?.isYahooFinance) {
+          yahooSymbol = firstQuote.symbol;
+        }
       }
 
       if (!yahooSymbol) {
@@ -209,7 +213,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       });
 
       if (!assetProfile?.price?.symbol) {
-        return undefined;
+        throw new Error(`No price data found for ${symbol}`);
       }
 
       const { assetClass, assetSubClass } = this.parseAssetClass({
@@ -317,11 +321,11 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     quoteType?: string;
     shortName?: string | null;
   }): {
-    assetClass?: AssetClass;
-    assetSubClass?: AssetSubClass;
+    assetClass: AssetClass;
+    assetSubClass: AssetSubClass;
   } {
-    let assetClass: AssetClass | undefined;
-    let assetSubClass: AssetSubClass | undefined;
+    let assetClass: AssetClass;
+    let assetSubClass: AssetSubClass;
 
     switch (quoteType?.toLowerCase()) {
       case 'cryptocurrency':

@@ -334,8 +334,8 @@ export function formatAssetProfileName({
   assetSubClass,
   name
 }: {
-  assetSubClass?: AssetSubClass;
-  name?: string;
+  assetSubClass?: AssetSubClass | null;
+  name?: string | null;
 }) {
   if (assetSubClass === 'CRYPTOCURRENCY') {
     // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
