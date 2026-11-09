@@ -6562,7 +6562,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.markets" datatype="html">
         <source>Check the current mood of the financial markets with the Fear and Greed Index and compare the trends of major benchmarks in Ghostfolio.</source>
-        <target state="translated">Consulta el sentimiento actual de los mercados financieros con el índice de miedo y codicia y compara las tendencias de los principales índices de referencia en Ghostfolio.</target>
+        <target state="translated">Consulta el sentimiento actual de los mercados financieros con el Fear and Greed Index y compara las tendencias de los principales índices de referencia en Ghostfolio.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">65</context>
@@ -6618,7 +6618,7 @@
       </trans-unit>
       <trans-unit id="metaDescription.resources.markets" datatype="html">
         <source>Follow the financial markets with tools such as the Crypto Coins Heatmap, the Fear and Greed Index, the Inflation Chart and the Stock Heatmap.</source>
-        <target state="translated">Sigue los mercados financieros con herramientas como el mapa de calor de criptomonedas, el índice de miedo y codicia, el gráfico de inflación y el mapa de calor de acciones.</target>
+        <target state="translated">Sigue los mercados financieros con herramientas como el Crypto Coins Heatmap, el Fear and Greed Index, el Inflation Chart y el Stock Heatmap.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">97</context>
