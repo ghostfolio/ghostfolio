@@ -25,6 +25,7 @@
     "database:setup": "npm run database:push && npm run database:seed",
     "database:validate-schema": "prisma validate",
     "dep-graph": "nx dep-graph",
+    "dev": "nx run-many --target=copy-assets --projects=api,client && nx run-many --target=serve --projects=api,client --configuration=development-en",
     "extract-locales": "nx run client:extract-i18n --output-path ./apps/client/src/locales",
     "format": "nx format:write",
     "format:check": "nx format:check",
