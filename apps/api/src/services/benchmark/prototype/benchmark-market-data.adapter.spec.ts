@@ -26,6 +26,19 @@ function marketData({
 }
 
 describe('Benchmark MarketData adapter', () => {
+  it('preserves the UTC calendar date of original quotations', () => {
+    const result = adaptBenchmarkMarketData({
+      marketData: [
+        marketData({
+          date: '2025-01-10',
+          price: 100
+        })
+      ]
+    });
+
+    expect(result.prices[0].date).toBe('2025-01-10');
+  });
+
   it('keeps original CLOSE prices in chronological order', () => {
     const result = adaptBenchmarkMarketData({
       marketData: [

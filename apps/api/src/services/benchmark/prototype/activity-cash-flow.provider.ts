@@ -1,6 +1,7 @@
 import { Activity } from '@ghostfolio/common/interfaces';
 import { AssetSubClass } from '@ghostfolio/prisma/browser';
 
+import { utc } from '@date-fns/utc';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
 
@@ -95,7 +96,7 @@ export function createActivityFunding({
       activityType: activity.type,
       amount: (activity.type === 'BUY' ? amount : amount.neg()).toString(),
       currency,
-      date: format(activity.date, 'yyyy-MM-dd'),
+      date: format(activity.date, 'yyyy-MM-dd', { in: utc }),
       source: 'ACTIVITY_PROXY'
     });
   }

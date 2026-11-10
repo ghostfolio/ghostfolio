@@ -1,3 +1,4 @@
+import { utc } from '@date-fns/utc';
 import { MarketData } from '@prisma/client';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
@@ -36,14 +37,14 @@ export function adaptBenchmarkMarketData({
 
     if (!Number.isFinite(item.marketPrice) || item.marketPrice <= 0) {
       throw new Error(
-        `Invalid benchmark market price: ${format(item.date, 'yyyy-MM-dd')}`
+        `Invalid benchmark market price: ${format(item.date, 'yyyy-MM-dd', { in: utc })}`
       );
     }
 
     const price = new Big(item.marketPrice);
 
     prices.push({
-      date: format(item.date, 'yyyy-MM-dd'),
+      date: format(item.date, 'yyyy-MM-dd', { in: utc }),
       price: price.toString()
     });
   }

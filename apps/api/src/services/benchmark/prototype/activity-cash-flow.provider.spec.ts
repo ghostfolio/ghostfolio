@@ -26,6 +26,22 @@ function makeActivity({
 }
 
 describe('ActivityCashFlowProvider', () => {
+  it('preserves the UTC calendar date of activities', () => {
+    const result = createActivityFunding({
+      activities: [
+        makeActivity({
+          id: 'utc-midnight',
+          date: new Date('2025-01-10T00:00:00.000Z')
+        })
+      ],
+      currency: 'EUR'
+    });
+
+    expect(result.canSimulate).toBe(true);
+    expect(result.events[0].date).toBe('2025-01-10');
+    expect(result.flows[0].date).toBe('2025-01-10');
+  });
+
   it('converts BUY and SELL into signed investment proxies', () => {
     const result = createActivityFunding({
       activities: [

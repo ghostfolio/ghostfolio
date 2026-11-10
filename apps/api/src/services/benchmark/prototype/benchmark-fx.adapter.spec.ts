@@ -182,6 +182,36 @@ describe('Benchmark historical FX adapter', () => {
     ).toThrow('Stale FX rate: USDEUR 2025-01-18');
   });
 
+  it('does not fall back to USD when a direct pair starts after the valuation date', () => {
+    expect(() =>
+      convertBenchmarkPrices({
+        prices: [{ date: '2025-01-05', price: '100' }],
+        currencyFrom: 'GBP',
+        currencyTo: 'EUR',
+        fxQuotes: [
+          {
+            currencyFrom: 'GBP',
+            currencyTo: 'EUR',
+            date: '2025-01-10',
+            rate: '1.15'
+          },
+          {
+            currencyFrom: 'GBP',
+            currencyTo: 'USD',
+            date: '2025-01-02',
+            rate: '1.25'
+          },
+          {
+            currencyFrom: 'USD',
+            currencyTo: 'EUR',
+            date: '2025-01-02',
+            rate: '0.92'
+          }
+        ]
+      })
+    ).toThrow('Missing FX rate: GBPEUR 2025-01-05');
+  });
+
   it('converts indirectly from GBP to EUR through USD', () => {
     const result = convertBenchmarkPrices({
       prices: [{ date: '2025-01-10', price: '80' }],
