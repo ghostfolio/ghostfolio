@@ -1,0 +1,31 @@
+{
+  "name": "Ghostfolio",
+  "dockerComposeFile": [
+    "../docker/docker-compose.dev.yml",
+    "docker-compose.yml"
+  ],
+  "service": "app",
+  "workspaceFolder": "/workspaces/ghostfolio",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "node",
+  "forwardPorts": [3333, 4200],
+  "portsAttributes": {
+    "3333": {
+      "label": "API"
+    },
+    "4200": {
+      "label": "Client"
+    }
+  },
+  "postCreateCommand": "npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "angular.ng-template",
+        "esbenp.prettier-vscode",
+        "firsttris.vscode-jest-runner",
+        "nrwl.angular-console"
+      ]
+    }
+  }
+}
