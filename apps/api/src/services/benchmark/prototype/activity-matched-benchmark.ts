@@ -259,6 +259,140 @@ export function simulateBenchmark(input: SimulationInput): FinancialPoint[] {
   return simulateNormalizedBenchmark(normalizeBenchmarkInput(input));
 }
 
+interface FinancialRangeObservation {
+  date: string;
+  capital: Big;
+  netPerformance: Big;
+  returnFraction: Big;
+}
+
+/** Financial state advances only for eligible financial observations.
+ * Range selection and input validation remain the caller's responsibility.
+ */
+export class IncrementalFinancialEvaluator {
+  private first: FinancialPoint | undefined;
+  private previous: FinancialPoint | undefined;
+  private previousDay = 0;
+  private openingGain = new Big(0);
+  private roiCapital = new Big(0);
+  private weighted = new Big(0);
+  private days = 0;
+
+  public constructor(
+    private readonly method: 'ROI' | 'ROAI',
+    baseline?: { point: FinancialPoint; value: Big; currentDay: number }
+  ) {
+    // Composition can open a range on a display date. This establishes only
+    // range normalization; the preceding canonical financial point is retained.
+    if (baseline) {
+      const { point, value, currentDay } = baseline;
+      this.first = {
+        ...point,
+        value,
+        netPerformance: value.minus(point.costBasis).plus(point.realizedGain)
+      };
+      this.openingGain = value.minus(point.costBasis);
+      this.roiCapital = value;
+      this.previous = point;
+      this.previousDay = currentDay;
+    }
+  }
+
+  private observation(
+    date: string,
+    costBasis: Big,
+    netPerformance: Big,
+    weighted: Big,
+    days: number
+  ): FinancialRangeObservation {
+    const capital =
+      this.method === 'ROI'
+        ? this.roiCapital
+        : costBasis.gt(0)
+          ? weighted.plus(costBasis.plus(this.openingGain)).div(days + 1)
+          : days > 0
+            ? weighted.div(days)
+            : new Big(0);
+    return {
+      date,
+      capital,
+      netPerformance,
+      returnFraction: capital.gt(0) ? netPerformance.div(capital) : new Big(0)
+    };
+  }
+
+  private weightedThrough(currentDay: number): { weighted: Big; days: number } {
+    let weighted = this.weighted;
+    let days = this.days;
+    if (this.method === 'ROAI' && this.previous.costBasis.gt(0)) {
+      const duration = currentDay - this.previousDay;
+      weighted = weighted.plus(
+        this.previous.costBasis.plus(this.openingGain).mul(duration)
+      );
+      days += duration;
+    }
+    return { weighted, days };
+  }
+
+  public projectDisplayPoint(
+    date: string,
+    value: Big,
+    currentDay: number
+  ): FinancialRangeObservation {
+    if (!this.first || !this.previous) {
+      throw new Error(`Missing financial baseline: ${date}`);
+    }
+    const { weighted, days } = this.weightedThrough(currentDay);
+    const netPerformance = value
+      .minus(this.previous.costBasis)
+      .plus(this.previous.realizedGain)
+      .minus(this.first.netPerformance);
+    return this.observation(
+      date,
+      this.previous.costBasis,
+      netPerformance,
+      weighted,
+      days
+    );
+  }
+
+  public addFinancialPoint(
+    point: FinancialPoint,
+    currentDay: number
+  ): FinancialRangeObservation {
+    if (!this.first) {
+      this.first = point;
+      this.openingGain = this.first.value.minus(this.first.costBasis);
+      this.roiCapital = this.first.value;
+    }
+    if (this.previous) {
+      if (this.method === 'ROI') {
+        const change = point.costBasis.minus(this.previous.costBasis);
+        if (change.gt(0)) {
+          this.roiCapital = this.roiCapital.plus(change);
+        }
+      } else {
+        const { weighted, days } = this.weightedThrough(currentDay);
+        this.weighted = weighted;
+        this.days = days;
+      }
+    }
+    const netPerformance = point.netPerformance.minus(
+      this.first.netPerformance
+    );
+    const result = this.observation(
+      point.date,
+      point.costBasis,
+      netPerformance,
+      this.weighted,
+      this.days
+    );
+    this.previous = point;
+    this.previousDay = currentDay;
+    return result;
+  }
+}
+
 /** Mirrors upstream getPerformance range normalization and historical ROI/ROAI
  * denominators, NOT holding-level ROAI or overall snapshot aggregation.
  * costBasis is upstream totalInvestment: sales remove average COST, not proceeds.
@@ -275,21 +409,10 @@ export function evaluateRange(
   if (method !== 'ROI' && method !== 'ROAI') {
     throw new Error('Unsupported method');
   }
-  const result: {
-    date: string;
-    capital: Big;
-    netPerformance: Big;
-    returnFraction: Big;
-  }[] = [];
-  let first: FinancialPoint | undefined;
-  let previous: FinancialPoint | undefined;
-  let previousDay = 0;
-  let openingGain = new Big(0);
-  let roiCapital = new Big(0);
-  let weighted = new Big(0);
-  let days = 0;
-  // Validate, select and evaluate in one pass. Do not compute ROAI during ROI
-  // evaluation (or ROI during ROAI). No filtered history allocation is needed.
+  const result: FinancialRangeObservation[] = [];
+  const evaluator = new IncrementalFinancialEvaluator(method);
+  // Validate, select and evaluate in one pass. No filtered history allocation
+  // or financial state changes for display-only/out-of-range observations.
   for (let i = 0; i < points.length; i++) {
     const point = points[i];
     const currentDay = day(point.date);
@@ -299,42 +422,7 @@ export function evaluateRange(
     if (point.displayOnly || point.date < start || point.date > end) {
       continue;
     }
-    if (!first) {
-      first = point;
-      openingGain = first.value.minus(first.costBasis);
-      roiCapital = first.value;
-    }
-    if (previous) {
-      if (method === 'ROI') {
-        const change = point.costBasis.minus(previous.costBasis);
-        if (change.gt(0)) {
-          roiCapital = roiCapital.plus(change);
-        }
-      } else if (previous.costBasis.gt(0)) {
-        const duration = currentDay - previousDay;
-        weighted = weighted.plus(
-          previous.costBasis.plus(openingGain).mul(duration)
-        );
-        days += duration;
-      }
-    }
-    const capital =
-      method === 'ROI'
-        ? roiCapital
-        : point.costBasis.gt(0)
-          ? weighted.plus(point.costBasis.plus(openingGain)).div(days + 1)
-          : days > 0
-            ? weighted.div(days)
-            : new Big(0);
-    const netPerformance = point.netPerformance.minus(first.netPerformance);
-    result.push({
-      date: point.date,
-      capital,
-      netPerformance,
-      returnFraction: capital.gt(0) ? netPerformance.div(capital) : new Big(0)
-    });
-    previous = point;
-    previousDay = currentDay;
+    result.push(evaluator.addFinancialPoint(point, currentDay));
   }
   return result;
 }

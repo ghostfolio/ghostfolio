@@ -5,6 +5,7 @@ import type {
   HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
+import type { BenchmarkComparisonMode } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
@@ -31,6 +32,14 @@ export class UpdateUserSettingDto {
   @IsString()
   @IsOptional()
   benchmark?: string;
+
+  @IsIn([
+    'TRADITIONAL',
+    'ACTIVITY_MATCHED_ROI',
+    'ACTIVITY_MATCHED_ROAI'
+  ] as BenchmarkComparisonMode[])
+  @IsOptional()
+  benchmarkComparisonMode?: BenchmarkComparisonMode;
 
   @IsIn(['DARK', 'LIGHT'] as ColorScheme[])
   @IsOptional()

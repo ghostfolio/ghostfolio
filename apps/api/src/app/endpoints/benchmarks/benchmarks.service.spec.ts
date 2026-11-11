@@ -1,9 +1,12 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ActivityMatchedBenchmarkService } from '@ghostfolio/api/services/benchmark/activity-matched-benchmark.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolService } from '@ghostfolio/api/services/symbol/symbol.service';
 import { parseDate } from '@ghostfolio/common/helper';
+import { Filter, UserSettings } from '@ghostfolio/common/interfaces';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { DataSource } from '@prisma/client';
 
@@ -16,6 +19,7 @@ describe('BenchmarksService', () => {
   let getPerformance: jest.Mock;
   let getRange: jest.Mock;
   let marketDataItems: jest.Mock;
+  let getActivityMatchedMarketData: jest.Mock;
 
   beforeEach(() => {
     get = jest.fn().mockResolvedValue({ currency: 'USD', marketPrice: 200 });
@@ -30,13 +34,17 @@ describe('BenchmarksService', () => {
     });
     getRange = jest.fn().mockResolvedValue([]);
     marketDataItems = jest.fn();
+    getActivityMatchedMarketData = jest.fn();
 
     benchmarksService = new BenchmarksService(
       new BenchmarkService(null, null, null, null, null, null),
       { getExchangeRatesByCurrency } as unknown as ExchangeRateDataService,
       { getRange, marketDataItems } as unknown as MarketDataService,
       { getPerformance } as unknown as PortfolioService,
-      { get } as unknown as SymbolService
+      { get } as unknown as SymbolService,
+      {
+        getMarketDataForUser: getActivityMatchedMarketData
+      } as unknown as ActivityMatchedBenchmarkService
     );
   });
 
@@ -173,6 +181,202 @@ describe('BenchmarksService', () => {
       await expect(getMarketDataForUser()).resolves.toEqual({
         marketData: []
       });
+    });
+  });
+
+  describe('comparison mode dispatch', () => {
+    const chart = [{ date: '2010-07-18' }, { date: '2010-07-19' }];
+    const filters: Filter[] = [
+      { type: 'ACCOUNT', id: 'selected-account' },
+      { type: 'TAG', id: 'selected-tag' }
+    ];
+    const request = (userSettings: UserSettings) => ({
+      dataSource: DataSource.COINGECKO,
+      symbol: 'bitcoin',
+      dateRange: 'max' as const,
+      startDate: new Date('2010-07-18T00:00:00Z'),
+      endDate: new Date('2010-07-19T00:00:00Z'),
+      userId: 'authenticated-user',
+      filters,
+      withExcludedAccounts: false,
+      userSettings
+    });
+
+    beforeEach(() => {
+      getPerformance.mockResolvedValue({ chart });
+      marketDataItems.mockResolvedValue([
+        { date: new Date('2010-07-18T00:00:00Z'), marketPrice: 50 },
+        { date: new Date('2010-07-19T00:00:00Z'), marketPrice: 100 }
+      ]);
+    });
+
+    it.each([
+      { baseCurrency: 'EUR' },
+      { baseCurrency: 'EUR', isExperimentalFeatures: true },
+      {
+        baseCurrency: 'EUR',
+        isExperimentalFeatures: true,
+        benchmarkComparisonMode: 'TRADITIONAL'
+      },
+      {
+        baseCurrency: 'EUR',
+        isExperimentalFeatures: false,
+        benchmarkComparisonMode: 'ACTIVITY_MATCHED_ROI'
+      },
+      {
+        baseCurrency: 'EUR',
+        isExperimentalFeatures: false,
+        benchmarkComparisonMode: 'ACTIVITY_MATCHED_ROAI'
+      },
+      { baseCurrency: 'EUR', benchmarkComparisonMode: 'ACTIVITY_MATCHED_ROI' }
+    ] as UserSettings[])(
+      'preserves the traditional response and queries for %j',
+      async (settings) => {
+        expect(
+          await benchmarksService.getMarketDataForUser(request(settings))
+        ).toEqual({
+          marketData: [
+            { date: '2010-07-18', value: 0 },
+            { date: '2010-07-19', value: 100 }
+          ]
+        });
+        expect(getActivityMatchedMarketData).not.toHaveBeenCalled();
+        expect(getPerformance).toHaveBeenCalledTimes(1);
+        expect(get).toHaveBeenCalledTimes(1);
+        expect(marketDataItems).toHaveBeenCalledTimes(1);
+        expect(getExchangeRatesByCurrency).toHaveBeenCalledTimes(1);
+        expect(getRange).not.toHaveBeenCalled();
+      }
+    );
+
+    it.each([
+      ['ACTIVITY_MATCHED_ROI', 'ROI', PerformanceCalculationType.MWR],
+      ['ACTIVITY_MATCHED_ROI', 'ROI', PerformanceCalculationType.TWR],
+      ['ACTIVITY_MATCHED_ROI', 'ROI', PerformanceCalculationType.ROAI],
+      ['ACTIVITY_MATCHED_ROI', 'ROI', PerformanceCalculationType.ROI],
+      ['ACTIVITY_MATCHED_ROAI', 'ROAI', PerformanceCalculationType.MWR],
+      ['ACTIVITY_MATCHED_ROAI', 'ROAI', PerformanceCalculationType.TWR],
+      ['ACTIVITY_MATCHED_ROAI', 'ROAI', PerformanceCalculationType.ROI],
+      ['ACTIVITY_MATCHED_ROAI', 'ROAI', PerformanceCalculationType.ROAI]
+    ] as const)(
+      'dispatches %s as %s independently from portfolio method %s',
+      async (benchmarkComparisonMode, method, performanceCalculationType) => {
+        const response = {
+          marketData: [
+            { date: '2010-07-18', value: 0 },
+            { date: '2010-07-19', value: 12.5 }
+          ]
+        };
+        getActivityMatchedMarketData.mockResolvedValue(response);
+        const args = request({
+          baseCurrency: 'EUR',
+          isExperimentalFeatures: true,
+          benchmarkComparisonMode,
+          performanceCalculationType
+        });
+        expect(await benchmarksService.getMarketDataForUser(args)).toBe(
+          response
+        );
+        expect(getPerformance.mock.calls).toEqual([
+          [
+            {
+              dateRange: 'max',
+              filters,
+              userId: 'authenticated-user',
+              withExcludedAccounts: false
+            }
+          ]
+        ]);
+        expect(getActivityMatchedMarketData.mock.calls).toEqual([
+          [
+            {
+              userId: 'authenticated-user',
+              filters,
+              dataSource: DataSource.COINGECKO,
+              symbol: 'bitcoin',
+              currency: 'EUR',
+              valuationDates: ['2010-07-18', '2010-07-19'],
+              start: '2010-07-18',
+              end: '2010-07-19',
+              method
+            }
+          ]
+        ]);
+        for (const mock of [
+          get,
+          marketDataItems,
+          getRange,
+          getExchangeRatesByCurrency
+        ])
+          expect(mock).not.toHaveBeenCalled();
+      }
+    );
+
+    it('passes an empty chart to the activity-matched service without traditional queries', async () => {
+      getPerformance.mockResolvedValue({ chart: [] });
+      getActivityMatchedMarketData.mockResolvedValue({ marketData: [] });
+      expect(
+        await benchmarksService.getMarketDataForUser(
+          request({
+            baseCurrency: 'EUR',
+            isExperimentalFeatures: true,
+            benchmarkComparisonMode: 'ACTIVITY_MATCHED_ROI'
+          })
+        )
+      ).toEqual({ marketData: [] });
+      expect(getActivityMatchedMarketData).toHaveBeenCalledWith(
+        expect.objectContaining({ valuationDates: [] })
+      );
+      expect(getPerformance).toHaveBeenCalledTimes(1);
+      for (const mock of [
+        get,
+        marketDataItems,
+        getRange,
+        getExchangeRatesByCurrency
+      ])
+        expect(mock).not.toHaveBeenCalled();
+    });
+
+    it('preserves traditional empty-chart query behavior', async () => {
+      getPerformance.mockResolvedValue({ chart: [] });
+      expect(
+        await benchmarksService.getMarketDataForUser(
+          request({ baseCurrency: 'EUR' })
+        )
+      ).toEqual({ marketData: [] });
+      expect(getActivityMatchedMarketData).not.toHaveBeenCalled();
+      expect(get).toHaveBeenCalledTimes(1);
+      expect(marketDataItems).toHaveBeenCalledWith({
+        orderBy: { date: 'asc' },
+        where: {
+          dataSource: DataSource.COINGECKO,
+          symbol: 'bitcoin',
+          date: { in: [] }
+        }
+      });
+      expect(getExchangeRatesByCurrency).not.toHaveBeenCalled();
+    });
+
+    it('propagates activity-matched errors without a traditional fallback', async () => {
+      const error = new Error('Missing FX rate: USDEUR 2010-07-18');
+      getActivityMatchedMarketData.mockRejectedValue(error);
+      await expect(
+        benchmarksService.getMarketDataForUser(
+          request({
+            baseCurrency: 'EUR',
+            isExperimentalFeatures: true,
+            benchmarkComparisonMode: 'ACTIVITY_MATCHED_ROAI'
+          })
+        )
+      ).rejects.toBe(error);
+      expect(getPerformance).toHaveBeenCalledTimes(1);
+      for (const mock of [
+        get,
+        marketDataItems,
+        getRange,
+        getExchangeRatesByCurrency
+      ])
+        expect(mock).not.toHaveBeenCalled();
     });
   });
 });

@@ -52,6 +52,7 @@ describe('Benchmark display FX valuation without holdings', () => {
     expect(result).toEqual([
       {
         date: '2025-01-18',
+        currency: 'EUR',
         value: '0',
         benchmarkPriceSourceDate: '',
         fxComponents: [],

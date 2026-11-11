@@ -1,4 +1,5 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ActivityMatchedBenchmarkService } from '@ghostfolio/api/services/benchmark/activity-matched-benchmark.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -26,7 +27,8 @@ export class BenchmarksService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly portfolioService: PortfolioService,
-    private readonly symbolService: SymbolService
+    private readonly symbolService: SymbolService,
+    private readonly activityMatchedBenchmarkService: ActivityMatchedBenchmarkService
   ) {}
 
   public async getMarketDataForUser({
@@ -57,6 +59,25 @@ export class BenchmarksService {
       userId,
       withExcludedAccounts
     });
+
+    const comparisonMode = userSettings.benchmarkComparisonMode;
+    if (
+      userSettings.isExperimentalFeatures &&
+      (comparisonMode === 'ACTIVITY_MATCHED_ROI' ||
+        comparisonMode === 'ACTIVITY_MATCHED_ROAI')
+    ) {
+      return this.activityMatchedBenchmarkService.getMarketDataForUser({
+        userId,
+        filters,
+        dataSource,
+        symbol,
+        currency: userCurrency,
+        valuationDates: chart.map(({ date }) => date),
+        start: format(startDate, DATE_FORMAT, { in: utc }),
+        end: format(endDate, DATE_FORMAT, { in: utc }),
+        method: comparisonMode === 'ACTIVITY_MATCHED_ROI' ? 'ROI' : 'ROAI'
+      });
+    }
 
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({

@@ -4,6 +4,7 @@ import type { AccountWithBalance } from './account-with-balance.type';
 import type { AccountWithPlatform } from './account-with-platform.type';
 import type { AccountWithValue } from './account-with-value.type';
 import type { AiPromptMode } from './ai-prompt-mode.type';
+import type { BenchmarkComparisonMode } from './benchmark-comparison-mode.type';
 import type { BenchmarkTrend } from './benchmark-trend.type';
 import type { ColorScheme } from './color-scheme.type';
 import type { DateRange } from './date-range.type';
@@ -36,6 +37,7 @@ export type {
   AccountWithPlatform,
   AccountWithValue,
   AiPromptMode,
+  BenchmarkComparisonMode,
   BenchmarkTrend,
   ColorScheme,
   DateRange,

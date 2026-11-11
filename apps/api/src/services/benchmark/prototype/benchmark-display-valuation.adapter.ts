@@ -16,6 +16,7 @@ import {
 } from './benchmark-price-policy';
 
 export interface BenchmarkDisplayValuation {
+  currency: string;
   date: string;
   value: string;
   benchmarkPriceSourceDate: string;
@@ -170,6 +171,7 @@ export function createBenchmarkDisplayValuations({
     if (!price) {
       return {
         date: point.date,
+        currency: currencyTo,
         value: '0',
         benchmarkPriceSourceDate: '',
         fxComponents: [],
@@ -194,6 +196,7 @@ export function createBenchmarkDisplayValuations({
 
     return {
       date: point.date,
+      currency: currencyTo,
       value: point.units.mul(new Big(convertedPrice.price)).toString(),
       benchmarkPriceSourceDate: sourceDate,
       ...(fxSourceDate ? { fxSourceDate } : {}),

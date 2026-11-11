@@ -62,6 +62,42 @@
               </div>
             </div>
           }
+          @if (user?.settings?.isExperimentalFeatures) {
+            <div class="align-items-sm-baseline g-0 mb-3 mb-sm-2 row">
+              <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
+                <ng-container i18n>Benchmark Comparison Method</ng-container>
+              </div>
+              <div class="col-sm-6 ps-sm-1">
+                <mat-form-field appearance="outline" class="w-100 without-hint">
+                  <mat-select
+                    name="benchmarkComparisonMode"
+                    [disabled]="
+                      hasImpersonationId || !hasPermissionToUpdateUserSettings
+                    "
+                    [value]="
+                      user.settings.benchmarkComparisonMode ?? 'TRADITIONAL'
+                    "
+                    (selectionChange)="
+                      onChangeUserSetting(
+                        'benchmarkComparisonMode',
+                        $event.value
+                      )
+                    "
+                  >
+                    <mat-option i18n value="TRADITIONAL">
+                      Traditional (Ghostfolio)
+                    </mat-option>
+                    <mat-option i18n value="ACTIVITY_MATCHED_ROI">
+                      Activity-Matched ROI
+                    </mat-option>
+                    <mat-option i18n value="ACTIVITY_MATCHED_ROAI">
+                      Activity-Matched ROAI
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          }
           <div class="align-items-sm-baseline g-0 mb-3 mb-sm-2 row">
             <div class="col-sm-6 mb-1 mb-sm-0 pe-sm-1">
               <div i18n>Language</div>

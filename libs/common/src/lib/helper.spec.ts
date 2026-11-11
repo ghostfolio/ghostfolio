@@ -14,6 +14,7 @@ import {
   getStringOrUndefined,
   isAccountBalanceInFuture,
   isAccountExcluded,
+  isUserSettingOfAuthenticatedUser,
   isCurrency,
   isCurrencySymbol,
   isDarkColorScheme,
@@ -812,6 +813,27 @@ describe('Helper', () => {
       });
 
       expect(benchmark).toEqual('1e5a0e6a-1b8b-4d0e-9f0a-4c2b3d5e6f7a');
+    });
+
+    it('Benchmark comparison mode stays with the authenticated user', () => {
+      const { benchmarkComparisonMode } = resolveUserSettings({
+        impersonationUserSettings: {
+          benchmarkComparisonMode: 'ACTIVITY_MATCHED_ROAI'
+        },
+        userSettings: {
+          benchmarkComparisonMode: 'ACTIVITY_MATCHED_ROI'
+        }
+      });
+
+      expect(benchmarkComparisonMode).toBe('ACTIVITY_MATCHED_ROI');
+    });
+
+    it('Recognizes benchmark comparison mode as a personal setting', () => {
+      expect(isUserSettingOfAuthenticatedUser('benchmarkComparisonMode')).toBe(
+        true
+      );
+
+      expect(isUserSettingOfAuthenticatedUser('baseCurrency')).toBe(false);
     });
 
     it('Filters stay with the authenticated user', () => {

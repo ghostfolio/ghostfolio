@@ -2,6 +2,7 @@ import { Big } from 'big.js';
 
 import {
   evaluateRange,
+  IncrementalFinancialEvaluator,
   simulateBenchmark,
   normalizeBenchmarkInput,
   simulateNormalizedBenchmark
@@ -450,6 +451,103 @@ describe('normalization stage and precision boundaries', () => {
         Big.DP = saved.DP;
         Big.RM = saved.RM;
       }
+    }
+  );
+});
+
+describe('financial range validation contract', () => {
+  it('validates range dates and direction before the method, even without points', () => {
+    const unsupported = 'TWR' as 'ROI';
+    expect(() => evaluateRange([], unsupported, 'invalid', dates[2])).toThrow(
+      'Invalid date: invalid'
+    );
+    expect(() =>
+      evaluateRange([], unsupported, dates[0], '2024-02-30')
+    ).toThrow('Invalid date: 2024-02-30');
+    expect(() => evaluateRange([], unsupported, dates[2], dates[0])).toThrow(
+      'Reversed range'
+    );
+    expect(() => evaluateRange([], unsupported, dates[0], dates[2])).toThrow(
+      'Unsupported method'
+    );
+  });
+
+  it.each([false, true])(
+    'validates dates even for excluded points with displayOnly=%s',
+    (displayOnly) => {
+      const points = [{ ...run(['100'])[0], date: '2024-02-30', displayOnly }];
+      expect(() => evaluateRange(points, 'ROI', dates[0], dates[2])).toThrow(
+        'Invalid date: 2024-02-30'
+      );
+    }
+  );
+
+  it.each([dates[0], '2023-12-31'])(
+    'rejects duplicate or reversed points before excluding display and out-of-range dates (%s)',
+    (date) => {
+      const first = run(['100'])[0];
+      const points = [first, { ...first, date, displayOnly: true }];
+      expect(() => evaluateRange(points, 'ROAI', dates[2], dates[2])).toThrow(
+        'Points must be strictly ordered'
+      );
+    }
+  );
+
+  it.each(['ROI', 'ROAI'] as const)(
+    'returns an empty %s result without eligible financial observations',
+    (method) => {
+      const points = run(['100']);
+      expect(evaluateRange(points, method, '2025-01-01', '2025-01-02')).toEqual(
+        []
+      );
+      expect(
+        evaluateRange(
+          points.map((point) => ({ ...point, displayOnly: true })),
+          method,
+          dates[0],
+          dates[2]
+        )
+      ).toEqual([]);
+    }
+  );
+
+  it('evaluates frozen financial inputs repeatedly without mutating them or prior results', () => {
+    const points = run(['100', '-60'], ['10', '12', '14']);
+    const before = JSON.stringify(points);
+    points.forEach(Object.freeze);
+    Object.freeze(points);
+    const roi = evaluateRange(points, 'ROI', dates[0], dates[2]);
+    const roiBefore = JSON.stringify(roi);
+    const roai = evaluateRange(points, 'ROAI', dates[0], dates[2]);
+    expect(evaluateRange(points, 'ROI', dates[0], dates[2])).toEqual(roi);
+    expect(evaluateRange(points, 'ROAI', dates[0], dates[2])).toEqual(roai);
+    expect(JSON.stringify(points)).toBe(before);
+    expect(JSON.stringify(roi)).toBe(roiBefore);
+  });
+});
+
+describe('Non-mutating incremental projections', () => {
+  it.each(['ROI', 'ROAI'] as const)(
+    'projects repeatedly without writing evaluator state for %s',
+    (method) => {
+      const points = run(['100', '-60'], ['10', '12', '14']);
+      const evaluator = new IncrementalFinancialEvaluator(method);
+      const startDay = Date.parse(`${dates[0]}T00:00:00Z`) / 86400000;
+      evaluator.addFinancialPoint(points[0], startDay);
+      const before = JSON.stringify(evaluator);
+      Object.freeze(evaluator);
+      expect(
+        evaluator
+          .projectDisplayPoint(dates[1], new Big(110), startDay + 1)
+          .returnFraction.toString()
+      ).toBe('0.1');
+      evaluator.projectDisplayPoint(dates[2], new Big(120), startDay + 2);
+      expect(
+        evaluator
+          .projectDisplayPoint(dates[1], new Big(110), startDay + 1)
+          .returnFraction.toString()
+      ).toBe('0.1');
+      expect(JSON.stringify(evaluator)).toBe(before);
     }
   );
 });
