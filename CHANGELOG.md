@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.3.1` to `2.4.0`
+- Upgraded `@modelcontextprotocol/node` from version `2.1.1` to `2.1.2`
+- Upgraded `@rekog/mcp-nest` from version `2.0.8` to `2.0.9`
+
 ### Fixed
 
 - Fixed the parsing of text columns and dates with a time zone in the import of activities from CSV files

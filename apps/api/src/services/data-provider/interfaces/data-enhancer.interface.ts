@@ -13,5 +13,5 @@ export interface DataEnhancerInterface {
 
   getName(): string;
 
-  getTestSymbol(): string;
+  getTestSymbol(): string | undefined;
 }
