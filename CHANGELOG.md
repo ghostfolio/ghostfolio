@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded the `Node.js` engine from version `>=22.23.4` to `>=22.23.5` (`package.json`)
+- Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.3.1` to `2.4.0`
+- Upgraded `@modelcontextprotocol/node` from version `2.1.1` to `2.1.2`
+- Upgraded `@rekog/mcp-nest` from version `2.0.8` to `2.0.9`
 
 ## 3.99.0 - 2026-11-07
 
