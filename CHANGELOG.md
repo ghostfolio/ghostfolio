@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `@modelcontextprotocol/core` and `@modelcontextprotocol/server` from version `2.3.1` to `2.4.0`
 - Upgraded `@modelcontextprotocol/node` from version `2.1.1` to `2.1.2`
 - Upgraded `@rekog/mcp-nest` from version `2.0.8` to `2.0.9`
+- Upgraded `undici` from version `8.12.3` to `8.12.4`
 
 ## 3.99.0 - 2026-11-07
 
