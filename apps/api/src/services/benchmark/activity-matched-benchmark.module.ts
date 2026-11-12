@@ -6,8 +6,8 @@ import { SymbolModule } from '@ghostfolio/api/services/symbol/symbol.module';
 import { Module } from '@nestjs/common';
 
 import { ActivityMatchedBenchmarkService } from './activity-matched-benchmark.service';
-import { BenchmarkFxMarketDataProvider } from './prototype/benchmark-fx-market-data.provider';
-import { BenchmarkMarketDataProvider } from './prototype/benchmark-market-data.provider';
+import { BenchmarkFxMarketDataProvider } from './activity-matched/benchmark-fx-market-data.provider';
+import { BenchmarkMarketDataProvider } from './activity-matched/benchmark-market-data.provider';
 
 @Module({
   imports: [

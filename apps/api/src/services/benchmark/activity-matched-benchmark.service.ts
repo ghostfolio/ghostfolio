@@ -10,12 +10,12 @@ import {
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 
-import { createActivityFunding } from './prototype/activity-cash-flow.provider';
-import { runActivityMatchedBenchmarkPipeline } from './prototype/activity-matched-benchmark.pipeline';
-import { createBenchmarkDisplayValuations } from './prototype/benchmark-display-valuation.adapter';
-import { BenchmarkFxMarketDataProvider } from './prototype/benchmark-fx-market-data.provider';
-import { BenchmarkMarketDataProvider } from './prototype/benchmark-market-data.provider';
-import { composeBenchmarkPerformanceSeries } from './prototype/benchmark-performance-series.adapter';
+import { createActivityFunding } from './activity-matched/activity-cash-flow.provider';
+import { runActivityMatchedBenchmarkPipeline } from './activity-matched/activity-matched-benchmark.pipeline';
+import { createBenchmarkDisplayValuations } from './activity-matched/benchmark-display-valuation.adapter';
+import { BenchmarkFxMarketDataProvider } from './activity-matched/benchmark-fx-market-data.provider';
+import { BenchmarkMarketDataProvider } from './activity-matched/benchmark-market-data.provider';
+import { composeBenchmarkPerformanceSeries } from './activity-matched/benchmark-performance-series.adapter';
 
 export interface ActivityMatchedBenchmarkInput extends AssetProfileIdentifier {
   userId: string;

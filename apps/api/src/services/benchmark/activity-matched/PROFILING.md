@@ -1,4 +1,4 @@
-# Task 3 stage profiling
+# Activity-Matched Benchmark Performance Profiling
 
 Measured 2026-11-09, Node 22.23.4, Linux x86_64, installed Jest/ts-jest.
 No dependencies added. Run the performance spec with `BENCHMARK_PERFORMANCE=1`;
@@ -36,7 +36,7 @@ stages need not sum to the quantile of their combined interval.
 
 ## Before evaluator optimization, on the same hardened timeline
 
-This baseline already includes Task 3's explicit liquidation and complete price
+This pre-optimization baseline already includes explicit liquidation and complete price
 history. Only evaluator scan/allocation and method-specific computation changed
 between these runs. Input normalization and simulation were not optimized.
 
@@ -64,7 +64,7 @@ Both public evaluations still independently validate the history; no shared cach
 or trust boundary was introduced. Retaining linear scans is preferable here to
 repeated reconstruction or introducing hidden shared mutable prepared state.
 
-Task 2's totals are not directly comparable: its output timeline omitted price
+Earlier implementation totals are not directly comparable: its output timeline omitted price
 dates not requested for display. The present canonical timeline intentionally
 fixes that sampling dependence. Sorting is O(E log E + P log P + N log N), merge
 O(E+P+N), and each evaluator O(N), where N <= E+P+D. Memory remains linear.

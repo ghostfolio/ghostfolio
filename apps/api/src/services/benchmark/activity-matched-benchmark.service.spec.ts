@@ -17,10 +17,10 @@ import {
   ActivityMatchedBenchmarkInput,
   ActivityMatchedBenchmarkService
 } from './activity-matched-benchmark.service';
-import { runActivityMatchedBenchmarkPipeline } from './prototype/activity-matched-benchmark.pipeline';
-import * as displayAdapter from './prototype/benchmark-display-valuation.adapter';
-import { BenchmarkFxMarketDataProvider } from './prototype/benchmark-fx-market-data.provider';
-import { BenchmarkMarketDataProvider } from './prototype/benchmark-market-data.provider';
+import { runActivityMatchedBenchmarkPipeline } from './activity-matched/activity-matched-benchmark.pipeline';
+import * as displayAdapter from './activity-matched/benchmark-display-valuation.adapter';
+import { BenchmarkFxMarketDataProvider } from './activity-matched/benchmark-fx-market-data.provider';
+import { BenchmarkMarketDataProvider } from './activity-matched/benchmark-market-data.provider';
 
 // Isolate infrastructure module imports as well as their providers. Loading the
 // real application graph would pull in unrelated network clients and ESM SDKs.
