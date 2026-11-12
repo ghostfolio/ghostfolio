@@ -158,7 +158,9 @@ export class GfSymbolAutocompleteComponent
         this.lookupItems = filteredLookupItems.map((lookupItem) => {
           return {
             ...lookupItem,
-            assetSubClassString: translate(lookupItem.assetSubClass)
+            assetSubClassString: lookupItem.assetSubClass
+              ? translate(lookupItem.assetSubClass)
+              : ''
           };
         });
 
@@ -207,7 +209,9 @@ export class GfSymbolAutocompleteComponent
     this.lookupItems = this.defaultLookupItems.map((lookupItem) => {
       return {
         ...lookupItem,
-        assetSubClassString: translate(lookupItem.assetSubClass)
+        assetSubClassString: lookupItem.assetSubClass
+          ? translate(lookupItem.assetSubClass)
+          : ''
       };
     });
 

@@ -321,11 +321,11 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     quoteType?: string;
     shortName?: string | null;
   }): {
-    assetClass: AssetClass;
-    assetSubClass: AssetSubClass;
+    assetClass?: AssetClass;
+    assetSubClass?: AssetSubClass;
   } {
-    let assetClass: AssetClass;
-    let assetSubClass: AssetSubClass;
+    let assetClass: AssetClass | undefined;
+    let assetSubClass: AssetSubClass | undefined;
 
     switch (quoteType?.toLowerCase()) {
       case 'cryptocurrency':
