@@ -96,7 +96,8 @@ export class GfAnalysisPageComponent implements OnInit {
   protected isLoadingInvestmentTimelineChart: boolean;
   protected isLoadingPerformanceTimelineChart: boolean;
   protected isLoadingPortfolioPrompt: boolean;
-  protected readonly mode = signal<GroupBy>('month');
+  protected readonly dividendGroupBy = signal<GroupBy>('month');
+  protected readonly investmentGroupBy = signal<GroupBy>('month');
   protected readonly modeOptions: ToggleOption<GroupBy>[] = [
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Yearly`, value: 'year' }
@@ -142,7 +143,7 @@ export class GfAnalysisPageComponent implements OnInit {
       return undefined;
     }
 
-    return this.mode() === 'year'
+    return this.investmentGroupBy() === 'year'
       ? this.savingsRatePerMonth * 12
       : this.savingsRatePerMonth;
   }
@@ -186,8 +187,13 @@ export class GfAnalysisPageComponent implements OnInit {
       });
   }
 
-  protected onChangeGroupBy(aMode: GroupBy) {
-    this.mode.set(aMode);
+  protected onChangeDividendGroupBy(aMode: GroupBy) {
+    this.dividendGroupBy.set(aMode);
+    this.fetchDividendsAndInvestments();
+  }
+
+  protected onChangeInvestmentGroupBy(aMode: GroupBy) {
+    this.investmentGroupBy.set(aMode);
     this.fetchDividendsAndInvestments();
   }
 
@@ -248,12 +254,12 @@ export class GfAnalysisPageComponent implements OnInit {
     forkJoin({
       dividends: this.dataService.fetchDividends({
         filters: this.userService.getFilters(),
-        groupBy: this.mode(),
+        groupBy: this.dividendGroupBy(),
         range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       }),
       investments: this.dataService.fetchInvestments({
         filters: this.userService.getFilters(),
-        groupBy: this.mode(),
+        groupBy: this.investmentGroupBy(),
         range: this.user?.settings?.dateRange ?? DEFAULT_DATE_RANGE
       })
     })
@@ -263,35 +269,40 @@ export class GfAnalysisPageComponent implements OnInit {
           dividends: { dividends },
           investments: { investments, savingsRate, streaks }
         }) => {
-          // Expand both timelines to the union of their groups so that the
-          // charts share the same axis, independent of whether a dividend or
-          // an investment has been tracked in a given group
-          const dividendByDate = keyBy(dividends, 'date');
-          const investmentByDate = keyBy(investments, 'date');
+          if (this.dividendGroupBy() === this.investmentGroupBy()) {
+            // Expand both timelines to the union of their groups so that the
+            // charts share the same axis, independent of whether a dividend or
+            // an investment has been tracked in a given group
+            const dividendByDate = keyBy(dividends, 'date');
+            const investmentByDate = keyBy(investments, 'date');
 
-          const dates = sortBy(
-            union(Object.keys(dividendByDate), Object.keys(investmentByDate))
-          );
+            const dates = sortBy(
+              union(Object.keys(dividendByDate), Object.keys(investmentByDate))
+            );
 
-          this.dividendsByGroup = dates.map((date) => {
-            return {
-              date,
-              investment: dividendByDate[date]?.investment ?? 0
-            };
-          });
+            this.dividendsByGroup = dates.map((date) => {
+              return {
+                date,
+                investment: dividendByDate[date]?.investment ?? 0
+              };
+            });
 
-          this.investmentsByGroup = dates.map((date) => {
-            return {
-              date,
-              investment: investmentByDate[date]?.investment ?? 0
-            };
-          });
+            this.investmentsByGroup = dates.map((date) => {
+              return {
+                date,
+                investment: investmentByDate[date]?.investment ?? 0
+              };
+            });
+          } else {
+            this.dividendsByGroup = dividends;
+            this.investmentsByGroup = investments;
+          }
 
           this.savingsRatePerMonth = savingsRate;
           this.streaks = streaks;
 
           this.unitCurrentStreak =
-            this.mode() === 'year'
+            this.investmentGroupBy() === 'year'
               ? this.streaks?.currentStreak === 1
                 ? translate('YEAR')
                 : translate('YEARS')
@@ -300,7 +311,7 @@ export class GfAnalysisPageComponent implements OnInit {
                 : translate('MONTHS');
 
           this.unitLongestStreak =
-            this.mode() === 'year'
+            this.investmentGroupBy() === 'year'
               ? this.streaks?.longestStreak === 1
                 ? translate('YEAR')
                 : translate('YEARS')
