@@ -77,6 +77,7 @@ export const DATE_FORMAT_YEARLY = 'yyyy';
 // overwrite the filters of the authenticated user.
 const USER_SETTINGS_KEYS_OF_AUTHENTICATED_USER: (keyof UserSettings)[] = [
   'benchmark',
+  'benchmarkComparisonMode',
   'colorScheme',
   'dateRange',
   'filters.accounts',

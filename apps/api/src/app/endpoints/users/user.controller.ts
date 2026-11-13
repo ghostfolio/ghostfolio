@@ -240,6 +240,7 @@ export class UserController {
     }
 
     if (!userSettings.isExperimentalFeatures) {
+      delete userSettings.benchmarkComparisonMode;
       delete userSettings.isGhostfolioAiEnabled;
       delete userSettings.performanceCalculationType;
     }
