@@ -179,10 +179,12 @@ export abstract class PortfolioCalculator {
             tags,
             type,
             date: format(date, DATE_FORMAT),
-            fee: new Big(feeInAssetProfileCurrency),
-            feeInBaseCurrency: new Big(feeInBaseCurrency),
-            quantity: new Big(quantity),
-            unitPrice: new Big(unitPriceInAssetProfileCurrency)
+            // Missing FX conversion can leave these undefined (#6482);
+            // Big.js throws "[big.js] Invalid number" on undefined/null.
+            fee: new Big(feeInAssetProfileCurrency ?? 0),
+            feeInBaseCurrency: new Big(feeInBaseCurrency ?? 0),
+            quantity: new Big(quantity ?? 0),
+            unitPrice: new Big(unitPriceInAssetProfileCurrency ?? 0)
           };
         }
       )

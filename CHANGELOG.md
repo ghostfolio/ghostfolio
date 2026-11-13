@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Spanish (`es`)
 - Upgraded `ngx-skeleton-loader` from version `13.0.0` to `14.0.0`
 
+### Fixed
+
+- Fixed the portfolio crash (`[big.js] Invalid number`) when historical exchange rates are missing
+
 ## 3.98.0 - 2026-11-04
 
 ### Changed
