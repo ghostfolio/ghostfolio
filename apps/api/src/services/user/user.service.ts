@@ -495,7 +495,8 @@ export class UserService {
           permissions.deleteOwnUser
         );
 
-        // Reset offer
+        // Reset offer (createStripeCheckoutSession() in SubscriptionService
+        // validates the checkout against this offer)
         user.subscription.offer.coupon = undefined;
         user.subscription.offer.couponId = undefined;
         user.subscription.offer.durationExtension = undefined;
