@@ -28,7 +28,8 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
       !(
         response.assetClass === 'EQUITY' &&
         (response.assetSubClass === 'ETF' || response.assetSubClass === 'STOCK')
-      )
+      ) ||
+      !response.dataSource
     ) {
       return response;
     }
