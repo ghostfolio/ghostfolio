@@ -321,8 +321,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     quoteType?: string;
     shortName?: string | null;
   }): {
-    assetClass?: AssetClass;
-    assetSubClass?: AssetSubClass;
+    assetClass: AssetClass | undefined;
+    assetSubClass: AssetSubClass | undefined;
   } {
     let assetClass: AssetClass | undefined;
     let assetSubClass: AssetSubClass | undefined;
