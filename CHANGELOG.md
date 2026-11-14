@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `dotenv` from version `18.0.3` to `18.0.9`
 - Upgraded `stripe` from version `23.0.1` to `23.1.0`
 
+### Fixed
+
+- Fixed the parsing of text columns and dates with a time zone in the import of activities from CSV files
+
 ## 3.99.0 - 2026-11-07
 
 ### Added
