@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `@rekog/mcp-nest` from version `2.0.8` to `2.0.9`
 - Upgraded `dotenv` from version `18.0.3` to `18.0.9`
 - Upgraded `stripe` from version `23.0.1` to `23.1.0`
+- Upgraded `undici` from version `8.12.3` to `8.12.4`
 
 ## 3.99.0 - 2026-11-07
 
