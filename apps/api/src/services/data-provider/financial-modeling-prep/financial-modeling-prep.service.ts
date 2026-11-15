@@ -91,8 +91,8 @@ export class FinancialModelingPrepService
   public async getAssetProfile({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    let response: Partial<SymbolProfile> = {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile> | undefined> {
+    let response: Partial<SymbolProfile> | undefined = {
       symbol,
       dataSource: this.getName()
     };
@@ -387,10 +387,13 @@ export class FinancialModelingPrepService
           .then((res) => res.json());
 
         for (const { close, date } of historical) {
+          const parsedDate = parseDate(date);
+
           if (
-            (isSameDay(parseDate(date), currentFrom) ||
-              isAfter(parseDate(date), currentFrom)) &&
-            isBefore(parseDate(date), currentTo)
+            parsedDate &&
+            (isSameDay(parsedDate, currentFrom) ||
+              isAfter(parsedDate, currentFrom)) &&
+            isBefore(parsedDate, currentTo)
           ) {
             result[date] = {
               marketPrice: close
@@ -512,7 +515,7 @@ export class FinancialModelingPrepService
           marketState,
           currency: currencyBySymbolMap[symbol]?.currency,
           dataProviderInfo: this.getDataProviderInfo(),
-          dataSource: this.getDataProviderInfo().dataSource,
+          dataSource: this.getName(),
           marketPrice: price
         };
       }
@@ -679,7 +682,7 @@ export class FinancialModelingPrepService
   }: {
     requestTimeout: number;
     symbol: string;
-  }): Promise<Pick<SymbolProfile, 'currency' | 'name'>> {
+  }): Promise<Pick<SymbolProfile, 'currency' | 'name'> | undefined> {
     const results = await this.getSearchResults({
       requestTimeout,
       endpoint: 'search-symbol',
