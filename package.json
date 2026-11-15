@@ -115,7 +115,7 @@
     "countries-list": "3.4.1",
     "countup.js": "2.10.1",
     "date-fns": "4.4.0",
-    "dotenv": "18.0.3",
+    "dotenv": "18.0.9",
     "dotenv-expand": "13.0.0",
     "envalid": "9.0.0",
     "express": "5.2.1",
@@ -144,7 +144,7 @@
     "passport-openidconnect": "0.1.2",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1",
-    "stripe": "23.0.1",
+    "stripe": "23.1.0",
     "svgmap": "2.21.0",
     "tablemark": "4.1.0",
     "twitter-api-v2": "1.29.1",
@@ -224,6 +224,6 @@
     "webpack-cli": "7.1.0"
   },
   "engines": {
-    "node": ">=22.23.4"
+    "node": ">=22.23.5"
   }
 }
