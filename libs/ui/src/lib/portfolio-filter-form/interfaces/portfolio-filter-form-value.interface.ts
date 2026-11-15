@@ -1,8 +1,8 @@
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 export interface PortfolioFilterFormValue {
-  account: string | null;
-  assetClass: string | null;
+  accounts: string[];
+  assetClasses: string[];
   holding: PortfolioPosition | null;
-  tag: string | null;
+  tags: string[];
 }

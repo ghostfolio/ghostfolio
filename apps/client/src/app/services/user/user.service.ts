@@ -54,16 +54,16 @@ export class UserService extends ObservableStore<UserStoreState> {
     const filters: Filter[] = [];
     const user = this.getState().user;
 
-    if (user?.settings['filters.accounts']) {
+    for (const id of user?.settings['filters.accounts'] ?? []) {
       filters.push({
-        id: user.settings['filters.accounts'][0],
+        id,
         type: 'ACCOUNT'
       });
     }
 
-    if (user?.settings['filters.assetClasses']) {
+    for (const id of user?.settings['filters.assetClasses'] ?? []) {
       filters.push({
-        id: user.settings['filters.assetClasses'][0],
+        id,
         type: 'ASSET_CLASS'
       });
     }
@@ -82,9 +82,9 @@ export class UserService extends ObservableStore<UserStoreState> {
       });
     }
 
-    if (user?.settings['filters.tags']) {
+    for (const id of user?.settings['filters.tags'] ?? []) {
       filters.push({
-        id: user.settings['filters.tags'][0],
+        id,
         type: 'TAG'
       });
     }

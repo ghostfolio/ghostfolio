@@ -249,17 +249,29 @@ export class GfHeaderComponent implements OnChanges {
   protected onFiltersChanged(filters: Filter[]) {
     const userSetting: UpdateUserSettingDto = {};
 
+    const getIds = (type: Filter['type']) => {
+      const ids = filters
+        .filter((filter) => {
+          return filter.type === type && !!filter.id;
+        })
+        .map(({ id }) => {
+          return id;
+        });
+
+      return ids.length > 0 ? ids : null;
+    };
+
     for (const filter of filters) {
       if (filter.type === 'ACCOUNT') {
-        userSetting['filters.accounts'] = filter.id ? [filter.id] : null;
+        userSetting['filters.accounts'] = getIds('ACCOUNT');
       } else if (filter.type === 'ASSET_CLASS') {
-        userSetting['filters.assetClasses'] = filter.id ? [filter.id] : null;
+        userSetting['filters.assetClasses'] = getIds('ASSET_CLASS');
       } else if (filter.type === 'DATA_SOURCE') {
         userSetting['filters.dataSource'] = filter.id ? filter.id : null;
       } else if (filter.type === 'SYMBOL') {
         userSetting['filters.symbol'] = filter.id ? filter.id : null;
       } else if (filter.type === 'TAG') {
-        userSetting['filters.tags'] = filter.id ? [filter.id] : null;
+        userSetting['filters.tags'] = getIds('TAG');
       }
     }
 

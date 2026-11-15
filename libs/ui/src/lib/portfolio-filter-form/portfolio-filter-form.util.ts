@@ -25,15 +25,29 @@ export function getFiltersFromPortfolioFilterFormValue(
   value: PortfolioFilterFormValue | null,
   { includeEmpty = false }: { includeEmpty?: boolean } = {}
 ) {
+  const getFiltersOfType = (
+    ids: string[] | undefined,
+    type: Filter['type']
+  ) => {
+    const filtersOfType = (ids ?? [])
+      .filter((id) => {
+        return !!id;
+      })
+      .map((id) => {
+        return { id, type } satisfies Filter;
+      });
+
+    // An empty filter signals that the filter of this type has been reset
+    if (filtersOfType.length === 0 && includeEmpty) {
+      return [{ type, id: '' } satisfies Filter];
+    }
+
+    return filtersOfType;
+  };
+
   const filters: Filter[] = [
-    {
-      id: value?.account ?? '',
-      type: 'ACCOUNT'
-    },
-    {
-      id: value?.assetClass ?? '',
-      type: 'ASSET_CLASS'
-    },
+    ...getFiltersOfType(value?.accounts, 'ACCOUNT'),
+    ...getFiltersOfType(value?.assetClasses, 'ASSET_CLASS'),
     {
       id: value?.holding?.assetProfile?.dataSource ?? '',
       type: 'DATA_SOURCE'
@@ -42,10 +56,7 @@ export function getFiltersFromPortfolioFilterFormValue(
       id: value?.holding?.assetProfile?.symbol ?? '',
       type: 'SYMBOL'
     },
-    {
-      id: value?.tag ?? '',
-      type: 'TAG'
-    }
+    ...getFiltersOfType(value?.tags, 'TAG')
   ];
 
   return includeEmpty
@@ -82,6 +93,16 @@ export function getPortfolioFilterFormValue(
     );
   };
 
+  const getFilterIds = (type: Filter['type']) => {
+    return (filters ?? [])
+      .filter((filter) => {
+        return filter.type === type && !!filter.id;
+      })
+      .map(({ id }) => {
+        return id;
+      });
+  };
+
   const dataSource = getFilterId('DATA_SOURCE') as DataSource;
   const symbol = getFilterId('SYMBOL');
 
@@ -94,10 +115,10 @@ export function getPortfolioFilterFormValue(
   });
 
   return {
-    account: getFilterId('ACCOUNT'),
-    assetClass: getFilterId('ASSET_CLASS'),
+    accounts: getFilterIds('ACCOUNT'),
+    assetClasses: getFilterIds('ASSET_CLASS'),
     holding: holding ?? null,
-    tag: getFilterId('TAG')
+    tags: getFilterIds('TAG')
   };
 }
 
