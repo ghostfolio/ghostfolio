@@ -148,10 +148,10 @@ export class ConfigurationService {
       }),
       STRIPE_SECRET_KEY: str({ default: '' }),
       TRUST_PROXY: trustProxy({ default: '' }),
-      TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
-      TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),
-      TWITTER_API_KEY: str({ default: 'dummyApiKey' }),
-      TWITTER_API_SECRET: str({ default: 'dummyApiSecret' })
+      TWITTER_ACCESS_TOKEN: str({ default: '' }),
+      TWITTER_ACCESS_TOKEN_SECRET: str({ default: '' }),
+      TWITTER_API_KEY: str({ default: '' }),
+      TWITTER_API_SECRET: str({ default: '' })
     });
   }
 
