@@ -123,7 +123,7 @@ export class DataProviderService implements OnModuleInit {
 
         promises.push(
           promise.then((assetProfile) => {
-            if (isCurrency(assetProfile?.currency)) {
+            if (assetProfile?.currency && isCurrency(assetProfile.currency)) {
               response[
                 getAssetProfileIdentifier({
                   symbol,
@@ -255,14 +255,21 @@ export class DataProviderService implements OnModuleInit {
     ] of activitiesDto.entries()) {
       const activityPath =
         maxActivitiesToImport === 1 ? 'activity' : `activities.${index}`;
+
+      if (!dataSource || !dataSources.includes(dataSource)) {
+        throw new ImportValidationError(
+          `${activityPath}.dataSource ("${dataSource}") is not valid`
+        );
+      }
+
       const maskedDataSource = getMaskedGhostfolioDataSource({
         dataSource,
         ghostfolioDataSources
       });
 
-      if (!dataSources.includes(dataSource)) {
+      if (!symbol) {
         throw new ImportValidationError(
-          `${activityPath}.dataSource ("${dataSource}") is not valid`
+          `${activityPath}.symbol ("${symbol}") is not valid`
         );
       }
 
@@ -315,7 +322,7 @@ export class DataProviderService implements OnModuleInit {
         if (
           (dataSource === DataSource.MANUAL && type === 'BUY') ||
           assetProfileInImport?.dataSource === DataSource.MANUAL ||
-          NON_INVESTMENT_ACTIVITY_TYPES.includes(type)
+          (type && NON_INVESTMENT_ACTIVITY_TYPES.includes(type))
         ) {
           assetProfiles[assetProfileIdentifier] = {
             ...omit(assetProfileInImport ?? {}, [
@@ -951,7 +958,7 @@ export class DataProviderService implements OnModuleInit {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 
-        lookupItem.name = formatAssetProfileName(lookupItem);
+        lookupItem.name = formatAssetProfileName(lookupItem) ?? lookupItem.name;
 
         return lookupItem;
       })
@@ -972,9 +979,9 @@ export class DataProviderService implements OnModuleInit {
     dataSource,
     symbol,
     userId
-  }: AssetProfileIdentifier & { userId: string }): Promise<
-    Partial<SymbolProfile>
-  > {
+  }: AssetProfileIdentifier & {
+    userId: string;
+  }): Promise<Partial<SymbolProfile> | null> {
     return this.prismaService.symbolProfile.findFirst({
       select: {
         assetClass: true,

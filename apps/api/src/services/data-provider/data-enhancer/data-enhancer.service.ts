@@ -25,13 +25,19 @@ export class DataEnhancerService {
     }
 
     try {
+      const testSymbol = dataEnhancer.getTestSymbol();
+
+      if (!testSymbol) {
+        return false;
+      }
+
       const assetProfile = await dataEnhancer.enhance({
         requestTimeout: ms('30 seconds'),
         response: {
           assetClass: 'EQUITY',
           assetSubClass: 'ETF'
         },
-        symbol: dataEnhancer.getTestSymbol()
+        symbol: testSymbol
       });
 
       if (
