@@ -1,7 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_DATE_RANGE,
+  DEFAULT_USER_DATE_RANGE,
   DEFAULT_LOCALE
 } from '@ghostfolio/common/config';
 import {
@@ -66,7 +66,7 @@ export class GfHomeHoldingsComponent implements OnInit {
   });
 
   protected readonly dateRange = computed(() => {
-    return this.user()?.settings?.dateRange ?? DEFAULT_DATE_RANGE;
+    return this.user()?.settings?.dateRange ?? DEFAULT_USER_DATE_RANGE;
   });
 
   protected readonly deviceType = computed(() => {
