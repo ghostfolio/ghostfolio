@@ -23,6 +23,7 @@ import {
   PortfolioDividendsResponse,
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
+  PortfolioIntradayResponse,
   PortfolioInvestmentsResponse,
   PortfolioPerformanceResponse,
   PortfolioReportResponse
@@ -54,8 +55,10 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { GetDetailsDto } from './get-details.dto';
 import { GetDividendsDto } from './get-dividends.dto';
 import { GetHoldingsDto } from './get-holdings.dto';
+import { GetIntradayDto } from './get-intraday.dto';
 import { GetInvestmentsDto } from './get-investments.dto';
 import { GetPerformanceDto } from './get-performance.dto';
+import { IntradayService } from './intraday/intraday.service';
 import { PortfolioService } from './portfolio.service';
 import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 
@@ -65,6 +68,7 @@ export class PortfolioController {
     private readonly activitiesService: ActivitiesService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
+    private readonly intradayService: IntradayService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -408,6 +412,21 @@ export class PortfolioController {
     });
 
     return { holdings };
+  }
+
+  @Get('intraday')
+  @RequiresScope(scopes.portfolioRead)
+  @UseInterceptors(PerformanceLoggingInterceptor)
+  public async getIntraday(
+    @Impersonation() { userId }: ImpersonationContext,
+    @Query() { benchmarks, range }: GetIntradayDto
+  ): Promise<PortfolioIntradayResponse> {
+    return this.intradayService.getIntraday({
+      userId,
+      benchmarkIds: benchmarks,
+      dateRange: range,
+      userCurrency: this.request.user.settings.settings.baseCurrency
+    });
   }
 
   @Get('investments')
