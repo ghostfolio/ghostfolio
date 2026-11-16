@@ -12,18 +12,28 @@ import {
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 
-import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit
+} from '@nestjs/common';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
+import ms from 'ms';
 
 @Injectable()
-export class CronService {
-  private static readonly EVERY_HOUR_AT_RANDOM_MINUTE = `${new Date().getMinutes()} * * * *`;
+export class CronService implements OnModuleDestroy, OnModuleInit {
+  private static readonly HOURLY_MARKET_DATA_GATHERING_JOB_NAME =
+    'HOURLY_MARKET_DATA_GATHERING';
   private static readonly EVERY_SUNDAY_AT_LUNCH_TIME = '0 12 * * 0';
+
+  private isHourlyMarketDataGatheringRunning = false;
 
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly propertyService: PropertyService,
+    private readonly schedulerRegistry: SchedulerRegistry,
     private readonly statisticsGatheringService: StatisticsGatheringService,
     private readonly twitterBotService: TwitterBotService,
     private readonly userService: UserService
@@ -36,11 +46,51 @@ export class CronService {
     }
   }
 
-  @Cron(CronService.EVERY_HOUR_AT_RANDOM_MINUTE)
-  public async runEveryHourAtRandomMinute() {
-    if (await this.isDataGatheringEnabled()) {
-      await this.dataGatheringService.gatherHourlyMarketData();
-      await this.dataGatheringService.gatherRecentMarketData();
+  public onModuleInit() {
+    const intervalInMinutes = Math.max(
+      1,
+      this.configurationService.get('DATA_GATHERING_INTERVAL_MINUTES')
+    );
+
+    // The interval starts at the application start, which is equivalent to the
+    // former hourly cron job running at the minute of the application start
+    this.schedulerRegistry.addInterval(
+      CronService.HOURLY_MARKET_DATA_GATHERING_JOB_NAME,
+      setInterval(
+        () => {
+          void this.runHourlyMarketDataGathering();
+        },
+        ms(`${intervalInMinutes} minutes`)
+      )
+    );
+  }
+
+  public onModuleDestroy() {
+    try {
+      this.schedulerRegistry.deleteInterval(
+        CronService.HOURLY_MARKET_DATA_GATHERING_JOB_NAME
+      );
+    } catch {}
+  }
+
+  public async runHourlyMarketDataGathering() {
+    // Skip the run if the previous one is still in progress to avoid
+    // overlapping requests to the data providers
+    if (this.isHourlyMarketDataGatheringRunning) {
+      return;
+    }
+
+    this.isHourlyMarketDataGatheringRunning = true;
+
+    try {
+      if (await this.isDataGatheringEnabled()) {
+        await this.dataGatheringService.gatherHourlyMarketData();
+        await this.dataGatheringService.gatherRecentMarketData();
+      }
+    } catch (error) {
+      Logger.error(error, 'CronService');
+    } finally {
+      this.isHourlyMarketDataGatheringRunning = false;
     }
   }
 
