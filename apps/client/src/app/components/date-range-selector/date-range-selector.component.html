@@ -1,0 +1,8 @@
+@if (isVisible()) {
+  <gf-toggle
+    [defaultValue]="user()?.settings?.dateRange ?? 'ytd'"
+    [isLoading]="isLoading()"
+    [options]="options()"
+    (valueChange)="onValueChange($event)"
+  />
+}
