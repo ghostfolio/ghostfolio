@@ -1,4 +1,5 @@
 import {
+  getBaselinePlugin,
   getChartBorderColor,
   getTimeAxisOptions,
   getValueAxisOptions,
@@ -58,6 +59,8 @@ export class GfLineChartComponent
 {
   @Input() benchmarkDataItems: NullableLineChartItem[] = [];
   @Input() benchmarkLabel = '';
+  /** Value of a horizontal reference line (e.g. 0 for a change in percent) */
+  @Input() baseline?: number;
   @Input() colorScheme?: ColorScheme;
   @Input() currency?: string;
   @Input() historicalDataItems: LineChartItem[] | null;
@@ -271,12 +274,21 @@ export class GfLineChartComponent
                 }),
                 max: this.yMax,
                 min: this.yMin,
+                // The baseline stays visible if all values are on one side
+                suggestedMax: this.baseline,
+                suggestedMin: this.baseline,
                 type: 'linear'
               }
             },
             spanGaps: true
           },
           plugins: [
+            getBaselinePlugin({
+              colorScheme: this.colorScheme,
+              getValue: () => {
+                return this.baseline;
+              }
+            }),
             getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
           ],
           type: 'line'
