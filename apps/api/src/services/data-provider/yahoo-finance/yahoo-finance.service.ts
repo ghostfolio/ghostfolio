@@ -64,7 +64,9 @@ export class YahooFinanceService implements DataProviderInterface {
   public async getAssetProfile({
     symbol
   }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    return this.yahooFinanceDataEnhancerService.getAssetProfile(symbol);
+    return (
+      (await this.yahooFinanceDataEnhancerService.getAssetProfile(symbol)) ?? {}
+    );
   }
 
   public getDataProviderInfo(): DataProviderInfo {

@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version `>=22.23.4`)
+- [Node.js](https://nodejs.org/en/download) (version `>=22.23.5`)
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
@@ -114,7 +114,7 @@ https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
 
 #### Create schema migration
 
-Run `npm run prisma migrate dev --name added_job_title`
+Run `npm run prisma -- migrate dev --name added_job_title`
 
 https://www.prisma.io/docs/concepts/components/prisma-migrate#getting-started-with-prisma-migrate
 
