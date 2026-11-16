@@ -72,14 +72,15 @@
             unit="%"
             [class.pe-3]="deviceType() === 'mobile'"
             [colorScheme]="user()?.settings?.colorScheme"
-            [hidden]="historicalDataItems()?.length === 0"
+            [dateRange]="user()?.settings?.dateRange ?? defaultDateRange"
+            [hidden]="!hasEnoughChartData()"
             [historicalDataItems]="historicalDataItems()"
             [isAnimated]="user()?.settings?.dateRange === '1d' ? false : true"
             [label]="performanceLabel"
             [locale]="locale()"
             [showGradient]="true"
             [showLoader]="false"
-            [showXAxis]="false"
+            [showXAxis]="true"
             [showYAxis]="false"
           />
         </div>
