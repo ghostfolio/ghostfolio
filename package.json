@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "3.99.0",
+  "version": "3.100.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -73,9 +73,9 @@
     "@internationalized/number": "3.6.9",
     "@ionic/angular": "8.8.12",
     "@keyv/redis": "5.1.6",
-    "@modelcontextprotocol/core": "2.3.1",
-    "@modelcontextprotocol/node": "2.1.1",
-    "@modelcontextprotocol/server": "2.3.1",
+    "@modelcontextprotocol/core": "2.4.0",
+    "@modelcontextprotocol/node": "2.1.2",
+    "@modelcontextprotocol/server": "2.4.0",
     "@nest-lab/throttler-storage-redis": "1.2.0",
     "@nestjs/bull": "11.0.5",
     "@nestjs/cache-manager": "3.1.3",
@@ -93,7 +93,7 @@
     "@openrouter/ai-sdk-provider": "3.1.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
-    "@rekog/mcp-nest": "2.0.8",
+    "@rekog/mcp-nest": "2.0.9",
     "@simplewebauthn/browser": "14.0.0",
     "@simplewebauthn/server": "14.0.3",
     "ai": "7.0.127",
@@ -115,7 +115,7 @@
     "countries-list": "3.4.1",
     "countup.js": "2.10.1",
     "date-fns": "4.4.0",
-    "dotenv": "18.0.3",
+    "dotenv": "18.0.9",
     "dotenv-expand": "13.0.0",
     "envalid": "9.0.0",
     "express": "5.2.1",
@@ -144,11 +144,11 @@
     "passport-openidconnect": "0.1.2",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1",
-    "stripe": "23.0.1",
+    "stripe": "23.1.0",
     "svgmap": "2.21.0",
     "tablemark": "4.1.0",
     "twitter-api-v2": "1.29.1",
-    "undici": "8.12.3",
+    "undici": "8.12.4",
     "uuid": "14.0.3",
     "yahoo-finance2": "4.0.5",
     "zod": "4.6.7",
@@ -224,6 +224,6 @@
     "webpack-cli": "7.1.0"
   },
   "engines": {
-    "node": ">=22.23.4"
+    "node": ">=22.23.5"
   }
 }
