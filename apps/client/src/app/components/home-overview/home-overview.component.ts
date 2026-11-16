@@ -1,5 +1,6 @@
 import { GfPortfolioPerformanceComponent } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
+import { AutoRefreshService } from '@ghostfolio/client/services/auto-refresh/auto-refresh.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -13,6 +14,7 @@ import {
   AssetProfileIdentifier,
   LineChartItem,
   PortfolioPerformance,
+  PortfolioPerformanceResponse,
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
@@ -40,6 +42,7 @@ import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { catchError, EMPTY, exhaustMap, filter } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -125,6 +128,7 @@ export class GfHomeOverviewComponent implements OnInit {
       : (this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY);
   });
 
+  private readonly autoRefreshService = inject(AutoRefreshService);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly deviceDetectorService = inject(DeviceDetectorService);
@@ -161,6 +165,45 @@ export class GfHomeOverviewComponent implements OnInit {
       .subscribe(() => {
         this.update();
       });
+
+    this.autoRefreshService.refresh$
+      .pipe(
+        filter(() => !!this.user() && !this.isLoadingPerformance()),
+        exhaustMap(() => {
+          return this.dataService
+            .fetchPortfolioPerformance({
+              range: this.user()?.settings?.dateRange ?? DEFAULT_DATE_RANGE
+            })
+            .pipe(catchError(() => EMPTY));
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(({ chart, errors, performance }) => {
+        this.errors.set(errors ?? []);
+        this.performance.set(performance);
+
+        // Same series: the line chart moves without the drawing animation
+        this.historicalDataItems.set(this.getChartItems(chart));
+
+        this.autoRefreshService.markUpdated();
+      });
+
+    this.autoRefreshService.refresh$
+      .pipe(
+        filter(() => this.showExperimentalHoldings() && !!this.holdings()),
+        exhaustMap(() => {
+          return this.dataService
+            .fetchPortfolioHoldings({
+              filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }],
+              range: this.user()?.settings?.dateRange
+            })
+            .pipe(catchError(() => EMPTY));
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(({ holdings }) => {
+        this.holdings.set(this.filterCashPositions(holdings));
+      });
   }
 
   protected onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -169,6 +212,32 @@ export class GfHomeOverviewComponent implements OnInit {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
+  }
+
+  private filterCashPositions(holdings: PortfolioPosition[]) {
+    const baseCurrency =
+      this.user()?.settings?.baseCurrency ?? DEFAULT_CURRENCY;
+
+    return holdings.filter(({ assetProfile }) => {
+      return !(
+        isCashPosition(assetProfile) &&
+        assetProfile.currency === baseCurrency &&
+        assetProfile.symbol === baseCurrency
+      );
+    });
+  }
+
+  private getChartItems(
+    chart?: PortfolioPerformanceResponse['chart']
+  ): LineChartItem[] | null {
+    return (
+      chart?.map(({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
+        return {
+          date,
+          value: (netPerformanceInPercentageWithCurrencyEffect ?? 0) * 100
+        };
+      }) ?? null
+    );
   }
 
   private update() {
@@ -187,17 +256,7 @@ export class GfHomeOverviewComponent implements OnInit {
         })
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(({ holdings }) => {
-          const baseCurrency = userSettings?.baseCurrency ?? DEFAULT_CURRENCY;
-
-          this.holdings.set(
-            holdings.filter(({ assetProfile }) => {
-              return !(
-                isCashPosition(assetProfile) &&
-                assetProfile.currency === baseCurrency &&
-                assetProfile.symbol === baseCurrency
-              );
-            })
-          );
+          this.holdings.set(this.filterCashPositions(holdings));
         });
     }
 
@@ -210,16 +269,7 @@ export class GfHomeOverviewComponent implements OnInit {
         this.errors.set(errors ?? []);
         this.performance.set(performance);
 
-        this.historicalDataItems.set(
-          chart?.map(
-            ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
-              return {
-                date,
-                value: (netPerformanceInPercentageWithCurrencyEffect ?? 0) * 100
-              };
-            }
-          ) ?? null
-        );
+        this.historicalDataItems.set(this.getChartItems(chart));
 
         this.precision.set(2);
 

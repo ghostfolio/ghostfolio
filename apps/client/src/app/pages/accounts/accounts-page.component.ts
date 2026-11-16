@@ -1,3 +1,4 @@
+import { AutoRefreshService } from '@ghostfolio/client/services/auto-refresh/auto-refresh.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LOCALE } from '@ghostfolio/common/config';
@@ -20,7 +21,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
-import { filter, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, exhaustMap, filter, switchMap, tap } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +46,7 @@ export class GfAccountsPageComponent implements OnInit {
 
   private hasImpersonationId: boolean;
 
+  private readonly autoRefreshService = inject(AutoRefreshService);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly dataService = inject(DataService);
   private readonly destroyRef = inject(DestroyRef);
@@ -91,6 +93,17 @@ export class GfAccountsPageComponent implements OnInit {
       )
       .subscribe((response) => {
         this.updateAccounts(response);
+      });
+
+    this.autoRefreshService.refresh$
+      .pipe(
+        filter(() => !!this.accounts),
+        exhaustMap(() => this.fetchAccounts().pipe(catchError(() => EMPTY))),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((response) => {
+        this.updateAccounts(response);
+        this.autoRefreshService.markUpdated();
       });
   }
 

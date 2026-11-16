@@ -1,3 +1,4 @@
+import { GfLiveIndicatorComponent } from '@ghostfolio/client/components/live-indicator/live-indicator.component';
 import {
   LoginWithAccessTokenDialogParams,
   LoginWithAccessTokenDialogResult
@@ -61,6 +62,7 @@ import { catchError } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfAssistantComponent,
+    GfLiveIndicatorComponent,
     GfLogoComponent,
     GfPremiumIndicatorComponent,
     IonIcon,

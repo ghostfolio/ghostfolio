@@ -84,6 +84,11 @@ export class GfAccountsTableComponent {
 
   public readonly sort = viewChild.required(MatSort);
 
+  protected readonly trackByAccount = (
+    _index: number,
+    { id }: AccountWithValue
+  ) => id;
+
   protected readonly accountDialogRouterLinks = computed(() => {
     const { detail, update } = internalRoutes.accounts.subRoutes;
 

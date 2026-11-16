@@ -100,6 +100,7 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [colorizeValue]="true"
             [isCurrency]="true"
             [isLoading]="isLoadingInvestmentChart"
             [locale]="user?.settings?.locale"
@@ -118,6 +119,7 @@
             i18n
             size="large"
             [colorizeSign]="true"
+            [colorizeValue]="true"
             [isLoading]="isLoadingInvestmentChart"
             [isPercent]="true"
             [locale]="user?.settings?.locale"
@@ -359,6 +361,8 @@
                       class="justify-content-end"
                       position="end"
                       [colorizeSign]="true"
+                      [flashValue]="holding.netPerformanceWithCurrencyEffect"
+                      [isMarketOpen]="holding.marketState === 'open'"
                       [isPercent]="true"
                       [locale]="user?.settings?.locale"
                       [value]="holding.netPerformancePercentWithCurrencyEffect"
@@ -412,6 +416,8 @@
                       class="justify-content-end"
                       position="end"
                       [colorizeSign]="true"
+                      [flashValue]="holding.netPerformanceWithCurrencyEffect"
+                      [isMarketOpen]="holding.marketState === 'open'"
                       [isPercent]="true"
                       [locale]="user?.settings?.locale"
                       [value]="holding.netPerformancePercentWithCurrencyEffect"

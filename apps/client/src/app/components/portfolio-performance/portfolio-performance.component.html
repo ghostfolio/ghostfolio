@@ -25,6 +25,8 @@
     }
     <div
       class="display-4 fw-bold m-0 text-center value-container"
+      [gfFlashDigits]="precision()"
+      [gfFlashOnChange]="displayedValue()"
       [hidden]="isLoading()"
     >
       <span #value id="value"></span>
@@ -38,6 +40,7 @@
       <div class="d-flex col justify-content-end">
         <gf-value
           [colorizeSign]="true"
+          [colorizeValue]="true"
           [isCurrency]="true"
           [isLoading]="isLoading()"
           [locale]="locale()"
@@ -45,8 +48,11 @@
         />
       </div>
       <div class="col">
+        <!-- Highlighted together with the absolute change -->
         <gf-value
           [colorizeSign]="true"
+          [colorizeValue]="true"
+          [flashValue]="performance()?.netPerformanceWithCurrencyEffect"
           [isLoading]="isLoading()"
           [isPercent]="true"
           [locale]="locale()"
