@@ -203,7 +203,7 @@ export class UserController {
 
     if (
       size(data) === 1 &&
-      (data.benchmark || data.dateRange) &&
+      (data.benchmark || data.benchmarks || data.dateRange) &&
       this.request.user.role === 'DEMO'
     ) {
       // Allow benchmark or date range change for demo user
@@ -227,6 +227,14 @@ export class UserController {
       data
     );
 
+    if (data.benchmarks) {
+      // Replace instead of merge the list, otherwise removed entries remain
+      userSettings.benchmarks = data.benchmarks;
+
+      // The list supersedes the legacy single benchmark
+      delete userSettings.benchmark;
+    }
+
     if (userSettings['filters.dataSource']) {
       userSettings['filters.dataSource'] = decodeDataSource(
         userSettings['filters.dataSource']
@@ -237,6 +245,10 @@ export class UserController {
       if (userSettings[key] === false || userSettings[key] === null) {
         delete userSettings[key];
       }
+    }
+
+    if (userSettings.benchmarks?.length === 0) {
+      delete userSettings.benchmarks;
     }
 
     if (!userSettings.isExperimentalFeatures) {

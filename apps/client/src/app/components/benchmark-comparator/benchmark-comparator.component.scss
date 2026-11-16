@@ -9,3 +9,8 @@
     }
   }
 }
+
+// The link to the benchmark management is an action and not a selectable value
+::ng-deep .manage-benchmarks-option .mat-pseudo-checkbox {
+  display: none;
+}
