@@ -1,16 +1,18 @@
 import {
   getChartBorderColor,
   getTimeAxisOptions,
+  getTimeAxisUnit,
   getValueAxisOptions,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import { getBackgroundColor, getLocale } from '@ghostfolio/common/helper';
 import {
-  LineChartItem,
-  NullableLineChartItem
-} from '@ghostfolio/common/interfaces';
-import { ColorScheme } from '@ghostfolio/common/types';
+  getBackgroundColor,
+  getLocale,
+  isIntradayDateRange
+} from '@ghostfolio/common/helper';
+import { NullableLineChartItem } from '@ghostfolio/common/interfaces';
+import { ColorScheme, DateRange } from '@ghostfolio/common/types';
 
 import {
   AfterViewInit,
@@ -34,6 +36,7 @@ import {
   LineElement,
   PointElement,
   TimeScale,
+  TimeSeriesScale,
   Tooltip,
   type TooltipOptions
 } from 'chart.js';
@@ -60,7 +63,8 @@ export class GfLineChartComponent
   @Input() benchmarkLabel = '';
   @Input() colorScheme?: ColorScheme;
   @Input() currency?: string;
-  @Input() historicalDataItems: LineChartItem[] | null;
+  @Input() dateRange?: DateRange;
+  @Input() historicalDataItems: NullableLineChartItem[] | null;
   @Input() isAnimated = false;
   @Input() label: string;
   @Input() locale = getLocale();
@@ -90,6 +94,7 @@ export class GfLineChartComponent
       PointElement,
       LinearScale,
       TimeScale,
+      TimeSeriesScale,
       Tooltip
     );
 
@@ -140,7 +145,7 @@ export class GfLineChartComponent
     this.isLoading = true;
     const benchmarkPrices: (number | null)[] = [];
     const labels: string[] = [];
-    const marketPrices: number[] = [];
+    const marketPrices: (number | null)[] = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
       benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value ?? null);
@@ -207,6 +212,10 @@ export class GfLineChartComponent
           ? animations
           : undefined;
 
+        // The date range can change while the chart stays alive
+        this.chart.options.scales ??= {};
+        this.chart.options.scales['x'] = this.getTimeAxisConfiguration();
+
         this.chart.update();
       } else {
         this.chart = new Chart<'line'>(this.chartCanvas.nativeElement, {
@@ -233,11 +242,7 @@ export class GfLineChartComponent
               }
             },
             scales: {
-              x: getTimeAxisOptions({
-                colorScheme: this.colorScheme,
-                display: this.showXAxis,
-                locale: this.locale
-              }),
+              x: this.getTimeAxisConfiguration(),
               y: {
                 ...getValueAxisOptions({
                   colorScheme: this.colorScheme,
@@ -285,6 +290,18 @@ export class GfLineChartComponent
     }
 
     this.isLoading = false;
+  }
+
+  private getTimeAxisConfiguration() {
+    return getTimeAxisOptions({
+      colorScheme: this.colorScheme,
+      display: this.showXAxis,
+      locale: this.locale,
+      // Equidistant points: the closed markets (nights, weekends) are skipped
+      type: this.dateRange ? 'timeseries' : 'time',
+      unit: getTimeAxisUnit(this.dateRange),
+      withTime: isIntradayDateRange(this.dateRange)
+    });
   }
 
   private getAnimationConfigurationForAxis({

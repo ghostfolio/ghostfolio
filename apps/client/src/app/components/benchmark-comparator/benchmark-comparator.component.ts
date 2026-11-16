@@ -1,17 +1,27 @@
 import {
+  getBenchmarkColor,
   getChartBorderColor,
   getChartElementsOptions,
   getTimeAxisOptions,
+  getTimeAxisUnit,
   getValueAxisOptions,
   getVerticalHoverLinePlugin,
   getZeroLineAnnotation
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import { getLocale, parseDate } from '@ghostfolio/common/helper';
-import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { primaryColorRgb } from '@ghostfolio/common/config';
+import {
+  getLocale,
+  isIntradayDateRange,
+  parseDate
+} from '@ghostfolio/common/helper';
+import {
+  BenchmarkSeries,
+  NullableLineChartItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
-import { ColorScheme } from '@ghostfolio/common/types';
+import { ColorScheme, DateRange } from '@ghostfolio/common/types';
 import type { SymbolProfile } from '@ghostfolio/prisma/browser';
 import {
   getTimeSeriesTooltipOptions,
@@ -43,6 +53,7 @@ import {
   LineElement,
   PointElement,
   TimeScale,
+  TimeSeriesScale,
   Tooltip,
   type TooltipOptions
 } from 'chart.js';
@@ -67,10 +78,10 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './benchmark-comparator.component.html'
 })
 export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
-  public readonly benchmark = input<Partial<SymbolProfile>>();
-  public readonly benchmarkDataItems = input<LineChartItem[]>([]);
+  public readonly benchmarkSeries = input<BenchmarkSeries[]>([]);
   public readonly benchmarks = input<Partial<SymbolProfile>[]>();
   public readonly colorScheme = input<ColorScheme>();
+  public readonly dateRange = input<DateRange>();
   public readonly isLoading = input<boolean>();
 
   public readonly locale = input(getLocale(), {
@@ -79,10 +90,12 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   });
 
-  public readonly performanceDataItems = input.required<LineChartItem[]>();
+  public readonly performanceDataItems =
+    input.required<NullableLineChartItem[]>();
+  public readonly selectedBenchmarkIds = input<string[]>([]);
   public readonly user = input<User>();
 
-  public readonly benchmarkChanged = output<string>();
+  public readonly benchmarksChanged = output<string[]>();
 
   protected chart?: Chart<'line'>;
   protected hasPermissionToAccessAdminControl: boolean;
@@ -99,6 +112,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
       LineElement,
       PointElement,
       TimeScale,
+      TimeSeriesScale,
       Tooltip
     );
 
@@ -136,43 +150,49 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     this.chart?.destroy();
   }
 
-  protected onChangeBenchmark(symbolProfileId: string) {
-    this.benchmarkChanged.emit(symbolProfileId);
+  protected onChangeBenchmarks(symbolProfileIds: string[]) {
+    this.benchmarksChanged.emit(symbolProfileIds);
   }
 
   private initialize() {
-    const benchmarkDataValues: Record<string, number> = {};
-
-    for (const { date, value } of this.benchmarkDataItems()) {
-      benchmarkDataValues[date] = value;
-    }
+    const portfolioColor = `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`;
 
     const data: ChartData<'line'> = {
       datasets: [
         {
-          backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+          backgroundColor: portfolioColor,
+          borderColor: portfolioColor,
           borderWidth: 2,
           data: this.performanceDataItems().map(({ date, value }) => {
             return {
               x: parseDate(date)?.getTime() ?? null,
-              y: value * 100
+              y: value === null ? null : value * 100
             };
           }),
           label: $localize`Portfolio`
         },
-        {
-          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderWidth: 2,
-          data: this.performanceDataItems().map(({ date }) => {
-            return {
-              x: parseDate(date)?.getTime() ?? null,
-              y: benchmarkDataValues[date]
-            };
-          }),
-          label: this.benchmark()?.name ?? $localize`Benchmark`
-        }
+        ...this.benchmarkSeries().map(({ items, name }, index) => {
+          const color = getBenchmarkColor(index);
+          const valuesByDate: Record<string, number | null> = {};
+
+          for (const { date, value } of items) {
+            valuesByDate[date] = value;
+          }
+
+          return {
+            backgroundColor: color,
+            borderColor: color,
+            borderWidth: 2,
+            data: this.performanceDataItems().map(({ date }) => {
+              return {
+                x: parseDate(date)?.getTime() ?? null,
+                // The benchmarks are already in percent
+                y: valuesByDate[date] ?? null
+              };
+            }),
+            label: name ?? $localize`Benchmark`
+          };
+        })
       ]
     };
 
@@ -182,6 +202,10 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
         this.chart.options.plugins ??= {};
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration();
+
+        // The date range can change while the chart stays alive
+        this.chart.options.scales ??= {};
+        this.chart.options.scales['x'] = this.getTimeAxisConfiguration();
 
         this.chart.update();
       } else {
@@ -199,7 +223,8 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 }
               },
               legend: {
-                display: false
+                display: this.benchmarkSeries().length > 0,
+                labels: { boxHeight: 2, boxWidth: 16 }
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
@@ -208,10 +233,7 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
             },
             responsive: true,
             scales: {
-              x: getTimeAxisOptions({
-                colorScheme: this.colorScheme(),
-                locale: this.locale()
-              }),
+              x: this.getTimeAxisConfiguration(),
               y: getValueAxisOptions({
                 colorScheme: this.colorScheme(),
                 tickCallback: (tickValue) => {
@@ -229,11 +251,42 @@ export class GfBenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   }
 
-  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
-    return getTimeSeriesTooltipOptions<'line'>({
+  private getTimeAxisConfiguration() {
+    const dateRange = this.dateRange();
+
+    return getTimeAxisOptions({
       colorScheme: this.colorScheme(),
       locale: this.locale(),
-      unit: '%'
+      // Equidistant points: the closed markets (nights, weekends) are skipped
+      type: dateRange ? 'timeseries' : 'time',
+      unit: getTimeAxisUnit(dateRange),
+      withTime: isIntradayDateRange(dateRange)
     });
+  }
+
+  private getTooltipPluginConfiguration(): Partial<TooltipOptions<'line'>> {
+    return {
+      ...getTimeSeriesTooltipOptions<'line'>({
+        colorScheme: this.colorScheme(),
+        locale: this.locale(),
+        unit: '%'
+      }),
+      // List the best performing line first
+      itemSort: (a, b) => {
+        // Lines without a value at the hovered date are listed last
+        const valueOfA = Number(a.parsed.y);
+        const valueOfB = Number(b.parsed.y);
+
+        if (Number.isFinite(valueOfA) && Number.isFinite(valueOfB)) {
+          return valueOfB - valueOfA;
+        }
+
+        return Number.isFinite(valueOfB)
+          ? 1
+          : Number.isFinite(valueOfA)
+            ? -1
+            : 0;
+      }
+    };
   }
 }

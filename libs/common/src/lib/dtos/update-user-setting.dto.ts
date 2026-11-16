@@ -32,6 +32,11 @@ export class UpdateUserSettingDto {
   @IsOptional()
   benchmark?: string;
 
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
+  benchmarks?: string[] | null;
+
   @IsIn(['DARK', 'LIGHT'] as ColorScheme[])
   @IsOptional()
   colorScheme?: ColorScheme;
