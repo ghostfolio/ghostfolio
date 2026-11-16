@@ -5,8 +5,9 @@
     matSort
     [class.simple]="mode() === 'simple'"
     [dataSource]="dataSource"
-    [matSortActive]="sortActive()"
-    [matSortDirection]="sortDirection()"
+    [gfPersistSort]="'holdings-' + mode()"
+    [matSortActive]="sortActive"
+    [matSortDirection]="sortDirection"
   >
     <ng-container matColumnDef="icon" [sticky]="mode() === 'default'">
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
@@ -210,11 +211,7 @@
       </td>
     </ng-container>
 
-    <tr
-      *matHeaderRowDef="displayedColumns()"
-      mat-header-row
-      [class.d-none]="mode() === 'simple'"
-    ></tr>
+    <tr *matHeaderRowDef="displayedColumns()" mat-header-row></tr>
     <tr
       *matRowDef="let row; columns: displayedColumns()"
       mat-row
