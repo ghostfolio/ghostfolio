@@ -42,6 +42,7 @@ import { openOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 
+import { CustomPaginatorIntl } from './adapter/custom-paginator-intl';
 import { GfFooterComponent } from './components/footer/footer.component';
 import { GfHeaderComponent } from './components/header/header.component';
 import { GfHoldingDetailDialogComponent } from './components/holding-detail-dialog/holding-detail-dialog.component';
@@ -85,6 +86,7 @@ export class GfAppComponent implements OnInit {
     ImpersonationStorageService
   );
   private readonly notificationService = inject(NotificationService);
+  private readonly paginatorIntl = inject(CustomPaginatorIntl);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly title = inject(Title);
@@ -225,6 +227,7 @@ export class GfAppComponent implements OnInit {
       .subscribe((locale) => {
         if (locale) {
           this.dateAdapter.setLocale(locale);
+          this.paginatorIntl.setLocale(locale);
         }
       });
 
