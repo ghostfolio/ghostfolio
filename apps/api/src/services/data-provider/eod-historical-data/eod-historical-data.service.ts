@@ -409,8 +409,8 @@ export class EodHistoricalDataService
     requestTimeout?: number;
   }) {
     let searchResult: (LookupItem & {
-      assetClass: AssetClass;
-      assetSubClass: AssetSubClass;
+      assetClass: AssetClass | undefined;
+      assetSubClass: AssetSubClass | undefined;
       isin: string;
     })[] = [];
 
