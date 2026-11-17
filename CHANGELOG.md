@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `ng-extract-i18n-merge` from version `3.4.0` to `3.5.0`
+
 ### Fixed
 
 - Fixed the duplicate data point of today in the chart of the holding detail dialog
