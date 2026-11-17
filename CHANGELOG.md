@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `yahoo-finance2` from version `4.0.5` to `4.0.6`
+
 ### Fixed
 
 - Fixed the duplicate data point of today in the chart of the holding detail dialog
