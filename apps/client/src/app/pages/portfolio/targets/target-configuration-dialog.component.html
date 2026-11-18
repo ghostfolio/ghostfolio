@@ -1,0 +1,76 @@
+<h2 mat-dialog-title i18n>Configure target</h2>
+<mat-dialog-content class="configuration-content">
+  <div class="mb-3">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label i18n>Starting allocation</mat-label>
+      <mat-select [value]="profile.presetId ?? 'custom'" (selectionChange)="applyPreset($event.value)">
+        @for (preset of presets; track preset.id) {
+          <mat-option [value]="preset.id">{{ preset.label }}</mat-option>
+        }
+        <mat-option value="custom" [disabled]="true" i18n>Custom</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p class="text-body-secondary small" i18n>
+      Presets are starting points. Edit any percentage to customize your target.
+    </p>
+  </div>
+  <div class="row">
+    <div class="col-md-5 mb-3">
+      <gf-portfolio-proportion-chart
+        [data]="chartData"
+        [isInPercentage]="true"
+        [locale]="data.user.settings.locale"
+        [colorScheme]="data.user.settings.colorScheme"
+      />
+      <div class="text-center fw-bold mt-2">
+        <span i18n>Total</span>: {{ total * 100 | number: '1.0-2' }}%
+      </div>
+    </div>
+    <div class="col-md-7">
+      @for (assetClass of classes; track assetClass) {
+        <div class="allocation-input">
+          <label [for]="'target-' + assetClass">{{ labels[assetClass] }}</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="number"
+              min="0"
+              max="100"
+              step="0.5"
+              [id]="'target-' + assetClass"
+              [ngModel]="profile.allocations[assetClass] * 100"
+              (ngModelChange)="updateAllocation(assetClass, $event)"
+            />
+            <span class="input-group-text">%</span>
+          </div>
+        </div>
+      }
+      <hr />
+      <div class="allocation-input">
+        <label for="target-tolerance" i18n>Allowed deviation</label>
+        <div class="input-group">
+          <input
+            id="target-tolerance"
+            class="form-control"
+            type="number"
+            min="0"
+            max="100"
+            step="0.5"
+            [ngModel]="profile.tolerance * 100"
+            (ngModelChange)="updateTolerance($event)"
+          />
+          <span class="input-group-text">%</span>
+        </div>
+      </div>
+      @if (!isValid) {
+        <p class="text-danger small" i18n>
+          Each percentage must be between 0 and 100, and the total must equal 100%.
+        </p>
+      }
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" i18n>Cancel</button>
+  <button mat-flat-button [disabled]="!isValid" (click)="save()" i18n>Save target</button>
+</mat-dialog-actions>
