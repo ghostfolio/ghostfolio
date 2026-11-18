@@ -1,0 +1,7 @@
+:host { display: block; }
+.account-select { width: min(320px, 100%); }
+.comparison-track { height: 0.62rem; background: rgba(128,128,128,.11); border-radius: .35rem; margin-bottom: .3rem; overflow: hidden; }
+.comparison-bar { height: 100%; border-radius: .35rem; }
+.current-bar, .current-marker { background: #36cfcc; }
+.target-bar, .target-marker { background: #3686cf; }
+.legend-marker { display: inline-block; width: .65rem; height: .65rem; border-radius: .15rem; }
