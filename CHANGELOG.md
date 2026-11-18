@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `dotenv` from version `18.0.9` to `18.0.10`
 - Upgraded `prisma` from version `7.10.0` to `7.10.1`
 
 ### Fixed
