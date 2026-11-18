@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the duplicate data point of today in the chart of the holding detail dialog
 - Fixed the missing localization of the range label in the paginator
+- Fixed the proportion of net worth on the allocations page with liabilities or filters
 - Fixed the requests of the twitter bot service with dummy credentials
 
 ## 3.100.0 - 2026-11-15
