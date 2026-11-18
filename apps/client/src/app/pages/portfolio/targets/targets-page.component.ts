@@ -53,8 +53,6 @@ export class GfTargetsPageComponent implements OnInit {
   protected isSaving = false;
   protected hasError = false;
   protected canEdit = false;
-  protected readonly UNKNOWN_KEY = UNKNOWN_KEY;
-  protected readonly classes = Object.values(AssetClass);
   protected readonly labels: Record<string, string> = Object.fromEntries(
     Object.values(AssetClass).map((assetClass) => [assetClass, translate(assetClass)])
   );
@@ -90,11 +88,7 @@ export class GfTargetsPageComponent implements OnInit {
   }
 
   protected get accounts() {
-    return (this.user?.accounts ?? []).filter((account) => !account.isExcluded);
-  }
-
-  protected get usableResult() {
-    return this.result?.status === 'ready';
+    return this.user?.accounts ?? [];
   }
 
   protected get hasReadValues() {
