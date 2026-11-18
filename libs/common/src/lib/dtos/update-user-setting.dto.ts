@@ -1,4 +1,4 @@
-import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
+import { PortfolioTargetsSettings, XRayRulesSettings } from '@ghostfolio/common/interfaces';
 import type {
   ColorScheme,
   DateRange,
@@ -6,6 +6,7 @@ import type {
   ViewMode
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
+import { isValidPortfolioTargetsSettings } from '@ghostfolio/common/portfolio-targets/portfolio-targets-validation';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import {
@@ -15,7 +16,8 @@ import {
   IsIn,
   IsNumber,
   IsOptional,
-  IsString
+  IsString,
+  ValidateBy
 } from 'class-validator';
 import { eachYearOfInterval, format } from 'date-fns';
 
@@ -109,6 +111,16 @@ export class UpdateUserSettingDto {
    * The target financial amount the user aims to reach before retiring.
    * Can be explicitly set to null to clear the value and calculate it dynamically.
    */
+  @IsOptional()
+  @ValidateBy({
+    name: 'isValidPortfolioTargetsSettings',
+    validator: {
+      validate: isValidPortfolioTargetsSettings,
+      defaultMessage: () => 'portfolioTargets must contain one valid global target allocation'
+    }
+  })
+  portfolioTargets?: PortfolioTargetsSettings;
+
   @IsNumber()
   @IsOptional()
   projectedTotalAmount?: number | null;
