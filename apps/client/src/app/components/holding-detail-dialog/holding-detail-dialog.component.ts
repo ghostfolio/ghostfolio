@@ -70,7 +70,14 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { isUUID } from 'class-validator';
-import { format, isSameMonth, isToday, parseISO } from 'date-fns';
+import {
+  format,
+  isBefore,
+  isSameMonth,
+  isToday,
+  parseISO,
+  startOfToday
+} from 'date-fns';
 import { addIcons } from 'ionicons';
 import {
   arrowDownCircleOutline,
@@ -374,8 +381,15 @@ export class GfHoldingDetailDialogComponent implements OnInit {
             permissions.readMarketDataOfOwnAssetProfile
           );
 
-          this.historicalDataItems = historicalData.map(
-            ({ averagePrice, date, marketPrice }) => {
+          const today = startOfToday();
+
+          this.historicalDataItems = historicalData
+            .filter(({ date }) => {
+              // Skip the market data from today on, the market price is added
+              // as the latest data point below
+              return isBefore(parseISO(date), today);
+            })
+            .map(({ averagePrice, date, marketPrice }) => {
               this.benchmarkDataItems.push({
                 date,
                 value: isNumber(averagePrice) ? averagePrice : null
@@ -385,8 +399,7 @@ export class GfHoldingDetailDialogComponent implements OnInit {
                 date,
                 value: marketPrice ?? 0
               };
-            }
-          );
+            });
 
           this.investmentInBaseCurrencyWithCurrencyEffect =
             investmentInBaseCurrencyWithCurrencyEffect;
