@@ -30,8 +30,8 @@ function makePreset(
 
 /** Editable starting points, not investment recommendations. */
 export const PORTFOLIO_TARGET_PRESETS: PortfolioTargetPreset[] = [
-  makePreset('conservative-20-80', $localize`Conservative (20/80)`, 0.2, 0.8),
-  makePreset('cautious-40-60', $localize`Cautious (40/60)`, 0.4, 0.6),
+  makePreset('cautious-20-80', $localize`Cautious (20/80)`, 0.2, 0.8),
+  makePreset('conservative-40-60', $localize`Conservative (40/60)`, 0.4, 0.6),
   makePreset('moderate-60-40', $localize`Moderate (60/40)`, 0.6, 0.4),
   makePreset('aggressive-80-20', $localize`Aggressive (80/20)`, 0.8, 0.2),
   makePreset('golden-butterfly', 'Golden Butterfly', 0.4, 0.4, 0.2)
