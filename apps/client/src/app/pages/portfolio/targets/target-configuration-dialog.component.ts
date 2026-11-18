@@ -97,6 +97,7 @@ export class GfTargetConfigurationDialogComponent {
     this.profile = {
       ...this.profile,
       presetId: undefined,
+      name: $localize`Custom`,
       allocations: {
         ...this.profile.allocations,
         [assetClass]: Number(percent) / 100
