@@ -1,6 +1,6 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { TAG_ID_EXCLUDE_FROM_ANALYSIS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { Filter, PortfolioTargetProfile, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
@@ -88,7 +88,9 @@ export class GfTargetsPageComponent implements OnInit {
   }
 
   protected get accounts() {
-    return this.user?.accounts ?? [];
+    return (this.user?.accounts ?? []).filter((account) =>
+      !account.tags?.some(({ id }) => id === TAG_ID_EXCLUDE_FROM_ANALYSIS)
+    );
   }
 
   protected get hasReadValues() {
