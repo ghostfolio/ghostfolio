@@ -65,6 +65,11 @@
       </mat-card-content>
     </mat-card>
   } @else {
+    @if (result.unclassifiedValue > 0) {
+      <p class="text-warning" i18n>
+        Some holdings have no asset classification. The reported allocation is incomplete.
+      </p>
+    }
     <div class="row mb-3">
       <div class="col-md-4 mb-3">
         <mat-card appearance="outlined"><mat-card-content>
