@@ -184,6 +184,6 @@ export function calculatePortfolioTargets({
     maxDrift: Math.max(...drifts),
     outOfToleranceCount: rows.filter(({ outOfTolerance }) => outOfTolerance).length,
     unclassifiedValue,
-    status: unclassifiedValue > 0 ? 'inconsistent' : 'ready'
+    status: 'ready'
   };
 }
