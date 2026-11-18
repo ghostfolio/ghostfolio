@@ -71,7 +71,7 @@
     "@codewithdan/observable-store": "3.0.0",
     "@date-fns/utc": "2.1.1",
     "@internationalized/number": "3.6.9",
-    "@ionic/angular": "8.8.12",
+    "@ionic/angular": "8.8.19",
     "@keyv/redis": "5.1.6",
     "@modelcontextprotocol/core": "2.4.0",
     "@modelcontextprotocol/node": "2.1.2",
