@@ -1566,6 +1566,113 @@ describe('PortfolioService', () => {
       expect(summary.excludedAccountsAndActivities).toBe(900);
       expect(summary.totalValueInBaseCurrency).toBe(3900);
     });
+
+    describe('filteredValueInPercentage', () => {
+      const mockUnfilteredPortfolioCalculator = ({
+        currentValueInBaseCurrency
+      }: {
+        currentValueInBaseCurrency: number;
+      }) => {
+        return jest
+          .spyOn(portfolioCalculatorFactory, 'createCalculator')
+          .mockReturnValue({
+            getSnapshot: jest.fn().mockResolvedValue({
+              currentValueInBaseCurrency: new Big(currentValueInBaseCurrency)
+            })
+          } as unknown as ReturnType<
+            typeof portfolioCalculatorFactory.createCalculator
+          >);
+      };
+
+      it('should be 100% without a filter when there are liabilities', async () => {
+        jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+          accounts: [],
+          balanceInBaseCurrency: 1000
+        });
+
+        const portfolioCalculator = createPortfolioCalculator();
+
+        jest
+          .spyOn(portfolioCalculator, 'getLiabilitiesInBaseCurrency')
+          .mockResolvedValue(new Big(1000));
+
+        const summary = await getSummary({
+          portfolioCalculator,
+          balanceInBaseCurrency: 1000,
+          emergencyFundHoldingsValueInBaseCurrency: 0,
+          filteredValueInBaseCurrency: new Big(3000),
+          filters: [],
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+
+        expect(summary.filteredValueInPercentage).toBe(1);
+
+        // The net worth still deducts the liabilities
+        expect(summary.totalValueInBaseCurrency).toBe(2000);
+      });
+
+      it('should put the value filtered by asset class in relation to the unfiltered portfolio', async () => {
+        jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
+          accounts: [],
+          balanceInBaseCurrency: 1000
+        });
+
+        const createCalculator = mockUnfilteredPortfolioCalculator({
+          currentValueInBaseCurrency: 12000
+        });
+
+        const summary = await getSummary({
+          balanceInBaseCurrency: 1000,
+          emergencyFundHoldingsValueInBaseCurrency: 0,
+          filteredValueInBaseCurrency: new Big(3000),
+          filters: [{ id: AssetClass.EQUITY, type: 'ASSET_CLASS' }],
+          portfolioCalculator: createPortfolioCalculator(),
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+
+        expect(createCalculator).toHaveBeenCalledWith(
+          expect.not.objectContaining({ filters: expect.anything() })
+        );
+
+        // 3000 (equity) / 12000 (portfolio)
+        expect(summary.filteredValueInPercentage).toBe(0.25);
+      });
+
+      it('should put the value filtered by account in relation to the unfiltered portfolio including the excluded accounts', async () => {
+        jest
+          .spyOn(accountService, 'getCashDetails')
+          .mockImplementation(async ({ filters, withExcludedAccounts }) => {
+            if (withExcludedAccounts) {
+              // All accounts, including an excluded account with 500
+              return { accounts: [], balanceInBaseCurrency: 5500 };
+            }
+
+            return {
+              accounts: [],
+              balanceInBaseCurrency: filters?.length > 0 ? 1000 : 5000
+            };
+          });
+
+        mockUnfilteredPortfolioCalculator({
+          currentValueInBaseCurrency: 12000
+        });
+
+        const summary = await getSummary({
+          balanceInBaseCurrency: 1000,
+          emergencyFundHoldingsValueInBaseCurrency: 0,
+          filteredValueInBaseCurrency: new Big(3000),
+          filters: [{ id: randomUUID(), type: 'ACCOUNT' }],
+          portfolioCalculator: createPortfolioCalculator(),
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+
+        // 3000 (account) / (12000 (portfolio) + 500 (excluded account))
+        expect(summary.filteredValueInPercentage).toBe(0.24);
+      });
+    });
   });
 
   describe('getValueOfAccountsAndPlatforms', () => {
