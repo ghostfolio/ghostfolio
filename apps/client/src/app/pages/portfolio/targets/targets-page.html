@@ -129,7 +129,7 @@
                 <td>{{ formatClass(row.assetClass) }}</td>
                 <td class="text-end">{{ row.actual * 100 | number: '1.0-2' }}%</td>
                 <td class="text-end">{{ row.target * 100 | number: '1.0-2' }}%</td>
-                <td class="text-end">{{ row.drift * 100 | number: '+1.0-2' }}%</td>
+                <td class="text-end">{{ row.drift >= 0 ? '+' : '' }}{{ row.drift * 100 | number: '1.0-2' }}%</td>
                 <td class="text-end">
                   @if (row.outOfTolerance) {
                     <span class="text-danger" i18n>Outside tolerance</span>
