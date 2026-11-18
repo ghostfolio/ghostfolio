@@ -1,3 +1,4 @@
+import { PortfolioTargetsSettings } from './portfolio-targets.interface';
 import { XRayRulesSettings } from '@ghostfolio/common/interfaces/x-ray-rules-settings.interface';
 import {
   ColorScheme,
@@ -27,6 +28,7 @@ export interface UserSettings {
   language?: string;
   locale?: string;
   performanceCalculationType?: PerformanceCalculationType;
+  portfolioTargets?: PortfolioTargetsSettings;
   projectedTotalAmount?: number;
   retirementDate?: string;
   safeWithdrawalRate?: number;
