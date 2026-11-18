@@ -28,7 +28,9 @@ export class CustomPaginatorIntl extends MatPaginatorIntl {
       range = `${this.formatNumber(startIndex + 1)} – ${this.formatNumber(endIndex)}`;
     }
 
-    return $localize`${range} of ${this.formatNumber(Math.max(length, 0))}`;
+    const total = this.formatNumber(Math.max(length, 0));
+
+    return `${range} ${$localize`of`} ${total}`;
   };
 
   public setLocale(aLocale: string) {
