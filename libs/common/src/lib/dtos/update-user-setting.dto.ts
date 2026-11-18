@@ -107,10 +107,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   performanceCalculationType?: PerformanceCalculationType;
 
-  /**
-   * The target financial amount the user aims to reach before retiring.
-   * Can be explicitly set to null to clear the value and calculate it dynamically.
-   */
+  /** Desired asset-class allocation and tolerance for the global portfolio. */
   @IsOptional()
   @ValidateBy({
     name: 'isValidPortfolioTargetsSettings',
@@ -121,6 +118,10 @@ export class UpdateUserSettingDto {
   })
   portfolioTargets?: PortfolioTargetsSettings;
 
+  /**
+   * The target financial amount the user aims to reach before retiring.
+   * Can be explicitly set to null to clear the value and calculate it dynamically.
+   */
   @IsNumber()
   @IsOptional()
   projectedTotalAmount?: number | null;
