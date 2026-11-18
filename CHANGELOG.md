@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `@ionic/angular` from version `8.8.12` to `8.8.19`
+- Upgraded `ionicons` from version `8.0.13` to `8.1.0`
 - Upgraded `prisma` from version `7.10.0` to `7.10.1`
 
 ### Fixed
