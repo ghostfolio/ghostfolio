@@ -1,0 +1,16 @@
+:host { display: block; }
+.configuration-content { min-width: min(760px, 80vw); }
+.allocation-input {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+  label { flex: 1; }
+  .input-group { width: 9rem; }
+}
+gf-portfolio-proportion-chart { display: block; min-height: 250px; }
+@media (max-width: 600px) {
+  .configuration-content { min-width: 0; }
+  .allocation-input { gap: 0.5rem; }
+}
