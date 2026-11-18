@@ -37,7 +37,7 @@ export class GfTargetConfigurationDialogComponent {
   protected readonly presets = TARGET_PRESETS;
   protected profile: PortfolioTargetProfile;
 
-  private readonly data = inject<{
+  protected readonly data = inject<{
     profile?: PortfolioTargetProfile;
     user: User;
   }>(MAT_DIALOG_DATA);
@@ -54,10 +54,13 @@ export class GfTargetConfigurationDialogComponent {
       ...(this.data.profile ?? defaultProfile),
       allocations: { ...(this.data.profile?.allocations ?? defaultProfile.allocations) }
     };
+    this.updateChartData();
   }
 
-  protected get chartData() {
-    return Object.fromEntries(this.classes.map((assetClass) => [
+  protected chartData: Record<string, { name: string; value: number }> = {};
+
+  private updateChartData() {
+    this.chartData = Object.fromEntries(this.classes.map((assetClass) => [
       assetClass,
       {
         name: this.labels[assetClass],
@@ -87,6 +90,7 @@ export class GfTargetConfigurationDialogComponent {
       ...next,
       tolerance: this.profile.tolerance
     };
+    this.updateChartData();
   }
 
   protected updateAllocation(assetClass: AssetClass, percent: number) {
@@ -98,6 +102,7 @@ export class GfTargetConfigurationDialogComponent {
         [assetClass]: Number(percent) / 100
       }
     };
+    this.updateChartData();
   }
 
   protected updateTolerance(percent: number) {
