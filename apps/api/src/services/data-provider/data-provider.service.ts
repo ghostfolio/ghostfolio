@@ -74,6 +74,10 @@ export class DataProviderService implements OnModuleInit {
     const dataProvider = this.getDataProvider(dataSource);
     const symbol = dataProvider.getTestSymbol();
 
+    if (!symbol) {
+      return false;
+    }
+
     const quotes = await this.getQuotes({
       items: [
         {
@@ -963,7 +967,9 @@ export class DataProviderService implements OnModuleInit {
         return lookupItem;
       })
       .sort(({ name: name1 }, { name: name2 }) => {
-        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
+        return (name1?.toLowerCase() ?? '').localeCompare(
+          name2?.toLowerCase() ?? ''
+        );
       });
 
     return {

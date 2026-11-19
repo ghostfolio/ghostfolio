@@ -14,7 +14,7 @@ export interface DataProviderInterface {
 
   getAssetProfile({
     symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>>;
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile> | undefined>;
 
   getDataProviderInfo(): DataProviderInfo;
 
@@ -52,7 +52,7 @@ export interface DataProviderInterface {
     symbols
   }: GetQuotesParams): Promise<{ [symbol: string]: DataProviderResponse }>;
 
-  getTestSymbol(): string;
+  getTestSymbol(): string | undefined;
 
   search({ includeIndices, query }: GetSearchParams): Promise<LookupResponse>;
 }

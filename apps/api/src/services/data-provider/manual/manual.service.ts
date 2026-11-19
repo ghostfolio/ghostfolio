@@ -47,7 +47,7 @@ export class ManualService implements DataProviderInterface {
 
   public async getAssetProfile({
     symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile> | undefined> {
     const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       { symbol, dataSource: this.getName() }
     ]);
@@ -86,8 +86,8 @@ export class ManualService implements DataProviderInterface {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [{ symbol, dataSource: this.getName() }]
       );
-      const { defaultMarketPrice, selector, url } =
-        symbolProfile?.scraperConfiguration ?? {};
+      const scraperConfiguration = symbolProfile?.scraperConfiguration;
+      const { defaultMarketPrice, selector, url } = scraperConfiguration ?? {};
 
       if (defaultMarketPrice) {
         const historical: {
@@ -105,14 +105,18 @@ export class ManualService implements DataProviderInterface {
         }
 
         return historical;
-      } else if (!selector || !url) {
+      } else if (!scraperConfiguration || !selector || !url) {
         return {};
       }
 
       const value = await this.scrape({
         symbol,
-        scraperConfiguration: symbolProfile.scraperConfiguration
+        scraperConfiguration
       });
+
+      if (value === undefined) {
+        return {};
+      }
 
       return {
         [format(getStartOfUtcDateOfYesterday(), DATE_FORMAT, { in: utc })]: {
@@ -178,6 +182,10 @@ export class ManualService implements DataProviderInterface {
 
       const scraperResultPromises = symbolProfilesToScrape.map(
         async ({ scraperConfiguration, symbol }) => {
+          if (!scraperConfiguration) {
+            return { symbol, marketPrice: undefined };
+          }
+
           try {
             const marketPrice = await this.scrape({
               scraperConfiguration,
@@ -294,7 +302,7 @@ export class ManualService implements DataProviderInterface {
   }: {
     scraperConfiguration: ScraperConfiguration;
     symbol: string;
-  }): Promise<number> {
+  }): Promise<number | undefined> {
     let locale = scraperConfiguration.locale;
 
     const response = await this.fetchService.fetch(scraperConfiguration.url, {
