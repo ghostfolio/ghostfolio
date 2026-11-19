@@ -9,6 +9,8 @@
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
+> **Note:** `.env.example` is intended for self-hosting the full application via Docker and uses Docker-internal hostnames (e.g. `postgres:5432`), which will not work when running Prisma or the API directly on the host.
+
 ### Setup
 
 1. Run `npm install`
