@@ -2289,6 +2289,7 @@ export class PortfolioService {
       })?.toNumber();
 
     return {
+      accountCashInBaseCurrency: balanceInBaseCurrency,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,

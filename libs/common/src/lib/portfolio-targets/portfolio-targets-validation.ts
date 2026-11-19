@@ -55,7 +55,9 @@ export function isValidPortfolioTargetsSettings(
     return false;
   }
 
-  const weights = assetClasses.map((assetClass) => profile.allocations[assetClass]);
+  const weights = assetClasses.map(
+    (assetClass) => profile.allocations[assetClass]
+  );
 
   return (
     weights.every(
@@ -64,7 +66,6 @@ export function isValidPortfolioTargetsSettings(
         Number.isFinite(weight) &&
         weight >= 0 &&
         weight <= 1
-    ) &&
-    Math.abs(weights.reduce((sum, weight) => sum + weight, 0) - 1) < 1e-8
+    ) && Math.abs(weights.reduce((sum, weight) => sum + weight, 0) - 1) < 1e-8
   );
 }

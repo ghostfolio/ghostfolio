@@ -5,21 +5,25 @@ import { AssetClass } from '@ghostfolio/prisma/enums';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 
-import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
+import { GfTargetPercentPipe } from './target-percent.pipe';
 import { createTargetFromPreset, TARGET_PRESETS } from './target-presets';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    DecimalPipe,
+    GfTargetPercentPipe,
     FormsModule,
     GfPortfolioProportionChartComponent,
     MatButtonModule,
@@ -42,17 +46,24 @@ export class GfTargetConfigurationDialogComponent {
     user: User;
   }>(MAT_DIALOG_DATA);
   private readonly dialogRef =
-    inject<MatDialogRef<GfTargetConfigurationDialogComponent, PortfolioTargetProfile>>(MatDialogRef);
+    inject<
+      MatDialogRef<GfTargetConfigurationDialogComponent, PortfolioTargetProfile>
+    >(MatDialogRef);
 
   protected readonly labels = Object.fromEntries(
-    TARGET_ASSET_CLASSES.map((assetClass) => [assetClass, translate(assetClass)])
+    TARGET_ASSET_CLASSES.map((assetClass) => [
+      assetClass,
+      translate(assetClass)
+    ])
   ) as Record<AssetClass, string>;
 
   public constructor() {
-    const defaultProfile = createTargetFromPreset('moderate');
+    const defaultProfile = createTargetFromPreset('moderate-60-40');
     this.profile = {
       ...(this.data.profile ?? defaultProfile),
-      allocations: { ...(this.data.profile?.allocations ?? defaultProfile.allocations) }
+      allocations: {
+        ...(this.data.profile?.allocations ?? defaultProfile.allocations)
+      }
     };
     this.updateChartData();
   }
@@ -60,13 +71,15 @@ export class GfTargetConfigurationDialogComponent {
   protected chartData: Record<string, { name: string; value: number }> = {};
 
   private updateChartData() {
-    this.chartData = Object.fromEntries(this.classes.map((assetClass) => [
-      assetClass,
-      {
-        name: this.labels[assetClass],
-        value: Math.max(0, this.profile.allocations[assetClass] ?? 0)
-      }
-    ]));
+    this.chartData = Object.fromEntries(
+      this.classes.map((assetClass) => [
+        assetClass,
+        {
+          name: this.labels[assetClass],
+          value: Math.max(0, this.profile.allocations[assetClass] ?? 0)
+        }
+      ])
+    );
   }
 
   protected get total() {
@@ -97,10 +110,10 @@ export class GfTargetConfigurationDialogComponent {
     this.profile = {
       ...this.profile,
       presetId: undefined,
-      name: $localize`Custom`,
+      name: 'Custom',
       allocations: {
         ...this.profile.allocations,
-        [assetClass]: Number(percent) / 100
+        [assetClass]: percent == null ? NaN : Number(percent) / 100
       }
     };
     this.updateChartData();
@@ -109,7 +122,7 @@ export class GfTargetConfigurationDialogComponent {
   protected updateTolerance(percent: number) {
     this.profile = {
       ...this.profile,
-      tolerance: Number(percent) / 100
+      tolerance: percent == null ? NaN : Number(percent) / 100
     };
   }
 

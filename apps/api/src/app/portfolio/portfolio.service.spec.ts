@@ -2,6 +2,7 @@ import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/po
 import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { WHERE_ACCOUNT_NOT_EXCLUDED } from '@ghostfolio/api/helper/account.helper';
 import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/services/account/account.service';
 import { CashDetails } from '@ghostfolio/api/services/account/interfaces/cash-details.interface';
@@ -430,6 +431,45 @@ describe('PortfolioService', () => {
     });
   });
 
+  describe('independent account cash selection', () => {
+    it.each([false, true])(
+      'preserves exclusion and account-selection constraints (selected: %s)',
+      async (selected) => {
+        const filters: Filter[] = selected
+          ? [{ type: 'ACCOUNT', id: 'euro' }]
+          : [];
+        const euro = { id: 'euro', balance: 20, currency: 'EUR' };
+        const dollar = { id: 'dollar', balance: 60, currency: 'USD' };
+        const accounts = (
+          selected ? [euro] : [euro, dollar]
+        ) as AccountWithBalance[];
+        const accountsSpy = jest
+          .spyOn(accountService, 'accounts')
+          .mockResolvedValue(accounts);
+        const conversion = jest
+          .spyOn(exchangeRateDataService, 'toCurrency')
+          .mockImplementation((value, currency) =>
+            currency === 'EUR' ? value * 2 : value
+          );
+        const result = await accountService.getCashDetails({
+          userId: userDummyData.id,
+          currency: 'USD',
+          filters
+        });
+        expect(accountsSpy).toHaveBeenCalledWith({
+          where: {
+            userId: userDummyData.id,
+            AND: [WHERE_ACCOUNT_NOT_EXCLUDED],
+            ...(selected ? { id: { in: ['euro'] } } : {})
+          }
+        });
+        expect(result.balanceInBaseCurrency).toBe(selected ? 40 : 100);
+        expect(result.accounts).toEqual(accounts);
+        expect(conversion).toHaveBeenCalledTimes(accounts.length);
+      }
+    );
+  });
+
   describe('getDetails', () => {
     const setUpCashOnlyPortfolio = ({
       baseCurrency = 'CHF',
@@ -545,6 +585,46 @@ describe('PortfolioService', () => {
         )
         .mockResolvedValue({ accounts: {}, platforms: {} });
     };
+
+    it.each([
+      { filters: [] as Filter[] },
+      { filters: [{ type: 'ACCOUNT', id: 'selected-account' }] as Filter[] }
+    ])(
+      'passes the existing filtered cash result to the summary: %j',
+      async ({ filters }) => {
+        setUpCashOnlyPortfolio();
+        const summarySpy = jest
+          .spyOn(
+            portfolioService as unknown as {
+              getSummary: (args: {
+                balanceInBaseCurrency: number;
+              }) => Promise<PortfolioSummary>;
+            },
+            'getSummary'
+          )
+          .mockImplementation(
+            async ({ balanceInBaseCurrency }) =>
+              ({
+                accountCashInBaseCurrency: balanceInBaseCurrency
+              }) as PortfolioSummary
+          );
+        const result = await portfolioService.getDetails({
+          filters,
+          userId: userDummyData.id,
+          withSummary: true
+        });
+        expect(accountService.getCashDetails).toHaveBeenCalledTimes(1);
+        expect(accountService.getCashDetails).toHaveBeenCalledWith({
+          filters,
+          userId: userDummyData.id,
+          currency: 'CHF'
+        });
+        expect(summarySpy).toHaveBeenCalledWith(
+          expect.objectContaining({ balanceInBaseCurrency: 1820 })
+        );
+        expect(result.summary.accountCashInBaseCurrency).toBe(1820);
+      }
+    );
 
     it('should return cash holdings when the calculator emits cash positions with the exchange-rate data source', async () => {
       setUpCashOnlyPortfolio();
@@ -1356,6 +1436,38 @@ describe('PortfolioService', () => {
       } as unknown as Awaited<ReturnType<typeof userService.user>>);
     });
 
+    it.each([
+      { balance: 0.01, fund: 10000 },
+      { balance: 100, fund: 3e15 },
+      { balance: 100, fund: 1e16 }
+    ])(
+      'exposes account cash unchanged by fund adjustments: %j',
+      async ({ balance, fund }) => {
+        jest
+          .spyOn(accountService, 'getCashDetails')
+          .mockResolvedValue({ accounts: [], balanceInBaseCurrency: balance });
+        jest.spyOn(userService, 'user').mockResolvedValue({
+          id: userDummyData.id,
+          settings: { settings: { baseCurrency: 'CHF', emergencyFund: fund } }
+        } as unknown as Awaited<ReturnType<typeof userService.user>>);
+        const summary = await getSummary({
+          portfolioCalculator: createPortfolioCalculator(),
+          balanceInBaseCurrency: balance,
+          emergencyFundHoldingsValueInBaseCurrency: 0,
+          filteredValueInBaseCurrency: new Big(3000),
+          userCurrency: 'CHF',
+          userId: userDummyData.id
+        });
+        expect(summary.accountCashInBaseCurrency).toBe(balance);
+        expect(summary.cash).toBe(new Big(balance).minus(fund).toNumber());
+        expect(summary.emergencyFund.cash).toBe(fund);
+        expect(summary.totalCashInBaseCurrency).toBe(1000);
+        // Only the pre-existing excluded-account lookup occurs in getSummary.
+        expect(accountService.getCashDetails).toHaveBeenCalledTimes(1);
+        expect(exchangeRateDataService.toCurrency).not.toHaveBeenCalled();
+      }
+    );
+
     it('should derive the cash and net worth from the account balance when there are no excluded accounts, no emergency fund and no liabilities', async () => {
       jest.spyOn(accountService, 'getCashDetails').mockResolvedValue({
         accounts: [],
@@ -1875,6 +1987,30 @@ describe('PortfolioService', () => {
       // 100 (balance) + 1 * 10 (activity)
       expect(accounts[account.id].valueInBaseCurrency).toBe(110);
       expect(platforms[account.platformId].valueInBaseCurrency).toBe(110);
+    });
+
+    it('keeps permanently excluded accounts out of account totals', async () => {
+      const excluded = {
+        ...account,
+        id: 'excluded',
+        balance: 5000,
+        tags: [{ id: TAG_ID_EXCLUDE_FROM_ANALYSIS }]
+      };
+      jest
+        .spyOn(accountService, 'getAccounts')
+        .mockResolvedValue([
+          account,
+          excluded
+        ] as unknown as AccountWithBalance[]);
+      const { accounts } = await getValueOfAccountsAndPlatforms({
+        activities: [],
+        filters: [],
+        portfolioItemsNow: {},
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+      expect(Object.keys(accounts)).toEqual([account.id]);
+      expect(accounts[account.id].valueInBaseCurrency).toBe(100);
     });
 
     it('should not accumulate rounding errors of the balances of accounts sharing a platform', async () => {

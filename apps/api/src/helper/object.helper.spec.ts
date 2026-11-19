@@ -27,6 +27,14 @@ describe('query', () => {
 });
 
 describe('redactAttributes', () => {
+  it('redacts independent summary cash with the centralized paths', () => {
+    expect(
+      redactPaths({
+        object: { summary: { accountCashInBaseCurrency: 0.01 } },
+        paths: DEFAULT_REDACTED_PATHS
+      })
+    ).toEqual({ summary: { accountCashInBaseCurrency: null } });
+  });
   it('should redact provided attributes', () => {
     expect(redactPaths({ object: {}, paths: [] })).toStrictEqual({});
 

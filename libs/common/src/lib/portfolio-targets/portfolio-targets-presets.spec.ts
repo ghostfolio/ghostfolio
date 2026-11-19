@@ -1,10 +1,10 @@
 import { AssetClass } from '@ghostfolio/prisma/enums';
 
+import { isValidPortfolioTarget } from './portfolio-targets-calculator';
 import {
   createDefaultPortfolioTarget,
   PORTFOLIO_TARGET_PRESETS
 } from './portfolio-targets-presets';
-import { isValidPortfolioTarget } from './portfolio-targets-calculator';
 
 describe('Portfolio target presets', () => {
   it('provides five valid, editable starting points', () => {
@@ -18,7 +18,9 @@ describe('Portfolio target presets', () => {
     const target = createDefaultPortfolioTarget();
     target.allocations[AssetClass.EQUITY] = 0.1;
 
-    expect(PORTFOLIO_TARGET_PRESETS[2].allocations[AssetClass.EQUITY]).toBe(0.6);
+    expect(PORTFOLIO_TARGET_PRESETS[2].allocations[AssetClass.EQUITY]).toBe(
+      0.6
+    );
     expect(target.tolerance).toBe(0.05);
     expect(target.id).toBe('global');
   });

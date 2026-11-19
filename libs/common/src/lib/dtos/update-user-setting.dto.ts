@@ -1,4 +1,8 @@
-import { PortfolioTargetsSettings, XRayRulesSettings } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioTargetsSettings,
+  XRayRulesSettings
+} from '@ghostfolio/common/interfaces';
+import { isValidPortfolioTargetsSettings } from '@ghostfolio/common/portfolio-targets/portfolio-targets-validation';
 import type {
   ColorScheme,
   DateRange,
@@ -6,7 +10,6 @@ import type {
   ViewMode
 } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
-import { isValidPortfolioTargetsSettings } from '@ghostfolio/common/portfolio-targets/portfolio-targets-validation';
 import { IsCurrencyCode } from '@ghostfolio/common/validators/is-currency-code';
 
 import {
@@ -17,7 +20,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidateBy
+  ValidateBy,
+  ValidateIf
 } from 'class-validator';
 import { eachYearOfInterval, format } from 'date-fns';
 
@@ -108,12 +112,13 @@ export class UpdateUserSettingDto {
   performanceCalculationType?: PerformanceCalculationType;
 
   /** Desired asset-class allocation and tolerance for the global portfolio. */
-  @IsOptional()
+  @ValidateIf((_object, value: unknown) => value !== undefined)
   @ValidateBy({
     name: 'isValidPortfolioTargetsSettings',
     validator: {
       validate: isValidPortfolioTargetsSettings,
-      defaultMessage: () => 'portfolioTargets must contain one valid global target allocation'
+      defaultMessage: () =>
+        'portfolioTargets must contain one valid global target allocation'
     }
   })
   portfolioTargets?: PortfolioTargetsSettings;

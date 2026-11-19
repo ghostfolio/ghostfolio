@@ -30,43 +30,57 @@ describe('Portfolio targets settings validation', () => {
   });
 
   it('rejects multiple profiles in v1', () => {
-    expect(isValidPortfolioTargetsSettings({
-      ...validSettings,
-      profiles: [...validSettings.profiles, ...validSettings.profiles]
-    })).toBe(false);
+    expect(
+      isValidPortfolioTargetsSettings({
+        ...validSettings,
+        profiles: [...validSettings.profiles, ...validSettings.profiles]
+      })
+    ).toBe(false);
   });
 
   it('rejects non-100-percent allocations', () => {
-    expect(isValidPortfolioTargetsSettings({
-      ...validSettings,
-      profiles: [{
-        ...validSettings.profiles[0],
-        allocations: { ...allocations, [AssetClass.EQUITY]: 0.3 }
-      }]
-    })).toBe(false);
+    expect(
+      isValidPortfolioTargetsSettings({
+        ...validSettings,
+        profiles: [
+          {
+            ...validSettings.profiles[0],
+            allocations: { ...allocations, [AssetClass.EQUITY]: 0.3 }
+          }
+        ]
+      })
+    ).toBe(false);
   });
 
   it('rejects invalid tolerances', () => {
-    expect(isValidPortfolioTargetsSettings({
-      ...validSettings,
-      profiles: [{ ...validSettings.profiles[0], tolerance: -0.1 }]
-    })).toBe(false);
+    expect(
+      isValidPortfolioTargetsSettings({
+        ...validSettings,
+        profiles: [{ ...validSettings.profiles[0], tolerance: -0.1 }]
+      })
+    ).toBe(false);
   });
 
   it('rejects a mismatched active profile', () => {
-    expect(isValidPortfolioTargetsSettings({
-      ...validSettings,
-      activeProfileId: 'other'
-    })).toBe(false);
+    expect(
+      isValidPortfolioTargetsSettings({
+        ...validSettings,
+        activeProfileId: 'other'
+      })
+    ).toBe(false);
   });
 
   it('rejects unknown allocation keys', () => {
-    expect(isValidPortfolioTargetsSettings({
-      ...validSettings,
-      profiles: [{
-        ...validSettings.profiles[0],
-        allocations: { ...allocations, UNKNOWN: 0 }
-      }]
-    })).toBe(false);
+    expect(
+      isValidPortfolioTargetsSettings({
+        ...validSettings,
+        profiles: [
+          {
+            ...validSettings.profiles[0],
+            allocations: { ...allocations, UNKNOWN: 0 }
+          }
+        ]
+      })
+    ).toBe(false);
   });
 });
