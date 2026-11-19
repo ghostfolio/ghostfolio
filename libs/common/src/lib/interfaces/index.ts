@@ -35,6 +35,7 @@ import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
 import type { PortfolioReportRule } from './portfolio-report-rule.interface';
+import type { PortfolioTargetProfile, PortfolioTargetsSettings } from './portfolio-targets.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Product } from './product.interface';
 import type { ReferralPartner } from './referral-partner.interface';
@@ -197,6 +198,8 @@ export {
   PortfolioReportResponse,
   PortfolioReportRule,
   PortfolioSummary,
+  PortfolioTargetProfile,
+  PortfolioTargetsSettings,
   Product,
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,

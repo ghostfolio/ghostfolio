@@ -494,6 +494,18 @@ ngx-skeleton-loader {
   }
 }
 
+// Tooltips render in the global overlay, outside the Targets component.
+.targets-allocation-tooltip .mat-mdc-tooltip-surface {
+  max-width: min(22rem, calc(100vw - 2rem));
+  white-space: pre-line;
+  text-align: left;
+  line-height: 1.55;
+
+  &::first-line {
+    font-weight: 600;
+  }
+}
+
 .svgMap-tooltip {
   border-bottom: none;
 

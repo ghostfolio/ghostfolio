@@ -178,6 +178,7 @@ export const DEFAULT_REDACTED_PATHS = [
   'settings.emergencyFund',
   'settings.projectedTotalAmount',
   'settings.savingsRate',
+  'summary.accountCashInBaseCurrency',
   'totalBalanceInBaseCurrency',
   'totalDividendInBaseCurrency',
   'totalInterestInBaseCurrency',

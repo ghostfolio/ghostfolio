@@ -6330,7 +6330,7 @@
       </trans-unit>
       <trans-unit id="assetClass.ALTERNATIVE_INVESTMENT" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">Investimenti alternativi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
@@ -6338,7 +6338,7 @@
       </trans-unit>
       <trans-unit id="assetClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">Materie prime</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">55</context>
@@ -6346,7 +6346,7 @@
       </trans-unit>
       <trans-unit id="assetClass.EQUITY" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">Azioni</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">56</context>
@@ -6354,7 +6354,7 @@
       </trans-unit>
       <trans-unit id="assetClass.FIXED_INCOME" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">Reddito fisso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">57</context>
@@ -6362,7 +6362,7 @@
       </trans-unit>
       <trans-unit id="assetClass.LIQUIDITY" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">Liquidità</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">58</context>
@@ -6370,7 +6370,7 @@
       </trans-unit>
       <trans-unit id="assetClass.REAL_ESTATE" datatype="html">
         <source>Real Estate</source>
-        <target state="new">Real Estate</target>
+        <target state="translated">Immobiliare</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">59</context>
@@ -9878,6 +9878,370 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">170</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1279657346672539085" datatype="html">
+        <source>Deviation details</source>
+        <target state="translated">Dettaglio degli scostamenti</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1389467201711090519" datatype="html">
+        <source>Account values, holdings and cash cannot be reconciled. The allocation comparison is unavailable.</source>
+        <target state="translated">Non è possibile riconciliare i valori dei conti, le posizioni e la cassa. Il confronto delle allocazioni non è disponibile.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="206912233070797860" datatype="html">
+        <source>Create a target to compare the actual asset allocation with your desired allocation.</source>
+        <target state="translated">Crea un obiettivo per confrontare l’allocazione attuale con quella desiderata.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2160161334901921979" datatype="html">
+        <source>Target: <x id="PH" equiv-text="target"/></source>
+        <target state="translated">Obiettivo: <x id="PH" equiv-text="target"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2215120771329635253" datatype="html">
+        <source>Moderate (60/40)</source>
+        <target state="translated">Moderato (60/40)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2434927374458229739" datatype="html">
+        <source>Total allocation drift</source>
+        <target state="translated">Scostamento totale</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2603620551566373483" datatype="html">
+        <source>Targets</source>
+        <target state="translated">Obiettivi</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.routes.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2628961601867476622" datatype="html">
+        <source>Actual</source>
+        <target state="translated">Attuale</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2983995128934049177" datatype="html">
+        <source>No target configured yet</source>
+        <target state="translated">Nessun obiettivo configurato</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3320457525737616436" datatype="html">
+        <source>Comparing the selected account with the global portfolio target.</source>
+        <target state="translated">Confronto del conto selezionato con l’obiettivo globale del portafoglio.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3415352235608266819" datatype="html">
+        <source>Allowed deviation</source>
+        <target state="translated">Scostamento consentito</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3951507582953079153" datatype="html">
+        <source>Allowed deviation:</source>
+        <target state="translated">Scostamento consentito:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4017112821868737046" datatype="html">
+        <source>Aggressive (80/20)</source>
+        <target state="translated">Aggressivo (80/20)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4048030472122153871" datatype="html">
+        <source>Outside tolerance</source>
+        <target state="translated">Fuori tolleranza</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4067040415107758654" datatype="html">
+        <source>Conservative (40/60)</source>
+        <target state="translated">Conservativo (40/60)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4075475815080399514" datatype="html">
+        <source>Loading portfolio allocation…</source>
+        <target state="translated">Caricamento dell’allocazione del portafoglio…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4324057463345695429" datatype="html">
+        <source>Some holdings have no asset classification. The reported allocation is incomplete.</source>
+        <target state="translated">Alcune posizioni non hanno una classificazione per classe di attivo. L’allocazione riportata è incompleta.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4421939531351296583" datatype="html">
+        <source>Negative cash balances, short positions and liabilities can be valid financial data, but are not supported by this version of the allocation comparison.</source>
+        <target state="translated">Saldi di cassa negativi, posizioni corte e passività possono essere dati finanziari validi, ma non sono supportati da questa versione del confronto delle allocazioni.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4735839210169832471" datatype="html">
+        <source>Golden Butterfly (simplified)</source>
+        <target state="translated">Golden Butterfly (semplificato)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4854396465510517671" datatype="html">
+        <source>Target</source>
+        <target state="translated">Obiettivo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5493343199328160416" datatype="html">
+        <source>Each percentage must be between 0 and 100, and the total must equal 100%.</source>
+        <target state="translated">Ogni percentuale deve essere compresa tra 0 e 100 e il totale deve essere pari al 100%.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5604865068436994524" datatype="html">
+        <source>Save target</source>
+        <target state="translated">Salva obiettivo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3752741644727048956" datatype="html">
+        <source>Portfolio value</source>
+        <target state="translated">Valore del portafoglio</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="643581205340245996" datatype="html">
+        <source>Maximum deviation</source>
+        <target state="translated">Scostamento massimo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6484803623371950164" datatype="html">
+        <source>Within tolerance</source>
+        <target state="translated">Entro la tolleranza</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6576491899990100846" datatype="html">
+        <source>The selected portfolio is empty.</source>
+        <target state="translated">Il portafoglio selezionato è vuoto.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6623816455155556311" datatype="html">
+        <source>Actual vs target allocation</source>
+        <target state="translated">Allocazione attuale e obiettivo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6797301161481252413" datatype="html">
+        <source>The current allocation cannot be calculated with the available data or permissions.</source>
+        <target state="translated">Non è possibile calcolare l’allocazione attuale con i dati o i permessi disponibili.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6892550185745815663" datatype="html">
+        <source>Deviation: <x id="PH" equiv-text="deviation"/> percentage points</source>
+        <target state="translated">Scostamento: <x id="PH" equiv-text="deviation"/> punti percentuali</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6990751070258954140" datatype="html">
+        <source>All accounts</source>
+        <target state="translated">Tutti i conti</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7297566750545444480" datatype="html">
+        <source>Starting allocation</source>
+        <target state="translated">Allocazione iniziale</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7336498829051474765" datatype="html">
+        <source>Actual: <x id="PH" equiv-text="actual"/></source>
+        <target state="translated">Attuale: <x id="PH" equiv-text="actual"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7590013429208346303" datatype="html">
+        <source>Custom</source>
+        <target state="translated">Personalizzato</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7650628233171131970" datatype="html">
+        <source>Asset class</source>
+        <target state="translated">Classe di attivo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7916625202810726113" datatype="html">
+        <source>Presets are starting points. Edit any percentage to customize your target.</source>
+        <target state="translated">I preset sono punti di partenza. Modifica le percentuali per personalizzare il tuo obiettivo.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7917645161177157800" datatype="html">
+        <source>Configure target</source>
+        <target state="translated">Configura obiettivo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="804809194926901761" datatype="html">
+        <source>Cautious (20/80)</source>
+        <target state="translated">Prudente (20/80)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8540113876300993298" datatype="html">
+        <source>Unclassified</source>
+        <target state="translated">Non classificato</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8875902766128905602" datatype="html">
+        <source>Actual: <x id="PH" equiv-text="actual"/> (<x id="PH_1" equiv-text="value"/>)</source>
+        <target state="translated">Attuale: <x id="PH" equiv-text="actual"/> (<x id="PH_1" equiv-text="value"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="928801240741789810" datatype="html">
+        <source>The target could not be saved. Please try again.</source>
+        <target state="translated">Impossibile salvare l’obiettivo. Riprova.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="936192550900633332" datatype="html">
+        <source>Deviation</source>
+        <target state="translated">Scostamento</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="943488921368137950" datatype="html">
+        <source>Configure target</source>
+        <target state="translated">Configura obiettivo</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
     </body>

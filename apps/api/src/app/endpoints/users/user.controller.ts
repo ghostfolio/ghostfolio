@@ -227,6 +227,12 @@ export class UserController {
       data
     );
 
+    // Targets are a versioned document: arrays and optional preset metadata
+    // must be replaced rather than merged with the previous profile.
+    if (data.portfolioTargets !== undefined) {
+      userSettings.portfolioTargets = data.portfolioTargets;
+    }
+
     if (userSettings['filters.dataSource']) {
       userSettings['filters.dataSource'] = decodeDataSource(
         userSettings['filters.dataSource']
