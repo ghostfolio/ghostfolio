@@ -3,8 +3,10 @@ import {
   assetProfileDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import { WHERE_ACTIVITY_NOT_DRAFT } from '@ghostfolio/api/helper/activity.helper';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/services/account/account.service';
 import { AssetProfileSplitService } from '@ghostfolio/api/services/asset-profile-split/asset-profile-split.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
@@ -19,7 +21,7 @@ import {
 } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import { Activity, Filter } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
+import { AccountWithBalance, DateRange } from '@ghostfolio/common/types';
 
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
@@ -739,6 +741,152 @@ describe('ActivitiesService', () => {
 
       return result.activities[0];
     }
+  });
+
+  describe('getCashActivities precision', () => {
+    async function getCashActivitiesForBalances({
+      balances,
+      balanceInBaseCurrency,
+      accountCurrency = 'EUR',
+      userCurrency = 'EUR'
+    }: {
+      balances: { value: number; valueInBaseCurrency: number }[];
+      balanceInBaseCurrency: number;
+      accountCurrency?: string;
+      userCurrency?: string;
+    }) {
+      const getAccountBalances = jest.fn().mockResolvedValue({
+        balances: balances.map((balance, index) => ({
+          ...balance,
+          id: `balance-${index}`,
+          date: parseDate(`2026-01-0${index + 1}`)
+        }))
+      });
+
+      const service = new ActivitiesService(
+        { getAccountBalances } as unknown as AccountBalanceService,
+        null,
+        null,
+        null,
+        null,
+        {
+          getDataSourceForExchangeRates: () => DataSource.YAHOO
+        } as unknown as DataProviderService,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      );
+
+      return service.getCashActivities({
+        cashDetails: {
+          accounts: [
+            { id: 'account-id', currency: accountCurrency, name: 'Cash' }
+          ] as unknown as AccountWithBalance[],
+          balanceInBaseCurrency
+        },
+        userCurrency,
+        userId: 'user-id'
+      });
+    }
+
+    it('preserves decimal balance differences in synthetic cash activities', async () => {
+      const result = await getCashActivitiesForBalances({
+        balances: [10000, 10000.01, 0.01].map((value) => ({
+          value,
+          valueInBaseCurrency: value
+        })),
+        balanceInBaseCurrency: 0.01
+      });
+
+      expect(result.activities).toHaveLength(3);
+      expect(result.activities[1].type).toBe(ActivityType.BUY);
+      expect(result.activities[1].quantity).toBe(0.01);
+      expect(result.activities[1].valueInBaseCurrency).toBe(0.01);
+      expect(result.activities[2].type).toBe(ActivityType.SELL);
+      expect(result.activities[2].quantity).toBe(10000);
+
+      const reconstructed = result.activities.reduce(
+        (total, activity) =>
+          total.plus(
+            new Big(activity.quantity).times(
+              activity.type === ActivityType.BUY ? 1 : -1
+            )
+          ),
+        new Big(0)
+      );
+
+      expect(reconstructed.toNumber()).toBe(0.01);
+    });
+
+    it('preserves native and base-currency deltas independently', async () => {
+      const result = await getCashActivitiesForBalances({
+        balances: [
+          { value: 10000, valueInBaseCurrency: 11000 },
+          { value: 10000.01, valueInBaseCurrency: 11000.02 },
+          { value: 10000, valueInBaseCurrency: 11000 }
+        ],
+        balanceInBaseCurrency: 11000,
+        userCurrency: 'USD'
+      });
+
+      expect(result.activities).toHaveLength(3);
+
+      const buy = result.activities[1];
+      const sell = result.activities[2];
+
+      expect(buy.type).toBe(ActivityType.BUY);
+      expect(buy.quantity).toBe(0.01);
+      expect(buy.value).toBe(0.01);
+      expect(buy.valueInBaseCurrency).toBe(0.02);
+
+      expect(sell.type).toBe(ActivityType.SELL);
+      expect(sell.quantity).toBe(0.01);
+      expect(sell.value).toBe(0.01);
+      expect(sell.valueInBaseCurrency).toBe(0.02);
+
+      const nativeBalance = result.activities.reduce(
+        (total, activity) =>
+          total.plus(
+            new Big(activity.quantity).times(
+              activity.type === ActivityType.BUY ? 1 : -1
+            )
+          ),
+        new Big(0)
+      );
+
+      const baseCurrencyBalance = result.activities.reduce(
+        (total, activity) =>
+          total.plus(
+            new Big(activity.valueInBaseCurrency).times(
+              activity.type === ActivityType.BUY ? 1 : -1
+            )
+          ),
+        new Big(0)
+      );
+
+      expect(nativeBalance.toNumber()).toBe(10000);
+      expect(baseCurrencyBalance.toNumber()).toBe(11000);
+    });
+
+    it('preserves a negative base-currency delta when native cash decreases', async () => {
+      const result = await getCashActivitiesForBalances({
+        balances: [
+          { value: 100, valueInBaseCurrency: 110 },
+          { value: 90, valueInBaseCurrency: 120 }
+        ],
+        balanceInBaseCurrency: 120,
+        userCurrency: 'USD'
+      });
+
+      expect(result.activities).toHaveLength(2);
+      expect(result.activities[1].type).toBe(ActivityType.SELL);
+      expect(result.activities[1].quantity).toBe(10);
+      expect(result.activities[1].value).toBe(10);
+      expect(result.activities[1].valueInBaseCurrency).toBe(-10);
+    });
   });
 
   describe('getLatestActivity', () => {
