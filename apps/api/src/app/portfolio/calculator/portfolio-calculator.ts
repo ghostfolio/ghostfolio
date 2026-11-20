@@ -56,6 +56,7 @@ import {
 import { DateRange, GroupBy } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
+import { utc } from '@date-fns/utc';
 import { Logger } from '@nestjs/common';
 import { AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
@@ -337,7 +338,7 @@ export abstract class PortfolioCalculator {
     } = {};
 
     for (const marketSymbol of marketSymbols) {
-      const date = format(marketSymbol.date, DATE_FORMAT);
+      const date = format(marketSymbol.date, DATE_FORMAT, { in: utc });
 
       if (!marketSymbolMap[date]) {
         marketSymbolMap[date] = {};
