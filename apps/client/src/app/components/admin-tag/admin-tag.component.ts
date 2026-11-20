@@ -178,7 +178,6 @@ export class GfAdminTagComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource(this.tags);
         this.dataSource.paginator = this.paginator();
-        this.dataSource.sort = this.sort();
 
         this.dataSource.sortingDataAccessor = (tag, path) => {
           if (path === 'name') {
@@ -189,6 +188,8 @@ export class GfAdminTagComponent implements OnInit {
 
           return getLowercase(tag, path) as number | string;
         };
+
+        this.dataSource.sort = this.sort();
 
         this.dataService.updateInfo();
 
