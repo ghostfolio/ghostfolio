@@ -888,6 +888,7 @@ export class PortfolioService {
         userCurrency,
         userId,
         balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
+        filters: portfolioSnapshotFilters,
         emergencyFundHoldingsValueInBaseCurrency:
           this.getEmergencyFundHoldingsValueInBaseCurrency({
             holdings
@@ -2153,6 +2154,7 @@ export class PortfolioService {
     balanceInBaseCurrency,
     emergencyFundHoldingsValueInBaseCurrency,
     filteredValueInBaseCurrency,
+    filters,
     portfolioCalculator,
     userCurrency,
     userId
@@ -2160,6 +2162,7 @@ export class PortfolioService {
     balanceInBaseCurrency: number;
     emergencyFundHoldingsValueInBaseCurrency: number;
     filteredValueInBaseCurrency: Big;
+    filters?: Filter[];
     portfolioCalculator: PortfolioCalculator;
     userCurrency: string;
     userId: string;
@@ -2271,6 +2274,22 @@ export class PortfolioService {
       .minus(liabilities)
       .toNumber();
 
+    // The filtered value is put in relation to the whole portfolio. Neither
+    // the filters nor the liabilities apply, so it is 100% without a filter.
+    const valueOfUnfilteredPortfolioInBaseCurrency =
+      filters?.length > 0
+        ? await this.getValueOfUnfilteredPortfolioInBaseCurrency({
+            user,
+            userCurrency,
+            userId,
+            valueOfExcludedActivitiesInBaseCurrency,
+            withExcludedAccountsBalanceInBaseCurrency:
+              cashDetailsWithExcludedAccounts.balanceInBaseCurrency
+          })
+        : new Big(totalAssetsInBaseCurrency).plus(
+            excludedAccountsAndActivities
+          );
+
     const daysInMarket = dateOfFirstActivity
       ? differenceInDays(new Date(), dateOfFirstActivity)
       : 0;
@@ -2318,9 +2337,11 @@ export class PortfolioService {
       },
       fees: fees.toNumber(),
       filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
-      filteredValueInPercentage: netWorth
-        ? filteredValueInBaseCurrency.div(netWorth).toNumber()
-        : undefined,
+      filteredValueInPercentage: valueOfUnfilteredPortfolioInBaseCurrency.eq(0)
+        ? undefined
+        : filteredValueInBaseCurrency
+            .div(valueOfUnfilteredPortfolioInBaseCurrency)
+            .toNumber(),
       fireWealth: {
         today: {
           valueInBaseCurrency: fireWealthInBaseCurrency.gt(0)
@@ -2664,6 +2685,52 @@ export class PortfolioService {
         );
       })
     );
+  }
+
+  /**
+   * Returns the value of the portfolio without filters: the holdings and the
+   * cash of all accounts that are not excluded, plus the excluded accounts and
+   * activities
+   */
+  private async getValueOfUnfilteredPortfolioInBaseCurrency({
+    user,
+    userCurrency,
+    userId,
+    valueOfExcludedActivitiesInBaseCurrency,
+    withExcludedAccountsBalanceInBaseCurrency
+  }: {
+    user: UserWithSettings;
+    userCurrency: string;
+    userId: string;
+    valueOfExcludedActivitiesInBaseCurrency: Big;
+    withExcludedAccountsBalanceInBaseCurrency: number;
+  }) {
+    const [{ activities }, { balanceInBaseCurrency }] = await Promise.all([
+      this.activitiesService.getActivitiesForPortfolioCalculator({
+        userCurrency,
+        userId
+      }),
+      this.accountService.getCashDetails({
+        userId,
+        currency: userCurrency
+      })
+    ]);
+
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      activities,
+      userId,
+      calculationType: this.getUserPerformanceCalculationType(user),
+      currency: userCurrency,
+      subscriptionType: user.subscription?.type
+    });
+
+    const { currentValueInBaseCurrency } =
+      await portfolioCalculator.getSnapshot();
+
+    return new Big(currentValueInBaseCurrency)
+      .plus(withExcludedAccountsBalanceInBaseCurrency)
+      .minus(balanceInBaseCurrency)
+      .plus(valueOfExcludedActivitiesInBaseCurrency);
   }
 
   private isExcludedFromAnalysis(activity: Activity) {
