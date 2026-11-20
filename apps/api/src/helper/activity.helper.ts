@@ -28,7 +28,7 @@ export function getTagsWithDraftTag<T extends { id: string }>({
   endOfTodayDate?: Date;
   originalDate?: Date;
   tags: T[];
-  type?: ActivityType;
+  type: ActivityType;
 }) {
   if (!isDraftTagToBeAssigned({ date, endOfTodayDate, originalDate, type })) {
     return tags;
@@ -56,9 +56,9 @@ export function isDraftTagToBeAssigned({
   date: Date;
   endOfTodayDate?: Date;
   originalDate?: Date;
-  type?: ActivityType;
+  type: ActivityType;
 }) {
-  if (type && NON_INVESTMENT_ACTIVITY_TYPES.includes(type)) {
+  if (NON_INVESTMENT_ACTIVITY_TYPES.includes(type)) {
     return false;
   }
 

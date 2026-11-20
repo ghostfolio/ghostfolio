@@ -175,6 +175,10 @@ export class ActivitiesService {
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       symbol?: string;
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      SymbolProfile: {
+        connectOrCreate: Prisma.SymbolProfileCreateOrConnectWithoutActivitiesInput;
+      };
       tags?: { id: string }[];
       updateAccountBalance?: boolean;
       userId: string;
@@ -213,10 +217,6 @@ export class ActivitiesService {
 
     const connectOrCreateSymbolProfile =
       orderInput.SymbolProfile.connectOrCreate;
-
-    if (!connectOrCreateSymbolProfile) {
-      throw new Error('SymbolProfile.connectOrCreate is required');
-    }
 
     if (
       NON_INVESTMENT_ACTIVITY_TYPES.includes(orderInput.type) ||
@@ -513,9 +513,7 @@ export class ActivitiesService {
     const startOfUtcDateOfTomorrow = getStartOfUtcDateOfTomorrow();
 
     for (const account of cashDetails.accounts) {
-      if (!account.currency) {
-        continue;
-      }
+      const accountCurrency = account.currency ?? userCurrency;
 
       const { balances } = await this.accountBalanceService.getAccountBalances({
         userCurrency,
@@ -546,27 +544,27 @@ export class ActivitiesService {
             assetSubClass: AssetSubClass.CASH,
             countries: [],
             createdAt: new Date(balanceItem.date),
-            currency: account.currency,
+            currency: accountCurrency,
             dataSource:
               this.dataProviderService.getDataSourceForExchangeRates(),
             holdings: [],
-            id: account.currency,
+            id: accountCurrency,
             isActive: true,
-            name: account.currency,
+            name: accountCurrency,
             sectors: [],
-            symbol: account.currency,
+            symbol: accountCurrency,
             updatedAt: new Date(balanceItem.date)
           },
           comment: account.name,
           createdAt: new Date(balanceItem.date),
-          currency: account.currency,
+          currency: accountCurrency,
           date: new Date(balanceItem.date),
           fee: 0,
           feeInAssetProfileCurrency: 0,
           feeInBaseCurrency: 0,
           id: balanceItem.id,
           quantity: 1,
-          symbolProfileId: account.currency,
+          symbolProfileId: accountCurrency,
           type: ActivityType.BUY,
           unitPrice: 1,
           unitPriceInAssetProfileCurrency: 1,
@@ -936,7 +934,7 @@ export class ActivitiesService {
       assetSubClass?: AssetSubClass;
       symbol?: string;
       tags?: { id: string }[];
-      type?: ActivityType;
+      type: ActivityType;
     };
     originalDate: Date;
     userId: string;
@@ -959,7 +957,7 @@ export class ActivitiesService {
     let assetProfileCurrency: string | undefined;
 
     if (
-      (data.type && NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type)) ||
+      NON_INVESTMENT_ACTIVITY_TYPES.includes(data.type) ||
       (data.SymbolProfile?.connect?.dataSource_symbol?.dataSource ===
         'MANUAL' &&
         data.type === 'BUY')
