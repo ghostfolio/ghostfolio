@@ -1279,6 +1279,23 @@ export abstract class PortfolioCalculator {
           grossPerformanceFromSellWithCurrencyEffect
         );
 
+      // Keep the remaining long-position cost basis aligned with partial sells.
+      // The realized gain above must use the average price before this update.
+      if (activity.type === 'SELL' && totalQuantity.gt(0)) {
+        totalQuantityFromBuyTransactions =
+          totalQuantityFromBuyTransactions.minus(activity.quantity);
+
+        totalInvestmentFromBuyTransactions =
+          totalInvestmentFromBuyTransactions.minus(
+            lastAveragePrice.mul(activity.quantity)
+          );
+
+        totalInvestmentFromBuyTransactionsWithCurrencyEffect =
+          totalInvestmentFromBuyTransactionsWithCurrencyEffect.minus(
+            lastAveragePriceWithCurrencyEffect.mul(activity.quantity)
+          );
+      }
+
       lastAveragePrice = totalQuantityFromBuyTransactions.eq(0)
         ? new Big(0)
         : totalInvestmentFromBuyTransactions.div(
