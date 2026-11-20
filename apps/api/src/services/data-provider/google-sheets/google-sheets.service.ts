@@ -37,7 +37,7 @@ export class GoogleSheetsService implements DataProviderInterface {
   }
 
   public async getAssetProfile({}: GetAssetProfileParams): Promise<
-    Partial<SymbolProfile>
+    Partial<SymbolProfile> | undefined
   > {
     return undefined;
   }
@@ -82,7 +82,9 @@ export class GoogleSheetsService implements DataProviderInterface {
           const date = parseDate(row._rawData[0]);
           const close = parseFloat(row._rawData[1]);
 
-          historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };
+          if (date) {
+            historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };
+          }
         });
 
       return historicalData;

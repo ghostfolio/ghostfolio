@@ -55,8 +55,8 @@ export class GhostfolioService implements DataProviderInterface {
   public async getAssetProfile({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
-    let assetProfile: DataProviderGhostfolioAssetProfileResponse;
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile> | undefined> {
+    let assetProfile: DataProviderGhostfolioAssetProfileResponse | undefined;
 
     try {
       const response = await this.fetchService.fetch(

@@ -39,7 +39,7 @@ export class RapidApiService implements DataProviderInterface {
   }
 
   public async getAssetProfile({}: GetAssetProfileParams): Promise<
-    Partial<SymbolProfile>
+    Partial<SymbolProfile> | undefined
   > {
     return undefined;
   }
@@ -133,13 +133,16 @@ export class RapidApiService implements DataProviderInterface {
     return { items: [] };
   }
 
-  private async getFearAndGreedIndex(): Promise<{
-    now: { value: number; valueText: string };
-    previousClose: { value: number; valueText: string };
-    oneWeekAgo: { value: number; valueText: string };
-    oneMonthAgo: { value: number; valueText: string };
-    oneYearAgo: { value: number; valueText: string };
-  }> {
+  private async getFearAndGreedIndex(): Promise<
+    | {
+        now: { value: number; valueText: string };
+        previousClose: { value: number; valueText: string };
+        oneWeekAgo: { value: number; valueText: string };
+        oneMonthAgo: { value: number; valueText: string };
+        oneYearAgo: { value: number; valueText: string };
+      }
+    | undefined
+  > {
     try {
       const { fgi } = await this.fetchService
         .fetch(`https://fear-and-greed-index.p.rapidapi.com/v1/fgi`, {
