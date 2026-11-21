@@ -1,5 +1,9 @@
 import { SEARCH_QUERY_MAXIMUM_LENGTH } from '@ghostfolio/common/config';
-import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import type {
+  Filter,
+  PortfolioPosition,
+  User
+} from '@ghostfolio/common/interfaces';
 import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { AccountWithPlatform, DateRange } from '@ghostfolio/common/types';
@@ -479,9 +483,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.setIsOpen(true);
 
     this.dataService
-      .fetchPortfolioHoldings({
-        filters: [{ id: 'ACTIVE', type: 'HOLDING_TYPE' }]
-      })
+      .fetchPortfolioHoldings()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ holdings }) => {
         this.holdings = getHoldingsForFilter(holdings);
