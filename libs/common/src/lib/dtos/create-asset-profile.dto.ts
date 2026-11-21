@@ -22,7 +22,7 @@ import {
   MaxLength,
   ValidateNested
 } from 'class-validator';
-import { isString } from 'lodash-es';
+import { isNumber, isString } from 'lodash-es';
 
 import { CountryDto } from './country.dto';
 import { HoldingDto } from './holding.dto';
@@ -98,7 +98,7 @@ export class CreateAssetProfileDto {
   @IsString()
   @MaxLength(SYMBOL_MAXIMUM_LENGTH)
   @Transform(({ value }: TransformFnParams) =>
-    isString(value) ? value.trim() : value
+    isNumber(value) ? `${value}` : (isString(value) ? value.trim() : value)
   )
   symbol: string;
 
