@@ -34,6 +34,30 @@ describe('ImportDataDto', () => {
     ).resolves.toBeInstanceOf(ImportDataDto);
   });
 
+  it('accepts an activity with an all-numeric symbol and transforms it to a string', async () => {
+    const importData = loadImportData('ok', 'sample.json');
+    (importData.activities[0] as any).symbol = 639;
+
+    const result = (await validationPipe.transform(importData, {
+      metatype: ImportDataDto,
+      type: 'body'
+    })) as ImportDataDto;
+
+    expect(result.activities[0].symbol).toBe('639');
+  });
+
+  it('accepts an asset profile with an all-numeric symbol and transforms it to a string', async () => {
+    const importData = loadImportData('ok', 'sample.json');
+    (importData.assetProfiles[0] as any).symbol = 639;
+
+    const result = (await validationPipe.transform(importData, {
+      metatype: ImportDataDto,
+      type: 'body'
+    })) as ImportDataDto;
+
+    expect(result.assetProfiles[0].symbol).toBe('639');
+  });
+
   it('refuses a comment of an account balance which exceeds the maximum length', async () => {
     const importData = loadImportData('ok', 'sample.json');
 
