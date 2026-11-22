@@ -345,16 +345,37 @@ export class DataProviderService implements OnModuleInit {
 
         let assetProfile: Partial<SymbolProfile> = { currency };
 
-        try {
-          assetProfile = (
-            await this.getAssetProfiles([
-              {
-                dataSource,
-                symbol
-              }
-            ])
-          )?.[assetProfileIdentifier];
-        } catch {}
+        const localAssetProfile =
+          await this.prismaService.symbolProfile.findFirst({
+            select: {
+              assetClass: true,
+              assetSubClass: true,
+              currency: true,
+              dataSource: true,
+              isin: true,
+              name: true,
+              symbol: true
+            },
+            where: {
+              dataSource,
+              symbol
+            }
+          });
+
+        if (localAssetProfile?.name) {
+          assetProfile = localAssetProfile;
+        } else {
+          try {
+            assetProfile = (
+              await this.getAssetProfiles([
+                {
+                  dataSource,
+                  symbol
+                }
+              ])
+            )?.[assetProfileIdentifier];
+          } catch {}
+        }
 
         if (!assetProfile?.name) {
           throw new ImportValidationError(
