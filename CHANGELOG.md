@@ -7,8 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `dotenv` from version `18.0.9` to `18.0.10`
+- Upgraded `ng-extract-i18n-merge` from version `3.4.0` to `3.5.0`
+- Upgraded `prisma` from version `7.10.0` to `7.10.1`
+- Upgraded `yahoo-finance2` from version `4.0.5` to `4.0.6`
+
 ### Fixed
 
+- Fixed the duplicate data point of today in the chart of the holding detail dialog
 - Fixed the requests of the twitter bot service with dummy credentials
 
 ## 3.100.0 - 2026-11-15

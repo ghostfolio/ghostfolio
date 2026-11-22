@@ -59,7 +59,7 @@ export class EodHistoricalDataService
   public async getAssetProfile({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
-  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile> | undefined> {
     const [searchResult] = await this.getSearchResult({
       requestTimeout,
       query: symbol
@@ -249,7 +249,7 @@ export class EodHistoricalDataService
       );
 
       for (const { close, code, previousClose, timestamp } of quotes) {
-        let currency: string;
+        let currency: string | undefined;
 
         if (this.isForex(code)) {
           currency = this.convertFromEodSymbol(code)?.replace(
@@ -409,8 +409,8 @@ export class EodHistoricalDataService
     requestTimeout?: number;
   }) {
     let searchResult: (LookupItem & {
-      assetClass: AssetClass;
-      assetSubClass: AssetSubClass;
+      assetClass: AssetClass | undefined;
+      assetSubClass: AssetSubClass | undefined;
       isin: string;
     })[] = [];
 
@@ -469,11 +469,11 @@ export class EodHistoricalDataService
     Exchange: string;
     Type: string;
   }): {
-    assetClass: AssetClass;
-    assetSubClass: AssetSubClass;
+    assetClass: AssetClass | undefined;
+    assetSubClass: AssetSubClass | undefined;
   } {
-    let assetClass: AssetClass;
-    let assetSubClass: AssetSubClass;
+    let assetClass: AssetClass | undefined;
+    let assetSubClass: AssetSubClass | undefined;
 
     switch (Type?.toLowerCase()) {
       case 'common stock':

@@ -7,7 +7,7 @@ export interface DataProviderHistoricalResponse {
 }
 
 export interface DataProviderResponse {
-  currency: string;
+  currency?: string;
   dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
   marketPrice: number;
