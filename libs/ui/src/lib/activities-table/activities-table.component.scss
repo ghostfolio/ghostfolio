@@ -1,3 +1,10 @@
 :host {
   display: block;
+
+  .gf-table {
+    .mat-column-nameWithSymbol {
+      max-width: 0;
+      min-width: 10rem;
+    }
+  }
 }
