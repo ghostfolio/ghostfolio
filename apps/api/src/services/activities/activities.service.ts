@@ -175,7 +175,6 @@ export class ActivitiesService {
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       symbol?: string;
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       SymbolProfile: {
         connectOrCreate: Prisma.SymbolProfileCreateOrConnectWithoutActivitiesInput;
       };
@@ -195,10 +194,10 @@ export class ActivitiesService {
     } = data;
 
     await this.tagService.validateTagIds({
+      userId,
       tagIds: tags.map(({ id }) => {
         return id;
-      }),
-      userId
+      })
     });
 
     let account:
