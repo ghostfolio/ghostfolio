@@ -18,6 +18,7 @@ import {
   MAT_DATE_FORMATS,
   MatNativeDateModule
 } from '@angular/material/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -28,6 +29,7 @@ import { provideMarkdown } from 'ngx-markdown';
 import { provideNgxSkeletonLoader } from 'ngx-skeleton-loader';
 
 import { CustomDateAdapter } from './app/adapter/custom-date-adapter';
+import { CustomPaginatorIntl } from './app/adapter/custom-paginator-intl';
 import { DateFormats } from './app/adapter/date-formats';
 import { GfAppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
@@ -92,6 +94,10 @@ import { environment } from './environments/environment';
       {
         provide: MAT_DATE_FORMATS,
         useValue: DateFormats
+      },
+      {
+        provide: MatPaginatorIntl,
+        useExisting: CustomPaginatorIntl
       },
       {
         provide: TitleStrategy,
