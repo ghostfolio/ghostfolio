@@ -5,11 +5,7 @@ import { OAuthCallbackGuard } from '@ghostfolio/api/guards/oauth-callback.guard'
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { AuthDeviceDto } from '@ghostfolio/common/dtos';
-import {
-  AssertionCredentialJSON,
-  AttestationCredentialJSON,
-  OAuthResponse
-} from '@ghostfolio/common/interfaces';
+import { OAuthResponse } from '@ghostfolio/common/interfaces';
 
 import {
   Body,
@@ -31,8 +27,11 @@ import type {
 import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
+import { AccessTokenLoginDto } from './access-token-login.dto';
 import { AuthService } from './auth.service';
 import { GenerateAuthenticationOptionsDto } from './generate-authentication-options.dto';
+import { VerifyAttestationDto } from './verify-attestation.dto';
+import { VerifyAuthenticationDto } from './verify-authentication.dto';
 import { WebAuthService } from './web-auth.service';
 
 @AllowDuringImpersonation()
@@ -47,7 +46,7 @@ export class AuthController {
   @Post('anonymous')
   @UseGuards(CustomThrottlerGuard)
   public async accessTokenLogin(
-    @Body() body: { accessToken: string }
+    @Body() body: AccessTokenLoginDto
   ): Promise<OAuthResponse> {
     try {
       const authToken = await this.authService.validateAnonymousLogin(
@@ -142,7 +141,7 @@ export class AuthController {
   @Post('webauthn/verify-attestation')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async verifyAttestation(
-    @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
+    @Body() body: VerifyAttestationDto
   ): Promise<AuthDeviceDto> {
     return this.webAuthService.verifyAttestation(body.credential);
   }
@@ -150,7 +149,7 @@ export class AuthController {
   @Post('webauthn/verify-authentication')
   @UseGuards(CustomThrottlerGuard)
   public async verifyAuthentication(
-    @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
+    @Body() body: VerifyAuthenticationDto
   ): Promise<OAuthResponse> {
     try {
       const authToken = await this.webAuthService.verifyAuthentication(

@@ -33,6 +33,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { CreateStripeCheckoutSessionDto } from './create-stripe-checkout-session.dto';
+import { RedeemCouponDto } from './redeem-coupon.dto';
+
 @AllowDuringImpersonation()
 @Controller('subscription')
 export class SubscriptionController {
@@ -49,7 +52,7 @@ export class SubscriptionController {
   @HttpCode(StatusCodes.OK)
   @UseGuards(AuthGuard('jwt'), CustomThrottlerGuard, HasPermissionGuard)
   public async redeemCoupon(
-    @Body() { couponCode }: { couponCode: string }
+    @Body() { couponCode }: RedeemCouponDto
   ): Promise<RedeemCouponResponse> {
     if (!this.request.user) {
       throw new HttpException(
@@ -124,7 +127,7 @@ export class SubscriptionController {
   @Post('stripe/checkout-session')
   @UseGuards(AuthGuard('jwt'), CustomThrottlerGuard, HasPermissionGuard)
   public async createStripeCheckoutSession(
-    @Body() { couponId, priceId }: { couponId?: string; priceId: string }
+    @Body() { couponId, priceId }: CreateStripeCheckoutSessionDto
   ): Promise<CreateStripeCheckoutSessionResponse> {
     try {
       return await this.subscriptionService.createStripeCheckoutSession({
