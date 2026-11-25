@@ -1771,7 +1771,31 @@ describe('PortfolioService', () => {
 
       expect(accountsSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { userId: userDummyData.id, id: account.id }
+          where: { userId: userDummyData.id, id: { in: [account.id] } }
+        })
+      );
+    });
+
+    it('should only consider accounts of the current user if the activities are filtered by multiple accounts', async () => {
+      const accountsSpy = jest.spyOn(accountService, 'accounts');
+
+      await getValueOfAccountsAndPlatforms({
+        activities: [],
+        filters: [
+          { id: account.id, type: 'ACCOUNT' },
+          { id: 'f7d5e4c3-b2a1-4f0e-9d8c-7b6a5f4e3d2c', type: 'ACCOUNT' }
+        ],
+        portfolioItemsNow: {},
+        userCurrency: 'USD',
+        userId: userDummyData.id
+      });
+
+      expect(accountsSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            userId: userDummyData.id,
+            id: { in: [account.id, 'f7d5e4c3-b2a1-4f0e-9d8c-7b6a5f4e3d2c'] }
+          }
         })
       );
     });

@@ -2429,10 +2429,21 @@ export class PortfolioService {
 
     if (filters.length === 0) {
       currentAccounts = await this.accountService.getAccounts(userId);
-    } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
+    } else if (
+      filters.every(({ type }) => {
+        return type === 'ACCOUNT';
+      })
+    ) {
       currentAccounts = await this.accountService.accounts({
         include: { platform: true, tags: true },
-        where: { userId, id: filters[0].id }
+        where: {
+          userId,
+          id: {
+            in: filters.map(({ id }) => {
+              return id;
+            })
+          }
+        }
       });
     } else {
       const accountIds = Array.from(
