@@ -66,9 +66,20 @@ export class ImportActivitiesService {
     assetProfiles: CreateAssetProfileWithMarketDataDto[];
   }> {
     const content = csvToJson<Record<string, unknown>>(fileContent, {
-      dynamicTyping: true,
+      dynamicTyping: (field) => {
+        return [
+          ...ImportActivitiesService.FEE_KEYS,
+          ...ImportActivitiesService.QUANTITY_KEYS,
+          ...ImportActivitiesService.UNIT_PRICE_KEYS
+        ].includes(String(field).toLowerCase());
+      },
       header: true,
-      skipEmptyLines: true
+      skipEmptyLines: true,
+      transform: (value) => {
+        const trimmedValue = value.trim();
+
+        return trimmedValue === '' ? null : trimmedValue;
+      }
     }).data;
 
     const activities: CreateOrderDto[] = [];
@@ -260,11 +271,9 @@ export class ImportActivitiesService {
     for (const key of ImportActivitiesService.ACCOUNT_KEYS) {
       const value = item[key];
 
-      if (isNumber(value) || isString(value)) {
+      if (isString(value)) {
         return userAccounts.find(({ id, name }) => {
-          return (
-            id === value || name?.toLowerCase() === String(value).toLowerCase()
-          );
+          return id === value || name?.toLowerCase() === value.toLowerCase();
         })?.id;
       }
     }
@@ -278,8 +287,8 @@ export class ImportActivitiesService {
     for (const key of ImportActivitiesService.COMMENT_KEYS) {
       const value = item[key];
 
-      if (isNumber(value) || isString(value)) {
-        return String(value);
+      if (isString(value)) {
+        return value;
       }
     }
 
@@ -339,9 +348,9 @@ export class ImportActivitiesService {
     for (const key of ImportActivitiesService.DATE_KEYS) {
       const value = item[key];
 
-      if (isNumber(value) || isString(value)) {
+      if (isString(value)) {
         try {
-          const parsedDate = parseDateHelper(String(value));
+          const parsedDate = parseDateHelper(value);
 
           if (parsedDate) {
             return parsedDate.toISOString();
@@ -420,8 +429,8 @@ export class ImportActivitiesService {
     for (const key of ImportActivitiesService.SYMBOL_KEYS) {
       const value = item[key];
 
-      if (isNumber(value) || isString(value)) {
-        return String(value);
+      if (isString(value)) {
+        return value;
       }
     }
 
