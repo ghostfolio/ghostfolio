@@ -371,6 +371,9 @@ export class ExchangeRateDataService {
       return factor * aValue;
     }
 
+    // Missing historical FX must not propagate undefined into Big.js
+    // (PortfolioCalculator / overview crash — #6482). Treat as 0, same
+    // pattern as missing market prices in #6397; keep the error log.
     this.logger.error(
       `No exchange rate has been found for ${aFromCurrency}${aToCurrency} at ${format(
         aDate,
@@ -378,7 +381,7 @@ export class ExchangeRateDataService {
       )}`
     );
 
-    return undefined;
+    return 0;
   }
 
   private async getExchangeRates({
