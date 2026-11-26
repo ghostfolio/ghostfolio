@@ -302,7 +302,7 @@ export class AdminController {
           isBenchmark,
           activitiesCount: assetProfile.activitiesCount,
           symbol: assetProfile.symbol,
-          watchedByCount: assetProfile.watchedByCount
+          watchedByCount: assetProfile.watchedByCount ?? 0
         })
       ) {
         throw new HttpException(

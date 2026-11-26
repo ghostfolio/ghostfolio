@@ -82,6 +82,12 @@ export class AdminService {
           );
         }
 
+        if (!currency) {
+          throw new BadRequestException(
+            `currency is required for the data source ("${dataSource}")`
+          );
+        }
+
         return this.symbolProfileService.add({
           currency,
           dataSource,
@@ -192,7 +198,11 @@ export class AdminService {
           return null;
         })
       )
-    ).filter(Boolean);
+    ).filter(
+      (dataProvider): dataProvider is NonNullable<typeof dataProvider> => {
+        return Boolean(dataProvider);
+      }
+    );
 
     return {
       activitiesCount,
@@ -635,7 +645,7 @@ export class AdminService {
     }
   }
 
-  public async putSetting(key: PropertyKey, value: string) {
+  public async putSetting(key: PropertyKey, value?: string) {
     let response: Property;
 
     if (value) {

@@ -5,6 +5,7 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ImportDataDto } from '@ghostfolio/api/services/import/import-data.dto';
 import { ImportService } from '@ghostfolio/api/services/import/import.service';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -97,7 +98,8 @@ export class ImportController {
     const activities = await this.importService.getDividends({
       dataSource,
       symbol,
-      userCurrency: this.request.user.settings.settings.baseCurrency,
+      userCurrency:
+        this.request.user.settings.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: this.request.user.id
     });
 
