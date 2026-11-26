@@ -6,6 +6,7 @@ import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { Scope, hasScope, scopes } from '@ghostfolio/common/scopes';
 import { DataService } from '@ghostfolio/ui/services';
 
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,7 +17,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
 import {
@@ -48,6 +51,7 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
   private readonly userService = inject(UserService);
 
   public ngOnInit() {
@@ -208,7 +212,21 @@ export class GfActivityDialogHostComponent implements OnDestroy, OnInit {
           : this.dataService.postActivity(result as CreateOrderDto);
 
         request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-          error: () => {
+          error: (error: HttpErrorResponse) => {
+            const message =
+              error?.error?.message ??
+              $localize`Oops! Something went wrong.` +
+                ' ' +
+                $localize`Please try again later.`;
+
+            this.snackBar.open(
+              Array.isArray(message) ? message.join(' ') : message,
+              undefined,
+              {
+                duration: ms('6 seconds')
+              }
+            );
+
             this.navigateBack();
           },
           next: () => {
