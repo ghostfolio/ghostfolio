@@ -142,8 +142,30 @@ export class GfLineChartComponent
     const labels: string[] = [];
     const marketPrices: number[] = [];
 
+    const benchmarkDataItemsByDate = new Map<string, number | null>();
+
+    this.benchmarkDataItems?.forEach((item) => {
+      if (item?.date) {
+        benchmarkDataItemsByDate.set(item.date, item.value ?? null);
+
+        if (item.date.includes('T')) {
+          benchmarkDataItemsByDate.set(
+            item.date.split('T')[0],
+            item.value ?? null
+          );
+        }
+      }
+    });
+
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value ?? null);
+      const benchmarkPrice =
+        benchmarkDataItemsByDate.get(historicalDataItem.date) ??
+        benchmarkDataItemsByDate.get(historicalDataItem.date?.split('T')[0]) ??
+        (benchmarkDataItemsByDate.size === 0
+          ? (this.benchmarkDataItems?.[index]?.value ?? null)
+          : null);
+
+      benchmarkPrices.push(benchmarkPrice);
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
