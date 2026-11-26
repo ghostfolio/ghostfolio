@@ -194,7 +194,7 @@ export class ImportService {
               feeInBaseCurrency: 0,
               id: assetProfile.id,
               symbolProfileId: assetProfile.id,
-              type: 'DIVIDEND' as ActivityType,
+              type: 'DIVIDEND',
               unitPrice: marketPrice,
               unitPriceInAssetProfileCurrency: marketPrice,
               updatedAt: new Date(),
@@ -830,7 +830,7 @@ export class ImportService {
           }
         )
         .forEach(({ id, name }) => {
-          accounts.push({ id, name: name ?? '' });
+          accounts.push({ id, name });
         });
     }
 
@@ -866,7 +866,7 @@ export class ImportService {
           );
         })
         .forEach(({ id, name }) => {
-          tags.push({ id, name: name ?? '' });
+          tags.push({ id, name });
         });
     }
 
@@ -1165,6 +1165,9 @@ export class ImportService {
           type,
           unitPrice,
           assetProfile: {
+            // The data source of each activity is already set in import(). The
+            // fallback only satisfies the type, since MANUAL is not the default
+            // data source of investment activities.
             dataSource: dataSource ?? DataSource.MANUAL,
             symbol
           },
