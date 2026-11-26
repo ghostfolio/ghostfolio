@@ -2,6 +2,10 @@
   display: block;
   height: 100%;
 
+  .overview {
+    min-height: 100%;
+  }
+
   .chart-container {
     aspect-ratio: 16 / 9;
     height: auto;
@@ -55,6 +59,11 @@
         }
       }
     }
+  }
+
+  .pnl-calendar-container {
+    margin-top: 2rem;
+    max-width: 72rem;
   }
 
   .introduction {
