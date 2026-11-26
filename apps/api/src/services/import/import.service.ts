@@ -182,12 +182,13 @@ export class ImportService {
               date,
               error,
               quantity,
+              userId,
               value,
               accountId: account?.id ?? null,
               accountUserId: null,
               comment: null,
               currency: null,
-              createdAt: date,
+              createdAt: new Date(),
               fee: 0,
               feeInAssetProfileCurrency: 0,
               feeInBaseCurrency: 0,
@@ -196,8 +197,7 @@ export class ImportService {
               type: 'DIVIDEND' as ActivityType,
               unitPrice: marketPrice,
               unitPriceInAssetProfileCurrency: marketPrice,
-              updatedAt: date,
-              userId: account?.userId ?? '',
+              updatedAt: new Date(),
               valueInBaseCurrency: value
             }
           ];
@@ -986,6 +986,12 @@ export class ImportService {
           assetProfile.symbol ??
           activity.assetProfile.symbol;
 
+        if (!assetProfile.currency) {
+          throw new ImportValidationError(
+            `Asset profile ("${symbol}") has no currency`
+          );
+        }
+
         const createdActivity = await this.activitiesService.createActivity({
           comment,
           currency,
@@ -1001,7 +1007,7 @@ export class ImportService {
                 dataSource,
                 name,
                 symbol,
-                currency: assetProfile.currency ?? currency,
+                currency: assetProfile.currency,
                 userId: dataSource === 'MANUAL' ? user.id : undefined
               },
               where: {
