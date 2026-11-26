@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the historical currency conversion of derived currencies (e.g. `GBp`) by converting via their root currency
 - Fixed the duplicate data point of today in the chart of the holding detail dialog
 - Fixed the case-insensitive sorting in the platform management of the admin control panel
 - Fixed the case-insensitive sorting in the tag management of the admin control panel
