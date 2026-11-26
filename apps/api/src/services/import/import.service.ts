@@ -14,6 +14,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DEFAULT_CURRENCY,
   ghostfolioPrefix,
   NON_INVESTMENT_ACTIVITY_TYPES,
   TAG_ID_DRAFT,
@@ -34,7 +35,8 @@ import {
 import {
   Activity,
   ActivityError,
-  AssetProfileIdentifier
+  AssetProfileIdentifier,
+  EnhancedAssetProfile
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
@@ -45,7 +47,12 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { Account, DataSource, Prisma } from '@prisma/client';
+import {
+  Account,
+  DataSource,
+  Prisma,
+  Type as ActivityType
+} from '@prisma/client';
 import { Big } from 'big.js';
 import { isISIN } from 'class-validator';
 import { isSameSecond, parseISO, subDays } from 'date-fns';
@@ -99,6 +106,11 @@ export class ImportService {
       });
 
       const { dateOfFirstActivity, historicalData } = holding;
+      const firstActivityDate = parseDate(dateOfFirstActivity);
+
+      if (!firstActivityDate) {
+        return [];
+      }
 
       const [{ accounts }, { activities }, [assetProfile], dividends] =
         await Promise.all([
@@ -112,7 +124,7 @@ export class ImportService {
             userCurrency,
             userId,
             includeDrafts: true,
-            startDate: subDays(parseDate(dateOfFirstActivity), 1),
+            startDate: subDays(firstActivityDate, 1),
             withExcludedAccountsAndActivities: true
           }),
           this.symbolProfileService.getSymbolProfiles([
@@ -124,7 +136,7 @@ export class ImportService {
           this.dataProviderService.getDividends({
             dataSource,
             symbol,
-            from: parseDate(dateOfFirstActivity),
+            from: firstActivityDate,
             granularity: 'day',
             to: new Date()
           })
@@ -133,8 +145,12 @@ export class ImportService {
       const account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
       return await Promise.all(
-        Object.entries(dividends).map(([dateString, { marketPrice }]) => {
+        Object.entries(dividends).flatMap(([dateString, { marketPrice }]) => {
           const date = parseDate(dateString);
+
+          if (!date) {
+            return [];
+          }
 
           const quantity =
             historicalData.find((historicalDataItem) => {
@@ -155,34 +171,36 @@ export class ImportService {
             );
           });
 
-          const error: ActivityError = isDuplicate
+          const error: ActivityError | undefined = isDuplicate
             ? { code: 'IS_DUPLICATE' }
             : undefined;
 
-          return {
-            account,
-            assetProfile,
-            date,
-            error,
-            quantity,
-            value,
-            accountId: account?.id,
-            accountUserId: undefined,
-            comment: undefined,
-            currency: undefined,
-            createdAt: undefined,
-            fee: 0,
-            feeInAssetProfileCurrency: 0,
-            feeInBaseCurrency: 0,
-            id: assetProfile.id,
-            symbolProfileId: assetProfile.id,
-            type: 'DIVIDEND',
-            unitPrice: marketPrice,
-            unitPriceInAssetProfileCurrency: marketPrice,
-            updatedAt: undefined,
-            userId: account?.userId,
-            valueInBaseCurrency: value
-          };
+          return [
+            {
+              account,
+              assetProfile,
+              date,
+              error,
+              quantity,
+              userId,
+              value,
+              accountId: account?.id ?? null,
+              accountUserId: null,
+              comment: null,
+              currency: null,
+              createdAt: new Date(),
+              fee: 0,
+              feeInAssetProfileCurrency: 0,
+              feeInBaseCurrency: 0,
+              id: assetProfile.id,
+              symbolProfileId: assetProfile.id,
+              type: 'DIVIDEND',
+              unitPrice: marketPrice,
+              unitPriceInAssetProfileCurrency: marketPrice,
+              updatedAt: new Date(),
+              valueInBaseCurrency: value
+            }
+          ];
         })
       );
     } catch {
@@ -226,7 +244,8 @@ export class ImportService {
     const maxActivitiesToImport = this.getMaxActivitiesToImport({ user });
     const platformIdMapping: { [oldPlatformId: string]: string } = {};
     const tagIdMapping: { [oldTagId: string]: string } = {};
-    const userCurrency = user.settings.settings.baseCurrency;
+    const userCurrency =
+      user.settings.settings.baseCurrency ?? DEFAULT_CURRENCY;
 
     // Validate the symbols before any data is persisted
     for (const [index, assetProfileWithMarketData] of (
@@ -279,6 +298,7 @@ export class ImportService {
           `activities.${index}.symbol ("${activity.symbol}") must be a UUID or start with the prefix "${ghostfolioPrefix}_" for the data source ("${DataSource.MANUAL}")`
         );
       } else if (
+        activity.dataSource &&
         activity.dataSource !== DataSource.MANUAL &&
         isValidCustomAssetProfileSymbol(activity.symbol)
       ) {
@@ -296,13 +316,15 @@ export class ImportService {
     // Resolve the symbols with an ISIN to the symbol of the data provider
     // before the asset profiles are created and the duplicates are detected
     const assetProfileIdentifiersWithIsin: AssetProfileIdentifier[] = uniqBy(
-      [...(assetProfilesWithMarketDataDto ?? []), ...activitiesDto]
-        .filter(({ dataSource, symbol }) => {
-          return dataSource !== DataSource.MANUAL && isISIN(symbol);
-        })
-        .map(({ dataSource, symbol }) => {
-          return { dataSource, symbol };
-        }),
+      [...(assetProfilesWithMarketDataDto ?? []), ...activitiesDto].flatMap(
+        ({ dataSource, symbol }) => {
+          return dataSource &&
+            dataSource !== DataSource.MANUAL &&
+            isISIN(symbol)
+            ? [{ dataSource, symbol }]
+            : [];
+        }
+      ),
       getAssetProfileIdentifier
     );
 
@@ -448,11 +470,11 @@ export class ImportService {
           where: {
             id: {
               in: accountsWithBalancesDto
-                .filter(({ id }) => {
-                  return Boolean(id);
-                })
                 .map(({ id }) => {
                   return id;
+                })
+                .filter((id): id is string => {
+                  return Boolean(id);
                 })
             },
             userId: { not: user.id }
@@ -520,14 +542,15 @@ export class ImportService {
           'balance',
           'balances',
           'isExcluded',
+          'platformId',
           'tags'
         ]);
 
         let oldAccountId: string | undefined;
-        const platformId =
-          platformIdMapping[account.platformId] ?? account.platformId;
-
-        delete account.platformId;
+        const platformId = accountWithBalances.platformId
+          ? (platformIdMapping[accountWithBalances.platformId] ??
+            accountWithBalances.platformId)
+          : undefined;
 
         if (accountWithSameIdOfOtherUser) {
           oldAccountId = account.id;
@@ -561,6 +584,7 @@ export class ImportService {
         };
 
         if (
+          platformId &&
           existingPlatforms.some(({ id }) => {
             return id === platformId;
           })
@@ -589,9 +613,16 @@ export class ImportService {
 
     if (assetProfilesWithMarketDataDto?.length) {
       const customAssetProfileNames = assetProfilesWithMarketDataDto
-        .filter(({ dataSource, name }) => {
-          return dataSource === DataSource.MANUAL && Boolean(name);
-        })
+        .filter(
+          (
+            assetProfile
+          ): assetProfile is typeof assetProfile & { name: string } => {
+            return (
+              assetProfile.dataSource === DataSource.MANUAL &&
+              Boolean(assetProfile.name)
+            );
+          }
+        )
         .map(({ name }) => {
           return name;
         });
@@ -745,7 +776,7 @@ export class ImportService {
       }
 
       // If an account is created or reused, then update the accountId in all activities
-      if (accountIdMapping[activity.accountId]) {
+      if (activity.accountId && accountIdMapping[activity.accountId]) {
         activity.accountId = accountIdMapping[activity.accountId];
       }
 
@@ -780,18 +811,24 @@ export class ImportService {
       return { id, name, platform };
     });
 
-    if (isDryRun) {
+    if (isDryRun && accountsWithBalancesDto?.length) {
       accountsWithBalancesDto
-        .filter(({ id }) => {
-          // Skip the accounts which are reused or which already belong to the
-          // user, since they are part of the accounts of the user above
-          return (
-            !accountIdMapping[id] &&
-            !accounts.some(({ id: accountId }) => {
-              return accountId === id;
-            })
-          );
-        })
+        .filter(
+          (
+            account
+          ): account is CreateAccountWithBalancesDto & { id: string } => {
+            if (!account.id) {
+              return false;
+            }
+
+            return (
+              !accountIdMapping[account.id] &&
+              !accounts.some(({ id: accountId }) => {
+                return accountId === account.id;
+              })
+            );
+          }
+        )
         .forEach(({ id, name }) => {
           accounts.push({ id, name });
         });
@@ -818,12 +855,15 @@ export class ImportService {
       }
     );
 
-    if (isDryRun) {
+    if (isDryRun && tagsDto?.length) {
       tagsDto
-        .filter(({ id }) => {
-          return !tags.some(({ id: tagId }) => {
-            return tagId === id;
-          });
+        .filter((tag): tag is typeof tag & { id: string } => {
+          return (
+            Boolean(tag.id) &&
+            !tags.some(({ id: tagId }) => {
+              return tagId === tag.id;
+            })
+          );
         })
         .forEach(({ id, name }) => {
           tags.push({ id, name });
@@ -892,8 +932,12 @@ export class ImportService {
 
       let order:
         | OrderWithAccount
-        | (Omit<OrderWithAccount, 'account' | 'SymbolProfile' | 'tags'> & {
+        | (Omit<
+            OrderWithAccount,
+            'account' | 'SymbolProfile' | 'symbolProfileId' | 'tags'
+          > & {
             account?: Pick<AccountWithPlatform, 'id' | 'name' | 'platform'>;
+            symbolProfileId?: string;
             tags?: { id: string; name: string }[];
           });
 
@@ -906,7 +950,7 @@ export class ImportService {
         });
 
         order = {
-          comment,
+          comment: comment ?? null,
           currency,
           date,
           fee,
@@ -914,8 +958,8 @@ export class ImportService {
           type,
           unitPrice,
           account: validatedAccount,
-          accountId: validatedAccount?.id,
-          accountUserId: undefined,
+          accountId: validatedAccount?.id ?? null,
+          accountUserId: null,
           createdAt: new Date(),
           id: randomUUID(),
           symbolProfileId: undefined,
@@ -934,8 +978,19 @@ export class ImportService {
             ? customAssetProfileSymbols[assetProfileIdentifier]
             : undefined;
 
-        const { dataSource, name } = assetProfile;
-        const symbol = customAssetProfileSymbol ?? assetProfile.symbol;
+        const dataSource =
+          assetProfile.dataSource ?? activity.assetProfile.dataSource;
+        const name = assetProfile.name;
+        const symbol =
+          customAssetProfileSymbol ??
+          assetProfile.symbol ??
+          activity.assetProfile.symbol;
+
+        if (!assetProfile.currency) {
+          throw new ImportValidationError(
+            `Asset profile ("${symbol}") has no currency`
+          );
+        }
 
         const createdActivity = await this.activitiesService.createActivity({
           comment,
@@ -1038,10 +1093,24 @@ export class ImportService {
     userCurrency,
     userId
   }: {
-    activitiesDto: Partial<CreateOrderDto>[];
+    activitiesDto: CreateOrderDto[];
     userCurrency: string;
     userId: string;
-  }): Promise<(Partial<Activity> & Pick<Activity, 'assetProfile'>)[]> {
+  }): Promise<
+    {
+      accountId?: string;
+      assetProfile: Pick<EnhancedAssetProfile, 'dataSource' | 'symbol'>;
+      comment?: string | null;
+      currency: string;
+      date: Date;
+      error?: ActivityError;
+      fee: number;
+      quantity: number;
+      tagIds?: string[];
+      type: ActivityType;
+      unitPrice: number;
+    }[]
+  > {
     const { activities: existingActivities } =
       await this.activitiesService.getActivities({
         userCurrency,
@@ -1081,7 +1150,7 @@ export class ImportService {
           );
         });
 
-        const error: ActivityError = isDuplicate
+        const error: ActivityError | undefined = isDuplicate
           ? { code: 'IS_DUPLICATE' }
           : undefined;
 
@@ -1096,19 +1165,11 @@ export class ImportService {
           type,
           unitPrice,
           assetProfile: {
-            dataSource,
-            symbol,
-            activitiesCount: undefined,
-            assetClass: undefined,
-            assetSubClass: undefined,
-            countries: undefined,
-            createdAt: undefined,
-            currency: undefined,
-            holdings: undefined,
-            id: undefined,
-            isActive: true,
-            sectors: undefined,
-            updatedAt: undefined
+            // The data source of each activity is already set in import(). The
+            // fallback only satisfies the type, since MANUAL is not the default
+            // data source of investment activities.
+            dataSource: dataSource ?? DataSource.MANUAL,
+            symbol
           },
           tagIds: tags
         };
@@ -1133,7 +1194,7 @@ export class ImportService {
     accountWithBalances: CreateAccountWithBalancesDto;
     accountsWithBalancesDto: ImportDataDto['accounts'];
     existingAccountsOfUser: Account[];
-  }): Account {
+  }): Account | undefined {
     const matchingAccountsOfUser = existingAccountsOfUser.filter(
       ({ currency, name }) => {
         return (
@@ -1143,7 +1204,7 @@ export class ImportService {
       }
     );
 
-    const matchingAccountsToImport = accountsWithBalancesDto.filter(
+    const matchingAccountsToImport = (accountsWithBalancesDto ?? []).filter(
       ({ currency, name }) => {
         return (
           currency === accountWithBalances.currency &&
@@ -1166,7 +1227,10 @@ export class ImportService {
     activities,
     assetProfiles
   }: {
-    activities: Pick<Activity, 'assetProfile' | 'error'>[];
+    activities: {
+      assetProfile: Pick<EnhancedAssetProfile, 'dataSource' | 'symbol'>;
+      error?: ActivityError;
+    }[];
     assetProfiles: AssetProfileToCreate[];
   }) {
     const assetProfileIdentifiersToImport = new Set(
