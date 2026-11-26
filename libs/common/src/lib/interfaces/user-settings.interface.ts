@@ -5,6 +5,7 @@ import {
   HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
+import type { BenchmarkComparisonMode } from '@ghostfolio/common/types';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { AssetClass } from '@ghostfolio/prisma/enums';
 
@@ -12,6 +13,7 @@ export interface UserSettings {
   annualInterestRate?: number;
   baseCurrency?: string;
   benchmark?: string;
+  benchmarkComparisonMode?: BenchmarkComparisonMode;
   colorScheme?: ColorScheme;
   dateRange?: DateRange;
   emergencyFund?: number;

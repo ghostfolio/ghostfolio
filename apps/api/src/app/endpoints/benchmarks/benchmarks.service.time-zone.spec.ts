@@ -3,6 +3,7 @@
  * @jest-environment-options {"timeZone": "America/New_York"}
  */
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ActivityMatchedBenchmarkService } from '@ghostfolio/api/services/benchmark/activity-matched-benchmark.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -15,8 +16,12 @@ import { BenchmarksService } from './benchmarks.service';
 
 describe('BenchmarksService in a time zone behind UTC', () => {
   let benchmarksService: BenchmarksService;
+  let getActivityMatchedMarketData: jest.Mock;
 
   beforeEach(() => {
+    getActivityMatchedMarketData = jest
+      .fn()
+      .mockResolvedValue({ marketData: [] });
     benchmarksService = new BenchmarksService(
       new BenchmarkService(null, null, null, null, null, null),
       {
@@ -37,7 +42,10 @@ describe('BenchmarksService in a time zone behind UTC', () => {
       } as unknown as PortfolioService,
       {
         get: jest.fn().mockResolvedValue({ currency: 'USD', marketPrice: 200 })
-      } as unknown as SymbolService
+      } as unknown as SymbolService,
+      {
+        getMarketDataForUser: getActivityMatchedMarketData
+      } as unknown as ActivityMatchedBenchmarkService
     );
   });
 
@@ -77,4 +85,32 @@ describe('BenchmarksService in a time zone behind UTC', () => {
       });
     });
   });
+
+  it.each(['ACTIVITY_MATCHED_ROI', 'ACTIVITY_MATCHED_ROAI'] as const)(
+    'passes UTC range bounds and original chart dates without shifts for %s',
+    async (benchmarkComparisonMode) => {
+      await benchmarksService.getMarketDataForUser({
+        endDate: new Date('2010-07-20T00:00:00.000Z'),
+        startDate: new Date('2010-07-18T00:00:00.000Z'),
+        dataSource: DataSource.COINGECKO,
+        dateRange: 'max',
+        symbol: 'bitcoin',
+        userId: 'user-id',
+        userSettings: {
+          baseCurrency: 'USD',
+          isExperimentalFeatures: true,
+          benchmarkComparisonMode
+        }
+      });
+      expect(getActivityMatchedMarketData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          start: '2010-07-18',
+          end: '2010-07-20',
+          valuationDates: ['2010-07-18', '2010-07-19'],
+          method:
+            benchmarkComparisonMode === 'ACTIVITY_MATCHED_ROI' ? 'ROI' : 'ROAI'
+        })
+      );
+    }
+  );
 });

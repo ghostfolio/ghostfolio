@@ -2,6 +2,7 @@ import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module'
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
+import { ActivityMatchedBenchmarkModule } from '@ghostfolio/api/services/benchmark/activity-matched-benchmark.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
@@ -16,6 +17,7 @@ import { BenchmarksService } from './benchmarks.service';
 @Module({
   controllers: [BenchmarksController],
   imports: [
+    ActivityMatchedBenchmarkModule,
     ApiModule,
     BenchmarkModule,
     ExchangeRateDataModule,
