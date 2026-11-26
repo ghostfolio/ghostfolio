@@ -51,6 +51,7 @@ Ghostfolio is for you if you are...
 - ✅ Various charts
 - ✅ Static analysis to identify potential risks in your portfolio
 - ✅ Import and export transactions
+- ✅ Model Context Protocol (MCP) server for AI clients (experimental)
 - ✅ Dark Mode
 - ✅ Zen Mode
 - ✅ Progressive Web App (PWA) with a mobile-first design
