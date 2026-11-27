@@ -77,22 +77,15 @@ export interface PublicKeyCredentialEntity {
   name: string;
 }
 export declare type AttestationConveyancePreference =
-  | 'direct'
-  | 'enterprise'
-  | 'indirect'
-  | 'none';
+  'direct' | 'enterprise' | 'indirect' | 'none';
 export declare type AuthenticatorTransport = 'ble' | 'internal' | 'nfc' | 'usb';
 export declare type COSEAlgorithmIdentifier = number;
 export declare type UserVerificationRequirement =
-  | 'discouraged'
-  | 'preferred'
-  | 'required';
+  'discouraged' | 'preferred' | 'required';
 export declare type UvmEntries = UvmEntry[];
 export declare type AuthenticatorAttachment = 'cross-platform' | 'platform';
 export declare type ResidentKeyRequirement =
-  | 'discouraged'
-  | 'preferred'
-  | 'required';
+  'discouraged' | 'preferred' | 'required';
 export declare type BufferSource = ArrayBufferView | ArrayBuffer;
 export declare type PublicKeyCredentialType = 'public-key';
 export declare type UvmEntry = number[];
