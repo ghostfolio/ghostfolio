@@ -174,6 +174,9 @@ export class FinancialModelingPrepService
             .then((res) => res.json());
 
           response.countries = etfCountryWeightings
+            .filter(({ country: countryName }) => {
+              return countryName?.toLowerCase() !== 'supranational';
+            })
             .map(({ country: countryName, weightPercentage }) => {
               return {
                 code: getCountryCodeByName({
