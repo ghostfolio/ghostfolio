@@ -52,7 +52,7 @@ export class FireCalculatorService {
   }) {
     if (r === 0) {
       // No compound interest
-      return (totalAmount - P) / PMT;
+      return Math.max(0, (totalAmount - P) / PMT);
     } else if (totalAmount <= P) {
       return 0;
     }

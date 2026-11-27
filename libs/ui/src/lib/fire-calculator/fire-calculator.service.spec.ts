@@ -32,6 +32,38 @@ describe('FireCalculatorService', () => {
       expect(periodsToRetire).toBe(9);
     });
 
+    it('should return 0 with no interest rate when the goal is already met', async () => {
+      const r = 0;
+      const P = 2000;
+      const totalAmount = 1900;
+      const PMT = 100;
+
+      const periodsToRetire = fireCalculatorService.calculatePeriodsToRetire({
+        P,
+        r,
+        PMT,
+        totalAmount
+      });
+
+      expect(periodsToRetire).toBe(0);
+    });
+
+    it('should return the correct positive amount of periods to retire with no interest rate', async () => {
+      const r = 0;
+      const P = 1000;
+      const totalAmount = 5000;
+      const PMT = 250;
+
+      const periodsToRetire = fireCalculatorService.calculatePeriodsToRetire({
+        P,
+        r,
+        PMT,
+        totalAmount
+      });
+
+      expect(periodsToRetire).toBe(16);
+    });
+
     it('should return the 0 when total amount is 0', async () => {
       const r = 0.05;
       const P = 100000;
