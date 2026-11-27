@@ -12,18 +12,6 @@ export class OAuthStorageService {
 
   public constructor(private readonly redisCacheService: RedisCacheService) {}
 
-  public async storeAuthorizationCode(
-    code: string,
-    data: OAuthAuthorizationCode,
-    ttlMs: number = OAuthStorageService.DEFAULT_TTL_MS
-  ): Promise<void> {
-    await this.redisCacheService.set(
-      this.getCodeKey(code),
-      JSON.stringify(data),
-      ttlMs
-    );
-  }
-
   public async consumeAuthorizationCode(
     code: string
   ): Promise<OAuthAuthorizationCode | null> {
@@ -41,6 +29,18 @@ export class OAuthStorageService {
     } catch {
       return null;
     }
+  }
+
+  public async storeAuthorizationCode(
+    code: string,
+    data: OAuthAuthorizationCode,
+    ttlMs: number = OAuthStorageService.DEFAULT_TTL_MS
+  ): Promise<void> {
+    await this.redisCacheService.set(
+      this.getCodeKey(code),
+      JSON.stringify(data),
+      ttlMs
+    );
   }
 
   private getCodeKey(code: string): string {

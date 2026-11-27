@@ -77,6 +77,19 @@ export class OAuthClientService {
     });
   }
 
+  private isValidRedirectUri(uri: unknown): uri is string {
+    if (typeof uri !== 'string') {
+      return false;
+    }
+
+    try {
+      const parsed = new URL(uri);
+      return !parsed.hash;
+    } catch {
+      return false;
+    }
+  }
+
   private matchesLoopbackRedirectUri(
     registeredUri: string,
     requestedUrl: URL
@@ -182,19 +195,6 @@ export class OAuthClientService {
         ? { token_endpoint_auth_method: tokenEndpointAuthMethod }
         : {})
     };
-  }
-
-  private isValidRedirectUri(uri: unknown): uri is string {
-    if (typeof uri !== 'string') {
-      return false;
-    }
-
-    try {
-      const parsed = new URL(uri);
-      return !parsed.hash;
-    } catch {
-      return false;
-    }
   }
 
   private parseStringArray(value: unknown, fieldName: string): string[] {
