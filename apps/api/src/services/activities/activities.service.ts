@@ -572,25 +572,28 @@ export class ActivitiesService {
           value: 0
         };
 
-        if (currentBalance < balanceItem.value) {
+        const balanceDelta = new Big(balanceItem.value).minus(currentBalance);
+        const baseCurrencyDelta = new Big(
+          balanceItem.valueInBaseCurrency
+        ).minus(currentBalanceInBaseCurrency);
+
+        if (balanceDelta.gt(0)) {
           // BUY
           activities.push({
             ...syntheticActivityTemplate,
-            quantity: balanceItem.value - currentBalance,
+            quantity: balanceDelta.toNumber(),
             type: ActivityType.BUY,
-            value: balanceItem.value - currentBalance,
-            valueInBaseCurrency:
-              balanceItem.valueInBaseCurrency - currentBalanceInBaseCurrency
+            value: balanceDelta.toNumber(),
+            valueInBaseCurrency: baseCurrencyDelta.toNumber()
           });
-        } else if (currentBalance > balanceItem.value) {
+        } else if (balanceDelta.lt(0)) {
           // SELL
           activities.push({
             ...syntheticActivityTemplate,
-            quantity: currentBalance - balanceItem.value,
+            quantity: balanceDelta.abs().toNumber(),
             type: ActivityType.SELL,
-            value: currentBalance - balanceItem.value,
-            valueInBaseCurrency:
-              currentBalanceInBaseCurrency - balanceItem.valueInBaseCurrency
+            value: balanceDelta.abs().toNumber(),
+            valueInBaseCurrency: baseCurrencyDelta.neg().toNumber()
           });
         }
 
