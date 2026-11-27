@@ -26,13 +26,18 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import { format, fromUnixTime, getUnixTime } from 'date-fns';
+import { format, fromUnixTime, getUnixTime, isBefore, subDays } from 'date-fns';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
   private readonly logger = new Logger(CoinGeckoService.name);
 
+  // The public API (with or without a demo API key) rejects requests for
+  // historical market data that start more than 365 days in the past
+  private static readonly MAX_DAYS_OF_HISTORICAL_DATA_WITHOUT_PRO_API_KEY = 365;
+
   private apiUrl: string;
+  private hasProApiKey = false;
   private headers: HeadersInit = {};
 
   public constructor(
@@ -52,6 +57,7 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
 
     if (apiKeyPro) {
       this.apiUrl = 'https://pro-api.coingecko.com/api/v3';
+      this.hasProApiKey = true;
       this.headers['x-cg-pro-api-key'] = apiKeyPro;
     }
   }
@@ -119,6 +125,26 @@ export class CoinGeckoService implements DataProviderInterface, OnModuleInit {
     [date: string]: DataProviderHistoricalResponse;
   }> {
     try {
+      if (!this.hasProApiKey) {
+        const minDate = subDays(
+          new Date(),
+          CoinGeckoService.MAX_DAYS_OF_HISTORICAL_DATA_WITHOUT_PRO_API_KEY,
+          { in: utc }
+        );
+
+        if (isBefore(to, minDate)) {
+          return {};
+        }
+
+        if (isBefore(from, minDate)) {
+          this.logger.warn(
+            `Historical market data for ${symbol} (${this.getName()}) is limited to the past ${CoinGeckoService.MAX_DAYS_OF_HISTORICAL_DATA_WITHOUT_PRO_API_KEY} days without an API key of CoinGecko Pro`
+          );
+
+          from = minDate;
+        }
+      }
+
       const queryParams = new URLSearchParams({
         from: getUnixTime(from).toString(),
         to: getUnixTime(to).toString(),
