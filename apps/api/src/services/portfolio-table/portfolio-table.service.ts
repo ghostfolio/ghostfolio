@@ -27,6 +27,7 @@ import {
   Type as ActivityType
 } from '@prisma/client';
 import { format } from 'date-fns';
+import { isNumber } from 'lodash-es';
 
 import { DataSourceTableContext } from './interfaces/data-source-table-context.interface';
 import { HoldingsTableColumnDefinition } from './types/holdings-table-column-definition.type';
@@ -421,7 +422,9 @@ export class PortfolioTableService {
     {
       align: 'right',
       getValue: ({ performances }) => {
-        return getPercentage(performances.allTimeHigh.performancePercent);
+        return isNumber(performances.allTimeHigh.performancePercent)
+          ? getPercentage(performances.allTimeHigh.performancePercent)
+          : '';
       },
       name: 'Change from All Time High'
     },

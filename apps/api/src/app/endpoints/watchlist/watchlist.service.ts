@@ -125,26 +125,23 @@ export class WatchlistService {
           this.benchmarkService.getBenchmarkTrends({ dataSource, symbol })
         ]);
 
-        const performancePercent =
-          this.benchmarkService.calculateChangeInPercentage(
-            allTimeHigh?.marketPrice,
-            quotes[getAssetProfileIdentifier({ dataSource, symbol })]
-              ?.marketPrice
-          );
+        const { marketCondition, performancePercent } =
+          this.benchmarkService.getAllTimeHighPerformance({
+            allTimeHighMarketPrice: allTimeHigh?.marketPrice,
+            marketPrice:
+              quotes[getAssetProfileIdentifier({ dataSource, symbol })]
+                ?.marketPrice
+          });
 
         return {
           dataSource,
+          marketCondition,
           symbol,
-          marketCondition:
-            this.benchmarkService.getMarketCondition(performancePercent),
           name: assetProfile?.name,
           performances: {
             allTimeHigh: {
-              date: allTimeHigh?.date,
-              performancePercent:
-                this.benchmarkService.getPerformancePercentFromAllTimeHigh(
-                  performancePercent
-                )
+              performancePercent,
+              date: allTimeHigh?.date
             }
           },
           trend50d: trends.trend50d,

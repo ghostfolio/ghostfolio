@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the case-insensitive sorting in the tag management of the admin control panel
 - Fixed the missing localization of the range label in the paginator
 - Fixed the requests of the twitter bot service with dummy credentials
+- Fixed the market condition of benchmarks and watchlist items without market data (no longer reported as all time high)
 
 ## 3.100.0 - 2026-11-15
 
