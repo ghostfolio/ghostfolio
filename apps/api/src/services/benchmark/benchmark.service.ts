@@ -52,6 +52,41 @@ export class BenchmarkService {
     return 0;
   }
 
+  /**
+   * Gives the performance from the all time high together with the market
+   * condition. Without the all time high or the current market price (e.g. if
+   * the market data has not been gathered yet or the data provider did not
+   * respond) the performance is unknown instead of at the all time high.
+   */
+  public getAllTimeHighPerformance({
+    allTimeHighMarketPrice,
+    marketPrice
+  }: {
+    allTimeHighMarketPrice?: number;
+    marketPrice?: number;
+  }): {
+    marketCondition: Benchmark['marketCondition'];
+    performancePercent?: number;
+  } {
+    if (!allTimeHighMarketPrice || !marketPrice) {
+      return {
+        marketCondition: 'NEUTRAL_MARKET',
+        performancePercent: undefined
+      };
+    }
+
+    const performancePercent = this.calculateChangeInPercentage(
+      allTimeHighMarketPrice,
+      marketPrice
+    );
+
+    return {
+      marketCondition: this.getMarketCondition(performancePercent),
+      performancePercent:
+        this.getPerformancePercentFromAllTimeHigh(performancePercent)
+    };
+  }
+
   public async getBenchmarkTrends({
     dataSource,
     symbol
@@ -279,29 +314,24 @@ export class BenchmarkService {
       const { marketPrice } =
         quotes[getAssetProfileIdentifier({ dataSource, symbol })] ?? {};
 
-      let performancePercentFromAllTimeHigh = 0;
+      const { marketCondition, performancePercent } =
+        this.getAllTimeHighPerformance({
+          marketPrice,
+          allTimeHighMarketPrice: allTimeHigh?.marketPrice
+        });
 
-      if (allTimeHigh?.marketPrice && marketPrice) {
-        performancePercentFromAllTimeHigh = this.calculateChangeInPercentage(
-          allTimeHigh.marketPrice,
-          marketPrice
-        );
-      } else {
+      if (performancePercent === undefined) {
         storeInCache = false;
       }
 
       return {
+        marketCondition,
         dataSource: benchmarkAssetProfiles[index].dataSource,
-        marketCondition: this.getMarketCondition(
-          performancePercentFromAllTimeHigh
-        ),
         name: benchmarkAssetProfiles[index].name,
         performances: {
           allTimeHigh: {
-            date: allTimeHigh?.date as Date,
-            performancePercent: this.getPerformancePercentFromAllTimeHigh(
-              performancePercentFromAllTimeHigh
-            )
+            performancePercent,
+            date: allTimeHigh?.date as Date
           }
         },
         symbol: benchmarkAssetProfiles[index].symbol,

@@ -846,6 +846,22 @@ describe('PortfolioTableService', () => {
       expect(row).toContain('-25.000%');
     });
 
+    it('gives no change of the all time high if it is unknown', async () => {
+      const watchlistItem = createWatchlistItem();
+      watchlistItem.marketCondition = 'NEUTRAL_MARKET';
+      watchlistItem.performances.allTimeHigh.performancePercent = undefined;
+
+      const result = await getWatchlistTable([watchlistItem]);
+
+      const [row] = result.split('\n').filter((line) => {
+        return line.startsWith('| Name of AAPL');
+      });
+
+      expect(row).toContain('NEUTRAL_MARKET');
+      expect(row).not.toContain('%');
+      expect(row).not.toContain('NaN');
+    });
+
     it('tells that no watchlist items are found if the result is empty', async () => {
       const result = await getWatchlistTable([]);
 

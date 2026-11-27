@@ -10,7 +10,7 @@ import {
 
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
-import { round } from 'lodash-es';
+import { isNumber, round } from 'lodash-es';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
@@ -112,6 +112,10 @@ export class TwitterBotService implements OnModuleInit {
     });
 
     return benchmarks
+      .filter(({ performances }) => {
+        // The performance is unknown without market data
+        return isNumber(performances.allTimeHigh.performancePercent);
+      })
       .map(({ name, performances }) => {
         const performancePercent = round(
           performances.allTimeHigh.performancePercent,

@@ -9,7 +9,7 @@ export interface Benchmark {
   performances: {
     allTimeHigh: {
       date: Date;
-      performancePercent: number;
+      performancePercent?: number;
     };
   };
   symbol: EnhancedAssetProfile['symbol'];
