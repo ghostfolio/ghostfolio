@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `dotenv` from version `18.0.9` to `18.0.10`
 - Upgraded `ng-extract-i18n-merge` from version `3.4.0` to `3.5.0`
+- Upgraded `prettier` from version `3.9.10` to `3.10.1`
 - Upgraded `prisma` from version `7.10.0` to `7.10.1`
 - Upgraded `yahoo-finance2` from version `4.0.5` to `4.0.6`
 
