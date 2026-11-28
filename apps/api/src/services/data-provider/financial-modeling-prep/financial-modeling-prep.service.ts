@@ -364,6 +364,10 @@ export class FinancialModelingPrepService
 
     let currentFrom = from;
 
+    if (isSameDay(from, to)) {
+      to = addDays(to, 1);
+    }
+
     try {
       while (isBefore(currentFrom, to) || isSameDay(currentFrom, to)) {
         const currentTo = isBefore(
