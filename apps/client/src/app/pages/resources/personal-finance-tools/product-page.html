@@ -104,14 +104,16 @@
                 <td class="mat-mdc-cell px-3 py-2 text-end" i18n>Origin</td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product1().origin; as origin) {
-                    <span aria-hidden="true">{{ origin.emojiFlag }}</span
-                    >&nbsp;{{ origin.name }}
+                    <span aria-hidden="true">{{
+                      origin.emojiFlag
+                    }}</span>&nbsp;{{ origin.name }}
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product2().origin; as origin) {
-                    <span aria-hidden="true">{{ origin.emojiFlag }}</span
-                    >&nbsp;{{ origin.name }}
+                    <span aria-hidden="true">{{
+                      origin.emojiFlag
+                    }}</span>&nbsp;{{ origin.name }}
                   }
                 </td>
               </tr>
@@ -124,8 +126,9 @@
                     let isLast = $last
                   ) {
                     @if (region.emojiFlag) {
-                      <span aria-hidden="true">{{ region.emojiFlag }}</span
-                      >&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
+                      <span aria-hidden="true">{{
+                        region.emojiFlag
+                      }}</span>&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
                     } @else {
                       {{ region.name }}{{ isLast ? '' : ', ' }}
                     }
@@ -138,8 +141,9 @@
                     let isLast = $last
                   ) {
                     @if (region.emojiFlag) {
-                      <span aria-hidden="true">{{ region.emojiFlag }}</span
-                      >&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
+                      <span aria-hidden="true">{{
+                        region.emojiFlag
+                      }}</span>&nbsp;{{ region.name }}{{ isLast ? '' : ', ' }}
                     } @else {
                       {{ region.name }}{{ isLast ? '' : ', ' }}
                     }

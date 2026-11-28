@@ -1,5 +1,2 @@
 export type Market =
-  | 'developedMarkets'
-  | 'emergingMarkets'
-  | 'otherMarkets'
-  | 'UNKNOWN';
+  'developedMarkets' | 'emergingMarkets' | 'otherMarkets' | 'UNKNOWN';

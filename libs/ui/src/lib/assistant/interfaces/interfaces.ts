@@ -30,9 +30,7 @@ export interface QuickLinkSearchResultItem {
 }
 
 export type SearchResultItem =
-  | AccountSearchResultItem
-  | AssetSearchResultItem
-  | QuickLinkSearchResultItem;
+  AccountSearchResultItem | AssetSearchResultItem | QuickLinkSearchResultItem;
 
 export interface SearchResults {
   accounts: SearchResultItem[];
