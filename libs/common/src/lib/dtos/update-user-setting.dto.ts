@@ -1,4 +1,8 @@
-import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioTargetsSettings,
+  XRayRulesSettings
+} from '@ghostfolio/common/interfaces';
+import { isValidPortfolioTargetsSettings } from '@ghostfolio/common/portfolio-targets/portfolio-targets-validation';
 import type {
   ColorScheme,
   DateRange,
@@ -15,7 +19,9 @@ import {
   IsIn,
   IsNumber,
   IsOptional,
-  IsString
+  IsString,
+  ValidateBy,
+  ValidateIf
 } from 'class-validator';
 import { eachYearOfInterval, format } from 'date-fns';
 
@@ -104,6 +110,18 @@ export class UpdateUserSettingDto {
   @IsIn([PerformanceCalculationType.ROAI, PerformanceCalculationType.ROI])
   @IsOptional()
   performanceCalculationType?: PerformanceCalculationType;
+
+  /** Desired asset-class allocation and tolerance for the global portfolio. */
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @ValidateBy({
+    name: 'isValidPortfolioTargetsSettings',
+    validator: {
+      validate: isValidPortfolioTargetsSettings,
+      defaultMessage: () =>
+        'portfolioTargets must contain one valid global target allocation'
+    }
+  })
+  portfolioTargets?: PortfolioTargetsSettings;
 
   /**
    * The target financial amount the user aims to reach before retiring.

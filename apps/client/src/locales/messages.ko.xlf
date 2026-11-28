@@ -3737,7 +3737,7 @@
       </trans-unit>
       <trans-unit id="assetClass.ALTERNATIVE_INVESTMENT" datatype="html">
         <source>Alternative Investment</source>
-        <target state="new">Alternative Investment</target>
+        <target state="translated">대체 투자</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">54</context>
@@ -3745,7 +3745,7 @@
       </trans-unit>
       <trans-unit id="assetClass.COMMODITY" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">원자재</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">55</context>
@@ -3753,7 +3753,7 @@
       </trans-unit>
       <trans-unit id="assetClass.EQUITY" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">주식</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">56</context>
@@ -3761,7 +3761,7 @@
       </trans-unit>
       <trans-unit id="assetClass.FIXED_INCOME" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">채권</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">57</context>
@@ -3769,7 +3769,7 @@
       </trans-unit>
       <trans-unit id="assetClass.LIQUIDITY" datatype="html">
         <source>Liquidity</source>
-        <target state="new">Liquidity</target>
+        <target state="translated">유동성</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">58</context>
@@ -3777,7 +3777,7 @@
       </trans-unit>
       <trans-unit id="assetClass.REAL_ESTATE" datatype="html">
         <source>Real Estate</source>
-        <target state="new">Real Estate</target>
+        <target state="translated">부동산</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">59</context>
@@ -9878,6 +9878,370 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
           <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1279657346672539085" datatype="html">
+        <source>Deviation details</source>
+        <target state="translated">편차 상세</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1389467201711090519" datatype="html">
+        <source>Account values, holdings and cash cannot be reconciled. The allocation comparison is unavailable.</source>
+        <target state="translated">계좌 평가액, 보유 자산 및 현금의 합계를 일치시킬 수 없습니다. 비중 비교를 사용할 수 없습니다.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">92</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="206912233070797860" datatype="html">
+        <source>Create a target to compare the actual asset allocation with your desired allocation.</source>
+        <target state="translated">목표를 만들어 현재 자산 비중과 원하는 비중을 비교하세요.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2160161334901921979" datatype="html">
+        <source>Target: <x id="PH" equiv-text="target"/></source>
+        <target state="translated">목표: <x id="PH" equiv-text="target"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">185</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2215120771329635253" datatype="html">
+        <source>Moderate (60/40)</source>
+        <target state="translated">중립형 (60/40)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2434927374458229739" datatype="html">
+        <source>Total allocation drift</source>
+        <target state="translated">전체 비중 편차</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2603620551566373483" datatype="html">
+        <source>Targets</source>
+        <target state="translated">목표 비중</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.routes.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2628961601867476622" datatype="html">
+        <source>Actual</source>
+        <target state="translated">현재</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">154</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">210</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2983995128934049177" datatype="html">
+        <source>No target configured yet</source>
+        <target state="translated">아직 설정된 목표가 없습니다</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3320457525737616436" datatype="html">
+        <source>Comparing the selected account with the global portfolio target.</source>
+        <target state="translated">선택한 계좌를 포트폴리오 전체의 목표 비중과 비교합니다.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3415352235608266819" datatype="html">
+        <source>Allowed deviation</source>
+        <target state="translated">허용 편차</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3951507582953079153" datatype="html">
+        <source>Allowed deviation:</source>
+        <target state="translated">허용 편차:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4017112821868737046" datatype="html">
+        <source>Aggressive (80/20)</source>
+        <target state="translated">공격형 (80/20)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4048030472122153871" datatype="html">
+        <source>Outside tolerance</source>
+        <target state="translated">허용 범위 초과</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">233</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4067040415107758654" datatype="html">
+        <source>Conservative (40/60)</source>
+        <target state="translated">보수형 (40/60)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4075475815080399514" datatype="html">
+        <source>Loading portfolio allocation…</source>
+        <target state="translated">포트폴리오 비중을 불러오는 중…</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4324057463345695429" datatype="html">
+        <source>Some holdings have no asset classification. The reported allocation is incomplete.</source>
+        <target state="translated">일부 보유 자산에 자산군이 지정되지 않았습니다. 표시된 비중은 불완전합니다.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4421939531351296583" datatype="html">
+        <source>Negative cash balances, short positions and liabilities can be valid financial data, but are not supported by this version of the allocation comparison.</source>
+        <target state="translated">마이너스 현금 잔액, 공매도 포지션 및 부채는 유효한 재무 데이터일 수 있지만, 이 버전의 비중 비교에서는 지원하지 않습니다.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4735839210169832471" datatype="html">
+        <source>Golden Butterfly (simplified)</source>
+        <target state="translated">골든 버터플라이 (단순화)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4854396465510517671" datatype="html">
+        <source>Target</source>
+        <target state="translated">목표</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">158</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5493343199328160416" datatype="html">
+        <source>Each percentage must be between 0 and 100, and the total must equal 100%.</source>
+        <target state="translated">각 비율은 0에서 100 사이여야 하며 합계는 100%여야 합니다.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5604865068436994524" datatype="html">
+        <source>Save target</source>
+        <target state="translated">목표 저장</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3752741644727048956" datatype="html">
+        <source>Portfolio value</source>
+        <target state="translated">포트폴리오 가치</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="643581205340245996" datatype="html">
+        <source>Maximum deviation</source>
+        <target state="translated">최대 편차</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6484803623371950164" datatype="html">
+        <source>Within tolerance</source>
+        <target state="translated">허용 범위 이내</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">235</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6576491899990100846" datatype="html">
+        <source>The selected portfolio is empty.</source>
+        <target state="translated">선택한 포트폴리오가 비어 있습니다.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6623816455155556311" datatype="html">
+        <source>Actual vs target allocation</source>
+        <target state="translated">현재 비중과 목표 비중</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6797301161481252413" datatype="html">
+        <source>The current allocation cannot be calculated with the available data or permissions.</source>
+        <target state="translated">현재 이용 가능한 데이터 또는 권한으로는 현재 비중을 계산할 수 없습니다.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">71</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6892550185745815663" datatype="html">
+        <source>Deviation: <x id="PH" equiv-text="deviation"/> percentage points</source>
+        <target state="translated">편차: <x id="PH" equiv-text="deviation"/> 퍼센트포인트</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6990751070258954140" datatype="html">
+        <source>All accounts</source>
+        <target state="translated">모든 계좌</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7297566750545444480" datatype="html">
+        <source>Starting allocation</source>
+        <target state="translated">초기 비중</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7336498829051474765" datatype="html">
+        <source>Actual: <x id="PH" equiv-text="actual"/></source>
+        <target state="translated">현재: <x id="PH" equiv-text="actual"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7590013429208346303" datatype="html">
+        <source>Custom</source>
+        <target state="translated">사용자 지정</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7650628233171131970" datatype="html">
+        <source>Asset class</source>
+        <target state="translated">자산군</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7916625202810726113" datatype="html">
+        <source>Presets are starting points. Edit any percentage to customize your target.</source>
+        <target state="translated">사전 설정은 시작점입니다. 각 비율을 수정하여 목표 비중을 조정하세요.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7917645161177157800" datatype="html">
+        <source>Configure target</source>
+        <target state="translated">목표 설정</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="804809194926901761" datatype="html">
+        <source>Cautious (20/80)</source>
+        <target state="translated">신중형 (20/80)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-presets.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8540113876300993298" datatype="html">
+        <source>Unclassified</source>
+        <target state="translated">미분류</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8875902766128905602" datatype="html">
+        <source>Actual: <x id="PH" equiv-text="actual"/> (<x id="PH_1" equiv-text="value"/>)</source>
+        <target state="translated">현재: <x id="PH" equiv-text="actual"/> (<x id="PH_1" equiv-text="value"/>)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.component.ts</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="928801240741789810" datatype="html">
+        <source>The target could not be saved. Please try again.</source>
+        <target state="translated">목표를 저장하지 못했습니다. 다시 시도해 주세요.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="936192550900633332" datatype="html">
+        <source>Deviation</source>
+        <target state="translated">편차</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/targets-page.html</context>
+          <context context-type="linenumber">212</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="943488921368137950" datatype="html">
+        <source>Configure target</source>
+        <target state="translated">목표 설정</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/targets/target-configuration-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
     </body>

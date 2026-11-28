@@ -214,6 +214,11 @@ export const internalRoutes = {
         routerLink: ['/portfolio'],
         title: $localize`Analysis`
       },
+      targets: {
+        path: 'targets',
+        routerLink: ['/portfolio', 'targets'],
+        title: $localize`Targets`
+      },
       fire: {
         path: 'fire',
         routerLink: ['/portfolio', 'fire'],

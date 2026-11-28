@@ -1,0 +1,247 @@
+<div class="container">
+  <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Targets</h1>
+
+  <div
+    class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3"
+  >
+    <div>
+      @if (profile) {
+        <div class="fw-bold">{{ profileName }}</div>
+        <span class="text-body-secondary small" i18n>Allowed deviation:</span>
+        <span class="small">
+          ±{{ profile.tolerance | targetPercent: user?.settings.locale : 1 }}
+        </span>
+      } @else {
+        <span class="text-body-secondary" i18n>No target configured yet</span>
+      }
+    </div>
+    @if (canEdit) {
+      <button
+        i18n
+        mat-flat-button
+        [disabled]="isSaving"
+        (click)="openConfiguration()"
+      >
+        Configure target
+      </button>
+    }
+  </div>
+
+  @if (accounts.length > 0) {
+    <mat-form-field appearance="outline" class="account-select">
+      <mat-label i18n>Account</mat-label>
+      <mat-select
+        [value]="selectedAccountId"
+        (selectionChange)="changeAccount($event.value)"
+      >
+        <mat-option i18n value="">All accounts</mat-option>
+        @for (account of accounts; track account.id) {
+          <mat-option [value]="account.id">{{ account.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (selectedAccountId) {
+      <p class="text-body-secondary small" i18n>
+        Comparing the selected account with the global portfolio target.
+      </p>
+    }
+  }
+
+  @if (hasSaveError) {
+    <p class="text-danger" i18n role="alert">
+      The target could not be saved. Please try again.
+    </p>
+  }
+
+  @if (!profile) {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p class="mb-0" i18n>
+          Create a target to compare the actual asset allocation with your
+          desired allocation.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  } @else if (isLoading) {
+    <p class="text-body-secondary" i18n>Loading portfolio allocation…</p>
+  } @else if (hasError || !result || result.status === 'unavailable') {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p class="mb-0" i18n>
+          The current allocation cannot be calculated with the available data or
+          permissions.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  } @else if (result.status === 'empty') {
+    <p class="text-body-secondary" i18n>The selected portfolio is empty.</p>
+  } @else if (result.status === 'unsupported') {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p class="mb-0" i18n>
+          Negative cash balances, short positions and liabilities can be valid
+          financial data, but are not supported by this version of the
+          allocation comparison.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  } @else if (result.status === 'inconsistent') {
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <p class="mb-0" i18n>
+          Account values, holdings and cash cannot be reconciled. The allocation
+          comparison is unavailable.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    @if (result.unclassifiedValue > 0) {
+      <p class="text-warning" i18n>
+        Some holdings have no asset classification. The reported allocation is
+        incomplete.
+      </p>
+    }
+    <div class="row mb-3">
+      <div class="col-md-4 mb-3">
+        <mat-card appearance="outlined"
+          ><mat-card-content>
+            <div class="text-body-secondary small" i18n>Portfolio value</div>
+            <div class="h3 mb-0 text-break">
+              <gf-value
+                [isCurrency]="true"
+                [locale]="user?.settings.locale"
+                [unit]="user?.settings.baseCurrency"
+                [value]="result.totalValue"
+              />
+            </div> </mat-card-content
+        ></mat-card>
+      </div>
+      <div class="col-md-4 mb-3">
+        <mat-card appearance="outlined"
+          ><mat-card-content>
+            <div class="text-body-secondary small" i18n>
+              Total allocation drift
+            </div>
+            <div class="h3 mb-0">
+              {{ result.totalDrift | targetPercent: user?.settings.locale }}
+            </div>
+          </mat-card-content></mat-card
+        >
+      </div>
+      <div class="col-md-4 mb-3">
+        <mat-card appearance="outlined"
+          ><mat-card-content>
+            <div class="text-body-secondary small" i18n>Maximum deviation</div>
+            <div class="h3 mb-0">
+              {{ result.maxDrift | targetPercent: user?.settings.locale }}
+            </div>
+          </mat-card-content></mat-card
+        >
+      </div>
+    </div>
+
+    <mat-card appearance="outlined" class="mb-3">
+      <mat-card-header
+        ><mat-card-title i18n
+          >Actual vs target allocation</mat-card-title
+        ></mat-card-header
+      >
+      <mat-card-content class="mt-3">
+        <div class="comparison-legend small">
+          <span class="legend-item">
+            <span
+              aria-hidden="true"
+              class="legend-marker current-marker"
+            ></span>
+            <span i18n>Actual</span>
+          </span>
+          <span class="legend-item">
+            <span aria-hidden="true" class="legend-marker target-marker"></span>
+            <span i18n>Target</span>
+          </span>
+        </div>
+        @for (row of displayedRows; track row.assetClass) {
+          <div
+            class="comparison-row mb-3"
+            matTooltipClass="targets-allocation-tooltip"
+            matTooltipPosition="above"
+            matTooltipTouchGestures="off"
+            role="group"
+            tabindex="0"
+            [attr.aria-label]="formatClass(row.assetClass)"
+            [matTooltip]="allocationTooltip(row)"
+            [matTooltipPositionAtOrigin]="true"
+            [matTooltipShowDelay]="150"
+          >
+            <div class="d-flex justify-content-between mb-1">
+              <span>{{ formatClass(row.assetClass) }}</span>
+              <span [class.text-danger]="row.outOfTolerance">
+                {{
+                  row.drift | targetPercent: user?.settings.locale : 2 : true
+                }}
+              </span>
+            </div>
+            <div class="comparison-track">
+              <div
+                class="comparison-bar current-bar"
+                [style.width.%]="row.actual * 100"
+              ></div>
+            </div>
+            <div class="comparison-track">
+              <div
+                class="comparison-bar target-bar"
+                [style.width.%]="row.target * 100"
+              ></div>
+            </div>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header
+        ><mat-card-title i18n id="targets-deviation-title"
+          >Deviation details</mat-card-title
+        ></mat-card-header
+      >
+      <mat-card-content class="targets-table-container mt-3">
+        <table aria-labelledby="targets-deviation-title" class="targets-table">
+          <thead>
+            <tr>
+              <th i18n scope="col">Asset class</th>
+              <th class="numeric-column" i18n scope="col">Actual</th>
+              <th class="numeric-column" i18n scope="col">Target</th>
+              <th class="numeric-column" i18n scope="col">Deviation</th>
+              <th class="status-column" i18n scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of displayedRows; track row.assetClass) {
+              <tr>
+                <th scope="row">{{ formatClass(row.assetClass) }}</th>
+                <td class="numeric-column">
+                  {{ row.actual | targetPercent: user?.settings.locale }}
+                </td>
+                <td class="numeric-column">
+                  {{ row.target | targetPercent: user?.settings.locale }}
+                </td>
+                <td class="numeric-column">
+                  {{
+                    row.drift | targetPercent: user?.settings.locale : 2 : true
+                  }}
+                </td>
+                <td class="status-column">
+                  @if (row.outOfTolerance) {
+                    <span class="text-danger" i18n>Outside tolerance</span>
+                  } @else {
+                    <span class="text-success" i18n>Within tolerance</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
