@@ -5,6 +5,7 @@
  */
 
 @use 'sass:map';
+@use 'sass:math';
 
 // Configuration
 @import 'bootstrap/scss/functions';
@@ -105,6 +106,43 @@ $unused-utilities: (
 
 $utilities: map.remove($utilities, $unused-utilities...);
 
+// Use logical properties so that the start and end utilities follow the text
+// direction, e.g. in right-to-left languages like Arabic
+$utilities: map.set(
+  $utilities,
+  'margin-start',
+  'property',
+  margin-inline-start
+);
+$utilities: map.set($utilities, 'margin-end', 'property', margin-inline-end);
+$utilities: map.set(
+  $utilities,
+  'padding-start',
+  'property',
+  padding-inline-start
+);
+$utilities: map.set($utilities, 'padding-end', 'property', padding-inline-end);
+$utilities: map.set(
+  $utilities,
+  'float',
+  'values',
+  (
+    start: inline-start,
+    end: inline-end,
+    none: none
+  )
+);
+$utilities: map.set(
+  $utilities,
+  'text-align',
+  'values',
+  (
+    start: start,
+    end: end,
+    center: center
+  )
+);
+
 $utilities: map.set(
   $utilities,
   'line-height',
@@ -122,6 +160,22 @@ $utilities: map.set(
 @import 'bootstrap/scss/images';
 @import 'bootstrap/scss/containers';
 @import 'bootstrap/scss/grid';
+
+// Mirror the column offsets, which use margin-left, in right-to-left languages
+[dir='rtl'] {
+  @each $breakpoint in map.keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint) {
+      $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+      @for $i from 0 through $grid-columns - 1 {
+        .offset#{$infix}-#{$i} {
+          margin-left: 0;
+          margin-right: math.percentage(math.div($i, $grid-columns));
+        }
+      }
+    }
+  }
+}
 // @import 'bootstrap/scss/tables';
 // @import 'bootstrap/scss/forms';
 // @import 'bootstrap/scss/buttons';

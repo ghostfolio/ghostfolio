@@ -1,4 +1,7 @@
 :host {
+  // The scroll offsets assume a left-to-right flow, also in right-to-left
+  // languages
+  direction: ltr;
   display: block;
   position: relative;
 

@@ -2,7 +2,7 @@
   display: block;
 
   .caret-container {
-    margin-left: -1rem;
+    margin-inline-start: -1rem;
     width: 1rem;
 
     .caret {
@@ -16,10 +16,10 @@
   }
 
   .indent-1 {
-    margin-left: 1rem;
+    margin-inline-start: 1rem;
   }
 
   .indent-2 {
-    margin-left: 2rem;
+    margin-inline-start: 2rem;
   }
 }

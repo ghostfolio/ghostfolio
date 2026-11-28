@@ -294,6 +294,16 @@ button:focus {
   outline: 0;
 }
 
+.list-unstyled {
+  padding-inline-start: 0;
+}
+
+canvas {
+  // Keep the axis labels of charts (e.g. -0.02 %) readable in right-to-left
+  // languages
+  direction: ltr;
+}
+
 hr {
   border-top: 1px solid rgba(var(--dark-dividers));
 }
@@ -467,7 +477,7 @@ ngx-skeleton-loader {
   padding: 9px 24px !important;
 
   button[mat-icon-button] {
-    margin-right: -0.8125rem;
+    margin-inline-end: -0.8125rem;
   }
 }
 

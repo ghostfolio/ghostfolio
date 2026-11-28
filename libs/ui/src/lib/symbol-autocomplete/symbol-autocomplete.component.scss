@@ -2,7 +2,7 @@
   display: block;
 
   .mat-mdc-progress-spinner {
-    right: 0;
+    inset-inline-end: 0;
     top: calc(50% - 10px);
   }
 }

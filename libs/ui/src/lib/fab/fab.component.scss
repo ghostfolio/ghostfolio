@@ -14,7 +14,7 @@
     bottom: calc(constant(safe-area-inset-bottom) + 2rem);
     bottom: calc(env(safe-area-inset-bottom) + 2rem);
     position: fixed;
-    right: 2rem;
+    inset-inline-end: 2rem;
     z-index: 999;
   }
 }

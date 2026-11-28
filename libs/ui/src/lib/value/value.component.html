@@ -42,31 +42,34 @@
       [class.justify-content-end]="position === 'end'"
     >
       @if (isNumber || value === null) {
-        @if (colorizeSign && !useAbsoluteValue && value !== null) {
-          @if (+value > 0) {
-            <div class="me-1 text-success">+</div>
+        <!-- Keep sign, value and unit in order in right-to-left languages -->
+        <div class="align-items-center d-flex" dir="ltr">
+          @if (colorizeSign && !useAbsoluteValue && value !== null) {
+            @if (+value > 0) {
+              <div class="me-1 text-success">+</div>
+            }
+            @if (+value < 0) {
+              <div class="me-1 text-danger">-</div>
+            }
           }
-          @if (+value < 0) {
-            <div class="me-1 text-danger">-</div>
-          }
-        }
-        <div
-          class="mb-0 value"
-          [class.fw-bold]="size === 'large'"
-          [class.h2]="size === 'large'"
-          [class.h4]="size === 'medium'"
-        >
-          @if (value === null) {
-            <span class="font-monospace text-body-secondary">*****</span>
-          } @else {
-            {{ formattedValue }}
+          <div
+            class="mb-0 value"
+            [class.fw-bold]="size === 'large'"
+            [class.h2]="size === 'large'"
+            [class.h4]="size === 'medium'"
+          >
+            @if (value === null) {
+              <span class="font-monospace text-body-secondary">*****</span>
+            } @else {
+              {{ formattedValue }}
+            }
+          </div>
+          @if (isPercent || unit) {
+            <div class="ms-1">
+              {{ isPercent ? '%' : unit }}
+            </div>
           }
         </div>
-        @if (isPercent || unit) {
-          <div class="ms-1">
-            {{ isPercent ? '%' : unit }}
-          </div>
-        }
       }
       @if (isString) {
         <div

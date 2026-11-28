@@ -38,12 +38,12 @@
         a[mat-icon-button] {
           --mat-icon-button-icon-size: 1rem;
 
-          margin-right: -0.125rem;
+          margin-inline-end: -0.125rem;
           margin-top: -0.5rem;
         }
 
         mat-card-title {
-          padding-left: 0.1875rem;
+          padding-inline-start: 0.1875rem;
         }
       }
 
