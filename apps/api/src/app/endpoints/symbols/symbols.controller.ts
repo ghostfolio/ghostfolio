@@ -48,7 +48,7 @@ export class SymbolsController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
-    @Query() { includeIndices, query }: GetLookupDto
+    @Query() { includeIndices, query = '' }: GetLookupDto
   ): Promise<LookupResponse> {
     try {
       return this.symbolService.lookup({

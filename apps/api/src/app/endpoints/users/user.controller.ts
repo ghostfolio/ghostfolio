@@ -171,8 +171,8 @@ export class UserController {
     });
 
     return {
-      accessToken,
       role,
+      accessToken: accessToken ?? undefined,
       authToken: this.jwtService.sign({
         id
       })
@@ -252,7 +252,7 @@ export class UserController {
   }
 
   private async validateAccessToken(
-    accessToken: string,
+    accessToken: string | undefined,
     userId: string
   ): Promise<UserModel> {
     if (!accessToken) {

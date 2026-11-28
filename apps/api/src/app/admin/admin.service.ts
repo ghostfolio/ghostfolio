@@ -71,7 +71,7 @@ export class AdminService {
     currency,
     dataSource,
     symbol
-  }: AssetProfileIdentifier & { currency?: string }): Promise<
+  }: AssetProfileIdentifier & { currency: string }): Promise<
     SymbolProfile | never
   > {
     try {
@@ -192,7 +192,11 @@ export class AdminService {
           return null;
         })
       )
-    ).filter(Boolean);
+    ).filter(
+      (dataProvider): dataProvider is NonNullable<typeof dataProvider> => {
+        return Boolean(dataProvider);
+      }
+    );
 
     return {
       activitiesCount,
@@ -635,7 +639,7 @@ export class AdminService {
     }
   }
 
-  public async putSetting(key: PropertyKey, value: string) {
+  public async putSetting(key: PropertyKey, value?: string) {
     let response: Property;
 
     if (value) {

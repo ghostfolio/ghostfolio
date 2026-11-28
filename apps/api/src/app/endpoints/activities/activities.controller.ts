@@ -14,6 +14,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DEFAULT_CURRENCY,
   NON_INVESTMENT_ACTIVITY_TYPES
 } from '@ghostfolio/common/config';
 import { CreateOrderDto, UpdateOrderDto } from '@ghostfolio/common/dtos';
@@ -41,7 +42,7 @@ import {
   Query,
   UseInterceptors
 } from '@nestjs/common';
-import { Order } from '@prisma/client';
+import { DataSource, Order } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { omit, pick } from 'lodash-es';
@@ -179,7 +180,7 @@ export class ActivitiesController {
       userId,
       includeDrafts: true,
       types: activityTypes,
-      userCurrency: userSettings.baseCurrency,
+      userCurrency: userSettings.baseCurrency ?? DEFAULT_CURRENCY,
       withExcludedAccountsAndActivities: true
     });
 
@@ -197,7 +198,7 @@ export class ActivitiesController {
     const { activities } = await this.activitiesService.getActivities({
       userId,
       includeDrafts: true,
-      userCurrency: userSettings.baseCurrency,
+      userCurrency: userSettings.baseCurrency ?? DEFAULT_CURRENCY,
       withExcludedAccountsAndActivities: true
     });
 
@@ -238,7 +239,7 @@ export class ActivitiesController {
     });
 
     const customCurrency = data.customCurrency;
-    const dataSource = data.dataSource;
+    const dataSource = data.dataSource ?? DataSource.MANUAL;
 
     const currency =
       assetProfiles[
@@ -358,24 +359,16 @@ export class ActivitiesController {
 
     const date = parseISO(data.date);
 
-    const accountId = data.accountId;
-    const customCurrency = data.customCurrency;
-    const dataSource = data.dataSource;
-
-    delete data.accountId;
+    const { accountId, customCurrency, dataSource, ...orderData } = data;
 
     if (customCurrency) {
-      data.currency = customCurrency;
-
-      delete data.customCurrency;
+      orderData.currency = customCurrency;
     }
-
-    delete data.dataSource;
 
     const activity = await this.activitiesService.updateActivity({
       userId,
       data: {
-        ...data,
+        ...orderData,
         date,
         account: accountId
           ? {

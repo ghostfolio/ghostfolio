@@ -105,7 +105,7 @@ export class UserService {
     scopes,
     user
   }: {
-    impersonationUserId: string;
+    impersonationUserId?: string;
     locale?: string;
     scopes: string[];
     user: UserWithSettings;
