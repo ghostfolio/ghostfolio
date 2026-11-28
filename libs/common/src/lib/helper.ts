@@ -28,6 +28,7 @@ import {
   subDays
 } from 'date-fns';
 import {
+  ar,
   ca,
   de,
   es,
@@ -409,7 +410,9 @@ export function getCountryName({ code }: { code: string }): string {
 }
 
 export function getDateFnsLocale(aLanguageCode?: string) {
-  if (aLanguageCode === 'ca') {
+  if (aLanguageCode === 'ar') {
+    return ar;
+  } else if (aLanguageCode === 'ca') {
     return ca;
   } else if (aLanguageCode === 'de') {
     return de;

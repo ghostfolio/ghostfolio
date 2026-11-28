@@ -7,7 +7,7 @@
     tabindex="-1"
     (click)="previous()"
   >
-    <ion-icon name="chevron-back-outline" />
+    <ion-icon name="chevron-back-outline" [flipRtl]="false" />
   </button>
 }
 
@@ -26,6 +26,6 @@
     tabindex="-1"
     (click)="next()"
   >
-    <ion-icon name="chevron-forward-outline" />
+    <ion-icon name="chevron-forward-outline" [flipRtl]="false" />
   </button>
 }

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up the language localization for Arabic (`ar`)
+- Added support for right-to-left languages
+
 ### Changed
 
 - Upgraded `dotenv` from version `18.0.9` to `18.0.10`

@@ -1,5 +1,6 @@
 <div class="container p-0">
-  <div class="d-flex flex-wrap">
+  <!-- Keep value and unit in order in right-to-left languages -->
+  <div class="d-flex flex-wrap" dir="ltr">
     <div class="px-1 status-container text-body-secondary text-end">
       @if ((errors()?.length ?? 0) > 0 && !isLoading()) {
         <ion-icon

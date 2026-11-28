@@ -402,6 +402,7 @@ export const SECTORS = [
 export const STORYBOOK_PATH = '/development/storybook';
 
 export const SUPPORTED_LANGUAGE_CODES = [
+  'ar',
   'ca',
   'de',
   'en',
