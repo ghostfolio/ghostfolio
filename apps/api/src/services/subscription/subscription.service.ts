@@ -291,6 +291,7 @@ export class SubscriptionService {
       >,
       true
     > = {
+      ar: true,
       ca: true,
       uk: true
     };

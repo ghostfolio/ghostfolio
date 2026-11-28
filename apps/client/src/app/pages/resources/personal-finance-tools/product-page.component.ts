@@ -42,6 +42,7 @@ export class GfProductPageComponent {
     isOpenSource: true,
     key: 'ghostfolio',
     languages: [
+      // 'Arabic (العربية)',
       // 'Català',
       'Chinese (简体中文)',
       'Deutsch',

@@ -6,6 +6,10 @@
   "prefix": "gf",
   "i18n": {
     "locales": {
+      "ar": {
+        "baseHref": "/ar/",
+        "translation": "apps/client/src/locales/messages.ar.xlf"
+      },
       "ca": {
         "baseHref": "/ca/",
         "translation": "apps/client/src/locales/messages.ca.xlf"
@@ -94,6 +98,10 @@
         ]
       },
       "configurations": {
+        "development-ar": {
+          "baseHref": "/ar/",
+          "localize": ["ar"]
+        },
         "development-ca": {
           "baseHref": "/ca/",
           "localize": ["ca"]
@@ -224,6 +232,9 @@
         "sslKey": "apps/client/localhost.pem"
       },
       "configurations": {
+        "development-ar": {
+          "buildTarget": "client:build:development-ar"
+        },
         "development-ca": {
           "buildTarget": "client:build:development-ca"
         },
@@ -279,6 +290,7 @@
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [
+          "messages.ar.xlf",
           "messages.ca.xlf",
           "messages.de.xlf",
           "messages.es.xlf",
