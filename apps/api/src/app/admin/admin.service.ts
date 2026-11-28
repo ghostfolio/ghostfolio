@@ -71,7 +71,7 @@ export class AdminService {
     currency,
     dataSource,
     symbol
-  }: AssetProfileIdentifier & { currency?: string }): Promise<
+  }: AssetProfileIdentifier & { currency: string }): Promise<
     SymbolProfile | never
   > {
     try {
@@ -79,12 +79,6 @@ export class AdminService {
         if (!hasGhostfolioPrefix(symbol)) {
           throw new BadRequestException(
             `symbol ("${symbol}") must start with the prefix "${ghostfolioPrefix}_" for the data source ("${dataSource}")`
-          );
-        }
-
-        if (!currency) {
-          throw new BadRequestException(
-            `currency is required for the data source ("${dataSource}")`
           );
         }
 

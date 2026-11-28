@@ -11,6 +11,7 @@ import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper'
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
+  DEFAULT_CURRENCY,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
   GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
@@ -274,7 +275,8 @@ export class AdminController {
     return this.adminService.addAssetProfile({
       dataSource,
       symbol,
-      currency: this.request.user.settings.settings.baseCurrency
+      currency:
+        this.request.user.settings.settings.baseCurrency ?? DEFAULT_CURRENCY
     });
   }
 
